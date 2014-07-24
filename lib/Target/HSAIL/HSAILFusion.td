@@ -591,26 +591,6 @@ def folded_abs_s32 : abs<"abs_s32", i32, GPR32, 31>;
 def folded_abs_s64 : abs<"abs_s64", i64, GPR64, 63>;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Misc patterns
-// Upper half of the expression result:
-// (float)((int) f32 / i32)) -> mulhi_u32
-// Expr morphed to: ((i64)f32 * (i64)i32) >> 32
-
-def isUpper32AllOnes : PatLeaf<(imm), [{
-    return (N->getZExtValue() >> 32) == 0xffffffff;
-}]>;
-
-def F2IDivI2F64 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src1, i64imm:$src2),
-    "mulhi_u32\t$dst, $src1, $src2",
-    [(set (i32 GPR32:$dst), (trunc 
-        (srl 
-            (mul 
-                 (sext (i32 GPR32:$src1)), 
-                 (i64 isUpper32AllOnes:$src2)), 
-            (i32 32))))]>;
-
-
-////////////////////////////////////////////////////////////////////////////////
 // fadd y (fmul x, 1)
 multiclass FusedAddMul1<string asm, ValueType Ty, Operand OpTy,
                        SDNode ImmTy, RegisterClass RC, PatLeaf one> {
