@@ -56,6 +56,9 @@ let TargetPrefix = "HSAIL", isTarget = 1 in {
     class UnaryFloatIntr : Intrinsic<[llvm_anyfloat_ty],
       [LLVMMatchType<0>], []>;
 
+    class UnaryFloatIntrNoMem : Intrinsic<[llvm_anyfloat_ty],
+      [LLVMMatchType<0>], [IntrNoMem]>;
+
     class BinaryIntIntr : Intrinsic<[llvm_anyint_ty],
       [LLVMMatchType<0>, LLVMMatchType<0>], []>;
 

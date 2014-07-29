@@ -547,3 +547,7 @@ def unpack_u32_u8x4: HSAILInst<(outs GPR32:$dst), (ins GPR32:$src, i32imm:$ind),
 def unpack_u32_u16x2: HSAILInst<(outs GPR32:$dst), (ins GPR32:$src, i32imm:$ind),
                                  "unpack_u32_u8x4\t $dst, $src, $ind",
                                  []>;
+
+// Map llvm fabs intrinsics to hsail fabs intrinsics
+def : Pat<(fabs GPR32:$dst), (fabs_f32 GPR32:$dst)>;
+def : Pat<(fabs GPR64:$dst), (fabs_f64 GPR64:$dst)>;
