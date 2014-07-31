@@ -824,7 +824,6 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
           .addFrameIndex(FrameIndex)
           .addReg(0)
           .addImm(0)
-          .addImm(1)
           .addMemOperand(MMO);            
       break;
   }
@@ -879,7 +878,6 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
           .addReg(0)
           .addImm(0)
           .addImm(Brig::BRIG_WIDTH_1)
-          .addImm(1)
           .addImm(0)
           .addMemOperand(MMO);
       break;

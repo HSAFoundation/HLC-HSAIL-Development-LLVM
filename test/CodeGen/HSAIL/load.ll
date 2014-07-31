@@ -9,7 +9,7 @@
 ; FUNC-LABEL: {{^}}prog function &load_i8
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL: ld_global_u8 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_u32 [[VAL]]
+; HSAIL: st_global_align(4)_u32 [[VAL]]
 ; HSAIL: ret;
 define void @load_i8(i32 addrspace(1)* %out, i8 addrspace(1)* %in) {
   %tmp1 = load i8 addrspace(1)* %in
@@ -21,7 +21,7 @@ define void @load_i8(i32 addrspace(1)* %out, i8 addrspace(1)* %in) {
 ; FUNC-LABEL: {{^}}prog function &load_i8_sext
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL: ld_global_s8 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_u32 [[VAL]]
+; HSAIL: st_global_align(4)_u32 [[VAL]]
 ; HSAIL: ret;
 define void @load_i8_sext(i32 addrspace(1)* %out, i8 addrspace(1)* %in) {
   %tmp0 = load i8 addrspace(1)* %in
@@ -65,8 +65,8 @@ define void @load_v4i8_sext(<4 x i32> addrspace(1)* %out, <4 x i8> addrspace(1)*
 ; Load an i16 value from the global address space.
 ; FUNC-LABEL: {{^}}prog function &load_i16
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
-; HSAIL: ld_global_u16 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_u32 [[VAL]]
+; HSAIL: ld_global_align(2)_u16 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
+; HSAIL: st_global_align(4)_u32 [[VAL]]
 ; HSAIL: ret;
 define void @load_i16(i32 addrspace(1)* %out, i16 addrspace(1)* %in) {
   %tmp0 = load i16	 addrspace(1)* %in
@@ -77,8 +77,8 @@ define void @load_i16(i32 addrspace(1)* %out, i16 addrspace(1)* %in) {
 
 ; FUNC-LABEL: {{^}}prog function &load_i16_sext
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
-; HSAIL: ld_global_s16 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_u32 [[VAL]]
+; HSAIL: ld_global_align(2)_s16 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
+; HSAIL: st_global_align(4)_u32 [[VAL]]
 ; HSAIL: ret;
 define void @load_i16_sext(i32 addrspace(1)* %out, i16 addrspace(1)* %in) {
   %tmp0 = load i16 addrspace(1)* %in
@@ -123,8 +123,8 @@ define void @load_v4i16_sext(<4 x i32> addrspace(1)* %out, <4 x i16> addrspace(1
 
 ; FUNC-LABEL: {{^}}prog function &load_i32
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
-; HSAIL: ld_global_u32 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_u32 [[VAL]]
+; HSAIL: ld_global_align(4)_u32 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
+; HSAIL: st_global_align(4)_u32 [[VAL]]
 ; HSAIL: ret;
 define void @load_i32(i32 addrspace(1)* %out, i32 addrspace(1)* %in) {
   %tmp0 = load i32 addrspace(1)* %in
@@ -136,8 +136,8 @@ define void @load_i32(i32 addrspace(1)* %out, i32 addrspace(1)* %in) {
 
 ; FUNC-LABEL: {{^}}prog function &load_f32
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
-; HSAIL: ld_global_f32 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_f32 [[VAL]]
+; HSAIL: ld_global_align(4)_f32 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
+; HSAIL: st_global_align(4)_f32 [[VAL]]
 ; HSAIL: ret;
 define void @load_f32(float addrspace(1)* %out, float addrspace(1)* %in) {
   %tmp0 = load float addrspace(1)* %in
@@ -155,8 +155,8 @@ define void @load_v2f32(<2 x float> addrspace(1)* %out, <2 x float> addrspace(1)
 
 ; FUNC-LABEL: {{^}}prog function &load_f64
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
-; HSAIL: ld_global_f64 [[VAL:\$d[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_f64 [[VAL]]
+; HSAIL: ld_global_align(8)_f64 [[VAL:\$d[0-9]+]], {{\[}}[[IN]]{{\]}};
+; HSAIL: st_global_align(8)_f64 [[VAL]]
 ; HSAIL: ret;
 define void @load_f64(double addrspace(1)* %out, double addrspace(1)* %in) {
   %tmp0 = load double addrspace(1)* %in
@@ -166,8 +166,8 @@ define void @load_f64(double addrspace(1)* %out, double addrspace(1)* %in) {
 
 ; FUNC-LABEL: {{^}}prog function &load_i64
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
-; HSAIL: ld_global_u64 [[VAL:\$d[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_u64 [[VAL]]
+; HSAIL: ld_global_align(8)_u64 [[VAL:\$d[0-9]+]], {{\[}}[[IN]]{{\]}};
+; HSAIL: st_global_align(8)_u64 [[VAL]]
 ; HSAIL: ret;
 define void @load_i64(i64 addrspace(1)* %out, i64 addrspace(1)* %in) {
   %tmp0 = load i64 addrspace(1)* %in
@@ -291,7 +291,7 @@ define void @load_const_addrspace_f32(float addrspace(1)* %out, float addrspace(
 ; FUNC-LABEL: {{^}}prog function &load_i8_local
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL: ld_group_u8 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_u32 [[VAL]]
+; HSAIL: st_global_align(4)_u32 [[VAL]]
 ; HSAIL: ret;
 define void @load_i8_local(i32 addrspace(1)* %out, i8 addrspace(3)* %in) {
   %tmp1 = load i8 addrspace(3)* %in
@@ -303,7 +303,7 @@ define void @load_i8_local(i32 addrspace(1)* %out, i8 addrspace(3)* %in) {
 ; FUNC-LABEL: {{^}}prog function &load_i8_sext_local
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL: ld_group_s8 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_u32 [[VAL]]
+; HSAIL: st_global_align(4)_u32 [[VAL]]
 ; HSAIL: ret;
 define void @load_i8_sext_local(i32 addrspace(1)* %out, i8 addrspace(3)* %in) {
   %tmp0 = load i8 addrspace(3)* %in
@@ -347,8 +347,8 @@ define void @load_v4i8_sext_local(<4 x i32> addrspace(1)* %out, <4 x i8> addrspa
 ; Load an i16 value from the local address space.
 ; FUNC-LABEL: {{^}}prog function &load_i16_local
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
-; HSAIL: ld_group_u16 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_u32 [[VAL]]
+; HSAIL: ld_group_align(2)_u16 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
+; HSAIL: st_global_align(4)_u32 [[VAL]]
 ; HSAIL: ret;
 define void @load_i16_local(i32 addrspace(1)* %out, i16 addrspace(3)* %in) {
   %tmp0 = load i16	 addrspace(3)* %in
@@ -359,8 +359,8 @@ define void @load_i16_local(i32 addrspace(1)* %out, i16 addrspace(3)* %in) {
 
 ; FUNC-LABEL: {{^}}prog function &load_i16_sext_local
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
-; HSAIL: ld_group_s16 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_u32 [[VAL]]
+; HSAIL: ld_group_align(2)_s16 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
+; HSAIL: st_global_align(4)_u32 [[VAL]]
 ; HSAIL: ret;
 define void @load_i16_sext_local(i32 addrspace(1)* %out, i16 addrspace(3)* %in) {
   %tmp0 = load i16 addrspace(3)* %in
@@ -404,8 +404,8 @@ define void @load_v4i16_sext_local(<4 x i32> addrspace(1)* %out, <4 x i16> addrs
 ; load an i32 value from the local address space.
 ; FUNC-LABEL: {{^}}prog function &load_i32_local
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
-; HSAIL: ld_group_u32 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_u32 [[VAL]]
+; HSAIL: ld_group_align(4)_u32 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
+; HSAIL: st_global_align(4)_u32 [[VAL]]
 ; HSAIL: ret;
 define void @load_i32_local(i32 addrspace(1)* %out, i32 addrspace(3)* %in) {
   %tmp0 = load i32 addrspace(3)* %in
@@ -416,8 +416,8 @@ define void @load_i32_local(i32 addrspace(1)* %out, i32 addrspace(3)* %in) {
 ; load a f32 value from the local address space.
 ; FUNC-LABEL: {{^}}prog function &load_f32_local
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
-; HSAIL: ld_group_f32 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_f32 [[VAL]]
+; HSAIL: ld_group_align(4)_f32 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
+; HSAIL: st_global_align(4)_f32 [[VAL]]
 ; HSAIL: ret;
 define void @load_f32_local(float addrspace(1)* %out, float addrspace(3)* %in) {
   %tmp0 = load float addrspace(3)* %in
@@ -435,8 +435,8 @@ define void @load_v2f32_local(<2 x float> addrspace(1)* %out, <2 x float> addrsp
 
 ; FUNC-LABEL: {{^}}prog function &load_f64_local
 ; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
-; HSAIL: ld_group_f64 [[VAL:\$d[0-9]+]], {{\[}}[[IN]]{{\]}};
-; HSAIL: st_global_f64 [[VAL]]
+; HSAIL: ld_group_align(8)_f64 [[VAL:\$d[0-9]+]], {{\[}}[[IN]]{{\]}};
+; HSAIL: st_global_align(8)_f64 [[VAL]]
 ; HSAIL: ret;
 define void @load_f64_local(double addrspace(1)* %out, double addrspace(3)* %in) {
   %tmp0 = load double addrspace(3)* %in

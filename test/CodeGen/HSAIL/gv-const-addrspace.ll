@@ -20,8 +20,8 @@
 
 ; FUNC-LABEL: @float
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
-; HSAIL: ld_readonly_f32 [[LD:\$s[0-9]+]], [&float_gv]{{\[}}[[ADDR]]{{\]}};
-; HSAIL: st_global_f32 [[LD]]
+; HSAIL: ld_readonly_align(4)_f32 [[LD:\$s[0-9]+]], [&float_gv]{{\[}}[[ADDR]]{{\]}};
+; HSAIL: st_global_align(4)_f32 [[LD]]
 ; HSAIL: ret;
 define void @float(float addrspace(1)* %out, i32 %index) {
   %tmp0 = getelementptr inbounds [5 x float] addrspace(2)* @float_gv, i32 0, i32 %index
@@ -34,8 +34,8 @@ define void @float(float addrspace(1)* %out, i32 %index) {
 
 ; FUNC-LABEL: @i32
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
-; HSAIL: ld_readonly_u32 [[LD:\$s[0-9]+]], [&i32_gv]{{\[}}[[ADDR]]{{\]}};
-; HSAIL: st_global_u32 [[LD]]
+; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&i32_gv]{{\[}}[[ADDR]]{{\]}};
+; HSAIL: st_global_align(4)_u32 [[LD]]
 ; HSAIL: ret;
 define void @i32(i32 addrspace(1)* %out, i32 %index) {
   %tmp0 = getelementptr inbounds [5 x i32] addrspace(2)* @i32_gv, i32 0, i32 %index
@@ -46,8 +46,8 @@ define void @i32(i32 addrspace(1)* %out, i32 %index) {
 
 ; FUNC-LABEL: @struct_foo_gv_load
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
-; HSAIL: ld_readonly_u32 [[LD:\$s[0-9]+]], [&struct_foo_gv]{{\[}}[[ADDR]]+4{{\]}};
-; HSAIL: st_global_u32 [[LD]]
+; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&struct_foo_gv]{{\[}}[[ADDR]]+4{{\]}};
+; HSAIL: st_global_align(4)_u32 [[LD]]
 ; HSAIL: ret;
 define void @struct_foo_gv_load(i32 addrspace(1)* %out, i32 %index) {
   %gep = getelementptr inbounds [1 x %struct.foo] addrspace(2)* @struct_foo_gv, i32 0, i32 0, i32 1, i32 %index
@@ -59,8 +59,8 @@ define void @struct_foo_gv_load(i32 addrspace(1)* %out, i32 %index) {
 
 ; FUNC-LABEL: @array_v1_gv_load
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
-; HSAIL: ld_readonly_u32 [[LD:\$s[0-9]+]], [&array_v1_gv]{{\[}}[[ADDR]]{{\]}};
-; HSAIL: st_global_u32 [[LD]]
+; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&array_v1_gv]{{\[}}[[ADDR]]{{\]}};
+; HSAIL: st_global_align(4)_u32 [[LD]]
 ; HSAIL: ret;
 define void @array_v1_gv_load(<1 x i32> addrspace(1)* %out, i32 %index) {
   %gep = getelementptr inbounds [4 x <1 x i32>] addrspace(2)* @array_v1_gv, i32 0, i32 %index
@@ -71,8 +71,8 @@ define void @array_v1_gv_load(<1 x i32> addrspace(1)* %out, i32 %index) {
 
 ; FUNC-LABEL: @gv_addressing_in_branch
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
-; HSAIL: ld_readonly_f32 [[LD:\$s[0-9]+]], [&float_gv]{{\[}}[[ADDR]]{{\]}};
-; HSAIL: st_global_f32 [[LD]]
+; HSAIL: ld_readonly_align(4)_f32 [[LD:\$s[0-9]+]], [&float_gv]{{\[}}[[ADDR]]{{\]}};
+; HSAIL: st_global_align(4)_f32 [[LD]]
 ; HSAIL: ret;
 define void @gv_addressing_in_branch(float addrspace(1)* %out, i32 %index, i32 %a) {
 entry:

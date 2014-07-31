@@ -93,31 +93,14 @@ uint32_t HSAILPrintfInfo::getOperandID(uint32_t idx) {
   return mOperands[idx];
 }
 
-HSAILMachineFunctionInfo::HSAILMachineFunctionInfo()
-  : CalleeSavedFrameSize(0), BytesToPopOnReturn(0),
-  DecorationStyle(NONE), ReturnAddrIndex(0),
-  TailCallReturnAddrDelta(0),
-  SRetReturnReg(0), UsesLDS(false), LDSArg(false),
-  UsesGDS(false), GDSArg(false),
-  mReservedLits(11)
-{
-  memset(mUsedMem, 0, sizeof(mUsedMem));
-  mMF = NULL;
-  mKernel = NULL;
-  mScratchSize = -1;
-  mPrivateMemSize = -1;
-  mGroupMemSize = -1;
-  mArgSize = -1;
-  mStackSize = -1;
-}
-
 HSAILMachineFunctionInfo::HSAILMachineFunctionInfo(MachineFunction& MF)
   : CalleeSavedFrameSize(0), BytesToPopOnReturn(0),
   DecorationStyle(NONE), ReturnAddrIndex(0),
   TailCallReturnAddrDelta(0),
   SRetReturnReg(0), UsesLDS(false), LDSArg(false),
   UsesGDS(false), GDSArg(false),
-  mReservedLits(11)
+  mReservedLits(11),
+    ParamManager(MF.getTarget().getSubtargetImpl()->getDataLayout())
 {
   memset(mUsedMem, 0, sizeof(mUsedMem));
   const Function *F = MF.getFunction();

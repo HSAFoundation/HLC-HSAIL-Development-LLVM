@@ -4,9 +4,9 @@
 
 ; FUNC-LABEL: {{^}}prog function &local_memory_i32
 ; HSAIL: group_u32 %__hsa_replaced_local_memory_i32_local_mem[128];
-; HSAIL: st_group_u32 {{\$s[0-9]+}}, [%__hsa_replaced_local_memory_i32_local_mem][{{\$s[0-9]+}}];
+; HSAIL: st_group_align(4)_u32 {{\$s[0-9]+}}, [%__hsa_replaced_local_memory_i32_local_mem][{{\$s[0-9]+}}];
 ; HSAIL: barrier;
-; HSAIL: ld_group_u32 {{\$s[0-9]+}}, [%__hsa_replaced_local_memory_i32_local_mem][{{\$s[0-9]+}}];
+; HSAIL: ld_group_align(4)_u32 {{\$s[0-9]+}}, [%__hsa_replaced_local_memory_i32_local_mem][{{\$s[0-9]+}}];
 ; HSAIL: ret;
 define void @local_memory_i32(i32 addrspace(1)* %out) #0 {
   %y.i = call i32 @llvm.HSAIL.workitemid.flat() #0
@@ -52,9 +52,9 @@ define void @local_memory_i8(i8 addrspace(1)* %out) #0 {
 
 ; FUNC-LABEL: {{^}}prog function &local_memory_i16
 ; HSAIL: align(4) group_u16 %__hsa_replaced_local_memory_i16_local_mem[128];
-; HSAIL: st_group_u16 {{\$s[0-9]+}}, [%__hsa_replaced_local_memory_i16_local_mem][{{\$s[0-9]+}}];
+; HSAIL: st_group_align(2)_u16 {{\$s[0-9]+}}, [%__hsa_replaced_local_memory_i16_local_mem][{{\$s[0-9]+}}];
 ; HSAIL: barrier;
-; HSAIL: ld_group_u16 {{\$s[0-9]+}}, [%__hsa_replaced_local_memory_i16_local_mem][{{\$s[0-9]+}}];
+; HSAIL: ld_group_align(2)_u16 {{\$s[0-9]+}}, [%__hsa_replaced_local_memory_i16_local_mem][{{\$s[0-9]+}}];
 ; HSAIL: ret;
 define void @local_memory_i16(i16 addrspace(1)* %out) #0 {
   %y.i = call i32 @llvm.HSAIL.workitemid.flat() #0
@@ -76,9 +76,9 @@ define void @local_memory_i16(i16 addrspace(1)* %out) #0 {
 
 ; FUNC-LABEL: {{^}}prog function &local_memory_i64
 ; HSAIL: group_u64 %__hsa_replaced_local_memory_i64_local_mem[128];
-; HSAIL: st_group_u64 {{\$d[0-9]+}}, [%__hsa_replaced_local_memory_i64_local_mem][{{\$s[0-9]+}}];
+; HSAIL: st_group_align(8)_u64 {{\$d[0-9]+}}, [%__hsa_replaced_local_memory_i64_local_mem][{{\$s[0-9]+}}];
 ; HSAIL: barrier;
-; HSAIL: ld_group_u64 {{\$d[0-9]+}}, [%__hsa_replaced_local_memory_i64_local_mem][{{\$s[0-9]+}}];
+; HSAIL: ld_group_align(8)_u64 {{\$d[0-9]+}}, [%__hsa_replaced_local_memory_i64_local_mem][{{\$s[0-9]+}}];
 ; HSAIL: ret;
 define void @local_memory_i64(i64 addrspace(1)* %out) #0 {
   %y.i = call i32 @llvm.HSAIL.workitemid.flat() #0
@@ -101,9 +101,9 @@ define void @local_memory_i64(i64 addrspace(1)* %out) #0 {
 
 ; FUNC-LABEL: {{^}}prog function &local_memory_f32
 ; HSAIL: group_f32 %__hsa_replaced_local_memory_f32_local_mem[128];
-; HSAIL: st_group_f32 {{\$s[0-9]+}}, [%__hsa_replaced_local_memory_f32_local_mem][{{\$s[0-9]+}}];
+; HSAIL: st_group_align(4)_f32 {{\$s[0-9]+}}, [%__hsa_replaced_local_memory_f32_local_mem][{{\$s[0-9]+}}];
 ; HSAIL: barrier;
-; HSAIL: ld_group_f32 {{\$s[0-9]+}}, [%__hsa_replaced_local_memory_f32_local_mem][{{\$s[0-9]+}}];
+; HSAIL: ld_group_align(4)_f32 {{\$s[0-9]+}}, [%__hsa_replaced_local_memory_f32_local_mem][{{\$s[0-9]+}}];
 ; HSAIL: ret;
 define void @local_memory_f32(float addrspace(1)* %out) #0 {
   %y.i = call i32 @llvm.HSAIL.workitemid.flat() #0

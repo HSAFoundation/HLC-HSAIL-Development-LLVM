@@ -3,7 +3,7 @@
 ; FUNC-LABEL: {{^}}prog function &infinite_loop(
 ; HSAIL: ld_arg
 ; HSAIL: {{^BB0_1:}}
-; HSAIL: st_global_u32
+; HSAIL: st_global_align(4)_u32
 ; HSAIL-NEXT: br BB0_1
 ; HSAIL: };
 define void @infinite_loop(i32 addrspace(1)* %out) {

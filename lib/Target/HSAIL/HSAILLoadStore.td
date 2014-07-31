@@ -123,7 +123,8 @@ let isNotDuplicable = 1, hasCtrlDep = 1, hasSideEffects = 1 in {
   let mayStore = 1 in {
     def st_arg_64 : HSAILInst<(outs ), (ins GPR64:$s, MEMOP:$a, i32imm:$brig_type), "", []>;
   }
-  def arg_decl : HSAILInst<(outs ), (ins PtrRC:$v, i32imm:$brig_type, i32imm:$size), "", []>;
+  def arg_decl : HSAILInst<(outs ), (ins PtrRC:$v, i32imm:$brig_type, i32imm:$size,
+                                     i32imm:$alignnment), "", []>;
 }
 
 // For sampler/image load from readonly segment for 0.98+ hsail spec
@@ -142,7 +143,7 @@ multiclass HSAIL_LD<PatFrag op, RegisterClass RC, ValueType Ty, string asm>
 {
   let needSpecialProcessing = 1, hasAddress = 1, isLoad = 1 in {
     let VectorSize = 1, addressOpNum = 1 in {
-      def _v1: HSAILInst<(outs RC:$dst), (ins MEMOP:$ptr, WIDTH_OPND:$w, ALIGN_OPND:$alignnment, CONST_OPERAND:$isConst),
+      def _v1: HSAILInst<(outs RC:$dst), (ins MEMOP:$ptr, WIDTH_OPND:$w, CONST_OPERAND:$isConst),
                        "ld_"#asm#"\t$dst, $ptr",
                        [(set (Ty RC:$dst), (op ADDR:$ptr))]>,
                      VectorOperation;
@@ -150,17 +151,17 @@ multiclass HSAIL_LD<PatFrag op, RegisterClass RC, ValueType Ty, string asm>
 
     let mayLoad = 1 in {
       let VectorSize = 2, addressOpNum = 2 in {
-        def _v2 : HSAILInst<(outs RC:$dst1, RC:$dst2), (ins MEMOP:$ptr, WIDTH_OPND:$w, ALIGN_OPND:$alignnment, CONST_OPERAND:$isConst),
+        def _v2 : HSAILInst<(outs RC:$dst1, RC:$dst2), (ins MEMOP:$ptr, WIDTH_OPND:$w, CONST_OPERAND:$isConst),
                              "ld_v2_"#asm#"\t($dst1, $dst2 ), $ptr", []>,
                            VectorOperation;
       }
       let VectorSize = 3, addressOpNum = 3 in {
-        def _v3 : HSAILInst<(outs RC:$dst1, RC:$dst2, RC:$dst3), (ins MEMOP:$ptr, WIDTH_OPND:$w, ALIGN_OPND:$alignnment, CONST_OPERAND:$isConst),
+        def _v3 : HSAILInst<(outs RC:$dst1, RC:$dst2, RC:$dst3), (ins MEMOP:$ptr, WIDTH_OPND:$w, CONST_OPERAND:$isConst),
                              "ld_v3_"#asm#"\t($dst1, $dst2, $dst3 ), $ptr", []>,
                            VectorOperation;
       }
       let VectorSize = 4, addressOpNum = 4 in {
-        def _v4 : HSAILInst<(outs RC:$dst1, RC:$dst2, RC:$dst3, RC:$dst4), (ins MEMOP:$ptr, WIDTH_OPND:$w, ALIGN_OPND:$alignnment, CONST_OPERAND:$isConst),
+        def _v4 : HSAILInst<(outs RC:$dst1, RC:$dst2, RC:$dst3, RC:$dst4), (ins MEMOP:$ptr, WIDTH_OPND:$w, CONST_OPERAND:$isConst),
                              "ld_v4_"#asm#"\t($dst1, $dst2, $dst3, $dst4 ), $ptr", []>,
                            VectorOperation;
       }
@@ -198,17 +199,27 @@ defm kernarg_ld_u64 : HSAIL_LD<kernarg_load, GPR64, i64, "kernarg_u64">;
 defm kernarg_ld_f32 : HSAIL_LD<kernarg_load, GPR32, f32, "kernarg_f32">;
 defm kernarg_ld_f64 : HSAIL_LD<kernarg_load, GPR64, f64, "kernarg_f64">;
 
+defm arg_ld_u32 : HSAIL_LD<arg_load, GPR32, i32, "arg_u32">;
+defm arg_ld_u64 : HSAIL_LD<arg_load, GPR64, i64, "arg_u64">;
+defm arg_ld_f32 : HSAIL_LD<arg_load, GPR32, f32, "arg_f32">;
+defm arg_ld_f64 : HSAIL_LD<arg_load, GPR64, f64, "arg_f64">;
+
 let hasSideEffects = 1, hasCtrlDep = 1 in {
   // It is not safe to move ld_arg as it can be in an argscope
-  defm arg_ld_u32 : HSAIL_LD<arg_load, GPR32, i32, "arg_u32">;
-  defm arg_ld_u64 : HSAIL_LD<arg_load, GPR64, i64, "arg_u64">;
-  defm arg_ld_f32 : HSAIL_LD<arg_load, GPR32, f32, "arg_f32">;
-  defm arg_ld_f64 : HSAIL_LD<arg_load, GPR64, f64, "arg_f64">;
+  defm rarg_ld_u32 : HSAIL_LD<arg_load, GPR32, i32, "arg_u32">;
+  defm rarg_ld_u64 : HSAIL_LD<arg_load, GPR64, i64, "arg_u64">;
+  defm rarg_ld_f32 : HSAIL_LD<arg_load, GPR32, f32, "arg_f32">;
+  defm rarg_ld_f64 : HSAIL_LD<arg_load, GPR64, f64, "arg_f64">;
+
+  defm rarg_sext_ld_s32_s8  : HSAIL_LD<sextloadi8_arg,  GPR32, i32, "arg_s8">;
+  defm rarg_zext_ld_u32_u8  : HSAIL_LD<zextloadi8_arg,  GPR32, i32, "arg_u8">;
+  defm rarg_sext_ld_s32_s16 : HSAIL_LD<sextloadi16_arg, GPR32, i32, "arg_s16">;
+  defm rarg_zext_ld_u32_u16 : HSAIL_LD<zextloadi16_arg, GPR32, i32, "arg_u16">;
 }
 
 let hasAddress = 1, mayLoad = 1, isPseudo = 1 in {
   def spill_ld_b1 : HSAILInst<(outs CR:$dst), (ins MEMOP:$ptr, WIDTH_OPND:$w,
-                              ALIGN_OPND:$alignnment, CONST_OPERAND:$isConst),
+                              CONST_OPERAND:$isConst),
                               "ld_spill_b1\t$dst, $ptr", []>;
 }
 
@@ -277,7 +288,7 @@ multiclass HSAIL_ST<PatFrag op, RegisterClass RC, ValueType Ty, string asm>
 {
   let needSpecialProcessing = 1, hasAddress = 1, isStore = 1 in {
     let VectorSize = 1, addressOpNum = 1 in {
-      def _v1 : HSAILInst<(outs), (ins RC:$val, MEMOP:$ptr, ALIGN_OPND:$alignnment),
+      def _v1 : HSAILInst<(outs), (ins RC:$val, MEMOP:$ptr),
                           "st_"#asm#"\t$val, $ptr",
                           [(op (Ty RC:$val), ADDR:$ptr)]>,
                           VectorOperation;
@@ -286,20 +297,20 @@ multiclass HSAIL_ST<PatFrag op, RegisterClass RC, ValueType Ty, string asm>
     let mayStore = 1 in {
       let VectorSize = 2, addressOpNum = 2 in {
         def _v2 : HSAILInst<(outs), 
-                            (ins RC:$val1, RC:$val2, MEMOP:$ptr, ALIGN_OPND:$alignnment),
+                            (ins RC:$val1, RC:$val2, MEMOP:$ptr),
                             "st_v2_"#asm#"\t($val1, $val2 ), $ptr",
                             []>, VectorOperation;
       }
       let VectorSize = 3, addressOpNum = 3 in {
         def _v3 : HSAILInst<(outs), 
-                            (ins RC:$val1, RC:$val2, RC:$val3, MEMOP:$ptr, ALIGN_OPND:$alignnment),
+                            (ins RC:$val1, RC:$val2, RC:$val3, MEMOP:$ptr),
                             "st_v3_"#asm#"\t($val1, $val2, $val3 ), $ptr",
                             []>, VectorOperation;
       }
       let VectorSize = 4, addressOpNum = 4 in {
         def _v4 : HSAILInst<(outs), 
                             (ins RC:$val1, RC:$val2, 
-                                 RC:$val3, RC:$val4, MEMOP:$ptr, ALIGN_OPND:$alignnment),
+                                 RC:$val3, RC:$val4, MEMOP:$ptr),
                             "st_v4_"#asm#"\t($val1, $val2, $val3, $val4 ), $ptr",
                             []>, VectorOperation;
       }
@@ -329,8 +340,7 @@ defm private_st_f64 : HSAIL_ST<private_store, GPR64, f64, "private_f64">;
 
 // spill stores
 let hasAddress = 1, mayStore = 1, isPseudo = 1 in {
-  def spill_st_b1 : HSAILInst<(outs), (ins CR:$val, MEMOP:$ptr,
-                                       ALIGN_OPND:$alignnment),
+  def spill_st_b1 : HSAILInst<(outs), (ins CR:$val, MEMOP:$ptr),
                               "st_spill_b1\t$val, $ptr", []>;
 }
 

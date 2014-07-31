@@ -13,9 +13,6 @@ def MEMOP  : Operand<iPTR> {
 def WIDTH_OPND  : OptionalDefOperand<i32, (ops i32), (ops (i32 1))> {
 }
 
-def ALIGN_OPND  : OptionalDefOperand<i8, (ops i8), (ops (i8 1))> {
-}
-
 def CONST_OPERAND  : OptionalDefOperand<i1, (ops i1), (ops (i1 0))> {
 }
 

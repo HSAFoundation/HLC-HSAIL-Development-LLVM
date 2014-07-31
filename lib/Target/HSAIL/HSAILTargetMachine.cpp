@@ -140,6 +140,13 @@ bool HSAILPassConfig::addInstSelector() {
 
   addPass(createHSAILISelDag(HSATM, HSATM.getOptLevel()));
 
+#if 0
+  addPass(&DeadMachineInstructionElimID);
+  if (EnableUniformOps) {
+    addPass(createHSAILUniformOperations(HSATM));
+  }
+#endif
+
   return false;
 }
 bool HSAILPassConfig::addPreEmitPass()

@@ -254,7 +254,6 @@ namespace llvm
     const HSAILSubtarget *mSTM;
     public:
 
-    HSAILMachineFunctionInfo();
     explicit HSAILMachineFunctionInfo(MachineFunction &MF);
     virtual ~HSAILMachineFunctionInfo();
 

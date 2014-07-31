@@ -33,6 +33,7 @@
 #include "llvm/IR/Intrinsics.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Mangler.h"
+#include "llvm/IR/MDBuilder.h"
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/CodeGen/IntrinsicLowering.h"
 #include "llvm/CodeGen/MachineFrameInfo.h"
@@ -657,32 +658,14 @@ HSAILTargetLowering::IsDesirableToPromoteOp(SDValue Op, EVT &PVT) const
 // the SelectionDAGLowering code knows how to lower these.
 //
 
-/*
-
-/// CanLowerReturn - This hook should be implemented to check whether the
-/// return values described by the Outs array can fit into the return
-/// registers.  If false is returned, an sret-demotion is performed.
-
-bool
-HSAILTargetLowering::CanLowerReturn(CallingConv::ID CallConv,
-                                    bool isVarArg,
-                                    const SmallVectorImpl<ISD::OutputArg> &Outs,
-                                    LLVMContext &Context) const
-{
-  SmallVector<CCValAssign, 16> RVLocs;
-  CCState CCInfo(CallConv, isVarArg, getTargetMachine(),
-                 RVLocs, Context);
-  return CCInfo.CheckReturn(Outs, RetCC_HSAIL);
-}
-
-*/
-
 /// n-th element of a vector has different alignment than a base.
 /// This function returns alignment for n-th alement.
 static unsigned getElementAlignment(const DataLayout *DL, Type *Ty, unsigned n) {
   unsigned Alignment = DL->getABITypeAlignment(Ty);
-  if (n) {
+  if (n && (Alignment > 1)) {
     Type* EltTy = Ty->getScalarType();
+    if (Ty->isArrayTy())
+      EltTy = Ty->getArrayElementType();
     unsigned ffs = 0;
     while (((n >> ffs) & 1) == 0) ffs++;
     Alignment = (DL->getABITypeAlignment(EltTy) * (1 << ffs)) &
@@ -716,94 +699,38 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
   const FunctionType *funcType = F->getFunctionType();
 
   SmallVector<SDValue, 6> RetOps;
-  RetOps.push_back(Chain); // Operand #0 = Chain (updated below)
-  // Operand #1 = Bytes To Pop
-  RetOps.push_back(DAG.getTargetConstant(FuncInfo->getBytesToPopOnReturn(),
-                                         MVT::i16));
+  RetOps.push_back(Chain);
 
   Type *type  = funcType->getReturnType();
+  if (type->isIntegerTy(1)) // Handle bit as DWORD
+    type = Type::getInt32Ty(type->getContext());
+
   if(type->getTypeID() != Type::VoidTyID) {
-    EVT VT = Outs[0].VT;
-    Type* EltTy = type->getScalarType();
-    if (EltTy->isIntegerTy(8)) VT = MVT::i8;
-    else if (EltTy->isIntegerTy(16)) VT = MVT::i16;
     Mangler Mang(getDataLayout());
-    SDValue retVariable =  DAG.getTargetExternalSymbol(PM.getParamName(
-      PM.addReturnParam(VT.getStoreSizeInBits(),
-      PM.mangleArg(&Mang, F->getName()))), getPointerTy());
-    
-    // Copy the result values into the output registers.
-    
-    if (EnableExperimentalFeatures && type->isPointerTy() &&
-        (GetOpaqueType(type) == Sampler)) {
-      Chain = getArgLoadOrStore(DAG, VT, type, false, false,
-                                HSAILAS::ARG_ADDRESS, retVariable,
-                                OutVals[0], 0, dl, Chain, SDValue());
-    } else {
-      MVT PtrTy = getPointerTy(HSAILAS::ARG_ADDRESS);
-      PointerType *ArgPT = PointerType::get(EltTy, HSAILAS::ARG_ADDRESS);
-      unsigned EltSize = (VT.getStoreSizeInBits() + 7) / 8;
-      const VectorType *VecVT = dyn_cast<VectorType>(type);
-      unsigned num_elems = VecVT ? VecVT->getNumElements() : 1;
+    SDValue RetVariable =  DAG.getTargetExternalSymbol(PM.getParamName(
+      PM.addReturnParam(type, PM.mangleArg(&Mang, F->getName()))),
+      getPointerTy(HSAILAS::ARG_ADDRESS));
+    Value *mdops[] = { const_cast<Function*>(F) };
+    MDNode *MD = MDNode::get(F->getContext(), mdops);
 
-      for (unsigned i = 0; i < num_elems; i++) {
-        MachinePointerInfo MPtrInfo(UndefValue::get(ArgPT), EltSize * i);
-        SDValue R = retVariable;
-        unsigned Alignment = getElementAlignment(DL, type, i);
-
-        if (i > 0)
-          R = DAG.getNode(ISD::ADD, dl, PtrTy, retVariable,
-                          DAG.getConstant(i * EltSize, PtrTy));
-
-        if (EltSize < 4) {
-          Chain = DAG.getTruncStore(Chain, dl, OutVals[i], R, MPtrInfo, VT,
-                                    false, false, Alignment);
-        } else {
-          Chain = DAG.getStore(Chain, dl, OutVals[i], R, MPtrInfo,
-                               false, false, Alignment);
-        }
-      }
-    }
+    unsigned ArgNo = 0;
+    LowerArgument(Chain, SDValue(), false, NULL, &Outs, dl, DAG, &RetOps, ArgNo,
+                  type, HSAILAS::ARG_ADDRESS, NULL, RetVariable, &OutVals, MD);
+    Chain = DAG.getNode(ISD::TokenFactor, dl, MVT::Other, RetOps);
   }
 
-  RetOps[0] = Chain;  // Update chain.
-
-  return DAG.getNode(HSAILISD::RET_FLAG, dl,
-                     MVT::Other, RetOps);
+  return DAG.getNode(HSAILISD::RET_FLAG, dl, MVT::Other, Chain);
 }
 
-//===----------------------------------------------------------------------===//
-//                C & StdCall & Fast Calling Convention implementation
-//===----------------------------------------------------------------------===//
-
-SDValue
-HSAILTargetLowering::LowerMemArgument(SDValue Chain,
-                                      CallingConv::ID CallConv,
-                                      const SmallVectorImpl<ISD::InputArg> &Ins,
-                                      SDLoc dl, SelectionDAG &DAG,
-                                      const CCValAssign &VA,
-                                      MachineFrameInfo *MFI,
-                                      unsigned i) const
-{
-  // Create the nodes corresponding to a load from this parameter slot.
-  ISD::ArgFlagsTy Flags = Ins[i].Flags;
-
-  bool AlwaysUseMutable = (CallConv==CallingConv::Fast) && getTargetMachine().Options.GuaranteedTailCallOpt;
-  bool isImmutable = !AlwaysUseMutable && !Flags.isByVal();
-
-  // In case of tail call optimization mark all arguments mutable. Since they
-  // could be overwritten by lowering of arguments in case of a tail call.
-  int FI = MFI->CreateFixedObject(VA.getValVT().getSizeInBits()/8,
-                                  VA.getLocMemOffset(),
-                                  isImmutable);
-  SDValue FIN = DAG.getFrameIndex(FI, getPointerTy());
-
-  if (Flags.isByVal())
-    return FIN;
-
-  return DAG.getLoad(VA.getValVT(), dl, Chain, FIN,
-                     MachinePointerInfo::getFixedStack(FI),
-                     false, false,false, 0);
+/// getTypeForExtArgOrReturn - Return the type that should be used to zero or
+/// sign extend a zeroext/signext integer argument or return value.
+EVT HSAILTargetLowering::getTypeForExtArgOrReturn(LLVMContext &Context,
+                                                  EVT VT,
+                                                  ISD::NodeType ExtendKind)
+                                                  const {
+  if (VT == MVT::i1)
+    return MVT::i32;
+  return TargetLowering::getTypeForExtArgOrReturn(Context, VT, ExtendKind);
 }
 
 EVT HSAILTargetLowering::getValueType(Type *Ty, bool AllowUnknown ) const
@@ -843,12 +770,20 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
                                                SDValue Ptr, SDValue ParamValue,
                                                unsigned index,
                                                SDLoc dl, SDValue Chain,
-                                               SDValue InFlag) const
+                                               SDValue InFlag,
+                                               const AAMDNodes &AAInfo,
+                                               uint64_t offset) const
 {
     MachineFunction &MF = DAG.getMachineFunction();
-    Type* EltTy = Ty->getScalarType();
+    Type* EltTy = Ty;
+    if (Ty->isArrayTy())
+      EltTy = Ty->getArrayElementType();
+    EltTy = EltTy->getScalarType();
+    MVT PtrTy = getPointerTy(AddressSpace);
     PointerType *ArgPT = PointerType::get(EltTy, AddressSpace);
-    uint64_t offset = ((EltTy->getPrimitiveSizeInBits() + 7) / 8) * index;
+    // TODO_HSA: check if that works with packed structs, it can happen
+    //           we would need to inhibit alignment calculation in that case.
+    offset += DL->getTypeStoreSize(EltTy) * index;
 
     if (ArgVT == MVT::i1) {
       ArgVT = MVT::i32; // Handle a bit as DWORD;
@@ -913,22 +848,58 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
       }
     }
 
+    // Change opcode for load of return value
+    if (isLoad && AAInfo.TBAA && AAInfo.TBAA->getNumOperands() >= 1) {
+      if (const MDString *MDS = dyn_cast<MDString>(AAInfo.TBAA->getOperand(0))) {
+        if (MDS->getString().equals("retarg")) {
+          switch (op) {
+          case HSAIL::arg_sext_ld_s32_s8_v1:  op = HSAIL::rarg_sext_ld_s32_s8_v1;  break;
+          case HSAIL::arg_zext_ld_u32_u8_v1:  op = HSAIL::rarg_zext_ld_u32_u8_v1;  break;
+          case HSAIL::arg_sext_ld_s32_s16_v1: op = HSAIL::rarg_sext_ld_s32_s16_v1; break;
+          case HSAIL::arg_zext_ld_u32_u16_v1: op = HSAIL::rarg_zext_ld_u32_u16_v1; break;
+          case HSAIL::arg_ld_u32_v1: op = HSAIL::rarg_ld_u32_v1; break;
+          case HSAIL::arg_ld_u64_v1: op = HSAIL::rarg_ld_u64_v1; break;
+          case HSAIL::arg_ld_f32_v1: op = HSAIL::rarg_ld_f32_v1; break;
+          case HSAIL::arg_ld_f64_v1: op = HSAIL::rarg_ld_f64_v1; break;
+          }
+        }
+      }
+    }
+
     unsigned opShift = isLoad ? 1 : 0;
     unsigned opNo = 4; // Value and pointer operands
     SDValue Zero = DAG.getTargetConstant(0, MVT::i32);
+    SDValue Reg = DAG.getRegister(0, PtrTy); // %noreg
+    if (!Ptr.getNode()) {
+      // %noreg [%noreg + offset]
+      alignment = ArgVT.getStoreSize(); // Assume base pointer zero.
+      if (offset & (alignment - 1))
+        alignment = 1;
+    } else if (Ptr.getOpcode() != ISD::TargetExternalSymbol) {
+      // %noreg [%reg + offset]
+      Reg = Ptr;
+      Ptr = SDValue();
+      alignment = 1; // %reg is unknown, alignment as well.
+    }
+    if (!Ptr.getNode()) {
+      // TODO_HSA: If argument symbol is unknown generate a kernargbaseptr
+      //           instruction for Ptr instead on %noreg value.
+      Ptr = DAG.getRegister(0, PtrTy);
+    }
     SDValue Ops[] = { ParamValue,
-        /* Address */ Ptr, Zero, DAG.getTargetConstant(offset, MVT::i32),
-        /* Ops[5]  */ Zero, Zero, Zero, Zero, Zero };
+        /* Address */ Ptr, Reg, DAG.getTargetConstant(offset, MVT::i32),
+        /* Ops[5]  */ Zero, Zero, Zero, Zero };
     if (BrigType != Brig::BRIG_TYPE_NONE) {
       Ops[opNo++] = DAG.getTargetConstant((unsigned) BrigType, MVT::i32);
     } else {
-      if (isLoad)
+      if (isLoad) // Width qualifier.
         Ops[opNo++] = DAG.getTargetConstant((AddressSpace ==
           HSAILAS::KERNARG_ADDRESS) ? Brig::BRIG_WIDTH_ALL
                                     : Brig::BRIG_WIDTH_1, MVT::i32);
 
-      Ops[opNo++] = DAG.getTargetConstant(alignment, MVT::i32);
-      if (isLoad) opNo++; // const = 0, already in the Ops[].
+      if (isLoad) // Const qualifier.
+        Ops[opNo++] = DAG.getTargetConstant(
+          (AddressSpace == HSAILAS::KERNARG_ADDRESS) ? 1 : 0, MVT::i1);
     }
     Ops[opNo++] = Chain;
     if (InFlag.getNode())
@@ -949,22 +920,122 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     }
     SDNode *ArgNode = DAG.getMachineNode(op, dl, VTs, OpArg);
 
-    // TODO_HSA: Find a better base pointer for an argument than an UndefValue.
-    //           This way we could use vectorization of parameter loads.
-    //           A PseudoSourceValue implementation might be suitable,
-    //           though it does not provide an address space.
-    //           A ConstantNullValue is a good representation of kernarg/
-    //           arg segments, though have undesirable effects that we have
-    //           to keep track of segment layout with respect to individual
-    //           argument's alignment and have cross-parameter vectorization.
     MachinePointerInfo MPtrInfo(UndefValue::get(ArgPT), offset);
     MachineSDNode::mmo_iterator MemOp = MF.allocateMemRefsArray(1);
     MemOp[0] = MF.getMachineMemOperand(MPtrInfo,
       isLoad ? MachineMemOperand::MOLoad : MachineMemOperand::MOStore,
-      ArgVT.getStoreSize(), alignment);
+      ArgVT.getStoreSize(), alignment, AAInfo);
     cast<MachineSDNode>(ArgNode)->setMemRefs(MemOp, MemOp + 1);
 
     return SDValue(ArgNode, 0);
+}
+
+/// Recursively lower a single argument or its element.
+/// Either Ins or Outs must non-zero, which means we are doing argument load
+/// or store.
+/// ArgNo is an index to InVals and OutVals, which is advanced after the call.
+/// AS is an address space of argument, either arg or kernarg
+/// ParamPtr is a pointer value for argument to load from or store to.
+/// Offset is a value which has to be added to the pointer.
+/// If InFlag gis present lue all operations.
+/// If ChainLink is true chain link all operations.
+/// Returns last operation value.
+SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
+                                           bool ChainLink,
+                                           const SmallVectorImpl<ISD::InputArg> *Ins,
+                                           const SmallVectorImpl<ISD::OutputArg> *Outs,
+                                           SDLoc dl,
+                                           SelectionDAG &DAG,
+                                           SmallVectorImpl<SDValue> *InVals,
+                                           unsigned &ArgNo,
+                                           Type *type,
+                                           unsigned AS,
+                                           const char *ParamName,
+                                           SDValue ParamPtr,
+                                           const SmallVectorImpl<SDValue> *OutVals,
+                                           const AAMDNodes & AAInfo,
+                                           uint64_t offset) const {
+  assert((Ins == NULL && Outs != NULL) || (Ins != NULL && Outs == NULL));
+
+      Type *sType = type->getScalarType();
+
+  EVT argVT = Ins ? (*Ins)[ArgNo].VT : (*Outs)[ArgNo].VT;
+      if (sType->isIntegerTy(8)) argVT = MVT::i8;
+      else if (sType->isIntegerTy(16)) argVT = MVT::i16;
+
+  bool isLoad = Ins != NULL;
+  bool hasFlag = InFlag.getNode() != NULL;
+      SDValue ArgValue;
+
+  const VectorType *VecTy = dyn_cast<VectorType>(type);
+  const ArrayType  *ArrTy = dyn_cast<ArrayType>(type);
+  if (VecTy || ArrTy) {
+        // This assumes that char and short vector elements are unpacked in Ins.
+    unsigned num_elem = VecTy ? VecTy->getNumElements() : ArrTy->getNumElements();
+    for (unsigned i = 0; i < num_elem; ++i) {
+      bool isSExt = isLoad ? (*Ins)[ArgNo].Flags.isSExt()
+                           : (*Outs)[ArgNo].Flags.isSExt();
+      ArgValue = getArgLoadOrStore(DAG, argVT, type, isLoad, isSExt, AS, ParamPtr,
+                                   isLoad ? SDValue() : (*OutVals)[ArgNo],
+                                   i, dl, Chain, InFlag, AAInfo, offset);
+
+      if (ChainLink) Chain  = ArgValue.getValue(isLoad ? 1 : 0);
+      // Glue next vector loads regardless of input flag to favor vectorization.
+      InFlag = ArgValue.getValue(isLoad ? 2 : 1);
+      if (InVals) InVals->push_back(ArgValue);
+      ArgNo++;
+        }
+    return ArgValue;
+      }
+
+      if (type->isPointerTy()) {
+        if ( !EnableExperimentalFeatures ) {
+      Type *CT = dyn_cast<PointerType>(type)->getElementType();
+          if (const StructType *ST = dyn_cast<StructType>(CT)) {
+            OpaqueType OT = GetOpaqueType(ST);
+            if (IsImage(OT) || OT == Sampler) {
+              // Lower image and sampler kernel arg to image arg handle index. 
+              // We bias the values of image_t and sampler_t arg indices so that 
+              // we know that index values >= IMAGE_ARG_BIAS represent kernel args. 
+              // Note that if either the order of processing for kernel args  
+              // or the biasing of index values is changed here, these changes must be 
+              // reflected in HSAILPropagateImageOperands.
+              unsigned index = 
+                Subtarget->getImageHandles()->findOrCreateImageHandle(ParamName);
+              index += IMAGE_ARG_BIAS;
+              ArgValue = DAG.getConstant((index), MVT::i32);
+          if (InVals) InVals->push_back(ArgValue);
+          ArgNo++;
+          return ArgValue;
+            }
+          }
+        }  // END !EnableExperimentalFeatures
+      }
+
+  if (StructType *STy = dyn_cast<StructType>(type)) {
+    const StructLayout *SL = DL->getStructLayout(STy);
+    unsigned num_elem = STy->getNumElements();
+    for (unsigned i = 0; i < num_elem; ++i) {
+      ArgValue = LowerArgument(Chain, InFlag, ChainLink, Ins, Outs, dl, DAG,
+                               InVals, ArgNo, STy->getElementType(i), AS,
+                               ParamName, ParamPtr, OutVals, AAInfo,
+                               offset + SL->getElementOffset(i));
+      if (ChainLink) Chain  = ArgValue.getValue(isLoad ? 1 : 0);
+      if (hasFlag) InFlag = ArgValue.getValue(isLoad ? 2 : 1);
+    }
+    return ArgValue;
+  }
+
+      // Regular scalar load case.
+  bool isSExt = isLoad ? (*Ins)[ArgNo].Flags.isSExt()
+                       : (*Outs)[ArgNo].Flags.isSExt();
+  ArgValue = getArgLoadOrStore(DAG, argVT, type, isLoad, isSExt, AS, ParamPtr,
+                               isLoad ? SDValue() : (*OutVals)[ArgNo], 0, dl,
+                               Chain, InFlag, AAInfo, offset);
+  if (InVals) InVals->push_back(ArgValue);
+  ArgNo++;
+
+  return ArgValue;
 }
 
 /// LowerFormalArguments - This hook must be implemented to lower the
@@ -985,78 +1056,28 @@ HSAILTargetLowering::LowerFormalArguments(SDValue Chain,
   MachineFunction &MF = DAG.getMachineFunction();
   HSAILMachineFunctionInfo *FuncInfo = MF.getInfo<HSAILMachineFunctionInfo>();
   HSAILParamManager &PM = FuncInfo->getParamManager();
-
-  unsigned int j = 0;
-  SDValue InFlag;
+  const FunctionType *funcType = MF.getFunction()->getFunctionType();
   unsigned AS = HSAIL::isKernelFunc(MF.getFunction()) ? HSAILAS::KERNARG_ADDRESS
                                                       : HSAILAS::ARG_ADDRESS;
   MVT PtrTy = getPointerTy(AS);
 
+  Mangler Mang(DL);
+
   // Map function param types to Ins.
-  SmallVector<const Type*, 16> paramTypes;
   Function::const_arg_iterator AI = MF.getFunction()->arg_begin();
   Function::const_arg_iterator AE = MF.getFunction()->arg_end();
-  Mangler Mang(DL);
-  for(; AI != AE; ++AI) {
-      Type *type = AI->getType();
-      Type *sType = type->getScalarType();
+  for(unsigned ArgNo = 0; AI != AE; ++AI) {
+    unsigned Param = PM.addArgumentParam(AS, *AI,
+                        HSAILParamManager::mangleArg(&Mang, AI->getName()));
+    const char* ParamName = PM.getParamName(Param);
+    std::string md = (AI->getName() + ":" + ParamName + " ").str();
+    FuncInfo->addMetadata("argmap:"+ md, true);
+    SDValue ParamPtr = DAG.getTargetExternalSymbol(ParamName, PtrTy);
+    Value *mdops[] = { const_cast<Argument*>(&(*AI)) };
+    MDNode *ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
 
-      EVT argVT = Ins[j].VT;
-      if (sType->isIntegerTy(8)) argVT = MVT::i8;
-      else if (sType->isIntegerTy(16)) argVT = MVT::i16;
-
-      unsigned Param = PM.addArgumentParam(argVT.getStoreSizeInBits(),
-        HSAILParamManager::mangleArg(&Mang, AI->getName()));
-      const char* ParamName = PM.getParamName(Param);
-      std::string md = (AI->getName() + ":" + ParamName + " ").str();
-      FuncInfo->addMetadata("argmap:"+ md, true);
-      SDValue ParamValue = DAG.getTargetExternalSymbol(ParamName, PtrTy);
-      PM.addParamType(type, Param);
-      SDValue ArgValue;
-
-      if (const VectorType *VecVT = dyn_cast<VectorType>(type)) {
-        // This assumes that char and short vector elements are unpacked in Ins.
-        for (unsigned x = 0, y = VecVT->getNumElements(); x < y; ++x) {
-          ArgValue = getArgLoadOrStore(DAG, argVT, type, true,
-                                       Ins[j].Flags.isSExt(), AS, ParamValue,
-                                       SDValue(), x, dl, Chain, SDValue());
-          InVals.push_back(ArgValue);
-          j++;
-        }
-        continue;
-      }
-
-      if (type->isPointerTy()) {
-        if ( !EnableExperimentalFeatures ) {
-          const PointerType *PT = dyn_cast<PointerType>(type);
-          Type *CT = PT->getElementType();
-          if (const StructType *ST = dyn_cast<StructType>(CT)) {
-            OpaqueType OT = GetOpaqueType(ST);
-            if (IsImage(OT) || OT == Sampler) {
-              // Lower image and sampler kernel arg to image arg handle index. 
-              // We bias the values of image_t and sampler_t arg indices so that 
-              // we know that index values >= IMAGE_ARG_BIAS represent kernel args. 
-              // Note that if either the order of processing for kernel args  
-              // or the biasing of index values is changed here, these changes must be 
-              // reflected in HSAILPropagateImageOperands.
-              unsigned index = 
-                Subtarget->getImageHandles()->findOrCreateImageHandle(ParamName);
-              index += IMAGE_ARG_BIAS;
-              ArgValue = DAG.getConstant((index), MVT::i32);
-              InVals.push_back(ArgValue);
-              j++;
-              continue;
-            }
-          }
-        }  // END !EnableExperimentalFeatures
-      }
-
-      // Regular scalar load case.
-      ArgValue = getArgLoadOrStore(DAG, argVT, type, true,
-                                   Ins[j].Flags.isSExt(), AS, ParamValue,
-                                   SDValue(), 0, dl, Chain, SDValue());
-      InVals.push_back(ArgValue);
-      j++;
+    LowerArgument(Chain, SDValue(), false, &Ins, NULL, dl, DAG, &InVals, ArgNo,
+                  AI->getType(), AS, ParamName, ParamPtr, NULL, ArgMD);
   }
 
   return Chain;
@@ -1137,20 +1158,26 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   Type *retType = funcType->getReturnType();
   SDValue RetValue;
   if (retType->getTypeID() != Type::VoidTyID) {
-    RetValue = DAG.getTargetExternalSymbol(PM.getParamName(PM.addCallRetParam(
-        retType->getPrimitiveSizeInBits(), PM.mangleArg(&Mang, FuncName))),
+    if (retType->isIntegerTy(1)) // Handle bit as DWORD
+      retType = Type::getInt32Ty(retType->getContext());
+    RetValue = DAG.getTargetExternalSymbol(PM.getParamName(
+      PM.addCallRetParam(retType, PM.mangleArg(&Mang, FuncName))),
       getPointerTy(HSAILAS::ARG_ADDRESS));
-
-    const VectorType *VecVT = dyn_cast<VectorType>(retType);
 
     unsigned BrigType = (unsigned) HSAIL::HSAILgetBrigType(retType,
                                      Subtarget->is64Bit(), CLI.RetSExt);
-    if (BrigType == Brig::BRIG_TYPE_B1) BrigType = Brig::BRIG_TYPE_U32; // Store bit as DWORD
+    if (BrigType == Brig::BRIG_TYPE_B1)
+      BrigType = Brig::BRIG_TYPE_U32; // Store bit as DWORD
     SDValue SDBrigType =  DAG.getTargetConstant(BrigType, MVT::i32);
-    SDValue arrSize =  DAG.getTargetConstant(VecVT ? VecVT->getNumElements() : 1, MVT::i32);
-    SDValue ArgDeclOps[] = {  RetValue, SDBrigType, arrSize, Chain, InFlag };
+    SDValue arrSize = DAG.getTargetConstant(
+      HSAIL::getNumElementsInHSAILType(retType, *DL), MVT::i32);
+    unsigned alignment = HSAIL::HSAILgetAlignTypeQualifier(retType, *DL, false);
+    SDValue Align = DAG.getTargetConstant(alignment, MVT::i32);
+    SDValue ArgDeclOps[] = { RetValue, SDBrigType, arrSize, Align,
+                             Chain, InFlag };
     SDNode *ArgDeclNode = DAG.getMachineNode(HSAIL::arg_decl, dl, VTs,
-                            ArgDeclOps);
+                  makeArrayRef(ArgDeclOps).drop_back(InFlag.getNode() ? 0 : 1));
+    
     SDValue ArgDecl(ArgDeclNode, 0);
 
     Chain = ArgDecl.getValue(0);
@@ -1169,9 +1196,12 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     ae = calleeFunc->arg_end();
   }
 
+  MDBuilder MDB(*DAG.getContext());
   for(FunctionType::param_iterator pb = funcType->param_begin(),
     pe = funcType->param_end(); pb != pe; ++pb, ++ai, ++k) {
     Type *type = *pb;
+    if (type->isIntegerTy(1)) // Handle bit as DWORD
+      type = Type::getInt32Ty(type->getContext());
     EVT VT = Outs[j].VT;
 
     std::string ParamName;
@@ -1182,22 +1212,24 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
       ParamName = "__param_p";
       ParamName.append(itostr(k));
     }
-    SDValue StParamValue = DAG.getTargetExternalSymbol(PM.getParamName(
-        PM.addCallArgParam(VT.getStoreSizeInBits(), ParamName)),
+    SDValue StParamValue = DAG.getTargetExternalSymbol(
+      PM.getParamName(PM.addCallArgParam(type, ParamName)),
       getPointerTy(HSAILAS::ARG_ADDRESS));
-
-    VectorType *VecVT = dyn_cast<VectorType>(type);
-    unsigned num_elem = VecVT ? VecVT->getNumElements() : 1;
 
     // START array parameter declaration
     unsigned BrigType = (unsigned) HSAIL::HSAILgetBrigType(type, Subtarget->is64Bit(),
                                                     Outs[j].Flags.isSExt());
-    if (BrigType == Brig::BRIG_TYPE_B1) BrigType = Brig::BRIG_TYPE_U32; // Store bit as DWORD
+    if (BrigType == Brig::BRIG_TYPE_B1)
+      BrigType = Brig::BRIG_TYPE_U32; // Store bit as DWORD
     SDValue SDBrigType =  DAG.getTargetConstant(BrigType, MVT::i32);
-    SDValue arrSize =  DAG.getTargetConstant(num_elem, MVT::i32);
-    SDValue ArgDeclOps[] = { StParamValue, SDBrigType, arrSize, Chain, InFlag };
+    SDValue arrSize =  DAG.getTargetConstant(
+      HSAIL::getNumElementsInHSAILType(type, *DL), MVT::i32);
+    unsigned alignment = HSAIL::HSAILgetAlignTypeQualifier(type, *DL, false);
+    SDValue Align = DAG.getTargetConstant(alignment, MVT::i32);
+    SDValue ArgDeclOps[] = { StParamValue, SDBrigType, arrSize, Align,
+                             Chain, InFlag };
     SDNode *ArgDeclNode = DAG.getMachineNode(HSAIL::arg_decl, dl, VTs,
-                            ArgDeclOps);
+                  makeArrayRef(ArgDeclOps).drop_back(InFlag.getNode() ? 0 : 1));
     SDValue ArgDecl(ArgDeclNode, 0);
     Chain = ArgDecl.getValue(0);
     InFlag = ArgDecl.getValue(1);
@@ -1205,23 +1237,24 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
     VarOps.push_back(StParamValue);
 
-    j += num_elem;
+    for ( ; j < Outs.size() - 1; j++) {
+      if (Outs[j].OrigArgIndex != Outs[j + 1].OrigArgIndex)
+        break;
+    }
+    j++;
   }
 
   j = k = 0;
   for(FunctionType::param_iterator pb = funcType->param_begin(),
-    pe = funcType->param_end(); pb != pe; ++pb, ++ai, ++k) {
+    pe = funcType->param_end(); pb != pe; ++pb, ++k) {
     Type *type = *pb;
-    EVT VT = Outs[j].VT;
-    VectorType *VecVT = dyn_cast<VectorType>(type);
-    unsigned num_elem = VecVT ? VecVT->getNumElements() : 1;
-    for(unsigned int x =0; x < num_elem; ++x) {
-      Chain = getArgLoadOrStore(DAG, VT, type, false, false,
-                                HSAILAS::ARG_ADDRESS, VarOps[FirstArg + k],
-                                OutVals[j], x, dl, Chain, InFlag);
+    if (type->isIntegerTy(1)) // Handle bit as DWORD
+      type = Type::getInt32Ty(type->getContext());
+    Chain = LowerArgument(Chain, InFlag, true, NULL, &Outs, dl, DAG, NULL, j,
+                          type, HSAILAS::ARG_ADDRESS, NULL,
+                          VarOps[FirstArg + k], &OutVals,
+                          MDB.createAnonymousTBAARoot());
       InFlag = Chain.getValue(1);
-      j++;
-    }
   }
 
   // If this is a direct call, pass the chain and the callee
@@ -1242,10 +1275,16 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   Chain = DAG.getNode(HSAILISD::CALL, dl, VTs, Ops);
   InFlag = Chain.getValue(1);
 
-  // Handle result values, copying them out of physregs into vregs that
-  // we return
-  Chain = LowerCallResult(Chain, InFlag, Ins, retType, dl, DAG, InVals,
-                          RetValue);
+  // Read return value.
+  if(Ins.size() > 0) {
+    j = 0;
+    MDNode *TBAA = MDB.createTBAANode("retarg", MDB.createAnonymousTBAARoot());
+    Chain = LowerArgument(Chain, InFlag, true, &Ins, NULL, dl, DAG, &InVals, j,
+                          retType, HSAILAS::ARG_ADDRESS, NULL, RetValue, NULL,
+                          TBAA);
+    InFlag = Chain.getValue(2);
+    Chain  = Chain.getValue(1);
+  }
 
   // Create the CALLSEQ_END node
   Chain = DAG.getCALLSEQ_END(Chain,
@@ -1253,56 +1292,6 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
                              DAG.getIntPtrConstant(0, true),
                              InFlag, dl);
   return Chain;
-}
-
-// LowerCallResult - Lower the result values of an ISD::CALL into the
-// appropriate copies out of appropriate physical registers.  This assumes that
-// Chain/InFlag are the input chain/flag to use, and that TheCall is the call
-// being lowered.  The returns a SDNode with the same number of values as the
-// ISD::CALL.
-SDValue HSAILTargetLowering::LowerCallResult(SDValue Chain,
-                             SDValue& InFlag,
-                             const SmallVectorImpl<ISD::InputArg> &Ins,
-                             Type *type,
-                             SDLoc dl,
-                             SelectionDAG &DAG,
-                             SmallVectorImpl<SDValue> &InVals,
-                             SDValue retVariable) const
-{
-  if(Ins.size() > 0) {
-    // if size is more than 1, then it must be a vector
-    for(unsigned i=0; i != Ins.size(); ++i) {
-      SDValue ArgValue = getArgLoadOrStore(DAG, Ins[i].VT, type, true,
-                                           Ins[i].Flags.isSExt(),
-                                           HSAILAS::ARG_ADDRESS, retVariable,
-                                           SDValue(), i, dl, Chain, InFlag);
-      Chain  = ArgValue.getValue(1);
-      InFlag = ArgValue.getValue(2);
-      InVals.push_back(ArgValue);
-    }
-  }
-
-  return Chain;
-}
-
-/// LowerOperationWrapper - This callback is invoked by the type legalizer
-/// to legalize nodes with an illegal operand type but legal result types.
-/// It replaces the LowerOperation callback in the type Legalizer.
-/// The reason we can not do away with LowerOperation entirely is that
-/// LegalizeDAG isn't yet ready to use this callback.
-/// TODO: Consider merging with ReplaceNodeResults.
-
-/// The target places new result values for the node in Results (their number
-/// and types must exactly match those of the original return values of
-/// the node), or leaves Results empty, which indicates that the node is not
-/// to be custom lowered after all.
-/// The default implementation calls LowerOperation.
-void
-HSAILTargetLowering::LowerOperationWrapper(SDNode *N,
-                                           SmallVectorImpl<SDValue> &Results,
-                                           SelectionDAG &DAG) const
-{
-  return TargetLowering::LowerOperationWrapper(N, Results, DAG);
 }
 
 #define LOWER(A) \
