@@ -558,8 +558,25 @@ bool BRIGAsmPrinter::canInitHSAILAddressSpace(const GlobalVariable* gv) const {
 }
 
 /// EmitGlobalVariable - Emit the specified global variable to the .s file.
-void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
+void BRIGAsmPrinter::EmitGlobalVariable(GlobalVariable *GV)
 {
+  unsigned as = GV->getType()->getAddressSpace();
+  if (GV->isConstant() && (as == HSAILAS::PRIVATE_ADDRESS ||
+                           as == HSAILAS::GLOBAL_ADDRESS)) {
+    // Change addrspace of constant global variable which is needed to
+    // emit it.
+    // Also promote global to readonly if memory is constant.
+    GV->mutateType(PointerType::get(GV->getType()->getElementType(),
+                                    HSAILAS::CONSTANT_ADDRESS));
+    for (GlobalVariable::use_iterator UI = GV->use_begin(), UE = GV->use_end();
+         UI != UE; ++UI) {
+      if (GetElementPtrInst *GEP = dyn_cast<GetElementPtrInst>(*UI)) {
+        GEP->mutateType(PointerType::get(GEP->getType()->getElementType(),
+                        HSAILAS::CONSTANT_ADDRESS));
+      }
+    }
+  }
+
   if (HSAIL::isIgnoredGV(GV))
     return;
 
@@ -1182,7 +1199,7 @@ void BRIGAsmPrinter::EmitStartOfAsmFile(Module &M) {
     }
   }
 
-  for (Module::const_global_iterator I = M.global_begin(), E = M.global_end();
+  for (Module::global_iterator I = M.global_begin(), E = M.global_end();
        I != E; ++I)
     EmitGlobalVariable(I);
 
