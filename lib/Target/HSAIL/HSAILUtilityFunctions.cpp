@@ -857,6 +857,7 @@ static SDValue generateFenceIntrinsicHelper(SDValue Chain, SDLoc dl,
   return CurDAG.getNode(ISD::INTRINSIC_VOID, dl, MVT::Other, Ops);
 }
 
+
 SDValue generateFenceIntrinsic(SDValue Chain, SDLoc dl, unsigned memSeg,
         unsigned brigMemoryOrder, unsigned brigMemoryScope, SelectionDAG &CurDAG) {
   switch(memSeg) {
