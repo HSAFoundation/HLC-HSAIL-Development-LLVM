@@ -108,7 +108,14 @@ size_t HSAILgetNumElements(llvm::ArrayType * const AT);
 size_t HSAILgetNumElements(llvm::VectorType * const VT);
 size_t HSAILgetNumElements(llvm::PointerType * const PT);
 
+uint64_t getNumElementsInHSAILType(llvm::Type* type,
+                                   const llvm::DataLayout& dataLayout);
+bool HSAILrequiresArray(llvm::Type* type);
+
 Brig::BrigType16_t HSAILgetBrigType(llvm::Type* type, bool is64Bit, bool Signed = false);
+
+unsigned HSAILgetAlignTypeQualifier(llvm::Type *ty, const llvm::DataLayout& DL,
+                                    bool isPreferred);
 
 const llvm::Value *HSAILgetBasePointerValue(const llvm::Value *V);
 const llvm::Value *HSAILgetBasePointerValue(const llvm::MachineInstr *MI);
@@ -131,8 +138,6 @@ llvm::MachineOperand &getIndex(llvm::MachineInstr *MI);
 llvm::MachineOperand &getOffset(llvm::MachineInstr *MI);
 llvm::MachineOperand &getWidth(llvm::MachineInstr *MI);
 llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI);
-llvm::MachineOperand &getLdStAlign(llvm::MachineInstr *MI);
-llvm::MachineOperand &getLdStAlign(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getLoadConstQual(llvm::MachineInstr *MI);
 llvm::MachineOperand &getLoadConstQual(const llvm::MachineInstr *MI);
 

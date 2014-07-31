@@ -79,9 +79,6 @@ public:
     return "HSAIL DAG->DAG Instruction Selection";
   }
 
-  virtual void
-  EmitFunctionEntryCode();
-
   virtual bool
   IsProfitableToFold(SDValue N, SDNode *U, SDNode *Root) const;
 
@@ -121,48 +118,6 @@ private:
              SDValue &Offset);
 
   bool SelectGPROrImm(SDValue In, SDValue &Src) const;
-
-  bool
-  TryFoldLoad(SDNode *P,
-              SDValue N,
-              SDValue &Base,
-              SDValue &Scale,
-              SDValue &Index,
-              SDValue &Disp,
-              SDValue &Segment);
-
-  void
-  EmitSpecialCodeForMain(MachineBasicBlock *BB, MachineFrameInfo *MFI);
-
-  /// getGlobalBaseReg - Return an SDNode that returns the value of
-  /// the global base register. Output instructions required to
-  /// initialize the global base register, if necessary.
-  ///
-  SDNode* getGlobalBaseReg();
-
-  /// getTargetMachine - Return a reference to the TargetMachine, casted
-  /// to the target-specific type.
-  const HSAILTargetMachine&
-  getTargetMachine()
-  {
-    assert(!"When do we hit this?");
-    return static_cast<const HSAILTargetMachine &>(TM);
-  }
-
-  /// getInstrInfo - Return a reference to the TargetInstrInfo, casted
-  /// to the target-specific type.
-  const HSAILInstrInfo*
-  getInstrInfo()
-  {
-    assert(!"When do we hit this?");
-    return NULL;
-  }
-
-  /// SelectInlineAsmMemoryOperand - Implement addressing mode selection for
-  /// inline asm expressions.
-  virtual bool SelectInlineAsmMemoryOperand(const SDValue &Op,
-                                            char ConstraintCode,
-                                            std::vector<SDValue> &OutOps);
 
   bool isGlobalStore(StoreSDNode *N) const;
   bool isGroupStore(StoreSDNode *N) const;
@@ -206,36 +161,6 @@ HSAILDAGToDAGISel::PreprocessISelDAG()
   return;
 }
 
-/// EmitSpecialCodeForMain - Emit any code that needs to be executed only in
-/// the main function.
-void
-HSAILDAGToDAGISel::EmitSpecialCodeForMain(MachineBasicBlock *BB,
-                                          MachineFrameInfo *MFI)
-{
-  assert(!"When do we hit this?");
-}
-
-void
-HSAILDAGToDAGISel::EmitFunctionEntryCode() {
-  // If this is main, emit special code for main.
-  if (const Function *Fn = MF->getFunction())
-    if (Fn->hasExternalLinkage() && Fn->getName() == "main")
-      EmitSpecialCodeForMain(MF->begin(), MF->getFrameInfo());
-}
-
-bool
-HSAILDAGToDAGISel::TryFoldLoad(SDNode *P,
-                               SDValue N,
-                               SDValue &Base,
-                               SDValue &Scale,
-                               SDValue &Index,
-                               SDValue &Disp,
-                               SDValue &Segment)
-{
-  assert(!"When do we hit this?");
-  return false;
-}
-
 bool HSAILDAGToDAGISel::SelectGPROrImm(SDValue In, SDValue &Src) const {
   if (ConstantSDNode *C = dyn_cast<ConstantSDNode>(In))
     Src = CurDAG->getTargetConstant(C->getAPIntValue(), C->getValueType(0));
@@ -245,16 +170,6 @@ bool HSAILDAGToDAGISel::SelectGPROrImm(SDValue In, SDValue &Src) const {
     Src = In;
 
   return true;
-}
-
-/// getGlobalBaseReg - Return an SDNode that returns the value of
-/// the global base register. Output instructions required to
-/// initialize the global base register, if necessary.
-SDNode*
-HSAILDAGToDAGISel::getGlobalBaseReg()
-{
-  assert(!"When do we hit this?");
-  return NULL;
 }
 
 bool
@@ -518,61 +433,44 @@ SDNode* HSAILDAGToDAGISel::SelectCrossLaneIntrinsic(SDNode *Node)
 }
 
 SDNode* HSAILDAGToDAGISel::SelectLdKernargIntrinsic(SDNode *Node) {
+  MachineFunction &MF = CurDAG->getMachineFunction();
+  HSAILMachineFunctionInfo *FuncInfo = MF.getInfo<HSAILMachineFunctionInfo>();
+  HSAILParamManager &PM = FuncInfo->getParamManager();
   bool hasChain = Node->getNumOperands() > 2;
   unsigned opShift = hasChain ? 1 : 0;
-  unsigned IntNo = (unsigned) Node->getConstantOperandVal(opShift);
+  const HSAILTargetLowering *TL
+    = static_cast<const HSAILTargetLowering *>(getTargetLowering());
 
-  unsigned opc;
-  EVT VT;
-  Type *Ty;
-  if (IntNo == HSAILIntrinsic::HSAIL_ld_kernarg_u32) {
-    opc = HSAIL::kernarg_ld_u32_v1;
-    VT = MVT::i32;
-    Ty = Type::getInt32Ty(*CurDAG->getContext());
-  } else {
-    opc = HSAIL::kernarg_ld_u64_v1;
-    VT = MVT::i64;
-    Ty = Type::getInt64Ty(*CurDAG->getContext());
-  }
+  EVT VT = Node->getValueType(0);
+  Type *Ty = Type::getIntNTy(*CurDAG->getContext(), VT.getSizeInBits());
   SDValue Addr = Node->getOperand(1 + opShift);
-  unsigned size = VT.getStoreSize();
-  unsigned alignment = size;
   int64_t offset = 0;
-  SDValue Base = CurDAG->getRegister(0, Subtarget->getTargetLowering()->getPointerTy());
-  SDValue Reg  = Base;
-  // TODO_HSA: match a constant address argument to the parameter through
-  //           functions's argument map (taking argument alignment into account).
-  //           Match is not possible if we are accesing beyond a known kernel
-  //           argument space, or if we accessing from a non-inlined function.
-  //           If no match is possible a kernargbaseptr instruction has to be
-  //           used as a base address instead on NoReg value.
+  MVT PtrTy = TL->getPointerTy(HSAILAS::KERNARG_ADDRESS);
+  MDNode *ArgMD = nullptr;
   if (isa<ConstantSDNode>(Addr)) {
     offset = Node->getConstantOperandVal(1 + opShift);
-    if (offset & (size - 1))
-      alignment = 1;
+    // Match a constant address argument to the parameter through functions's
+    // argument map (taking argument alignment into account).
+    // Match is not possible if we are accesing beyond a known kernel argument
+    // space, if we accessing from a non-inlined function, or if there is an
+    // opaque argument with unknwon size before requested offset.
+    unsigned param = UINT_MAX;
+    if (isKernelFunc())
+      param = PM.getParamByOffset(offset);
+    if (param != UINT_MAX) {
+      Addr = CurDAG->getTargetExternalSymbol(PM.getParamName(param), PtrTy);
+      Value *mdops[] = { const_cast<Argument*>(PM.getParamArg(param)) };
+      ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
+    } else {
+      Addr = SDValue();
+    }
   }
-  else if (Addr.isTargetOpcode())
-    Base = Addr;
-  else
-    Reg = Addr;
-  SDValue Offset = CurDAG->getTargetConstant(offset, VT);
-  SDValue OneDw = CurDAG->getTargetConstant(1, MVT::i1);
-  SDValue OneBit = CurDAG->getTargetConstant(1, MVT::i1);
-  SDValue Align = CurDAG->getTargetConstant(alignment, MVT::i32);
-  SDValue Ops[] = { Base, Reg, Offset,              /* Address */
-                    OneDw, Align, OneBit,           /* Width, Align, Const */
-                    hasChain ? Node->getOperand(0) : CurDAG->getEntryNode()  };
-  SDNode *Load = CurDAG->SelectNodeTo(Node, opc, VT, MVT::Other, Ops);
 
-  // Set machine memory operand
-  PointerType *ArgPT = PointerType::get(Ty, HSAILAS::KERNARG_ADDRESS);
-  MachinePointerInfo MPtrInfo(UndefValue::get(ArgPT));
-  MachineFunction &MF = CurDAG->getMachineFunction();
-  MachineSDNode::mmo_iterator MemOp = MF.allocateMemRefsArray(1);
-  MemOp[0] = MF.getMachineMemOperand(MPtrInfo, MachineMemOperand::MOLoad,
-                                     size, alignment);
-  cast<MachineSDNode>(Load)->setMemRefs(MemOp, MemOp + 1);
-  return Load;
+  SDValue Chain = hasChain ? Node->getOperand(0) : CurDAG->getEntryNode();
+  return TL->getArgLoadOrStore(*CurDAG, VT, Ty, true, false,
+                               HSAILAS::KERNARG_ADDRESS, Addr,
+                               SDValue(), 0, SDLoc(Node),
+                               Chain, SDValue(), ArgMD, offset).getNode();
 }
 
 SDValue HSAILDAGToDAGISel::getBRIGMemorySegment(unsigned memSeg) {
@@ -757,7 +655,7 @@ SDNode* HSAILDAGToDAGISel::SelectAtomic(SDNode *Node, bool bitwiseAtomicOp,
                                         bool isSignedOp)
 {
   SDValue Chain = Node->getOperand(0);
-  DebugLoc dl = Node->getDebugLoc();
+  SDLoc dl(Node);
   SDNode *ResNode;
   MemSDNode *Mn = dyn_cast<MemSDNode>(Node);
   SDValue memOrder = getBRIGMemoryOrder(Mn->getOrdering());
@@ -867,15 +765,6 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
       dbgs() << '\n');
 
   return ResNode;
-}
-
-bool
-HSAILDAGToDAGISel::SelectInlineAsmMemoryOperand(const SDValue &Op,
-    char ConstraintCode,
-    std::vector<SDValue> &OutOps)
-{
-  assert(!"When do we hit this?");
-  return false;
 }
 
 bool HSAILDAGToDAGISel::IsOREquivalentToADD(SDValue Op)

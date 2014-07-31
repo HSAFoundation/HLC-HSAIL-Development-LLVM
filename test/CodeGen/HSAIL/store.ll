@@ -51,7 +51,7 @@ define void @store_i8(i8 addrspace(1)* %out, i8 %in) {
 ; FUNC-LABEL: {{^}}prog function &store_i16
 ; HSAIL-DAG: ld_arg_align(2)_u16 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL: st_global_u16 [[IN]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_global_align(2)_u16 [[IN]], {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_i16(i16 addrspace(1)* %out, i16 %in) {
   store i16 %in, i16 addrspace(1)* %out
@@ -61,7 +61,7 @@ define void @store_i16(i16 addrspace(1)* %out, i16 %in) {
 ; FUNC-LABEL: {{^}}prog function &store_i32
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL: st_global_u32 [[IN]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_global_align(4)_u32 [[IN]], {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_i32(i32 addrspace(1)* %out, i32 %in) {
   store i32 %in, i32 addrspace(1)* %out
@@ -103,7 +103,7 @@ define void @store_v4i16(<4 x i16> addrspace(1)* %out, <4 x i32> %in) {
 ; FUNC-LABEL: {{^}}prog function &store_f32
 ; HSAIL-DAG: ld_arg_align(4)_f32 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL: st_global_f32 [[IN]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_global_align(4)_f32 [[IN]], {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_f32(float addrspace(1)* %out, float %in) {
   store float %in, float addrspace(1)* %out
@@ -113,7 +113,7 @@ define void @store_f32(float addrspace(1)* %out, float %in) {
 ; FUNC-LABEL: {{^}}prog function &store_f64
 ; HSAIL-DAG: ld_arg_align(8)_f64 [[IN:\$d[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL: st_global_f64 [[IN]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_global_align(8)_f64 [[IN]], {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_f64(double addrspace(1)* %out, double %in) {
   store double %in, double addrspace(1)* %out
@@ -203,7 +203,7 @@ define void @store_local_i8(i8 addrspace(3)* %out, i8 %in) {
 ; FUNC-LABEL: {{^}}prog function &store_local_i16
 ; HSAIL-DAG: ld_arg_align(2)_u16 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL: st_group_u16 [[IN]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_group_align(2)_u16 [[IN]], {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_local_i16(i16 addrspace(3)* %out, i16 %in) {
   store i16 %in, i16 addrspace(3)* %out
@@ -213,7 +213,7 @@ define void @store_local_i16(i16 addrspace(3)* %out, i16 %in) {
 ; FUNC-LABEL: {{^}}prog function &store_local_i32
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL: st_group_u32 [[IN]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_group_align(4)_u32 [[IN]], {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_local_i32(i32 addrspace(3)* %out, i32 %in) {
   store i32 %in, i32 addrspace(3)* %out
@@ -285,7 +285,7 @@ define void @store_private_i8(i8* %out, i8 %in) {
 ; FUNC-LABEL: {{^}}prog function &store_private_i16
 ; HSAIL-DAG: ld_arg_align(2)_u16 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL: st_private_u16 [[IN]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_private_align(2)_u16 [[IN]], {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_private_i16(i16* %out, i16 %in) {
   store i16 %in, i16* %out
@@ -295,7 +295,7 @@ define void @store_private_i16(i16* %out, i16 %in) {
 ; FUNC-LABEL: {{^}}prog function &store_private_i32
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL: st_private_u32 [[IN]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_private_align(4)_u32 [[IN]], {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_private_i32(i32* %out, i32 %in) {
   store i32 %in, i32* %out
@@ -367,7 +367,7 @@ define void @store_flat_i8(i8 addrspace(4)* %out, i8 %in) {
 ; FUNC-LABEL: {{^}}prog function &store_flat_i16
 ; HSAIL-DAG: ld_arg_align(2)_u16 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL: st_u16 [[IN]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_align(2)_u16 [[IN]], {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_flat_i16(i16 addrspace(4)* %out, i16 %in) {
   store i16 %in, i16 addrspace(4)* %out
@@ -377,7 +377,7 @@ define void @store_flat_i16(i16 addrspace(4)* %out, i16 %in) {
 ; FUNC-LABEL: {{^}}prog function &store_flat_i32
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL: st_u32 [[IN]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_align(4)_u32 [[IN]], {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_flat_i32(i32 addrspace(4)* %out, i32 %in) {
   store i32 %in, i32 addrspace(4)* %out

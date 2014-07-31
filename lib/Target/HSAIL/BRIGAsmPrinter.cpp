@@ -314,8 +314,6 @@ template <Brig::BrigTypeX BrigTypeId> void StoreInitializer::pushValueImpl(
   m_data.push_back(value);
 }
 
-uint64_t getNumElementsInHSAILType(Type* type, const DataLayout& dataLayout);
-
 void StoreInitializer::initVarWithAddress(const Value *V, const std::string Var,
                                           const APInt& Offset) {
   assert(V->hasName());
@@ -417,7 +415,8 @@ void StoreInitializer::append(const Constant *CV, const std::string Var) {
     break;
 
   case Value::ConstantAggregateZeroVal:
-    m_reqNumZeroes += getNumElementsInHSAILType(CV->getType(),m_asmPrinter.getDataLayout());
+    m_reqNumZeroes += HSAIL::getNumElementsInHSAILType(CV->getType(),
+                                                  m_asmPrinter.getDataLayout());
     break;
 
   case Value::ConstantExprVal: {
@@ -525,45 +524,6 @@ BRIGAsmPrinter::~BRIGAsmPrinter() {
   delete mDwarfFileStream;
 }
 
-static unsigned getAlignTypeQualifier(Type *ty, const DataLayout& DL) {
-  unsigned align = 0;
-
-  if (StructType *STy = dyn_cast<StructType>(ty)) {
-    // Scan members to find type with largest alignment requirement
-    for (StructType::element_iterator I = STy->element_begin(),
-           E = STy->element_end(); I != E; ++I) {
-      Type* elemTy = *I;
-      unsigned aa = getAlignTypeQualifier(elemTy, DL);
-      if (aa > align) {
-        align = aa;
-      }
-    }
-  } else if (ArrayType *ATy = dyn_cast<ArrayType>(ty)) {
-    align = getAlignTypeQualifier(ATy->getElementType(), DL);
-  } else if (IsImage(ty) || IsSampler(ty)) {
-    return 8;
-  }
-
-  align = DL.getPrefTypeAlignment(ty);
-
-  switch (align) {
-  case 1:
-  case 2:
-  case 4:
-  case 8:
-  case 16:
-  case 32:
-  case 64:
-  case 128:
-    break;
-
-  default:
-    llvm_unreachable("invalid align-type qualifier");
-  }
-
-  return align;
-}
-
 Brig::BrigSegment8_t BRIGAsmPrinter::getHSAILSegment(unsigned AddressSpace)
                                                      const {
   switch (AddressSpace) {
@@ -597,43 +557,6 @@ bool BRIGAsmPrinter::canInitHSAILAddressSpace(const GlobalVariable* gv) const {
   return canInit;
 }
 
-uint64_t getNumElementsInHSAILType(Type* type, const DataLayout& dataLayout) {
-  switch(type->getTypeID()) {
-  case Type::IntegerTyID:
-  case Type::PointerTyID:
-  case Type::FloatTyID:
-  case Type::DoubleTyID: return 1;
-  case Type::VectorTyID: {
-    VectorType *vt = cast<VectorType>(type);
-    uint64_t allocatedSize = dataLayout.getTypeAllocSize(type);
-    uint64_t elementSize = dataLayout.getTypeAllocSize(vt->getElementType());
-    return (allocatedSize/elementSize);
-  }
-  case Type::ArrayTyID: {
-    const ArrayType *at = cast<ArrayType>(type);
-    return at->getNumElements() * getNumElementsInHSAILType(at->getElementType(),dataLayout);
-  }
-  case Type::StructTyID: {
-    StructType *st= cast<StructType>(type);
-    const StructLayout *layout = dataLayout.getStructLayout(st);
-    return layout->getSizeInBytes();
-  }
-  default: assert(!"Unhandled type");
-  }
-  return 0;
-}
-
-bool requireHSAILArray(Type* type) {
-  switch(type->getTypeID()) {
-  case Type::VectorTyID:
-  case Type::ArrayTyID:
-  case Type::StructTyID:
-    return true;
-  default:
-    return false;
-  }
-}
-
 /// EmitGlobalVariable - Emit the specified global variable to the .s file.
 void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
 {
@@ -656,7 +579,7 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
    // variable will be changed to i8 here.
     ty = Type::getInt8Ty(GV->getContext());
   }
-  bool const isArray = requireHSAILArray(ty);
+  const bool isArray = HSAIL::HSAILrequiresArray(ty);
 
   // TODO_HSA: pending BRIG_LINKAGE_STATIC implementation in the Finalizer
   HSAIL_ASM::DirectiveVariable globalVar =
@@ -670,11 +593,11 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   globalVar.modifier().isDefinition() = 1;
 
   globalVar.modifier().isArray() = isArray;
-  globalVar.dim() = isArray ? getNumElementsInHSAILType(ty,DL) : 0;
+  globalVar.dim() = isArray ? HSAIL::getNumElementsInHSAILType(ty, DL) : 0;
   // Align arrays at least by 4 bytes
   unsigned align_value = std::max((globalVar.dim() > 1) ? 4U : 0U,
     std::max(GV->getAlignment(),
-             getAlignTypeQualifier(GV->getType()->getElementType(), DL)));
+             HSAIL::HSAILgetAlignTypeQualifier(GV->getType()->getElementType(), DL, true)));
   globalVar.align() = getBrigAlignment(align_value);
 
   globalVariableOffsets[GV] = globalVar.brigOffset();
@@ -912,7 +835,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitLdStArg(const MachineInstr *MI, bool isLoad)
   std::string sym("%");
   sym += oi++->getSymbolName();
   HSAIL_ASM::OperandReg reg;
-  if (oi->isReg())
+  if (oi->isReg() && oi->getReg() != 0)
     reg = getBrigReg(*oi);
   oi++; oi++; // skip reg and offset (offset is taken from MMO).
   m_opndList.push_back(brigantine
@@ -1405,19 +1328,20 @@ HSAIL_ASM::DirectiveVariable BRIGAsmPrinter::EmitLocalVariable(
     type = Type::getInt32Ty(GV->getContext());
   }
   if (OT == NotOpaque)
-    num_elem = getNumElementsInHSAILType(type, DL);
+    num_elem = HSAIL::getNumElementsInHSAILType(type, DL);
   HSAIL_ASM::DirectiveVariable var;
   if (num_elem > 1) {
      var = brigantine.addArrayVariable(("%" + GV->getName()).str(),num_elem,
            segment, HSAIL::HSAILgetBrigType(type, Subtarget->is64Bit()));
     // Align arrays at least by 4 bytes
     var.align() = getBrigAlignment(std::max((var.dim() > 1) ? 4U : 0U,
-                      std::max(GV->getAlignment(),
-                      getAlignTypeQualifier(type, getDataLayout()))));
+                                            std::max(GV->getAlignment(),
+                                                     HSAIL::HSAILgetAlignTypeQualifier(type, getDataLayout(), true))));
   } else {
     var = brigantine.addVariable(("%" + GV->getName()).str(),
-           segment, HSAIL::HSAILgetBrigType(type, Subtarget->is64Bit()));
-    var.align() = getBrigAlignment(getAlignTypeQualifier(type,getDataLayout()));
+      segment, HSAIL::HSAILgetBrigType(type, Subtarget->is64Bit()));
+    var.align() = getBrigAlignment(HSAIL::HSAILgetAlignTypeQualifier(type,
+                                     getDataLayout(), true));
   }
   var.allocation() = Brig::BRIG_ALLOCATION_AUTOMATIC;
   var.linkage() = Brig::BRIG_LINKAGE_FUNCTION;
@@ -1603,17 +1527,18 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
 
   // construct return symbol
   HSAIL_ASM::DirectiveVariable retParam;
-  if (const VectorType *VT = dyn_cast<VectorType>(type)) {
-    retParam = brigantine.addArrayVariable(ret, VT->getNumElements(),
-      Brig::BRIG_SEGMENT_ARG, HSAIL::HSAILgetBrigType(memType, Subtarget->is64Bit(),
-                                               isSExt));
+  if (HSAIL::HSAILrequiresArray(type)) {
+    retParam = brigantine.addArrayVariable(ret,
+        HSAIL::getNumElementsInHSAILType(type, getDataLayout()),
+        Brig::BRIG_SEGMENT_ARG,
+        HSAIL::HSAILgetBrigType(memType, Subtarget->is64Bit(), isSExt));
   } else {
     retParam = brigantine.addVariable(ret, Brig::BRIG_SEGMENT_ARG,
                       HSAIL::HSAILgetBrigType(memType, Subtarget->is64Bit(), isSExt));
   }
   retParam.align() = getBrigAlignment(std::max(
-    getAlignTypeQualifier(memType, getDataLayout()),
-    getAlignTypeQualifier(type, getDataLayout())));
+    HSAIL::HSAILgetAlignTypeQualifier(memType, getDataLayout(), false),
+    HSAIL::HSAILgetAlignTypeQualifier(type, getDataLayout(), false)));
   brigantine.addOutputParameter(retParam);
 }
 
@@ -1643,27 +1568,28 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
     sym = brigantine.addSampler(name, symSegment);
     sym.align() = Brig::BRIG_ALIGNMENT_8;
   } else {
-    const VectorType *VT = dyn_cast<VectorType>(type);
     // Handle bit argument as DWORD
     Type* memType = type->getScalarType();
     if (memType->isIntegerTy(1))
       memType = Type::getInt32Ty(type->getContext());
-    if (VT) {
-      sym = brigantine.addArrayVariable(name, VT->getNumElements(), symSegment,
-        HSAIL::HSAILgetBrigType(memType, Subtarget->is64Bit(), isSExt));
+    if (HSAIL::HSAILrequiresArray(type)) {
+      sym = brigantine.addArrayVariable(name,
+          HSAIL::getNumElementsInHSAILType(type, getDataLayout()),
+          symSegment, HSAIL::HSAILgetBrigType(memType, Subtarget->is64Bit(), isSExt));
       // TODO_HSA: workaround for RT bug.
       // RT does not read argument alignment from BRIG, so if we align vectors
       // on a full vector size that will cause mismatch between kernarg offsets
       // in RT and finalizer.
       // The line below has to be removed as soon as RT is fixed.
-      if (isKernel) type = VT->getElementType();
+      if (isKernel && type->isVectorTy())
+        type = type->getVectorElementType();
     } else {
       sym = brigantine.addVariable(name, symSegment,
                       HSAIL::HSAILgetBrigType(memType, Subtarget->is64Bit(), isSExt));
     }
     sym.align() = getBrigAlignment(
-      std::max(getAlignTypeQualifier(type, getDataLayout()),
-               getAlignTypeQualifier(memType, getDataLayout())));
+      std::max(HSAIL::HSAILgetAlignTypeQualifier(type, getDataLayout(), false),
+               HSAIL::HSAILgetAlignTypeQualifier(memType, getDataLayout(), false)));
   }
 
   uint64_t rv = sym.brigOffset();
@@ -2036,7 +1962,7 @@ void BRIGAsmPrinter::BrigEmitQualifiers(const MachineInstr *MI, unsigned opNum,
   assert(inst);
 
   if (EnableUniformOperations && HSAIL::isLoad(MI)) {
-    assert(opNum + 2 < MI->getNumOperands());
+    assert(opNum + 1 < MI->getNumOperands());
 
     // Emit width
     const MachineOperand &width_op = HSAIL::getWidth(MI);
@@ -2059,8 +1985,9 @@ void BRIGAsmPrinter::BrigEmitQualifiers(const MachineInstr *MI, unsigned opNum,
   }
 
   // Emit _align(n) attribute for loads and stores
-  if (HSAIL::isLoad(MI) || HSAIL::isStore(MI)) {
-    inst.align() = getBrigAlignment(HSAIL::getLdStAlign(MI).getImm());
+  if ((HSAIL::isLoad(MI) || HSAIL::isStore(MI)) && MI->hasOneMemOperand()) {
+    const MachineMemOperand *MMO = *MI->memoperands_begin();
+    inst.align() = getBrigAlignment(MMO->getAlignment());
   }
 }
 
@@ -2091,10 +2018,12 @@ void BRIGAsmPrinter::BrigEmitVecArgDeclaration(const MachineInstr *MI) {
   MachineOperand symb      = MI->getOperand(0);
   MachineOperand brig_type = MI->getOperand(1);
   MachineOperand size      = MI->getOperand(2);
+  MachineOperand align     = MI->getOperand(3);
 
   assert( symb.getType()      == MachineOperand::MO_ExternalSymbol );
   assert( brig_type.getType() == MachineOperand::MO_Immediate );
   assert( size.getType()      == MachineOperand::MO_Immediate );
+  assert( align.getType()     == MachineOperand::MO_Immediate );
 
   std::ostringstream stream;
   stream << "%" << symb.getSymbolName();
@@ -2106,7 +2035,7 @@ void BRIGAsmPrinter::BrigEmitVecArgDeclaration(const MachineInstr *MI) {
     brigantine.addArrayVariable(stream.str(), num_elem, Brig::BRIG_SEGMENT_ARG, brigType) :
     brigantine.addVariable(stream.str(), Brig::BRIG_SEGMENT_ARG, brigType);
 
-  vec_arg.align() = getBrigAlignment(HSAIL_ASM::getBrigTypeNumBytes(brigType) * num_elem);
+  vec_arg.align() = getBrigAlignment(align.getImm());
   vec_arg.modifier().isDefinition() = true;
   vec_arg.allocation() = Brig::BRIG_ALLOCATION_AUTOMATIC;
   vec_arg.linkage() = Brig::BRIG_LINKAGE_ARG;

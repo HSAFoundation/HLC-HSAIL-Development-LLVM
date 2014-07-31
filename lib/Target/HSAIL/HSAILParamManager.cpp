@@ -13,6 +13,7 @@
 
 #include "HSAIL.h"
 #include "HSAILParamManager.h"
+#include "HSAILOpaqueTypes.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/ADT/StringRef.h"
@@ -21,9 +22,6 @@
 #include <sstream>
 
 using namespace llvm;
-
-HSAILParamManager::HSAILParamManager() {
-}
 
 HSAILParamManager::~HSAILParamManager() {
   // Special handling for teardown of ParamNames
@@ -35,21 +33,18 @@ HSAILParamManager::~HSAILParamManager() {
   ParamNames.clear();
 }
 
-unsigned HSAILParamManager::addParam(HSAILParamType Type, unsigned Size, const StringRef ParamName) {
+unsigned HSAILParamManager::addParam(HSAILParamType ParamType, Type *Ty,
+                                     const StringRef ParamName) {
   HSAILParam Param;
-  Param.Type = Type;
-  Param.Size = Size;
-#ifndef ANDROID
-  SmallVector<unsigned, 4>* ParamList = nullptr;
-  const char* DefName = nullptr;
-#else
+  Param.Type = ParamType;
+  Param.Arg = NULL;
   SmallVector<unsigned, 4>* ParamList = 0;
   const char* DefName = 0;
-#endif
 
   std::string Name;
 
-  switch (Type) {
+  switch (ParamType) {
+  case HSAIL_PARAM_TYPE_KERNARG:
   case HSAIL_PARAM_TYPE_ARGUMENT:
     ParamList = &ArgumentParams;
     DefName = "__arg_p";
@@ -78,29 +73,54 @@ unsigned HSAILParamManager::addParam(HSAILParamType Type, unsigned Size, const S
     Name = ParamName;
   }
 
+  unsigned prev_offset = 0;
+  unsigned prev_size = 0;
+  if (ParamList->size() > 0) {
+    unsigned prev_param = (*ParamList)[ParamList->size() - 1];
+    prev_offset = getParamOffset(prev_param);
+    prev_size = getParamSize(prev_param);
+  }
+  if (prev_offset == UINT_MAX || GetOpaqueType(Ty)) {
+    Param.Offset = UINT_MAX;
+  } else {
+    unsigned alignment = DL->getABITypeAlignment(Ty);
+    // W/a for RT alignment of vectors to element size:
+    if (ParamType == HSAIL_PARAM_TYPE_KERNARG && Ty->isVectorTy())
+      alignment = DL->getABITypeAlignment(Ty->getVectorElementType());
+    assert(alignment != 0);
+    Param.Offset = (prev_offset + prev_size + alignment - 1) & ~(alignment - 1);
+  }
+
   unsigned Index = AllParams.size();
   AllParams[Index] = Param;
   ParamList->push_back(Index);
 
   addParamName(Name, Index);
+  addParamType(Ty, Index);
 
   return Index;
 }
 
-unsigned HSAILParamManager::addArgumentParam(unsigned Size, const StringRef ParamName) {
-  return addParam(HSAIL_PARAM_TYPE_ARGUMENT, Size, ParamName);
+unsigned HSAILParamManager::addArgumentParam(unsigned AS, const Argument &Arg,
+                                             const StringRef ParamName) {
+  unsigned Param = addParam(
+    (AS == HSAILAS::ARG_ADDRESS) ? HSAIL_PARAM_TYPE_ARGUMENT
+                                 : HSAIL_PARAM_TYPE_KERNARG,
+    Arg.getType(), ParamName);
+  AllParams.find(Param)->second.Arg = &Arg;
+  return Param;
 }
 
-unsigned HSAILParamManager::addReturnParam(unsigned Size, const StringRef ParamName) {
-  return addParam(HSAIL_PARAM_TYPE_RETURN, Size, ParamName);
+unsigned HSAILParamManager::addReturnParam(Type *Ty, const StringRef ParamName) {
+  return addParam(HSAIL_PARAM_TYPE_RETURN, Ty, ParamName);
 }
 
-unsigned HSAILParamManager::addCallArgParam(unsigned Size, const StringRef ParamName) {
-  return addParam(HSAIL_PARAM_TYPE_CALL_PARAM, Size, ParamName);
+unsigned HSAILParamManager::addCallArgParam(Type *Ty, const StringRef ParamName) {
+  return addParam(HSAIL_PARAM_TYPE_CALL_PARAM, Ty, ParamName);
 }
 
-unsigned HSAILParamManager::addCallRetParam(unsigned Size, const StringRef ParamName) {
-  return addParam(HSAIL_PARAM_TYPE_CALL_RET, Size, ParamName);
+unsigned HSAILParamManager::addCallRetParam(Type *Ty, const StringRef ParamName) {
+  return addParam(HSAIL_PARAM_TYPE_CALL_RET, Ty, ParamName);
 }
 
 void HSAILParamManager::addParamName(std::string Name, unsigned Index) {
@@ -110,8 +130,24 @@ void HSAILParamManager::addParamName(std::string Name, unsigned Index) {
   ParamNames[Index] = name;
 }
 
-void HSAILParamManager::addParamType(const Type * pTy, unsigned Index) {
+void HSAILParamManager::addParamType(Type* pTy, unsigned Index) {
   ParamTypes[Index] = pTy;
+}
+
+unsigned HSAILParamManager::getParamByOffset(unsigned &Offset) const {
+  unsigned param_no = ArgumentParams.size();
+  for (unsigned i = 0; i < param_no; i++) {
+    unsigned param = ArgumentParams[i];
+    unsigned o = getParamOffset(param);
+    if (o == UINT_MAX)
+      break;
+    if ((o <= Offset) && ((o + getParamSize(param)) > Offset)) {
+      // Parameter found and addressing is in bound.
+      Offset -= o;
+      return param;
+    }
+  }
+  return UINT_MAX;
 }
 
 /// returns a unique argument name for flattened vector component.

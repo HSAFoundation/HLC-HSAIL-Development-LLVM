@@ -303,6 +303,39 @@ size_t HSAILgetNumElements(PointerType * const PT) {
   return size;
 }
 
+uint64_t getNumElementsInHSAILType(Type* type, const DataLayout& dataLayout) {
+  switch(type->getTypeID()) {
+  case Type::IntegerTyID:
+  case Type::PointerTyID:
+  case Type::FloatTyID:
+  case Type::DoubleTyID:
+    return 1;
+  case Type::VectorTyID:
+    return type->getVectorNumElements();
+  case Type::ArrayTyID:
+    return type->getArrayNumElements() *
+           getNumElementsInHSAILType(type->getArrayElementType(), dataLayout);
+  case Type::StructTyID: {
+    StructType *st = cast<StructType>(type);
+    const StructLayout *layout = dataLayout.getStructLayout(st);
+    return layout->getSizeInBytes();
+  }
+  default: llvm_unreachable("Unhandled type");
+  }
+  return 0;
+}
+
+bool HSAILrequiresArray(Type* type) {
+  switch(type->getTypeID()) {
+  case Type::VectorTyID:
+  case Type::ArrayTyID:
+  case Type::StructTyID:
+    return true;
+  default:
+    return false;
+  }
+}
+
 Brig::BrigType16_t HSAILgetBrigType(Type* type, bool is64Bit, bool Signed) {
   switch (type->getTypeID()) {
   case Type::VoidTyID:
@@ -347,6 +380,28 @@ Brig::BrigType16_t HSAILgetBrigType(Type* type, bool is64Bit, bool Signed) {
     break;
   }
   return Brig::BRIG_TYPE_U8;  // FIXME needs a value here for linux release build
+}
+
+unsigned HSAILgetAlignTypeQualifier(Type *ty, const DataLayout& DL,
+                                    bool isPreferred) {
+  unsigned align = 0;
+
+  if (ArrayType *ATy = dyn_cast<ArrayType>(ty))
+    ty = ATy->getElementType();
+
+  if (IsImage(ty) || IsSampler(ty))
+    return 8;
+
+  align = isPreferred ? DL.getPrefTypeAlignment(ty)
+                      : DL.getABITypeAlignment(ty);
+
+  unsigned max_align = (1 << (Brig::BRIG_ALIGNMENT_MAX -
+                              Brig::BRIG_ALIGNMENT_1));
+  if (align > max_align) align = max_align;
+
+  assert(align && (align & (align - 1)) == 0);
+
+  return align;
 }
 
 const llvm::Value *HSAILgetBasePointerValue(const llvm::Value *V)
@@ -446,25 +501,10 @@ llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI)
   return getWidth(const_cast<llvm::MachineInstr*>(MI));
 }
 
-llvm::MachineOperand &getLdStAlign(llvm::MachineInstr *MI)
-{
-  assert(hasAddress(MI) && (isLoad(MI) || isStore(MI)));
-
-  if (isLoad(MI))
-    return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS + 1);
-  // isStore(MI) -> true
-  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS);
-}
-
-llvm::MachineOperand &getLdStAlign(const llvm::MachineInstr *MI)
-{
-  return getLdStAlign(const_cast<llvm::MachineInstr*>(MI));
-}
-
 llvm::MachineOperand &getLoadConstQual(llvm::MachineInstr *MI)
 {
   assert(hasAddress(MI) && (isLoad(MI)));
-  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS + 2);
+  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS + 1);
 }
 
 llvm::MachineOperand &getLoadConstQual(const llvm::MachineInstr *MI)

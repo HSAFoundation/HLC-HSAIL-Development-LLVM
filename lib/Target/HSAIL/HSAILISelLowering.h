@@ -278,6 +278,31 @@ public:
 
 protected:
 
+  /// Recursively lower a single argument.
+  /// Either Ins or Outs must non-zero, which means we are doing argument load
+  /// or store.
+  /// ArgNo is an index to InVals and OutVals, which is advanced after the call.
+  /// AS is an address space of argument, either arg or kernarg
+  /// ParamPtr is a pointer value for argument to load from or store to.
+  /// Offset is a value which has to be added to the pointer.
+  /// If InFlag gis present lue all operations.
+  /// If ChainLink is true chain link all operations.
+  /// Returns last operation value.
+  SDValue LowerArgument(SDValue Chain, SDValue InFlag, bool ChainLink,
+                        const SmallVectorImpl<ISD::InputArg> *Ins,
+                        const SmallVectorImpl<ISD::OutputArg> *Outs,
+                        SDLoc dl, SelectionDAG &DAG,
+                        SmallVectorImpl<SDValue> *InVals,
+                        unsigned &ArgNo,
+                        Type *type,
+                        unsigned AS,
+                        const char *ParamName,
+                        SDValue ParamPtr,
+                        const SmallVectorImpl<SDValue> *OutVals = nullptr,
+                        const AAMDNodes & = AAMDNodes(),
+                        uint64_t offset = 0) const;
+
+public:
   /// Create kernel or function parameter scalar load and return its value.
   /// If isLoad = false create an argument value store.
   /// AddressSpace used to determine if that is a kernel or function argument.
@@ -291,13 +316,15 @@ protected:
   /// This function inserts a load or store argument instruction with glue.
   /// If InFlag contains glue it is used for inbound glue. Glue is produced as a
   /// last result and can be consumed at will of the caller.
+  /// Offset operand is added to the offset value calculated from index.
   SDValue getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT, Type *Ty, bool isLoad,
                             bool isSExt, unsigned AddressSpace,
                             SDValue Ptr, SDValue ParamValue,
                             unsigned index, SDLoc dl, SDValue Chain,
-                            SDValue InFlag) const;
+                            SDValue InFlag,
+                            const AAMDNodes &AAInfo = AAMDNodes(),
+                            uint64_t offset = 0) const;
 
-public:
   //===--------------------------------------------------------------------===//
   // Lowering methods - These methods must be implemented by targets so that
   // the SelectionDAGLowering code knows how to lower these.
@@ -308,7 +335,6 @@ public:
                            SDLoc dl, SelectionDAG &DAG,
                            const CCValAssign &VA,  MachineFrameInfo *MFI,
                            unsigned i) const;
-
 
   // This method of the llvm::TargetLowering has been made virtual
   // under the AMD_HSAIL define to handle image/sampler object pointers
@@ -340,31 +366,6 @@ public:
   LowerCall(CallLoweringInfo &CLI,
                 SmallVectorImpl<SDValue> &InVals) const override;
 
-  /// LowerCallResult - Lower the result values of an ISD::CALL into the
-  /// appropriate copies out of appropriate physical registers.  This assumes that
-  /// Chain/InFlag are the input chain/flag to use, and that TheCall is the call
-  /// being lowered.  The returns a SDNode with the same number of values as the
-  /// ISD::CALL.
-  SDValue LowerCallResult(SDValue Chain,
-                          SDValue& InFlag,
-                          const SmallVectorImpl<ISD::InputArg> &Ins,
-                          Type *type,
-                          SDLoc dl,
-                          SelectionDAG &DAG,
-                          SmallVectorImpl<SDValue> &InVals,
-                          SDValue RetValue) const;
-  /*
-  /// CanLowerReturn - This hook should be implemented to check whether the
-  /// return values described by the Outs array can fit into the return
-  /// registers.  If false is returned, an sret-demotion is performed.
-  ///
-  virtual bool
-  CanLowerReturn(CallingConv::ID CallConv,
-                 bool isVarArg,
-                 const SmallVectorImpl<ISD::OutputArg> &Outs,
-                 LLVMContext &Context) const;
-  */
-
   /// LowerReturn - This hook must be implemented to lower outgoing
   /// return values, described by the Outs array, into the specified
   /// DAG. The implementation should return the resulting token chain
@@ -379,23 +380,10 @@ public:
               SDLoc dl,
               SelectionDAG &DAG) const;
 
-  /// LowerOperationWrapper - This callback is invoked by the type legalizer
-  /// to legalize nodes with an illegal operand type but legal result types.
-  /// It replaces the LowerOperation callback in the type Legalizer.
-  /// The reason we can not do away with LowerOperation entirely is that
-  /// LegalizeDAG isn't yet ready to use this callback.
-  /// TODO: Consider merging with ReplaceNodeResults.
-
-  /// The target places new result values for the node in Results (their number
-  /// and types must exactly match those of the original return values of
-  /// the node), or leaves Results empty, which indicates that the node is not
-  /// to be custom lowered after all.
-  /// The default implementation calls LowerOperation.
-  virtual void
-  LowerOperationWrapper(SDNode *N,
-                        SmallVectorImpl<SDValue> &Results,
-                        SelectionDAG &DAG) const;
-
+  /// getTypeForExtArgOrReturn - Return the type that should be used to zero or
+  /// sign extend a zeroext/signext integer argument or return value.
+  virtual EVT getTypeForExtArgOrReturn(LLVMContext &Context, EVT VT,
+                                       ISD::NodeType ExtendKind) const;
   /// LowerOperation - This callback is invoked for operations that are
   /// unsupported by the target, which are registered to use 'custom' lowering,
   /// and whose defined values are all legal.
