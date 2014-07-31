@@ -46,6 +46,7 @@
 // Industry and Securitys website at http://www.bis.doc.gov/.
 //
 //==-----------------------------------------------------------------------===//
+#include "libHSAIL/HSAILBrigantine.h"
 #include "HSAILKernelManager.h"
 #include "HSAILAlgorithms.tpp"
 #include "HSAILDeviceInfo.h"

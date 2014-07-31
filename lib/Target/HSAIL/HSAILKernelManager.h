@@ -74,9 +74,6 @@
 #include "libHSAIL/HSAILItemBase.h"
 #include "libHSAIL/HSAILItems.h"
 
-#define IMAGETYPE_2D 0
-#define IMAGETYPE_3D 1
-#define RESERVED_LIT_COUNT 6
 
 namespace llvm {
 class HSAILSubtarget;
