@@ -875,17 +875,22 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
       alignment = ArgVT.getStoreSize(); // Assume base pointer zero.
       if (offset & (alignment - 1))
         alignment = 1;
+      if (AddressSpace == HSAILAS::KERNARG_ADDRESS) {
+        // If argument symbol is unknown generate a kernargbaseptr
+        // instruction for Ptr instead on %noreg value.
+        Reg = SDValue(DAG.getMachineNode(
+          Subtarget->is64Bit() ? HSAIL::kernargbaseptr_u64
+                               : HSAIL::kernargbaseptr_u32,
+          dl, PtrTy), 0);
+      }
     } else if (Ptr.getOpcode() != ISD::TargetExternalSymbol) {
       // %noreg [%reg + offset]
       Reg = Ptr;
       Ptr = SDValue();
       alignment = 1; // %reg is unknown, alignment as well.
     }
-    if (!Ptr.getNode()) {
-      // TODO_HSA: If argument symbol is unknown generate a kernargbaseptr
-      //           instruction for Ptr instead on %noreg value.
+    if (!Ptr.getNode())
       Ptr = DAG.getRegister(0, PtrTy);
-    }
     SDValue Ops[] = { ParamValue,
         /* Address */ Ptr, Reg, DAG.getTargetConstant(offset, MVT::i32),
         /* Ops[5]  */ Zero, Zero, Zero, Zero };

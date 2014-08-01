@@ -165,21 +165,27 @@ def hsail_memfence : HSAILInst< (outs),
     def activelanemask_v4_width_b64_b1 : CrossLaneV4<"activelanemask_v4_width(WAVESIZE)_b64_b1">;
   }
 
-def nullptr_flat_u64  : HSAILInst<(outs GPR64:$dst), (ins),
-          "nullptr_u64\t $dst",
-          [(set (i64 GPR64:$dst), (int_HSAIL_nullptr_flat))]>;
-def nullptr_flat_u32  : HSAILInst<(outs GPR32:$dst), (ins),
-          "nullptr_u32\t $dst",
-          [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_flat))]>;
-def nullptr_global_u64  : HSAILInst<(outs GPR64:$dst), (ins),
-          "nullptr_global_u64\t $dst",
-          [(set (i64 GPR64:$dst), (int_HSAIL_nullptr_global))]>;
-def nullptr_global_u32  : HSAILInst<(outs GPR32:$dst), (ins),
-          "nullptr_global_u32\t $dst",
-          [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_global))]>;
-def nullptr_group_u32  : HSAILInst<(outs GPR32:$dst), (ins),
-          "nullptr_group_u32\t $dst",
-          [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_group))]>;
-def nullptr_private_u32  : HSAILInst<(outs GPR32:$dst), (ins),
-          "nullptr_private_u32\t $dst",
-          [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_private))]>;
+let isAsCheapAsAMove = 1, isReMaterializable = 1 in {
+  def nullptr_flat_u64  : HSAILInst<(outs GPR64:$dst), (ins),
+            "nullptr_u64\t $dst",
+            [(set (i64 GPR64:$dst), (int_HSAIL_nullptr_flat))]>;
+  def nullptr_flat_u32  : HSAILInst<(outs GPR32:$dst), (ins),
+            "nullptr_u32\t $dst",
+            [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_flat))]>;
+  def nullptr_global_u64  : HSAILInst<(outs GPR64:$dst), (ins),
+            "nullptr_global_u64\t $dst",
+            [(set (i64 GPR64:$dst), (int_HSAIL_nullptr_global))]>;
+  def nullptr_global_u32  : HSAILInst<(outs GPR32:$dst), (ins),
+            "nullptr_global_u32\t $dst",
+            [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_global))]>;
+  def nullptr_group_u32  : HSAILInst<(outs GPR32:$dst), (ins),
+            "nullptr_group_u32\t $dst",
+            [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_group))]>;
+  def nullptr_private_u32  : HSAILInst<(outs GPR32:$dst), (ins),
+            "nullptr_private_u32\t $dst",
+            [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_private))]>;
+  def kernargbaseptr_u64 : HSAILInst<(outs GPR64:$dst), (ins ),
+            "kernargbaseptr_u64 \t $dst", []>;
+  def kernargbaseptr_u32 : HSAILInst<(outs GPR32:$dst), (ins ),
+            "kernargbaseptr_u32 \t $dst", []>;
+}
