@@ -1785,15 +1785,6 @@ bool BRIGAsmPrinter::isBlockOnlyReachableByFallthrough(
 // Dwarf Emission Helper Routines
 //===------------------------------------------------------------------===//
 
-/// getDebugValueLocation - Get location information encoded by DBG_VALUE
-/// operands.
-MachineLocation BRIGAsmPrinter::getDebugValueLocation(const MachineInstr *MI)
-                                                      const {
-  MachineLocation Location;
-  assert(!"When do we hit this?");
-  return Location;
-}
-
 /// getISAEncoding - Get the value for DW_AT_APPLE_isa. Zero if no isa
 /// encoding specified.
 unsigned BRIGAsmPrinter::getISAEncoding() {

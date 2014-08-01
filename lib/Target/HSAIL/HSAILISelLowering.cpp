@@ -280,15 +280,6 @@ HSAILTargetLowering::getSetCCResultType(LLVMContext &Context, EVT VT) const
   return MVT::i1;
 }
 
-/// getCmpLibcallReturnType - Return the ValueType for comparison
-/// libcalls. Comparions libcalls include floating point comparion calls,
-/// and Ordered/Unordered check calls on floating point numbers.
-MVT::SimpleValueType
-HSAILTargetLowering::getCmpLibcallReturnType() const
-{
-  assert(!"When do we hit this?");
-  return MVT::SimpleValueType();
-}
 /// getSchedulingPreference - Some scheduler, e.g. hybrid, can switch to
 /// different scheduling heuristics for different nodes. This function returns
 /// the preference (or none) for the given node.
@@ -317,7 +308,7 @@ HSAILTargetLowering::getRepRegClassFor(MVT VT) const
     case MVT::i1:
       return &HSAIL::CRRegClass;
     default:
-      assert(!"When do we hit this?");
+      llvm_unreachable("Cannot find register class for value type");
       break;
   }
   return NULL;
@@ -353,40 +344,6 @@ HSAILTargetLowering::isFPImmLegal(const APFloat &Imm,
   return (VT == EVT(MVT::f32) || VT == EVT(MVT::f64));
 }
 
-/// isShuffleMaskLegal - Targets can use this to indicate that they only
-/// support *some* VECTOR_SHUFFLE operations, those with specific masks.
-/// By default, if a target supports the VECTOR_SHUFFLE node, all mask values
-/// are assumed to be legal.
-bool
-HSAILTargetLowering::isShuffleMaskLegal(const SmallVectorImpl<int> &Mask,
-                                        EVT VT) const
-{
-  assert(!"When do we hit this?");
-  return false;
-}
-
-/// canOpTrap - Returns true if the operation can trap for the value type.
-/// VT must be a legal type. By default, we optimistically assume most
-/// operations don't trap except for divide and remainder.
-bool
-HSAILTargetLowering::canOpTrap(unsigned Op, EVT VT) const
-{
-  assert(!"When do we hit this?");
-  return false;
-}
-
-/// isVectorClearMaskLegal - Similar to isShuffleMaskLegal. This is
-/// used by Targets can use this to indicate if there is a suitable
-/// VECTOR_SHUFFLE that can be used to replace a VAND with a constant
-/// pool entry.
-bool
-HSAILTargetLowering::isVectorClearMaskLegal(const SmallVectorImpl<int> &Mask,
-                                            EVT VT) const
-{
-  assert(!"When do we hit this?");
-  return false;
-}
-
 /// getByValTypeAlignment - Return the desired alignment for ByVal aggregate
 /// function arguments in the caller parameter area.  This is the actual
 /// alignment, not its logarithm.
@@ -394,16 +351,6 @@ unsigned
 HSAILTargetLowering::getByValTypeAlignment(Type *Ty) const
 {
   return TargetLowering::getByValTypeAlignment(Ty);
-}
-
-/// ShouldShrinkFPConstant - If true, then instruction selection should
-/// seek to shrink the FP constant of the specified type to a smaller type
-/// in order to save space and / or reduce runtime.
-bool
-HSAILTargetLowering::ShouldShrinkFPConstant(EVT VT) const
-{
-  assert(!"When do we hit this?");
-  return false;
 }
 
 /// This function returns true if the target allows unaligned memory accesses.
@@ -418,35 +365,6 @@ HSAILTargetLowering::allowsUnalignedMemoryAccesses(EVT VT) const
   return true;
 }
 
-/// getPreIndexedAddressParts - returns true by value, base pointer and
-/// offset pointer and addressing mode by reference if the node's address
-/// can be legally represented as pre-indexed load / store address.
-bool
-HSAILTargetLowering::getPreIndexedAddressParts(SDNode *N,
-                                               SDValue &Base,
-                                               SDValue &Offset,
-                                               ISD::MemIndexedMode &AM,
-                                               SelectionDAG &DAG) const
-{
-  assert(!"When do we hit this?");
-  return false;
-}
-
-/// getPostIndexedAddressParts - returns true by value, base pointer and
-/// offset pointer and addressing mode by reference if this node can be
-/// combined with a load / store to form a post-indexed load / store.
-bool
-HSAILTargetLowering::getPostIndexedAddressParts(SDNode *N,
-                                                SDNode *Op,
-                                                SDValue &Base,
-                                                SDValue &Offset,
-                                                ISD::MemIndexedMode &AM,
-                                                SelectionDAG &DAG) const
-{
-  assert(!"When do we hit this?");
-  return false;
-}
-
 /// getJumpTableEncoding - Return the entry encoding for a jump table in the
 /// current function.  The returned value is a member of the
 /// MachineJumpTableInfo::JTEntryKind enum.
@@ -454,38 +372,6 @@ unsigned
 HSAILTargetLowering::getJumpTableEncoding() const
 {
     return MachineJumpTableInfo::EK_BlockAddress;
-}
-
-const MCExpr*
-HSAILTargetLowering::LowerCustomJumpTableEntry(const MachineJumpTableInfo *MJTI,
-                                               const MachineBasicBlock *MBB,
-                                               unsigned uid,
-                                               MCContext &Ctx) const
-{
-  assert(!"When do we hit this?");
-  return NULL;
-}
-
-/// getPICJumpTableRelocaBase - Returns relocation base for the given PIC
-/// jumptable.
-SDValue
-HSAILTargetLowering::getPICJumpTableRelocBase(SDValue Table,
-                                              SelectionDAG &DAG) const
-{
-  assert(!"When do we hit this?");
-  return SDValue();
-}
-
-/// getPICJumpTableRelocBaseExpr - This returns the relocation base for the
-/// given PIC jumptable, the same as getPICJumpTableRelocBase, but as an
-/// MCExpr.
-const MCExpr*
-HSAILTargetLowering::getPICJumpTableRelocBaseExpr(const MachineFunction *MF,
-                                                  unsigned JTI,
-                                                  MCContext &Ctx) const
-{
-  assert(!"When do we hit this?");
-  return NULL;
 }
 
 /// isOffsetFoldingLegal - Return true if folding a constant offset
@@ -502,27 +388,6 @@ HSAILTargetLowering::isOffsetFoldingLegal(const GlobalAddressSDNode *GA) const
 unsigned
 HSAILTargetLowering::getFunctionAlignment(const Function *) const
 {
-  return 0;
-}
-
-/// getStackCookieLocation - Return true if the target stores stack
-/// protector cookies at a fixed offset in some non-standard address
-/// space, and populates the address space and offset as
-/// appropriate.
-bool
-HSAILTargetLowering::getStackCookieLocation(unsigned &AddressSpace,
-                                            unsigned &Offset) const
-{
-  assert(!"When do we hit this?");
-  return false;
-}
-
-/// getMaximalGlobalOffset - Returns the maximal possible offset which can be
-/// used for loads / stores from the global.
-unsigned
-HSAILTargetLowering::getMaximalGlobalOffset() const
-{
-  assert(!"When do we hit this?");
   return 0;
 }
 

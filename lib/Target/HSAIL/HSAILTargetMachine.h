@@ -19,14 +19,14 @@
 #include "HSAILInstrInfo.h"
 #include "HSAILIntrinsicInfo.h"
 #include "HSAILISelLowering.h"
-#include "HSAILSelectionDAGInfo.h"
 #include "HSAILSubtarget.h"
-#include "llvm/CodeGen/Passes.h"
-
 #include "HSAILLLVMVersion.h"
-#include "llvm/Target/TargetMachine.h"
+
+#include "llvm/CodeGen/Passes.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/Target/TargetFrameLowering.h"
+#include "llvm/Target/TargetMachine.h"
+#include "llvm/Target/TargetSelectionDAGInfo.h"
 
 namespace llvm {
 
@@ -39,7 +39,20 @@ public:
   HSAILIntrinsicInfo IntrinsicInfo;
   bool mDebugMode;
   
-private:
+  class HSAILSelectionDAGInfo : public TargetSelectionDAGInfo {
+    /// Subtarget - Keep a pointer to the HSAILSubtarget around so that we can
+    /// make the right decision when generating code for different targets.
+    const HSAILSubtarget *Subtarget;
+
+    const HSAILTargetLowering &TLI;
+
+  public:
+    explicit HSAILSelectionDAGInfo(const HSAILTargetMachine &TM) :
+      TargetSelectionDAGInfo(TM.getSubtarget<HSAILSubtarget>().getDataLayout()),
+      Subtarget(&TM.getSubtarget<HSAILSubtarget>()),
+      TLI(*TM.getSubtarget<HSAILSubtarget>().getTargetLowering()) {}
+  };
+
 public:
 
   //  HSAILTargetMachine(const Target &T,

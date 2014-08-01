@@ -61,12 +61,6 @@ public:
   virtual EVT
   getSetCCResultType(LLVMContext &Context, EVT VT) const;
 
-  /// getCmpLibcallReturnType - Return the ValueType for comparison
-  /// libcalls. Comparions libcalls include floating point comparion calls,
-  /// and Ordered/Unordered check calls on floating point numbers.
-  virtual MVT::SimpleValueType
-  getCmpLibcallReturnType() const;
-
   /// getSchedulingPreference - Some scheduler, e.g. hybrid, can switch to
   /// different scheduling heuristics for different nodes. This function returns
   /// the preference (or none) for the given node.
@@ -99,39 +93,11 @@ public:
   virtual bool
   isFPImmLegal(const APFloat &Imm, EVT VT) const;
 
-  /// isShuffleMaskLegal - Targets can use this to indicate that they only
-  /// support *some* VECTOR_SHUFFLE operations, those with specific masks.
-  /// By default, if a target supports the VECTOR_SHUFFLE node, all mask values
-  /// are assumed to be legal.
-  virtual bool
-  isShuffleMaskLegal(const SmallVectorImpl<int> &Mask,
-                     EVT VT) const;
-
-  /// canOpTrap - Returns true if the operation can trap for the value type.
-  /// VT must be a legal type. By default, we optimistically assume most
-  /// operations don't trap except for divide and remainder.
-  virtual bool
-  canOpTrap(unsigned Op, EVT VT) const;
-
-  /// isVectorClearMaskLegal - Similar to isShuffleMaskLegal. This is
-  /// used by Targets can use this to indicate if there is a suitable
-  /// VECTOR_SHUFFLE that can be used to replace a VAND with a constant
-  /// pool entry.
-  virtual bool
-  isVectorClearMaskLegal(const SmallVectorImpl<int> &Mask,
-                         EVT VT) const;
-
   /// getByValTypeAlignment - Return the desired alignment for ByVal aggregate
   /// function arguments in the caller parameter area.  This is the actual
   /// alignment, not its logarithm.
   virtual unsigned
   getByValTypeAlignment(Type *Ty) const;
-
-  /// ShouldShrinkFPConstant - If true, then instruction selection should
-  /// seek to shrink the FP constant of the specified type to a smaller type
-  /// in order to save space and / or reduce runtime.
-  virtual bool
-  ShouldShrinkFPConstant(EVT VT) const;
 
   /// This function returns true if the target allows unaligned memory accesses.
   /// of the specified type. This is used, for example, in situations where an
@@ -142,52 +108,11 @@ public:
   virtual bool
   allowsUnalignedMemoryAccesses(EVT VT) const;
 
-  /// getPreIndexedAddressParts - returns true by value, base pointer and
-  /// offset pointer and addressing mode by reference if the node's address
-  /// can be legally represented as pre-indexed load / store address.
-  virtual bool
-  getPreIndexedAddressParts(SDNode *N,
-                            SDValue &Base,
-                            SDValue &Offset,
-                            ISD::MemIndexedMode &AM,
-                            SelectionDAG &DAG) const;
-
-  /// getPostIndexedAddressParts - returns true by value, base pointer and
-  /// offset pointer and addressing mode by reference if this node can be
-  /// combined with a load / store to form a post-indexed load / store.
-  virtual bool
-  getPostIndexedAddressParts(SDNode *N,
-                             SDNode *Op,
-                             SDValue &Base,
-                             SDValue &Offset,
-                             ISD::MemIndexedMode &AM,
-                             SelectionDAG &DAG) const;
-
   /// getJumpTableEncoding - Return the entry encoding for a jump table in the
   /// current function.  The returned value is a member of the
   /// MachineJumpTableInfo::JTEntryKind enum.
   virtual unsigned
   getJumpTableEncoding() const;
-
-  virtual const MCExpr*
-  LowerCustomJumpTableEntry(const MachineJumpTableInfo *MJTI,
-                            const MachineBasicBlock *MBB,
-                            unsigned uid,
-                            MCContext &Ctx) const;
-
-  /// getPICJumpTableRelocaBase - Returns relocation base for the given PIC
-  /// jumptable.
-  virtual SDValue
-  getPICJumpTableRelocBase(SDValue Table,
-                           SelectionDAG &DAG) const;
-
-  /// getPICJumpTableRelocBaseExpr - This returns the relocation base for the
-  /// given PIC jumptable, the same as getPICJumpTableRelocBase, but as an
-  /// MCExpr.
-  virtual const MCExpr*
-  getPICJumpTableRelocBaseExpr(const MachineFunction *MF,
-                               unsigned JTI,
-                               MCContext &Ctx) const;
 
   /// isOffsetFoldingLegal - Return true if folding a constant offset
   /// with the given GlobalAddress is legal.  It is frequently not legal in
@@ -198,18 +123,6 @@ public:
   /// getFunctionAlignment - Return the Log2 alignment of this function.
   virtual unsigned
   getFunctionAlignment(const Function *) const;
-
-  /// getStackCookieLocation - Return true if the target stores stack
-  /// protector cookies at a fixed offset in some non-standard address
-  /// space, and populates the address space and offset as
-  /// appropriate.
-  virtual bool
-  getStackCookieLocation(unsigned &AddressSpace, unsigned &Offset) const;
-
-  /// getMaximalGlobalOffset - Returns the maximal possible offset which can be
-  /// used for loads / stores from the global.
-  virtual unsigned
-  getMaximalGlobalOffset() const;
 
   /// ComputeNumSignBitsForTargetNode - This method can be implemented by
   /// targets that want to expose additional information about sign bits to the

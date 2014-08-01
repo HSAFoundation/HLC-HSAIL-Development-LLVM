@@ -14,7 +14,6 @@
 #define DEBUG_TYPE "mccodeemitter"
 #include "HSAIL.h"
 #include "HSAILInstrInfo.h"
-#include "HSAILFixupKinds.h"
 #include "HSAILMCCodeEmitter.h"
 #include "llvm/MC/MCCodeEmitter.h"
 #include "llvm/MC/MCExpr.h"

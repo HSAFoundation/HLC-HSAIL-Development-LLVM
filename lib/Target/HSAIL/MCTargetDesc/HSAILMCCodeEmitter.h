@@ -18,7 +18,6 @@
 #include "HSAIL.h"
 #include "HSAILSubtarget.h"
 #include "HSAILInstrInfo.h"
-#include "HSAILFixupKinds.h"
 #include "llvm/MC/MCCodeEmitter.h"
 #include "llvm/MC/MCExpr.h"
 #include "llvm/MC/MCInst.h"

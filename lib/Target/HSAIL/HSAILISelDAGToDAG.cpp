@@ -82,9 +82,6 @@ public:
   virtual bool
   IsProfitableToFold(SDValue N, SDNode *U, SDNode *Root) const;
 
-  virtual void
-  PreprocessISelDAG();
-
 private:
   SDNode*
   Select(SDNode *N);
@@ -155,11 +152,6 @@ HSAILDAGToDAGISel::IsProfitableToFold(SDValue N,
   return true;
 }
 
-void
-HSAILDAGToDAGISel::PreprocessISelDAG()
-{
-  return;
-}
 
 bool HSAILDAGToDAGISel::SelectGPROrImm(SDValue In, SDValue &Src) const {
   if (ConstantSDNode *C = dyn_cast<ConstantSDNode>(In))

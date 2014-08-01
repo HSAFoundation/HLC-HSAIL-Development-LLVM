@@ -20,7 +20,6 @@
 #include "HSAILInstrInfo.h"
 #include "HSAILISelLowering.h"
 #include "llvm/ADT/Triple.h"
-//#include "llvm/Target/TargetSubtarget.h"
 #include "llvm/Target/TargetSubtargetInfo.h"
 #include "llvm/IR/CallingConv.h"
 #include "llvm/IR/DataLayout.h"

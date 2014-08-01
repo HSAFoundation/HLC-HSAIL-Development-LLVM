@@ -13,10 +13,6 @@ hsail_SRC_FILES := \
 	HSAILDeviceInfo.cpp \
 	HSAILEarlyCFGOpts.cpp \
 	HSAILELFObjectWriter.cpp \
-	HSAILELFTargetObjectFile.cpp \
-	HSAILELFWriterInfo.cpp \
-	HSAILFastISel.cpp \
-	HSAILFrameLowering.cpp \
 	HSAILGlobalOffsetInsertionPass.cpp \
 	HSAILInsertKernelIndexMetadata.cpp \
 	HSAILInstrInfo.cpp \
@@ -29,7 +25,6 @@ hsail_SRC_FILES := \
 	HSAILMachineFunctionInfo.cpp \
 	HSAILMCAsmInfo.cpp \
 	HSAILMCCodeEmitter.cpp \
-	HSAILMergeLoadStores.cpp \
 	HSAILModuleInfo.cpp \
 	HSAILNullPtrInsertion.cpp \
 	HSAILOpaqueTypes.cpp \
@@ -40,7 +35,6 @@ hsail_SRC_FILES := \
 	HSAILPropImageOps.cpp \
 	HSAILRegisterInfo.cpp \
 	HSAILResizePointer.cpp \
-	HSAILSelectionDAGInfo.cpp \
 	HSAILSubtarget.cpp \
 	HSAILSyntaxCleanupPass.cpp \
 	HSAILTargetMachine.cpp \

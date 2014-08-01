@@ -120,9 +120,6 @@ public:
   // Dwarf Emission Helper Routines
   //===------------------------------------------------------------------===//
 
-  /// Get location information encoded by DBG_VALUE operands.
-  virtual MachineLocation getDebugValueLocation(const MachineInstr *MI) const;
-
   /// Get the value for DW_AT_APPLE_isa. Zero if no isa encoding specified.
   virtual unsigned getISAEncoding();
 
