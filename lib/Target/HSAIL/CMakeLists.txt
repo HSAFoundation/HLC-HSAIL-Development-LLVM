@@ -22,9 +22,6 @@ set(sources
 #  BRIGDwarfDebug.cpp
   HSAILDevice.cpp
   HSAILDeviceInfo.cpp
-  HSAILELFTargetObjectFile.cpp
-  HSAILELFWriterInfo.cpp
-  HSAILFrameLowering.cpp
   HSAILInstrInfo.cpp
   HSAILIntrinsicInfo.cpp
   HSAILISelDAGToDAG.cpp
@@ -35,11 +32,9 @@ set(sources
   HSAILModuleInfo.cpp
   HSAILParamManager.cpp
   HSAILRegisterInfo.cpp
-  HSAILSelectionDAGInfo.cpp
   HSAILSubtarget.cpp
   HSAILTargetMachine.cpp
   HSAILUtilityFunctions.cpp
-  HSAILFastISel.cpp
   HSAILOpaqueTypes.cpp
   )
 

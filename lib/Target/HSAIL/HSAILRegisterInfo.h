@@ -134,11 +134,6 @@ public:
   virtual unsigned
   getFrameRegister(const MachineFunction &MF) const;
 
-  /// getRARegister - This method should return the register where the return
-  /// address can be found.
-  virtual unsigned
-  getRARegister() const;
-
   /// getRegPressureLimit - Return the register pressure "high water mark" for
   /// the specific register class. The scheduler is in high register pressure
   /// mode (for the specific register class) if it goes over the limit.

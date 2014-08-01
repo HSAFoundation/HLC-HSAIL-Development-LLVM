@@ -163,7 +163,6 @@ HSAILRegisterInfo::trackLivenessAfterRegAlloc(const MachineFunction &MF) const {
   return true;
 }
 
-
 /// getPointerRegClass - Returns a TargetRegisterClass used for pointer
 /// values.  If a target supports multiple different pointer register classes,
 /// kind specifies which one is indicated.
@@ -332,15 +331,6 @@ HSAILRegisterInfo::getFrameRegister(const MachineFunction &MF) const
 {
   //This value is unused in LLVM
   return HSAIL::NoRegister;
-}
-
-/// getRARegister - This method should return the register where the return
-/// address can be found.
-unsigned
-HSAILRegisterInfo::getRARegister() const
-{
-  assert(!"When do we hit this?");
-  return 0;
 }
 
 /// getRegPressureLimit - Return the register pressure "high water mark" for
