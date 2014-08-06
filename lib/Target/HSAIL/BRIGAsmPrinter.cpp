@@ -1590,9 +1590,14 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
     if (memType->isIntegerTy(1))
       memType = Type::getInt32Ty(type->getContext());
     if (HSAIL::HSAILrequiresArray(type)) {
-      sym = brigantine.addArrayVariable(name,
-          HSAIL::getNumElementsInHSAILType(type, getDataLayout()),
-          symSegment, HSAIL::HSAILgetBrigType(memType, Subtarget->is64Bit(), isSExt));
+      uint64_t num_elem = HSAIL::getNumElementsInHSAILType(type, getDataLayout());
+      // TODO_HSA: w/a for RT bug, remove when RT is fixed.
+      // RT passes vec3 as 3 elements, not vec4 as required by OpenCL spec.
+      if (isKernel && type->isVectorTy())
+        num_elem = type->getVectorNumElements();
+
+      sym = brigantine.addArrayVariable(name, num_elem, symSegment,
+                HSAIL::HSAILgetBrigType(memType, Subtarget->is64Bit(), isSExt));
       // TODO_HSA: workaround for RT bug.
       // RT does not read argument alignment from BRIG, so if we align vectors
       // on a full vector size that will cause mismatch between kernarg offsets

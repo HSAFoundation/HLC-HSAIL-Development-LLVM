@@ -311,7 +311,8 @@ uint64_t getNumElementsInHSAILType(Type* type, const DataLayout& dataLayout) {
   case Type::DoubleTyID:
     return 1;
   case Type::VectorTyID:
-    return type->getVectorNumElements();
+    return dataLayout.getTypeAllocSize(type) /
+           dataLayout.getTypeAllocSize(type->getVectorElementType());
   case Type::ArrayTyID:
     return type->getArrayNumElements() *
            getNumElementsInHSAILType(type->getArrayElementType(), dataLayout);
