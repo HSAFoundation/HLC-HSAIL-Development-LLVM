@@ -805,7 +805,7 @@ bool  HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr,
   {
   case ISD::Constant:
   {
-    int64_t new_offset = cast<ConstantSDNode>(Addr)->getSExtValue() + Offset;
+    int64_t new_offset = cast<ConstantSDNode>(Addr)->getSExtValue();
     // No 64 bit offsets in 32 bit target
     if (!Subtarget->is64Bit() && !isInt<32>(new_offset))
       return false;
