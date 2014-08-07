@@ -1501,6 +1501,30 @@ HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
   if (VT.getSimpleVT() != MVT::i64) return Op;
   LoadSDNode *LD = cast<LoadSDNode>(Op.getNode());
   ISD::LoadExtType extType = LD->getExtensionType();
+
+  if (extType == ISD::SEXTLOAD && LD->hasNUsesOfValue(1, 0)) {
+    // Check if the only use is a truncation to the size of loaded memory.
+    // In this case produce zext instead of sext. Note, that load chain
+    // has its own use.
+    SDNode::use_iterator UI = LD->use_begin(), UE = LD->use_end();
+    for ( ; UI != UE; ++UI) {
+      if (UI.getUse().getResNo() == 0) {
+        // User of a loaded value.
+        if (UI->getOpcode() == ISD::AND && isa<ConstantSDNode>(UI->getOperand(1))) {
+          EVT MemVT = LD->getMemoryVT();
+          uint64_t Mask = UI->getConstantOperandVal(1);
+          if ((MemVT == MVT::i8  && Mask == 0xFFul) ||
+              (MemVT == MVT::i16 && Mask == 0xFFFFul)) {
+            // The AND operator was not really needed. Produce zextload as it does
+            // not change the result and let AND node silintly die.
+            extType = ISD::ZEXTLOAD;
+          }
+        }
+        break;
+      }
+    }
+  }
+
   // Do load into 32-bit register.
   SDValue load = DAG.getLoad(ISD::UNINDEXED, extType, MVT::i32, dl,
     Op.getOperand(0), Op.getOperand(1), Op.getOperand(2),
