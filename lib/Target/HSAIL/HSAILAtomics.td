@@ -1,6 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // atomics
 
+let mayLoad = 1, mayStore = 1 in {
+
 // gcn atomic append/consume
 class AtomicCounter32<Intrinsic intr, string asm>:
     HSAILInst<(outs GPR32:$dst), (ins MEMOP:$src),
@@ -157,4 +159,6 @@ let needSpecialProcessing = 1, hasAddress = 1, addressOpNum = 4 in {
   def atomic_ternary_b64_rr_noret : HSAILInst<(outs), (ins i32imm:$op,
                                               i32imm:$as, i32imm:$mo, i32imm:$ms,
                                               MEMOP:$ptr, GPR64:$src0, GPR64:$src1) , "",[]>;
+}
+
 }

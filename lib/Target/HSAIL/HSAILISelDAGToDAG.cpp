@@ -646,6 +646,7 @@ static unsigned getHSAILAtomicOpcode(SDNode *Node, bool bitwiseAtomicOp = true,
 SDNode* HSAILDAGToDAGISel::SelectAtomic(SDNode *Node, bool bitwiseAtomicOp,
                                         bool isSignedOp)
 {
+  MachineFunction &MF = CurDAG->getMachineFunction();
   SDValue Chain = Node->getOperand(0);
   SDLoc dl(Node);
   SDNode *ResNode;
@@ -677,6 +678,12 @@ SDNode* HSAILDAGToDAGISel::SelectAtomic(SDNode *Node, bool bitwiseAtomicOp,
                                  getHSAILAtomicOpcode(Node, bitwiseAtomicOp,
                                  isSignedOp), Node->getVTList(), NewOps.data(),
                                  NewOps.size());
+
+  MachineSDNode::mmo_iterator MemOp = MF.allocateMemRefsArray(1);
+  MemOp[0] = Mn->getMemOperand();
+  MemOp[0]->setOffset(cast<ConstantSDNode>(Offset.getNode())->getSExtValue());
+  cast<MachineSDNode>(ResNode)->setMemRefs(MemOp, MemOp + 1);
+
   return ResNode;
 }
 #endif
