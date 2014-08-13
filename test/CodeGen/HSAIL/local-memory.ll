@@ -121,7 +121,8 @@ define void @local_memory_f32(float addrspace(1)* %out) #0 {
   ret void
 }
 
-declare i32 @llvm.HSAIL.workitemid.flat() #0
+declare i32 @llvm.HSAIL.workitemid.flat() #1
 declare void @llvm.HSAIL.barrier() #0
 
 attributes #0 = { nounwind }
+attributes #1 = { nounwind readnone }

@@ -216,11 +216,11 @@ declare i32 @llvm.HSAIL.get.global.id(i32) #0
 declare i32 @llvm.HSAIL.currentworkgroup.size(i32) #0
 declare i32 @llvm.HSAIL.get.work.dim() #0
 
-declare i32 @llvm.HSAIL.workitemid.flat() #1
-declare i32 @llvm.HSAIL.workitemid.flatabs() #1
-declare i32 @llvm.HSAIL.get.lane.id() #1
-declare i32 @llvm.HSAIL.get.dynwave.id() #1
-declare i32 @llvm.HSAIL.get.maxdynwave.id() #1
+declare i32 @llvm.HSAIL.workitemid.flat() #0
+declare i32 @llvm.HSAIL.workitemid.flatabs() #0
+declare i32 @llvm.HSAIL.get.lane.id() #0
+declare i32 @llvm.HSAIL.get.dynwave.id() #0
+declare i32 @llvm.HSAIL.get.maxdynwave.id() #0
 declare i32 @llvm.HSAIL.get.clock() #1
 declare i32 @llvm.HSAIL.get.cu() #1
 
