@@ -94,13 +94,6 @@ void DAGWalker::ProcessDef( DefInit * def ) {
       case LDA_READONLY:
         m_state = PS_EXPECT_LDST_ADDR;
         break;
-      case LOAD:
-        printer << "    BrigEmitQualifiers( MI, " << m_opNum + 3 << ", inst );\n";
-        m_state = PS_EXPECT_LDST_ADDR;
-        break;
-      case STORE:	
-        m_state = PS_EXPECT_STORE_DST;
-        break;
       case BRCOND:
         m_state = PS_BR_EXPECT_COND;
         break;
@@ -125,26 +118,6 @@ void DAGWalker::ProcessDef( DefInit * def ) {
     {
       printer << "    BrigEmitOperandLdStAddress( MI, " << m_opNum << " );\n";
       m_state = PS_END;
-    }
-    break;
-  case PS_EXPECT_STORE_DST:
-    {
-      switch(Node[getOpcode(def)]) {
-      case Register:
-        EmitVectorOrScalarOperand();
-        printer << "    BrigEmitQualifiers( MI, " << m_opNum + 3 << ", inst );\n";
-        m_state = PS_EXPECT_LDST_ADDR;
-        break;
-      case VALUETYPE:  // do nothing, expect value itself TODO: check type/size against operation type/size
-      case ADD:        // we likely in [$reg + off] story, expect operands
-      case LDA_GLOBAL: // load $reg %addr - here we're retreiving the '%addr' with LDA_***, we don't need to react, just await for LDA operand
-      case LDA_FLAT:   // same story as above...
-      case LDA_GROUP:
-      case LDA_PRIVATE:
-        break;
-      default:
-        m_state = PS_ERROR;
-      }
     }
     break;
   case PS_BR_EXPECT_COND:

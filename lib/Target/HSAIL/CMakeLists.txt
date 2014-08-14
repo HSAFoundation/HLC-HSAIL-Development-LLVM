@@ -9,7 +9,6 @@ tablegen(LLVM HSAILGenSubtargetInfo.inc -gen-subtarget)
 tablegen(LLVM HSAILGenCallingConv.inc -gen-callingconv)
 tablegen(LLVM HSAILGenIntrinsics.inc -gen-tgt-intrinsic)
 tablegen(LLVM HSAILGenBrigWriter.inc -gen-brig-writer)
-tablegen(LLVM HSAILGenVecMap.inc -gen-hsail-vec-map)
 
 add_public_tablegen_target(HSAILCommonTableGen)
 

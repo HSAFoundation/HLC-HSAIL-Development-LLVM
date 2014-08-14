@@ -23,9 +23,6 @@ public:
       m_opNum(0),
       m_vec_size(vec_size)
       {
-        Node["ISD::LOAD"] = LOAD;
-        Node["ISD::STORE"] = STORE;
-        Node["ISD::ADD"] = ADD;
         Node["ISD::BRCOND"] = BRCOND;
         Node["ISD::BR"] = BR;
         Node["ISD::BasicBlock"] = BasicBlock;
@@ -55,7 +52,6 @@ private:
     PS_ERROR = -1,
     PS_START,
     PS_EXPECT_LDST_ADDR, // Expect address for load or store
-    PS_EXPECT_STORE_DST, // st_***  ...
     PS_BR_EXPECT_COND,   // brcond ...
     PS_BR_EXPECT_BB,     // brcond cond ...  'expects address of BasicBlock to jump to'
 

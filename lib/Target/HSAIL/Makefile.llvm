@@ -23,8 +23,7 @@ BUILT_SOURCES = HSAILGenAsmMatcher.inc \
                 HSAILGenRegisterInfo.h.inc \
                 HSAILGenRegisterNames.inc \
                 HSAILGenRegisterInfo.inc \
-                HSAILGenSubtarget.inc \
-                HSAILGenVecMap.inc
+                HSAILGenSubtarget.inc
 
 DIRS = TargetInfo
 

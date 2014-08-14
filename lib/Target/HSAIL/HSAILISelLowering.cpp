@@ -664,75 +664,27 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
       alignment = DL->getABITypeAlignment(EltTy);
 
     unsigned op = 0;
-    Brig::BrigTypeX BrigType = Brig::BRIG_TYPE_NONE;
-    if (EltTy->isIntegerTy(8))
-      op = isLoad ? (isSExt ? HSAIL::arg_sext_ld_s32_s8_v1
-                            : HSAIL::arg_zext_ld_u32_u8_v1)
-                  : HSAIL::arg_truncst_u32_u8_v1;
-    else if (EltTy->isIntegerTy(16))
-      op = isLoad ? (isSExt ? HSAIL::arg_sext_ld_s32_s16_v1
-                            : HSAIL::arg_zext_ld_u32_u16_v1)
-                  : HSAIL::arg_truncst_u32_u16_v1;
-    else if (EltTy->isIntegerTy(32))
-      op = isLoad ? HSAIL::arg_ld_u32_v1 : HSAIL::arg_st_u32_v1;
-    else if (EltTy->isIntegerTy(64))
-      op = isLoad ? HSAIL::arg_ld_u64_v1 : HSAIL::arg_st_u64_v1;
-    else if (EltTy->isFloatTy())
-      op = isLoad ? HSAIL::arg_ld_f32_v1 : HSAIL::arg_st_f32_v1;
-    else if (EltTy->isDoubleTy())
-      op = isLoad ? HSAIL::arg_ld_f64_v1 : HSAIL::arg_st_f64_v1;
-    else if (EltTy->isPointerTy()) {
-      if (OpaqueType OT = GetOpaqueType(EltTy)) {
-        if (IsImage(OT)) {
-          op = isLoad ? HSAIL::ld_arg_64 : HSAIL::st_arg_64;
-          BrigType = Brig::BRIG_TYPE_RWIMG;
-        }
-        else if (OT == Sampler) {
-          op = isLoad ? HSAIL::ld_arg_64 : HSAIL::st_arg_64;
-          BrigType = Brig::BRIG_TYPE_SAMP;
-        }
-      }
-      if (op == 0) op = Subtarget->is64Bit() ?
-                        (isLoad ? HSAIL::arg_ld_u64_v1 : HSAIL::arg_st_u64_v1)
-                      : (isLoad ? HSAIL::arg_ld_u32_v1 : HSAIL::arg_st_u32_v1);
-    }
+    unsigned BrigType = HSAIL::HSAILgetBrigType(EltTy, Subtarget->is64Bit(), isSExt);
+    if (ArgVT.getSizeInBits() <= 32)
+      op = isLoad ? HSAIL::ld_32_v1 : HSAIL::st_32_v1;
     else
-      llvm_unreachable("Unhandled type in HSAIL argument lowering");
-    assert(op != 0);
-
-    if (AddressSpace == HSAILAS::KERNARG_ADDRESS) {
-      switch (op) {
-      case HSAIL::arg_sext_ld_s32_s8_v1:  op = HSAIL::kernarg_sext_ld_s32_s8_v1;  break;
-      case HSAIL::arg_zext_ld_u32_u8_v1:  op = HSAIL::kernarg_zext_ld_u32_u8_v1;  break;
-      case HSAIL::arg_sext_ld_s32_s16_v1: op = HSAIL::kernarg_sext_ld_s32_s16_v1; break;
-      case HSAIL::arg_zext_ld_u32_u16_v1: op = HSAIL::kernarg_zext_ld_u32_u16_v1; break;
-      case HSAIL::arg_ld_u32_v1: op = HSAIL::kernarg_ld_u32_v1; break;
-      case HSAIL::arg_ld_u64_v1: op = HSAIL::kernarg_ld_u64_v1; break;
-      case HSAIL::arg_ld_f32_v1: op = HSAIL::kernarg_ld_f32_v1; break;
-      case HSAIL::arg_ld_f64_v1: op = HSAIL::kernarg_ld_f64_v1; break;
-      }
-    }
+      op = isLoad ? HSAIL::ld_64_v1 : HSAIL::st_64_v1;
 
     // Change opcode for load of return value
-    if (isLoad && AAInfo.TBAA && AAInfo.TBAA->getNumOperands() >= 1) {
+    if (isLoad && AddressSpace == HSAILAS::ARG_ADDRESS &&
+        AAInfo.TBAA && AAInfo.TBAA->getNumOperands() >= 1) {
       if (const MDString *MDS = dyn_cast<MDString>(AAInfo.TBAA->getOperand(0))) {
         if (MDS->getString().equals("retarg")) {
           switch (op) {
-          case HSAIL::arg_sext_ld_s32_s8_v1:  op = HSAIL::rarg_sext_ld_s32_s8_v1;  break;
-          case HSAIL::arg_zext_ld_u32_u8_v1:  op = HSAIL::rarg_zext_ld_u32_u8_v1;  break;
-          case HSAIL::arg_sext_ld_s32_s16_v1: op = HSAIL::rarg_sext_ld_s32_s16_v1; break;
-          case HSAIL::arg_zext_ld_u32_u16_v1: op = HSAIL::rarg_zext_ld_u32_u16_v1; break;
-          case HSAIL::arg_ld_u32_v1: op = HSAIL::rarg_ld_u32_v1; break;
-          case HSAIL::arg_ld_u64_v1: op = HSAIL::rarg_ld_u64_v1; break;
-          case HSAIL::arg_ld_f32_v1: op = HSAIL::rarg_ld_f32_v1; break;
-          case HSAIL::arg_ld_f64_v1: op = HSAIL::rarg_ld_f64_v1; break;
+          case HSAIL::ld_32_v1: op = HSAIL::rarg_ld_32_v1; break;
+          case HSAIL::ld_64_v1: op = HSAIL::rarg_ld_64_v1; break;
           }
         }
       }
     }
 
     unsigned opShift = isLoad ? 1 : 0;
-    unsigned opNo = 4; // Value and pointer operands
+    unsigned opNo = 5; // Value and pointer operands
     SDValue Zero = DAG.getTargetConstant(0, MVT::i32);
     SDValue Reg = DAG.getRegister(0, PtrTy); // %noreg
     if (!Ptr.getNode()) {
@@ -758,19 +710,20 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
       Ptr = DAG.getRegister(0, PtrTy);
     SDValue Ops[] = { ParamValue,
         /* Address */ Ptr, Reg, DAG.getTargetConstant(offset, MVT::i32),
+        /* Ops[4]  */ DAG.getTargetConstant(BrigType, MVT::i32),
         /* Ops[5]  */ Zero, Zero, Zero, Zero };
-    if (BrigType != Brig::BRIG_TYPE_NONE) {
-      Ops[opNo++] = DAG.getTargetConstant((unsigned) BrigType, MVT::i32);
-    } else {
-      if (isLoad) // Width qualifier.
+
+    if (isLoad) {
+      // Width qualifier.
         Ops[opNo++] = DAG.getTargetConstant((AddressSpace ==
           HSAILAS::KERNARG_ADDRESS) ? Brig::BRIG_WIDTH_ALL
                                     : Brig::BRIG_WIDTH_1, MVT::i32);
 
-      if (isLoad) // Const qualifier.
+      // Const qualifier.
         Ops[opNo++] = DAG.getTargetConstant(
           (AddressSpace == HSAILAS::KERNARG_ADDRESS) ? 1 : 0, MVT::i1);
     }
+
     Ops[opNo++] = Chain;
     if (InFlag.getNode())
       Ops[opNo++] = InFlag;

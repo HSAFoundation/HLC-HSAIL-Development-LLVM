@@ -66,9 +66,10 @@
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/ValueMap.h"
 #include "llvm/ADT/SmallString.h"
+#include "llvm/CodeGen/MachineInstr.h"
+#include "llvm/CodeGen/PseudoSourceValue.h"
 #include "llvm/Support/FormattedStream.h"
 #include "llvm/Support/Debug.h"
-#include "llvm/CodeGen/MachineInstr.h"
 #include <cstdio>
 #include <queue>
 #include <list>
@@ -479,36 +480,66 @@ llvm::MachineOperand &getBase(llvm::MachineInstr *MI)
   assert(hasAddress(MI));
   return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::BASE);
 }
+
+const llvm::MachineOperand &getBase(const llvm::MachineInstr *MI)
+{
+  return getBase(const_cast<llvm::MachineInstr*>(MI));
+}
+
 llvm::MachineOperand &getIndex(llvm::MachineInstr *MI)
 {
   assert(hasAddress(MI));
   return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::REG);
 }
+
+const llvm::MachineOperand &getIndex(const llvm::MachineInstr *MI)
+{
+  return getIndex(const_cast<llvm::MachineInstr*>(MI));
+}
+
 llvm::MachineOperand &getOffset(llvm::MachineInstr *MI)
 {
-  assert(hasAddress(MI));
+  assert(hasAddress(MI) && MI->getNumOperands() >= HSAILADDRESS::ADDRESS_NUM_OPS);
   return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::OFFSET);
+}
+
+const llvm::MachineOperand &getOffset(const llvm::MachineInstr *MI)
+{
+  return getOffset(const_cast<llvm::MachineInstr*>(MI));
+}
+
+llvm::MachineOperand &getBrigType(llvm::MachineInstr *MI)
+{
+  assert(hasAddress(MI) && (MI->mayLoad() || MI->mayStore()) &&
+         MI->getNumOperands() > HSAILADDRESS::ADDRESS_NUM_OPS);
+  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS);
+}
+
+const llvm::MachineOperand &getBrigType(const llvm::MachineInstr *MI)
+{
+  return getBrigType(const_cast<llvm::MachineInstr*>(MI));
 }
 
 llvm::MachineOperand &getWidth(llvm::MachineInstr *MI)
 {
-  assert(hasAddress(MI) && isLoad(MI));
-  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS);
+  assert(hasAddress(MI) && MI->mayLoad() &&
+         MI->getNumOperands() > HSAILADDRESS::ADDRESS_NUM_OPS + 1);
+  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS + 1);
 }
 
-llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI)
+const llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI)
 {
-  assert(hasAddress(MI) && isLoad(MI));
   return getWidth(const_cast<llvm::MachineInstr*>(MI));
 }
 
 llvm::MachineOperand &getLoadConstQual(llvm::MachineInstr *MI)
 {
-  assert(hasAddress(MI) && (isLoad(MI)));
-  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS + 1);
+  assert(hasAddress(MI) && MI->mayLoad() &&
+         MI->getNumOperands() > HSAILADDRESS::ADDRESS_NUM_OPS + 2);
+  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS + 2);
 }
 
-llvm::MachineOperand &getLoadConstQual(const llvm::MachineInstr *MI)
+const llvm::MachineOperand &getLoadConstQual(const llvm::MachineInstr *MI)
 {
   return getLoadConstQual(const_cast<llvm::MachineInstr*>(MI));
 }
@@ -529,22 +560,37 @@ bool isConv(const llvm::MachineInstr *MI)
   return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_CONV);
 }
 
-bool HSAILisGlobalInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
+unsigned getAddrSpace(const llvm::MachineInstr *MI)
 {
-  return strstr(TM.getSubtarget<HSAILSubtarget>().getInstrInfo()->getName(MI->getOpcode()), "global");
+  assert(MI->hasOneMemOperand());\
+  const MachineMemOperand &MMO = **MI->memoperands_begin();
+  const MachinePointerInfo &MPI = MMO.getPointerInfo();
+  unsigned as = MPI.getAddrSpace();
+  if (as != HSAILAS::PRIVATE_ADDRESS)
+    return as;
+
+  const MachineOperand &Base = getBase(MI);
+  bool isFI = false;
+  int FrameIndex;
+  if (Base.isFI()) {
+    FrameIndex = Base.getIndex();
+    isFI = true;
+  } else if (Base.isImm() && MPI.V) {
+    if (const FixedStackPseudoSourceValue* FSV =
+          dyn_cast<FixedStackPseudoSourceValue>(MMO.getPseudoValue())) {
+      FrameIndex = FSV->getFrameIndex();
+      isFI = true;
+    }
+  }
+
+  if (isFI) {
+    const MachineFrameInfo *MFI = MI->getParent()->getParent()->getFrameInfo();
+    if (MFI->isSpillSlotObjectIndex(FrameIndex))
+      return HSAILAS::SPILL_ADDRESS;
+  }
+  return as;
 }
-bool HSAILisPrivateInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
-{
-  return strstr(TM.getSubtarget<HSAILSubtarget>().getInstrInfo()->getName(MI->getOpcode()), "private");
-}
-bool HSAILisConstantInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
-{
-  return strstr(TM.getSubtarget<HSAILSubtarget>().getInstrInfo()->getName(MI->getOpcode()), "constant");
-}
-bool HSAILisGroupInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
-{
-  return strstr(TM.getSubtarget<HSAILSubtarget>().getInstrInfo()->getName(MI->getOpcode()), "group");
-}
+
 bool HSAILisArgInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
 {
   unsigned op = MI->getOpcode();

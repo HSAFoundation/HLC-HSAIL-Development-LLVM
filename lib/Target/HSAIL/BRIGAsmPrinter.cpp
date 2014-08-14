@@ -527,15 +527,17 @@ BRIGAsmPrinter::~BRIGAsmPrinter() {
 Brig::BrigSegment8_t BRIGAsmPrinter::getHSAILSegment(unsigned AddressSpace)
                                                      const {
   switch (AddressSpace) {
+  case HSAILAS::PRIVATE_ADDRESS:  return Brig::BRIG_SEGMENT_PRIVATE;
   case HSAILAS::GLOBAL_ADDRESS:   return Brig::BRIG_SEGMENT_GLOBAL;
   case HSAILAS::CONSTANT_ADDRESS: return Brig::BRIG_SEGMENT_READONLY;
   case HSAILAS::GROUP_ADDRESS:    return Brig::BRIG_SEGMENT_GROUP;
-  case HSAILAS::PRIVATE_ADDRESS:  return Brig::BRIG_SEGMENT_PRIVATE;
+  case HSAILAS::FLAT_ADDRESS:     return Brig::BRIG_SEGMENT_FLAT;
+  case HSAILAS::REGION_ADDRESS:   return Brig::BRIG_SEGMENT_EXTSPACE0;
   case HSAILAS::KERNARG_ADDRESS:  return Brig::BRIG_SEGMENT_KERNARG;
   case HSAILAS::ARG_ADDRESS:      return Brig::BRIG_SEGMENT_ARG;
-  // TODO_HSA: default to global until all possible actions are resolved
-  default: return Brig::BRIG_SEGMENT_GLOBAL;
+  case HSAILAS::SPILL_ADDRESS:    return Brig::BRIG_SEGMENT_SPILL;
   }
+  llvm_unreachable("Unexpected BRIG address space value");
 }
 
 Brig::BrigSegment8_t BRIGAsmPrinter::getHSAILSegment(const GlobalVariable* gv)
@@ -837,38 +839,6 @@ void BRIGAsmPrinter::EmitBasicBlockStart(const MachineBasicBlock &MBB) {
   AsmPrinter::EmitBasicBlockStart(MBB);
 }
 
-/// Emit ld_arg or st_arg
-HSAIL_ASM::Inst BRIGAsmPrinter::EmitLdStArg(const MachineInstr *MI, bool isLoad) {
-  MachineInstr::const_mop_iterator oi = MI->operands_begin();
-  const MachineMemOperand *MMO = *MI->memoperands_begin();
-  const MachinePointerInfo &MPI = MMO->getPointerInfo();
-
-  HSAIL_ASM::InstMem inst = brigantine.addInst<HSAIL_ASM::InstMem>(
-    isLoad ? Brig::BRIG_OPCODE_LD : Brig::BRIG_OPCODE_ST);
-
-  assert(oi->isReg());
-  BrigEmitOperand(MI, 0, inst); ++oi;
-  assert(oi->isSymbol());
-  std::string sym("%");
-  sym += oi++->getSymbolName();
-  HSAIL_ASM::OperandReg reg;
-  if (oi->isReg() && oi->getReg() != 0)
-    reg = getBrigReg(*oi);
-  oi++; oi++; // skip reg and offset (offset is taken from MMO).
-  m_opndList.push_back(brigantine
-        .createRef(sym, reg, MMO->getOffset()));
-
-  assert(oi->isImm());
-  Brig::BrigTypeX type = static_cast<Brig::BrigTypeX>(oi->getImm());
-  inst.segment()    = getHSAILSegment(MPI.getAddrSpace());
-  inst.type()       = type;
-  inst.align()      = getBrigAlignment(MMO->getAlignment());
-  inst.width()      = isLoad ? Brig::BRIG_WIDTH_1 : Brig::BRIG_WIDTH_NONE;
-  inst.equivClass() = 0;
-  inst.modifier().isConst() = 0;
-  return inst;
-}
-
 namespace {
   class autoCodeEmitter {
     MCStreamer                *streamer;
@@ -1037,11 +1007,46 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
       return call;
   }
-  case HSAIL::ld_arg_64:
-    return EmitLdStArg(II, true);
 
-  case HSAIL::st_arg_64:
-    return EmitLdStArg(II, false);
+  case HSAIL::ld_32_v1:
+  case HSAIL::ld_64_v1:
+  case HSAIL::rarg_ld_32_v1:
+  case HSAIL::rarg_ld_64_v1:
+    return EmitLoadOrStore(II, true, 1);
+
+  case HSAIL::ld_32_v2:
+  case HSAIL::ld_64_v2:
+  case HSAIL::rarg_ld_32_v2:
+  case HSAIL::rarg_ld_64_v2:
+    return EmitLoadOrStore(II, true, 2);
+
+  case HSAIL::ld_32_v3:
+  case HSAIL::ld_64_v3:
+  case HSAIL::rarg_ld_32_v3:
+  case HSAIL::rarg_ld_64_v3:
+    return EmitLoadOrStore(II, true, 3);
+
+  case HSAIL::ld_32_v4:
+  case HSAIL::ld_64_v4:
+  case HSAIL::rarg_ld_32_v4:
+  case HSAIL::rarg_ld_64_v4:
+    return EmitLoadOrStore(II, true, 4);
+
+  case HSAIL::st_32_v1:
+  case HSAIL::st_64_v1:
+    return EmitLoadOrStore(II, false, 1);
+
+  case HSAIL::st_32_v2:
+  case HSAIL::st_64_v2:
+    return EmitLoadOrStore(II, false, 2);
+
+  case HSAIL::st_32_v3:
+  case HSAIL::st_64_v3:
+    return EmitLoadOrStore(II, false, 3);
+
+  case HSAIL::st_32_v4:
+  case HSAIL::st_64_v4:
+    return EmitLoadOrStore(II, false, 4);
 
   case HSAIL::arg_decl:
     BrigEmitVecArgDeclaration(II);
@@ -1969,39 +1974,51 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned
   m_opndList.push_back(brigantine.createRef(base_name, reg_name, offset));
 }
 
-void BRIGAsmPrinter::BrigEmitQualifiers(const MachineInstr *MI, unsigned opNum,
-                                        HSAIL_ASM::Inst inst_) {
-  HSAIL_ASM::InstMem inst = inst_;
-  assert(inst);
+HSAIL_ASM::Inst BRIGAsmPrinter::EmitLoadOrStore(const MachineInstr *MI,
+                                                bool isLoad,
+                                                unsigned vec_size) {
+  const MachineMemOperand *MMO = *MI->memoperands_begin();
+  unsigned as = HSAIL::getAddrSpace(MI);
 
-  if (EnableUniformOperations && HSAIL::isLoad(MI)) {
-    assert(opNum + 1 < MI->getNumOperands());
+  HSAIL_ASM::InstMem inst = brigantine.addInst<HSAIL_ASM::InstMem>
+    (isLoad ? Brig::BRIG_OPCODE_LD : Brig::BRIG_OPCODE_ST);
 
+  if (vec_size == 1)
+    BrigEmitOperand(MI, 0, inst);
+  else
+    BrigEmitVecOperand(MI, 0, vec_size);
+  BrigEmitOperandLdStAddress(MI, vec_size);
+
+  unsigned BT = HSAIL::getBrigType(MI).getImm();
+  if (HSAIL_ASM::isBitType(BT))
+    BT = HSAIL_ASM::getUnsignedType(HSAIL_ASM::getBrigTypeNumBits(BT));
+
+  inst.segment()    = getHSAILSegment(as);
+  inst.type()       = BT;
+  inst.align()      = getBrigAlignment(MMO->getAlignment());
+  inst.width()      = isLoad ? Brig::BRIG_WIDTH_1 : Brig::BRIG_WIDTH_NONE;
+  inst.equivClass() = 0;
+  inst.modifier().isConst() = 0;
+
+  if (EnableUniformOperations && isLoad) {
     // Emit width
     const MachineOperand &width_op = HSAIL::getWidth(MI);
     assert( width_op.isImm());
     unsigned int width  = width_op.getImm();
     assert( width == Brig::BRIG_WIDTH_1        ||
             width == Brig::BRIG_WIDTH_WAVESIZE ||
-            width == Brig::BRIG_WIDTH_ALL
-          );
+            width == Brig::BRIG_WIDTH_ALL);
     inst.width() = width;
 
     // Emit const
-    unsigned AS = (*(MI->memoperands_begin()))->getPointerInfo().getAddrSpace();
-    if(HSAILAS::GLOBAL_ADDRESS == AS) {
+    if(HSAILAS::GLOBAL_ADDRESS == as) {
       const MachineOperand &const_op = HSAIL::getLoadConstQual(MI);
-      assert( const_op.isImm());
-      bool isConst = const_op.getImm();
-      inst.modifier().isConst() = isConst;
+      assert(const_op.isImm());
+      inst.modifier().isConst() = const_op.getImm();
     }
   }
 
-  // Emit _align(n) attribute for loads and stores
-  if ((HSAIL::isLoad(MI) || HSAIL::isStore(MI)) && MI->hasOneMemOperand()) {
-    const MachineMemOperand *MMO = *MI->memoperands_begin();
-    inst.align() = getBrigAlignment(MMO->getAlignment());
-  }
+  return inst;
 }
 
 void BRIGAsmPrinter::BrigEmitOperandAddress(const MachineInstr *MI, unsigned opNum) 

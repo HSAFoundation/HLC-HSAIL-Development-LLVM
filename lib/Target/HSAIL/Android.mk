@@ -53,8 +53,7 @@ TBLGEN_TABLES := \
 	HSAILGenSubtarget.inc \
 	HSAILGenIntrinsics.inc \
 	HSAILGenBrigWriter.inc \
-	HSAILGenDAGISel.inc \
-	HSAILGenVecMap.inc
+	HSAILGenDAGISel.inc
 
 TBLGEN_TD_DIR := \
 	$(LOCAL_PATH)
