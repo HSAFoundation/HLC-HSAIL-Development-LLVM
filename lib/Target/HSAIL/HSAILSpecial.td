@@ -102,7 +102,9 @@ def hsail_memfence : HSAILInst< (outs),
 					(ins CR:$src1),
 					!strconcat(asm,
 							   " ( $dst1, $dst2, $dst3, $dst4 ), "
-							   "$src1"), []>;
+							   "$src1"), []> {
+    let isCrossLaneInst = 1;
+  }
 
   def activelaneid_u32 :         HSAILInst<(outs GPR32:$dst), (ins),
                     "activelaneid_u32\t$dst",
@@ -160,10 +162,8 @@ def hsail_memfence : HSAILInst< (outs),
                                 (i1 imm:$src)))]>;
   }
 
-  let isCrossLaneInst = 1 in {
-    def activelanemask_v4_b64_b1 : CrossLaneV4<"activelanemask_v4_b64_b1">;
-    def activelanemask_v4_width_b64_b1 : CrossLaneV4<"activelanemask_v4_width(WAVESIZE)_b64_b1">;
-  }
+  def activelanemask_v4_b64_b1 : CrossLaneV4<"activelanemask_v4_b64_b1">;
+  def activelanemask_v4_width_b64_b1 : CrossLaneV4<"activelanemask_v4_width(WAVESIZE)_b64_b1">;
 
 let isAsCheapAsAMove = 1, isReMaterializable = 1 in {
   def nullptr_flat_u64  : HSAILInst<(outs GPR64:$dst), (ins),
