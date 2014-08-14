@@ -112,20 +112,16 @@ unsigned
 HSAILInstrInfo::isLoadFromStackSlot(const MachineInstr *MI,
                                     int &FrameIndex) const
 {
-  switch (MI->getOpcode()) {
-  default:
+  const MCInstrDesc &MCID = get(MI->getOpcode());
+  if (!MCID.mayLoad() || !MI->hasOneMemOperand())
     return 0;
-  case HSAIL::spill_ld_u32_v1:
-  case HSAIL::spill_ld_u64_v1:
-  case HSAIL::spill_ld_b1:
-    for (unsigned i = 0, e = MI->getNumOperands(); i != e; ++i) {
-      if (MI->getOperand(i).isFI()) {
-        FrameIndex = MI->getOperand(i).getIndex();
+  if (HSAIL::getAddrSpace(MI) != HSAILAS::SPILL_ADDRESS)
+    return 0;
+  const MachineOperand &Base = HSAIL::getBase(MI);
+  if (Base.isFI()) {
+    FrameIndex = Base.getIndex();
         return MI->getOperand(0).getReg();
       }
-    }
-    break;
-  }
   return 0;
 }
 
@@ -140,20 +136,16 @@ unsigned
 HSAILInstrInfo::isStoreToStackSlot(const MachineInstr *MI,
                                    int &FrameIndex) const
 {
-  switch (MI->getOpcode()) {
-  default:
+  const MCInstrDesc &MCID = get(MI->getOpcode());
+  if (!MCID.mayStore() || !MI->hasOneMemOperand())
     return 0;
-  case HSAIL::spill_st_u32_v1:
-  case HSAIL::spill_st_u64_v1:
-  case HSAIL::spill_st_b1:
-    for (unsigned i = 0, e = MI->getNumOperands(); i != e; ++i) {
-      if (MI->getOperand(i).isFI()) {
-        FrameIndex = MI->getOperand(i).getIndex();
+  if (HSAIL::getAddrSpace(MI) != HSAILAS::SPILL_ADDRESS)
+    return 0;
+  const MachineOperand &Base = HSAIL::getBase(MI);
+  if (Base.isFI()) {
+    FrameIndex = Base.getIndex();
         return MI->getOperand(0).getReg();
       }
-    }
-    break;
-  }
   return 0;
 }
 
@@ -780,18 +772,22 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
   MachineFrameInfo &MFI = *MF.getFrameInfo();
   DebugLoc DL;
 
+  unsigned BT;
   switch (RC->getID()) {
     default:
-      assert(0 && "unrecognized TargetRegisterClass");
+      llvm_unreachable("unrecognized TargetRegisterClass");
       break;
     case HSAIL::GPR32RegClassID:
-      Opc = HSAIL::spill_st_u32_v1;
+      Opc = HSAIL::st_32_v1;
+      BT = Brig::BRIG_TYPE_U32;
       break;
     case HSAIL::GPR64RegClassID:
-      Opc = HSAIL::spill_st_u64_v1;
+      Opc = HSAIL::st_64_v1;
+      BT = Brig::BRIG_TYPE_U64;
       break;
     case HSAIL::CRRegClassID:
-      Opc = HSAIL::spill_st_b1;
+      Opc = HSAIL::st_b1;
+      BT = Brig::BRIG_TYPE_B1;
       break;
   }
   if (MI != MBB.end()) {
@@ -802,7 +798,7 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
   MachineInstr *nMI;
   switch (RC->getID()) {
     default:
-      assert(0 && "unrecognized TargetRegisterClass");
+      llvm_unreachable("unrecognized TargetRegisterClass");
       break;
     case HSAIL::CRRegClassID:
       // We may need a stack slot for spilling a temp GPR32 after expansion
@@ -824,6 +820,7 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
           .addFrameIndex(FrameIndex)
           .addReg(0)
           .addImm(0)
+          .addImm(BT)
           .addMemOperand(MMO);            
       break;
   }
@@ -842,18 +839,22 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
   MachineFrameInfo &MFI = *MF.getFrameInfo();
   DebugLoc DL;
 
+  unsigned BT;
   switch (RC->getID()) {
     default:
-      assert(0 && "unrecognized TargetRegisterClass");
+      llvm_unreachable("unrecognized TargetRegisterClass");
       break;
     case HSAIL::GPR32RegClassID:
-      Opc = HSAIL::spill_ld_u32_v1;
+      Opc = HSAIL::ld_32_v1;
+      BT = Brig::BRIG_TYPE_U32;
       break;
     case HSAIL::GPR64RegClassID:
-      Opc = HSAIL::spill_ld_u64_v1;
+      Opc = HSAIL::ld_64_v1;
+      BT = Brig::BRIG_TYPE_U64;
       break;
     case HSAIL::CRRegClassID:
-      Opc = HSAIL::spill_ld_b1;
+      Opc = HSAIL::ld_b1;
+      BT = Brig::BRIG_TYPE_B1;
       break;
   }
   if (MI != MBB.end()) {
@@ -863,7 +864,7 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
   MachineInstr *nMI;
   switch (RC->getID()) {
     default:
-      assert(0 && "unrecognized TargetRegisterClass");
+      llvm_unreachable("unrecognized TargetRegisterClass");
       break;
     case HSAIL::GPR32RegClassID:
     case HSAIL::GPR64RegClassID:
@@ -877,6 +878,7 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
           .addFrameIndex(FrameIndex)
           .addReg(0)
           .addImm(0)
+          .addImm(BT)
           .addImm(Brig::BRIG_WIDTH_1)
           .addImm(0)
           .addMemOperand(MMO);
@@ -1355,29 +1357,31 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
   unsigned opcode = MI.getOpcode();
 
   switch (opcode) {
-  case HSAIL::spill_st_b1:
+  case HSAIL::st_b1:
     {
       unsigned tempU32 = getTempGPR32PostRA(MBBI);
       BuildMI(*MBB, MBBI, MI.getDebugLoc(),
          get(HSAIL::cvt_b1_u32))
         .addReg(tempU32, RegState::Define)
         .addOperand(MI.getOperand(0));
-      MI.setDesc(get(HSAIL::spill_st_u32_v1));
+      MI.setDesc(get(HSAIL::st_32_v1));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsKill();
+      HSAIL::getBrigType(&MI).setImm(Brig::BRIG_TYPE_U32);
       RS->setRegUsed(tempU32);
     }
     return true;
-  case HSAIL::spill_ld_b1:
+  case HSAIL::ld_b1:
     {
       unsigned tempU32 = getTempGPR32PostRA(MBBI);
       BuildMI(*MBB, ++MBBI, MI.getDebugLoc(),
          get(HSAIL::cvt_u32_b1))
         .addOperand(MI.getOperand(0))
         .addReg(tempU32, RegState::Kill);
-      MI.setDesc(get(HSAIL::spill_ld_u32_v1));
+      MI.setDesc(get(HSAIL::ld_32_v1));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsDef();
+      HSAIL::getBrigType(&MI).setImm(Brig::BRIG_TYPE_U32);
       RS->setRegUsed(tempU32);
     }
     return true;

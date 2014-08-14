@@ -134,21 +134,23 @@ bool HSAILcommaPrint(int i, OSTREAM_TYPE &O);
 bool hasAddress(const llvm::MachineInstr *MI);
 int addressOpNum(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getBase(llvm::MachineInstr *MI);
+const llvm::MachineOperand &getBase(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getIndex(llvm::MachineInstr *MI);
+const llvm::MachineOperand &getIndex(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getOffset(llvm::MachineInstr *MI);
+const llvm::MachineOperand &getOffset(const llvm::MachineInstr *MI);
+llvm::MachineOperand &getBrigType(llvm::MachineInstr *MI);
+const llvm::MachineOperand &getBrigType(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getWidth(llvm::MachineInstr *MI);
-llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI);
+const llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getLoadConstQual(llvm::MachineInstr *MI);
-llvm::MachineOperand &getLoadConstQual(const llvm::MachineInstr *MI);
+const llvm::MachineOperand &getLoadConstQual(const llvm::MachineInstr *MI);
 
 bool isLoad(const llvm::MachineInstr *MI);
 bool isStore(const llvm::MachineInstr *MI);
 bool isConv(const llvm::MachineInstr *MI);
 
-bool HSAILisGlobalInst(const llvm::TargetMachine &TM, const llvm::MachineInstr *MI);
-bool HSAILisPrivateInst(const llvm::TargetMachine &TM, const llvm::MachineInstr *MI);
-bool HSAILisConstantInst(const llvm::TargetMachine &TM, const llvm::MachineInstr *MI);
-bool HSAILisGroupInst(const llvm::TargetMachine &TM, const llvm::MachineInstr *MI);
+unsigned getAddrSpace(const llvm::MachineInstr *MI);
 bool HSAILisArgInst(const llvm::TargetMachine &TM, const llvm::MachineInstr *MI);
 
 bool isKernelFunc(const llvm::Function *F);

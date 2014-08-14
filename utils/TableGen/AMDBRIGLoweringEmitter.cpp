@@ -14,7 +14,6 @@
 #include "CodeGenTarget.h"
 #include "llvm/TableGen/StringToOffsetTable.h"
 #include "SequenceToOffsetTable.h"
-#include "AMDHSAILVecMapEmiter.h"
 #include "llvm/ADT/Twine.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/MathExtras.h"
@@ -202,7 +201,6 @@ void BRIGLoweringEmitter::EmitPrintInstruction(raw_ostream &O) {
   O << "  switch(MI->getOpcode()) {\n";
 
   // needSpecialProcessing defined only under this macro
-  HSAILVecMapEmiter vec_map(Records);
 
   for (unsigned i = 0, e = NumberedInstructions.size(); i != e; ++i) {
     const CodeGenInstruction * CGI = NumberedInstructions[i];
@@ -228,15 +226,6 @@ void BRIGLoweringEmitter::EmitPrintInstruction(raw_ostream &O) {
 
       const RecordVal *R = CGI->TheDef->getValue("Pattern");
       int vec_size = 1;
-
-      // For vector loads and stores find equivalent scalar load or store
-      Record *scalar_rec = vec_map.getVectorRec(CGI->TheDef, 1);
-      if (scalar_rec != NULL)
-      {
-        vec_size = CGI->TheDef->getValueAsInt("VectorSize");
-        R = scalar_rec->getValue("Pattern");
-        numOperands -= vec_size - 1;
-      }
 
       // Walk dag
       DAGWalker w(ss, vec_size);

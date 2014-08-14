@@ -14,10 +14,6 @@
 // TODO HSA : fix so that a space is not emitted prior to end of
 // statement semi-colon
 
-// TODO_HSA: Once we have InstrMappings in llvm 
-// reimplement our scalar to vector maps using core llvm functionality
-class VectorOperation;
-
 class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
   : Instruction {
   field bits<32> Inst;
@@ -30,9 +26,6 @@ class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
   dag InOperandList = ins;
   let AsmString   = !strconcat(asmstr, " ;");
   let Pattern = pattern;
-
-  // Vector relations
-  int VectorSize = 0;
 
   // Target specific flags
   // Important! Keep in sync with HSAIL.h::HSAILTSFLAG

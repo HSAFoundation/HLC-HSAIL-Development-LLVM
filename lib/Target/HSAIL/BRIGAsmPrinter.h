@@ -105,8 +105,9 @@ public:
 
   virtual void EmitFunctionEntryLabel();
 
-  /// Emit ld_rarg or st_parg
-  HSAIL_ASM::Inst EmitLdStArg(const MachineInstr *MI, bool isLoad);
+  /// Emit ld_* or st_* instruction.
+  HSAIL_ASM::Inst EmitLoadOrStore(const MachineInstr *MI, bool isLoad,
+                                  unsigned vec_size);
 
   /// isBlockOnlyReachableByFallthough - Return true if the basic block has
   /// exactly one predecessor and the control transfer mechanism between
@@ -182,8 +183,6 @@ protected:
 
   void BrigEmitVecOperand(const MachineInstr *MI, unsigned opStart, unsigned numRegs);
   
-  void BrigEmitQualifiers(const MachineInstr *MI, unsigned opNum, HSAIL_ASM::Inst inst);
-
   // Stream that captures DWARF data to the internal buffer
   RawVectorOstream* mDwarfStream;
   // Stream that will receive all BRIG data
