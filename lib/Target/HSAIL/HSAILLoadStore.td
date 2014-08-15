@@ -121,15 +121,6 @@ let isNotDuplicable = 1, hasCtrlDep = 1, hasSideEffects = 1 in {
                                      i32imm:$alignnment), "", []>;
 }
 
-// For sampler/image load from readonly segment for 0.98+ hsail spec
-let needSpecialProcessing = 1 in {
-class LD_ROSAMP<Intrinsic intr, string asm, RegisterClass RC, ValueType vt> :
-  HSAILInst<(outs RC:$dst), (ins i32imm:$a),
-      !strconcat("ld_",!strconcat(asm, "\t $dst, $a")),
-      [(set (vt RC:$dst), (intr imm:$a))]>;
-}
-def ld_readonly_samp : LD_ROSAMP<int_HSAIL_ld_readonly_samp, "readonly_samp", GPR64, i64>;
-
 ////////////////////////////////////////////////////////////////////////////////
 // ld (integer, singed and unsigned, 32-bit and 64-bit;
 //     float, 32-bit and 64-bit; addr, 32bit and 64-bit)

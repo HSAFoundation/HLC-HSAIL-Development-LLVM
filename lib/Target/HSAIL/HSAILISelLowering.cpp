@@ -1353,12 +1353,30 @@ HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op, SelectionDAG &DAG) const
       if (!EnableExperimentalFeatures) {
         ops[SAMPLER_ARG] = DAG.getConstant(samplerHandleIndex, MVT::i32);
       } else {
-        // Initialized sampler will be loaded with this intrinsic for 0.98+ hsail spec
-        ops[SAMPLER_ARG] = DAG.getNode(ISD::INTRINSIC_WO_CHAIN,
-                        SDLoc(Op), sampler.getValueType(),
-                        DAG.getConstant(HSAILIntrinsic::HSAIL_ld_readonly_samp,
-                        MVT::i32), DAG.getConstant(samplerHandleIndex,
-                        MVT::i32));
+        SDValue Ops[] = {
+          DAG.getTargetConstant(samplerHandleIndex, MVT::i32),
+          DAG.getRegister(0, getPointerTy()), DAG.getTargetConstant(0, MVT::i32),
+          DAG.getTargetConstant(Brig::BRIG_TYPE_SAMP, MVT::i32),
+          DAG.getTargetConstant(Brig::BRIG_WIDTH_ALL, MVT::i32),
+          DAG.getTargetConstant(1, MVT::i1), // Const
+          DAG.getEntryNode() // Chain
+        };
+        EVT VT = sampler.getValueType();
+        MachineSDNode *LDSamp = DAG
+          .getMachineNode(HSAIL::ld_64_v1, SDLoc(Op), VT, MVT::Other, Ops);
+
+        MachineFunction &MF = DAG.getMachineFunction();
+        MachineSDNode::mmo_iterator MemOp = MF.allocateMemRefsArray(1);
+        unsigned size = VT.getStoreSize();
+        Type *PTy = VT.getTypeForEVT(*DAG.getContext());
+        PointerType *PT = PointerType::get(PTy, HSAILAS::CONSTANT_ADDRESS);
+        MachinePointerInfo MPtrInfo(UndefValue::get(PT),
+                                    size * samplerHandleIndex);
+        MemOp[0] = MF.getMachineMemOperand(MPtrInfo, MachineMemOperand::MOLoad,
+                                           size, size);
+        LDSamp->setMemRefs(MemOp, MemOp + 1);
+
+        ops[SAMPLER_ARG] = SDValue(LDSamp, 0);
       }
     }
   }
