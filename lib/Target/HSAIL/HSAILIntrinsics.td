@@ -708,8 +708,4 @@ def int_HSAIL_ld_kernarg_u32 : GCCBuiltin<"__hsail_ld_kernarg_u32">,
 def int_HSAIL_ld_kernarg_u64 : GCCBuiltin<"__hsail_ld_kernarg_u64">,
                               Intrinsic<[llvm_i64_ty], [llvm_ptr_ty], [IntrNoMem]>;
 
-// Readonly sampler load instruction for HSAIL 0.98+ spec
-def int_HSAIL_ld_readonly_samp : GCCBuiltin<"__hsail_ld_readonly_samp">,
-                              Intrinsic<[llvm_i64_ty], [llvm_i32_ty], [IntrNoMem]>;
-
 }

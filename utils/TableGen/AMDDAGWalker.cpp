@@ -44,10 +44,9 @@ void DAGWalker::ProcessIntrinsic( DefInit * def ) {
   assert( 0 == sIntrnName.compare(0, sHSAILIntrnPrefix.length(), sHSAILIntrnPrefix) );
   if ( ( sIntrnName.find("img") != sIntrnName.npos ) || ( sIntrnName.find("image") != sIntrnName.npos ) ) 
   {  
-    /* image load, store or read and readonly sampler load for 0.98+ hsail spec*/
+    /* image load, store or read */
     printer << "    BrigEmitImageInst( MI, inst );\n";
-  } else if  ( (sIntrnName.find("query") != sIntrnName.npos) ||
-               ( sIntrnName.find("readonly_samp") != sIntrnName.npos) ) {
+  } else if (sIntrnName.find("query") != sIntrnName.npos) {
     /* query width, height, order etc */
     printer << "    BrigEmitOperandImage( MI, 1 );\n";
   } else {

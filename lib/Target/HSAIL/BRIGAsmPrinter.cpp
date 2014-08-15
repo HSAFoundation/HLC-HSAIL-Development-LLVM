@@ -1948,7 +1948,12 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned
     int64_t addr = base.getImm();
     assert(isInt<32>(addr));
 
-    if (spillMapforStack.find(addr) != spillMapforStack.end()) {
+    if (MI->getOpcode() == HSAIL::ld_64_v1 &&
+        HSAIL::getBrigType(MI).getImm() == Brig::BRIG_TYPE_SAMP) {
+      BrigEmitOperandImage(MI, opNum); // Constant sampler.
+      return;
+    }
+    else if (spillMapforStack.find(addr) != spillMapforStack.end()) {
       base_name = "%spillStack";
       offset += spillMapforStack[addr];
     }
@@ -1957,7 +1962,8 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned
       offset += LocalVarMapforStack[addr];
     }
     else
-      assert("Immediate base address: neither spill nor private stack" && 0);
+      llvm_unreachable(
+        "Immediate base address: neither spill, private stack nor sampler handle");
   }
   // Kernel or function argument
   else if (base.isSymbol()) {
