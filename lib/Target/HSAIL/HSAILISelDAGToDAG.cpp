@@ -699,8 +699,7 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
         CurDAG->getRegister(0, NVT), CurDAG->getTargetConstant(0, NVT),
         CurDAG->getTargetConstant(Brig::BRIG_SEGMENT_PRIVATE, MVT::i32)
       };
-      ResNode = CurDAG->SelectNodeTo(Node, HSAIL::lda_32, NVT,
-                                     Ops, array_lengthof(Ops));
+      ResNode = CurDAG->SelectNodeTo(Node, HSAIL::lda_32, NVT, Ops);
        } else {
           ResNode = Node;
        }
