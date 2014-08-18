@@ -229,27 +229,39 @@ let hasAddress = 1, mayStore = 1, isPseudo = 1, hasSideEffects = 0 in {
 ////////////////////////////////////////////////////////////////////////////////
 // load memory address
 
-//LDA flat and Group address
-multiclass LdaAddr<SDNode op, string asm>
-{
-  let hasAddress = 1, addressOpNum = 1 in {
-    def _addr32 : HSAILInst<(outs GPR32:$dst), (ins MEMOP:$addr), 
-        asm#"_u32"#"\t$dst, $addr",
-        [(set (i32 GPR32:$dst), (op ADDR:$addr))]>,
-        Requires<[In32BitMode]>;
-
-    def _addr64 : HSAILInst<(outs GPR64:$dst), (ins MEMOP:$addr), 
-        asm#"_u64"#"\t$dst, $addr",
-        [(set (i64 GPR64:$dst), (op ADDR:$addr))]>,
-        Requires<[In64BitMode]>;
-  }
+class LdaAddr<RegisterClass RC>
+      : HSAILInst<(outs RC:$dst), (ins MEMOP:$addr, i32imm:$segment),
+      "lda\t$dst, $addr", []> {
+  let hasAddress = 1;
+  let addressOpNum = 1;
+  let neverHasSideEffects = 1;
 }
 
-let needSpecialProcessing = 1 in {
-  // TODO_HSA: is lda_flat legal? See Spec "Additional Information About lda"
-  defm lda_flat      : LdaAddr<IL_lda_flat, "lda">;
-  defm ldas_group    : LdaAddr<IL_lda_group, "lda_group">;
-  defm ldas_global : LdaAddr<IL_lda_global,"lda_global">;
-  defm ldas_constant : LdaAddr<IL_lda_readonly, "lda_readonly">;
-  defm ldas_private  : LdaAddr<IL_lda_private, "lda_private">;
-}
+def lda_32 : LdaAddr<GPR32>;
+def lda_64 : LdaAddr<GPR64>;
+
+def : Pat<(i32 (IL_lda_group    ADDR:$ptr)), (lda_32 ADDR:$ptr, 5)>;
+def : Pat<(i32 (IL_lda_private  ADDR:$ptr)), (lda_32 ADDR:$ptr, 6)>;
+/*
+// Commented block produces suboptimal but correct 32 bit pointers in 64 bit mode, though
+// results in finalizer assertion:
+// Error: GetDstSize(i) == out_width || ( GetDstSize(i) == 4 && out_width < 4) at .../SCInst.cpp:3505
+// The assertion is fixed in staging, but not yet promoted.
+
+// Patterns for 64 bit mode with conversion of loaded 32 bit address.
+// TODO_HSA: remove these patterns as soon as we stop producing 64 bit private and group pointers.
+// TODO_HSA: note, that technically ADDR component can also be a 64 bit expression,
+//           ideally we need MEMOP32 and MEMOP64 operands for this scenario, here and in loads/stores.
+def : Pat<(i64 (IL_lda_group    ADDR:$ptr)), (cvt_u32_u64 (lda_32 ADDR:$ptr, 5))>, Requires<[In64BitMode]>;
+def : Pat<(i64 (IL_lda_private  ADDR:$ptr)), (cvt_u32_u64 (lda_32 ADDR:$ptr, 6))>, Requires<[In64BitMode]>;
+*/
+// Create 64 bit pointers for now
+def : Pat<(i64 (IL_lda_group    ADDR:$ptr)), (lda_64 ADDR:$ptr, 5)>, Requires<[In64BitMode]>;
+def : Pat<(i64 (IL_lda_private  ADDR:$ptr)), (lda_64 ADDR:$ptr, 6)>, Requires<[In64BitMode]>;
+
+def : Pat<(i32 (IL_lda_flat     ADDR:$ptr)), (lda_32 ADDR:$ptr, 1)>, Requires<[In32BitMode]>;
+def : Pat<(i64 (IL_lda_flat     ADDR:$ptr)), (lda_64 ADDR:$ptr, 1)>, Requires<[In64BitMode]>;
+def : Pat<(i32 (IL_lda_global   ADDR:$ptr)), (lda_32 ADDR:$ptr, 2)>, Requires<[In32BitMode]>;
+def : Pat<(i64 (IL_lda_global   ADDR:$ptr)), (lda_64 ADDR:$ptr, 2)>, Requires<[In64BitMode]>;
+def : Pat<(i32 (IL_lda_readonly ADDR:$ptr)), (lda_32 ADDR:$ptr, 3)>, Requires<[In32BitMode]>;
+def : Pat<(i64 (IL_lda_readonly ADDR:$ptr)), (lda_64 ADDR:$ptr, 3)>, Requires<[In64BitMode]>;
