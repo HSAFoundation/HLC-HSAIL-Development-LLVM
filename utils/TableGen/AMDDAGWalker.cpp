@@ -86,13 +86,6 @@ void DAGWalker::ProcessDef( DefInit * def ) {
   case PS_START:
     {
       switch(Node[getOpcode(def)]) {
-      case LDA_FLAT:
-      case LDA_GLOBAL:
-      case LDA_GROUP:
-      case LDA_PRIVATE:
-      case LDA_READONLY:
-        m_state = PS_EXPECT_LDST_ADDR;
-        break;
       case BRCOND:
         m_state = PS_BR_EXPECT_COND;
         break;
@@ -111,12 +104,6 @@ void DAGWalker::ProcessDef( DefInit * def ) {
         }
         break;
       }
-    }
-    break;
-  case PS_EXPECT_LDST_ADDR:
-    {
-      printer << "    BrigEmitOperandLdStAddress( MI, " << m_opNum << " );\n";
-      m_state = PS_END;
     }
     break;
   case PS_BR_EXPECT_COND:

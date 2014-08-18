@@ -35,11 +35,6 @@ public:
         Node["REGISTER"] = Register;
         Node["ValueType"] = VALUETYPE;
 
-        Node["HSAILISD::LDA_FLAT"] = LDA_FLAT;
-        Node["HSAILISD::LDA_PRIVATE"] = LDA_PRIVATE;
-        Node["HSAILISD::LDA_GLOBAL"] = LDA_GLOBAL;
-        Node["HSAILISD::LDA_GROUP"] = LDA_GROUP;
-        Node["HSAILISD::LDA_READONLY"] = LDA_READONLY;
         Node["Intrinsic"] = INTRINSIC;
 
         Node["EOL"] = DELETED_NODE;
@@ -51,7 +46,6 @@ private:
   enum ParseState {
     PS_ERROR = -1,
     PS_START,
-    PS_EXPECT_LDST_ADDR, // Expect address for load or store
     PS_BR_EXPECT_COND,   // brcond ...
     PS_BR_EXPECT_BB,     // brcond cond ...  'expects address of BasicBlock to jump to'
 

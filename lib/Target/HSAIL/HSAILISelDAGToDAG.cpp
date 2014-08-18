@@ -693,19 +693,17 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
     ResNode = SelectCode(Node);
     break;
   case ISD::FrameIndex:
-    {
-      unsigned int NewOpc;
       if (FrameIndexSDNode *FIN = dyn_cast<FrameIndexSDNode>(Node)) {
-        unsigned int FI = FIN->getIndex();
-        NewOpc = HSAIL::ldas_private_addr32;
-        SDValue TFI = CurDAG->getTargetFrameIndex(FI, MVT::i32);
-        ResNode = CurDAG->SelectNodeTo(Node, NewOpc, NVT, TFI, 
-          CurDAG->getRegister(0, NVT),
-          CurDAG->getTargetConstant(0, NVT));
+      SDValue Ops[] = {
+        CurDAG->getTargetFrameIndex(FIN->getIndex(), MVT::i32),
+        CurDAG->getRegister(0, NVT), CurDAG->getTargetConstant(0, NVT),
+        CurDAG->getTargetConstant(Brig::BRIG_SEGMENT_PRIVATE, MVT::i32)
+      };
+      ResNode = CurDAG->SelectNodeTo(Node, HSAIL::lda_32, NVT,
+                                     Ops, array_lengthof(Ops));
        } else {
           ResNode = Node;
        }
-    }
     break;
 
   case ISD::INTRINSIC_WO_CHAIN:

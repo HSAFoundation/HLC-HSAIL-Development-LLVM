@@ -1008,6 +1008,18 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
       return call;
   }
 
+  case HSAIL::lda_32:
+  case HSAIL::lda_64: {
+    HSAIL_ASM::InstAddr lda = brigantine
+      .addInst<HSAIL_ASM::InstAddr>(Brig::BRIG_OPCODE_LDA);
+    BrigEmitOperand(II, 0, lda);
+    BrigEmitOperandLdStAddress(II, 1);
+    lda.segment() = II->getOperand(4).getImm();
+    lda.type() = (II->getOpcode() == HSAIL::lda_32) ? Brig::BRIG_TYPE_U32
+                                                    : Brig::BRIG_TYPE_U64;
+    return lda;
+  }
+
   case HSAIL::ld_32_v1:
   case HSAIL::ld_64_v1:
   case HSAIL::rarg_ld_32_v1:
