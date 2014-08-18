@@ -83,7 +83,7 @@ public:
   const HSAILSubtarget& getSubtarget() const { return *Subtarget; }
 
   /// EmitGlobalVariable - Emit the specified global variable to the .s file.
-  virtual void EmitGlobalVariable(GlobalVariable *GV);
+  virtual void EmitGlobalVariable(const GlobalVariable *GV);
 
   void EmitFunctionLabel(const Function &, const llvm::StringRef sFuncName);
 
