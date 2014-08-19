@@ -1881,6 +1881,19 @@ bool BRIGAsmPrinter::getFunctionVectorArgumentOffsets(const std::string& argName
 }
 
 void BRIGAsmPrinter::BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSAIL_ASM::Inst inst) {
+
+  if (HSAIL::hasAddress(MI)) {
+    unsigned addrStart = HSAIL::addressOpNum(MI);
+    if (opNum == addrStart) {
+      BrigEmitOperandLdStAddress(MI, opNum);
+      return;
+    }
+    if ((opNum > addrStart) &&
+        (opNum < addrStart + HSAILADDRESS::ADDRESS_NUM_OPS))
+      // Ignore rest of address fields, already emitted.
+      return;
+  }
+
   const MachineOperand &MO = MI->getOperand(opNum);
 
   Brig::BrigType16_t const expType = HSAIL_ASM::getOperandType(inst, m_opndList.size(),
