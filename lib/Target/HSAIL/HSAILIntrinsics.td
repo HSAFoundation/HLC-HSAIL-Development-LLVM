@@ -25,53 +25,53 @@ def int_HSAIL_get_cu : GCCBuiltin<"__hsail_get_cu">,
 // HSAIL Cross-Lane Intrinsics
 // For OCL 2.0 1/32/64-bit built-ins
 def int_HSAIL_activelaneid_u32 : GCCBuiltin<"__hsail_activelaneid_u32">,
-                              Intrinsic<[llvm_i32_ty], [], [IntrNoMem]>;
+                              Intrinsic<[llvm_i32_ty], [], []>;
 
 def int_HSAIL_activelaneid_width_u32 : GCCBuiltin<
 	                          "__hsail_activelaneid_wavewidth_u32">,
-                              Intrinsic<[llvm_i32_ty], [], [IntrNoMem]>;
+                              Intrinsic<[llvm_i32_ty], [], []>;
 
 def int_HSAIL_activelanecount_u32_b1 : GCCBuiltin<
 	                          "__hsail_activelanecount_u32_b1">,
-                              Intrinsic<[llvm_i32_ty], [llvm_i1_ty], [IntrNoMem]>;
+                              Intrinsic<[llvm_i32_ty], [llvm_i1_ty], []>;
 
 def int_HSAIL_activelanecount_width_u32_b1 : GCCBuiltin<
 	                          "__hsail_activelanecount_wavewidth_u32_b1">,
-                              Intrinsic<[llvm_i32_ty], [llvm_i1_ty], [IntrNoMem]>;
+                              Intrinsic<[llvm_i32_ty], [llvm_i1_ty], []>;
 
 def int_HSAIL_activelaneshuffle_b1 : GCCBuiltin<
 	                          "__hsail_activelaneshuffle_b1">,
                               Intrinsic<[llvm_anyint_ty], [llvm_anyint_ty,
                                          llvm_i32_ty, llvm_anyint_ty,
-                                         llvm_i1_ty], [IntrNoMem]>;
+                                         llvm_i1_ty], []>;
 
 def int_HSAIL_activelaneshuffle_width_b1 : GCCBuiltin<
 	                          "__hsail_activelaneshuffle_wavewidth_b1">,
                               Intrinsic<[llvm_anyint_ty], [llvm_anyint_ty,
                                          llvm_i32_ty, llvm_anyint_ty,
-                                         llvm_i1_ty], [IntrNoMem]>;
+                                         llvm_i1_ty], []>;
 
 
 def int_HSAIL_activelaneshuffle_b32 : GCCBuiltin<
 	                          "__hsail_activelaneshuffle_b32">,
                               Intrinsic<[llvm_anyint_ty], [llvm_anyint_ty,
                                          llvm_i32_ty, llvm_anyint_ty,
-                                         llvm_i1_ty], [IntrNoMem]>;
+                                         llvm_i1_ty], []>;
 
 def int_HSAIL_activelaneshuffle_width_b32 : GCCBuiltin<
 	                          "__hsail_activelaneshuffle_wavewidth_b32">,
                               Intrinsic<[llvm_anyint_ty], [llvm_anyint_ty,
                                          llvm_i32_ty, llvm_anyint_ty,
-                                         llvm_i1_ty], [IntrNoMem]>;
+                                         llvm_i1_ty], []>;
 
 
 def int_HSAIL_activelanemask_v4_b64_b1 : GCCBuiltin<
 	                       "__hsail_activelanemask_v4_b64_b1">,
-                              CrossLaneVecIntrNoMem;
+                              CrossLaneVecIntr;
 
 def int_HSAIL_activelanemask_v4_width_b64_b1 : GCCBuiltin<
 	                       "__hsail_activelanemask_v4_wavewidth_b64_b1">,
-                              CrossLaneVecIntrNoMem;
+                              CrossLaneVecIntr;
 
 
 // For OCL 2.0 64-bit built-ins
@@ -80,13 +80,13 @@ def int_HSAIL_activelaneshuffle_b64 : GCCBuiltin<
 	                          "__hsail_activelaneshuffle_b64">,
                               Intrinsic<[llvm_anyint_ty], [llvm_anyint_ty,
                                          llvm_i32_ty, llvm_anyint_ty,
-                                         llvm_i1_ty], [IntrNoMem]>;
+                                         llvm_i1_ty], []>;
 
 def int_HSAIL_activelaneshuffle_width_b64 : GCCBuiltin<
 	                          "__hsail_activelaneshuffle_wavewidth_b64">,
                               Intrinsic<[llvm_anyint_ty], [llvm_anyint_ty,
                                          llvm_i32_ty, llvm_anyint_ty,
-                                         llvm_i1_ty], [IntrNoMem]>;
+                                         llvm_i1_ty], []>;
 
 // Intrinsics for OpenCL workitem built-ins (OCL 1.2 6.12.2)
 def int_HSAIL_get_work_dim : GCCBuiltin<"__hsail_get_work_dim">,
