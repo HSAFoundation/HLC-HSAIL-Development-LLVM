@@ -83,9 +83,6 @@ let TargetPrefix = "HSAIL", isTarget = 1 in {
     class CrossLaneVecIntr :
       Intrinsic<[llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i64_ty],
       [llvm_i1_ty], []>;
-    class CrossLaneVecIntrNoMem :
-      Intrinsic<[llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i64_ty],
-      [llvm_i1_ty], [IntrNoMem]>;
 
     class ClassIntr : Intrinsic<[llvm_i1_ty], 
       [llvm_anyfloat_ty, llvm_anyint_ty], []>;
