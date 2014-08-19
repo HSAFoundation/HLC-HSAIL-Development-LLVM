@@ -49,24 +49,6 @@ void DAGWalker::ProcessIntrinsic( DefInit * def ) {
   } else if (sIntrnName.find("query") != sIntrnName.npos) {
     /* query width, height, order etc */
     printer << "    BrigEmitOperandImage( MI, 1 );\n";
-  } else {
-    /* not image intrinsic */
-    ListInit * LI = def->getDef()->getValueAsListInit("ParamTypes");
-    ListInit::const_iterator i = LI->begin();
-    ListInit::const_iterator e = LI->end();
-    for (;i != e; i++ ){ 
-      Init * init = *i;
-      DefInit * defParamType = dyn_cast<DefInit>(init);
-      if ( defParamType ) {
-        std::string sParamType = defParamType->getDef()->getName();
-        if ( "llvm_ptr_ty" == sParamType ) {
-          printer << "    BrigEmitOperandLdStAddress( MI, " << m_opNum << " );\n";
-          m_opNum += 3;
-        } else {
-          printer << "    BrigEmitOperand( MI, " << m_opNum++ << ", inst );\n";
-        }
-      }
-    }
   }
   m_state = PS_END;
 }
