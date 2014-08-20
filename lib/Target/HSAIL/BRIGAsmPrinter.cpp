@@ -1925,6 +1925,11 @@ void BRIGAsmPrinter::BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSA
     }
     break;
   }
+  case MachineOperand::MO_MachineBasicBlock: {
+    std::string sLabel = MO.getMBB()->getSymbol()->getName();
+    m_opndList.push_back(brigantine.createLabelRef(sLabel));
+    break;
+  }
   }
 }
 
@@ -2033,29 +2038,6 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitLoadOrStore(const MachineInstr *MI,
   }
 
   return inst;
-}
-
-void BRIGAsmPrinter::BrigEmitOperandAddress(const MachineInstr *MI, unsigned opNum) 
-{
-  const MachineOperand &MO = MI->getOperand(opNum);
-
-  switch (MO.getType()) {
-  default:
-    printf("<unknown operand type>"); break;
-  case MachineOperand::MO_MachineBasicBlock: {
-    std::string sLabel = MO.getMBB()->getSymbol()->getName();
-    m_opndList.push_back(brigantine.createLabelRef(sLabel));
-    break;
-  }
-  case MachineOperand::MO_ExternalSymbol: {
-    std::stringstream ss;
-    ss << "%" << MO.getSymbolName();
-    uint64_t off = MO.getOffset();
-    assert( off < INT_MAX );
-    m_opndList.push_back(brigantine.createRef(ss.str(), (int)off));
-    break;
-  }
-  }
 }
 
 void BRIGAsmPrinter::BrigEmitVecArgDeclaration(const MachineInstr *MI) {

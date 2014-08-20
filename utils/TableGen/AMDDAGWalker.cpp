@@ -68,12 +68,6 @@ void DAGWalker::ProcessDef( DefInit * def ) {
   case PS_START:
     {
       switch(Node[getOpcode(def)]) {
-      case BRCOND:
-        m_state = PS_BR_EXPECT_COND;
-        break;
-      case BR:
-        m_state = PS_BR_EXPECT_BB;
-        break;
       case Register:
       case Constant:
       case ConstantFP:
@@ -85,36 +79,6 @@ void DAGWalker::ProcessDef( DefInit * def ) {
           ProcessIntrinsic(def);
         }
         break;
-      }
-    }
-    break;
-  case PS_BR_EXPECT_COND:
-    {
-      switch(Node[getOpcode(def)]) {
-      case Register: // TODO: check for the appropriate register class C*
-        printer << "    BrigEmitOperand( MI, " << m_opNum++ << ", inst );\n";
-        m_state = PS_BR_EXPECT_BB;
-        break;
-      case VALUETYPE:  // do nothing, expect value itself TODO: check type/size against operation type/size
-        break;
-      default:
-        m_state = PS_ERROR;
-      }
-    }
-    break;
-  case PS_BR_EXPECT_BB:
-    {
-      switch(Node[getOpcode(def)]) {
-      case BasicBlock:
-        printer << "    BrigEmitOperandAddress( MI, " << m_opNum++ << " );\n";
-        break;
-      case DELETED_NODE:
-        {
-          m_state = PS_END;
-        }
-        break;
-      default:
-        m_state = PS_ERROR;
       }
     }
     break;
