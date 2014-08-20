@@ -29,7 +29,7 @@ let isTerminator = 1, isReturn = 1, isBarrier = 1, hasCtrlDep = 1,
 ////////////////////////////////////////////////////////////////////////////////
 // branch (unconditional and conditional)
 
-let isBranch = 1, isTerminator = 1, hasCtrlDep = 1, needSpecialProcessing = 1  in {
+let isBranch = 1, isTerminator = 1, hasCtrlDep = 1 in {
   let isBarrier = 1 in {
     def branch : HSAILInst<(outs), (ins target:$disp),
              "br\t$disp",

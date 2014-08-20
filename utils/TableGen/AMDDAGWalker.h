@@ -23,9 +23,6 @@ public:
       m_opNum(0),
       m_vec_size(vec_size)
       {
-        Node["ISD::BRCOND"] = BRCOND;
-        Node["ISD::BR"] = BR;
-        Node["ISD::BasicBlock"] = BasicBlock;
         Node["ISD::Constant"] = Constant;
         Node["ISD::ConstantFP"] = ConstantFP;
         Node["ISD::ExternalSymbol"] = ExternalSymbol;
