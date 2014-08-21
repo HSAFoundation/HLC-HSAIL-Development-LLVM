@@ -9,7 +9,6 @@
 //===----------------------------------------------------------------------===//
 
 #include "AMDBRIGLoweringEmitter.h"
-#include "AMDDAGWalker.h"
 #include "AsmWriterInst.h"
 #include "CodeGenTarget.h"
 #include "llvm/TableGen/StringToOffsetTable.h"
@@ -200,13 +199,10 @@ void BRIGLoweringEmitter::EmitPrintInstruction(raw_ostream &O) {
   O << "  HSAIL_ASM::Inst inst = HSAIL_ASM::parseMnemo(AsmStrs+(Bits & "<< (1 << AsmStrBits)-1 <<")-1, brigantine);\n";
   O << "  switch(MI->getOpcode()) {\n";
 
-  // needSpecialProcessing defined only under this macro
-
   for (unsigned i = 0, e = NumberedInstructions.size(); i != e; ++i) {
     const CodeGenInstruction * CGI = NumberedInstructions[i];
     std::string sInstName = CGI->AsmString;
     int numOperands = CGI->Operands.size();
-    unsigned hasRef = CGI->needSpecialProcessing;
 
     if (CGI->isImageInst) {
       const std::string emission = "    BrigEmitImageInst(MI, inst);\n";
@@ -218,27 +214,6 @@ void BRIGLoweringEmitter::EmitPrintInstruction(raw_ostream &O) {
       const std::string emission = "    BrigEmitVecOperand(MI, 0, 4);    BrigEmitOperand( MI, 4, inst);\n";
       BrigOperands[emission].push_back(i);
       continue;
-    }
-
-      
-    if ( 0 != hasRef ) {
-      std::ostringstream ss;
-
-      const RecordVal *R = CGI->TheDef->getValue("Pattern");
-      int vec_size = 1;
-
-      // Walk dag
-      DAGWalker w(ss, vec_size);
-      if (ListInit *LI = dyn_cast<ListInit>(R->getValue())) {
-        if ( LI->getSize() > 0 ) {
-          Init * dagR = LI->getElement(0);
-          DagInit * dag = dyn_cast<DagInit>(dagR);
-          w.WalkDAG(dag, numOperands);
-        }
-      }
-
-      std::string sOperands = ss.str();
-      BrigOperands[sOperands].push_back(i);
     }
   }
 

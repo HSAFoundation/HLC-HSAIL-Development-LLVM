@@ -2114,9 +2114,20 @@ void BRIGAsmPrinter::BrigEmitVecOperand(
 }
 
 void BRIGAsmPrinter::BrigEmitImageInst(const MachineInstr *MI,
-                                       HSAIL_ASM::InstImage inst) {
+                                       HSAIL_ASM::Inst gen_inst) {
   unsigned opCnt = 0;
 
+  if (gen_inst.opcode() == Brig::BRIG_OPCODE_QUERYIMAGE ||
+      gen_inst.opcode() == Brig::BRIG_OPCODE_QUERYSAMPLER) {
+    BrigEmitOperand(MI, 0, gen_inst);
+    if (!EnableExperimentalFeatures)
+      BrigEmitOperandImage(MI, 1);
+    else
+      BrigEmitOperand(MI, 1, gen_inst);
+    return;
+  }
+
+  HSAIL_ASM::InstImage inst(gen_inst);
   if (inst.geometry() == Brig::BRIG_GEOMETRY_2DDEPTH ||
       inst.geometry() == Brig::BRIG_GEOMETRY_2DADEPTH) 
   {

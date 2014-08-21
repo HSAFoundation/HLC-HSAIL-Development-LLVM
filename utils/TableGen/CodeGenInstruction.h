@@ -281,7 +281,6 @@ namespace llvm {
     /// include text from the specified variant, returning the new string.
     static std::string FlattenAsmStringVariants(StringRef AsmString,
                                                 unsigned Variant);
-    bool needSpecialProcessing;
     bool isImageInst;
     bool isCrossLaneInst;
   };

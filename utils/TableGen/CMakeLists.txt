@@ -2,7 +2,6 @@ set(LLVM_LINK_COMPONENTS Support)
 
 add_tablegen(llvm-tblgen LLVM
   AMDBRIGLoweringEmitter.cpp
-  AMDDAGWalker.cpp
   AsmMatcherEmitter.cpp
   AsmWriterEmitter.cpp
   AsmWriterInst.cpp
