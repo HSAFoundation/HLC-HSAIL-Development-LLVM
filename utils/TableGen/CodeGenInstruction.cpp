@@ -335,9 +335,6 @@ CodeGenInstruction::CodeGenInstruction(Record *R)
   ImplicitDefs = R->getValueAsListOfDefs("Defs");
   ImplicitUses = R->getValueAsListOfDefs("Uses");
 
-  if( ( needSpecialProcessing = R->getValue("needSpecialProcessing") ) ) {
-    needSpecialProcessing = R->getValueAsBit("needSpecialProcessing");
-  }
   if ((isImageInst = R->getValue("isImageInst")))
     isImageInst = R->getValueAsBit("isImageInst");
   if ((isCrossLaneInst = R->getValue("isCrossLaneInst")))

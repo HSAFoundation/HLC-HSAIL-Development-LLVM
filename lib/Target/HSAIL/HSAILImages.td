@@ -1,6 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // image operations
 
+let isImageInst=1 in {
+
 // Image read 
 
 class ReadImage1D<string asm>
@@ -39,8 +41,6 @@ class ReadImage2DArrayDepth<string asm>
                   !strconcat(asm,
                              "( $dst ), "
                              "[$src1], [$src2], ( $src3, $src4, $src5 )"), []>;
-
-let isImageInst=1 in {
 
 // read image 1d
 
@@ -97,8 +97,6 @@ def rd_imgf_2ddepth_f32 : ReadImage2DDepth<"rdimage_2ddepth_f32_roimg_f32">;
 def rd_imgf_2dadepth_s32 : ReadImage2DArrayDepth<"rdimage_2dadepth_f32_roimg_s32">;
 def rd_imgf_2dadepth_f32 : ReadImage2DArrayDepth<"rdimage_2dadepth_f32_roimg_f32">;
 
-}
-
 class ReadImage1D_095<string asm>
       : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
                   (ins GPR64:$src1, GPR64:$src2, GPR32:$src3),
@@ -134,9 +132,6 @@ class ReadImage2DArrayDepth_095<string asm>
                   !strconcat(asm,
                              "( $dst ), "
                              "[$src1], [$src2], ( $src3, $src4, $src5 )"), []>;
-
-
-let isImageInst=1 in {
 
 // read image 1d
 
@@ -194,9 +189,6 @@ def rd_imgf_2ddepth_f32_095 : ReadImage2DDepth_095<"rdimage_2ddepth_f32_roimg_f3
 def rd_imgf_2dadepth_s32_095 : ReadImage2DArrayDepth_095<"rdimage_2dadepth_f32_roimg_s32">;
 def rd_imgf_2dadepth_f32_095 : ReadImage2DArrayDepth_095<"rdimage_2dadepth_f32_roimg_f32">;
 
-}
-
-
 
 // Image load
 
@@ -234,8 +226,6 @@ class LoadImage2DArrayDepth<string asm>
                   !strconcat(asm,
                              "( $dst ), "
                              "[$src1], ( $src2, $src3, $src4 )"), []>;
-
-let isImageInst=1 in {
 
 // load image 1d
 
@@ -279,7 +269,6 @@ def ld_imgf_2ddepth_u32 : LoadImage2DDepth<"ldimage_2ddepth_f32_rwimg_u32">;
 // load image 2dadepth
 def ld_imgf_2dadepth_u32 : LoadImage2DArrayDepth<"ldimage_2dadepth_f32_rwimg_u32">;
 
-}
 
 // HSAIL095 image loads
 class LoadImage1D_095<string asm>
@@ -316,8 +305,6 @@ class LoadImage2DArrayDepth_095<string asm>
                   !strconcat(asm,
                              "( $dst ), "
                              "[$src1], ( $src2, $src3, $src4 )"), []>;
-
-let isImageInst=1 in {
 
 // load image 1d
 
@@ -360,8 +347,6 @@ def ld_imgf_2ddepth_u32_095 : LoadImage2DDepth_095<"ldimage_2ddepth_f32_rwimg_u3
 
 // load image 2dadepth
 def ld_imgf_2dadepth_u32_095 : LoadImage2DArrayDepth_095<"ldimage_2dadepth_f32_rwimg_u32">;
-
-}
 
 // Image store
 class StImage1d<Intrinsic intr, string asm, ValueType ValTy, 
@@ -423,7 +408,6 @@ class StImage2dArrayDepth<Intrinsic intr, string asm, ValueType ValTy,
             (CoordTy GPR32:$src3), (CoordTy GPR32:$src4),
 			(CoordTy GPR32:$src5), (CoordTy GPR32:$src6))]>;
 
-let needSpecialProcessing=1 in {
 // store image 1d
 def stimagef_1d_i32 : StImage1d<int_HSAIL_stimagef_1d_i32,
       "stimage_v4_1d_f32_rwimg_u32", f32, i32>;
@@ -479,8 +463,6 @@ def stimagef_2ddepth_i32 : StImage2dDepth<int_HSAIL_stimagef_2ddepth_i32,
 // Store image 2d array depth
 def stimagef_2dadepth_i32 : StImage2dArrayDepth<int_HSAIL_stimagef_2dadepth_i32,
       "stimage_2dadepth_f32_rwimg_u32", f32, i32>;
-
-}
 
 // HSAIL095 image store
 
@@ -543,7 +525,6 @@ class StImage2dArrayDepth_095<Intrinsic intr, string asm, ValueType ValTy,
             (CoordTy GPR32:$src3), (CoordTy GPR32:$src4),
 			(CoordTy GPR32:$src5), (CoordTy GPR32:$src6))]>;
 
-let needSpecialProcessing=1 in {
 // store image 1d
 def stimagef_1d_i32_095 : StImage1d_095<int_HSAIL_stimagef_1d_i32,
       "stimage_v4_1d_f32_rwimg_u32", f32, i32>;
@@ -599,7 +580,6 @@ def stimagef_2ddepth_i32_095 : StImage2dDepth_095<int_HSAIL_stimagef_2ddepth_i32
 // Store image 2d array depth
 def stimagef_2dadepth_i32_095 : StImage2dArrayDepth_095<int_HSAIL_stimagef_2dadepth_i32,
       "stimage_2dadepth_f32_rwimg_u32", f32, i32>;
-}
 
 
 // HSAIL095 query image
@@ -660,7 +640,6 @@ class QueryImage<Intrinsic intr, string asm> : HSAILInst<
         !strconcat(asm, "\t $dst, [$src]"),
         [(set (i32 GPR32:$dst), (intr (iPTR imm:$src)))]>;
 
-let needSpecialProcessing=1 in {
 def query_width_1d  : QueryImage<int_HSAIL_query_width_1d,  "queryimage_1d_width_u32_rwimg">; 
 def query_width_1db : QueryImage<int_HSAIL_query_width_1db, "queryimage_1db_width_u32_rwimg">;
 def query_width_1da : QueryImage<int_HSAIL_query_width_1da, "queryimage_1da_width_u32_rwimg">;

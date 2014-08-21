@@ -18,7 +18,6 @@ class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
   : Instruction {
   field bits<32> Inst;
   bit hasWidthOperand = 0;
-  bit needSpecialProcessing = 0;
   bit isImageInst = 0;
   bit isCrossLaneInst = 0;
   let Namespace = "HSAIL";
