@@ -244,6 +244,9 @@ namespace llvm
 
     SmallVector<unsigned, 16> mArgRegs;
 
+    /// A number of 64 bit register slots reserved for $s registers.
+    unsigned RegisterPartitioning;
+
     /// Information about the kernel, NULL if the function is not a kernel.
     HSAILKernel *mKernel;
 
@@ -441,6 +444,10 @@ namespace llvm
     void addArgReg(unsigned arg) { mArgRegs.push_back(arg); }
     unsigned getArgReg(unsigned arg) { 
       return (arg < mArgRegs.size()) ? mArgRegs[arg] : arg; }
+
+    void setRegisterPartitioning(unsigned RegSlots) {
+      RegisterPartitioning = RegSlots; }
+    unsigned getRegisterPartitioning() const { return RegisterPartitioning; }
 
     HSAILParamManager& getParamManager() { return ParamManager; }
     const HSAILParamManager& getParamManager() const { return ParamManager; }

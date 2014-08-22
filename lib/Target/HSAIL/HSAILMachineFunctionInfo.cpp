@@ -99,8 +99,8 @@ HSAILMachineFunctionInfo::HSAILMachineFunctionInfo(MachineFunction& MF)
   TailCallReturnAddrDelta(0),
   SRetReturnReg(0), UsesLDS(false), LDSArg(false),
   UsesGDS(false), GDSArg(false),
-  mReservedLits(11),
-    ParamManager(MF.getTarget().getSubtargetImpl()->getDataLayout())
+  mReservedLits(11), RegisterPartitioning(0),
+  ParamManager(MF.getTarget().getSubtargetImpl()->getDataLayout())
 {
   memset(mUsedMem, 0, sizeof(mUsedMem));
   const Function *F = MF.getFunction();

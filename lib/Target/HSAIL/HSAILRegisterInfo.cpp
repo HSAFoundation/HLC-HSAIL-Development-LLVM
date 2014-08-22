@@ -40,6 +40,9 @@
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/Debug.h"
+
+#define DEBUG_TYPE "hsail-reginfo"
+
 using namespace llvm;
 
 static cl::opt<int> HSAILReg32PressureLimit(
@@ -92,14 +95,14 @@ HSAILRegisterInfo::getReservedRegs(const MachineFunction &MF) const
   // We can have up to 128 s-registers, but we should have (s + 2*d + 4*q) <= 128.
   // Let's calulate the number of 32 and 64 bit VRs used in the function
   // and partition register file accordingly.
-  static std::map<unsigned, unsigned> FunctionToRegPartionMap;
+  HSAILMachineFunctionInfo *MFI = const_cast<HSAILMachineFunctionInfo*>
+    (MF.getInfo<HSAILMachineFunctionInfo>());
   unsigned NumSlotsTotal = HSAIL::GPR64RegClass.getNumRegs();
   // Default register file partitioning 64 s-regs + 32 d-regs, RegSlots = 32.
   unsigned RegSlots = NumSlotsTotal / 2;
 
   // First query for this function, calculate register use
-  if (FunctionToRegPartionMap.find(MF.getFunctionNumber()) ==
-      FunctionToRegPartionMap.end()) {
+  if (MFI->getRegisterPartitioning() == 0) {
     const MachineRegisterInfo& RI = MF.getRegInfo();
     unsigned rc32 = 0, rc64 = 0;
     for( unsigned i = 0, e = RI.getNumVirtRegs(); i != e; ++i) {
@@ -138,9 +141,13 @@ HSAILRegisterInfo::getReservedRegs(const MachineFunction &MF) const
     if (RegSlots < 8) RegSlots = 8;
     else if (RegSlots > (NumSlotsTotal - 8)) RegSlots = NumSlotsTotal - 8;
 
-    FunctionToRegPartionMap[MF.getFunctionNumber()] = RegSlots;
+    MFI->setRegisterPartitioning(RegSlots);
+    DEBUG(dbgs() << "\nFunction: " << MF.getFunction()->getName().data()
+                 << " VR count: 32 bit = " << rc32 << ", 64 bit = " << rc64
+                 << ", register file partitioning: " << RegSlots*2
+                 << " $s + " << NumSlotsTotal-RegSlots << " $d\n\n");
   } else {
-    RegSlots = FunctionToRegPartionMap[MF.getFunctionNumber()];
+    RegSlots = MFI->getRegisterPartitioning();
   }
 
   unsigned Reg;
