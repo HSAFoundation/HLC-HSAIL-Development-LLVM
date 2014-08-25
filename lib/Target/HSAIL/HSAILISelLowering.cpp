@@ -1267,13 +1267,9 @@ HSAILTargetLowering::LowerADD(SDValue Op, SelectionDAG &DAG) const {
   return Zext2;
   
 }
-SDValue 
-HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op, SelectionDAG &DAG) const {
-  unsigned IntNo = cast<ConstantSDNode>(Op->getOperand(1))->getZExtValue();
 
+static bool isRdimage(unsigned IntNo) {
   switch (IntNo) {
-  default: 
-    return Op;
   case HSAILIntrinsic::HSAIL_rd_imgf_1d_s32:
   case HSAILIntrinsic::HSAIL_rd_imgf_1d_f32:
   case HSAILIntrinsic::HSAIL_rd_imgi_1d_s32:
@@ -1314,41 +1310,50 @@ HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op, SelectionDAG &DAG) const
     // read image 2d array depth
   case HSAILIntrinsic::HSAIL_rd_imgf_2dadepth_s32:
   case HSAILIntrinsic::HSAIL_rd_imgf_2dadepth_f32:
-    break;
+    return true;
   }
 
-  // Replace sampler operand with index into image handle table
-  SDValue ops[16];
-  for (unsigned i = 0; i < Op.getNumOperands(); i++) {
-    ops[i] = Op.getOperand(i);
-  }
+  return false;
+}
 
+SDValue
+HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op, SelectionDAG &DAG) const {
+  unsigned IntNo = cast<ConstantSDNode>(Op->getOperand(1))->getZExtValue();
+  if (!isRdimage(IntNo)) return Op;
+  return lowerSamplerInitializerOperand(Op, DAG);
+}
+
+/// \brief Replace sampler initializer with sampler handle from
+///        readonly segment, potentially creating a new handle.
+SDValue
+HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
+                                                    SelectionDAG &DAG) const {
   const unsigned SAMPLER_ARG = 3;
-
-  // Detect if sampler operand is an initializer. We do this by extracting 
-  // the constant operand and analyzing it. If value of the sampler operand
-  // is constant and < IMAGE_ARG_BIAS, then this is a sampler initializer. 
-  // Add it to the set of sampler handlers and displace the sampler operand 
-  // with a sampler handler index.
   SDValue sampler = Op.getOperand(SAMPLER_ARG);
-  unsigned samplerHandleIndex;
-  if (isa<ConstantSDNode>(sampler)) {
+
+  // The sampler operand is an initializer if it is constant and less than
+  // IMAGE_ARG_BIAS.
+  if (!isa<ConstantSDNode>(sampler)) return Op;
+
     unsigned samplerConstant = cast<ConstantSDNode>(sampler)->getZExtValue();
-    if (samplerConstant < IMAGE_ARG_BIAS) {
+  if (samplerConstant >= IMAGE_ARG_BIAS) return Op;
+
       // This is a sampler initializer.
       // Find or create sampler handle based on init val.
-      samplerHandleIndex = 
+  unsigned samplerHandleIndex =
         Subtarget->getImageHandles()->findOrCreateSamplerHandle(samplerConstant);
 
-      // Actual pointer info is already lost here, all we have is an i32 constant,
-      // so we cannot check address space of original pointer. This is done with the
-      // check isa<ConstantSDNode>(sampler) above.
       // Provided that this is simply int const we can assume it is not going to be
-      // changed, so we could use readonly segment for the sampler.
+  // changed, so we use readonly segment for the sampler.
       // According to OpenCL spec samplers cannot be modified, so that is safe for
       // OpenCL. If we are going to support modifiable or non-OpenCL samplers most
       // likely the whole support code will need change.
       Subtarget->getImageHandles()->getSamplerHandle(samplerHandleIndex)->setRO();
+
+  SDValue ops[16];
+  for (unsigned i = 0; i < Op.getNumOperands(); i++) {
+    ops[i] = Op.getOperand(i);
+  }
 
       if (!EnableExperimentalFeatures) {
         ops[SAMPLER_ARG] = DAG.getConstant(samplerHandleIndex, MVT::i32);
@@ -1378,11 +1383,9 @@ HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op, SelectionDAG &DAG) const
 
         ops[SAMPLER_ARG] = SDValue(LDSamp, 0);
       }
-    }
-  }
 
-  DAG.UpdateNodeOperands(Op.getNode(), ops),
-    Op.getOperand(0).getResNo();
+      DAG.UpdateNodeOperands(Op.getNode(),
+                             makeArrayRef(ops, Op.getNumOperands()));
 
   return Op;
 }
