@@ -115,6 +115,7 @@ private:
              SDValue &Offset);
 
   bool SelectGPROrImm(SDValue In, SDValue &Src) const;
+  bool MemOpHasPtr32(SDNode *N) const;
 
   unsigned getPointerSize(void) const;
   bool isKernelFunc(void) const;
@@ -773,6 +774,24 @@ bool HSAILDAGToDAGISel::IsOREquivalentToADD(SDValue Op)
 
   // Fallback to the more conservative check
   return CurDAG->isBaseWithConstantOffset(Op);
+}
+
+/// \brief Return true if the pointer is 32-bit in large and small models
+///
+/// We accept an SDNode to keep things simple in the TD files. The
+/// cast to MemSDNode will never assert because this predicate is only
+/// used in a pattern fragment that matches load or store nodes.
+bool HSAILDAGToDAGISel::MemOpHasPtr32(SDNode *N) const {
+  unsigned AddrSpace = cast<MemSDNode>(N)->getAddressSpace();
+  switch (AddrSpace) {
+  default : return false;
+
+  case HSAILAS::GROUP_ADDRESS:
+  case HSAILAS::ARG_ADDRESS:
+  case HSAILAS::PRIVATE_ADDRESS:
+  case HSAILAS::SPILL_ADDRESS:
+    return true;
+  }
 }
 
 bool  HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr,

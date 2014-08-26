@@ -992,7 +992,8 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   }
 
   case HSAIL::lda_32:
-  case HSAIL::lda_64: {
+  case HSAIL::lda_64:
+  case HSAIL::lda_64_ptr32: {
     HSAIL_ASM::InstAddr lda = brigantine
       .addInst<HSAIL_ASM::InstAddr>(Brig::BRIG_OPCODE_LDA);
     BrigEmitOperand(II, 0, lda);
@@ -1005,42 +1006,58 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
   case HSAIL::ld_32_v1:
   case HSAIL::ld_64_v1:
-  case HSAIL::rarg_ld_32_v1:
-  case HSAIL::rarg_ld_64_v1:
+  case HSAIL::ld_32_ptr32_v1:
+  case HSAIL::ld_64_ptr32_v1:
+  case HSAIL::rarg_ld_32_ptr32_v1:
+  case HSAIL::rarg_ld_64_ptr32_v1:
     return EmitLoadOrStore(II, true, 1);
 
   case HSAIL::ld_32_v2:
   case HSAIL::ld_64_v2:
-  case HSAIL::rarg_ld_32_v2:
-  case HSAIL::rarg_ld_64_v2:
+  case HSAIL::ld_32_ptr32_v2:
+  case HSAIL::ld_64_ptr32_v2:
+  case HSAIL::rarg_ld_32_ptr32_v2:
+  case HSAIL::rarg_ld_64_ptr32_v2:
     return EmitLoadOrStore(II, true, 2);
 
   case HSAIL::ld_32_v3:
   case HSAIL::ld_64_v3:
-  case HSAIL::rarg_ld_32_v3:
-  case HSAIL::rarg_ld_64_v3:
+  case HSAIL::ld_32_ptr32_v3:
+  case HSAIL::ld_64_ptr32_v3:
+  case HSAIL::rarg_ld_32_ptr32_v3:
+  case HSAIL::rarg_ld_64_ptr32_v3:
     return EmitLoadOrStore(II, true, 3);
 
   case HSAIL::ld_32_v4:
   case HSAIL::ld_64_v4:
-  case HSAIL::rarg_ld_32_v4:
-  case HSAIL::rarg_ld_64_v4:
+  case HSAIL::ld_32_ptr32_v4:
+  case HSAIL::ld_64_ptr32_v4:
+  case HSAIL::rarg_ld_32_ptr32_v4:
+  case HSAIL::rarg_ld_64_ptr32_v4:
     return EmitLoadOrStore(II, true, 4);
 
   case HSAIL::st_32_v1:
   case HSAIL::st_64_v1:
+  case HSAIL::st_32_ptr32_v1:
+  case HSAIL::st_64_ptr32_v1:
     return EmitLoadOrStore(II, false, 1);
 
   case HSAIL::st_32_v2:
   case HSAIL::st_64_v2:
+  case HSAIL::st_32_ptr32_v2:
+  case HSAIL::st_64_ptr32_v2:
     return EmitLoadOrStore(II, false, 2);
 
   case HSAIL::st_32_v3:
   case HSAIL::st_64_v3:
+  case HSAIL::st_32_ptr32_v3:
+  case HSAIL::st_64_ptr32_v3:
     return EmitLoadOrStore(II, false, 3);
 
   case HSAIL::st_32_v4:
   case HSAIL::st_64_v4:
+  case HSAIL::st_32_ptr32_v4:
+  case HSAIL::st_64_ptr32_v4:
     return EmitLoadOrStore(II, false, 4);
 
   case HSAIL::arg_decl:
@@ -1961,7 +1978,8 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned
     int64_t addr = base.getImm();
     assert(isInt<32>(addr));
 
-    if (MI->getOpcode() == HSAIL::ld_64_v1 &&
+    if ((MI->getOpcode() == HSAIL::ld_64_v1 ||
+         MI->getOpcode() == HSAIL::ld_64_ptr32_v1) &&
         HSAIL::getBrigType(MI).getImm() == Brig::BRIG_TYPE_SAMP) {
       BrigEmitOperandImage(MI, opNum); // Constant sampler.
       return;
