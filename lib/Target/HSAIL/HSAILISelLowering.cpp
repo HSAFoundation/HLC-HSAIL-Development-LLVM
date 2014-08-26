@@ -665,19 +665,32 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
 
     unsigned op = 0;
     unsigned BrigType = HSAIL::HSAILgetBrigType(EltTy, Subtarget->is64Bit(), isSExt);
+    if (AddressSpace == HSAILAS::ARG_ADDRESS) {
+      if (ArgVT.getSizeInBits() <= 32)
+        op = isLoad ? HSAIL::ld_32_ptr32_v1 : HSAIL::st_32_ptr32_v1;
+      else
+        op = isLoad ? HSAIL::ld_64_ptr32_v1 : HSAIL::st_64_ptr32_v1;
+    } else {
+      assert(AddressSpace == HSAILAS::KERNARG_ADDRESS);
     if (ArgVT.getSizeInBits() <= 32)
       op = isLoad ? HSAIL::ld_32_v1 : HSAIL::st_32_v1;
     else
       op = isLoad ? HSAIL::ld_64_v1 : HSAIL::st_64_v1;
+    }
 
     // Change opcode for load of return value
     if (isLoad && AddressSpace == HSAILAS::ARG_ADDRESS &&
         AAInfo.TBAA && AAInfo.TBAA->getNumOperands() >= 1) {
       if (const MDString *MDS = dyn_cast<MDString>(AAInfo.TBAA->getOperand(0))) {
         if (MDS->getString().equals("retarg")) {
+          assert(op != HSAIL::ld_32_v1 && op != HSAIL::ld_64_v1);
           switch (op) {
-          case HSAIL::ld_32_v1: op = HSAIL::rarg_ld_32_v1; break;
-          case HSAIL::ld_64_v1: op = HSAIL::rarg_ld_64_v1; break;
+          case HSAIL::ld_32_ptr32_v1:
+            op = HSAIL::rarg_ld_32_ptr32_v1;
+            break;
+          case HSAIL::ld_64_ptr32_v1:
+            op = HSAIL::rarg_ld_64_ptr32_v1;
+            break;
           }
         }
       }
@@ -1367,6 +1380,8 @@ HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
           DAG.getEntryNode() // Chain
         };
         EVT VT = sampler.getValueType();
+
+    // Don't use ptr32 since this is the readonly segment.
         MachineSDNode *LDSamp = DAG
           .getMachineNode(HSAIL::ld_64_v1, SDLoc(Op), VT, MVT::Other, Ops);
 

@@ -177,6 +177,8 @@ const TargetRegisterClass*
 HSAILRegisterInfo::getPointerRegClass(const MachineFunction &MF,
 		                      unsigned Kind) const
 {
+  if (Kind == 32) return &HSAIL::GPR32RegClass;
+
   assert(Kind == 0);
 
   if (ST.is64Bit())
