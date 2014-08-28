@@ -992,8 +992,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   }
 
   case HSAIL::lda_32:
-  case HSAIL::lda_64:
-  case HSAIL::lda_64_ptr32: {
+  case HSAIL::lda_64: {
     HSAIL_ASM::InstAddr lda = brigantine
       .addInst<HSAIL_ASM::InstAddr>(Brig::BRIG_OPCODE_LDA);
     BrigEmitOperand(II, 0, lda);
