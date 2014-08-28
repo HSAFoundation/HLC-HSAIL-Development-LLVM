@@ -277,39 +277,17 @@ class LdaAddr<RegisterClass RC, DAGOperand MPtr>
   let neverHasSideEffects = 1;
 }
 
-def lda_32 : LdaAddr<GPR32, MEMOP>;
+def lda_32 : LdaAddr<GPR32, MEMOP32>;
 def lda_64 : LdaAddr<GPR64, MEMOP>;
 
 def : Pat<(i32 (IL_lda_group    ADDR:$ptr)), (lda_32 ADDR:$ptr, 5)>, Requires<[In32BitMode]>;
 def : Pat<(i32 (IL_lda_private  ADDR:$ptr)), (lda_32 ADDR:$ptr, 6)>, Requires<[In32BitMode]>;
-/*
-// Commented block produces suboptimal but correct 32 bit pointers in 64 bit mode, though
-// results in finalizer assertion:
-// Error: GetDstSize(i) == out_width || ( GetDstSize(i) == 4 && out_width < 4) at .../SCInst.cpp:3505
-// The assertion is fixed in staging, but not yet promoted.
-
-// Additionally, the use of MEMOP32 in lda_32 causes the following error.
-//
-//     Error in hsa_operand section, at offset XXX:
-//     Operand 0 size does not match operation size
-//
-// In PropValidator::validateOperandReg(), operation size is wrongly reported as 64.
-// Note that even in large model, the operation size of lda_group and lda_private
-// should be 32.
-//
-// Strangely this error shows up only when we change the source operand type to 32!
 
 // Patterns for 64 bit mode with conversion of loaded 32 bit address.
-// TODO_HSA: remove these patterns as soon as we stop producing 64 bit private and group pointers.
-def lda_32 : LdaAddr<GPR32, MEMOP32>;
+// TODO_HSA: The cvt operations are necessary until LLVM supports
+//           different pointer widths in address spaces.
 def : Pat<(i64 (IL_lda_group    ADDR:$ptr)), (cvt_u32_u64 (lda_32 ADDR:$ptr, 5))>, Requires<[In64BitMode]>;
 def : Pat<(i64 (IL_lda_private  ADDR:$ptr)), (cvt_u32_u64 (lda_32 ADDR:$ptr, 6))>, Requires<[In64BitMode]>;
-*/
-// Create 64 bit pointers for now
-// Remove the next three lines when the above issues are resolved
-def lda_64_ptr32 : LdaAddr<GPR64, MEMOP32>;
-def : Pat<(i64 (IL_lda_group    ADDR:$ptr)), (lda_64_ptr32 ADDR:$ptr, 5)>, Requires<[In64BitMode]>;
-def : Pat<(i64 (IL_lda_private  ADDR:$ptr)), (lda_64_ptr32 ADDR:$ptr, 6)>, Requires<[In64BitMode]>;
 
 def : Pat<(i32 (IL_lda_flat     ADDR:$ptr)), (lda_32 ADDR:$ptr, 1)>, Requires<[In32BitMode]>;
 def : Pat<(i64 (IL_lda_flat     ADDR:$ptr)), (lda_64 ADDR:$ptr, 1)>, Requires<[In64BitMode]>;
