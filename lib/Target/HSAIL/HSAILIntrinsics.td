@@ -359,6 +359,8 @@ def int_HSAIL_bfm: GCCBuiltin<"__hsail_bfm">,
 
 		  
 def int_HSAIL_ftz_f32 : GCCBuiltin<"__hsail_ftz_f32">, UnaryFloatIntrNoMem;
+def int_HSAIL_mul_ftz_f32 : GCCBuiltin<"__hsail_mul_ftz_f32">, BinaryFloatIntrNoMem;
+def int_HSAIL_mul_f64 : GCCBuiltin<"__hsail_mul_f64">, BinaryFloatIntrNoMem;
 
 // HSAIL_SPEC_CURRENT <
 def int_HSAIL_firstbit_u32 : GCCBuiltin<"__hsail_firstbit_u32">, UnaryIntIntrNoMem;

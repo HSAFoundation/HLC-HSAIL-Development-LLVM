@@ -12,6 +12,8 @@ defm mul : BinaryOpU32< mul, "mul_u32">;
 defm mul : BinaryOpU64< mul, "mul_u64">;
 defm mul : BinaryOpF32<fmul, "mul_ftz_f32">;
 defm mul : BinaryOpF64<fmul, "mul_f64">;
+defm mul_intrn : BinaryIntrF32<int_HSAIL_mul_ftz_f32, "mul_ftz_f32">;
+defm mul_intrn : BinaryIntrF64<int_HSAIL_mul_f64, "mul_f64">;
 
 defm mulhi : BinaryOpU32<mulhu, "mulhi_u32">;
 defm mulhi : BinaryOpS32<mulhs, "mulhi_s32">;
