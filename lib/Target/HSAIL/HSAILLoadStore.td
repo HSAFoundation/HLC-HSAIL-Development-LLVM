@@ -65,32 +65,69 @@ def private_ftos_u64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src),
                      "ftos_private_u64\t$dst, $src",
                      []>;
 
-
 // stof/ftos for address space casting.
 multiclass AddrSpaceCastInst<Intrinsic intr, string asm> {
   def _r_addr32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
       asm#"_u32_u32"#"\t $dst, $src",
-      [(set (i32 GPR32:$dst), (intr (i32 GPR32:$src)))]>;
+      [(set (i32 GPR32:$dst), (intr (i32 GPR32:$src)))]>, Requires<[In32BitMode]>;
 
   def _i_addr32 : HSAILInst<(outs GPR32:$dst), (ins i32imm:$src),
       asm#"_u32_u32"#"\t $dst, $src",
-      [(set (i32 GPR32:$dst), (intr (i32 imm:$src)))]>;
+      [(set (i32 GPR32:$dst), (intr (i32 imm:$src)))]>, Requires<[In32BitMode]>;
 
   def _r_addr64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src),
       asm#"_u64_u64"#"\t $dst, $src",
-      [(set (i64 GPR64:$dst), (intr (i64 GPR64:$src)))]>;
+      [(set (i64 GPR64:$dst), (intr (i64 GPR64:$src)))]>, Requires<[In64BitMode]>;
 
   def _i_addr64 : HSAILInst<(outs GPR64:$dst), (ins i64imm:$src),
       asm#"_u64_u64"#"\t $dst, $src",
-      [(set (i64 GPR64:$dst), (intr (i64 imm:$src)))]>;
+      [(set (i64 GPR64:$dst), (intr (i64 imm:$src)))]>, Requires<[In64BitMode]>;
+}
+
+multiclass FToSInst32<Intrinsic intr, string asm> {
+  def _r_addr32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
+      asm#"_u32_u32"#"\t $dst, $src",
+      [(set (i32 GPR32:$dst), (intr (i32 GPR32:$src)))]>, Requires<[In32BitMode]>;
+
+  def _i_addr32 : HSAILInst<(outs GPR32:$dst), (ins i32imm:$src),
+      asm#"_u32_u32"#"\t $dst, $src",
+      [(set (i32 GPR32:$dst), (intr (i32 imm:$src)))]>, Requires<[In32BitMode]>;
+
+  def _r_addr64 : HSAILInst<(outs GPR32:$dst), (ins GPR64:$src),
+      asm#"_u32_u64"#"\t $dst, $src",
+      [(set (i32 GPR32:$dst), (intr (i64 GPR64:$src)))]>, Requires<[In64BitMode]>;
+
+  def _i_addr64 : HSAILInst<(outs GPR32:$dst), (ins i64imm:$src),
+      asm#"_u32_u64"#"\t $dst, $src",
+      [(set (i32 GPR32:$dst), (intr (i64 imm:$src)))]>, Requires<[In64BitMode]>;
+}
+
+multiclass SToFInst32<Intrinsic intr, string asm> {
+  def _r_addr32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
+      asm#"_u32_u32"#"\t $dst, $src",
+      [(set (i32 GPR32:$dst), (intr (i32 GPR32:$src)))]>, Requires<[In32BitMode]>;
+
+  def _i_addr32 : HSAILInst<(outs GPR32:$dst), (ins i32imm:$src),
+      asm#"_u32_u32"#"\t $dst, $src",
+      [(set (i32 GPR32:$dst), (intr (i32 imm:$src)))]>, Requires<[In32BitMode]>;
+
+  def _r_addr64 : HSAILInst<(outs GPR64:$dst), (ins GPR32:$src),
+      asm#"_u64_u32"#"\t $dst, $src",
+      [(set (i64 GPR64:$dst), (intr (i32 GPR32:$src)))]>, Requires<[In64BitMode]>;
+
+  def _i_addr64 : HSAILInst<(outs GPR64:$dst), (ins i32imm:$src),
+      asm#"_u64_u32"#"\t $dst, $src",
+      [(set (i64 GPR64:$dst), (intr (i32 imm:$src)))]>, Requires<[In64BitMode]>;
 }
 
 defm stof_global  : AddrSpaceCastInst<int_HSAIL_addrspacecast_g2f, "stof_global">;
-defm stof_local   : AddrSpaceCastInst<int_HSAIL_addrspacecast_l2f, "stof_group">;
-defm stof_private : AddrSpaceCastInst<int_HSAIL_addrspacecast_p2f, "stof_private">;
 defm ftos_global  : AddrSpaceCastInst<int_HSAIL_addrspacecast_f2g, "ftos_global">;
-defm ftos_local   : AddrSpaceCastInst<int_HSAIL_addrspacecast_f2l, "ftos_group">;
-defm ftos_private : AddrSpaceCastInst<int_HSAIL_addrspacecast_f2p, "ftos_private">;
+
+defm stof_local   : SToFInst32<int_HSAIL_addrspacecast_l2f, "stof_group">;
+defm stof_private : SToFInst32<int_HSAIL_addrspacecast_p2f, "stof_private">;
+
+defm ftos_local   : FToSInst32<int_HSAIL_addrspacecast_f2l, "ftos_group">;
+defm ftos_private : FToSInst32<int_HSAIL_addrspacecast_f2p, "ftos_private">;
 
 
 // segmentp
