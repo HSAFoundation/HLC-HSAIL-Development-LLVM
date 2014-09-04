@@ -850,8 +850,7 @@ static SDValue generateFenceIntrinsicHelper(SDValue Chain, DebugLoc dl,
   Ops.push_back(CurDAG.getConstant(brigGlobalMemoryScope, MVT::getIntegerVT(32)));
   Ops.push_back(CurDAG.getConstant(brigGroupMemoryScope, MVT::getIntegerVT(32)));
   Ops.push_back(CurDAG.getConstant(brigImageMemoryScope, MVT::getIntegerVT(32)));
-  return CurDAG.getNode(ISD::INTRINSIC_VOID, dl, MVT::Other, Ops.data(),
-          Ops.size());
+  return CurDAG.getNode(ISD::INTRINSIC_VOID, dl, MVT::Other, Ops);
 }
 
 SDValue generateFenceIntrinsic(SDValue Chain, DebugLoc dl, unsigned memSeg,
