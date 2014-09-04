@@ -20,7 +20,7 @@
 #include "llvm/Target/TargetSubtargetInfo.h"
 #include "llvm/IR/CallingConv.h"
 #define GET_SUBTARGETINFO_HEADER
-#include "HSAILGenSubtarget.inc"
+#include "HSAILGenSubtargetInfo.inc"
 
 #include <string>
 #include <cstdio>
