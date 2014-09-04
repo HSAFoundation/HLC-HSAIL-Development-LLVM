@@ -14,6 +14,7 @@
 
 #define DEBUG_TYPE "hsail-isel"
 #include "HSAIL.h"
+#include "HSAILBrig.h"
 #include "HSAILInstrInfo.h"
 #include "HSAILMachineFunctionInfo.h"
 #include "HSAILRegisterInfo.h"
@@ -39,7 +40,6 @@
 #include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/Statistic.h"
 #include "llvm/Support/CommandLine.h"
-#include "libHSAIL/Brig.h"
 
 using namespace llvm;
 
