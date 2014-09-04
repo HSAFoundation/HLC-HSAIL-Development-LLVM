@@ -890,10 +890,10 @@ bool HSAILDAGToDAGISel::IsOREquivalentToADD(SDValue Op)
   if (VT.isInteger() && !VT.isVector()) {
     APInt LHSZero, LHSOne;
     APInt RHSZero, RHSOne;
-    CurDAG->ComputeMaskedBits(N0, LHSZero, LHSOne);
+    CurDAG->computeKnownBits(N0, LHSZero, LHSOne);
 
     if (LHSZero.getBoolValue()) {
-      CurDAG->ComputeMaskedBits(N1, RHSZero, RHSOne);
+      CurDAG->computeKnownBits(N1, RHSZero, RHSOne);
 
       // If all possibly-set bits on the LHS are clear on the RHS, return yes.
       // If all possibly-set bits on the RHS are clear on the LHS, return yes.
