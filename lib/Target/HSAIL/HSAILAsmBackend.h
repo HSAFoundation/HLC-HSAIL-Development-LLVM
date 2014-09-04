@@ -109,9 +109,7 @@ class ELFHSAILAsmBackend : public HSAILAsmBackend {
 public:
   Triple::OSType OSType;
   ELFHSAILAsmBackend(const ASM_BACKEND_CLASS &T, Triple::OSType _OSType)
-    : HSAILAsmBackend(T), OSType(_OSType) {
-    HasReliableSymbolDifference = true;
-  }
+    : HSAILAsmBackend(T), OSType(_OSType) { }
 
   virtual bool doesSectionRequireSymbols(const MCSection &Section) const {
     const MCSectionELF &ES = static_cast<const MCSectionELF&>(Section);
