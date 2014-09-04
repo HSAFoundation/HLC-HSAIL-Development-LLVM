@@ -14,9 +14,6 @@ tablegen(LLVM HSAILGenVecMap.inc -gen-hsail-vec-map)
 add_public_tablegen_target(HSAILCommonTableGen)
 
 set(sources
-  BRIGAsmPrinter.cpp
-  BRIGDwarfCompileUnit.cpp
-  BRIGDwarfDebug.cpp
   HSAILAsmBackend.cpp
   BRIGDwarfCompileUnit.cpp
   BRIGDwarfDebug.cpp
