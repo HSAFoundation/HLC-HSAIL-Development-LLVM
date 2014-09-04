@@ -505,23 +505,23 @@ class StImage3d_095<Intrinsic intr, string asm, ValueType ValTy,
 class StImage2dDepth_095<Intrinsic intr, string asm, ValueType ValTy,
         ValueType CoordTy> :  HSAILInst<(outs),
         (ins GPR32:$src1,
-            IMAGEMEM32:$src2, GPR32:$src3, GPR32:$src4),
-        !strconcat(asm, "\t $src1, [$src2], "
+            GPR64:$src2, GPR32:$src3, GPR32:$src4),
+        !strconcat(asm, "\t $src1, $src2, "
                         "( $src3, $src4 )"),
         [(intr (ValTy GPR32:$src1),
-            (iPTR imm:$src2),
+            (i64 GPR64:$src2),
             (CoordTy GPR32:$src3), (CoordTy GPR32:$src4))]>;
 
 //image 2.0 2d array depth
 class StImage2dArrayDepth_095<Intrinsic intr, string asm, ValueType ValTy,
         ValueType CoordTy> :  HSAILInst<(outs),
         (ins GPR32:$src1,
-            IMAGEMEM32:$src2,
+            GPR64:$src2,
 			GPR32:$src3, GPR32:$src4, GPR32:$src5, GPR32:$src6),
-        !strconcat(asm, "\t $src1, [$src2], "
+        !strconcat(asm, "\t $src1, $src2, "
                         "( $src3, $src4, $src5, $src6 )"),
         [(intr (ValTy GPR32:$src1),
-            (iPTR imm:$src2),
+            (i64 GPR64:$src2),
             (CoordTy GPR32:$src3), (CoordTy GPR32:$src4),
 			(CoordTy GPR32:$src5), (CoordTy GPR32:$src6))]>;
 

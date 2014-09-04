@@ -2137,9 +2137,6 @@ void BRIGAsmPrinter::BrigEmitImageInst(const MachineInstr *MI,
   if (gen_inst.opcode() == Brig::BRIG_OPCODE_QUERYIMAGE ||
       gen_inst.opcode() == Brig::BRIG_OPCODE_QUERYSAMPLER) {
     BrigEmitOperand(MI, 0, gen_inst);
-    if (!EnableExperimentalFeatures)
-      BrigEmitOperandImage(MI, 1);
-    else
       BrigEmitOperand(MI, 1, gen_inst);
     return;
   }
@@ -2154,19 +2151,6 @@ void BRIGAsmPrinter::BrigEmitImageInst(const MachineInstr *MI,
     opCnt+=4;
   }
 
-  if (!EnableExperimentalFeatures) {
-    switch(inst.opcode()) {
-    case Brig::BRIG_OPCODE_RDIMAGE:
-      BrigEmitOperandImage(MI, opCnt++);  // Image object itself
-      BrigEmitOperandImage(MI, opCnt++);  // Sampler object
-    break;
-    case Brig::BRIG_OPCODE_LDIMAGE:
-    case Brig::BRIG_OPCODE_STIMAGE:
-      BrigEmitOperandImage(MI, opCnt++);  // Image only
-    break;
-    default: ;
-    }
-  } else { // EnableExperimentalFeatures
     switch(inst.opcode()) {
     case Brig::BRIG_OPCODE_RDIMAGE:
       BrigEmitOperand(MI, opCnt++, inst);
@@ -2178,7 +2162,6 @@ void BRIGAsmPrinter::BrigEmitImageInst(const MachineInstr *MI,
       break;
     default: ;
     }
-  }
 
   switch(inst.geometry()) {
   case Brig::BRIG_GEOMETRY_1D:

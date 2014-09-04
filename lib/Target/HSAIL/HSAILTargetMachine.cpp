@@ -127,7 +127,7 @@ void HSAILPassConfig::addIRPasses() {
 }
 
 bool HSAILPassConfig::addPreISel(){
-    addPass(createLCSSAPass()); // Required by early CFG opts
+  addPass(createLCSSAPass()); // Required by early CFG opts
 
   return true;
 }
