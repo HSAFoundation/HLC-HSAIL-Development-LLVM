@@ -153,7 +153,7 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
   uint32_t Align = 4;
   const char *MemType = "uav";
   if (PT->getElementType()->isSized()) {
-    Align = mTM->getDataLayout()->getTypeAllocSize(PT->getElementType());
+    Align = mTM->getSubtarget<HSAILSubtarget>().getDataLayout()->getTypeAllocSize(PT->getElementType());
     if ((Align & (Align - 1))) Align = NextPowerOf2(Align);
   }
   ptrArg += Ip->getName().str() + ":" + 
@@ -431,7 +431,7 @@ void HSAILKernelManager::processArgMetadata(OSTREAM_TYPE &ignored,
         // is passed to the kernel. Relevant RTI is generated here (value...struct).
         // [Informative: RTI for pass-by-pointer case (pointer...struct) is generated
         // in the next "else if" block.]     
-        const DataLayout *dl = mTM->getDataLayout();
+        const DataLayout *dl = mTM->getSubtarget<HSAILSubtarget>().getDataLayout();
         const StructLayout *sl = dl->getStructLayout(dyn_cast<StructType>(CT));
         int bytesize = sl->getSizeInBytes();
         int reservedsize = (bytesize + 15) & ~15;
