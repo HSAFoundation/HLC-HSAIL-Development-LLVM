@@ -1182,8 +1182,7 @@ bool HSAILDAGToDAGISel::isFlatLoad(LoadSDNode *N) const {
 unsigned 
 HSAILDAGToDAGISel::getPointerSize(void) const {
   const HSAILTargetMachine &HTM = static_cast<const HSAILTargetMachine &>(TM);
-  unsigned res = HTM.getDataLayout()->getPointerSize();
-  return res; 
+  return HTM.getSubtarget<HSAILSubtarget>().getDataLayout()->getPointerSize();
 }
 
 /// createHSAILISelDag - This pass converts a legalized DAG into a
