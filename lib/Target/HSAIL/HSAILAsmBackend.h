@@ -69,10 +69,8 @@ public:
   /// applyFixup - Apply the \arg Value for given \arg Fixup into the provided
   /// data fragment, at the offset specified by the fixup and following the
   /// fixup kind as appropriate.
-  virtual void applyFixup(const MCFixup &Fixup,
-                          char *Data,
-                          unsigned DataSize,
-                          uint64_t Value) const;
+  void applyFixup(const MCFixup &Fixup, char *Data, unsigned DataSize,
+                  uint64_t Value, bool IsPCRel) const override;
 
   /// mayNeedRelaxation - Check whether the given instruction may need
   /// relaxation.
