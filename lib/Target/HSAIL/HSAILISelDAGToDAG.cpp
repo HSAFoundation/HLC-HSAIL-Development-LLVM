@@ -156,10 +156,8 @@ HSAILDAGToDAGISel::isKernelFunc() const
   return HSAIL::isKernelFunc(MF.getFunction());
 }
 
-static unsigned getImageInstr(HSAILIntrinsic::ID intr, bool is095 )
+static unsigned getImageInstr(HSAILIntrinsic::ID intr)
 {
-
-  if ( is095 ) {
     switch(intr){
       default: llvm_unreachable("unexpected intrinsinc ID for images");
         case HSAILIntrinsic::HSAIL_rd_imgf_1d_f32: return HSAIL::rd_imgf_1d_f32_095;
@@ -217,69 +215,6 @@ static unsigned getImageInstr(HSAILIntrinsic::ID intr, bool is095 )
         case HSAILIntrinsic::HSAIL_ld_imgui_3d_u32: return HSAIL::ld_imgui_3d_u32_095;
         case HSAILIntrinsic::HSAIL_ld_imgf_2ddepth_u32: return HSAIL::ld_imgf_2ddepth_u32_095;
         case HSAILIntrinsic::HSAIL_ld_imgf_2dadepth_u32: return HSAIL::ld_imgf_2dadepth_u32_095;
-
-
-    }
-  } else {
-    switch (intr) {
-      default: llvm_unreachable("unexpected intrinsinc ID for images");
-      case HSAILIntrinsic::HSAIL_rd_imgf_1d_f32:  return HSAIL::rd_imgf_1d_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_1d_s32:  return HSAIL::rd_imgf_1d_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_1da_f32: return HSAIL::rd_imgf_1da_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_1da_s32: return HSAIL::rd_imgf_1da_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_2d_f32: return HSAIL::rd_imgf_2d_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_2d_s32: return HSAIL::rd_imgf_2d_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_2da_f32: return HSAIL::rd_imgf_2da_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_2da_s32: return HSAIL::rd_imgf_2da_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_3d_f32: return HSAIL::rd_imgf_3d_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_3d_s32: return HSAIL::rd_imgf_3d_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgi_1d_f32: return HSAIL::rd_imgi_1d_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgi_1d_s32: return HSAIL::rd_imgi_1d_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgi_1da_f32: return HSAIL::rd_imgi_1da_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgi_1da_s32: return HSAIL::rd_imgi_1da_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgi_2d_f32: return HSAIL::rd_imgi_2d_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgi_2d_s32: return HSAIL::rd_imgi_2d_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgi_2da_f32: return HSAIL::rd_imgi_2da_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgi_2da_s32: return HSAIL::rd_imgi_2da_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgi_3d_f32: return HSAIL::rd_imgi_3d_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgi_3d_s32: return HSAIL::rd_imgi_3d_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgui_1d_f32: return HSAIL::rd_imgui_1d_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgui_1d_s32: return HSAIL::rd_imgui_1d_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgui_1da_f32: return HSAIL::rd_imgui_1da_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgui_1da_s32: return HSAIL::rd_imgui_1da_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgui_2d_f32: return HSAIL::rd_imgui_2d_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgui_2d_s32: return HSAIL::rd_imgui_2d_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgui_2da_f32: return HSAIL::rd_imgui_2da_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgui_2da_s32: return HSAIL::rd_imgui_2da_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgui_3d_f32: return HSAIL::rd_imgui_3d_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgui_3d_s32: return HSAIL::rd_imgui_3d_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_2ddepth_f32: return HSAIL::rd_imgf_2ddepth_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_2ddepth_s32: return HSAIL::rd_imgf_2ddepth_s32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_2dadepth_f32: return HSAIL::rd_imgf_2dadepth_f32;
-      case HSAILIntrinsic::HSAIL_rd_imgf_2dadepth_s32: return HSAIL::rd_imgf_2dadepth_s32;
-
-
-      case HSAILIntrinsic::HSAIL_ld_imgf_1d_u32: return HSAIL::ld_imgf_1d_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgf_1da_u32: return HSAIL::ld_imgf_1da_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgf_1db_u32: return HSAIL::ld_imgf_1db_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgf_2d_u32: return HSAIL::ld_imgf_2d_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgf_2da_u32: return HSAIL::ld_imgf_2da_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgf_3d_u32: return HSAIL::ld_imgf_3d_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgi_1d_u32: return HSAIL::ld_imgi_1d_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgi_1da_u32: return HSAIL::ld_imgi_1da_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgi_1db_u32: return HSAIL::ld_imgi_1db_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgi_2d_u32: return HSAIL::ld_imgi_2d_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgi_2da_u32: return HSAIL::ld_imgi_2da_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgi_3d_u32: return HSAIL::ld_imgi_3d_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgui_1d_u32: return HSAIL::ld_imgui_1d_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgui_1da_u32: return HSAIL::ld_imgui_1da_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgui_1db_u32: return HSAIL::ld_imgui_1db_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgui_2d_u32: return HSAIL::ld_imgui_2d_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgui_2da_u32: return HSAIL::ld_imgui_2da_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgui_3d_u32: return HSAIL::ld_imgui_3d_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgf_2ddepth_u32: return HSAIL::ld_imgf_2ddepth_u32;
-      case HSAILIntrinsic::HSAIL_ld_imgf_2dadepth_u32: return HSAIL::ld_imgf_2dadepth_u32;
-    }
   }
 }
 
@@ -345,19 +280,6 @@ SDNode* HSAILDAGToDAGISel::SelectImageIntrinsic(SDNode *Node)
 
   unsigned OpIndex = 2;
 
-  if ( !EnableExperimentalFeatures ) {
-    SDValue ImgPtrImm = Node->getOperand(OpIndex++);
-    int64_t ImgPtrVal = cast<ConstantSDNode>(ImgPtrImm)->getZExtValue();
-    SDValue ImgPtr = CurDAG->getTargetConstant(ImgPtrVal, ImgPtrImm.getValueType());
-    NewOps.push_back(ImgPtr);
-
-    if (hasSampler) {
-      SDValue SmpPtrImm = Node->getOperand(OpIndex++);
-      int64_t SmpPtrVal = cast<ConstantSDNode>(SmpPtrImm)->getZExtValue();
-      SDValue SmpPtr = CurDAG->getTargetConstant(SmpPtrVal, SmpPtrImm.getValueType());
-      NewOps.push_back(SmpPtr);
-    }
-  } else {
     SDValue Img = Node->getOperand(OpIndex++);
     int ResNo = Img.getResNo();
     SDValue ImgHandle = Img.getValue(ResNo);
@@ -368,7 +290,6 @@ SDNode* HSAILDAGToDAGISel::SelectImageIntrinsic(SDNode *Node)
       SDValue SmpHandle = Smp.getValue(Smp.getResNo());
       NewOps.push_back(SmpHandle);
     }
-  }
 
   while (OpIndex < Node->getNumOperands()) {
     SDValue Coord = Node->getOperand(OpIndex++);
@@ -377,8 +298,8 @@ SDNode* HSAILDAGToDAGISel::SelectImageIntrinsic(SDNode *Node)
 
   NewOps.push_back(Chain);
 
-  ResNode = CurDAG->SelectNodeTo(Node, getImageInstr((HSAILIntrinsic::ID)IntNo,
-      EnableExperimentalFeatures), Node->getVTList(), NewOps);
+  ResNode = CurDAG->SelectNodeTo(Node, getImageInstr((HSAILIntrinsic::ID)IntNo),
+                                 Node->getVTList(), NewOps);
   return ResNode;
 }
 

@@ -602,9 +602,6 @@ EVT HSAILTargetLowering::getValueType(Type *Ty, bool AllowUnknown ) const
 {
     EVT VT = EVT::getEVT(Ty, AllowUnknown);
 
-    if (!EnableExperimentalFeatures)
-      return TargetLowering::getValueType(Ty, AllowUnknown);
-    
     if (VT != MVT::iPTR)
       return TargetLowering::getValueType(Ty, AllowUnknown);
 
@@ -822,30 +819,6 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
       ArgNo++;
         }
     return ArgValue;
-      }
-
-      if (type->isPointerTy()) {
-        if ( !EnableExperimentalFeatures ) {
-      Type *CT = dyn_cast<PointerType>(type)->getElementType();
-          if (const StructType *ST = dyn_cast<StructType>(CT)) {
-            OpaqueType OT = GetOpaqueType(ST);
-            if (IsImage(OT) || OT == Sampler) {
-              // Lower image and sampler kernel arg to image arg handle index. 
-              // We bias the values of image_t and sampler_t arg indices so that 
-              // we know that index values >= IMAGE_ARG_BIAS represent kernel args. 
-              // Note that if either the order of processing for kernel args  
-              // or the biasing of index values is changed here, these changes must be 
-              // reflected in HSAILPropagateImageOperands.
-              unsigned index = 
-                Subtarget->getImageHandles()->findOrCreateImageHandle(ParamName);
-              index += IMAGE_ARG_BIAS;
-              ArgValue = DAG.getConstant((index), MVT::i32);
-          if (InVals) InVals->push_back(ArgValue);
-          ArgNo++;
-          return ArgValue;
-            }
-          }
-        }  // END !EnableExperimentalFeatures
       }
 
   if (StructType *STy = dyn_cast<StructType>(type)) {
@@ -1368,9 +1341,6 @@ HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
     ops[i] = Op.getOperand(i);
   }
 
-      if (!EnableExperimentalFeatures) {
-        ops[SAMPLER_ARG] = DAG.getConstant(samplerHandleIndex, MVT::i32);
-      } else {
         SDValue Ops[] = {
           DAG.getTargetConstant(samplerHandleIndex, MVT::i32),
           DAG.getRegister(0, getPointerTy()), DAG.getTargetConstant(0, MVT::i32),
@@ -1397,7 +1367,6 @@ HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
         LDSamp->setMemRefs(MemOp, MemOp + 1);
 
         ops[SAMPLER_ARG] = SDValue(LDSamp, 0);
-      }
 
       DAG.UpdateNodeOperands(Op.getNode(),
                              makeArrayRef(ops, Op.getNumOperands()));
