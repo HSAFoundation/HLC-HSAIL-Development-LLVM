@@ -15,10 +15,12 @@
 #define _HSAIL_SUBTARGET_H_
 
 #include "HSAIL.h"
+#include "HSAILDevice.h"
 #include "llvm/ADT/Triple.h"
 //#include "llvm/Target/TargetSubtarget.h"
 #include "llvm/Target/TargetSubtargetInfo.h"
 #include "llvm/IR/CallingConv.h"
+#include "llvm/IR/DataLayout.h"
 #define GET_SUBTARGETINFO_HEADER
 #include "HSAILGenSubtargetInfo.inc"
 
@@ -191,7 +193,7 @@ public:
   bool is64Bit() const;
   bool supportMetadata30() const;
   const HSAILDevice* device() const;
-  std::string getDataLayout() const;
+  const DataLayout *getDataLayout() const override { return new DataLayout(mDevice->getDataLayout()); }
   std::string getDeviceName() const;
   virtual size_t getDefaultSize(uint32_t dim) const;
 
