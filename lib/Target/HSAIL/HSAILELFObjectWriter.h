@@ -19,11 +19,9 @@ public:
                        uint16_t EMachine,
                        bool HasRelocationAddend);
 
-// vikram - from 3.1 GetRelocType is pure virtual from inherited class and
-// this requires all targets to declare their own GetRelocType.
+protected:
 unsigned GetRelocType(const MCValue &Target, const MCFixup &Fixup,
-                                bool IsPCRel, bool IsRelocWithSymbol,
-                                int64_t Addend) const {
+                        bool IsPCRel) const override {
   return 0; // currently return 0, which means no relocation
 }
 
