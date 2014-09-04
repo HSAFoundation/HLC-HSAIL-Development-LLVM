@@ -1,0 +1,110 @@
+include $(LLVM_DEPTH)/llvmdefs
+
+NEED_EXCEPTIONS = 1
+
+#
+## Targets
+#
+LIB_TARGET = LLVMHSAILCodeGen
+
+#
+## C files
+#
+vpath %.c \
+	$(COMPONENT_DEPTH)
+
+vpath %.cpp \
+	$(COMPONENT_DEPTH) \
+	$(COMPONENT_DEPTH)/TargetInfo
+
+vpath %.td  $(COMPONENT_DEPTH)/*.td
+
+CPPFILES := \
+	$(notdir $(wildcard $(COMPONENT_DEPTH)/*.cpp)) \
+	$(notdir $(wildcard $(COMPONENT_DEPTH)/TargetInfo/*.cpp)) \
+
+
+ifeq ($(BUILD_GPU_DEVICE),no)
+# Compile in the AMDIL::MDParser since we won't get it from the AMDILCodeGenLIBS
+vpath %.cpp \
+	$(COMPONENT_DEPTH)/../AMDIL/MDParser
+
+CPPFILES += \
+	$(notdir $(wildcard $(COMPONENT_DEPTH)/../AMDIL/MDParser/*.cpp))
+endif
+
+#
+## C include paths
+#
+LCINCS = $(INCSWITCH) "$(COMPONENT_DEPTH)"
+LCINCS += $(INCSWITCH) "$(COMPONENT_DEPTH)/TargetInfo"
+LCINCS += $(INCSWITCH) "$(COMPONENT_DEPTH)/../AMDIL/MDParser"
+LCINCS += $(INCSWITCH) "$(OPENCL_DEPTH)/api/opencl"
+
+ifeq ($(HSA_GOAL4), 1)
+    LCINCS += -DHSA_GOAL4
+endif
+
+ifneq ($(HSAIL_SPEC), 1)
+    GCPPFLAGS += $(DEFSWITCH) $(HSAIL_SPEC)
+endif
+
+LCINCS += $(INCSWITCH) "$(OPENCL_DEPTH)/compiler/hsail-tools" $(INCSWITCH) "$(OPENCL_DEPTH)/compiler/hsail-tools/libHSAIL/$(FULL_BUILD_DIR)"
+
+#
+# Generated files as PRE_TARGETS
+#
+TDFiles := $(COMPONENT_DEPTH)/*.td
+
+
+BASETDFILE = $(COMPONENT_DEPTH)/HSAIL.td
+
+
+GENFILES = \
+    $(BUILD_DIR)/HSAILGenBrigWriter.inc \
+    $(BUILD_DIR)/HSAILGenDAGISel.inc \
+    $(BUILD_DIR)/HSAILGenInstrInfo.inc \
+    $(BUILD_DIR)/HSAILGenIntrinsics.inc \
+    $(BUILD_DIR)/HSAILGenRegisterInfo.inc \
+    $(BUILD_DIR)/HSAILGenSubtarget.inc \
+    $(BUILD_DIR)/HSAILGenVecMap.inc
+
+PRE_TARGETS = $(GENFILES)
+LDIRT = $(GENFILES)
+
+$(BUILD_DIR)/HSAILGenRegisterInfo.inc: $(TDFiles) $(TBLGEN)
+	@$(MAKENOISE) "Generating $(notdir $@) ..."
+	$(VNOISE)$(MKDIR) $(dir $@)
+	$(NONOISE)$(TableGen) -gen-register-info -o $@ $(BASETDFILE)
+
+$(BUILD_DIR)/HSAILGenInstrInfo.inc: $(TDFiles) $(TBLGEN)
+	@$(MAKENOISE) "Generating $(notdir $@) ..."
+	$(VNOISE)$(MKDIR) $(dir $@)
+	$(NONOISE)$(TableGen) -gen-instr-info -o $@ $(BASETDFILE)
+
+$(BUILD_DIR)/HSAILGenBrigWriter.inc: $(TDFiles) $(TBLGEN)
+	@$(MAKENOISE) "Generating $(notdir $@) ..."
+	$(VNOISE)$(MKDIR) $(dir $@)
+	$(NONOISE)$(TableGen) -gen-brig-writer -o $@ $(BASETDFILE)
+
+$(BUILD_DIR)/HSAILGenDAGISel.inc: $(TDFiles) $(TBLGEN)
+	@$(MAKENOISE) "Generating $(notdir $@) ..."
+	$(VNOISE)$(MKDIR) $(dir $@)
+	$(NONOISE)$(TableGen) -gen-dag-isel -o $@ $(BASETDFILE)
+
+$(BUILD_DIR)/HSAILGenSubtarget.inc: $(TDFiles) $(TBLGEN)
+	@$(MAKENOISE) "Generating $(notdir $@) ..."
+	$(VNOISE)$(MKDIR) $(dir $@)
+	$(NONOISE)$(TableGen) -gen-subtarget -o $@ $(BASETDFILE)
+
+$(BUILD_DIR)/HSAILGenIntrinsics.inc: $(TDFiles) $(TBLGEN)
+	@$(MAKENOISE) "Generating $(notdir $@) ..."
+	$(VNOISE)$(MKDIR) $(dir $@)
+	$(NONOISE)$(TableGen) -gen-tgt-intrinsic -o $@ $(BASETDFILE)
+
+$(BUILD_DIR)/HSAILGenVecMap.inc: $(TDFiles) $(TBLGEN)
+	@$(MAKENOISE) "Generating $(notdir $@) ..."
+	$(VNOISE)$(MKDIR) $(dir $@)
+	$(NONOISE)$(TableGen) -gen-hsail-vec-map -o $@ $(BASETDFILE)
+
+include $(LLVM_DEPTH)/llvmrules
