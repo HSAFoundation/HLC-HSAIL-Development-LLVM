@@ -391,7 +391,7 @@ public:
                           SDValue& InFlag,
                           const SmallVectorImpl<ISD::InputArg> &Ins,
                           Type *type,
-                          DebugLoc dl,
+                          SDLoc dl,
                           SelectionDAG &DAG,
                           SmallVectorImpl<SDValue> &InVals,
                           SDValue RetValue) const;
@@ -418,7 +418,7 @@ public:
               bool isVarArg,
               const SmallVectorImpl<ISD::OutputArg> &Outs,
               const SmallVectorImpl<SDValue> &OutVals,
-              DebugLoc dl,
+              SDLoc dl,
               SelectionDAG &DAG) const;
 
   /// isUsedByReturnOnly - Return true if result of the specified node is used

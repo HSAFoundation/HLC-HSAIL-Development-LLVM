@@ -951,7 +951,7 @@ bool  HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr,
     {
       Base = CurDAG->getTargetGlobalAddress(
         cast<GlobalAddressSDNode>(Addr)->getGlobal(), 
-        Addr.getDebugLoc(), 
+        SDLoc(Addr),
         ValueType);
       int64_t new_offset = Offset + cast<GlobalAddressSDNode>(Addr)->getOffset();
       if (!Subtarget->is64Bit() && !isInt<32>(new_offset))
