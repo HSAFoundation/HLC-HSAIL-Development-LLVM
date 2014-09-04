@@ -481,8 +481,8 @@ SDNode* HSAILDAGToDAGISel::SelectImageIntrinsic(SDNode *Node)
 
   NewOps.push_back(Chain);
 
-  ResNode = CurDAG->SelectNodeTo(Node, getImageInstr((HSAILIntrinsic::ID)IntNo, EnableExperimentalFeatures),
-                                 Node->getVTList(), NewOps.data(), NewOps.size());
+  ResNode = CurDAG->SelectNodeTo(Node, getImageInstr((HSAILIntrinsic::ID)IntNo,
+      EnableExperimentalFeatures), Node->getVTList(), NewOps);
   return ResNode;
 }
 
@@ -510,7 +510,7 @@ SDNode* HSAILDAGToDAGISel::SelectCrossLaneIntrinsic(SDNode *Node)
   NewOps.push_back(Chain);
 
   ResNode = CurDAG->SelectNodeTo(Node, getCrossLaneInstr((HSAILIntrinsic::ID)IntNo),
-                                 Node->getVTList(), NewOps.data(), NewOps.size());
+                                 Node->getVTList(), NewOps);
   return ResNode;
 }
 
@@ -559,8 +559,7 @@ SDNode* HSAILDAGToDAGISel::SelectLdKernargIntrinsic(SDNode *Node) {
   SDValue Ops[] = { Base, Reg, Offset,              /* Address */
                     OneDw, Align, OneBit,           /* Width, Align, Const */
                     hasChain ? Node->getOperand(0) : CurDAG->getEntryNode()  };
-  SDNode *Load = CurDAG->SelectNodeTo(Node, opc, VT, MVT::Other, Ops,
-                                      array_lengthof(Ops));
+  SDNode *Load = CurDAG->SelectNodeTo(Node, opc, VT, MVT::Other, Ops);
 
   // Set machine memory operand
   PointerType *ArgPT = PointerType::get(Ty, HSAILAS::KERNARG_ADDRESS);

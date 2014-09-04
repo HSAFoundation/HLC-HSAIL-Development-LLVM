@@ -820,7 +820,7 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
   RetOps[0] = Chain;  // Update chain.
 
   return DAG.getNode(HSAILISD::RET_FLAG, dl,
-                     MVT::Other, &RetOps[0], RetOps.size());
+                     MVT::Other, RetOps);
 }
 
 /// isUsedByReturnOnly - Return true if result of the specified node is used
@@ -1020,8 +1020,12 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     }
     else VTs = DAG.getVTList(MVT::Other, MVT::Glue);
 
-    SDNode *ArgNode = DAG.getMachineNode(op, dl, VTs, &Ops[opShift],
-                                         opNo - opShift);
+    SmallVector <SDValue, 8> OpArg;
+
+    for (unsigned i = opShift; i < opNo; ++i) {
+      OpArg.push_back(Ops[i]);
+    }
+    SDNode *ArgNode = DAG.getMachineNode(op, dl, VTs, OpArg);
 
     // TODO_HSA: Find a better base pointer for an argument than an UndefValue.
     //           This way we could use vectorization of parameter loads.
@@ -1229,7 +1233,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     SDValue arrSize =  DAG.getTargetConstant(VecVT ? VecVT->getNumElements() : 1, MVT::i32);
     SDValue ArgDeclOps[] = {  RetValue, SDBrigType, arrSize, Chain, InFlag };
     SDNode *ArgDeclNode = DAG.getMachineNode(HSAIL::arg_decl, dl, VTs,
-                            ArgDeclOps, InFlag.getNode() ? 5 : 4);
+                            ArgDeclOps);
     SDValue ArgDecl(ArgDeclNode, 0);
 
     Chain = ArgDecl.getValue(0);
@@ -1276,7 +1280,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     SDValue arrSize =  DAG.getTargetConstant(num_elem, MVT::i32);
     SDValue ArgDeclOps[] = { StParamValue, SDBrigType, arrSize, Chain, InFlag };
     SDNode *ArgDeclNode = DAG.getMachineNode(HSAIL::arg_decl, dl, VTs,
-                            ArgDeclOps, InFlag.getNode() ? 5 : 4);
+                            ArgDeclOps);
     SDValue ArgDecl(ArgDeclNode, 0);
     Chain = ArgDecl.getValue(0);
     InFlag = ArgDecl.getValue(1);
@@ -1318,7 +1322,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     Ops.push_back(InFlag);
   }
 
-  Chain = DAG.getNode(HSAILISD::CALL, dl, VTs, &Ops[0], Ops.size());
+  Chain = DAG.getNode(HSAILISD::CALL, dl, VTs, Ops);
   InFlag = Chain.getValue(1);
 
   // Handle result values, copying them out of physregs into vregs that
@@ -1631,7 +1635,7 @@ HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op, SelectionDAG &DAG) const
     }
   }
 
-  DAG.UpdateNodeOperands(Op.getNode(), ops, Op.getNumOperands()),
+  DAG.UpdateNodeOperands(Op.getNode(), ops),
     Op.getOperand(0).getResNo();
 
   return Op;
@@ -1712,7 +1716,7 @@ HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
 
     SDValue Result = DAG.getNode(ISD::TRUNCATE, dl, MVT::i1, NewLD);
     SDValue Ops[] = { Result, SDValue(NewLD.getNode(), 1) };
-    return DAG.getMergeValues(Ops, 2, dl);
+    return DAG.getMergeValues(Ops, dl);
   }
 
   // Custom lowering for extload from sub-dword size to i64. We only
