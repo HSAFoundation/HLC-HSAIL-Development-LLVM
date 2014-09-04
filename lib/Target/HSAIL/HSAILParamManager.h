@@ -18,7 +18,6 @@
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/SmallVector.h"
-#include "llvm/Target/Mangler.h"
 #include "llvm/IR/Type.h"
 
 namespace llvm {
