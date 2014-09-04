@@ -17,6 +17,7 @@ BUILT_SOURCES = HSAILGenRegisterInfo.inc HSAILGenInstrInfo.inc \
 		HSAILGenMCCodeEmitter.inc HSAILGenCallingConv.inc \
 		HSAILGenIntrinsics.inc HSAILGenAsmWriter.inc
 
-DIRS = InstPrinter
+
+DIRS = TargetInfo
 
 include $(LEVEL)/Makefile.common
