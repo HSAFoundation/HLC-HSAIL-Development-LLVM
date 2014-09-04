@@ -87,7 +87,7 @@ public:
   /// fixup requires the associated instruction to be relaxed.
   virtual bool fixupNeedsRelaxation(const MCFixup &Fixup,
                                     uint64_t Value,
-                                    const MCInstFragment *DF,
+                                    const MCRelaxableFragment *DF,
                                     const MCAsmLayout &Layout) const;
 
   /// relaxInstruction - Relax the instruction in the given fragment to the next

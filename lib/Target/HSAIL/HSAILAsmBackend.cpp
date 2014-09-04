@@ -120,7 +120,7 @@ HSAILAsmBackend::mayNeedRelaxation(const MCInst &Inst) const
 bool
 HSAILAsmBackend::fixupNeedsRelaxation(const MCFixup &Fixup,
                                       uint64_t Value,
-                                      const MCInstFragment *DF,
+                                      const MCRelaxableFragment *DF,
                                       const MCAsmLayout &Layout) const {
   assert(!"When do we hit this?");
   return false;
