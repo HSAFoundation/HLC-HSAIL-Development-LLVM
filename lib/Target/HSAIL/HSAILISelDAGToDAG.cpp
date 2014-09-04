@@ -50,6 +50,8 @@ using namespace llvm;
 namespace llvm {
   extern bool EnableExperimentalFeatures;
   extern bool EnableGCNMinMax;
+
+  void initializeHSAILDAGToDAGISelPass(PassRegistry &);
 }
 
 namespace {
@@ -194,7 +196,9 @@ private:
 #include "HSAILGenDAGISel.inc"
 
 };
+
 }
+
   // Register pass in passRegistry so that the pass info gets populated for printing debug info 
   INITIALIZE_PASS(HSAILDAGToDAGISel, "hsail-isel",
                 "HSAIL DAG->DAG Instruction Selection", false, false)			
