@@ -1087,35 +1087,35 @@ static bool check_attribute(const Value *ptr, unsigned int addrspace) {
 }
 
 bool HSAILDAGToDAGISel::isGlobalStore(StoreSDNode *N) const {
-  const Value *V = N->getSrcValue();
+  const Value *V = N->getMemOperand()->getValue();
   if (V == NULL) return false;
 
   return check_type(V, Subtarget->getGlobalAS());
 }
 
 bool HSAILDAGToDAGISel::isGroupStore(StoreSDNode *N) const {
-  return check_type(N->getSrcValue(), Subtarget->getGroupAS());
+  return check_type(N->getMemOperand()->getValue(), Subtarget->getGroupAS());
 }
 
 bool HSAILDAGToDAGISel::isPrivateStore(StoreSDNode *N) const {
-  return check_type(N->getSrcValue(), Subtarget->getPrivateAS());
+  return check_type(N->getMemOperand()->getValue(), Subtarget->getPrivateAS());
 }
 
 bool HSAILDAGToDAGISel::isSpillStore(StoreSDNode *N) const {
-  return check_type(N->getSrcValue(), Subtarget->getSpillAS());
+  return check_type(N->getMemOperand()->getValue(), Subtarget->getSpillAS());
 }
 
 bool HSAILDAGToDAGISel::isArgStore(StoreSDNode *N) const {
-  return check_type(N->getSrcValue(), Subtarget->getArgAS());
+  return check_type(N->getMemOperand()->getValue(), Subtarget->getArgAS());
 }
 
 bool HSAILDAGToDAGISel::isFlatStore(StoreSDNode *N) const {
-  return !check_type(N->getSrcValue(), Subtarget->getGlobalAS()) &&
-         !check_type(N->getSrcValue(), Subtarget->getConstantAS()) &&
-         !check_type(N->getSrcValue(), Subtarget->getGroupAS()) &&
-         !check_type(N->getSrcValue(), Subtarget->getPrivateAS()) &&
-         !check_type(N->getSrcValue(), Subtarget->getSpillAS()) &&
-         !check_type(N->getSrcValue(), Subtarget->getArgAS());
+  return !check_type(N->getMemOperand()->getValue(), Subtarget->getGlobalAS()) &&
+         !check_type(N->getMemOperand()->getValue(), Subtarget->getConstantAS()) &&
+         !check_type(N->getMemOperand()->getValue(), Subtarget->getGroupAS()) &&
+         !check_type(N->getMemOperand()->getValue(), Subtarget->getPrivateAS()) &&
+         !check_type(N->getMemOperand()->getValue(), Subtarget->getSpillAS()) &&
+         !check_type(N->getMemOperand()->getValue(), Subtarget->getArgAS());
 }
 
 LoadSDNode* HSAILDAGToDAGISel::getAncestorLoad(SDNode *N) const{
@@ -1131,14 +1131,14 @@ LoadSDNode* HSAILDAGToDAGISel::getAncestorLoad(SDNode *N) const{
 }
 
 bool HSAILDAGToDAGISel::isGlobalLoad(LoadSDNode *N) const {
-  const Value *V = N->getSrcValue();
+  const Value *V = N->getMemOperand()->getValue();
   if (V == NULL) return false;
 
   return check_type(V, Subtarget->getGlobalAS());
 }
 
 bool HSAILDAGToDAGISel::isConstantLoad(LoadSDNode *N, int cbID) const {
-  const Value *V = N->getSrcValue();
+  const Value *V = N->getMemOperand()->getValue();
   if (V == NULL) return false;
 
   if (check_type(V, Subtarget->getConstantAS()))
@@ -1148,33 +1148,33 @@ bool HSAILDAGToDAGISel::isConstantLoad(LoadSDNode *N, int cbID) const {
 }
 
 bool HSAILDAGToDAGISel::isGroupLoad(LoadSDNode *N) const {
-  return check_type(N->getSrcValue(), Subtarget->getGroupAS());
+  return check_type(N->getMemOperand()->getValue(), Subtarget->getGroupAS());
 }
 
 bool HSAILDAGToDAGISel::isPrivateLoad(LoadSDNode *N) const {
-  return check_type(N->getSrcValue(), Subtarget->getPrivateAS());
+  return check_type(N->getMemOperand()->getValue(), Subtarget->getPrivateAS());
 }
 
 bool HSAILDAGToDAGISel::isSpillLoad(LoadSDNode *N) const {
-  return check_type(N->getSrcValue(), Subtarget->getSpillAS());
+  return check_type(N->getMemOperand()->getValue(), Subtarget->getSpillAS());
 }
 
 bool HSAILDAGToDAGISel::isKernargLoad(LoadSDNode *N) const {
-  return check_type(N->getSrcValue(), Subtarget->getKernargAS());
+  return check_type(N->getMemOperand()->getValue(), Subtarget->getKernargAS());
 }
 
 bool HSAILDAGToDAGISel::isArgLoad(LoadSDNode *N) const {
-  return check_type(N->getSrcValue(), Subtarget->getArgAS());
+  return check_type(N->getMemOperand()->getValue(), Subtarget->getArgAS());
 }
 
 bool HSAILDAGToDAGISel::isFlatLoad(LoadSDNode *N) const {
-  return !check_type(N->getSrcValue(), Subtarget->getGlobalAS()) &&
-         !check_type(N->getSrcValue(), Subtarget->getConstantAS()) &&
-         !check_type(N->getSrcValue(), Subtarget->getGroupAS()) &&
-         !check_type(N->getSrcValue(), Subtarget->getPrivateAS()) &&
-         !check_type(N->getSrcValue(), Subtarget->getSpillAS()) &&
-         !check_type(N->getSrcValue(), Subtarget->getKernargAS()) &&
-         !check_type(N->getSrcValue(), Subtarget->getArgAS());
+  return !check_type(N->getMemOperand()->getValue(), Subtarget->getGlobalAS()) &&
+         !check_type(N->getMemOperand()->getValue(), Subtarget->getConstantAS()) &&
+         !check_type(N->getMemOperand()->getValue(), Subtarget->getGroupAS()) &&
+         !check_type(N->getMemOperand()->getValue(), Subtarget->getPrivateAS()) &&
+         !check_type(N->getMemOperand()->getValue(), Subtarget->getSpillAS()) &&
+         !check_type(N->getMemOperand()->getValue(), Subtarget->getKernargAS()) &&
+         !check_type(N->getMemOperand()->getValue(), Subtarget->getArgAS());
 }
 
 /// Query the target data for target pointer size as defined in datalayout
