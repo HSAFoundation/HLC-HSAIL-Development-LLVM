@@ -380,7 +380,7 @@ public:
   /// the resulting token chain value.
   virtual SDValue
   LowerCall(CallLoweringInfo &CLI,
-                SmallVectorImpl<SDValue> &InVals) const LLVM_OVERRIDE;
+                SmallVectorImpl<SDValue> &InVals) const override;
 
   /// LowerCallResult - Lower the result values of an ISD::CALL into the
   /// appropriate copies out of appropriate physical registers.  This assumes that
