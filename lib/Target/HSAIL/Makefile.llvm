@@ -1,0 +1,31 @@
+##===- lib/Target/HSAIL/Makefile ---------------------------*- Makefile -*-===##
+#
+#                     The LLVM Compiler Infrastructure
+#
+# This file is distributed under the University of Illinois Open Source
+# License. See LICENSE.TXT for details.
+#
+##===----------------------------------------------------------------------===##
+
+LEVEL = ../../..
+LIBRARYNAME = LLVMHSAILCodeGen
+TARGET = HSAIL
+
+# Make sure that tblgen is run, first thing.
+BUILT_SOURCES = HSAILGenAsmMatcher.inc \
+                HSAILGenBrigWriter.inc \
+                HSAILGenDAGISel.inc \
+                HSAILGenEDInfo.inc \
+                HSAILGenFastISel.inc \
+                HSAILGenInstrNames.inc \
+                HSAILGenInstrInfo.inc \
+                HSAILGenIntrinsics.inc \
+                HSAILGenRegisterInfo.h.inc \
+                HSAILGenRegisterNames.inc \
+                HSAILGenRegisterInfo.inc \
+                HSAILGenSubtarget.inc \
+                HSAILGenVecMap.inc
+
+DIRS = TargetInfo
+
+include $(LEVEL)/Makefile.common
