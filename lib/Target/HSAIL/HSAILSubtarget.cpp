@@ -14,6 +14,7 @@
 #define DEBUG_TYPE "subtarget"
 #include "HSAILSubtarget.h"
 #include "HSAILInstrInfo.h"
+#include "HSAILDevice.h"
 
 #define GET_SUBTARGETINFO_ENUM
 #define GET_SUBTARGETINFO_CTOR
