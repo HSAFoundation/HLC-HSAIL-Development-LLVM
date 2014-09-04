@@ -76,12 +76,9 @@ static unsigned getFixupKindLog2Size(unsigned Kind) {
 /// applyFixup - Apply the \arg Value for given \arg Fixup into the provided
 /// data fragment, at the offset specified by the fixup and following the
 /// fixup kind as appropriate.
-void
-HSAILAsmBackend::applyFixup(const MCFixup &Fixup,
-                            char *Data,
-                            unsigned DataSize,
-                            uint64_t Value) const
-{
+void HSAILAsmBackend::applyFixup(const MCFixup &Fixup, char *Data,
+                                 unsigned DataSize, uint64_t Value,
+                                 bool IsPCRel) const {
 #ifdef AMD_HSAIL_DEBUG_ENHANCED_LOGGING
     errs()<<"ApplyFixup called: kind="<<Fixup.getKind()<<", offset="<<Fixup.getOffset()<<", value="<<Value<<", datasize="<<DataSize<<"\n";
 #endif // AMD_HSAIL_DEBUG_ENHANCED_LOGGING
