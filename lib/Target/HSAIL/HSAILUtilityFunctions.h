@@ -56,10 +56,10 @@
 #define HSAILUTILITYFUNCTIONS_H_
 
 #include "HSAIL.h"
+#include "HSAILBrig.h"
 #include "HSAILLLVMVersion.h"
 #include "HSAILTargetMachine.h"
 #include "llvm/ADT/SmallVector.h"
-#include "libHSAIL/Brig.h"
 
 // Utility functions from ID
 //
