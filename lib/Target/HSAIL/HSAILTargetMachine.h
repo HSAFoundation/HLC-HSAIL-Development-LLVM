@@ -195,7 +195,7 @@ public:
   }
 
   // Pass Pipeline Configuration
-  virtual void addIRPasses() LLVM_OVERRIDE;
+  virtual void addIRPasses() override;
   virtual bool addPreEmitPass();
   virtual bool addPreISel();
   virtual bool addInstSelector();
