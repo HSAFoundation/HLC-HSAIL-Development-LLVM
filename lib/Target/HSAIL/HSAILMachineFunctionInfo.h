@@ -83,6 +83,7 @@ namespace llvm
 
   enum NameDecorationStyle
   {
+    NONE,
     StdCall,
     FastCall
   };
