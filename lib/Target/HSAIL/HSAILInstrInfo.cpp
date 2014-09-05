@@ -438,7 +438,7 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
           Cond.push_back(MachineOperand::CreateImm(COND_IRREVERSIBLE));
           continue;
         }
-        RS->setUsed(free_reg);
+        RS->setRegUsed(free_reg);
       }
 
       // Everything is ok - mark condition as reversible
@@ -1373,7 +1373,7 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
       MI.setDesc(get(HSAIL::spill_st_u32_v1));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsKill();
-      RS->setUsed(tempU32);
+      RS->setRegUsed(tempU32);
     }
     return true;
   case HSAIL::spill_ld_b1:
@@ -1386,7 +1386,7 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
       MI.setDesc(get(HSAIL::spill_ld_u32_v1));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsDef();
-      RS->setUsed(tempU32);
+      RS->setRegUsed(tempU32);
     }
     return true;
   }
