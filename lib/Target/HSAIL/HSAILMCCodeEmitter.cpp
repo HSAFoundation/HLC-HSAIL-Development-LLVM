@@ -94,7 +94,8 @@ public:
     /// EncodeInstruction - Encode the given \arg Inst to bytes on the output
     /// stream \arg OS.
     virtual void EncodeInstruction(const MCInst &Inst, raw_ostream &OS,
-                                   SmallVectorImpl<MCFixup> &Fixups) const
+                                   SmallVectorImpl<MCFixup> &Fixups,
+                                   const MCSubtargetInfo &STI) const override
     {
       printf("DummyMCCodeEmitter::EncodeInstruction called...\n");
     }
@@ -197,7 +198,8 @@ HSAILMCCodeEmitter::EmitOpcodePrefix(uint64_t TSFlags,
 void
 HSAILMCCodeEmitter::EncodeInstruction(const MCInst &MI,
                                       raw_ostream &OS,
-                                      SmallVectorImpl<MCFixup> &Fixups) const
+                                      SmallVectorImpl<MCFixup> &Fixups,
+                                      const MCSubtargetInfo &STI) const
 {
   assert(!"When do we hit this?");
 }
