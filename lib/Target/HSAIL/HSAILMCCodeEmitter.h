@@ -81,7 +81,8 @@ public:
   void
   EncodeInstruction(const MCInst &MI,
                     raw_ostream &OS,
-                    SmallVectorImpl<MCFixup> &Fixups) const;
+                    SmallVectorImpl<MCFixup> &Fixups,
+                    const MCSubtargetInfo &STI) const;
   /*
   void
   EmitVEXOpcodePrefix(uint64_t TSFlags,
