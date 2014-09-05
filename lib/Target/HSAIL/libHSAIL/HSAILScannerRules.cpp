@@ -38,13 +38,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 // SOFTWARE.
-#ifndef INCLUDED_BRIG_H
-#define INCLUDED_BRIG_H
+#include "HSAILScanner.h"
+#include "Brig.h"
+#include <sstream>
+#include <limits>
 
-#include "llvm/Support/DataTypes.h"
-
-namespace Brig {
-#include "Brig_new.hpp"
-}
-
-#endif // defined(INCLUDED_BRIG_H)
+#include "HSAILScannerRules_gen_re2c.hpp"

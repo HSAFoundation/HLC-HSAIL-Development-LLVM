@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include "HSAIL.h"
+#include "HSAILBrig.h"
 #include "HSAILLLVMVersion.h"
 #include "HSAILSubtarget.h"
 #include "llvm/IR/GlobalVariable.h"
@@ -24,7 +25,6 @@
 // below all are in assembler/libHSAIL
 //
 #include "RawVectorOstream.h"
-#include "libHSAIL/Brig.h"
 #include "libHSAIL/HSAILItemBase.h"
 #include "libHSAIL/HSAILItems.h"
 #include "libHSAIL/HSAILParser.h"

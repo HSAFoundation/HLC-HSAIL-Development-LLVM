@@ -14,7 +14,7 @@
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal with
-// the Software without restriction, including without limitation the rights to
+// the Software without restriction, includ ing without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 // of the Software, and to permit persons to whom the Software is furnished to do
 // so, subject to the following conditions:
@@ -38,13 +38,17 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 // SOFTWARE.
-#ifndef INCLUDED_BRIG_H
-#define INCLUDED_BRIG_H
-
-#include "llvm/Support/DataTypes.h"
+#include "HSAILItems.h"
 
 namespace Brig {
-#include "Brig_new.hpp"
+// #include "HSAILBrigStaticChecks_gen.hpp"
 }
 
-#endif // defined(INCLUDED_BRIG_H)
+namespace HSAIL_ASM
+{
+
+//#include "HSAILBrigStaticChecks_gen.hpp"
+#include "HSAILBrigUtilities_gen.hpp"
+#include "HSAILInitBrig_gen.hpp"
+
+}

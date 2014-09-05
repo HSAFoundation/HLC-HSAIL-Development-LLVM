@@ -38,13 +38,46 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 // SOFTWARE.
-#ifndef INCLUDED_BRIG_H
-#define INCLUDED_BRIG_H
+//===-- HSAILValidator.cpp - HSAIL Validator ----------------------===//
 
-#include "llvm/Support/DataTypes.h"
+#ifndef INCLUDED_HSAIL_VALIDATOR_H
+#define INCLUDED_HSAIL_VALIDATOR_H
 
-namespace Brig {
-#include "Brig_new.hpp"
-}
+#include "HSAILBrigContainer.h"
+#include "HSAILItemBase.h"
+#include "HSAILItems.h"
+#include <istream>
+#include <string>
 
-#endif // defined(INCLUDED_BRIG_H)
+#define ENABLE_ADDRESS_SIZE_CHECK (0)
+
+using std::istream;
+
+namespace HSAIL_ASM {
+
+//============================================================================
+
+class ValidatorImpl;
+
+class Validator
+{
+    ValidatorImpl *impl;
+
+    Validator(const Validator&); // non-copyable
+    const Validator &operator=(const Validator &); // not assignable
+
+    //==========================================================================
+    // Public Validator API
+public:
+    Validator(BrigContainer &c);
+    ~Validator();
+
+    bool validate(bool disasmOnError = false) const;
+
+    std::string getErrorMsg(istream *is) const;
+    int getErrorCode() const;
+};
+
+} // namespace HSAIL_ASM
+
+#endif

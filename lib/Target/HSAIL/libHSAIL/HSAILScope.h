@@ -38,13 +38,65 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 // SOFTWARE.
-#ifndef INCLUDED_BRIG_H
-#define INCLUDED_BRIG_H
+#pragma once
+#ifndef INCLUDED_HSAIL_SCOPE_H
+#define INCLUDED_HSAIL_SCOPE_H
 
-#include "llvm/Support/DataTypes.h"
+namespace HSAIL_ASM {
 
-namespace Brig {
-#include "Brig_new.hpp"
+class Scope {
+    typedef std::map<std::string, Offset> Map;
+    Map            d_map;
+    BrigContainer* d_container_p;
+
+public:
+    // TBD READING FUNCTIONALITY (LOAD KERN/FUNC/GLOBAL INTO THIS)
+    Scope(BrigContainer* container)
+        : d_container_p(container)
+    {
+    }
+
+    BrigContainer* container() const { return d_container_p; }
+
+    template<typename Item>
+    Item get(const SRef& name);
+
+    template<typename Item>
+    bool add(const SRef& name, const Item& item);
+
+    template<typename Item>
+    bool replaceOtherwiseAdd(const SRef& name, const Item& item);
+};
+
+template<typename Item>
+Item Scope::get(const SRef& name) {
+    Map::iterator p = d_map.find(std::string(name.begin, name.end));
+    if (p != d_map.end()) {
+        return typename Item::Kind(d_container_p, p->second);
+    }
+    else {
+        return Item();
+    }
 }
 
-#endif // defined(INCLUDED_BRIG_H)
+template<typename Item>
+bool Scope::add(const SRef& name, const Item& item) {
+    std::pair<Map::iterator, bool> res =
+        d_map.insert(std::make_pair(std::string(name.begin,name.end), item.brigOffset()));
+    return res.second;
+}
+
+template<typename Item>
+bool Scope::replaceOtherwiseAdd(const SRef& name, const Item& item) {
+    std::pair<Map::iterator, bool> res =
+        d_map.insert(std::make_pair(std::string(name.begin,name.end), item.brigOffset()));
+    if (res.second==false) {
+        (*res.first).second = item.brigOffset();
+    }
+    return res.second;
+}
+
+} // namespace HSAIL_ASM
+
+#endif // INCLUDED_HSAIL_SCOPE_H
+

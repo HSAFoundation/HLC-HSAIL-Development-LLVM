@@ -38,13 +38,33 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 // SOFTWARE.
-#ifndef INCLUDED_BRIG_H
-#define INCLUDED_BRIG_H
 
-#include "llvm/Support/DataTypes.h"
+Inst appendInst(BrigContainer &container, unsigned instFormat)
+{
+    using namespace Brig;
 
-namespace Brig {
-#include "Brig_new.hpp"
+    switch(instFormat)
+    {
+    case BRIG_KIND_INST_ADDR: return container.append<InstAddr>();
+    case BRIG_KIND_INST_ATOMIC: return container.append<InstAtomic>();
+    case BRIG_KIND_INST_BASIC: return container.append<InstBasic>();
+    case BRIG_KIND_INST_BR: return container.append<InstBr>();
+    case BRIG_KIND_INST_CMP: return container.append<InstCmp>();
+    case BRIG_KIND_INST_CVT: return container.append<InstCvt>();
+    case BRIG_KIND_INST_IMAGE: return container.append<InstImage>();
+    case BRIG_KIND_INST_LANE: return container.append<InstLane>();
+    case BRIG_KIND_INST_MEM: return container.append<InstMem>();
+    case BRIG_KIND_INST_MEM_FENCE: return container.append<InstMemFence>();
+    case BRIG_KIND_INST_MOD: return container.append<InstMod>();
+    case BRIG_KIND_INST_QUERY_IMAGE: return container.append<InstQueryImage>();
+    case BRIG_KIND_INST_QUERY_SAMPLER: return container.append<InstQuerySampler>();
+    case BRIG_KIND_INST_QUEUE: return container.append<InstQueue>();
+    case BRIG_KIND_INST_SEG: return container.append<InstSeg>();
+    case BRIG_KIND_INST_SEG_CVT: return container.append<InstSegCvt>();
+    case BRIG_KIND_INST_SIGNAL: return container.append<InstSignal>();
+    case BRIG_KIND_INST_SOURCE_TYPE: return container.append<InstSourceType>();
+    default:
+        assert(false);
+        return Inst();
+    }
 }
-
-#endif // defined(INCLUDED_BRIG_H)

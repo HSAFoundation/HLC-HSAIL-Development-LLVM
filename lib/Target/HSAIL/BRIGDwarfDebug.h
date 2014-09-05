@@ -7,7 +7,7 @@
 #include "llvm/CodeGen/LexicalScopes.h"
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/CodeGen/AsmPrinter.h"
-#include "llvm/DebugInfo.h"
+#include "llvm/IR/DebugInfo.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/GlobalVariable.h"
 #include "BRIGAsmPrinter.h"
@@ -53,7 +53,7 @@ namespace llvm {
       return dwarf::DW_TAG_variable;
     }
 
-    DIType getType() const {
+    DITypeRef getType() const {
       return Var.getType();
     }
   };
@@ -69,7 +69,7 @@ namespace llvm {
  
   protected:
     /// createCompileUnitInstance - Returns target-specific instance of CompileUnit
-    virtual CompileUnit* createCompileUnit(unsigned int I, unsigned int L, DIE* D);
+    virtual DICompileUnit* createCompileUnit(unsigned int I, unsigned int L, DIE* D);
 
     /// shouldCoalesceDbgValue - Returns true if MInst should be coalesced with History
     virtual bool shouldCoalesceDbgValue(const SmallVectorImpl<const MachineInstr*> &History,
@@ -89,7 +89,7 @@ namespace llvm {
                                      SmallPtrSet<const MDNode *, 16> &ProcessedVars);
 
     /// Construct DIEs for current scope variables (including private and group variables)
-    virtual DIE *constructDIEsForScopeVariables(CompileUnit *TheCU, LexicalScope *Scope,
+    virtual DIE *constructDIEsForScopeVariables(DICompileUnit *TheCU, LexicalScope *Scope,
                                                 SmallVector <DIE *, 8>& Children);
 
   private:
