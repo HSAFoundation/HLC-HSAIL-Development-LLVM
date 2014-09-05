@@ -165,15 +165,6 @@ HSAILTargetMachine::HSAILTargetMachine(const Target &T, StringRef TT,
   //  TLInfo(*this), 
   IntrinsicInfo(this)
  {
-     if (FileType == CGFT_AssemblyFile) {
-       if (FileType.getNumOccurrences() == 0) {
-         // LLVM's default is CGFT_AssemblyFile. HSAIL default is binary BRIG,
-         // thus we need to change output to CGFT_AssemblyFile, unless text
-         // assembly was explicitly requested by the command line switch.
-         HSAILFileType = FileType = CGFT_ObjectFile;
-       }
-     }
-
      setAsmVerbosityDefault(true);
 
 }
