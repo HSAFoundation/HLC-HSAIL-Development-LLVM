@@ -1346,8 +1346,11 @@ HSAILInstrInfo::getTempGPR32PostRA(MachineBasicBlock::iterator MBBI) const
     MachineBasicBlock::iterator UseMI (MBBI);
     RI.saveScavengerRegisterToFI(*MBB, *MBBI, ++UseMI, &HSAIL::GPR32RegClass,
       tempU32, getEmergencyStackSlot(MBB->getParent()));
-    RI.eliminateFrameIndex(--MBBI, 0, RS);
-    RI.eliminateFrameIndex(--UseMI, 0, RS);
+
+    // FIXME: Need to pass correct FrameOperand Idx
+    unsigned FIOpIdx = 0;
+    RI.eliminateFrameIndex(--MBBI, 0, FIOpIdx, RS);
+    RI.eliminateFrameIndex(--UseMI, 0, FIOpIdx,  RS);
   }
   return tempU32;
 }
