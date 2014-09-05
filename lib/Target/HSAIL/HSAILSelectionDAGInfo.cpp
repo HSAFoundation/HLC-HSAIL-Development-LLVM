@@ -14,12 +14,12 @@
 #define DEBUG_TYPE "HSAIL-selectiondag-info"
 #include "HSAILSelectionDAGInfo.h"
 #include "HSAILTargetMachine.h"
-#include "llvm/DerivedTypes.h"
+#include "llvm/IR/DerivedTypes.h"
 #include "llvm/CodeGen/SelectionDAG.h"
 using namespace llvm;
 
 HSAILSelectionDAGInfo::HSAILSelectionDAGInfo(const HSAILTargetMachine &TM)
-  : TargetSelectionDAGInfo(TM),
+  : TargetSelectionDAGInfo(TM.getSubtarget<HSAILSubtarget>().getDataLayout()),
     Subtarget(&TM.getSubtarget<HSAILSubtarget>()),
     TLI(*TM.getTargetLowering()) {}
 
