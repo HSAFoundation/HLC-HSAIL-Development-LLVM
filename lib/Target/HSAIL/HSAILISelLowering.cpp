@@ -14,6 +14,7 @@
 
 #define DEBUG_TYPE "hsail-isel"
 #include "HSAIL.h"
+#include "HSAILBrig.h"
 #include "HSAILInstrInfo.h"
 #include "HSAILELFTargetObjectFile.h"
 #include "HSAILISelLowering.h"
@@ -53,7 +54,6 @@
 #include "llvm/Support/MathExtras.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
-#include "libHSAIL/Brig.h"
 #include <sstream>
 #include "HSAILGenInstrInfo.inc"
 
