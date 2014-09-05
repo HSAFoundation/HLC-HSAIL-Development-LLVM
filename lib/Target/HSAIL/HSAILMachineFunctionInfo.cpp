@@ -109,7 +109,7 @@ uint32_t HSAILPrintfInfo::getOperandID(uint32_t idx) {
 
 HSAILMachineFunctionInfo::HSAILMachineFunctionInfo()
   : CalleeSavedFrameSize(0), BytesToPopOnReturn(0),
-  DecorationStyle(None), ReturnAddrIndex(0),
+  DecorationStyle(NONE), ReturnAddrIndex(0),
   TailCallReturnAddrDelta(0),
   SRetReturnReg(0), UsesLDS(false), LDSArg(false),
   UsesGDS(false), GDSArg(false),
@@ -127,7 +127,7 @@ HSAILMachineFunctionInfo::HSAILMachineFunctionInfo()
 
 HSAILMachineFunctionInfo::HSAILMachineFunctionInfo(MachineFunction& MF)
   : CalleeSavedFrameSize(0), BytesToPopOnReturn(0),
-  DecorationStyle(None), ReturnAddrIndex(0),
+  DecorationStyle(NONE), ReturnAddrIndex(0),
   TailCallReturnAddrDelta(0),
   SRetReturnReg(0), UsesLDS(false), LDSArg(false),
   UsesGDS(false), GDSArg(false),
