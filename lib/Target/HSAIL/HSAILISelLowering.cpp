@@ -776,7 +776,7 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
     Type* EltTy = type->getScalarType();
     if (EltTy->isIntegerTy(8)) VT = MVT::i8;
     else if (EltTy->isIntegerTy(16)) VT = MVT::i16;
-    Mangler Mang(MF.getContext(), *getDataLayout());
+    Mangler Mang(getDataLayout());
     SDValue retVariable =  DAG.getTargetExternalSymbol(PM.getParamName(
       PM.addReturnParam(VT.getStoreSizeInBits(),
       PM.mangleArg(&Mang, F->getName()))), getPointerTy());
@@ -1073,7 +1073,7 @@ HSAILTargetLowering::LowerFormalArguments(SDValue Chain,
   SmallVector<const Type*, 16> paramTypes;
   Function::const_arg_iterator AI = MF.getFunction()->arg_begin();
   Function::const_arg_iterator AE = MF.getFunction()->arg_end();
-  Mangler Mang(MF.getContext(), *DL);
+  Mangler Mang(DL);
   for(; AI != AE; ++AI) {
       Type *type = AI->getType();
       Type *sType = type->getScalarType();
@@ -1163,7 +1163,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   isTailCall = false;
   MachineFunction& MF = DAG.getMachineFunction();
   HSAILParamManager &PM = MF.getInfo<HSAILMachineFunctionInfo>()->getParamManager();
-  Mangler Mang(MF.getContext(), *getDataLayout());
+  Mangler Mang(getDataLayout());
   // FIXME: DO we need to handle fast calling conventions and tail call
   // optimizations?? X86/PPC ISelLowering
   /*bool hasStructRet = (TheCall->getNumArgs())
