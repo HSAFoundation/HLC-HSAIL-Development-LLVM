@@ -1123,7 +1123,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     // See X86/PPC ISelLowering
   }
 
-  SDValue CallSeqStart = DAG.getCALLSEQ_START(Chain, DAG.getIntPtrConstant(NumBytes, true));
+  SDValue CallSeqStart = DAG.getCALLSEQ_START(Chain, DAG.getIntPtrConstant(NumBytes, true), dl);
   Chain = CallSeqStart.getValue(0);
 
   SmallVector<std::pair<unsigned int, SDValue>, 8> RegsToPass;
