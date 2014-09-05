@@ -288,13 +288,6 @@ HSAILTargetLowering::getSchedulingPreference(SDNode *N) const
 {
   return TargetLowering::getSchedulingPreference(N);
 }
-/// getRegClassFor - Return the register class that should be used for the
-/// specified value type.
-const TargetRegisterClass*
-HSAILTargetLowering::getRegClassFor(EVT VT) const
-{
-  return TargetLowering::getRegClassFor(VT);
-}
 /// getRepRegClassFor - Return the 'representative' register class for the
 /// specified value type. The 'representative' register class is the largest
 /// legal super-reg register class for the register class of the value type.
@@ -418,30 +411,6 @@ HSAILTargetLowering::allowsUnalignedMemoryAccesses(EVT VT) const
   return true;
 }
 
-/// getOptimalMemOpType - Returns the target specific optimal type for load
-/// and store operations as a result of memset, memcpy, and memmove
-/// lowering. If DstAlign is zero that means it's safe to destination
-/// alignment can satisfy any constraint. Similarly if SrcAlign is zero it
-/// means there isn't a need to check it against alignment requirement,
-/// probably because the source does not need to be loaded. If
-/// 'NonScalarIntSafe' is true, that means it's safe to return a
-/// non-scalar-integer type, e.g. empty string source, constant, or loaded
-/// from memory. 'MemcpyStrSrc' indicates whether the memcpy source is
-/// constant so it does not need to be loaded.
-/// It returns EVT::Other if the type should be determined using generic
-/// target-independent logic.
-EVT
-HSAILTargetLowering::getOptimalMemOpType(uint64_t Size,
-                                         unsigned DstAlign,
-                                         unsigned SrcAlign,
-                                         bool NonScalarIntSafe,
-                                         bool MemcpyStrSrc,
-                                         MachineFunction &MF) const
-{
-  return TargetLowering::getOptimalMemOpType(Size, DstAlign, SrcAlign,
-      NonScalarIntSafe, MemcpyStrSrc, MF);
-}
-
 /// getPreIndexedAddressParts - returns true by value, base pointer and
 /// offset pointer and addressing mode by reference if the node's address
 /// can be legally represented as pre-indexed load / store address.
@@ -548,21 +517,6 @@ HSAILTargetLowering::getMaximalGlobalOffset() const
 {
   assert(!"When do we hit this?");
   return 0;
-}
-
-/// computeMaskedBitsForTargetNode - Determine which of the bits specified in
-/// Mask are known to be either zero or one and return them in the
-/// KnownZero/KnownOne bitsets.
-void
-HSAILTargetLowering::computeMaskedBitsForTargetNode(const SDValue Op,
-                                                    const APInt &Mask,
-                                                    APInt &KnownZero,
-                                                    APInt &KnownOne,
-                                                    const SelectionDAG &DAG,
-                                                    unsigned Depth) const
-{
-  return TargetLowering::computeMaskedBitsForTargetNode(Op,
-       KnownZero, KnownOne, DAG, Depth);
 }
 
 /// ComputeNumSignBitsForTargetNode - This method can be implemented by
@@ -690,14 +644,6 @@ bool
 HSAILTargetLowering::IsDesirableToPromoteOp(SDValue Op, EVT &PVT) const
 {
   return TargetLowering::IsDesirableToPromoteOp(Op, PVT);
-}
-
-/// findRepresentativeClass - Return the largest legal super-reg register class
-/// of the register class for the specified type and its associated "cost".
-std::pair<const TargetRegisterClass*, uint8_t>
-HSAILTargetLowering::findRepresentativeClass(EVT VT) const
-{
-  return TargetLowering::findRepresentativeClass(VT);
 }
 
 //===--------------------------------------------------------------------===//
@@ -1844,23 +1790,6 @@ HSAILTargetLowering::getRegClassForInlineAsmConstraint(const std::string &Constr
   return TargetLowering::getRegClassForInlineAsmConstraint(Constraint, VT);
 }
 */
-
-/// getRegForInlineAsmConstraint - Given a physical register constraint (e.g.
-/// {edx}), return the register number and the register class for the
-/// register.
-///
-/// Given a register class constraint, like 'r', if this corresponds directly
-/// to an LLVM register class, return a register of 0 and the register class
-/// pointer.
-///
-/// This should only be used for C_Register constraints.  On error,
-/// this returns a register number of 0 and a null register class pointer..
-std::pair<unsigned, const TargetRegisterClass*>
-HSAILTargetLowering::getRegForInlineAsmConstraint(const std::string &Constraint,
-                                                  EVT VT) const
-{
-  return TargetLowering::getRegForInlineAsmConstraint(Constraint, VT);
-}
 
 /// LowerXConstraint - try to replace an X constraint, which matches anything,
 /// with another that has more specific requirements based on the type of the

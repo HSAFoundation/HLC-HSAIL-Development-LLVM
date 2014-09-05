@@ -589,16 +589,6 @@ public:
     return RI;
   }
 
-  /// isReallyTriviallyReMaterializable - For instructions with opcodes for
-  /// which the M_REMATERIALIZABLE flag is set, this hook lets the target
-  /// specify whether the instruction is actually trivially rematerializable,
-  /// taking into consideration its operands. This predicate must return false
-  /// if the instruction has any side effects other than producing a value, or
-  /// if it requres any address registers that are not always available.
-  virtual bool
-  isReallyTriviallyReMaterializable(const MachineInstr *MI,
-                                    AliasAnalysis *AA) const;
-
   /// isCoalescableExtInstr - Return true if the instruction is a "coalescable"
   /// extension instruction. That is, it's like a copy where it's legal for the
   /// source to overlap the destination. e.g. X86::MOVSX64rr32. If this returns
@@ -629,19 +619,6 @@ public:
                             int &FrameIndex) const;
 
 
-  /// hasLoadFromStackSlot - If the specified machine instruction has
-  /// a load from a stack slot, return true along with the FrameIndex
-  /// of the loaded stack slot and the machine mem operand containing
-  /// the reference.  If not, return false.  Unlike
-  /// isLoadFromStackSlot, this returns true for any instructions that
-  /// loads from the stack.  This is just a hint, as some cases may be
-  /// missed.
-  virtual bool
-  hasLoadFromStackSlot(const MachineInstr *MI,
-                       const MachineMemOperand *&MMO,
-                       int &FrameIndex) const;
-
-
   /// isStoreToStackSlot - If the specified machine instruction is a direct
   /// store to a stack slot, return the virtual or physical register number of
   /// the source reg along with the FrameIndex of the loaded stack slot.  If
@@ -659,83 +636,6 @@ public:
   isStoreToStackSlotPostFE(const MachineInstr *MI,
                            int &FrameIndex) const;
 
-
-  /// hasStoreToStackSlot - If the specified machine instruction has a
-  /// store to a stack slot, return true along with the FrameIndex of
-  /// the loaded stack slot and the machine mem operand containing the
-  /// reference.  If not, return false.  Unlike isStoreToStackSlot,
-  /// this returns true for any instructions that stores to the
-  /// stack.  This is just a hint, as some cases may be missed.
-  virtual bool
-  hasStoreToStackSlot(const MachineInstr *MI,
-                      const MachineMemOperand *&MMO,
-                      int &FrameIndex) const;
-
-  /// reMaterialize - Re-issue the specified 'original' instruction at the
-  /// specific location targeting a new destination register.
-  /// The register in Orig->getOperand(0).getReg() will be substituted by
-  /// DestReg:SubIdx. Any existing subreg index is preserved or composed with
-  /// SubIdx.
-  virtual void
-  reMaterialize(MachineBasicBlock &MBB,
-                MachineBasicBlock::iterator MI,
-                unsigned DestReg, unsigned SubIdx,
-                const MachineInstr *Orig,
-                const TargetRegisterInfo &TRI) const;
-
-  /// duplicate - Create a duplicate of the Orig instruction in MF. This is like
-  /// MachineFunction::CloneMachineInstr(), but the target may update operands
-  /// that are required to be unique.
-  ///
-  /// The instruction must be duplicable as indicated by isNotDuplicable().
-  virtual MachineInstr*
-  duplicate(MachineInstr *Orig,
-            MachineFunction &MF) const;
-
-  /// convertToThreeAddress - This method must be implemented by targets that
-  /// set the M_CONVERTIBLE_TO_3_ADDR flag.  When this flag is set, the target
-  /// may be able to convert a two-address instruction into one or more true
-  /// three-address instructions on demand.  This allows the X86 target (for
-  /// example) to convert ADD and SHL instructions into LEA instructions if they
-  /// would require register copies due to two-addressness.
-  ///
-  /// This method returns a null pointer if the transformation cannot be
-  /// performed, otherwise it returns the last new instruction.
-  ///
-  virtual MachineInstr*
-  convertToThreeAddress(MachineFunction::iterator &MFI,
-                        MachineBasicBlock::iterator &MBBI,
-                        LiveVariables *LV) const;
-
-  /// commuteInstruction - If a target has any instructions that are
-  /// commutable but require converting to different instructions or making
-  /// non-trivial changes to commute them, this method can overloaded to do
-  /// that.  The default implementation simply swaps the commutable operands.
-  /// If NewMI is false, MI is modified in place and returned; otherwise, a
-  /// new machine instruction is created and returned.  Do not call this
-  /// method for a non-commutable instruction, but there may be some cases
-  /// where this method fails and returns null.
-  virtual MachineInstr*
-  commuteInstruction(MachineInstr *MI,
-                     bool NewMI = false) const;
-
-  /// findCommutedOpIndices - If specified MI is commutable, return the two
-  /// operand indices that would swap value. Return false if the instruction
-  /// is not in a form which this routine understands.
-  virtual bool
-  findCommutedOpIndices(MachineInstr *MI,
-                        unsigned &SrcOpIdx1,
-                        unsigned &SrcOpIdx2) const;
-
-  /// produceSameValue - Return true if two machine instructions would produce
-  /// identical values. By default, this is only true when the two instructions
-  /// are deemed identical except for defs. If this function is called when the
-  /// IR is still in SSA form, the caller can pass the MachineRegisterInfo for
-  /// aggressive checks.
-  virtual bool
-  produceSameValue(const MachineInstr *MI0,
-                   const MachineInstr *MI1,
-                   const MachineRegisterInfo *MRI = 0) const;
 
   /// AnalyzeBranch - Analyze the branching code at the end of MBB, returning
   /// true if it cannot be understood (e.g. it's a switch dispatch or isn't
@@ -803,59 +703,6 @@ public:
                const SmallVectorImpl<MachineOperand> &Cond,
                DebugLoc DL) const;
 
-  /// ReplaceTailWithBranchTo - Delete the instruction OldInst and everything
-  /// after it, replacing it with an unconditional branch to NewDest. This is
-  /// used by the tail merging pass.
-  virtual void
-  ReplaceTailWithBranchTo(MachineBasicBlock::iterator Tail,
-                          MachineBasicBlock *NewDest) const;
-
-  /// isLegalToSplitMBBAt - Return true if it's legal to split the given basic
-  /// block at the specified instruction (i.e. instruction would be the start
-  /// of a new basic block).
-  virtual bool
-  isLegalToSplitMBBAt(MachineBasicBlock &MBB,
-                      MachineBasicBlock::iterator MBBI) const;
-
-  /// isProfitableToIfCvt - Return true if it's profitable to predicate
-  /// instructions with accumulated instruction latency of "NumCycles"
-  /// of the specified basic block, where the probability of the instructions
-  /// being executed is given by Probability, and Confidence is a measure
-  /// of our confidence that it will be properly predicted.
-  virtual bool
-  isProfitableToIfCvt(MachineBasicBlock &MBB,
-                      unsigned NumCyles,
-                      unsigned ExtraPredCycles,
-		      const BranchProbability &Probability) const;
-                      
-
-  /// isProfitableToIfCvt - Second variant of isProfitableToIfCvt, this one
-  /// checks for the case where two basic blocks from true and false path
-  /// of a if-then-else (diamond) are predicated on mutally exclusive
-  /// predicates, where the probability of the true path being taken is given
-  /// by Probability, and Confidence is a measure of our confidence that it
-  /// will be properly predicted.
-  virtual bool
-  isProfitableToIfCvt(MachineBasicBlock &TMBB,
-                      unsigned NumTCycles,
-                      unsigned ExtraTCycles,
-                      MachineBasicBlock &FMBB,
-                      unsigned NumFCycles,
-                      unsigned ExtraFCycles,
-		      const BranchProbability &Probability) const;
-                      
-
-  /// isProfitableToDupForIfCvt - Return true if it's profitable for
-  /// if-converter to duplicate instructions of specified accumulated
-  /// instruction latencies in the specified MBB to enable if-conversion.
-  /// The probability of the instructions being executed is given by
-  /// Probability, and Confidence is a measure of our confidence that it
-  /// will be properly predicted.
-  virtual bool
-  isProfitableToDupForIfCvt(MachineBasicBlock &MBB,
-                            unsigned NumCyles,
-			    const BranchProbability &Probability) const;
-
   /// copyPhysReg - Emit instructions to copy a pair of physical registers.
   virtual void
   copyPhysReg(MachineBasicBlock &MBB,
@@ -891,20 +738,6 @@ public:
                        const TargetRegisterClass *RC,
                        const TargetRegisterInfo *TRI) const;
 
-  /// emitFrameIndexDebugValue - Emit a target-dependent form of
-  /// DBG_VALUE encoding the address of a frame index.  Addresses would
-  /// normally be lowered the same way as other addresses on the target,
-  /// e.g. in load instructions.  For targets that do not support this
-  /// the debug info is simply lost.
-  /// If you add this for a target you should handle this DBG_VALUE in the
-  /// target-specific AsmPrinter code as well; you will probably get invalid
-  /// assembly output if you don't.
-  virtual MachineInstr*
-  emitFrameIndexDebugValue(MachineFunction &MF,
-                           int FrameIx,
-                           uint64_t Offset,
-                           const MDNode *MDPtr,
-                           DebugLoc dl) const;
 protected:
   /// foldMemoryOperandImpl - Target-dependent implementation for
   /// foldMemoryOperand. Target-independent code in foldMemoryOperand will
@@ -989,79 +822,10 @@ public:
   virtual bool
   ReverseBranchCondition(SmallVectorImpl<MachineOperand> &Cond) const;
 
-  /// insertNoop - Insert a noop into the instruction stream at the specified
-  /// point.
-  virtual void
-  insertNoop(MachineBasicBlock &MBB,
-             MachineBasicBlock::iterator MI) const;
-
-  /// isPredicated - Returns true if the instruction is already predicated.
-  ///
-  virtual bool
-  isPredicated(const MachineInstr *MI) const;
-
-  /// isUnpredicatedTerminator - Returns true if the instruction is a
-  /// terminator instruction that has not been predicated.
-  virtual bool
-  isUnpredicatedTerminator(const MachineInstr *MI) const;
-
-  /// PredicateInstruction - Convert the instruction into a predicated
-  /// instruction. It returns true if the operation was successful.
-  virtual bool
-  PredicateInstruction(MachineInstr *MI,
-                       const SmallVectorImpl<MachineOperand> &Pred) const;
-
-  /// SubsumesPredicate - Returns true if the first specified predicate
-  /// subsumes the second, e.g. GE subsumes GT.
-  virtual bool
-  SubsumesPredicate(const SmallVectorImpl<MachineOperand> &Pred1,
-                    const SmallVectorImpl<MachineOperand> &Pred2) const;
-
-  /// DefinesPredicate - If the specified instruction defines any predicate
-  /// or condition code register(s) used for predication, returns true as well
-  /// as the definition predicate(s) by reference.
-  virtual bool
-  DefinesPredicate(MachineInstr *MI,
-                   std::vector<MachineOperand> &Pred) const;
-
-  /// isPredicable - Return true if the specified instruction can be predicated.
-  /// By default, this returns true for every instruction with a
-  /// PredicateOperand.
-  virtual bool
-  isPredicable(MachineInstr *MI) const;
-
   /// isSafeToMoveRegClassDefs - Return true if it's safe to move a machine
   /// instruction that defines the specified register class.
   virtual bool
   isSafeToMoveRegClassDefs(const TargetRegisterClass *RC) const;
-
-  /// isSchedulingBoundary - Test if the given instruction should be
-  /// considered a scheduling boundary. This primarily includes labels and
-  /// terminators.
-  virtual bool
-  isSchedulingBoundary(const MachineInstr *MI,
-                       const MachineBasicBlock *MBB,
-                       const MachineFunction &MF) const;
-
-  /// Measure the specified inline asm to determine an approximation of its
-  /// length.
-  virtual unsigned
-  getInlineAsmLength(const char *Str,
-                     const MCAsmInfo &MAI) const;
-
-  /// CreateTargetHazardRecognizer - Allocate and return a hazard recognizer to
-  /// use for this target when scheduling the machine instructions before
-  /// register allocation.
-  virtual ScheduleHazardRecognizer*
-  CreateTargetHazardRecognizer(const TargetMachine *TM,
-                               const ScheduleDAG *DAG) const;
-
-  /// CreateTargetPostRAHazardRecognizer - Allocate and return a hazard
-  /// recognizer to use for this target when scheduling the machine instructions
-  /// after register allocation.
-  virtual ScheduleHazardRecognizer*
-  CreateTargetPostRAHazardRecognizer(const InstrItineraryData*,
-                                     const ScheduleDAG *DAG) const;
 
   /// AnalyzeCompare - For a comparison instruction, return the source register
   /// in SrcReg and the value it compares against in CmpValue. Return true if
@@ -1081,20 +845,6 @@ public:
                        int Mask,
                        int Value,
                        const MachineRegisterInfo *MRI) const;
-
-  /// FoldImmediate - 'Reg' is known to be defined by a move immediate
-  /// instruction, try to fold the immediate into the use instruction.
-  virtual bool
-  FoldImmediate(MachineInstr *UseMI,
-                MachineInstr *DefMI,
-                unsigned Reg,
-                MachineRegisterInfo *MRI) const;
-
-  /// getNumMicroOps - Return the number of u-operations the given machine
-  /// instruction will be decoded to on the target cpu.
-  virtual unsigned
-  getNumMicroOps(const InstrItineraryData *ItinData,
-                 const MachineInstr *MI) const;
 
   /// getOperandLatency - Compute and return the use operand latency of a given
   /// pair of def and use.
@@ -1127,26 +877,6 @@ public:
   getInstrLatency(const InstrItineraryData *ItinData,
                   SDNode *Node) const;
 
-  /// hasHighOperandLatency - Compute operand latency between a def of 'Reg'
-  /// and an use in the current loop, return true if the target considered
-  /// it 'high'. This is used by optimization passes such as machine LICM to
-  /// determine whether it makes sense to hoist an instruction out even in
-  /// high register pressure situation.
-  virtual bool
-  hasHighOperandLatency(const InstrItineraryData *ItinData,
-                        const MachineRegisterInfo *MRI,
-                        const MachineInstr *DefMI,
-                        unsigned DefIdx,
-                        const MachineInstr *UseMI,
-                        unsigned UseIdx) const;
-
-  /// hasLowDefLatency - Compute operand latency of a def of 'Reg', return true
-  /// if the target considered it 'low'.
-  virtual bool
-  hasLowDefLatency(const InstrItineraryData *ItinData,
-                   const MachineInstr *DefMI,
-                   unsigned DefIdx) const;
-
   /// Return true if the instruction is a register to register move and leave the
   /// source and dest operands in the passed parameters.
   bool
@@ -1155,9 +885,6 @@ public:
                               unsigned int &DstReg,
                               unsigned int &SrcSubIdx,
                               unsigned int &DstSubIdx) const;
-
-  unsigned int
-  getBranchInstr(const MachineOperand &op) const;
 
   bool
   getNextBranchInstr(MachineBasicBlock::iterator &iter,
@@ -1170,9 +897,6 @@ public:
                const TargetRegisterClass *DestRC,
                const TargetRegisterClass *SrcRC,
                DebugLoc DL) const;
-
-  bool
-  shouldScheduleWithNormalPriority(SDNode* instruction) const;
 
   unsigned
   GetInstSizeInBytes(const MachineInstr *MI) const;
