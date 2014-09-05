@@ -2,3 +2,4 @@
 2. Fix warnings
 3. Remove hack to force object emission in HSAILTargetMachine constructor 
 4. HSAILInstrInfo::getTempGPR32PostRA() - Figure out frame index operand index.
+5. Fix memory leak in HSAILSubtarget::getDataLayout()
