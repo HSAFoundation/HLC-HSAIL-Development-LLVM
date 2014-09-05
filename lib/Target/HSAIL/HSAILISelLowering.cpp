@@ -1278,7 +1278,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   Chain = DAG.getCALLSEQ_END(Chain,
                              DAG.getIntPtrConstant(NumBytes, true),
                              DAG.getIntPtrConstant(0, true),
-                             InFlag);
+                             InFlag, dl);
   return Chain;
 }
 
