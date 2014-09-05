@@ -16,6 +16,7 @@
 
 #define DEBUG_TYPE "mccodeemitter"
 #include "HSAIL.h"
+#include "HSAILSubtarget.h"
 #include "HSAILInstrInfo.h"
 #include "HSAILFixupKinds.h"
 #include "llvm/MC/MCCodeEmitter.h"
@@ -34,7 +35,7 @@ class HSAILMCCodeEmitter : public MCCodeEmitter {
   bool Is64BitMode;
 public:
   HSAILMCCodeEmitter(TargetMachine &tm, MCContext &ctx, bool is64Bit)
-    : TM(tm), TII(*TM.getInstrInfo()), Ctx(ctx) { Is64BitMode = is64Bit; }
+    : TM(tm), TII(*TM.getSubtarget<HSAILSubtarget>().getInstrInfo()), Ctx(ctx) { Is64BitMode = is64Bit; }
 
   ~HSAILMCCodeEmitter() {}
 
