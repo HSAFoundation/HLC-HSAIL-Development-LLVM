@@ -490,24 +490,24 @@ bool isConv(const llvm::MachineInstr *MI)
 
 bool HSAILisGlobalInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
 {
-  return strstr(TM.getInstrInfo()->getName(MI->getOpcode()), "global");
+  return strstr(TM.getSubtarget<HSAILSubtarget>().getInstrInfo()->getName(MI->getOpcode()), "global");
 }
 bool HSAILisPrivateInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
 {
-  return strstr(TM.getInstrInfo()->getName(MI->getOpcode()), "private");
+  return strstr(TM.getSubtarget<HSAILSubtarget>().getInstrInfo()->getName(MI->getOpcode()), "private");
 }
 bool HSAILisConstantInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
 {
-  return strstr(TM.getInstrInfo()->getName(MI->getOpcode()), "constant");
+  return strstr(TM.getSubtarget<HSAILSubtarget>().getInstrInfo()->getName(MI->getOpcode()), "constant");
 }
 bool HSAILisGroupInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
 {
-  return strstr(TM.getInstrInfo()->getName(MI->getOpcode()), "group");
+  return strstr(TM.getSubtarget<HSAILSubtarget>().getInstrInfo()->getName(MI->getOpcode()), "group");
 }
 bool HSAILisArgInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
 {
   unsigned op = MI->getOpcode();
-  const TargetInstrInfo *TII = TM.getInstrInfo();
+  const TargetInstrInfo *TII = TM.getSubtarget<HSAILSubtarget>().getInstrInfo();
   const MCInstrDesc &MCID = TII->get(op);
   if (!MCID.mayLoad() || !MI->hasOneMemOperand()) return false;
   unsigned as = (*MI->memoperands_begin())->getPointerInfo().getAddrSpace();
