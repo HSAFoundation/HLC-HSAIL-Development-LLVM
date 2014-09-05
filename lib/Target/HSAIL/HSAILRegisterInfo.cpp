@@ -476,6 +476,7 @@ HSAILRegisterInfo::saveScavengerRegisterToFI(MachineBasicBlock &MBB,
 void
 HSAILRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
                                        int SPAdj,
+                                       unsigned FIOperandNum,
                                        RegScavenger *RS) const
 {
   assert(SPAdj == 0 && "Unexpected");
