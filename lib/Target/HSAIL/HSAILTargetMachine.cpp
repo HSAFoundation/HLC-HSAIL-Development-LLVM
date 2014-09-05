@@ -176,12 +176,6 @@ HSAILTargetMachine::HSAILTargetMachine(const Target &T, StringRef TT,
 
      setAsmVerbosityDefault(true);
 
-     // disable use of the .loc directive, because only by 
-     // setting this to false does DwarfDebug generate the .debug_line
-     // section
-     //
-     setMCUseLoc(false);
-
 }
 
 bool HSAILTargetMachine::addPassesToEmitFile(PassManagerBase &PM,
