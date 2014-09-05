@@ -440,7 +440,6 @@ HSAILRegisterInfo::saveScavengerRegisterToFI(MachineBasicBlock &MBB,
 {
   MachineFunction *MF = MBB.getParent();
   const TargetMachine &TM = MF->getTarget();
-  const TargetRegisterInfo *TRI = TM.getRegisterInfo();
   const HSAILInstrInfo &HII = reinterpret_cast<const HSAILInstrInfo&>(TII);
   RegScavenger *RS = HII.getRS();
 
@@ -453,10 +452,10 @@ HSAILRegisterInfo::saveScavengerRegisterToFI(MachineBasicBlock &MBB,
          "Cannot scavenge register without an emergency spill slot!");
 
   // Store the scavenged register to its stack spill location
-  HII.storeRegToStackSlot(MBB, I, Reg, true /* isKill */, RS->getScavengingFrameIndex(), RC, TRI);
+  HII.storeRegToStackSlot(MBB, I, Reg, true /* isKill */, RS->getScavengingFrameIndex(), RC, this);
 
   // Restore the scavenged register before its use (or first terminator).
-  HII.loadRegFromStackSlot(MBB, UseMI, Reg, RS->getScavengingFrameIndex(), RC, TRI);
+  HII.loadRegFromStackSlot(MBB, UseMI, Reg, RS->getScavengingFrameIndex(), RC, this);
 
   // HSAIL Target saves/restores the scavenged register
   return true;
