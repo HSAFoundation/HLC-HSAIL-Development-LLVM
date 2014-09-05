@@ -20,7 +20,7 @@
 #include "llvm/Support/ELF.h"
 using namespace llvm;
 
-HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(const Triple &T, bool is64Bit)
+HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(StringRef &T)
 {
   PrivateGlobalPrefix = "@";
   GlobalDirective = "global";
@@ -38,7 +38,7 @@ HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(const Triple &T, bool is64Bit)
   //
   SupportsDebugInformation = true;
 
-  PointerSize = is64Bit ? 8 : 4;
+  PointerSize = Triple(T).getArch() == Triple::hsail_64 ? 8 : 4;
 
   ExceptionsType = ExceptionHandling::None;
   //  DwarfRequiresFrameSection = false;

@@ -80,8 +80,7 @@ namespace llvm {
 
 template<bool Is64Bit> static MCAsmInfo*
 createMCAsmInfo(const Target &T, StringRef TT) {
-  Triple TheTriple(TT);
-  return new HSAILELFMCAsmInfo(TheTriple, Is64Bit);
+  return new HSAILELFMCAsmInfo(TT);
 }
 
 // MC related code probably should be in MCTargetDesc subdir
@@ -120,6 +119,7 @@ MCStreamer* llvm::createHSAILMCStreamer(const Target &T,
 	             MCAsmBackend &TAB,
                  raw_ostream &_OS,
                  MCCodeEmitter *_Emitter,
+                 const MCSubtargetInfo &MSI,
                  bool RelaxAll,
                  bool NoExecStack) {
   return createMCStreamer(T, TT.str(), Ctx, TAB, _OS, _Emitter, RelaxAll, NoExecStack);
@@ -131,8 +131,8 @@ extern "C" void LLVMInitializeHSAILTarget() {
   RegisterTargetMachine<HSAIL_64TargetMachine> Y(TheHSAIL_64Target);
 
   // Register the target asm info.
-  RegisterMCAsmInfoFn A(TheHSAIL_32Target, createMCAsmInfo<false> );
-  RegisterMCAsmInfoFn B(TheHSAIL_64Target, createMCAsmInfo<true> );
+  RegisterMCAsmInfo<HSAILELFMCAsmInfo> A(TheHSAIL_32Target);
+  RegisterMCAsmInfo<HSAILELFMCAsmInfo> B(TheHSAIL_64Target);
 
   RegisterMCCodeGenInfoFn C(TheHSAIL_32Target, createHSAILMCCodeGenInfo);
   RegisterMCCodeGenInfoFn D(TheHSAIL_64Target, createHSAILMCCodeGenInfo);

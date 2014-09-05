@@ -142,6 +142,7 @@ createHSAIL_32MCCodeEmitter(const Target &T,
 
 MCStreamer* createHSAILMCStreamer(const Target &T, StringRef TT, MCContext &Ctx, MCAsmBackend &TAB,
                                   raw_ostream &_OS, MCCodeEmitter *_Emitter,
+                                  const MCSubtargetInfo &MSI,
                                   bool RelaxAll, bool NoExecStack);
 
 MCCodeEmitter*
@@ -156,8 +157,8 @@ MCCodeEmitter* createHSAIL_64MCCodeEmitterForLLVM32(const MCInstrInfo &II,
 		                 const MCRegisterInfo &MRI,
                                  const MCSubtargetInfo &STI, MCContext &Ctx);
 
-MCAsmBackend* createHSAIL_32AsmBackendForLLVM32(const Target &T, StringRef TT, StringRef CPU);
-MCAsmBackend* createHSAIL_64AsmBackendForLLVM32(const Target &T, StringRef TT, StringRef CPU);
+MCAsmBackend* createHSAIL_32AsmBackendForLLVM32(const Target &T, const MCRegisterInfo &MRI, StringRef TT, StringRef CPU);
+MCAsmBackend* createHSAIL_64AsmBackendForLLVM32(const Target &T, const MCRegisterInfo &MRI, StringRef TT, StringRef CPU);
 
 MCAsmBackend*
 createHSAIL_32AsmBackend(const MCAsmBackend &T, const std::string &s);

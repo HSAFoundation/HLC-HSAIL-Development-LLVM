@@ -158,13 +158,13 @@ llvm::createHSAIL_64AsmBackend(const ASM_BACKEND_CLASS &T,
   return new ELFHSAIL_64AsmBackend(T, Triple(TT).getOS());
 }
 
-MCAsmBackend* llvm::createHSAIL_32AsmBackendForLLVM32(const Target &T, StringRef TT, StringRef CPU)
+MCAsmBackend* llvm::createHSAIL_32AsmBackendForLLVM32(const Target &T, const MCRegisterInfo &MRI, StringRef TT, StringRef CPU)
 {
   HSAILAsmBackend dummy(0);
   return new ELFHSAIL_32AsmBackend(dummy, Triple(TT).getOS());
 }
 
-MCAsmBackend* llvm::createHSAIL_64AsmBackendForLLVM32(const Target &T, StringRef TT, StringRef CPU)
+MCAsmBackend* llvm::createHSAIL_64AsmBackendForLLVM32(const Target &T, const MCRegisterInfo &MRI, StringRef TT, StringRef CPU)
 {
   HSAILAsmBackend dummy(0);
   return new ELFHSAIL_64AsmBackend(dummy, Triple(TT).getOS());
