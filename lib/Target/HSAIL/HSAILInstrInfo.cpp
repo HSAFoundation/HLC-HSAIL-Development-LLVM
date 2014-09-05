@@ -5,10 +5,11 @@
 //===---------------------------------------------------------------------===//
 
 #include <queue>
+#include "HSAILBrig.h"
 #include "HSAILTargetMachine.h"
 #include "HSAILInstrInfo.h"
 #include "HSAILUtilityFunctions.h"
-#include "llvm/Instructions.h"
+#include "llvm/IR/Instructions.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
@@ -19,11 +20,10 @@
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/raw_ostream.h"
-#include "llvm/Analysis/Verifier.h"
+#include "llvm/IR/Verifier.h"
 #include "llvm/CodeGen/Passes.h"
 #include "llvm/Pass.h"
 #include "llvm/ADT/SmallPtrSet.h"
-#include "libHSAIL/Brig.h"
 
 #define GET_INSTRINFO_CTOR
 #define GET_INSTRINFO_MC_DESC

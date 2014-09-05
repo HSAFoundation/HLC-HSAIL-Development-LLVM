@@ -53,17 +53,18 @@
 //
 //===----------------------------------------------------------------------===//
 #include "HSAILUtilityFunctions.h"
+#include "HSAILBrig.h"
 #include "HSAILMachineFunctionInfo.h"
 #include "HSAILISelLowering.h"
 #include "HSAILOpaqueTypes.h"
-#include "llvm/GlobalVariable.h"
-#include "llvm/Constants.h"
-#include "llvm/Instructions.h"
-#include "llvm/Instruction.h"
-#include "llvm/Module.h"
-#include "llvm/Type.h"
-#include "llvm/DerivedTypes.h"
-#include "llvm/ADT/ValueMap.h"
+#include "llvm/IR/GlobalVariable.h"
+#include "llvm/IR/Constants.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/IR/Instruction.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Type.h"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/ValueMap.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/Support/FormattedStream.h"
 #include "llvm/Support/Debug.h"
@@ -71,7 +72,6 @@
 #include <cstdio>
 #include <queue>
 #include <list>
-#include "libHSAIL/Brig.h"
 
 using namespace llvm;
 

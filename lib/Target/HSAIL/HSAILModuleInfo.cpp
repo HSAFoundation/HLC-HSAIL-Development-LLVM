@@ -54,9 +54,9 @@
 #include "HSAILSubtarget.h"
 #include "HSAILUtilityFunctions.h"
 //#include "HSAILParseMetadata.h"
-#include "llvm/Constants.h"
-#include "llvm/DerivedTypes.h"
-#include "llvm/Instructions.h"
+#include "llvm/IR/Constants.h"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/IR/Instructions.h"
 #include "llvm/CodeGen/MachineConstantPool.h"
 #include "llvm/Support/FormattedStream.h"
 #include <cstdio>

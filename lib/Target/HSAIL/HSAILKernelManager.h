@@ -62,7 +62,7 @@
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/StringMap.h"
-#include "llvm/ADT/ValueMap.h"
+#include "llvm/IR/ValueMap.h"
 #include "llvm/IR/Function.h"
 #include "llvm/CodeGen/MachineBasicBlock.h"
 #include <string>
@@ -71,11 +71,6 @@
 #define IMAGETYPE_2D 0
 #define IMAGETYPE_3D 1
 #define RESERVED_LIT_COUNT 6
-
-// Brig lowering
-#include "libHSAIL/HSAILItemBase.h"
-#include "libHSAIL/HSAILItems.h"
-
 
 namespace llvm {
 class HSAILSubtarget;
