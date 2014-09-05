@@ -22,15 +22,11 @@ using namespace llvm;
 
 HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(const Triple &T, bool is64Bit)
 {
-  GlobalPrefix = "";
   PrivateGlobalPrefix = "@";
   GlobalDirective = "global";
-  ExternDirective = "extern";
   HasSetDirective = false;
-  HasLEB128 = false;
   HasDotTypeDotSizeDirective = false;
   HasSingleParameterDotFile = false;
-  AllowPeriodsInName = false;
 
   // We must set SupportsDebugInformation to true in order for debug info  to 
   // be generated.  This shouldn't cause unwanted output, because if the FE 
@@ -46,8 +42,6 @@ HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(const Triple &T, bool is64Bit)
 
   ExceptionsType = ExceptionHandling::None;
   //  DwarfRequiresFrameSection = false;
-  DwarfUsesInlineInfoSection = true;
-  AlignDirective = "align\t";
   CommentString = "//";
   Data8bitsDirective = "sectiondata_b8\t";
   Data16bitsDirective = "sectiondata_b16\t";
