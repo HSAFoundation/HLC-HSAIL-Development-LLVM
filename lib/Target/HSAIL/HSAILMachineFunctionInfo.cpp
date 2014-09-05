@@ -395,7 +395,7 @@ HSAILMachineFunctionInfo::getArgSize()
           }
         } else if (CT->isStructTy()
             && PT->getAddressSpace() == HSAILAS::PRIVATE_ADDRESS) {
-          Counter += ((HSAILgetTypeSize(ST) + 15) & ~15) >> 4;
+          Counter += ((HSAIL::HSAILgetTypeSize(ST) + 15) & ~15) >> 4;
         } else if (CT->isIntOrIntVectorTy()
             || CT->isFPOrFPVectorTy()
             || CT->isArrayTy()
@@ -426,7 +426,7 @@ HSAILMachineFunctionInfo::getScratchSize()
     Function::const_arg_iterator Ie = mMF->getFunction()->arg_end();
     while (I != Ie) {
       Type *curType = I->getType();
-      mScratchSize += ((HSAILgetTypeSize(curType) + 15) & ~15);
+      mScratchSize += ((HSAIL::HSAILgetTypeSize(curType) + 15) & ~15);
       ++I;
     }
     // mScratchSize += ((mScratchSize + 15) & ~15); // possible typo: doubling mScratchSize
@@ -448,7 +448,7 @@ size_t HSAILMachineFunctionInfo::getPrivateSize()
             if (const GlobalVariable *GV =  dyn_cast<GlobalVariable>(MO.getGlobal())){
               if  (GV->getType()->getAddressSpace() == HSAILAS::PRIVATE_ADDRESS){
                 if( thisFuncPvtVarsSet.insert(GV) ){
-                  mPrivateMemSize += HSAILgetTypeSize(GV->getType(),true);
+                  mPrivateMemSize += HSAIL::HSAILgetTypeSize(GV->getType(),true);
                 }
               }
             }
@@ -475,7 +475,7 @@ size_t HSAILMachineFunctionInfo::getGroupSize()
             if (const GlobalVariable *GV =  dyn_cast<GlobalVariable>(MO.getGlobal())){
               if  (GV->getType()->getAddressSpace() == HSAILAS::GROUP_ADDRESS){
                 if( thisFuncGrpVarsSet.insert(GV) ){
-                  mGroupMemSize += HSAILgetTypeSize(GV->getType(),true);
+                  mGroupMemSize += HSAIL::HSAILgetTypeSize(GV->getType(),true);
                 }
               }
             }

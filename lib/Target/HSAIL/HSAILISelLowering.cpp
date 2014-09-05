@@ -1066,8 +1066,8 @@ HSAILTargetLowering::LowerFormalArguments(SDValue Chain,
   const FunctionType *funcType = MF.getFunction()->getFunctionType();
   unsigned int j = 0;
   SDValue InFlag;
-  unsigned AS = isKernelFunc(MF.getFunction()) ? HSAILAS::KERNARG_ADDRESS
-                                               : HSAILAS::ARG_ADDRESS;
+  unsigned AS = HSAIL::isKernelFunc(MF.getFunction()) ? HSAILAS::KERNARG_ADDRESS
+                                                      : HSAILAS::ARG_ADDRESS;
   MVT PtrTy = getPointerTy(AS);
 
   // Map function param types to Ins.
@@ -1226,7 +1226,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
     const VectorType *VecVT = dyn_cast<VectorType>(retType);
 
-    unsigned BrigType = (unsigned) HSAILgetBrigType(retType,
+    unsigned BrigType = (unsigned) HSAIL::HSAILgetBrigType(retType,
                                      Subtarget->is64Bit(), CLI.RetSExt);
     if (BrigType == Brig::BRIG_TYPE_B1) BrigType = Brig::BRIG_TYPE_U32; // Store bit as DWORD
     SDValue SDBrigType =  DAG.getTargetConstant(BrigType, MVT::i32);
@@ -1273,7 +1273,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     unsigned num_elem = VecVT ? VecVT->getNumElements() : 1;
 
     // START array parameter declaration
-    unsigned BrigType = (unsigned) HSAILgetBrigType(type, Subtarget->is64Bit(),
+    unsigned BrigType = (unsigned) HSAIL::HSAILgetBrigType(type, Subtarget->is64Bit(),
                                                     Outs[j].Flags.isSExt());
     if (BrigType == Brig::BRIG_TYPE_B1) BrigType = Brig::BRIG_TYPE_U32; // Store bit as DWORD
     SDValue SDBrigType =  DAG.getTargetConstant(BrigType, MVT::i32);

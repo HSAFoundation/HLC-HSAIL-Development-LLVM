@@ -75,6 +75,10 @@
 
 using namespace llvm;
 
+namespace llvm {
+
+namespace HSAIL {
+
 int64_t HSAIL_GET_SCALAR_SIZE(llvm::Type *A) {
   return A->getScalarSizeInBits();
 }
@@ -874,3 +878,6 @@ SDValue generateFenceIntrinsic(SDValue Chain, DebugLoc dl, unsigned memSeg,
   }
 }
 
+} // End namespace HSAIL
+
+} // End namespace llvm
