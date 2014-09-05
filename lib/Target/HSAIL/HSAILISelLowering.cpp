@@ -233,10 +233,9 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM)
 
   setJumpIsExpensive(true);
   setSelectIsExpensive(true);
-  setPow2DivIsCheap(false);
+  setPow2SDivIsCheap(false);
   setPrefLoopAlignment(0);
   setSchedulingPreference(Sched::ILP);
-  setSupportJumpTables(false);
 #ifdef _DEBUG
   const char* pScheduler = std::getenv("AMD_DEBUG_HSAIL_PRE_RA_SCHEDULER");
   if (pScheduler) {
@@ -254,9 +253,9 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM)
 #endif
 
   computeRegisterProperties();
-  maxStoresPerMemcpy  = 4096;
-  maxStoresPerMemmove = 4096;
-  maxStoresPerMemset  = 4096;
+  MaxStoresPerMemcpy  = 4096;
+  MaxStoresPerMemmove = 4096;
+  MaxStoresPerMemset  = 4096;
 }
 
 HSAILTargetLowering::~HSAILTargetLowering() {}
