@@ -454,7 +454,7 @@ HSAILRegisterInfo::saveScavengerRegisterToFI(MachineBasicBlock &MBB,
   assert(RS != 0 && "Register scavenger has not been created");
 
   // Setup emergency spill location
-  RS->setScavengingFrameIndex(FI);
+  RS->addScavengingFrameIndex(FI);
 
   assert(getScavengingFrameIndex(RS) >= 0 &&
          "Cannot scavenge register without an emergency spill slot!");
