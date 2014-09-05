@@ -23,6 +23,8 @@ const char *Triple::getArchTypeName(ArchType Kind) {
   case aarch64_be:  return "aarch64_be";
   case arm:         return "arm";
   case armeb:       return "armeb";
+  case hsail:       return "hsail";
+  case hsail_64:     return "hsail64";
   case hexagon:     return "hexagon";
   case mips:        return "mips";
   case mipsel:      return "mipsel";
@@ -48,7 +50,6 @@ const char *Triple::getArchTypeName(ArchType Kind) {
   case amdil:       return "amdil";
   case spir:        return "spir";
   case spir64:      return "spir64";
-  case kalimba:     return "kalimba";
   }
 
   llvm_unreachable("Invalid ArchType!");
@@ -97,7 +98,6 @@ const char *Triple::getArchTypePrefix(ArchType Kind) {
   case amdil:       return "amdil";
   case spir:        return "spir";
   case spir64:      return "spir";
-  case kalimba:     return "kalimba";
   }
 }
 
@@ -200,10 +200,11 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
     .Case("nvptx", nvptx)
     .Case("nvptx64", nvptx64)
     .Case("le32", le32)
+    .Case("hsail", hsail)
+    .Case("hsail64", hsail_64)
     .Case("amdil", amdil)
     .Case("spir", spir)
     .Case("spir64", spir64)
-    .Case("kalimba", kalimba)
     .Default(UnknownArch);
 }
 
@@ -244,10 +245,11 @@ static Triple::ArchType parseArch(StringRef ArchName) {
     .Case("nvptx", Triple::nvptx)
     .Case("nvptx64", Triple::nvptx64)
     .Case("le32", Triple::le32)
+    .Case("hsail", Triple::hsail)
+    .Case("hsail64", Triple::hsail_64)
     .Case("amdil", Triple::amdil)
     .Case("spir", Triple::spir)
     .Case("spir64", Triple::spir64)
-    .Case("kalimba", Triple::kalimba)
     .Default(Triple::UnknownArch);
 }
 
@@ -785,6 +787,7 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::amdil:
   case llvm::Triple::arm:
   case llvm::Triple::armeb:
+  case llvm::Triple::hsail:
   case llvm::Triple::hexagon:
   case llvm::Triple::le32:
   case llvm::Triple::mips:
@@ -799,11 +802,11 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::x86:
   case llvm::Triple::xcore:
   case llvm::Triple::spir:
-  case llvm::Triple::kalimba:
     return 32;
 
   case llvm::Triple::aarch64:
   case llvm::Triple::aarch64_be:
+  case llvm::Triple::hsail_64:
   case llvm::Triple::mips64:
   case llvm::Triple::mips64el:
   case llvm::Triple::nvptx64:
@@ -847,7 +850,6 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::arm:
   case Triple::armeb:
   case Triple::hexagon:
-  case Triple::kalimba:
   case Triple::le32:
   case Triple::mips:
   case Triple::mipsel:
@@ -860,9 +862,11 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::thumbeb:
   case Triple::x86:
   case Triple::xcore:
+  case Triple::hsail:
     // Already 32-bit.
     break;
 
+  case Triple::hsail_64:  T.setArch(Triple::hsail); break;
   case Triple::mips64:    T.setArch(Triple::mips);    break;
   case Triple::mips64el:  T.setArch(Triple::mipsel);  break;
   case Triple::nvptx64:   T.setArch(Triple::nvptx);   break;
@@ -882,7 +886,6 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::arm:
   case Triple::armeb:
   case Triple::hexagon:
-  case Triple::kalimba:
   case Triple::le32:
   case Triple::msp430:
   case Triple::r600:
@@ -896,6 +899,7 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::aarch64:
   case Triple::aarch64_be:
   case Triple::spir64:
+  case Triple::hsail_64:
   case Triple::mips64:
   case Triple::mips64el:
   case Triple::nvptx64:
@@ -907,6 +911,7 @@ Triple Triple::get64BitArchVariant() const {
     // Already 64-bit.
     break;
 
+  case Triple::hsail:   T.setArch(Triple::hsail_64);  break;
   case Triple::mips:    T.setArch(Triple::mips64);    break;
   case Triple::mipsel:  T.setArch(Triple::mips64el);  break;
   case Triple::nvptx:   T.setArch(Triple::nvptx64);   break;
