@@ -20,7 +20,7 @@ namespace llvm {
   class Triple;
 
   struct HSAILELFMCAsmInfo : public MCAsmInfo {
-    explicit HSAILELFMCAsmInfo(const Triple &Triple, bool is64Bit);
+    explicit HSAILELFMCAsmInfo(StringRef &Triple);
     virtual const MCSection *getNonexecutableStackSection(MCContext &Ctx) const;
   };
 } // namespace llvm
