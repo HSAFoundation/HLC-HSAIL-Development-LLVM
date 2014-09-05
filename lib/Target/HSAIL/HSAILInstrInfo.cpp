@@ -430,7 +430,7 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
       if (!TargetRegisterInfo::isVirtualRegister(Cond[0].getReg()))
       {
         RS->enterBasicBlock(&MBB);
-        RS->forward(prior(MBB.end()));
+        RS->forward(std::prev(MBB.end()));
 
         free_reg = RS->FindUnusedReg(&HSAIL::CRRegClass);
         if (free_reg == 0)
