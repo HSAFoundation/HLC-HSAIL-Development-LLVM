@@ -487,7 +487,7 @@ HSAILRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
   MachineFunction &MF = *MI.getParent()->getParent();
   // FrameIndex to Offset translation is usually performed by the
   // target-specific implementation of TargetFrameLowering
-  const TargetFrameLowering *TFL = MF.getTarget().getFrameLowering();
+  const TargetFrameLowering *TFL = MF.getTarget().getSubtarget<HSAILSubtarget>().getFrameLowering();
   
   unsigned int y = MI.getNumOperands();
   for (unsigned int x = 0; x < y; ++x) {
