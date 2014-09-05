@@ -59,6 +59,7 @@
 #include "HSAILUtilityFunctions.h"
 #include "HSAILOpaqueTypes.h"
 #include "HSAILLLVMVersion.h"
+#include "libHSAIL/HSAILBrigantine.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Function.h"
@@ -505,18 +506,18 @@ void HSAILKernelManager::setName(const std::string &name) {
 
 class RTI {
     std::string m_str;
-//    HSAIL_ASM::Brigantine&  m_brig;
+    HSAIL_ASM::Brigantine&  m_brig;
     mutable llvm::raw_string_ostream m_os;
 public:
-    RTI(/*HSAIL_ASM::Brigantine&  brig*/) : /* m_brig(brig),*/m_os(m_str) { }
+    RTI(HSAIL_ASM::Brigantine&  brig) : m_brig(brig), m_os(m_str) { }
 
     ~RTI() {
-//      HSAIL_ASM::DirectivePragma pragma = m_brig.append<HSAIL_ASM::DirectivePragma>();
-//      HSAIL_ASM::ItemList opnds;
-//      opnds.push_back(m_brig.createOperandString("AMD RTI"));
+      HSAIL_ASM::DirectivePragma pragma = m_brig.append<HSAIL_ASM::DirectivePragma>();
+      HSAIL_ASM::ItemList opnds;
+      opnds.push_back(m_brig.createOperandString("AMD RTI"));
       const std::string& str = m_os.str();
-//      opnds.push_back(m_brig.createOperandString(str));
-//    pragma.operands() = opnds;
+      opnds.push_back(m_brig.createOperandString(str));
+    pragma.operands() = opnds;
     }
 
     llvm::raw_string_ostream& os() const { return m_os; }
@@ -526,7 +527,6 @@ template <typename T>
 const RTI& operator << (const RTI& os, const T& s)    { os.os() << s; return os; } 
 const RTI& operator << (const RTI& os, const char *s) { os.os() << s; return os; } 
 
-#if 0
 void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t id, bool isKernel) {
 
     // Initialization block related to current function being processed
@@ -608,14 +608,14 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
     if (!mMFI->func_empty()) {
       oss.str().clear();  
       oss << "function:" << mMFI->func_size();
-      binaryForEach(mMFI->func_begin(), mMFI->func_end(), HSAILcommaPrint, oss);
+      binaryForEach(mMFI->func_begin(), mMFI->func_end(), HSAIL::HSAILcommaPrint, oss);
       RTI(brig) << oss.str();
     }
 
     if (!mSTM->device()->isSupported(HSAILDeviceInfo::MacroDB) && !mMFI->intr_empty()) {
       oss.str().clear();  
       oss << "intrinsic:" << mMFI->intr_size();
-      binaryForEach(mMFI->intr_begin(), mMFI->intr_end(), HSAILcommaPrint, oss);
+      binaryForEach(mMFI->intr_begin(), mMFI->intr_end(), HSAIL::HSAILcommaPrint, oss);
       RTI(brig) << oss.str();
     }
   
@@ -697,8 +697,6 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
     mUniqueID = id;
   }
 }
-
-#endif
 
 uint32_t HSAILKernelManager::getUAVID(const Value *value) {
   if (mValueIDMap.find(value) != mValueIDMap.end()) {

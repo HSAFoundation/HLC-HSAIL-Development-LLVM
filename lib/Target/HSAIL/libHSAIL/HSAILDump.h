@@ -38,13 +38,25 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 // SOFTWARE.
-#ifndef INCLUDED_BRIG_H
-#define INCLUDED_BRIG_H
+#pragma once
+#ifndef INCLUDED_HSAIL_DUMP_H
+#define INCLUDED_HSAIL_DUMP_H
 
-#include "llvm/Support/DataTypes.h"
+#include <iosfwd>
 
-namespace Brig {
-#include "Brig_new.hpp"
+namespace HSAIL_ASM
+{
+
+class Code;
+class Operand;
+class BrigContainer;
+
+void dumpItem(std::ostream&, Code);
+void dumpItem(std::ostream&, Operand);
+
+void dump(BrigContainer &c, std::ostream& out);
+void dump(BrigContainer &c);
+
 }
 
-#endif // defined(INCLUDED_BRIG_H)
+#endif

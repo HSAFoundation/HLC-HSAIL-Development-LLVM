@@ -18,6 +18,6 @@ BUILT_SOURCES = HSAILGenRegisterInfo.inc HSAILGenInstrInfo.inc \
 		HSAILGenIntrinsics.inc HSAILGenAsmWriter.inc
 
 
-DIRS = TargetInfo
+DIRS = libHSAIL TargetInfo
 
 include $(LEVEL)/Makefile.common

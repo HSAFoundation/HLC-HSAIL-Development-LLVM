@@ -68,6 +68,12 @@
 #include <string>
 #include <set>
 #include <map>
+
+// Brig lowering
+#include "libHSAIL/HSAILBrigantine.h"
+#include "libHSAIL/HSAILItemBase.h"
+#include "libHSAIL/HSAILItems.h"
+
 #define IMAGETYPE_2D 0
 #define IMAGETYPE_3D 1
 #define RESERVED_LIT_COUNT 6
@@ -110,7 +116,7 @@ public:
   /// and calculation of the local/group/global id's.
   void printHeader(const std::string &name);
 
-//  void brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t id, bool isKernel = false);
+  void brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t id, bool isKernel = false);
 
   /// Set bool value on whether to consider the function a kernel or a normal
   /// function.
