@@ -640,7 +640,7 @@ bool notUsedInKernel(const GlobalVariable *GV)
 
   // We only inspect the users of GV, hence GV itself is never
   // inserted in the worklist.
-  worklist.append(GV->use_begin(), GV->use_end());
+  worklist.append(GV->user_begin(), GV->user_end());
 
   while (!worklist.empty()) {
     const User* user = worklist.pop_back_val();
@@ -653,7 +653,7 @@ bool notUsedInKernel(const GlobalVariable *GV)
     if (isa<Instruction>(user))
       return false;
 
-    worklist.append(user->use_begin(), user->use_end());
+    worklist.append(user->user_begin(), user->user_end());
   }
 
   return true;
