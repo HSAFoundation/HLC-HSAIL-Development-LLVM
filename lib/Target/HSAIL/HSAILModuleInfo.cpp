@@ -85,8 +85,7 @@ HSAILModuleInfo::HSAILModuleInfo(const MachineModuleInfo &MMI)
 HSAILModuleInfo::~HSAILModuleInfo() {
   for (StringMap<HSAILKernel*>::iterator kb = mKernels.begin(), ke = mKernels.end();
       kb != ke; ++kb) {
-    StringMapEntry<HSAILKernel*> cur = *kb;
-    HSAILKernel *ptr = cur.getValue();
+    HSAILKernel *ptr = kb->getValue();
     delete ptr;
   }
 }
