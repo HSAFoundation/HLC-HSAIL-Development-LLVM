@@ -1656,7 +1656,7 @@ HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
 
     SDValue NewLD = DAG.getExtLoad(ISD::SEXTLOAD, dl,
                      MVT::i32, Chain, BasePtr, MMO->getPointerInfo(), MVT::i8,
-                     LD->isVolatile(),  LD->isNonTemporal(), 0);
+                     LD->isVolatile(),  LD->isNonTemporal(), LD->isInvariant(), 0);
 
     SDValue Result = DAG.getNode(ISD::TRUNCATE, dl, MVT::i1, NewLD);
     SDValue Ops[] = { Result, SDValue(NewLD.getNode(), 1) };
