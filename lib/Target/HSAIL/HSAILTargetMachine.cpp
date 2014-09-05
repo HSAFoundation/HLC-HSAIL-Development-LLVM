@@ -254,7 +254,7 @@ HSAIL_32TargetMachine::HSAIL_32TargetMachine(const Target &T, StringRef TT,
         // triple comes from the module (unless overridden on command line). It's just a
         // warning, but users should know if they're specifying --march=hsail-64 on a
         // 32-bit module or --march=hsail on a 64-bit module.
-        if ( TheTriple.getArch() == Triple::hsail-64 ) {
+        if ( TheTriple.getArch() == Triple::hsail_64 ) {
           errs() << "warning: target triple '" << TT <<
               "' does not match target 'hsail', expecting hsail-pc-amdopencl.\n";
         }
