@@ -1161,7 +1161,7 @@ HSAILInstrInfo::OptimizeCompareInstr(MachineInstr *CmpInstr,
   if (!MRI->hasOneUse(SrcReg))
     return false;
 
-  MachineInstr &cmov = *MRI->use_begin(SrcReg);
+  MachineInstr &cmov = *MRI->use_instr_begin(SrcReg);
   if (cmov.getOpcode() != HSAIL::cmov_b32_i_ii &&
       cmov.getOpcode() != HSAIL::cmov_b64_i_ii)
     return false;
@@ -1176,7 +1176,7 @@ HSAILInstrInfo::OptimizeCompareInstr(MachineInstr *CmpInstr,
       !MRI->hasOneUse(cmov.getOperand(0).getReg()))
     return false;
 
-  MachineInstr &cmp_eq = *MRI->use_begin(cmov.getOperand(0).getReg());
+  MachineInstr &cmp_eq = *MRI->use_instr_begin(cmov.getOperand(0).getReg());
   
   int is_cmp_eq_or_ne = -1;
   switch (cmp_eq.getOpcode()) {
