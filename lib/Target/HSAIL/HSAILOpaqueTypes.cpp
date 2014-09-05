@@ -12,7 +12,7 @@
 
 #include "HSAILOpaqueTypes.h"
 
-#include <llvm/DerivedTypes.h>
+#include <llvm/IR/DerivedTypes.h>
 #include <llvm/ADT/StringSwitch.h>
 
 using namespace llvm;
