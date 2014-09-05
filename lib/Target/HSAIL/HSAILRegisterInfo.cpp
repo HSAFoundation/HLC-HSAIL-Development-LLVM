@@ -429,6 +429,14 @@ HSAILRegisterInfo::saveScavengerRegister(MachineBasicBlock &MBB,
     MFI->CreateSpillStackObject(RC->getSize(), RC->getAlignment()));
 }
 
+static int getScavengingFrameIndex(RegScavenger *RS) {
+
+  SmallVector<int, 8> FI;
+  RS->getScavengingFrameIndices(FI);
+  return FI[0];
+
+}
+
 // Save scavenger register and provide a frame index for it.
 bool
 HSAILRegisterInfo::saveScavengerRegisterToFI(MachineBasicBlock &MBB,
@@ -448,14 +456,14 @@ HSAILRegisterInfo::saveScavengerRegisterToFI(MachineBasicBlock &MBB,
   // Setup emergency spill location
   RS->setScavengingFrameIndex(FI);
 
-  assert(RS->getScavengingFrameIndex() >= 0 &&
+  assert(getScavengingFrameIndex(RS) >= 0 &&
          "Cannot scavenge register without an emergency spill slot!");
 
   // Store the scavenged register to its stack spill location
-  HII.storeRegToStackSlot(MBB, I, Reg, true /* isKill */, RS->getScavengingFrameIndex(), RC, this);
+  HII.storeRegToStackSlot(MBB, I, Reg, true /* isKill */, getScavengingFrameIndex(RS), RC, this);
 
   // Restore the scavenged register before its use (or first terminator).
-  HII.loadRegFromStackSlot(MBB, UseMI, Reg, RS->getScavengingFrameIndex(), RC, this);
+  HII.loadRegFromStackSlot(MBB, UseMI, Reg, getScavengingFrameIndex(RS), RC, this);
 
   // HSAIL Target saves/restores the scavenged register
   return true;
