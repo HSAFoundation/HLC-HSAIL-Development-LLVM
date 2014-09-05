@@ -81,7 +81,8 @@ class HSAILMachineFunctionInfo;
 class GlobalVariable;
 class SelectionDAG;
 class DebugLoc;
-}
+
+namespace HSAIL {
 
 // Debug functions for SDNode and SDValue.
 void HSAILprintSDValue(const llvm::SDValue &Op, int level);
@@ -169,5 +170,9 @@ llvm::SDValue generateFenceIntrinsic(llvm::SDValue Chain, llvm::DebugLoc dl,
         unsigned brigMemoryOrder,
         unsigned brigMemoryScope,
         llvm::SelectionDAG &CurDAG);
+
+} // End namespace HSAIL
+
+} // End namespace llvm
 
 #endif // HSAILUTILITYFUNCTIONS_H_

@@ -275,7 +275,7 @@ CheckSpillAfterDef(MachineInstr * start, unsigned reg, bool& canBeSpilled)
     {
       return true;
     }
-    if (I->readsRegister(reg) && (isConv(&*I) || I->mayStore())) {
+    if (I->readsRegister(reg) && (HSAIL::isConv(&*I) || I->mayStore())) {
       canBeSpilled = true;
       return true;
     }

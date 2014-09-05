@@ -259,8 +259,8 @@ HSAILDAGToDAGISel::getGlobalBaseReg()
 bool
 HSAILDAGToDAGISel::isKernelFunc() const
 {
-  MachineFunction &MF = CurDAG->getMachineFunction();
-  return ::isKernelFunc(MF.getFunction());
+  const MachineFunction &MF = CurDAG->getMachineFunction();
+  return HSAIL::isKernelFunc(MF.getFunction());
 }
 
 static unsigned getImageInstr(HSAILIntrinsic::ID intr, bool is095 )

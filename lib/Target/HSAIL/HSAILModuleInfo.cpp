@@ -279,7 +279,7 @@ void HSAILModuleInfo::parseAutoArray(const GlobalVariable *GV, bool isRegion) {
   tmp.isHW = true;
   tmp.offset = 0;
   tmp.align = std::max(GV->getAlignment(), 16U);
-  tmp.vecSize = HSAILgetTypeSize(Ty, true);
+  tmp.vecSize = HSAIL::HSAILgetTypeSize(Ty, true);
   tmp.isRegion = isRegion;
   mArrayMems[GV->getName()] = tmp;
 }
@@ -463,7 +463,7 @@ void HSAILModuleInfo::calculateCPOffsets(const MachineFunction *MF,
   for (size_t x = 0; x < numConsts; ++x) {
     krnl->CPOffsets.push_back(
         std::make_pair(mCurrentCPOffset, consts[x].Val.ConstVal));
-    size_t curSize = HSAILgetTypeSize(consts[x].Val.ConstVal->getType(), true);
+    size_t curSize = HSAIL::HSAILgetTypeSize(consts[x].Val.ConstVal->getType(), true);
     // Align the size to the vector boundary
     uint32_t alignment = 16;
     const GlobalValue *GV = dyn_cast<GlobalValue>(consts[x].Val.ConstVal);
@@ -726,7 +726,7 @@ void HSAILModuleInfo::printConstantValue(const Constant *CAval,
       if (asBytes) {
         dumpZeroElements(CAval->getType(), O, asBytes);
       } else {
-        int num_elts = HSAILgetNumElements(CAval->getType())-1;
+        int num_elts = HSAIL::HSAILgetNumElements(CAval->getType())-1;
         for (int x = 0; x < num_elts; ++x) {
           O << ":0";
         }

@@ -157,7 +157,7 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
     if ((Align & (Align - 1))) Align = NextPowerOf2(Align);
   }
   ptrArg += Ip->getName().str() + ":" + 
-    HSAILgetTypeName(PT, symTab, mMFI, 
+    HSAIL::HSAILgetTypeName(PT, symTab, mMFI, 
                      mMFI->isSignedIntType(Ip)) + ":1:1:" +
     itostr(counter * 16) + ":";
   switch (PT->getAddressSpace()) {
@@ -235,7 +235,7 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
   }
 
   const Module* M = mMF->getMMI().getModule();
-  bool isSPIR = isSPIRModule(*M);
+  bool isSPIR = HSAIL::isSPIRModule(*M);
   if (isSPIR) {
     if (pointerCount == 0)
       ptrArg += ":0:0:0"; //skip the print_buffer pointer
@@ -321,7 +321,7 @@ void HSAILKernelManager::processArgMetadata(OSTREAM_TYPE &ignored,
     Type *cType = Ip->getType();
     if (cType->isIntOrIntVectorTy() || cType->isFPOrFPVectorTy()) {
       std::string argMeta("value:");
-      argMeta += Ip->getName().str() + ":" + HSAILgetTypeName(cType, symTab, mMFI
+      argMeta += Ip->getName().str() + ":" + HSAIL::HSAILgetTypeName(cType, symTab, mMFI
           , mMFI->isSignedIntType(Ip)) + ":";
       int bitsize = cType->getPrimitiveSizeInBits();
       int numEle = 1;
@@ -416,7 +416,7 @@ void HSAILKernelManager::processArgMetadata(OSTREAM_TYPE &ignored,
               }
           }
           queueArg += Ip->getName().str() + ":"
-            + HSAILgetTypeName(PT, symTab, mMFI, mMFI->isSignedIntType(Ip))
+            + HSAIL::HSAILgetTypeName(PT, symTab, mMFI, mMFI->isSignedIntType(Ip))
             + ":1:1:" + itostr(mCBSize * 16) + ":" + MemType;
           mMFI->addMetadata(queueArg, true);
           ++mCBSize;
