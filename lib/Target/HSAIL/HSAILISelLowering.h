@@ -72,11 +72,6 @@ public:
   virtual Sched::Preference
   getSchedulingPreference(SDNode *N) const;
 
-  /// getRegClassFor - Return the register class that should be used for the
-  /// specified value type.
-  virtual const TargetRegisterClass*
-  getRegClassFor(EVT VT) const;
-
   /// getRepRegClassFor - Return the 'representative' register class for the
   /// specified value type. The 'representative' register class is the largest
   /// legal super-reg register class for the register class of the value type.
@@ -148,26 +143,6 @@ public:
   virtual bool
   allowsUnalignedMemoryAccesses(EVT VT) const;
 
-  /// getOptimalMemOpType - Returns the target specific optimal type for load
-  /// and store operations as a result of memset, memcpy, and memmove
-  /// lowering. If DstAlign is zero that means it's safe to destination
-  /// alignment can satisfy any constraint. Similarly if SrcAlign is zero it
-  /// means there isn't a need to check it against alignment requirement,
-  /// probably because the source does not need to be loaded. If
-  /// 'NonScalarIntSafe' is true, that means it's safe to return a
-  /// non-scalar-integer type, e.g. empty string source, constant, or loaded
-  /// from memory. 'MemcpyStrSrc' indicates whether the memcpy source is
-  /// constant so it does not need to be loaded.
-  /// It returns EVT::Other if the type should be determined using generic
-  /// target-independent logic.
-  virtual EVT
-  getOptimalMemOpType(uint64_t Size,
-                      unsigned DstAlign,
-                      unsigned SrcAlign,
-                      bool NonScalarIntSafe,
-                      bool MemcpyStrSrc,
-                      MachineFunction &MF) const;
-
   /// getPreIndexedAddressParts - returns true by value, base pointer and
   /// offset pointer and addressing mode by reference if the node's address
   /// can be legally represented as pre-indexed load / store address.
@@ -237,17 +212,6 @@ public:
   virtual unsigned
   getMaximalGlobalOffset() const;
 
-  /// computeMaskedBitsForTargetNode - Determine which of the bits specified in
-  /// Mask are known to be either zero or one and return them in the
-  /// KnownZero/KnownOne bitsets.
-  virtual void
-  computeMaskedBitsForTargetNode(const SDValue Op,
-                                 const APInt &Mask,
-                                 APInt &KnownZero,
-                                 APInt &KnownOne,
-                                 const SelectionDAG &DAG,
-                                 unsigned Depth = 0) const;
-
   /// ComputeNumSignBitsForTargetNode - This method can be implemented by
   /// targets that want to expose additional information about sign bits to the
   /// DAG Combiner.
@@ -314,11 +278,6 @@ public:
                                            const MemSDNode *N) const;
 
 protected:
-
-  /// findRepresentativeClass - Return the largest legal super-reg register class
-  /// of the register class for the specified type and its associated "cost".
-  virtual std::pair<const TargetRegisterClass*, uint8_t>
-  findRepresentativeClass(EVT VT) const;
 
   /// Create kernel or function parameter scalar load and return its value.
   /// If isLoad = false create an argument value store.
@@ -559,20 +518,6 @@ public:
                                     EVT VT) const;
 
   */
-  /// getRegForInlineAsmConstraint - Given a physical register constraint (e.g.
-  /// {edx}), return the register number and the register class for the
-  /// register.
-  ///
-  /// Given a register class constraint, like 'r', if this corresponds directly
-  /// to an LLVM register class, return a register of 0 and the register class
-  /// pointer.
-  ///
-  /// This should only be used for C_Register constraints.  On error,
-  /// this returns a register number of 0 and a null register class pointer..
-
-  virtual std::pair<unsigned, const TargetRegisterClass*>
-  getRegForInlineAsmConstraint(const std::string &Constraint,
-                               EVT VT) const;
 
 
   /// LowerXConstraint - try to replace an X constraint, which matches anything,

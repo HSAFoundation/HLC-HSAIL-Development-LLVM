@@ -136,14 +136,6 @@ HSAILInstrInfo::isLoadFromStackSlotPostFE(const MachineInstr *MI,
   return isLoadFromStackSlot(MI, FrameIndex);
 }
 
-bool
-HSAILInstrInfo::hasLoadFromStackSlot(const MachineInstr *MI,
-                                     const MachineMemOperand *&MMO,
-                                     int &FrameIndex) const
-{
-  return TargetInstrInfoImpl::hasLoadFromStackSlot(MI, MMO, FrameIndex);
-}
-
 unsigned
 HSAILInstrInfo::isStoreToStackSlot(const MachineInstr *MI,
                                    int &FrameIndex) const
@@ -170,21 +162,6 @@ HSAILInstrInfo::isStoreToStackSlotPostFE(const MachineInstr *MI,
                                            int &FrameIndex) const
 {
   return isStoreToStackSlot(MI, FrameIndex);
-}
-
-bool
-HSAILInstrInfo::hasStoreToStackSlot(const MachineInstr *MI,
-                                      const MachineMemOperand *&MMO,
-                                      int &FrameIndex) const
-{
-  return TargetInstrInfoImpl::hasStoreToStackSlot(MI, MMO, FrameIndex);
-}
-MachineInstr*
-HSAILInstrInfo::convertToThreeAddress(MachineFunction::iterator &MFI,
-                                      MachineBasicBlock::iterator &MBBI,
-                                      LiveVariables *LV) const
-{
-  return TargetInstrInfoImpl::convertToThreeAddress(MFI, MBBI, LV);
 }
 
 bool
@@ -476,13 +453,6 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
   }
 
   return false;
-}
-
-unsigned int
-HSAILInstrInfo::getBranchInstr(const MachineOperand &op) const
-{
-  //return TargetInstrInfoImpl::getBranchInstr(op);
-  return 0;
 }
 
 static unsigned short
@@ -1054,12 +1024,6 @@ HSAILInstrInfo::shouldScheduleLoadsNear(SDNode *Node1,
 }
 
 bool
-HSAILInstrInfo::shouldScheduleWithNormalPriority(SDNode* instruction) const
-{
-  return TargetInstrInfoImpl::shouldScheduleWithNormalPriority(instruction);
-}
-
-bool
 HSAILInstrInfo::ReverseBranchCondition(SmallVectorImpl<MachineOperand> &Cond)
                                        const
 {
@@ -1103,39 +1067,6 @@ HSAILInstrInfo::ReverseBranchCondition(SmallVectorImpl<MachineOperand> &Cond)
   return false;
 }
 
-void
-HSAILInstrInfo::insertNoop(MachineBasicBlock &MBB,
-                           MachineBasicBlock::iterator MI) const
-{
-  return TargetInstrInfoImpl::insertNoop(MBB, MI);
-}
-
-bool
-HSAILInstrInfo::isPredicated(const MachineInstr *MI) const
-{
-  return TargetInstrInfoImpl::isPredicated(MI);
-}
-
-bool
-HSAILInstrInfo::SubsumesPredicate(const SmallVectorImpl<MachineOperand> &Pred1,
-                                  const SmallVectorImpl<MachineOperand> &Pred2)
-                                  const
-{
-  return TargetInstrInfoImpl::SubsumesPredicate(Pred1, Pred2);
-}
-
-bool
-HSAILInstrInfo::DefinesPredicate(MachineInstr *MI,
-                                 std::vector<MachineOperand> &Pred) const
-{
-  return TargetInstrInfoImpl::DefinesPredicate(MI, Pred);
-}
-
-bool
-HSAILInstrInfo::isPredicable(MachineInstr *MI) const
-{
-  return TargetInstrInfoImpl::isPredicable(MI);
-}
 bool
 HSAILInstrInfo::isSafeToMoveRegClassDefs(const TargetRegisterClass *RC) const
 {
@@ -1146,101 +1077,6 @@ unsigned
 HSAILInstrInfo::GetInstSizeInBytes(const MachineInstr *MI) const
 {
   return 0;
-}
-
-bool
-HSAILInstrInfo::isReallyTriviallyReMaterializable(const MachineInstr *MI,
-                                  AliasAnalysis *AA) const
-{
-  return TargetInstrInfoImpl::isReallyTriviallyReMaterializable(MI, AA);
-}
-
-void
-HSAILInstrInfo::reMaterialize(MachineBasicBlock &MBB,
-                              MachineBasicBlock::iterator MI,
-                              unsigned DestReg, unsigned SubIdx,
-                              const MachineInstr *Orig,
-                              const TargetRegisterInfo &TRI) const
-{
-  return TargetInstrInfoImpl::reMaterialize(MBB, MI, DestReg, SubIdx, 
-      Orig, TRI);
-}
-
-bool
-HSAILInstrInfo::findCommutedOpIndices(MachineInstr *MI,
-                      unsigned &SrcOpIdx1,
-                      unsigned &SrcOpIdx2) const
-{
-  return TargetInstrInfoImpl::findCommutedOpIndices(MI, SrcOpIdx1, SrcOpIdx2);
-}
-
-bool
-HSAILInstrInfo::produceSameValue(const MachineInstr *MI0,
-                 const MachineInstr *MI1,
-                 const MachineRegisterInfo *MRI) const
-{
-  return TargetInstrInfoImpl::produceSameValue(MI0, MI1, MRI);
-}
-
-MachineInstr*
-HSAILInstrInfo::duplicate(MachineInstr *Orig,
-                          MachineFunction &MF) const
-{
-  return TargetInstrInfoImpl::duplicate(Orig, MF);
-}
-
-MachineInstr*
-HSAILInstrInfo::commuteInstruction(MachineInstr *MI,
-                                   bool NewMI) const
-{
-  return TargetInstrInfoImpl::commuteInstruction(MI, NewMI);
-}
-
-void
-HSAILInstrInfo::ReplaceTailWithBranchTo(MachineBasicBlock::iterator Tail,
-                                        MachineBasicBlock *NewDest) const
-{
-  return TargetInstrInfoImpl::ReplaceTailWithBranchTo(Tail, NewDest);
-}
-
-bool
-HSAILInstrInfo::isLegalToSplitMBBAt(MachineBasicBlock &MBB,
-                                    MachineBasicBlock::iterator MBBI) const
-{
-  return TargetInstrInfoImpl::isLegalToSplitMBBAt(MBB, MBBI);
-}
-
-bool
-HSAILInstrInfo::isProfitableToIfCvt(MachineBasicBlock &MBB,
-                                    unsigned NumCycles,
-                                    unsigned ExtraPredCycles,
-                                    const BranchProbability &Probability) const
-{
-  return TargetInstrInfoImpl::isProfitableToIfCvt(MBB, NumCycles, 
-      ExtraPredCycles, Probability);
-}
-
-bool
-HSAILInstrInfo::isProfitableToIfCvt(MachineBasicBlock &TMBB,
-                                    unsigned NumTCycles,
-                                    unsigned ExtraTCycles,
-                                    MachineBasicBlock &FMBB,
-                                    unsigned NumFCycles,
-                                    unsigned ExtraFCycles,
-				    const BranchProbability &Probability) const
-{
-  return TargetInstrInfoImpl::isProfitableToIfCvt(TMBB, NumTCycles, 
-      ExtraTCycles, FMBB, NumFCycles, ExtraFCycles, 
-      Probability);
-}
-
-bool
-HSAILInstrInfo::isProfitableToDupForIfCvt(MachineBasicBlock &MBB,
-                                          unsigned NumCycles,
-				    const BranchProbability &Probability) const
-{
-  return TargetInstrInfoImpl::isProfitableToDupForIfCvt(MBB, NumCycles, 
-      Probability);
 }
 
 void
@@ -1275,72 +1111,13 @@ HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
     Opc = HSAIL::cvt_u64_u32;
   } else {
     assert(!"When do we hit this?");
-    return TargetInstrInfoImpl::copyPhysReg(MBB, MI, DL, DestReg, SrcReg, 
+    return TargetInstrInfo::copyPhysReg(MBB, MI, DL, DestReg, SrcReg, 
         KillSrc);
   }
 
   BuildMI(MBB, MI, DL, get(Opc), DestReg)
     .addReg(SrcReg, getKillRegState(KillSrc));
 
-}
-
-MachineInstr*
-HSAILInstrInfo::emitFrameIndexDebugValue(MachineFunction &MF,
-                         int FrameIx,
-                         uint64_t Offset,
-                         const MDNode *MDPtr,
-                         DebugLoc dl) const
-{
-  return TargetInstrInfoImpl::emitFrameIndexDebugValue(MF, FrameIx, Offset, 
-      MDPtr, dl);
-}
-
-bool
-HSAILInstrInfo::isUnpredicatedTerminator(const MachineInstr *MI) const
-{
-  return TargetInstrInfoImpl::isUnpredicatedTerminator(MI);
-}
-
-bool
-HSAILInstrInfo::PredicateInstruction(MachineInstr *MI,
-                                   const SmallVectorImpl<MachineOperand> &Pred)
-                                   const
-{
-  return TargetInstrInfoImpl::PredicateInstruction(MI, Pred);
-}
-
-bool
-HSAILInstrInfo::isSchedulingBoundary(const MachineInstr *MI,
-                                     const MachineBasicBlock *MBB,
-                                     const MachineFunction &MF) const
-{
-  return TargetInstrInfoImpl::isSchedulingBoundary(MI, MBB, MF);
-}
-
-unsigned
-HSAILInstrInfo::getInlineAsmLength(const char *Str,
-                                   const MCAsmInfo &MAI) const
-{
-  return TargetInstrInfoImpl::getInlineAsmLength(Str, MAI);
-}
-ScheduleHazardRecognizer*
-HSAILInstrInfo::CreateTargetHazardRecognizer(const TargetMachine *TM,
-                                             const ScheduleDAG *DAG) const
-{
-  // TODO: Need to add a real hazard recognizer so that we can make sure
-  // certain instructions don't get scheduled back to back.
-  return TargetInstrInfoImpl::
-    CreateTargetHazardRecognizer(TM, DAG);
-}
-ScheduleHazardRecognizer*
-HSAILInstrInfo::CreateTargetPostRAHazardRecognizer(
-                                         const InstrItineraryData* IID,
-                                         const ScheduleDAG *DAG) const
-{
-  // TODO: Need to add a real hazard recognizer so that we can make sure
-  // certain instructions don't get scheduled back to back.
-  return TargetInstrInfoImpl::
-    CreateTargetPostRAHazardRecognizer(IID, DAG);
 }
 
 bool
@@ -1503,22 +1280,6 @@ HSAILInstrInfo::OptimizeCompareInstr(MachineInstr *CmpInstr,
   return true;
 }
 
-bool
-HSAILInstrInfo::FoldImmediate(MachineInstr *UseMI,
-                              MachineInstr *DefMI,
-                              unsigned Reg,
-                              MachineRegisterInfo *MRI) const
-{
-  return TargetInstrInfoImpl::FoldImmediate(UseMI, DefMI, Reg, MRI);
-}
-
-unsigned
-HSAILInstrInfo::getNumMicroOps(const InstrItineraryData *ItinData,
-                               const MachineInstr *MI) const
-{
-  return TargetInstrInfoImpl::getNumMicroOps(ItinData, MI);
-}
-
 int
 HSAILInstrInfo::getOperandLatency(const InstrItineraryData *ItinData,
                                   const MachineInstr *DefMI,
@@ -1556,26 +1317,6 @@ HSAILInstrInfo::getInstrLatency(const InstrItineraryData *ItinData,
 {
   //assert(!"When do we hit this?");
   return 1;
-}
-
-bool
-HSAILInstrInfo::hasHighOperandLatency(const InstrItineraryData *ItinData,
-                                      const MachineRegisterInfo *MRI,
-                                      const MachineInstr *DefMI,
-                                      unsigned DefIdx,
-                                      const MachineInstr *UseMI,
-                                      unsigned UseIdx) const
-{
-  return TargetInstrInfoImpl::hasHighOperandLatency(ItinData, MRI, DefMI, 
-      DefIdx, UseMI, UseIdx);
-}
-
-bool
-HSAILInstrInfo::hasLowDefLatency(const InstrItineraryData *ItinData,
-                                 const MachineInstr *DefMI,
-                                 unsigned DefIdx) const
-{
-  return TargetInstrInfoImpl::hasLowDefLatency(ItinData, DefMI, DefIdx);
 }
 
 /// Get a free GPR32 or insert spill and reload around specified instruction
