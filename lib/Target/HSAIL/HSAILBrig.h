@@ -14,6 +14,8 @@
 #ifndef HSAILBRIG_H_
 #define HSAILBRIG_H_
 
+#include "llvm/Support/DataTypes.h"
+
 namespace Brig {
 
 typedef uint16_t BrigType16_t;
