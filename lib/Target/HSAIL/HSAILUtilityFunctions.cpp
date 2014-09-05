@@ -838,7 +838,7 @@ bool hasParametrizedAtomicNoRetVersion(const llvm::MachineInstr *MI, SDNode *Nod
              Brig::BRIG_ATOMIC_EXCH));
 }
 
-static SDValue generateFenceIntrinsicHelper(SDValue Chain, DebugLoc dl,
+static SDValue generateFenceIntrinsicHelper(SDValue Chain, SDLoc dl,
                 unsigned brigMemoryOrder,
                 unsigned brigGlobalMemoryScope, 
                 unsigned brigGroupMemoryScope, 
@@ -857,7 +857,7 @@ static SDValue generateFenceIntrinsicHelper(SDValue Chain, DebugLoc dl,
   return CurDAG.getNode(ISD::INTRINSIC_VOID, dl, MVT::Other, Ops);
 }
 
-SDValue generateFenceIntrinsic(SDValue Chain, DebugLoc dl, unsigned memSeg,
+SDValue generateFenceIntrinsic(SDValue Chain, SDLoc dl, unsigned memSeg,
         unsigned brigMemoryOrder, unsigned brigMemoryScope, SelectionDAG &CurDAG) {
   switch(memSeg) {
     case llvm::HSAILAS::GLOBAL_ADDRESS:

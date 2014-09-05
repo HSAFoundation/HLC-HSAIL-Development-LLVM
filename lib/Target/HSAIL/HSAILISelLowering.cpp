@@ -597,7 +597,7 @@ PerformBitalignCombine(SDNode *N, TargetLowering::DAGCombinerInfo &DCI, unsigned
   SDValue Opr2 = N->getOperand(3);
   ConstantSDNode *SHR = dyn_cast<ConstantSDNode>(Opr2);
   SelectionDAG &DAG = DCI.DAG;
-  DebugLoc dl = N->getDebugLoc();
+  SDLoc dl = SDLoc(N);
   EVT VT = N->getValueType(0);
   // fold bitalign_b32(x & c1, x & c1, c2) -> bitalign_b32(x, x, c2) & rotr(c1, c2)
   if (SHR && (Opr0 == Opr1) && (Opr0.getOpcode() == ISD::AND)) {
@@ -608,7 +608,7 @@ PerformBitalignCombine(SDNode *N, TargetLowering::DAGCombinerInfo &DCI, unsigned
         shr_val = (shr_val & 3U) << 3U;
       and_mask = ((and_mask >> shr_val) | (and_mask << (32U - shr_val))) & 0xffffffffu;
       Opr0 = Opr0->getOperand(0);
-      return DAG.getNode(ISD::AND, Opr1.getDebugLoc(), Opr1.getValueType(),
+      return DAG.getNode(ISD::AND, SDLoc(Opr1), Opr1.getValueType(),
         DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
           DAG.getConstant(IID, MVT::i32), Opr0, Opr0, Opr2),
         DAG.getConstant(and_mask, MVT::i32));
@@ -755,7 +755,7 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
                                  bool isVarArg,
                                  const SmallVectorImpl<ISD::OutputArg> &Outs,
                                  const SmallVectorImpl<SDValue> &OutVals,
-                                 DebugLoc dl,
+                                 SDLoc dl,
                                  SelectionDAG &DAG) const
 {
   MachineFunction &MF = DAG.getMachineFunction();
@@ -840,7 +840,7 @@ SDValue
 HSAILTargetLowering::LowerMemArgument(SDValue Chain,
                                       CallingConv::ID CallConv,
                                       const SmallVectorImpl<ISD::InputArg> &Ins,
-                                      DebugLoc dl, SelectionDAG &DAG,
+                                      SDLoc dl, SelectionDAG &DAG,
                                       const CCValAssign &VA,
                                       MachineFrameInfo *MFI,
                                       unsigned i) const
@@ -918,7 +918,7 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
                                                unsigned AddressSpace,
                                                SDValue Ptr, SDValue ParamValue,
                                                unsigned index,
-                                               DebugLoc dl, SDValue Chain,
+                                               SDLoc dl, SDValue Chain,
                                                SDValue InFlag) const
 {
     MachineFunction &MF = DAG.getMachineFunction();
@@ -1055,7 +1055,7 @@ HSAILTargetLowering::LowerFormalArguments(SDValue Chain,
                                           CallingConv::ID CallConv,
                                           bool isVarArg,
                                           const SmallVectorImpl<ISD::InputArg> &Ins,
-                                          DebugLoc dl,
+                                          SDLoc dl,
                                           SelectionDAG &DAG,
                                           SmallVectorImpl<SDValue> &InVals) const
 {
@@ -1150,7 +1150,7 @@ HSAILTargetLowering::LowerFormalArguments(SDValue Chain,
 SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
                                SmallVectorImpl<SDValue> &InVals) const {
   SelectionDAG &DAG                     = CLI.DAG;
-  DebugLoc &dl                          = CLI.DL;
+  SDLoc &dl                          = CLI.DL;
   SmallVector<ISD::OutputArg, 32> &Outs = CLI.Outs;
   SmallVector<SDValue, 32> &OutVals     = CLI.OutVals;
   SmallVector<ISD::InputArg, 32> &Ins   = CLI.Ins;
@@ -1346,7 +1346,7 @@ SDValue HSAILTargetLowering::LowerCallResult(SDValue Chain,
                              SDValue& InFlag,
                              const SmallVectorImpl<ISD::InputArg> &Ins,
                              Type *type,
-                             DebugLoc dl,
+                             SDLoc dl,
                              SelectionDAG &DAG,
                              SmallVectorImpl<SDValue> &InVals,
                              SDValue retVariable) const
@@ -1477,7 +1477,7 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
 SDValue
 HSAILTargetLowering::LowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const {
   EVT PtrVT = getPointerTy();
-  DebugLoc dl = Op.getDebugLoc();
+  SDLoc dl = SDLoc(Op);
   const GlobalAddressSDNode *GSDN = cast<GlobalAddressSDNode>(Op);
   const GlobalValue *GV = GSDN->getGlobal();
   const Type *ptrType = GV->getType();
@@ -1504,7 +1504,7 @@ HSAILTargetLowering::LowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const {
 
 SDValue 
 HSAILTargetLowering::LowerTRUNCATE(SDValue Op, SelectionDAG &DAG) const {
-  DebugLoc dl = Op.getDebugLoc();
+  SDLoc dl = SDLoc(Op);
   EVT VT = Op.getValueType();
 
   if (VT != MVT::i1) {
@@ -1520,7 +1520,7 @@ HSAILTargetLowering::LowerTRUNCATE(SDValue Op, SelectionDAG &DAG) const {
 }
 SDValue 
 HSAILTargetLowering::LowerADD(SDValue Op, SelectionDAG &DAG) const {
-  DebugLoc dl = Op.getDebugLoc();
+  SDLoc dl = SDLoc(Op);
   EVT VT = Op.getValueType();
 
   if (VT != MVT::i1) {
@@ -1626,7 +1626,7 @@ HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op, SelectionDAG &DAG) const
       } else {
         // Initialized sampler will be loaded with this intrinsic for 0.98+ hsail spec
         ops[SAMPLER_ARG] = DAG.getNode(ISD::INTRINSIC_WO_CHAIN,
-                        Op.getDebugLoc(), sampler.getValueType(),
+                        SDLoc(Op), sampler.getValueType(),
                         DAG.getConstant(HSAILIntrinsic::HSAIL_ld_readonly_samp,
                         MVT::i32), DAG.getConstant(samplerHandleIndex,
                         MVT::i32));
@@ -1642,7 +1642,7 @@ HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op, SelectionDAG &DAG) const
 
 SDValue 
 HSAILTargetLowering::LowerROTL(SDValue Op, SelectionDAG &DAG) const {
-  DebugLoc dl = Op.getDebugLoc();
+  SDLoc dl = SDLoc(Op);
   EVT VT = Op.getValueType();
 
   if (VT != MVT::i32) {
@@ -1661,7 +1661,7 @@ HSAILTargetLowering::LowerROTL(SDValue Op, SelectionDAG &DAG) const {
 
 SDValue 
 HSAILTargetLowering::LowerROTR(SDValue Op, SelectionDAG &DAG) const {
-  DebugLoc dl = Op.getDebugLoc();
+  SDLoc dl = SDLoc(Op);
   EVT VT = Op.getValueType();
 
   if (VT != MVT::i32) {
@@ -1676,7 +1676,7 @@ HSAILTargetLowering::LowerROTR(SDValue Op, SelectionDAG &DAG) const {
 
 SDValue
 HSAILTargetLowering::LowerBSWAP(SDValue Op, SelectionDAG &DAG) const {
-  DebugLoc dl = Op.getDebugLoc();
+  SDLoc dl = SDLoc(Op);
   EVT VT = Op.getValueType();
 
   if (VT != MVT::i32) {
@@ -1697,7 +1697,7 @@ HSAILTargetLowering::LowerBSWAP(SDValue Op, SelectionDAG &DAG) const {
 SDValue 
 HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
   EVT VT = Op.getValueType();
-  DebugLoc dl = Op.getDebugLoc();
+  SDLoc dl = SDLoc(Op);
 
   if (VT.getSimpleVT() == MVT::i1) {
     // Since there are no 1 bit load operations, the load operations are
@@ -1752,7 +1752,7 @@ SDValue HSAILTargetLowering::LowerSTORE(SDValue Op, SelectionDAG &DAG) const {
   // converted to 8 bit stores.
   // First, sign extend to 32 bits, then use a truncating store to 8 bits.
 
-  DebugLoc dl = Op.getDebugLoc();
+  SDLoc dl = SDLoc(Op);
   StoreSDNode *ST = cast<StoreSDNode>(Op);
 
   SDValue Chain = ST->getChain();

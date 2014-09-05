@@ -336,7 +336,7 @@ protected:
   SDValue getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT, Type *Ty, bool isLoad,
                             bool isSExt, unsigned AddressSpace,
                             SDValue Ptr, SDValue ParamValue,
-                            unsigned index, DebugLoc dl, SDValue Chain,
+                            unsigned index, SDLoc dl, SDValue Chain,
                             SDValue InFlag) const;
 
 public:
@@ -347,7 +347,7 @@ public:
   SDValue LowerMemArgument(SDValue Chain,
                            CallingConv::ID CallConv,
                            const SmallVectorImpl<ISD::InputArg> &ArgInfo,
-                           DebugLoc dl, SelectionDAG &DAG,
+                           SDLoc dl, SelectionDAG &DAG,
                            const CCValAssign &VA,  MachineFrameInfo *MFI,
                            unsigned i) const;
 
@@ -368,7 +368,7 @@ public:
                        CallingConv::ID CallConv,
                        bool isVarArg,
                        const SmallVectorImpl<ISD::InputArg> &Ins,
-                       DebugLoc dl,
+                       SDLoc dl,
                        SelectionDAG &DAG,
                        SmallVectorImpl<SDValue> &InVals) const;
 
