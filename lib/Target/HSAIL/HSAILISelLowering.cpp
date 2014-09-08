@@ -93,7 +93,7 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM)
 
   Subtarget = &TM.getSubtarget<HSAILSubtarget>();
 
-  RegInfo = TM.getRegisterInfo();
+  RegInfo = Subtarget->getRegisterInfo();
   DL = getDataLayout();
 
   // Set up the register classes.

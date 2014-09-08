@@ -22,7 +22,7 @@
 namespace llvm {
   class Type;
   class TargetInstrInfo;
-  class HSAILTargetMachine;
+  class HSAILSubtarget;
 
   /// DWARFFlavour - Flavour of dwarf regnumbers
   ///
@@ -33,16 +33,13 @@ namespace llvm {
   }
 
 class HSAILRegisterInfo : public HSAILGenRegisterInfo {
-public:
-  HSAILTargetMachine &TM;
-  const TargetInstrInfo &TII;
-
 private:
+  HSAILSubtarget &ST;
   /// Is64Bit - Is the target 64-bits.
   bool Is64Bit;
 
 public:
-  HSAILRegisterInfo(HSAILTargetMachine &tm, const TargetInstrInfo &tii);
+  HSAILRegisterInfo(HSAILSubtarget &st);
 
   /// getCalleeSavedRegs - Return a null-terminated list of all of the
   /// callee saved registers on this target. The register should be in the

@@ -54,11 +54,6 @@ public:
   virtual const HSAILIntrinsicInfo*
   getIntrinsicInfo() const { return &IntrinsicInfo; }
 
-  virtual const HSAILInstrInfo*
-  getInstrInfo() const {
-    llvm_unreachable("getInstrInfo not implemented");
-  }
-
   virtual const HSAILFrameLowering*
   getFrameLowering() const { return &FrameLowering; }
 
@@ -74,9 +69,6 @@ public:
   getSelectionDAGInfo() const {
     llvm_unreachable("getSelectionDAGInfo not implemented");
   }
-
-  virtual const HSAILRegisterInfo*
-  getRegisterInfo() const { return &getInstrInfo()->getRegisterInfo(); }
 
   virtual TargetPassConfig *createPassConfig(PassManagerBase &PM);
 
@@ -97,7 +89,6 @@ public:
 /// HSAIL_32TargetMachine - HSAIL 32-bit target machine.
 class HSAIL_32TargetMachine : public HSAILTargetMachine {
   const DataLayout    DLInfo; // Calculates type size & alignment
-  HSAILInstrInfo      InstrInfo;
   HSAILSelectionDAGInfo TSInfo;
   HSAILTargetLowering TLInfo;
 public:
@@ -123,9 +114,6 @@ public:
   virtual const HSAILSelectionDAGInfo*
   getSelectionDAGInfo() const { return &TSInfo; }
 
-  virtual const HSAILInstrInfo*
-  getInstrInfo() const { return &InstrInfo; }
-
   void dump(OSTREAM_TYPE &O);
   void setDebug(bool debugMode);
   bool getDebug() const;
@@ -135,7 +123,6 @@ public:
 ///
 class HSAIL_64TargetMachine : public HSAILTargetMachine {
   const DataLayout  DLInfo; // Calculates type size & alignment
-  HSAILInstrInfo      InstrInfo;
   HSAILSelectionDAGInfo TSInfo;
   HSAILTargetLowering TLInfo;
 public:
@@ -166,12 +153,6 @@ public:
   getSelectionDAGInfo() const
   {
     return &TSInfo;
-  }
-
-  virtual const HSAILInstrInfo*
-  getInstrInfo() const
-  {
-    return &InstrInfo;
   }
 
 };

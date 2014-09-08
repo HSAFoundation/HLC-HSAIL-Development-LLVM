@@ -63,11 +63,11 @@ static unsigned int getMoveInstFromID(unsigned int ID) {
   return -1;
 }
 
-HSAILInstrInfo::HSAILInstrInfo(HSAILTargetMachine &tm)
+HSAILInstrInfo::HSAILInstrInfo(HSAILSubtarget &st)
   : HSAILGenInstrInfo(),
 //  : TargetInstrInfoImpl(HSAILInsts, array_lengthof(HSAILInsts)),
-    TM(tm),
-    RI(tm, *this)
+    ST(st),
+    RI(st)
 {
   RS = new RegScavenger();
 }
@@ -783,7 +783,7 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
   MachineFunction &MF = *MBB.getParent();
   MachineFrameInfo &MFI = *MF.getFrameInfo();
   DebugLoc DL;
-  const HSAILRegisterInfo *HRI = TM.getRegisterInfo();
+  const HSAILRegisterInfo *HRI = ST.getRegisterInfo();
   
   switch (RC->getID()) {
     default:
@@ -848,7 +848,7 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
   MachineFunction &MF = *MBB.getParent();
   MachineFrameInfo &MFI = *MF.getFrameInfo();
   DebugLoc DL;
-  const HSAILRegisterInfo *HRI = TM.getRegisterInfo();
+  const HSAILRegisterInfo *HRI = ST.getRegisterInfo();
 
   switch (RC->getID()) {
     default:

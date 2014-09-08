@@ -16,6 +16,7 @@
 
 #include "HSAIL.h"
 #include "HSAILDevice.h"
+#include "HSAILInstrInfo.h"
 #include "llvm/ADT/Triple.h"
 //#include "llvm/Target/TargetSubtarget.h"
 #include "llvm/Target/TargetSubtargetInfo.h"
@@ -147,6 +148,8 @@ protected:
   /// entry to the function and which must be maintained by every function.
   unsigned stackAlignment;
 
+  HSAILInstrInfo InstrInfo;
+
   /// TargetTriple - What processor and OS we're targeting.
   Triple TargetTriple;
 
@@ -160,6 +163,13 @@ public:
 
   HSAILSubtarget(llvm::StringRef TT, llvm::StringRef CPU, llvm::StringRef FS,
       bool is64bitTarget);
+
+  const HSAILRegisterInfo *getRegisterInfo() const override {
+    return &getInstrInfo()->getRegisterInfo();
+  }
+  const HSAILInstrInfo *getInstrInfo() const override {
+    return &InstrInfo;
+  }
 
   /// getSpecialAddressLatency - For targets where it is beneficial to
   /// backschedule instructions that compute addresses, return a value
