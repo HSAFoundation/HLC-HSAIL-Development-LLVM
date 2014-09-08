@@ -165,6 +165,7 @@ HSAILTargetMachine::HSAILTargetMachine(const Target &T, StringRef TT,
   //  TLInfo(*this), 
   IntrinsicInfo(this)
  {
+     initAsmInfo();
      setAsmVerbosityDefault(true);
 
 }
