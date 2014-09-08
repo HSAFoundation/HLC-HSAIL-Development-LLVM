@@ -15,7 +15,7 @@ TARGET = HSAIL
 BUILT_SOURCES = HSAILGenRegisterInfo.inc HSAILGenInstrInfo.inc \
 		HSAILGenDAGISel.inc  HSAILGenSubtargetInfo.inc \
 		HSAILGenMCCodeEmitter.inc HSAILGenCallingConv.inc \
-		HSAILGenIntrinsics.inc HSAILGenAsmWriter.inc
+		HSAILGenIntrinsics.inc HSAILGenAsmWriter.inc HSAILGenBrigWriter.inc \
 
 
 DIRS = libHSAIL TargetInfo
