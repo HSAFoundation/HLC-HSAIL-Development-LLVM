@@ -24,7 +24,7 @@ HSAILDevice* getDeviceFromName(
       return new HSAILGenericDeviceFlat(ptr);
     }
   }
-  return 0x0;
+  return nullptr;
 }
 namespace HSAILDeviceInfo{
   bool is64bit;
