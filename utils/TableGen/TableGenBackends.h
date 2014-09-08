@@ -78,6 +78,8 @@ void EmitSubtarget(RecordKeeper &RK, raw_ostream &OS);
 void EmitMapTable(RecordKeeper &RK, raw_ostream &OS);
 void EmitOptParser(RecordKeeper &RK, raw_ostream &OS);
 void EmitCTags(RecordKeeper &RK, raw_ostream &OS);
+void EmitBrigWriter(RecordKeeper &RK, raw_ostream &OS);
+void EmitHSAILVecMap(RecordKeeper &RK, raw_ostream &OS);
 
 } // End llvm namespace
 
