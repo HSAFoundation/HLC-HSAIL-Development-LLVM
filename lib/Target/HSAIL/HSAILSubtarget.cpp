@@ -13,6 +13,7 @@
 
 #define DEBUG_TYPE "subtarget"
 #include "HSAILSubtarget.h"
+#include "HSAILFrameLowering.h"
 #include "HSAILInstrInfo.h"
 #include "HSAILDevice.h"
 
@@ -34,7 +35,9 @@ using namespace llvm;
 HSAILSubtarget::HSAILSubtarget(llvm::StringRef TT, llvm::StringRef CPU, llvm::StringRef FS,
     bool is64bitTarget, HSAILTargetMachine &TM)
   : HSAILGenSubtargetInfo( TT, CPU, FS ), InstrInfo(*this),
-                                          TargetTriple(TT)
+    FrameLowering(TargetFrameLowering::StackGrowsUp,
+                  getStackAlignment(), 0),
+    TargetTriple(TT)
 {
   memset(CapsOverride, 0, sizeof(*CapsOverride) * 
          HSAILDeviceInfo::MaxNumberCapabilities);

@@ -35,7 +35,6 @@ class formatted_raw_ostream;
 class HSAILTargetMachine : public LLVMTargetMachine {
 public:
   HSAILSubtarget      Subtarget;
-  HSAILFrameLowering  FrameLowering;
   Reloc::Model      DefRelocModel; // Reloc model before it's overridden.
   HSAILIntrinsicInfo IntrinsicInfo;
   bool mDebugMode;
@@ -53,9 +52,6 @@ public:
 
   virtual const HSAILIntrinsicInfo*
   getIntrinsicInfo() const { return &IntrinsicInfo; }
-
-  virtual const HSAILFrameLowering*
-  getFrameLowering() const { return &FrameLowering; }
 
   virtual const HSAILSubtarget*
   getSubtargetImpl() const { return &Subtarget; }

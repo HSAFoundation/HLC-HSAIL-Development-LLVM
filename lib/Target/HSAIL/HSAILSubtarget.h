@@ -16,6 +16,7 @@
 
 #include "HSAIL.h"
 #include "HSAILDevice.h"
+#include "HSAILFrameLowering.h"
 #include "HSAILInstrInfo.h"
 #include "HSAILISelLowering.h"
 #include "llvm/ADT/Triple.h"
@@ -152,6 +153,7 @@ protected:
 
   HSAILInstrInfo InstrInfo;
   std::unique_ptr<HSAILTargetLowering> TLInfo;
+  HSAILFrameLowering FrameLowering;
 
   /// TargetTriple - What processor and OS we're targeting.
   Triple TargetTriple;
@@ -175,6 +177,9 @@ public:
   }
   const HSAILTargetLowering *getTargetLowering() const override {
     return TLInfo.get();
+  }
+  const HSAILFrameLowering *getFrameLowering() const override {
+    return &FrameLowering;
   }
 
   /// getSpecialAddressLatency - For targets where it is beneficial to
