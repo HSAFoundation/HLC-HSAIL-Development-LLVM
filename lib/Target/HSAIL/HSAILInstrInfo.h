@@ -26,7 +26,6 @@
 namespace llvm {
   class HSAILRegisterInfo;
   class HSAILSubtarget;
-  class HSAILTargetMachine;
   class RegScavenger;
 
 namespace HSAIL {
@@ -572,11 +571,11 @@ inline static bool isMem(const MachineInstr *MI, unsigned Op) {
 
   //class HSAILInstrInfo : public TargetInstrInfoImpl {
 class HSAILInstrInfo : public HSAILGenInstrInfo {
-  HSAILTargetMachine &TM;
+  HSAILSubtarget &ST;
   const HSAILRegisterInfo RI;
 
 public:
-  explicit HSAILInstrInfo(HSAILTargetMachine &tm);
+  explicit HSAILInstrInfo(HSAILSubtarget &st);
 
   ~HSAILInstrInfo();
 

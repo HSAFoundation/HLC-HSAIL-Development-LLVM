@@ -33,7 +33,7 @@ using namespace llvm;
 
 HSAILSubtarget::HSAILSubtarget(llvm::StringRef TT, llvm::StringRef CPU, llvm::StringRef FS,
     bool is64bitTarget)
-  : HSAILGenSubtargetInfo( TT, CPU, FS ), TargetTriple(TT)
+  : HSAILGenSubtargetInfo( TT, CPU, FS ), InstrInfo(*this), TargetTriple(TT)
 {
   memset(CapsOverride, 0, sizeof(*CapsOverride) * 
          HSAILDeviceInfo::MaxNumberCapabilities);

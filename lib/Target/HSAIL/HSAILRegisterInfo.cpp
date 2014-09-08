@@ -54,9 +54,8 @@ static cl::opt<int> HSAILRegSlots(
   "hsail-reg-slots", cl::Hidden, cl::init(0),
   cl::desc("A number of 64-bit slots allocated for $s registers"));
 
-HSAILRegisterInfo::HSAILRegisterInfo(HSAILTargetMachine &tm,
-                                     const TargetInstrInfo &tii)
-  : HSAILGenRegisterInfo(0, 0), TM(tm), TII(tii) {}
+HSAILRegisterInfo::HSAILRegisterInfo(HSAILSubtarget &st)
+  : HSAILGenRegisterInfo(0, 0), ST(st) {}
 
 /// getCalleeSavedRegs - Return a null-terminated list of all of the
 /// callee saved registers on this target. The register should be in the
@@ -238,7 +237,7 @@ HSAILRegisterInfo::getPointerRegClass(const MachineFunction &MF,
 {
   assert(Kind == 0);
 
-  if (TM.getSubtarget<HSAILSubtarget>().is64Bit())
+  if (ST.is64Bit())
     return &HSAIL::GPR64RegClass;
   return &HSAIL::GPR32RegClass;
 }
@@ -448,7 +447,8 @@ HSAILRegisterInfo::saveScavengerRegisterToFI(MachineBasicBlock &MBB,
 {
   MachineFunction *MF = MBB.getParent();
   const TargetMachine &TM = MF->getTarget();
-  const HSAILInstrInfo &HII = reinterpret_cast<const HSAILInstrInfo&>(TII);
+  const HSAILInstrInfo &HII =
+      *static_cast<const HSAILInstrInfo*>(ST.getInstrInfo());
   RegScavenger *RS = HII.getRS();
 
   assert(RS != 0 && "Register scavenger has not been created");
