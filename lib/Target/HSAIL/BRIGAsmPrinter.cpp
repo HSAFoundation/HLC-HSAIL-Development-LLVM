@@ -60,7 +60,7 @@
 using namespace llvm;
 using std::string;
 
-//#include "HSAILGenBrigWriter.inc"
+#include "HSAILGenBrigWriter.inc"
 #define GET_LLVM_INTRINSIC_FOR_GCC_BUILTIN
 #include "HSAILGenIntrinsics.inc"
 #undef GET_LLVM_INTRINSIC_FOR_GCC_BUILTIN

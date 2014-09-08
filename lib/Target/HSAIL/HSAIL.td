@@ -63,8 +63,14 @@ include "HSAILInstrInfo.td"
 
 def HSAILInstrInfo : InstrInfo;
 
+def BRIGAsmWriter : AsmWriter {
+  field bit isMCAsmWriter = 0;
+}
+
 def HSAIL : Target {
   // Information about the instructions...
   let InstructionSet = HSAILInstrInfo;
+
+  let AssemblyWriters = [BRIGAsmWriter];
 }
 
