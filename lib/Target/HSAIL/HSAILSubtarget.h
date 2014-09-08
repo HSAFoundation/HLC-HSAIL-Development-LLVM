@@ -17,6 +17,7 @@
 #include "HSAIL.h"
 #include "HSAILDevice.h"
 #include "HSAILInstrInfo.h"
+#include "HSAILISelLowering.h"
 #include "llvm/ADT/Triple.h"
 //#include "llvm/Target/TargetSubtarget.h"
 #include "llvm/Target/TargetSubtargetInfo.h"
@@ -32,6 +33,7 @@
 
 namespace llvm {
 class GlobalValue;
+class HSAILTargetMachine;
 class TargetMachine;
 
 /// PICStyles - The X86 backend supports a number of different styles of PIC.
@@ -149,6 +151,7 @@ protected:
   unsigned stackAlignment;
 
   HSAILInstrInfo InstrInfo;
+  std::unique_ptr<HSAILTargetLowering> TLInfo;
 
   /// TargetTriple - What processor and OS we're targeting.
   Triple TargetTriple;
@@ -162,13 +165,16 @@ public:
   ///
 
   HSAILSubtarget(llvm::StringRef TT, llvm::StringRef CPU, llvm::StringRef FS,
-      bool is64bitTarget);
+      bool is64bitTarget, HSAILTargetMachine &TM);
 
   const HSAILRegisterInfo *getRegisterInfo() const override {
     return &getInstrInfo()->getRegisterInfo();
   }
   const HSAILInstrInfo *getInstrInfo() const override {
     return &InstrInfo;
+  }
+  const HSAILTargetLowering *getTargetLowering() const override {
+    return TLInfo.get();
   }
 
   /// getSpecialAddressLatency - For targets where it is beneficial to
@@ -203,7 +209,7 @@ public:
   bool is64Bit() const;
   bool supportMetadata30() const;
   const HSAILDevice* device() const;
-  const DataLayout *getDataLayout() const override { return new DataLayout(mDevice->getDataLayout()); }
+  const DataLayout *getDataLayout() const override {assert(mDevice); return new DataLayout(mDevice->getDataLayout()); }
   std::string getDeviceName() const;
   virtual size_t getDefaultSize(uint32_t dim) const;
 

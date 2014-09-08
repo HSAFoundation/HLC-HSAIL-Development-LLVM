@@ -32,8 +32,9 @@
 using namespace llvm;
 
 HSAILSubtarget::HSAILSubtarget(llvm::StringRef TT, llvm::StringRef CPU, llvm::StringRef FS,
-    bool is64bitTarget)
-  : HSAILGenSubtargetInfo( TT, CPU, FS ), InstrInfo(*this), TargetTriple(TT)
+    bool is64bitTarget, HSAILTargetMachine &TM)
+  : HSAILGenSubtargetInfo( TT, CPU, FS ), InstrInfo(*this),
+                                          TargetTriple(TT)
 {
   memset(CapsOverride, 0, sizeof(*CapsOverride) * 
          HSAILDeviceInfo::MaxNumberCapabilities);
@@ -51,6 +52,10 @@ HSAILSubtarget::HSAILSubtarget(llvm::StringRef TT, llvm::StringRef CPU, llvm::St
   ParseSubtargetFeatures(GPU, FS);
   mDevName = GPU;
   mDevice = getDeviceFromName(GPU, this, mIs64bit);
+  // The constructor for TargetLoweringBase calls
+  // HSAILSubtarget::getDataLayout(), so we need to initialize
+  // HSAILTargetLowering after we have determined the device.
+  TLInfo.reset(new HSAILTargetLowering(TM));
   HSAILDeviceInfo::is64bit = mIs64bit;
   imageHandles = new HSAILImageHandles();
 }

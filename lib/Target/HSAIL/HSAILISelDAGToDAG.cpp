@@ -60,10 +60,6 @@ namespace {
 /// SelectionDAG operations.
 ///
 class HSAILDAGToDAGISel : public SelectionDAGISel {
-  /// HSAILLowering - This object fully describes how to lower LLVM code to an
-  /// HSAIL-specific SelectionDAG.
-  const HSAILTargetLowering &HSAILLowering;
-
   /// Subtarget - Keep a pointer to the HSAILSubtarget around so that we can
   /// make the right decision when generating code for different targets.
   const HSAILSubtarget *Subtarget;
@@ -76,14 +72,12 @@ class HSAILDAGToDAGISel : public SelectionDAGISel {
 public:
   explicit HSAILDAGToDAGISel(HSAILTargetMachine &tm, CodeGenOpt::Level OptLevel)
     : SelectionDAGISel(tm, OptLevel),
-      HSAILLowering(*tm.getTargetLowering()),
       Subtarget(&tm.getSubtarget<HSAILSubtarget>()),
       OptForSize(false) {}
 
   // Default constructor required for Initiallizing PASS
   explicit HSAILDAGToDAGISel()
-	: SelectionDAGISel(TM, OptLevel),
-	  HSAILLowering(HSAILLowering) {}
+	: SelectionDAGISel(TM, OptLevel) {}
 	 
   virtual const char*
   getPassName() const
@@ -539,7 +533,7 @@ SDNode* HSAILDAGToDAGISel::SelectLdKernargIntrinsic(SDNode *Node) {
   unsigned size = VT.getStoreSize();
   unsigned alignment = size;
   int64_t offset = 0;
-  SDValue Base = CurDAG->getRegister(0, HSAILLowering.getPointerTy());
+  SDValue Base = CurDAG->getRegister(0, Subtarget->getTargetLowering()->getPointerTy());
   SDValue Reg  = Base;
   // TODO_HSA: match a constant address argument to the parameter through
   //           functions's argument map (taking argument alignment into account).

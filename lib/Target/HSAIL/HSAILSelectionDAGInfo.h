@@ -27,8 +27,6 @@ class HSAILSelectionDAGInfo : public TargetSelectionDAGInfo {
   /// make the right decision when generating code for different targets.
   const HSAILSubtarget *Subtarget;
 
-  const HSAILTargetLowering &TLI;
-
 public:
   explicit HSAILSelectionDAGInfo(const HSAILTargetMachine &TM);
   ~HSAILSelectionDAGInfo();

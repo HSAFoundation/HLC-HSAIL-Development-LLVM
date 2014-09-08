@@ -157,7 +157,7 @@ HSAILTargetMachine::HSAILTargetMachine(const Target &T, StringRef TT,
     StringRef CPU, StringRef FS,const TargetOptions &Options, Reloc::Model RM, CodeModel::Model CM,CodeGenOpt::Level OL, bool is64bitTarget )
 :
   LLVMTargetMachine(T, TT, CPU, FS,Options, RM, CM,OL),
-  Subtarget(TT, CPU, FS, is64bitTarget),
+  Subtarget(TT, CPU, FS, is64bitTarget, *this),
   //  DLInfo(Subtarget.getDataLayout()),
   FrameLowering(TargetFrameLowering::StackGrowsUp,
       Subtarget.getStackAlignment(), 0),
@@ -235,8 +235,7 @@ HSAIL_32TargetMachine::HSAIL_32TargetMachine(const Target &T, StringRef TT,
     StringRef CPU, StringRef FS,const TargetOptions &Options, Reloc::Model RM, CodeModel::Model CM,CodeGenOpt::Level OL)
   : HSAILTargetMachine(T, TT, CPU, FS,Options, RM, CM,OL, false /* is64bitTarget */),
     DLInfo("e-p:32:32-f64:64:64-i64:64:64-f80:32:32-f128:128:128-n32"),
-    TSInfo(*this),
-    TLInfo(*this) {
+    TSInfo(*this) {
 
         Triple TheTriple(TT);
 
@@ -258,8 +257,7 @@ HSAIL_64TargetMachine::HSAIL_64TargetMachine(const Target &T, StringRef TT,
     StringRef CPU, StringRef FS,const TargetOptions &Options, Reloc::Model RM, CodeModel::Model CM,CodeGenOpt::Level OL)
   : HSAILTargetMachine(T, TT, CPU, FS,Options, RM, CM,OL, true /* is64bitTarget */),
     DLInfo("e-p:64:64-s:64-f64:64:64-i64:64:64-f80:128:128-f128:128:128-n32:64"),
-    TSInfo(*this),
-    TLInfo(*this) {
+    TSInfo(*this) {
 
         Triple TheTriple(TT);
 

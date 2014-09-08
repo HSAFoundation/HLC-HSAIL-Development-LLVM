@@ -20,8 +20,8 @@ using namespace llvm;
 
 HSAILSelectionDAGInfo::HSAILSelectionDAGInfo(const HSAILTargetMachine &TM)
   : TargetSelectionDAGInfo(TM.getSubtarget<HSAILSubtarget>().getDataLayout()),
-    Subtarget(&TM.getSubtarget<HSAILSubtarget>()),
-    TLI(*TM.getTargetLowering()) {}
+    Subtarget(&TM.getSubtarget<HSAILSubtarget>())
+    {}
 
 HSAILSelectionDAGInfo::~HSAILSelectionDAGInfo() {}
 
