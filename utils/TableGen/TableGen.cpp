@@ -41,7 +41,9 @@ enum ActionType {
   PrintEnums,
   PrintSets,
   GenOptParserDefs,
-  GenCTags
+  GenCTags,
+  GenBrigWriter,
+  GenHSAILVecMap
 };
 
 namespace {
@@ -85,6 +87,10 @@ namespace {
                                "Generate option definitions"),
                     clEnumValN(GenCTags, "gen-ctags",
                                "Generate ctags-compatible index"),
+                    clEnumValN(GenBrigWriter, "gen-brig-writer",
+                               "Generate BRIG writer"),
+                    clEnumValN(GenHSAILVecMap, "gen-hsail-vec-map",
+                               "Generate HSAIL scalar to vector map"),
                     clEnumValEnd));
 
   cl::opt<std::string>
@@ -166,6 +172,12 @@ bool LLVMTableGenMain(raw_ostream &OS, RecordKeeper &Records) {
   }
   case GenCTags:
     EmitCTags(Records, OS);
+    break;
+  case GenBrigWriter:
+    EmitBrigWriter(Records, OS);
+    break;
+  case GenHSAILVecMap:
+    EmitHSAILVecMap(Records,OS);
     break;
   }
 
