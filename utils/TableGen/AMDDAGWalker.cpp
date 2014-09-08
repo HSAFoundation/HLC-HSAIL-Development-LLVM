@@ -19,9 +19,9 @@ std::string getOpcode( DefInit * def ) {
     } else	if ( IsSubclassOf("PatFrag", def ) ) {
       if ( DagInit * frag = def->getDef()->getValueAsDag("Fragment") ) {
         Init * val = frag->getOperator();
-        if ( DefInit * def = dynamic_cast<DefInit*>(val) ) {
+        if ( DefInit * def = dyn_cast<DefInit>(val) ) {
           if ( IsSubclassOf("ValueType", def) ) {
-            sOpcode = getOpcode(dynamic_cast<DefInit*>(frag->getArg(0)));
+            sOpcode = getOpcode(dyn_cast<DefInit>(frag->getArg(0)));
           } else {
             sOpcode = getOpcode(def);
           }
@@ -57,7 +57,7 @@ void DAGWalker::ProcessIntrinsic( DefInit * def ) {
     ListInit::const_iterator e = LI->end();
     for (;i != e; i++ ){ 
       Init * init = *i;
-      DefInit * defParamType = dynamic_cast<DefInit*>(init);
+      DefInit * defParamType = dyn_cast<DefInit>(init);
       if ( defParamType ) {
         std::string sParamType = defParamType->getDef()->getName();
         if ( "llvm_ptr_ty" == sParamType ) {
@@ -199,14 +199,14 @@ void DAGWalker::ProcessDef( DefInit * def ) {
 void DAGWalker::WalkDAG( DagInit * dag, int& nNumOperands ) {
   if ( ( 0 > nNumOperands ) || ( PS_END == m_state ) ) return;
   Init * val = dag->getOperator();
-  if ( DefInit * def = dynamic_cast<DefInit*>(val) ) {
+  if ( DefInit * def = dyn_cast<DefInit>(val) ) {
     ProcessDef(def);
   }
   for ( DagInit::const_arg_iterator ai = dag->arg_begin(), ae = dag->arg_end(); ai != ae; ai++ ) {
-    if ( DefInit * def = dynamic_cast<DefInit*>(*ai) ) { 
+    if ( DefInit * def = dyn_cast<DefInit>(*ai) ) { 
       if ( ( 0 > --nNumOperands ) || ( PS_END == m_state )) return;    
       ProcessDef(def);
-    } else if ( DagInit * d = dynamic_cast<DagInit*>(*ai) ) {
+    } else if ( DagInit * d = dyn_cast<DagInit>(*ai) ) {
       WalkDAG( d, nNumOperands);
     }
   }
