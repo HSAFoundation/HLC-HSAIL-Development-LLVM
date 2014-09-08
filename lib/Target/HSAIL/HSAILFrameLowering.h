@@ -14,7 +14,6 @@
 #ifndef _HSAIL_FRAME_LOWERING_H_
 #define _HSAIL_FRAME_LOWERING_H_
 
-#include "HSAILSubtarget.h"
 //#include "llvm/CodeGen/MachineLocation.h"
 #include "llvm/Target/TargetFrameLowering.h"
 

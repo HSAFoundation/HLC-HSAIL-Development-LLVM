@@ -159,8 +159,6 @@ HSAILTargetMachine::HSAILTargetMachine(const Target &T, StringRef TT,
   LLVMTargetMachine(T, TT, CPU, FS,Options, RM, CM,OL),
   Subtarget(TT, CPU, FS, is64bitTarget, *this),
   //  DLInfo(Subtarget.getDataLayout()),
-  FrameLowering(TargetFrameLowering::StackGrowsUp,
-      Subtarget.getStackAlignment(), 0),
   //  InstrInfo(*this),
   //  TLInfo(*this), 
   IntrinsicInfo(this)
