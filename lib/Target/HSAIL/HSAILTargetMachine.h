@@ -60,11 +60,6 @@ public:
   virtual const HSAILSubtarget*
   getSubtargetImpl() const { return &Subtarget; }
 
-  virtual const HSAILTargetLowering*
-  getTargetLowering() const {
-    llvm_unreachable("getTargetLowering not implemented");
-  }
-
   virtual const HSAILSelectionDAGInfo*
   getSelectionDAGInfo() const {
     llvm_unreachable("getSelectionDAGInfo not implemented");
@@ -90,7 +85,6 @@ public:
 class HSAIL_32TargetMachine : public HSAILTargetMachine {
   const DataLayout    DLInfo; // Calculates type size & alignment
   HSAILSelectionDAGInfo TSInfo;
-  HSAILTargetLowering TLInfo;
 public:
   HSAIL_32TargetMachine(const Target &T,
 			StringRef TT, StringRef CPU, 
@@ -108,9 +102,6 @@ public:
   virtual const DataLayout*
   getDataLayout() const { return &DLInfo; }
 
-  virtual const HSAILTargetLowering*
-  getTargetLowering() const { return &TLInfo; }
-
   virtual const HSAILSelectionDAGInfo*
   getSelectionDAGInfo() const { return &TSInfo; }
 
@@ -124,7 +115,6 @@ public:
 class HSAIL_64TargetMachine : public HSAILTargetMachine {
   const DataLayout  DLInfo; // Calculates type size & alignment
   HSAILSelectionDAGInfo TSInfo;
-  HSAILTargetLowering TLInfo;
 public:
   HSAIL_64TargetMachine(const Target &T,
 			StringRef TT, StringRef CPU, 
@@ -141,12 +131,6 @@ public:
   getDataLayout() const
   {
     return &DLInfo;
-  }
-
-  virtual const HSAILTargetLowering*
-  getTargetLowering() const
-  {
-    return &TLInfo;
   }
 
   virtual const HSAILSelectionDAGInfo*

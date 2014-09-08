@@ -22,7 +22,6 @@
 #ifndef _HSAIL_LOWERING_H_
 #define _HSAIL_LOWERING_H_
 
-#include "HSAILSubtarget.h"
 #include "HSAILRegisterInfo.h"
 #include "HSAILMachineFunctionInfo.h"
 #include "llvm/CodeGen/CallingConvLower.h"
@@ -31,6 +30,8 @@
 #include "HSAILISDNodes.h"
 
 namespace llvm {
+
+class HSAILSubtarget;
 
 //===----------------------------------------------------------------------===//
 /// HSAILLowering - This class defines information used to lower LLVM code to
