@@ -78,7 +78,7 @@ public:
   /// For example, on i386 the rep register class for i8, i16, and i32 are GR32;
   /// while the rep register class is GR64 on x86_64.
   virtual const TargetRegisterClass*
-  getRepRegClassFor(EVT VT) const;
+  getRepRegClassFor(MVT VT) const;
 
   /// getRepRegClassCostFor - Return the cost of the 'representative' register
   /// class for the specified value type.

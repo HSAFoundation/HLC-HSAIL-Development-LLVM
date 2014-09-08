@@ -294,9 +294,9 @@ HSAILTargetLowering::getSchedulingPreference(SDNode *N) const
 /// For example, on i386 the rep register class for i8, i16, and i32 are GR32;
 /// while the rep register class is GR64 on x86_64.
 const TargetRegisterClass*
-HSAILTargetLowering::getRepRegClassFor(EVT VT) const
+HSAILTargetLowering::getRepRegClassFor(MVT VT) const
 {
-  switch (VT.getSimpleVT().SimpleTy) {
+  switch (VT.SimpleTy) {
     case MVT::i64:
     case MVT::f64:
       return &HSAIL::GPR64RegClass;
