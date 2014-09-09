@@ -88,13 +88,8 @@ private:
 
   SDNode* SelectINTRINSIC_W_CHAIN(SDNode *Node);
   SDNode* SelectINTRINSIC_WO_CHAIN(SDNode *Node);
+  SDNode* SelectAtomic(SDNode *Node, bool bitwise, bool isSigned);
   SDNode* SelectLdKernargIntrinsic(SDNode *Node);
-#if 0
-  SDNode* SelectAtomic(SDNode *Node, bool bitwiseAtomicOp = true, bool sign = false);
-  SDValue getBRIGMemoryOrder(AtomicOrdering memOrder);
-  SDValue getBRIGAtomicOpcode(unsigned atomicOp);
-#endif
-  SDValue getBRIGMemorySegment(unsigned memSeg);
   SDNode* SelectImageIntrinsic(SDNode *Node);
   SDNode* SelectCrossLaneIntrinsic(SDNode *Node);
   // Helper for SelectAddrCommon
@@ -371,7 +366,8 @@ SDNode* HSAILDAGToDAGISel::SelectLdKernargIntrinsic(SDNode *Node) {
                                Chain, SDValue(), ArgMD, offset).getNode();
 }
 
-SDValue HSAILDAGToDAGISel::getBRIGMemorySegment(unsigned memSeg) {
+static SDValue getBRIGMemorySegment(SelectionDAG *CurDAG,
+                                    unsigned memSeg) {
   unsigned BRIGMemSegment;
   switch(memSeg) {
     case llvm::HSAILAS::GLOBAL_ADDRESS:
@@ -388,7 +384,8 @@ SDValue HSAILDAGToDAGISel::getBRIGMemorySegment(unsigned memSeg) {
 }
 
 #if 0
-SDValue HSAILDAGToDAGISel::getBRIGMemoryOrder(AtomicOrdering memOrder) {
+static SDValue getBRIGMemoryOrder(SelectionDAG *CurDAG,
+                                  AtomicOrdering memOrder) {
   unsigned BRIGMemOrder;
   switch(memOrder) {
     case Monotonic: BRIGMemOrder = Brig::BRIG_MEMORY_ORDER_RELAXED;break;
@@ -405,7 +402,8 @@ SDValue HSAILDAGToDAGISel::getBRIGMemoryOrder(AtomicOrdering memOrder) {
   return memOrderSD;
 }
 
-SDValue HSAILDAGToDAGISel::getBRIGAtomicOpcode(unsigned atomicOp) {
+static SDValue getBRIGAtomicOpcode(SelectionDAG *CurDAG,
+                                   unsigned atomicOp) {
   unsigned BRIGAtomicOp;
   switch(atomicOp) {
     case ISD::ATOMIC_LOAD_ADD: BRIGAtomicOp = Brig::BRIG_ATOMIC_ADD; break;
@@ -430,91 +428,64 @@ SDValue HSAILDAGToDAGISel::getBRIGAtomicOpcode(unsigned atomicOp) {
   return atomicOpSD;
 }
 
+static bool TypeIs32Bit(const MemSDNode *M) {
+  unsigned size = M->getMemoryVT().getSizeInBits();
+  if (size == 32) return true;
+  assert(size == 64);
+  return false;
+}
+
 /// Select atomic opcode based on
 /// size of the compare operand and its addressing mode
-static unsigned getHSAILAtomicCasOpcode (SDNode *Node) {
-  SDValue cmpOp = Node->getOperand(2);
-  unsigned size = cmpOp.getValueSizeInBits();
-  bool immOp1 = cmpOp.getNode()->getOpcode() == ISD::Constant ?
-                true : false;
-  bool immOp2 = Node->getOperand(3).getNode()->getOpcode() == ISD::Constant ?
-                true : false;
-  if (size == 32)
+static unsigned getHSAILAtomicCasOpcode (const MemSDNode *Node) {
+  bool immOp1 = Node->getOperand(2).getOpcode() == ISD::Constant;
+  bool immOp2 = Node->getOperand(3).getOpcode() == ISD::Constant;
+
+  if (TypeIs32Bit(Node)) {
     return immOp1 ?
-           immOp2 ? HSAIL::atomic_ternary_b32_ii : HSAIL::atomic_ternary_b32_ir :
-           immOp2 ? HSAIL::atomic_ternary_b32_ri : HSAIL::atomic_ternary_b32_rr;
-  if (size == 64)
+           immOp2 ? HSAIL::atomic_b32_ternary_ii_ret : HSAIL::atomic_b32_ternary_ir_ret :
+           immOp2 ? HSAIL::atomic_b32_ternary_ri_ret : HSAIL::atomic_b32_ternary_rr_ret;
+  }
+
     return immOp1 ?
-           immOp2 ? HSAIL::atomic_ternary_b64_ii : HSAIL::atomic_ternary_b64_ir :
-           immOp2 ? HSAIL::atomic_ternary_b64_ri : HSAIL::atomic_ternary_b64_rr;
-  llvm_unreachable("unexpected operand size for atomic op");
+         immOp2 ? HSAIL::atomic_b64_ternary_ii_ret : HSAIL::atomic_b64_ternary_ir_ret :
+         immOp2 ? HSAIL::atomic_b64_ternary_ri_ret : HSAIL::atomic_b64_ternary_rr_ret;
 }
 
 /// Select atomic opcode based on
 /// size of the operand, its addressing mode and signedness
-static unsigned getHSAILAtomicRMWOpcode(SDNode *Node, bool bitwiseAtomicOp = true,
-                                        bool isSignedOp = false) {
-  SDValue rmwValOp = Node->getOperand(2);
-  unsigned size = rmwValOp.getValueSizeInBits();
-  bool immOp = rmwValOp.getNode()->getOpcode() == ISD::Constant ?
-               true : false;
-  if (size == 32) {
-    if (bitwiseAtomicOp)
-      return immOp ? HSAIL::atomic_binary_b32_i :
-             HSAIL::atomic_binary_b32_r;
-     else {
-      if (isSignedOp)
-        return immOp ? HSAIL::atomic_binary_s32_i :
-               HSAIL::atomic_binary_s32_r;
-       else
-         return immOp ? HSAIL::atomic_binary_u32_i:
-                HSAIL::atomic_binary_u32_r;
-     }
-  }
-  if (size == 64) {
-    if (bitwiseAtomicOp)
-      return immOp ? HSAIL::atomic_binary_b64_i:
-             HSAIL::atomic_binary_b64_r;
-    else {
-      if (isSignedOp)
-        return immOp ? HSAIL::atomic_binary_s64_i:
-               HSAIL::atomic_binary_s64_r;
-      else
-        return immOp ? HSAIL::atomic_binary_u64_i:
-               HSAIL::atomic_binary_u64_r;
-    }
-  }
-  llvm_unreachable("unexpected operand size for atomic op");
+static unsigned getHSAILAtomicRMWOpcode(const MemSDNode *Node) {
+  bool immOp = Node->getOperand(2).getOpcode() == ISD::Constant;
+
+  if (TypeIs32Bit(Node))
+    return immOp ? HSAIL::atomic_b32_binary_i_ret :
+                   HSAIL::atomic_b32_binary_r_ret;
+
+  return immOp ? HSAIL::atomic_b64_binary_i_ret:
+                 HSAIL::atomic_b64_binary_r_ret;
 }
 
 /// Select atomic opcode based on size of the loaded value
-static unsigned getHSAILAtomicLoadOpcode (SDNode *Node) {
-  // fetch the size of the loaded value
-  unsigned size = Node->getValueSizeInBits(0);
-  if (size == 32) return HSAIL::atomic_unary_b32;
-  if (size == 64) return HSAIL::atomic_unary_b64;
-  llvm_unreachable("unexpected operand size for atomic op");
+static unsigned getHSAILAtomicLoadOpcode (const MemSDNode *Node) {
+  if (TypeIs32Bit(Node)) return HSAIL::atomic_b32_unary;
+  return HSAIL::atomic_b64_unary;
 }
 
 /// Select atomic opcode based on
 /// size of the value to be stored and its addressing mode
-static unsigned getHSAILAtomicStoreOpcode (SDNode *Node) {
-  SDValue storeValue = Node->getOperand(2);
-  unsigned size = storeValue.getValueSizeInBits();
-  bool immOp = storeValue.getNode()->getOpcode() == ISD::Constant ?
-               true : false;
-  if (size == 32)
-    return immOp ? HSAIL::atomic_binary_b32_i_noret :
-                   HSAIL::atomic_binary_b32_r_noret;
-  if (size == 64)
-    return immOp ? HSAIL::atomic_binary_b64_i_noret :
-                   HSAIL::atomic_binary_b64_r_noret;
-  llvm_unreachable("unexpected operand size for atomic op");
+static unsigned getHSAILAtomicStoreOpcode (const MemSDNode *Node) {
+  bool immOp = Node->getOperand(2).getOpcode() == ISD::Constant;
+
+  if (TypeIs32Bit(Node))
+    return immOp ? HSAIL::atomic_b32_binary_i_noret :
+                   HSAIL::atomic_b32_binary_r_noret;
+
+  return immOp ? HSAIL::atomic_b64_binary_i_noret :
+                 HSAIL::atomic_b64_binary_r_noret;
 }
 
-static unsigned getHSAILAtomicOpcode(SDNode *Node, bool bitwiseAtomicOp = true,
-                                     bool isSignedOp = false) {
-  switch(Node->getOpcode()) {
+static unsigned getHSAILAtomicOpcode(const MemSDNode *Node) {
+  switch (Node->getOpcode()) {
     case ISD::ATOMIC_LOAD: return getHSAILAtomicLoadOpcode(Node);
     case ISD::ATOMIC_STORE: return getHSAILAtomicStoreOpcode(Node);
     case ISD::ATOMIC_LOAD_ADD:
@@ -527,44 +498,76 @@ static unsigned getHSAILAtomicOpcode(SDNode *Node, bool bitwiseAtomicOp = true,
     case ISD::ATOMIC_LOAD_MIN:
     case ISD::ATOMIC_LOAD_UMIN:
     case ISD::ATOMIC_SWAP:
-         return getHSAILAtomicRMWOpcode(Node, bitwiseAtomicOp, isSignedOp);
+      return getHSAILAtomicRMWOpcode(Node);
     case ISD::ATOMIC_CMP_SWAP:  return getHSAILAtomicCasOpcode(Node);
     default: llvm_unreachable("unknown atomic SDNode");
   }
 }
 
-/// SelectAtomic - Selects the appropriate Machine Instruction for AtomicSDNode
-/// Machine IR for atomics is paramenterized with
-/// <atomic opcode, address space, memory order, memory scope>
-/// along with the SDNode operands.
-/// e.g: atomic_binary_s32_i BRIG_ATOMIC_ADD, BRIG_SEGMENT_GLOBAL,
-///                    BRIG_MEMORY_ORDER_RELAXED, BRIG_MEMORY_SCOPE_WORKGROUP,
-///                    arg1, arg2
-/// This is done inorder to reduce the number of Machine Instructions for atomics.
-/// In BRIGAsmPrinter::EmitInstruction, these Machine Instructions
-/// are custom lowered into appropriate BRIG.
+static SDValue getBRIGTypeForAtomic(SelectionDAG *CurDAG,
+                                    bool is32bit, bool bitwise,
+                                    bool isSigned) {
+  unsigned BrigType;
+  if (is32bit) {
+    if (bitwise) BrigType = Brig::BRIG_TYPE_B32;
+    else if (isSigned) BrigType = Brig::BRIG_TYPE_S32;
+    else BrigType = Brig::BRIG_TYPE_U32;
+  } else {
+    if (bitwise) BrigType = Brig::BRIG_TYPE_B64;
+    else if (isSigned) BrigType = Brig::BRIG_TYPE_S64;
+    else BrigType = Brig::BRIG_TYPE_U64;
+  }
+
+  return CurDAG->getTargetConstant(BrigType, MVT::getIntegerVT(32));
+}
+
+static SDValue getBRIGMemoryScope(SelectionDAG *CurDAG,
+                                  MemSDNode *Mn) {
+  unsigned brigMemScopeVal = Brig::BRIG_MEMORY_SCOPE_WORKGROUP;
+  if (Mn->getAddressSpace() != HSAILAS::GROUP_ADDRESS)
+    brigMemScopeVal = Mn->getMemoryScope();
+
+  return CurDAG->getTargetConstant(brigMemScopeVal, MVT::getIntegerVT(32));
+}
+
+/// \brief Select the appropriate MI for AtomicSDNode
 ///
-/// bitwiseAtomicOp - true for bitwise atomic ops,
-///                        - false for signed/unsigned ops
-/// isSignedOp - true for signed atomic op
-///          - false for unsigned atomic op
+/// Machine instructions for atomics are paramenterized with
+/// additional BRIG operands along with the SDNode operands:
 ///
-SDNode* HSAILDAGToDAGISel::SelectAtomic(SDNode *Node, bool bitwiseAtomicOp,
-                                        bool isSignedOp)
+/// <atomic opcode, address space, memory order, memory scope, brig type>
+///
+/// For example, atomic_add_global_rlx_wg_s32 with an immediate
+/// operand src0 is encoded as:
+///
+/// atomic_b32_binary_b32_i BRIG_ATOMIC_ADD,
+///                         BRIG_SEGMENT_GLOBAL,
+///                         BRIG_MEMORY_ORDER_RELAXED,
+///                         BRIG_MEMORY_SCOPE_WORKGROUP,
+///                         BRIG_TYPE_S32,
+///                         ptr, src0
+///
+/// This helps reduce the number of MI's for atomics in the backend.
+/// In BRIGAsmPrinter, these MI's are decoded into the appropriate
+/// BRIG instructions.
+///
+/// BRIG type is "b" if bitwise is true, else isSigned indicates
+/// whether it is "s" or "u".
+SDNode* HSAILDAGToDAGISel::SelectAtomic(SDNode *Node,
+                                        bool bitwise, bool isSigned)
 {
   MachineFunction &MF = CurDAG->getMachineFunction();
   SDValue Chain = Node->getOperand(0);
   SDLoc dl(Node);
   SDNode *ResNode;
-  MemSDNode *Mn = dyn_cast<MemSDNode>(Node);
-  SDValue memOrder = getBRIGMemoryOrder(Mn->getOrdering());
-  unsigned brigMemScopeVal = Mn->getAddressSpace() == HSAILAS::GROUP_ADDRESS ?
-      Brig::BRIG_MEMORY_SCOPE_WORKGROUP : Mn->getMemoryScope();
-  SDValue memScope = CurDAG->getTargetConstant(brigMemScopeVal,
-                                               MVT::getIntegerVT(32));
-  SDValue atomicOpcode = getBRIGAtomicOpcode(Node->getOpcode());
-  SDValue addrSpace = getBRIGMemorySegment(Mn->getAddressSpace());
-  SmallVector<SDValue, 9> NewOps;
+  MemSDNode *Mn = cast<MemSDNode>(Node);
+  SDValue memOrder = getBRIGMemoryOrder(CurDAG, Mn->getOrdering());
+  SDValue memScope = getBRIGMemoryScope(CurDAG, Mn);
+  SDValue atomicOpcode = getBRIGAtomicOpcode(CurDAG, Node->getOpcode());
+  SDValue addrSpace = getBRIGMemorySegment(CurDAG, Mn->getAddressSpace());
+  SDValue brigType = getBRIGTypeForAtomic(CurDAG, TypeIs32Bit(Mn),
+                                          bitwise, isSigned);
+  SmallVector<SDValue, 10> NewOps;
   SDValue Base, Reg, Offset;
 
   SelectAddr(Node->getOperand(1), Base, Reg, Offset);
@@ -573,6 +576,7 @@ SDNode* HSAILDAGToDAGISel::SelectAtomic(SDNode *Node, bool bitwiseAtomicOp,
   NewOps.push_back(addrSpace);
   NewOps.push_back(memOrder);
   NewOps.push_back(memScope);
+  NewOps.push_back(brigType);
   NewOps.push_back(Base);
   NewOps.push_back(Reg);
   NewOps.push_back(Offset);
@@ -580,10 +584,9 @@ SDNode* HSAILDAGToDAGISel::SelectAtomic(SDNode *Node, bool bitwiseAtomicOp,
     NewOps.push_back(Node->getOperand(i));
   NewOps.push_back(Chain);
 
-  ResNode = CurDAG->SelectNodeTo(Node,
-                                 getHSAILAtomicOpcode(Node, bitwiseAtomicOp,
-                                 isSignedOp), Node->getVTList(), NewOps.data(),
-                                 NewOps.size());
+  ResNode = CurDAG->SelectNodeTo(Node, getHSAILAtomicOpcode(Mn),
+                                 Node->getVTList(),
+                                 NewOps.data(), NewOps.size());
 
   MachineSDNode::mmo_iterator MemOp = MF.allocateMemRefsArray(1);
   MemOp[0] = Mn->getMemOperand();
@@ -642,7 +645,7 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
   case ISD::ATOMIC_SWAP:
   case ISD::ATOMIC_CMP_SWAP:
     // Handle bitwise atomic operations
-    ResNode = SelectAtomic(Node);
+    ResNode = SelectAtomic(Node, true, false /*ignored*/);
     break;
   case ISD::ATOMIC_LOAD_ADD:
   case ISD::ATOMIC_LOAD_SUB:
