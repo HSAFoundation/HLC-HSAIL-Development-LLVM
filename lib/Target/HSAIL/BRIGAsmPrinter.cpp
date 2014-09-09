@@ -99,7 +99,8 @@ namespace HSAIL_ATOMIC_OPS {
     OPCODE_INDEX = 0,
     SEGMENT_INDEX = 1,
     ORDER_INDEX = 2,
-    SCOPE_INDEX = 3
+    SCOPE_INDEX = 3,
+    TYPE_INDEX = 4
   };
 }
 
@@ -112,9 +113,7 @@ namespace HSAIL_MEMFENCE {
   };
 }
 
-Brig::BrigAtomicOperation getParametrizedAtomicOpcode(
-  const llvm::MachineInstr *MI) {
-
+static int getAtomicParameter(const llvm::MachineInstr *MI, unsigned index) {
   assert(HSAIL::isParametrizedAtomicOp(MI->getOpcode()));
 
   int offset = 0;
@@ -123,127 +122,51 @@ Brig::BrigAtomicOperation getParametrizedAtomicOpcode(
   if (HSAIL::isParametrizedRetAtomicOp(MI->getOpcode()))
     offset = 1;
 
-  llvm::MachineOperand opc = const_cast<llvm::MachineInstr*>(MI)->getOperand(
-                                        HSAIL_ATOMIC_OPS::OPCODE_INDEX+offset);
+  llvm::MachineOperand opc = MI->getOperand(index + offset);
+
   assert(opc.isImm());
-  int val = opc.getImm();
+  return opc.getImm();
+}
+
+static Brig::BrigAtomicOperation getAtomicOpcode(const llvm::MachineInstr *MI) {
+  int val = getAtomicParameter(MI, HSAIL_ATOMIC_OPS::OPCODE_INDEX);
   assert(val >= Brig::BRIG_ATOMIC_ADD && val <= Brig::BRIG_ATOMIC_XOR);
   return (Brig::BrigAtomicOperation)val;
 }
 
-Brig::BrigSegment getParametrizedAtomicSegment(const llvm::MachineInstr *MI) {
-  assert(HSAIL::isParametrizedAtomicOp(MI->getOpcode()));
-
-  int offset = 0;
-
-  //Ret versions have destination operand at 0 index, so offset parameters index by 1
-  if (HSAIL::isParametrizedRetAtomicOp(MI->getOpcode()))
-    offset = 1;
-
-  llvm::MachineOperand seg = const_cast<llvm::MachineInstr*>(MI)->getOperand(
-                                        HSAIL_ATOMIC_OPS::SEGMENT_INDEX+offset);
-  assert(seg.isImm());
-  int val = seg.getImm();
+static Brig::BrigSegment getAtomicSegment(const llvm::MachineInstr *MI) {
+  int val = getAtomicParameter(MI, HSAIL_ATOMIC_OPS::SEGMENT_INDEX);
   assert(val > 0 && val < Brig::BRIG_SEGMENT_EXTSPACE0);
   return (Brig::BrigSegment)val;
 }
 
-Brig::BrigMemoryOrder getParametrizedAtomicOrder(const llvm::MachineInstr *MI) {
-  assert(HSAIL::isParametrizedAtomicOp(MI->getOpcode()));
-
-  int offset = 0;
-
-  //Ret versions have destination operand at 0 index, so offset parameters index by 1
-  if (HSAIL::isParametrizedRetAtomicOp(MI->getOpcode()))
-    offset = 1;
-
-  llvm::MachineOperand ord = const_cast<llvm::MachineInstr*>(MI)->getOperand(
-                                        HSAIL_ATOMIC_OPS::ORDER_INDEX+offset);
-  assert(ord.isImm());
-  int val = ord.getImm();
+static Brig::BrigMemoryOrder getAtomicOrder(const llvm::MachineInstr *MI) {
+  int val = getAtomicParameter(MI, HSAIL_ATOMIC_OPS::ORDER_INDEX);
   assert(val > 0 && val <= Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE);
   return (Brig::BrigMemoryOrder)val;
 }
 
-Brig::BrigMemoryScope getParametrizedAtomicScope(const llvm::MachineInstr *MI) {
-  assert(HSAIL::isParametrizedAtomicOp(MI->getOpcode()));
-
-  int offset = 0;
-
-  //Ret versions have destination operand at 0 index, so offset parameters index by 1
-  if (HSAIL::isParametrizedRetAtomicOp(MI->getOpcode()))
-    offset = 1;
-
-  llvm::MachineOperand scp = const_cast<llvm::MachineInstr*>(MI)->getOperand(
-                                        HSAIL_ATOMIC_OPS::SCOPE_INDEX+offset);
-  assert(scp.isImm());
-  int val = scp.getImm();
+static Brig::BrigMemoryScope getAtomicScope(const llvm::MachineInstr *MI) {
+  int val = getAtomicParameter(MI, HSAIL_ATOMIC_OPS::SCOPE_INDEX);
   assert(val > 0 && val <= Brig::BRIG_MEMORY_SCOPE_SYSTEM);
   return (Brig::BrigMemoryScope)val;
 }
 
-Brig::BrigTypeX getParametrizedAtomicBrigType(int opcode) {
-  switch (opcode) {
+static Brig::BrigTypeX getAtomicType(const llvm::MachineInstr *MI) {
+  int val = getAtomicParameter(MI, HSAIL_ATOMIC_OPS::TYPE_INDEX);
+  switch (val) {
+  case Brig::BRIG_TYPE_B32:
+  case Brig::BRIG_TYPE_S32:
+  case Brig::BRIG_TYPE_U32:
+  case Brig::BRIG_TYPE_B64:
+  case Brig::BRIG_TYPE_S64:
+  case Brig::BRIG_TYPE_U64:
+    break;
     default:
-      assert(!"Invalid atomic opcode");
-      return Brig::BRIG_TYPE_INVALID;
-
-    case llvm::HSAIL::atomic_unary_b32:
-    case llvm::HSAIL::atomic_binary_b32_i:
-    case llvm::HSAIL::atomic_binary_b32_r:
-    case llvm::HSAIL::atomic_binary_b32_i_noret:
-    case llvm::HSAIL::atomic_binary_b32_r_noret:
-    case llvm::HSAIL::atomic_ternary_b32_ii:
-    case llvm::HSAIL::atomic_ternary_b32_ir:
-    case llvm::HSAIL::atomic_ternary_b32_ri:
-    case llvm::HSAIL::atomic_ternary_b32_rr:
-    case llvm::HSAIL::atomic_ternary_b32_ii_noret:
-    case llvm::HSAIL::atomic_ternary_b32_ir_noret:
-    case llvm::HSAIL::atomic_ternary_b32_ri_noret:
-    case llvm::HSAIL::atomic_ternary_b32_rr_noret:
-      return Brig::BRIG_TYPE_B32;
-
-    case llvm::HSAIL::atomic_binary_s32_i:
-    case llvm::HSAIL::atomic_binary_s32_r:
-    case llvm::HSAIL::atomic_binary_s32_i_noret:
-    case llvm::HSAIL::atomic_binary_s32_r_noret:
-      return Brig::BRIG_TYPE_S32;
-
-    case llvm::HSAIL::atomic_binary_u32_i:
-    case llvm::HSAIL::atomic_binary_u32_r:
-    case llvm::HSAIL::atomic_binary_u32_i_noret:
-    case llvm::HSAIL::atomic_binary_u32_r_noret:
-      return Brig::BRIG_TYPE_U32;
-
-    case llvm::HSAIL::atomic_unary_b64:
-    case llvm::HSAIL::atomic_binary_b64_i:
-    case llvm::HSAIL::atomic_binary_b64_r:
-    case llvm::HSAIL::atomic_binary_b64_i_noret:
-    case llvm::HSAIL::atomic_binary_b64_r_noret:
-    case llvm::HSAIL::atomic_ternary_b64_ii:
-    case llvm::HSAIL::atomic_ternary_b64_ir:
-    case llvm::HSAIL::atomic_ternary_b64_ri:
-    case llvm::HSAIL::atomic_ternary_b64_rr:
-    case llvm::HSAIL::atomic_ternary_b64_ii_noret:
-    case llvm::HSAIL::atomic_ternary_b64_ir_noret:
-    case llvm::HSAIL::atomic_ternary_b64_ri_noret:
-    case llvm::HSAIL::atomic_ternary_b64_rr_noret:
-      return Brig::BRIG_TYPE_B64;
-
-    case llvm::HSAIL::atomic_binary_s64_i:
-    case llvm::HSAIL::atomic_binary_s64_r:
-    case llvm::HSAIL::atomic_binary_s64_i_noret:
-    case llvm::HSAIL::atomic_binary_s64_r_noret:
-      return Brig::BRIG_TYPE_S64;
-
-    case llvm::HSAIL::atomic_binary_u64_i:
-    case llvm::HSAIL::atomic_binary_u64_r:
-    case llvm::HSAIL::atomic_binary_u64_i_noret:
-    case llvm::HSAIL::atomic_binary_u64_r_noret:
-      return Brig::BRIG_TYPE_U64;
+    llvm_unreachable("Unknown BrigType");
   }
 
-  return Brig::BRIG_TYPE_INVALID;
+  return (Brig::BrigTypeX)val;
 }
 
 class LLVM_LIBRARY_VISIBILITY StoreInitializer {
@@ -885,20 +808,20 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
   if (HSAIL::isParametrizedAtomicOp(II->getOpcode())) {
     bool hasRet = HSAIL::isParametrizedRetAtomicOp(II->getOpcode());
-    Brig::BrigTypeX btype = getParametrizedAtomicBrigType(II->getOpcode());
+    Brig::BrigTypeX btype = getAtomicType(II);
     unsigned brigAtomicOp = hasRet ? Brig::BRIG_OPCODE_ATOMIC :
                                      Brig::BRIG_OPCODE_ATOMICNORET;
     HSAIL_ASM::InstAtomic instAtomic =
         brigantine.addInst<HSAIL_ASM::InstAtomic>(brigAtomicOp, btype);
 
-    instAtomic.atomicOperation() = getParametrizedAtomicOpcode(II);
-    instAtomic.segment() = getParametrizedAtomicSegment(II);
-    instAtomic.memoryOrder() = getParametrizedAtomicOrder(II);
-    instAtomic.memoryScope() = getParametrizedAtomicScope(II);
+    instAtomic.atomicOperation() = getAtomicOpcode(II);
+    instAtomic.segment() = getAtomicSegment(II);
+    instAtomic.memoryOrder() = getAtomicOrder(II);
+    instAtomic.memoryScope() = getAtomicScope(II);
 
     if (hasRet)
       BrigEmitOperand(II, 0, instAtomic);
-    BrigEmitOperandLdStAddress(II, HSAIL_ATOMIC_OPS::SCOPE_INDEX + 1 +
+    BrigEmitOperandLdStAddress(II, HSAIL_ATOMIC_OPS::TYPE_INDEX + 1 +
                                (hasRet ? 1 : 0));
     if (HSAIL::isParametrizedTernaryAtomicOp(II->getOpcode())) {
       BrigEmitOperand(II, II->getNumOperands() - 2, instAtomic);

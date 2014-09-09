@@ -828,40 +828,24 @@ bool isSPIRModule(const Module &M) {
 
 bool isParametrizedUnaryRetAtomicOp(int opcode)
 {
-  return (opcode == llvm::HSAIL::atomic_unary_b32)
-  || (opcode == llvm::HSAIL::atomic_unary_b64);
+  return (opcode == llvm::HSAIL::atomic_b32_unary)
+  || (opcode == llvm::HSAIL::atomic_b64_unary);
 }
 
 bool isParametrizedBinaryRetAtomicOp(int opcode)
 {
-  return (opcode == llvm::HSAIL::atomic_binary_b32_i)
-  || (opcode == llvm::HSAIL::atomic_binary_b32_r)
-  || (opcode == llvm::HSAIL::atomic_binary_s32_i)
-  || (opcode == llvm::HSAIL::atomic_binary_s32_r)
-  || (opcode == llvm::HSAIL::atomic_binary_u32_i)
-  || (opcode == llvm::HSAIL::atomic_binary_u32_r)
-  || (opcode == llvm::HSAIL::atomic_binary_b64_i)
-  || (opcode == llvm::HSAIL::atomic_binary_b64_r)
-  || (opcode == llvm::HSAIL::atomic_binary_s64_i)
-  || (opcode == llvm::HSAIL::atomic_binary_s64_r)
-  || (opcode == llvm::HSAIL::atomic_binary_u64_i)
-  || (opcode == llvm::HSAIL::atomic_binary_u64_r);
+  return (opcode == llvm::HSAIL::atomic_b32_binary_i_ret)
+  || (opcode == llvm::HSAIL::atomic_b32_binary_r_ret)
+  || (opcode == llvm::HSAIL::atomic_b64_binary_i_ret)
+  || (opcode == llvm::HSAIL::atomic_b64_binary_r_ret);
 }
 
 bool isParametrizedBinaryNoRetAtomicOp(int opcode)
 {
-  return (opcode == llvm::HSAIL::atomic_binary_b32_i_noret)
-  || (opcode == llvm::HSAIL::atomic_binary_b32_r_noret)
-  || (opcode == llvm::HSAIL::atomic_binary_s32_i_noret)
-  || (opcode == llvm::HSAIL::atomic_binary_s32_r_noret)
-  || (opcode == llvm::HSAIL::atomic_binary_u32_i_noret)
-  || (opcode == llvm::HSAIL::atomic_binary_u32_r_noret)
-  || (opcode == llvm::HSAIL::atomic_binary_b64_i_noret)
-  || (opcode == llvm::HSAIL::atomic_binary_b64_r_noret)
-  || (opcode == llvm::HSAIL::atomic_binary_s64_i_noret)
-  || (opcode == llvm::HSAIL::atomic_binary_s64_r_noret)
-  || (opcode == llvm::HSAIL::atomic_binary_u64_i_noret)
-  || (opcode == llvm::HSAIL::atomic_binary_u64_r_noret);
+  return (opcode == llvm::HSAIL::atomic_b32_binary_i_noret)
+  || (opcode == llvm::HSAIL::atomic_b32_binary_r_noret)
+  || (opcode == llvm::HSAIL::atomic_b64_binary_i_noret)
+  || (opcode == llvm::HSAIL::atomic_b64_binary_r_noret);
 }
 
 bool isParametrizedUnaryAtomicOp(int opcode) {
@@ -876,26 +860,26 @@ bool isParametrizedBinaryAtomicOp(int opcode)
 
 bool isParametrizedTernaryNoRetAtomicOp(int opcode)
 {
-  return (opcode == llvm::HSAIL::atomic_ternary_b32_ii_noret)
-  || (opcode == llvm::HSAIL::atomic_ternary_b32_ir_noret)
-  || (opcode == llvm::HSAIL::atomic_ternary_b32_ri_noret)
-  || (opcode == llvm::HSAIL::atomic_ternary_b32_rr_noret)
-  || (opcode == llvm::HSAIL::atomic_ternary_b64_ii_noret)
-  || (opcode == llvm::HSAIL::atomic_ternary_b64_ir_noret)
-  || (opcode == llvm::HSAIL::atomic_ternary_b64_ri_noret)
-  || (opcode == llvm::HSAIL::atomic_ternary_b64_rr_noret);
+  return (opcode == llvm::HSAIL::atomic_b32_ternary_ii_noret)
+  || (opcode == llvm::HSAIL::atomic_b32_ternary_ir_noret)
+  || (opcode == llvm::HSAIL::atomic_b32_ternary_ri_noret)
+  || (opcode == llvm::HSAIL::atomic_b32_ternary_rr_noret)
+  || (opcode == llvm::HSAIL::atomic_b64_ternary_ii_noret)
+  || (opcode == llvm::HSAIL::atomic_b64_ternary_ir_noret)
+  || (opcode == llvm::HSAIL::atomic_b64_ternary_ri_noret)
+  || (opcode == llvm::HSAIL::atomic_b64_ternary_rr_noret);
 }
 
 bool isParametrizedTernaryRetAtomicOp(int opcode)
 {
-  return (opcode == llvm::HSAIL::atomic_ternary_b32_ii)
-  || (opcode == llvm::HSAIL::atomic_ternary_b32_ir)
-  || (opcode == llvm::HSAIL::atomic_ternary_b32_ri)
-  || (opcode == llvm::HSAIL::atomic_ternary_b32_rr)
-  || (opcode == llvm::HSAIL::atomic_ternary_b64_ii)
-  || (opcode == llvm::HSAIL::atomic_ternary_b64_ir)
-  || (opcode == llvm::HSAIL::atomic_ternary_b64_ri)
-  || (opcode == llvm::HSAIL::atomic_ternary_b64_rr);
+  return (opcode == llvm::HSAIL::atomic_b32_ternary_ii_ret)
+  || (opcode == llvm::HSAIL::atomic_b32_ternary_ir_ret)
+  || (opcode == llvm::HSAIL::atomic_b32_ternary_ri_ret)
+  || (opcode == llvm::HSAIL::atomic_b32_ternary_rr_ret)
+  || (opcode == llvm::HSAIL::atomic_b64_ternary_ii_ret)
+  || (opcode == llvm::HSAIL::atomic_b64_ternary_ir_ret)
+  || (opcode == llvm::HSAIL::atomic_b64_ternary_ri_ret)
+  || (opcode == llvm::HSAIL::atomic_b64_ternary_rr_ret);
 }
 
 bool isParametrizedTernaryAtomicOp(int opcode)
@@ -916,6 +900,38 @@ bool isParametrizedRetAtomicOp(int opcode)
   return isParametrizedUnaryRetAtomicOp(opcode)
          || isParametrizedBinaryRetAtomicOp(opcode)
          || isParametrizedTernaryRetAtomicOp(opcode);
+}
+
+int getParametrizedAtomicNoRetVersion(int OpCode) {
+  switch (OpCode) {
+    case llvm::HSAIL::atomic_b32_ternary_ii_ret:
+      return llvm::HSAIL::atomic_b32_ternary_ii_noret;
+    case llvm::HSAIL::atomic_b32_ternary_ir_ret:
+      return llvm::HSAIL::atomic_b32_ternary_ir_noret;
+    case llvm::HSAIL::atomic_b32_ternary_ri_ret:
+      return llvm::HSAIL::atomic_b32_ternary_ri_noret;
+    case llvm::HSAIL::atomic_b32_ternary_rr_ret:
+      return llvm::HSAIL::atomic_b32_ternary_rr_noret;
+    case llvm::HSAIL::atomic_b64_ternary_ii_ret:
+      return llvm::HSAIL::atomic_b64_ternary_ii_noret;
+    case llvm::HSAIL::atomic_b64_ternary_ir_ret:
+      return llvm::HSAIL::atomic_b64_ternary_ir_noret;
+    case llvm::HSAIL::atomic_b64_ternary_ri_ret:
+      return llvm::HSAIL::atomic_b64_ternary_ri_noret;
+    case llvm::HSAIL::atomic_b64_ternary_rr_ret:
+      return llvm::HSAIL::atomic_b64_ternary_rr_noret;
+    case llvm::HSAIL::atomic_b32_binary_i_ret:
+      return llvm::HSAIL::atomic_b32_binary_i_noret;
+    case llvm::HSAIL::atomic_b32_binary_r_ret:
+      return llvm::HSAIL::atomic_b32_binary_r_noret;
+    case llvm::HSAIL::atomic_b64_binary_i_ret:
+      return llvm::HSAIL::atomic_b64_binary_i_noret;
+    case llvm::HSAIL::atomic_b64_binary_r_ret:
+      return llvm::HSAIL::atomic_b64_binary_r_noret;
+  }
+
+  llvm_unreachable("atomic opcode lacks a noret version");
+  return -1;
 }
 
 bool hasParametrizedAtomicNoRetVersion(const llvm::MachineInstr *MI, SDNode *Node)

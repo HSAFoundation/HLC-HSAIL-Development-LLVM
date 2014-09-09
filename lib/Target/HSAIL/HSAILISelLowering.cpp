@@ -1623,8 +1623,8 @@ HSAILTargetLowering::AdjustInstrPostInstrSelection(MachineInstr *MI, SDNode *Nod
       DEBUG(MI->dump());
       DEBUG(dbgs() << " with no return version ");
       const TargetInstrInfo *TII = MI->getParent()->getParent()->getTarget().getInstrInfo();
-      // Hack: _noret opcode is always next to corresponding atomic ret opcode in td file
-      MI->setDesc(TII->get(MI->getOpcode() + 1));
+      int NoretOp = getParametrizedAtomicNoRetVersion(MI->getOpcode());
+      MI->setDesc(TII->get(NoretOp));
       MI->RemoveOperand(0);
       DEBUG(MI->dump());
       DEBUG(dbgs() << '\n');

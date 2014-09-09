@@ -171,6 +171,7 @@ bool isParametrizedTernaryAtomicOp(int opcode);
 bool isParametrizedAtomicOp(int opcode);
 bool isParametrizedRetAtomicOp(int opcode);
 bool hasParametrizedAtomicNoRetVersion(const llvm::MachineInstr *MI, llvm::SDNode *Node);
+int getParametrizedAtomicNoRetVersion(int OpCode);
 
 llvm::SDValue generateFenceIntrinsic(llvm::SDValue Chain, llvm::DebugLoc dl,
         unsigned memSeg,
