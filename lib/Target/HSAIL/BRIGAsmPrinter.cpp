@@ -925,18 +925,18 @@ void BRIGAsmPrinter::emitMacroFunc(const MachineInstr *MI, raw_ostream &O) {
 }
 
 #define TWINE_TO_STR(_a) Twine(_a).str()
-void BRIGAsmPrinter::EmitBasicBlockStart(const MachineBasicBlock *MBB) {
+void BRIGAsmPrinter::EmitBasicBlockStart(const MachineBasicBlock &MBB) {
   std::ostringstream o;
   bool insert_spaces=false;
 
-  if (MBB->pred_empty() || isBlockOnlyReachableByFallthrough(MBB)) {
-    o << "// BB#" << MBB->getNumber() << ":";
+  if (MBB.pred_empty() || isBlockOnlyReachableByFallthrough(&MBB)) {
+    o << "// BB#" << MBB.getNumber() << ":";
     insert_spaces=true;
   } else {
-    StringRef name = MBB->getSymbol()->getName();
+    StringRef name = MBB.getSymbol()->getName();
     brigantine.addLabel(HSAIL_ASM::SRef(name.begin(), name.end()));
   }
-  if (const BasicBlock *BB = MBB->getBasicBlock())
+  if (const BasicBlock *BB = MBB.getBasicBlock())
     if  (BB->hasName())
       o << ( insert_spaces ? "                                ":"")
         <<"// %" << BB->getName();
@@ -944,7 +944,7 @@ void BRIGAsmPrinter::EmitBasicBlockStart(const MachineBasicBlock *MBB) {
     brigantine.addComment(o.str().c_str());
   }
 
-  AsmPrinter::EmitBasicBlockStart(*MBB);
+  AsmPrinter::EmitBasicBlockStart(MBB);
 }
 
 /// Emit ld_arg or st_arg
