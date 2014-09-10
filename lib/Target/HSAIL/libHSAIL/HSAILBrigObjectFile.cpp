@@ -41,6 +41,7 @@
 #include "HSAILBrigObjectFile.h"
 #include "HSAILBrigContainer.h"
 
+// FIXME: Should use configure test
 #include <errno.h>
 #ifdef _WIN32
 #include <io.h>
@@ -50,6 +51,11 @@
 #include <unistd.h>
 #define O_BINARY_ 0
 #define LSEEK lseek64
+#endif
+
+#if defined(__APPLE__) & defined(__MACH__)
+#define lseek64 lseek
+#define open64 open
 #endif
 
 #include <cstring>
