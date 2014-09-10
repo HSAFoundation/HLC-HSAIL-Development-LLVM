@@ -36,7 +36,11 @@ HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(StringRef &T)
   //        BRIGAsmPrinter does not create large ".text", etc., sections in order to
   //        save space and I/O time.
   //
-  SupportsDebugInformation = true;
+
+  // FIXME: Setting SupportsDebugInformation to true causes an assertion
+  // failure in the AsmPrinter() destructor.
+  // Assertion `!DD && Handlers.empty() && "Debug/EH info didn't get finalized"' failed.
+  SupportsDebugInformation = false;
 
   PointerSize = Triple(T).getArch() == Triple::hsail_64 ? 8 : 4;
 
