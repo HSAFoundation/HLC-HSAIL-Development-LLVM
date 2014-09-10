@@ -74,13 +74,18 @@
 #include <queue>
 #include <list>
 
+// Bring in the implementation for InstrMappings
+#define GET_INSTRMAP_INFO
+#include "HSAILGenInstrInfo.inc"
+#undef GET_INSTRMAP_INFO
+
 using namespace llvm;
 
 namespace llvm {
 
 namespace HSAIL {
 
-int64_t HSAIL_GET_SCALAR_SIZE(llvm::Type *A) {
+int64_t HSAIL_GET_SCALAR_SIZE(Type *A) {
   return A->getScalarSizeInBits();
 }
 
@@ -406,7 +411,7 @@ unsigned HSAILgetAlignTypeQualifier(Type *ty, const DataLayout& DL,
   return align;
 }
 
-const llvm::Value *HSAILgetBasePointerValue(const llvm::Value *V)
+const Value *HSAILgetBasePointerValue(const Value *V)
 {
   if (!V) {
     return NULL;
@@ -447,7 +452,7 @@ const llvm::Value *HSAILgetBasePointerValue(const llvm::Value *V)
   return ret;
 }
 
-const llvm::Value *HSAILgetBasePointerValue(const llvm::MachineInstr *MI) {
+const Value *HSAILgetBasePointerValue(const MachineInstr *MI) {
   const Value *moVal = NULL;
   if (!MI->memoperands_empty()) {
     const MachineMemOperand *memOp = (*MI->memoperands_begin());
@@ -457,7 +462,7 @@ const llvm::Value *HSAILgetBasePointerValue(const llvm::MachineInstr *MI) {
   return moVal;
 }
 
-bool HSAILcommaPrint(int i, OSTREAM_TYPE &O) {
+bool HSAILcommaPrint(int i, raw_ostream &O) {
   O << ":" << i;
   return false;
 }
@@ -505,7 +510,7 @@ llvm::MachineOperand &getOffset(llvm::MachineInstr *MI)
 
 const llvm::MachineOperand &getOffset(const llvm::MachineInstr *MI)
 {
-  return getOffset(const_cast<llvm::MachineInstr*>(MI));
+  return getOffset(const_cast<MachineInstr*>(MI));
 }
 
 llvm::MachineOperand &getBrigType(llvm::MachineInstr *MI)
@@ -826,119 +831,52 @@ bool isSPIRModule(const Module &M) {
   return M.getNamedMetadata("opencl.kernels");
 }
 
-bool isParametrizedUnaryRetAtomicOp(int opcode)
+namespace {
+  // This must match the declarations in HSAILAtomics.td
+  enum AtomicNumOps {
+    ATOMIC_UNARY_NUM_OPS = 8,
+    ATOMIC_BINARY_NUM_OPS = 9,
+    ATOMIC_TERNARY_NUM_OPS = 10
+  };
+}
+
+bool isUnaryAtomicOp(const MachineInstr *MI)
 {
-  return (opcode == llvm::HSAIL::atomic_b32_unary)
-  || (opcode == llvm::HSAIL::atomic_b64_unary);
+  if (!HSAIL::isAtomicOp(MI)) return false;
+
+  const MCInstrDesc &D = MI->getDesc();
+  return ATOMIC_UNARY_NUM_OPS == (D.getNumOperands() - D.getNumDefs());
 }
 
-bool isParametrizedBinaryRetAtomicOp(int opcode)
+bool isBinaryAtomicOp(const MachineInstr *MI)
 {
-  return (opcode == llvm::HSAIL::atomic_b32_binary_i_ret)
-  || (opcode == llvm::HSAIL::atomic_b32_binary_r_ret)
-  || (opcode == llvm::HSAIL::atomic_b64_binary_i_ret)
-  || (opcode == llvm::HSAIL::atomic_b64_binary_r_ret);
+  if (!HSAIL::isAtomicOp(MI)) return false;
+
+  const MCInstrDesc &D = MI->getDesc();
+  return ATOMIC_BINARY_NUM_OPS == (D.getNumOperands() - D.getNumDefs());
 }
 
-bool isParametrizedBinaryNoRetAtomicOp(int opcode)
+bool isTernaryAtomicOp(const MachineInstr *MI)
 {
-  return (opcode == llvm::HSAIL::atomic_b32_binary_i_noret)
-  || (opcode == llvm::HSAIL::atomic_b32_binary_r_noret)
-  || (opcode == llvm::HSAIL::atomic_b64_binary_i_noret)
-  || (opcode == llvm::HSAIL::atomic_b64_binary_r_noret);
+  if (!HSAIL::isAtomicOp(MI)) return false;
+
+  const MCInstrDesc &D = MI->getDesc();
+  return ATOMIC_TERNARY_NUM_OPS == (D.getNumOperands() - D.getNumDefs());
 }
 
-bool isParametrizedUnaryAtomicOp(int opcode) {
-  return isParametrizedUnaryRetAtomicOp(opcode);
-}
-
-bool isParametrizedBinaryAtomicOp(int opcode)
+bool isAtomicOp(const MachineInstr *MI)
 {
-  return isParametrizedBinaryRetAtomicOp(opcode)
-         || isParametrizedBinaryNoRetAtomicOp(opcode);
+  return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_ATOMIC);
 }
 
-bool isParametrizedTernaryNoRetAtomicOp(int opcode)
+bool isRetAtomicOp(const MachineInstr *MI)
 {
-  return (opcode == llvm::HSAIL::atomic_b32_ternary_ii_noret)
-  || (opcode == llvm::HSAIL::atomic_b32_ternary_ir_noret)
-  || (opcode == llvm::HSAIL::atomic_b32_ternary_ri_noret)
-  || (opcode == llvm::HSAIL::atomic_b32_ternary_rr_noret)
-  || (opcode == llvm::HSAIL::atomic_b64_ternary_ii_noret)
-  || (opcode == llvm::HSAIL::atomic_b64_ternary_ir_noret)
-  || (opcode == llvm::HSAIL::atomic_b64_ternary_ri_noret)
-  || (opcode == llvm::HSAIL::atomic_b64_ternary_rr_noret);
+  return isAtomicOp(MI) && MI->getDesc().getNumDefs() == 1;
 }
 
-bool isParametrizedTernaryRetAtomicOp(int opcode)
+bool isNoretAtomicOp(const MachineInstr *MI)
 {
-  return (opcode == llvm::HSAIL::atomic_b32_ternary_ii_ret)
-  || (opcode == llvm::HSAIL::atomic_b32_ternary_ir_ret)
-  || (opcode == llvm::HSAIL::atomic_b32_ternary_ri_ret)
-  || (opcode == llvm::HSAIL::atomic_b32_ternary_rr_ret)
-  || (opcode == llvm::HSAIL::atomic_b64_ternary_ii_ret)
-  || (opcode == llvm::HSAIL::atomic_b64_ternary_ir_ret)
-  || (opcode == llvm::HSAIL::atomic_b64_ternary_ri_ret)
-  || (opcode == llvm::HSAIL::atomic_b64_ternary_rr_ret);
-}
-
-bool isParametrizedTernaryAtomicOp(int opcode)
-{
-  return isParametrizedTernaryRetAtomicOp(opcode)
-         || isParametrizedTernaryNoRetAtomicOp(opcode);
-}
-
-bool isParametrizedAtomicOp(int opcode)
-{
-  return isParametrizedUnaryAtomicOp(opcode)
-         || isParametrizedBinaryAtomicOp(opcode)
-         || isParametrizedTernaryAtomicOp(opcode);
-}
-
-bool isParametrizedRetAtomicOp(int opcode)
-{
-  return isParametrizedUnaryRetAtomicOp(opcode)
-         || isParametrizedBinaryRetAtomicOp(opcode)
-         || isParametrizedTernaryRetAtomicOp(opcode);
-}
-
-int getParametrizedAtomicNoRetVersion(int OpCode) {
-  switch (OpCode) {
-    case llvm::HSAIL::atomic_b32_ternary_ii_ret:
-      return llvm::HSAIL::atomic_b32_ternary_ii_noret;
-    case llvm::HSAIL::atomic_b32_ternary_ir_ret:
-      return llvm::HSAIL::atomic_b32_ternary_ir_noret;
-    case llvm::HSAIL::atomic_b32_ternary_ri_ret:
-      return llvm::HSAIL::atomic_b32_ternary_ri_noret;
-    case llvm::HSAIL::atomic_b32_ternary_rr_ret:
-      return llvm::HSAIL::atomic_b32_ternary_rr_noret;
-    case llvm::HSAIL::atomic_b64_ternary_ii_ret:
-      return llvm::HSAIL::atomic_b64_ternary_ii_noret;
-    case llvm::HSAIL::atomic_b64_ternary_ir_ret:
-      return llvm::HSAIL::atomic_b64_ternary_ir_noret;
-    case llvm::HSAIL::atomic_b64_ternary_ri_ret:
-      return llvm::HSAIL::atomic_b64_ternary_ri_noret;
-    case llvm::HSAIL::atomic_b64_ternary_rr_ret:
-      return llvm::HSAIL::atomic_b64_ternary_rr_noret;
-    case llvm::HSAIL::atomic_b32_binary_i_ret:
-      return llvm::HSAIL::atomic_b32_binary_i_noret;
-    case llvm::HSAIL::atomic_b32_binary_r_ret:
-      return llvm::HSAIL::atomic_b32_binary_r_noret;
-    case llvm::HSAIL::atomic_b64_binary_i_ret:
-      return llvm::HSAIL::atomic_b64_binary_i_noret;
-    case llvm::HSAIL::atomic_b64_binary_r_ret:
-      return llvm::HSAIL::atomic_b64_binary_r_noret;
-  }
-
-  llvm_unreachable("atomic opcode lacks a noret version");
-  return -1;
-}
-
-bool hasParametrizedAtomicNoRetVersion(const llvm::MachineInstr *MI, SDNode *Node)
-{
-  return isParametrizedRetAtomicOp(MI->getOpcode())
-         && ((cast<ConstantSDNode>(Node->getOperand(0))->getZExtValue() !=
-             Brig::BRIG_ATOMIC_EXCH));
+  return isAtomicOp(MI) && MI->getDesc().getNumDefs() == 0;
 }
 
 static SDValue generateFenceIntrinsicHelper(SDValue Chain, SDLoc dl,

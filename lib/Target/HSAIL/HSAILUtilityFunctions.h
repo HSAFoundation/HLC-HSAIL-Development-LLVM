@@ -160,24 +160,27 @@ bool notUsedInKernel(const llvm::GlobalVariable *GV);
 bool isIgnoredGV(const llvm::GlobalVariable *GV);
 bool sanitizeGlobalValueName(llvm::GlobalValue *GV);
 
-bool isParametrizedUnaryRetAtomicOp(int opcode);
-bool isParametrizedUnaryAtomicOp(int opcode);
-bool isParametrizedBinaryRetAtomicOp(int opcode);
-bool isParametrizedBinaryNoRetAtomicOp(int opcode);
-bool isParametrizedBinaryAtomicOp(int opcode);
-bool isParametrizedTernaryRetAtomicOp(int opcode);
-bool isParametrizedTernaryNoRetAtomicOp(int opcode);
-bool isParametrizedTernaryAtomicOp(int opcode);
-bool isParametrizedAtomicOp(int opcode);
-bool isParametrizedRetAtomicOp(int opcode);
-bool hasParametrizedAtomicNoRetVersion(const llvm::MachineInstr *MI, llvm::SDNode *Node);
-int getParametrizedAtomicNoRetVersion(int OpCode);
+bool isAtomicOp(const llvm::MachineInstr *MI);
+bool isRetAtomicOp(const llvm::MachineInstr *MI);
+bool isNoretAtomicOp(const llvm::MachineInstr *MI);
 
-llvm::SDValue generateFenceIntrinsic(llvm::SDValue Chain, llvm::DebugLoc dl,
+bool isUnaryAtomicOp(const llvm::MachineInstr *MI);
+bool isBinaryAtomicOp(const llvm::MachineInstr *MI);
+bool isTernaryAtomicOp(const llvm::MachineInstr *MI);
+
+// TabelGen'erated function (see HSAILAtomics.td)
+
+// IMPORTANT: The value returned is invalid when the actual
+// operation is BRIG_ATOMIC_EXCH (binary) or BRIG_ATOMIC_LD
+// (unary). These two operations do not have equivalent noret
+// versions in HSAIL.
+int getAtomicNoretVersion(uint16_t Opcode);
+
+SDValue generateFenceIntrinsic(SDValue Chain, SDLoc dl,
         unsigned memSeg,
         unsigned brigMemoryOrder,
         unsigned brigMemoryScope,
-        llvm::SelectionDAG &CurDAG);
+        SelectionDAG &CurDAG);
 
 } // End namespace HSAIL
 

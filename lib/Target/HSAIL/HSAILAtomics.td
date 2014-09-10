@@ -1,6 +1,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 // atomics
 
+class AtomicRetMap {
+  string AtomicRetBaseOpcode;
+  string AtomicIsRet;
+}
+
+def getAtomicNoretVersion : InstrMapping {
+  let FilterClass = "AtomicRetMap";
+  let RowFields = ["AtomicRetBaseOpcode"];
+  let ColFields = ["AtomicIsRet"];
+  let KeyCol = ["true"];
+  let ValueCols = [["false"]];
+}
+
 let mayLoad = 1, mayStore = 1 in {
 
 // gcn atomic append/consume
@@ -26,39 +39,50 @@ let hasAddress = 1, addressOpNum = 1 in {
 /// atomic_unary  : brig operands, ptr
 /// atomic_binary : brig operands, ptr, val
 /// atomic_ternary: brig operands, ptr, val1, val2
+///
+/// enum AtomicNumOps in HSAILUtilityFunctions.cpp must be updated if
+/// this format is changed.
 
 multiclass AtomicMaybeRet<dag OutList, dag InList> {
   let addressOpNum = 6, hasPostISelHook = 1 in {
-    def _ret   : HSAILInst<OutList, InList, "", []>;
+    def NAME#_ret   : AtomicRetMap, HSAILInst<OutList, InList, "", []> {
+      let AtomicRetBaseOpcode = NAME;
+      let AtomicIsRet = "true";
+    }
   }
+
   let addressOpNum = 5 in {
-    def _noret : HSAILInst<(outs), InList, "", []>;
+    def NAME#_noret : AtomicRetMap, HSAILInst<(outs), InList, "", []> {
+      let AtomicRetBaseOpcode = NAME;
+      let AtomicIsRet = "false";
+    }
   }
 }
 
-let hasAddress = 1 in {
+let hasAddress = 1, isAtomic = 1 in {
   multiclass AtomicRRInst<dag OutList, RegisterClass inRC, Operand immTy> {
     let addressOpNum = 6 in {
-      def _unary     :      HSAILInst<OutList,
+      def NAME#_unary     :      HSAILInst<OutList,
                                       (ins i32imm:$op, i32imm:$as, i32imm:$mo, i32imm:$ms,
-                                        i32imm:$ty, MEMOP:$ptr), "", []>;
+                                           i32imm:$ty, MEMOP:$ptr), "", []>;
     }
-    defm _binary_i   : AtomicMaybeRet<OutList,
+
+    defm NAME#_binary_i   : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$as, i32imm:$mo, i32imm:$ms,
                                            i32imm:$ty, MEMOP:$ptr, immTy:$val0)>;
-    defm _binary_r   : AtomicMaybeRet<OutList,
+    defm NAME#_binary_r   : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$as, i32imm:$mo, i32imm:$ms,
                                            i32imm:$ty, MEMOP:$ptr, inRC:$val0)>;
-    defm _ternary_ii : AtomicMaybeRet<OutList,
+    defm NAME#_ternary_ii : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$as, i32imm:$mo, i32imm:$ms,
                                            i32imm:$ty, MEMOP:$ptr, immTy:$val0, immTy:$val1)>;
-    defm _ternary_ir : AtomicMaybeRet<OutList,
+    defm NAME#_ternary_ir : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$as, i32imm:$mo, i32imm:$ms,
                                            i32imm:$ty, MEMOP:$ptr, immTy:$val0, inRC:$val1)>;
-    defm _ternary_ri : AtomicMaybeRet<OutList,
+    defm NAME#_ternary_ri : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$as, i32imm:$mo, i32imm:$ms,
                                            i32imm:$ty, MEMOP:$ptr, inRC:$val0, immTy:$val1)>;
-    defm _ternary_rr : AtomicMaybeRet<OutList,
+    defm NAME#_ternary_rr : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$as, i32imm:$mo, i32imm:$ms,
                                            i32imm:$ty, MEMOP:$ptr, inRC:$val0, inRC:$val1)>;
   }
