@@ -75,7 +75,7 @@ void BrigantineNoEx::handleError(const SyntaxError& e)
 
 void Brigantine::handleError(const SyntaxError& e)
 {
-    llvm_unreachable("Error");
+    llvm_unreachable(e.what().c_str());
 }
 
 void Brigantine::brigWriteError(const char *errMsg, const SourceInfo* srcInfo)
