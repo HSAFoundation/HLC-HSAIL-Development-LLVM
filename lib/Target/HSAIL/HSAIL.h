@@ -224,7 +224,8 @@ namespace llvm {
       ADDRESS_OP_NUM2 = 3,
       IS_LOAD         = 4,
       IS_STORE        = 5,
-      IS_CONV = 6
+      IS_CONV         = 6,
+      IS_ATOMIC       = 7
     };
   }
 

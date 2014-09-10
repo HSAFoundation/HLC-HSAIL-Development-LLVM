@@ -114,12 +114,12 @@ namespace HSAIL_MEMFENCE {
 }
 
 static int getAtomicParameter(const llvm::MachineInstr *MI, unsigned index) {
-  assert(HSAIL::isParametrizedAtomicOp(MI->getOpcode()));
+  assert(HSAIL::isAtomicOp(MI));
 
   int offset = 0;
 
   //Ret versions have destination operand at 0 index, so offset parameters index by 1
-  if (HSAIL::isParametrizedRetAtomicOp(MI->getOpcode()))
+  if (HSAIL::isRetAtomicOp(MI))
     offset = 1;
 
   llvm::MachineOperand opc = MI->getOperand(index + offset);
@@ -806,8 +806,8 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     return HSAIL_ASM::Inst();
   }
 
-  if (HSAIL::isParametrizedAtomicOp(II->getOpcode())) {
-    bool hasRet = HSAIL::isParametrizedRetAtomicOp(II->getOpcode());
+  if (HSAIL::isAtomicOp(II)) {
+    bool hasRet = HSAIL::isRetAtomicOp(II);
     Brig::BrigTypeX btype = getAtomicType(II);
     unsigned brigAtomicOp = hasRet ? Brig::BRIG_OPCODE_ATOMIC :
                                      Brig::BRIG_OPCODE_ATOMICNORET;
@@ -823,11 +823,11 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
       BrigEmitOperand(II, 0, instAtomic);
     BrigEmitOperandLdStAddress(II, HSAIL_ATOMIC_OPS::TYPE_INDEX + 1 +
                                (hasRet ? 1 : 0));
-    if (HSAIL::isParametrizedTernaryAtomicOp(II->getOpcode())) {
+    if (HSAIL::isTernaryAtomicOp(II)) {
       BrigEmitOperand(II, II->getNumOperands() - 2, instAtomic);
     }
-    if (HSAIL::isParametrizedTernaryAtomicOp(II->getOpcode()) ||
-        HSAIL::isParametrizedBinaryAtomicOp(II->getOpcode())) {
+    if (HSAIL::isTernaryAtomicOp(II) ||
+        HSAIL::isBinaryAtomicOp(II)) {
       BrigEmitOperand(II, II->getNumOperands() - 1, instAtomic);
     }
     return instAtomic;

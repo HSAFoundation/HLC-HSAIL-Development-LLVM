@@ -408,11 +408,11 @@ public:
 
   MVT getScalarShiftAmountTy(EVT LHSTy) const override;
 
-#if 0
-  virtual void
-  AdjustInstrPostInstrSelection(MachineInstr *MI, SDNode *Node) const;
-#endif
-  
+  void replaceUnusedAtomicRetInst(MachineInstr *MI,
+                                  SDNode *Node) const;
+
+  void AdjustInstrPostInstrSelection(MachineInstr *MI,
+                                     SDNode *Node) const override;
 };
 
 } // end llvm namespace

@@ -38,6 +38,8 @@ class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
   let TSFlags{5} = isStore;
   bit isConv = 0;
   let TSFlags{6} = isConv;
+  bit isAtomic = 0;
+  let TSFlags{7} = isAtomic;
 }
 
 let TargetPrefix = "HSAIL", isTarget = 1 in {
