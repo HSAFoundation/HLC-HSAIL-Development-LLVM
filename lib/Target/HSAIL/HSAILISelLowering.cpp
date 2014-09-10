@@ -126,8 +126,11 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM)
 
   setOperationAction(ISD::TRUNCATE, MVT::i1, Custom);
 
-  setOperationAction(ISD::BR_JT, MVT::Other, Expand);
-  setOperationAction(ISD::BR_CC, MVT::Other, Expand);
+  setOperationAction(ISD::BR_CC, MVT::i32, Expand);
+  setOperationAction(ISD::BR_CC, MVT::i64, Expand);
+  setOperationAction(ISD::BR_CC, MVT::f32, Expand);
+  setOperationAction(ISD::BR_CC, MVT::f64, Expand);
+  setOperationAction(ISD::BR_CC, MVT::i1, Expand);
   setOperationAction(ISD::SELECT_CC, MVT::Other, Expand);
 
   setOperationAction(ISD::GlobalAddress, MVT::i32, Custom);
