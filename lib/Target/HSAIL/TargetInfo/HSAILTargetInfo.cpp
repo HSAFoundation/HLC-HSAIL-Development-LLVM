@@ -19,6 +19,7 @@ extern "C" void LLVMInitializeHSAILTargetInfo()
   RegisterTarget<Triple::hsail, /*HasJIT=*/false>
     X(TheHSAIL_32Target, "hsail", "32-bit HSAIL: small machine model, addresses are 32 bit");
 
-  RegisterTarget<Triple::hsail_64, /*HasJIT=*/false>
+  // FIXME: Should get rid of the - in "hsail-64"
+  RegisterTarget<Triple::hsail64, /*HasJIT=*/false>
     Y(TheHSAIL_64Target, "hsail-64", "64-bit HSAIL: large machine model, addresses are 64 bit");
 }

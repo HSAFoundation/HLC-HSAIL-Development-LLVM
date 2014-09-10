@@ -50,8 +50,6 @@ public:
     armeb,      // ARM (big endian): armeb
     aarch64,    // AArch64 (little endian): aarch64
     aarch64_be, // AArch64 (big endian): aarch64_be
-    hsail,      // HSAIL Target
-    hsail_64,   // HSAIL_64 Target
     hexagon,    // Hexagon: hexagon
     mips,       // MIPS: mips, mipsallegrex
     mipsel,     // MIPSEL: mipsel, mipsallegrexel
@@ -75,6 +73,9 @@ public:
     nvptx64,    // NVPTX: 64-bit
     le32,       // le32: generic little-endian 32-bit CPU (PNaCl / Emscripten)
     amdil,      // amdil: amd IL
+    amdil64,    // AMDIL 64bit Target
+    hsail,      // AMD HSAIL Target
+    hsail64,    // AMD HSAIL_64 Target
     spir,       // SPIR: standard portable IR for OpenCL 32-bit version
     spir64,     // SPIR: standard portable IR for OpenCL 64-bit version
   };
