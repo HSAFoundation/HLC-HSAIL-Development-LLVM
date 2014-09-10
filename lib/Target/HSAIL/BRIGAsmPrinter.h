@@ -253,7 +253,7 @@ private:
   Brig::BrigSegment8_t getHSAILSegment(const GlobalVariable* gv) const;
 
   bool canInitHSAILAddressSpace(const GlobalVariable* gv) const;
-  void EmitBasicBlockStart(const MachineBasicBlock *MBB);
+  void EmitBasicBlockStart(const MachineBasicBlock &MBB);
   // returns an offset of corresponding DirectiveVariable
   uint64_t EmitFunctionArgument(Type* type, bool isKernel,
                                 const StringRef argName, bool isSExt);
