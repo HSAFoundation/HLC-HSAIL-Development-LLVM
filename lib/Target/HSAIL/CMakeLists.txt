@@ -13,10 +13,14 @@ tablegen(LLVM HSAILGenVecMap.inc -gen-hsail-vec-map)
 
 add_public_tablegen_target(HSAILCommonTableGen)
 
+add_subdirectory(libHSAIL)
+
 set(sources
   HSAILAsmBackend.cpp
   BRIGAsmPrinter.cpp
-  BRIGDwarfStreamer.cpp 
+#  BRIGDwarfCompileUnit.cpp
+#  BRIGDwarfDebug.cpp
+  BRIGDwarfStreamer.cpp
   HSAILDevice.cpp
   HSAILDeviceInfo.cpp
   HSAILELFObjectWriter.cpp
@@ -60,17 +64,19 @@ endif()
 
 add_llvm_target(HSAILCodeGen ${sources})
 
-add_dependencies(LLVMHSAILCodeGen
-  LLVMAnalysis
-  LLVMAsmPrinter
-  LLVMCodeGen
-  LLVMCore
-  LLVMMC
-  LLVMSelectionDAG
-  LLVMSupport
-  LLVMTarget
-  LLVMHSAILAsmPrinter
-  )
+target_link_libraries(LLVMHSAILCodeGen PRIVATE HSAIL)
+
+# add_dependencies(LLVMHSAILCodeGen
+#   LLVMAnalysis
+#   LLVMAsmPrinter
+#   LLVMCodeGen
+#   LLVMCore
+#   LLVMMC
+#   LLVMSelectionDAG
+#   LLVMSupport
+#   LLVMTarget
+#   LLVMHSAILAsmPrinter
+#   )
 #add_subdirectory(AsmParser)
 #add_subdirectory(Disassembler)
 #add_subdirectory(InstPrinter)
