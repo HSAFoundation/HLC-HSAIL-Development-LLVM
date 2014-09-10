@@ -15,8 +15,7 @@ add_public_tablegen_target(HSAILCommonTableGen)
 
 set(sources
   HSAILAsmBackend.cpp
-  BRIGDwarfCompileUnit.cpp
-  BRIGDwarfDebug.cpp
+  BRIGAsmPrinter.cpp
   BRIGDwarfStreamer.cpp 
   HSAILDevice.cpp
   HSAILDeviceInfo.cpp
