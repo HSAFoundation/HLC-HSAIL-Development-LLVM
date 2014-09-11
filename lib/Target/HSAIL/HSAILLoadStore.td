@@ -158,6 +158,19 @@ let isNotDuplicable = 1, hasCtrlDep = 1, hasSideEffects = 1 in {
                                      i32imm:$alignnment), "", []>;
 }
 
+class LdStVectorMap<string op, int size> {
+  string opcode   = op;
+  int    vec_size = size;
+}
+
+def getLdStVectorOpcode : InstrMapping {
+  let FilterClass = "LdStVectorMap";
+  let RowFields   = ["opcode"];
+  let ColFields   = ["vec_size"];
+  let KeyCol      = ["1"];
+  let ValueCols   = [["1"], ["2"], ["3"], ["4"]];
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // ld (integer, singed and unsigned, 32-bit and 64-bit;
 //     float, 32-bit and 64-bit; addr, 32bit and 64-bit)
@@ -168,26 +181,30 @@ multiclass HSAIL_LD<RegisterClass RC, DAGOperand MPtr>
       def _v1: HSAILInst<(outs RC:$dst),
                          (ins MPtr:$ptr, BRIG_TYPE_OPND:$t, WIDTH_OPND:$w,
                               CONST_OPERAND:$isConst),
-                        "ld\t$dst, $ptr", []>;
+                        "ld\t$dst, $ptr", []>,
+               LdStVectorMap<NAME, 1>;
     }
 
     let addressOpNum = 2 in {
       def _v2 : HSAILInst<(outs RC:$dst1, RC:$dst2),
                           (ins MPtr:$ptr, BRIG_TYPE_OPND:$t, WIDTH_OPND:$w,
                                CONST_OPERAND:$isConst),
-                           "ld_v2\t($dst1, $dst2 ), $ptr", []>;
+                           "ld_v2\t($dst1, $dst2 ), $ptr", []>,
+               LdStVectorMap<NAME, 2>;
     }
     let addressOpNum = 3 in {
       def _v3 : HSAILInst<(outs RC:$dst1, RC:$dst2, RC:$dst3),
                           (ins MPtr:$ptr, BRIG_TYPE_OPND:$t, WIDTH_OPND:$w,
                                CONST_OPERAND:$isConst),
-                           "ld_v3\t($dst1, $dst2, $dst3 ), $ptr", []>;
+                           "ld_v3\t($dst1, $dst2, $dst3 ), $ptr", []>,
+                LdStVectorMap<NAME, 3>;
     }
     let addressOpNum = 4 in {
       def _v4 : HSAILInst<(outs RC:$dst1, RC:$dst2, RC:$dst3, RC:$dst4),
                           (ins MPtr:$ptr, BRIG_TYPE_OPND:$t, WIDTH_OPND:$w,
                                CONST_OPERAND:$isConst),
-                           "ld_v4\t($dst1, $dst2, $dst3, $dst4 ), $ptr", []>;
+                           "ld_v4\t($dst1, $dst2, $dst3, $dst4 ), $ptr", []>,
+                LdStVectorMap<NAME, 4>;
     }
   }
 }
@@ -249,23 +266,27 @@ multiclass HSAIL_ST<RegisterClass RC, DAGOperand MPtr>
     let addressOpNum = 1 in {
       def _v1 : HSAILInst<(outs), (ins RC:$val,
                                        MPtr:$ptr, BRIG_TYPE_OPND:$t),
-                          "st_$t\t$val, $ptr", []>;
+                          "st_$t\t$val, $ptr", []>,
+                LdStVectorMap<NAME, 1>;
     }
 
     let addressOpNum = 2 in {
       def _v2 : HSAILInst<(outs), (ins RC:$val1, RC:$val2,
                                        MPtr:$ptr, BRIG_TYPE_OPND:$t),
-                          "st_v2_$t\t($val1, $val2 ), $ptr", []>;
+                          "st_v2_$t\t($val1, $val2 ), $ptr", []>,
+                LdStVectorMap<NAME, 2>;
     }
     let addressOpNum = 3 in {
       def _v3 : HSAILInst<(outs), (ins RC:$val1, RC:$val2, RC:$val3,
                                        MPtr:$ptr, BRIG_TYPE_OPND:$t),
-                          "st_v3_$t\t($val1, $val2, $val3 ), $ptr", []>;
+                          "st_v3_$t\t($val1, $val2, $val3 ), $ptr", []>,
+                LdStVectorMap<NAME, 3>;
     }
     let addressOpNum = 4 in {
       def _v4 : HSAILInst<(outs), (ins RC:$val1, RC:$val2, RC:$val3, RC:$val4,
                                        MPtr:$ptr, BRIG_TYPE_OPND:$t),
-                          "st_v4_$t\t($val1, $val2, $val3, $val4 ), $ptr", []>;
+                          "st_v4_$t\t($val1, $val2, $val3, $val4 ), $ptr", []>,
+                LdStVectorMap<NAME, 4>;
     }
   }
 }
