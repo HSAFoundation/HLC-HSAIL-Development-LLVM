@@ -98,8 +98,8 @@ const char *Triple::getArchTypePrefix(ArchType Kind) {
   case le32:        return "le32";
   case amdil:       return "amdil";
   case amdil64:     return "amdil";
-  case hsail:       return "hsail";
-  case hsail64:     return "hsail";
+  case hsail:
+  case hsail64: return "hsail";
   case spir:        return "spir";
   case spir64:      return "spir";
   }
