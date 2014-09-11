@@ -484,10 +484,15 @@ static unsigned getHSAILAtomicStoreOpcode (const MemSDNode *Node) {
                  HSAIL::atomic_b64_binary_r_noret;
 }
 
-static unsigned getHSAILAtomicOpcode(const MemSDNode *Node) {
+static int getHSAILAtomicOpcode(const MemSDNode *Node) {
+  int opcode = -1;
   switch (Node->getOpcode()) {
-    case ISD::ATOMIC_LOAD: return getHSAILAtomicLoadOpcode(Node);
-    case ISD::ATOMIC_STORE: return getHSAILAtomicStoreOpcode(Node);
+    case ISD::ATOMIC_LOAD:
+      opcode = getHSAILAtomicLoadOpcode(Node);
+      break;
+    case ISD::ATOMIC_STORE:
+      opcode = getHSAILAtomicStoreOpcode(Node);
+      break;
     case ISD::ATOMIC_LOAD_ADD:
     case ISD::ATOMIC_LOAD_SUB:
     case ISD::ATOMIC_LOAD_AND:
@@ -498,10 +503,20 @@ static unsigned getHSAILAtomicOpcode(const MemSDNode *Node) {
     case ISD::ATOMIC_LOAD_MIN:
     case ISD::ATOMIC_LOAD_UMIN:
     case ISD::ATOMIC_SWAP:
-      return getHSAILAtomicRMWOpcode(Node);
-    case ISD::ATOMIC_CMP_SWAP:  return getHSAILAtomicCasOpcode(Node);
+      opcode = getHSAILAtomicRMWOpcode(Node);
+      break;
+    case ISD::ATOMIC_CMP_SWAP:
+      opcode = getHSAILAtomicCasOpcode(Node);
+      break;
     default: llvm_unreachable("unknown atomic SDNode");
   }
+
+  if (MemOpHasPtr32(Node)) {
+    opcode = HSAIL::getAtomicPtr32Version(opcode);
+    assert(opcode != -1);
+  }
+
+  return opcode;
 }
 
 static SDValue getBRIGTypeForAtomic(SelectionDAG *CurDAG,
@@ -701,13 +716,8 @@ bool HSAILDAGToDAGISel::IsOREquivalentToADD(SDValue Op)
 }
 
 /// \brief Return true if the pointer is 32-bit in large and small models
-///
-/// We accept an SDNode to keep things simple in the TD files. The
-/// cast to MemSDNode will never assert because this predicate is only
-/// used in a pattern fragment that matches load or store nodes.
-bool HSAILDAGToDAGISel::MemOpHasPtr32(SDNode *N) const {
-  unsigned AddrSpace = cast<MemSDNode>(N)->getAddressSpace();
-  switch (AddrSpace) {
+static bool addrSpaceHasPtr32(unsigned AS) {
+  switch (AS) {
   default : return false;
 
   case HSAILAS::GROUP_ADDRESS:
@@ -718,7 +728,14 @@ bool HSAILDAGToDAGISel::MemOpHasPtr32(SDNode *N) const {
   }
 }
 
-bool  HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr,
+/// We accept an SDNode to keep things simple in the TD files. The
+/// cast to MemSDNode will never assert because this predicate is only
+/// used in a pattern fragment that matches load or store nodes.
+bool HSAILDAGToDAGISel::MemOpHasPtr32(SDNode *N) const {
+  return addrSpaceHasPtr32(cast<MemSDNode>(N)->getAddressSpace());
+}
+
+bool HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr,
   SDValue &Base,
   SDValue &Reg,
   int64_t &Offset,

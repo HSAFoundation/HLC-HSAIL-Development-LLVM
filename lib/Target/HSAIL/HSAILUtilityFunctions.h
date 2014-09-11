@@ -175,6 +175,7 @@ bool isTernaryAtomicOp(const llvm::MachineInstr *MI);
 // (unary). These two operations do not have equivalent noret
 // versions in HSAIL.
 int getAtomicNoretVersion(uint16_t Opcode);
+int getAtomicPtr32Version(uint16_t Opcode);
 
 int getVectorLdStOpcode(uint16_t Opcode, unsigned vsize);
 
