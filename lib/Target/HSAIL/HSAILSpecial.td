@@ -93,7 +93,8 @@ let isAsCheapAsAMove = 1 in {
 // SYNC OCL 2.0
 
 def hsail_memfence : HSAILInst< (outs),
-    (ins i32imm:$order, i32imm:$globalscope, i32imm:$groupscope, i32imm:$imagescope), "",
+    (ins i32imm:$order, i32imm:$globalscope, i32imm:$groupscope, i32imm:$imagescope),
+    "memfence_$order$globalscope$groupscope$imagescope",
     [(int_HSAIL_memfence (i32 imm:$order), (i32 imm:$globalscope), (i32 imm:$groupscope), (i32 imm:$imagescope))]>;
 
 // Cross-Lane Operations
@@ -112,12 +113,12 @@ def hsail_memfence : HSAILInst< (outs),
                           (int_HSAIL_activelaneid_u32))]>;
 
   def activelanecount_u32_b1 :   HSAILInst<(outs GPR32:$dst), (ins CR:$src),
-                    "activelanecount_u32_b1\t$dst",
+                    "activelanecount_u32_b1\t$dst, $src",
                     [(set (i32 GPR32:$dst),
                           (int_HSAIL_activelanecount_u32_b1 (i1 CR:$src)))]>;
 
   def activelanecount_u32_b1_i : HSAILInst<(outs GPR32:$dst), (ins i1imm:$src),
-                    "activelanecount_u32_b1\t$dst",
+                    "activelanecount_u32_b1\t$dst, $src",
                     [(set (i32 GPR32:$dst),
                           (int_HSAIL_activelanecount_u32_b1 (i1 imm:$src)))]>;
 
@@ -150,13 +151,13 @@ def hsail_memfence : HSAILInst< (outs),
 
     def activelanecount_width_u32_b1 : HSAILInst<(outs GPR32:$dst),
                                                  (ins CR:$src),
-                      "activelanecount_width(WAVESIZE)_u32_b1\t$dst",
+                      "activelanecount_width(WAVESIZE)_u32_b1\t$dst, $src",
                       [(set (i32 GPR32:$dst),
                             (int_HSAIL_activelanecount_width_u32_b1
                                 (i1 CR:$src)))]>;
     def activelanecount_width_u32_b1_i : HSAILInst<(outs GPR32:$dst),
                                                    (ins i1imm:$src),
-                      "activelanecount_width(WAVESIZE)_u32_b1\t$dst",
+                      "activelanecount_width(WAVESIZE)_u32_b1\t$dst, $src",
                       [(set (i32 GPR32:$dst),
                             (int_HSAIL_activelanecount_width_u32_b1
                                 (i1 imm:$src)))]>;

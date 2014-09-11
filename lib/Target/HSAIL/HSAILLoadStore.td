@@ -155,7 +155,8 @@ defm segmentp_private : SegmentPInst<int_HSAIL_segmentp_private, "segmentp_priva
 
 let isNotDuplicable = 1, hasCtrlDep = 1, hasSideEffects = 1 in {
   def arg_decl : HSAILInst<(outs ), (ins PtrRC:$v, BRIG_TYPE_OPND:$brig_type, i32imm:$size,
-                                     i32imm:$alignnment), "", []>;
+                                     i32imm:$alignnment),
+                                     "align $alignnment arg_$brig_type\t$v[$size]", []>;
 }
 
 class LdStVectorMap<string op, int size> {
@@ -181,7 +182,7 @@ multiclass HSAIL_LD<RegisterClass RC, DAGOperand MPtr>
       def _v1: HSAILInst<(outs RC:$dst),
                          (ins MPtr:$ptr, BRIG_TYPE_OPND:$t, WIDTH_OPND:$w,
                               CONST_OPERAND:$isConst),
-                        "ld\t$dst, $ptr", []>,
+                        "ld_$w$isConst$t\t$dst, $ptr", []>,
                LdStVectorMap<NAME, 1>;
     }
 
@@ -189,21 +190,21 @@ multiclass HSAIL_LD<RegisterClass RC, DAGOperand MPtr>
       def _v2 : HSAILInst<(outs RC:$dst1, RC:$dst2),
                           (ins MPtr:$ptr, BRIG_TYPE_OPND:$t, WIDTH_OPND:$w,
                                CONST_OPERAND:$isConst),
-                           "ld_v2\t($dst1, $dst2 ), $ptr", []>,
+                           "ld_v2_$w$isConst$t\t($dst1, $dst2 ), $ptr", []>,
                LdStVectorMap<NAME, 2>;
     }
     let addressOpNum = 3 in {
       def _v3 : HSAILInst<(outs RC:$dst1, RC:$dst2, RC:$dst3),
                           (ins MPtr:$ptr, BRIG_TYPE_OPND:$t, WIDTH_OPND:$w,
                                CONST_OPERAND:$isConst),
-                           "ld_v3\t($dst1, $dst2, $dst3 ), $ptr", []>,
+                           "ld_v3_$w$isConst$t\t($dst1, $dst2, $dst3 ), $ptr", []>,
                 LdStVectorMap<NAME, 3>;
     }
     let addressOpNum = 4 in {
       def _v4 : HSAILInst<(outs RC:$dst1, RC:$dst2, RC:$dst3, RC:$dst4),
                           (ins MPtr:$ptr, BRIG_TYPE_OPND:$t, WIDTH_OPND:$w,
                                CONST_OPERAND:$isConst),
-                           "ld_v4\t($dst1, $dst2, $dst3, $dst4 ), $ptr", []>,
+                           "ld_v4_$w$isConst$t\t($dst1, $dst2, $dst3, $dst4 ), $ptr", []>,
                 LdStVectorMap<NAME, 4>;
     }
   }
@@ -254,7 +255,7 @@ let hasSideEffects = 1, hasCtrlDep = 1 in {
 let hasAddress = 1, mayLoad = 1, isPseudo = 1, hasSideEffects = 0 in {
   def ld_b1_ptr32 : HSAILInst<(outs CR:$dst), (ins MEMOP32:$ptr, BRIG_TYPE_OPND:$t,
                                              WIDTH_OPND:$w, CONST_OPERAND:$isConst),
-                              "ld_b1\t$dst, $ptr", []>;
+                              "ld_b1_$w$isConst$t\t$dst, $ptr", []>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -321,7 +322,7 @@ def : Pat<(StoreIsPtr32<store>         (f64 GPR64:$val), ADDR:$ptr), (st_64_ptr3
 
 let hasAddress = 1, mayStore = 1, isPseudo = 1, hasSideEffects = 0 in {
   def st_b1_ptr32 : HSAILInst<(outs), (ins CR:$val, MEMOP32:$ptr, BRIG_TYPE_OPND:$t),
-                              "st_b1\t$val, $ptr", []>;
+                              "st_b1_$t\t$val, $ptr", []>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -329,7 +330,7 @@ let hasAddress = 1, mayStore = 1, isPseudo = 1, hasSideEffects = 0 in {
 
 class LdaAddr<RegisterClass RC, DAGOperand MPtr>
       : HSAILInst<(outs RC:$dst), (ins MPtr:$addr, i32imm:$segment),
-      "lda\t$dst, $addr", []> {
+      "lda_$segment\t$dst, $addr", []> {
   let hasAddress = 1;
   let addressOpNum = 1;
   let neverHasSideEffects = 1;
