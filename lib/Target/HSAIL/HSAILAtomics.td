@@ -31,7 +31,7 @@ let mayLoad = 1, mayStore = 1 in {
 
 // gcn atomic append/consume
 class AtomicCounter32<Intrinsic intr, string asm>:
-    HSAILInst<(outs GPR32:$dst), (ins MEMOP:$src),
+    HSAILInst<(outs GPR32:$dst), (ins MEMOP32:$src),
           !strconcat(asm, "\t $dst, [$src]"),
           [(set (i32 GPR32:$dst), (intr ADDR:$src))]>
 {
