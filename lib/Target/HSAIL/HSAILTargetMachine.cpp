@@ -33,8 +33,6 @@ using namespace llvm;
 static cl::opt<bool> DisableHSAILCFGOpts("disable-hsail-cfg-opts",
   cl::desc("Disable hsail control flow optimizations"));
 
-extern llvm::cl::opt<TargetMachine::CodeGenFileType> FileType;
-
 // TODO_HSA: As soon as -enable-experimetal llc option is not needed anymore
 //           the code block below shall be removed.
 namespace llvm {
