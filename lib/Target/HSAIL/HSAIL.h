@@ -81,9 +81,6 @@ createHSAILUniformOperations(const HSAILTargetMachine &TM);
 FunctionPass *
 createHSAILOptimizeMemoryOps(const HSAILTargetMachine &TM);
 
-FunctionPass *
-createHSAILResizeLocalPointer(const HSAILTargetMachine &TM);
-
 ///
 ///
 FunctionPass*
