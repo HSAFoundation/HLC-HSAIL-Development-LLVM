@@ -369,8 +369,8 @@ def int_HSAIL_fract_f32 : GCCBuiltin<"__hsail_fraction_f32">, UnaryFloatIntrNoMe
 def int_HSAIL_fract_f64 : GCCBuiltin<"__hsail_fraction_f64">, UnaryFloatIntrNoMem;
 // > HSAIL_SPEC_CURRENT
 
-def int_HSAIL_mad_s32 : GCCBuiltin<"__hsail_mad_s32">, TernaryIntIntrNoMem; // unused?
 def int_HSAIL_mad_u32 : GCCBuiltin<"__hsail_mad_u32">, TernaryIntIntrNoMem;
+def int_HSAIL_mad_u64 : GCCBuiltin<"__hsail_mad_u64">, TernaryIntIntrNoMem;
 
 def int_HSAIL_mulhi_s32 : GCCBuiltin<"__hsail_mulhi_s32">, BinaryIntIntrNoMem;
 def int_HSAIL_mulhi_u32 : GCCBuiltin<"__hsail_mulhi_u32">, BinaryIntIntrNoMem;

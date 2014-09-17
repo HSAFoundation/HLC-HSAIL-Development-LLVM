@@ -12,21 +12,11 @@ def cvt_b1_u32_a : HSAILInst<(outs GPR32:$dst), (ins CR:$src),
                  [(set (i32 GPR32:$dst),
                        (anyext (i1 CR:$src)))]>;
 
-def sext_cmov_s32_b1 : HSAILInst<(outs GPR32:$dst), (ins CR:$src),
-                 "cmov_b32\t$dst, $src, -1, 0",
-                 [(set (i32 GPR32:$dst),
-                       (sext (i1 CR:$src)))]>;
-
 // 1bit => 64bit
 def cvt_b1_u64 : HSAILInst<(outs GPR64:$dst), (ins CR:$src),
                  "cvt_u64_b1\t$dst, $src",
                  [(set (i64 GPR64:$dst),
                        (zext (i1 CR:$src)))]>;
-
-def sext_cmov_s64_b1 : HSAILInst<(outs GPR64:$dst), (ins CR:$src),
-                "cmov_b64\t$dst, $src, -1, 0",
-                 [(set (i64 GPR64:$dst),
-                       (sext (i1 CR:$src)))]>;
 
 // 32bit => 64bit
 def cvt_u32_u64 : HSAILInst<(outs GPR64:$dst), (ins GPR32:$src),
@@ -422,3 +412,6 @@ def bitcvt_u64_f64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src),
                      "mov_b64\t$dst, $src",
                      [(set (f64 GPR64:$dst), (bitconvert (i64 GPR64:$src)))]>;
 }
+
+def : Pat<(i32 (sext (i1 CR:$src))), (cmov_b32_i_ii CR:$src, -1, 0)>;
+def : Pat<(i64 (sext (i1 CR:$src))), (cmov_b64_i_ii CR:$src, -1, 0)>;

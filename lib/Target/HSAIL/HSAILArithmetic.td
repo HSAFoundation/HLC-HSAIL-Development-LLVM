@@ -39,8 +39,8 @@ defm mulhi_intrn : BinaryIntrU32<int_HSAIL_mulhi_u32, "mulhi_u32">;
 defm mulhi_intrn : BinaryIntrS64<int_HSAIL_mulhi_s64, "mulhi_s64">;
 defm mulhi_intrn : BinaryIntrU64<int_HSAIL_mulhi_u64, "mulhi_u64">;
 
-defm imad  : TernaryIntrS32<int_HSAIL_mad_s32, "mad_s32">;
 defm umad  : TernaryIntrU32<int_HSAIL_mad_u32, "mad_u32">;
+defm umad  : TernaryIntrU64<int_HSAIL_mad_u64, "mad_u64">;
 
 // u[32,64] forms illegal in HSAIL
 defm neg : UnaryPatS32<ineg, "neg_s32">;
@@ -543,12 +543,10 @@ multiclass GcnFldexp<Intrinsic intr, string asm, ValueType Ty, Operand OpTy,
 defm gcn_fldexp_f32 : GcnFldexp<int_HSAIL_gcn_fldexp_f32, "gcn_fldexp_f32", f32, f32imm, fpimm, GPR32>;
 defm gcn_fldexp_f64 : GcnFldexp<int_HSAIL_gcn_fldexp_f64, "gcn_fldexp_f64", f64, f64imm, fpimm, GPR64>;
 
-def unpack_u32_u8x4: HSAILInst<(outs GPR32:$dst), (ins GPR32:$src, i32imm:$ind),
-                                 "unpack_u32_u8x4\t $dst, $src, $ind",
-                                 []>;
-def unpack_u32_u16x2: HSAILInst<(outs GPR32:$dst), (ins GPR32:$src, i32imm:$ind),
-                                 "unpack_u32_u8x4\t $dst, $src, $ind",
-                                 []>;
+let neverHasSideEffects = 1 in {
+def pack_u32x2_u32_iri: HSAILInst<(outs GPR64:$dst), (ins i32imm:$src1, GPR32:$src2, i32imm:$src3),
+                                  "pack_u32x2_u32\t $dst, $src1, $src2, $src3", []>;
+}
 
 // Map llvm fabs intrinsics to hsail fabs intrinsics
 def : Pat<(fabs GPR32:$dst), (fabs_f32 GPR32:$dst)>;
