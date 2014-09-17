@@ -1,3 +1,4 @@
+
 // Copyright (c) 2011, Advanced Micro Devices, Inc.
 // All rights reserved.
 //
@@ -633,14 +634,7 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
       RTI(brig) << oss.str();
     }
   
-    if (!isKernel) {
-      oss.str().clear();  
-      binaryForEach(mMFI->printf_begin(), mMFI->printf_end(), printfPrint, oss);
-      if ( ! oss.str().empty() ) {
-        RTI(brig) << oss.str();
-      }
-      mMF->getMMI().getObjFileInfo<HSAILModuleInfo>().add_printf_offset(mMFI->printf_size());
-    } else {
+    if (isKernel) {
       for (StringMap<SamplerInfo>::iterator 
         smb = mMFI->sampler_begin(),
         sme = mMFI->sampler_end(); smb != sme; ++ smb) {
@@ -660,10 +654,7 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
         RTI(brig) << oss.str();
       }
     }
-
-    if (isKernel && mMFI->printf_size() > 0) {
-      RTI(brig) << ";uavid:" << mSTM->device()->getResourceID(HSAILDevice::GLOBAL_ID);
-    }
+    
     if (isKernel) {
       RTI(brig) << "privateid:" << mSTM->device()->getResourceID(HSAILDevice::SCRATCH_ID);
     }

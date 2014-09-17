@@ -233,9 +233,6 @@ namespace llvm
     /// A set of all errors that occured in the backend for this function.
     DenseSet<const char *> mErrors;
 
-    /// A mapping of printf data and the printf string
-    std::map<std::string, HSAILPrintfInfo*> mPrintfMap;
-
     /// A set of all of the metadata that is used for the current function.
     std::set<std::string> mMetadataFunc;
 
@@ -258,7 +255,6 @@ namespace llvm
     public:
 
     explicit HSAILMachineFunctionInfo(MachineFunction &MF);
-    virtual ~HSAILMachineFunctionInfo();
 
     unsigned int getCalleeSavedFrameSize() const;
     void setCalleeSavedFrameSize(unsigned int bytes);
@@ -410,15 +406,6 @@ namespace llvm
     bool errors_empty() { return mErrors.empty(); }
     error_iterator errors_begin() { return mErrors.begin(); }
     error_iterator errors_end() { return mErrors.end(); }
-
-    /// Add a string to the printf map
-    uint32_t addPrintfString(std::string &name, unsigned offset);
-    /// Add a operand to the printf string
-    void addPrintfOperand(std::string &name, size_t idx, uint32_t size);
-    bool printf_empty() { return mPrintfMap.empty(); }
-    size_t printf_size() { return mPrintfMap.size(); }
-    printf_iterator printf_begin() { return mPrintfMap.begin(); }
-    printf_iterator printf_end() { return mPrintfMap.end(); }
 
     /// Add a string to the metadata set for a function/kernel wrapper
     void addMetadata(const char *md, bool kernelOnly = false);
