@@ -42,7 +42,7 @@ enum ActionType {
   PrintSets,
   GenOptParserDefs,
   GenCTags,
-  GenBrigWriter
+  GenMnemonicMapper
 };
 
 namespace {
@@ -82,12 +82,8 @@ namespace {
                                "Print enum values for a class"),
                     clEnumValN(PrintSets, "print-sets",
                                "Print expanded sets for testing DAG exprs"),
-                    clEnumValN(GenOptParserDefs, "gen-opt-parser-defs",
-                               "Generate option definitions"),
-                    clEnumValN(GenCTags, "gen-ctags",
-                               "Generate ctags-compatible index"),
-                    clEnumValN(GenBrigWriter, "gen-brig-writer",
-                               "Generate BRIG writer"),
+                    clEnumValN(GenMnemonicMapper, "gen-mnemonic-mapper",
+                               "Generate mnemonic mapper"),
                     clEnumValEnd));
 
   cl::opt<std::string>
@@ -170,8 +166,8 @@ bool LLVMTableGenMain(raw_ostream &OS, RecordKeeper &Records) {
   case GenCTags:
     EmitCTags(Records, OS);
     break;
-  case GenBrigWriter:
-    EmitBrigWriter(Records, OS);
+  case GenMnemonicMapper:
+    EmitMnemonicMapper(Records, OS);
     break;
   }
 

@@ -58,7 +58,7 @@
 using namespace llvm;
 using std::string;
 
-#include "HSAILGenBrigWriter.inc"
+#include "HSAILGenMnemonicMapper.inc"
 #define GET_LLVM_INTRINSIC_FOR_GCC_BUILTIN
 #include "HSAILGenIntrinsics.inc"
 #undef GET_LLVM_INTRINSIC_FOR_GCC_BUILTIN
@@ -833,24 +833,31 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     return instAtomic;
   }
 
-  if (II->getOpcode() == llvm::HSAIL::hsail_memfence) {
-    HSAIL_ASM::InstMemFence memfence = 
-        brigantine.addInst< HSAIL_ASM::InstMemFence >(Brig::BRIG_OPCODE_MEMFENCE,
-                Brig::BRIG_TYPE_NONE);
-    memfence.memoryOrder() =
-        II->getOperand(HSAIL_MEMFENCE::MEMORY_ORDER_INDEX).getImm();
-    memfence.globalSegmentMemoryScope() =
-        II->getOperand(HSAIL_MEMFENCE::GLOBAL_SCOPE_INDEX).getImm();
-    memfence.groupSegmentMemoryScope() =
-        II->getOperand(HSAIL_MEMFENCE::GROUP_SCOPE_INDEX).getImm();
-    memfence.imageSegmentMemoryScope() =
-        II->getOperand(HSAIL_MEMFENCE::IMAGE_SCOPE_INDEX).getImm();
-    return memfence;
+  if (HSAIL::isImageInst(II)) {
+    const char *AsmStr = getInstMnemonic(II);
+    HSAIL_ASM::InstImage inst = HSAIL_ASM::parseMnemo(AsmStr, brigantine);
+    BrigEmitImageInst(II, inst);
+    return inst;
+  }
+
+  if (HSAIL::isCrosslaneInst(II)) {
+    const char *AsmStr = getInstMnemonic(II);
+    HSAIL_ASM::Inst inst = HSAIL_ASM::parseMnemo(AsmStr, brigantine);
+    BrigEmitVecOperand(II, 0, 4);
+    BrigEmitOperand(II, 4, inst);
+    return inst;
   }
 
   switch(II->getOpcode()) {
-  default:
-    return BrigEmitInstruction(II);
+  default: {
+    const char *AsmStr = getInstMnemonic(II);
+    HSAIL_ASM::Inst inst = HSAIL_ASM::parseMnemo(AsmStr, brigantine);
+    unsigned NumOperands = II->getNumOperands();
+    for (unsigned OpNum=0; OpNum != NumOperands; ++OpNum) {
+      BrigEmitOperand(II, OpNum, inst);
+    }
+    return inst;
+  }
 
   case HSAIL::ret:
     return brigantine.addInst<HSAIL_ASM::InstBasic>(Brig::BRIG_OPCODE_RET,Brig::BRIG_TYPE_NONE);
@@ -986,6 +993,20 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     BrigEmitVecArgDeclaration(II);
     return HSAIL_ASM::Inst();
 
+  case HSAIL::hsail_memfence: {
+    HSAIL_ASM::InstMemFence memfence =
+        brigantine.addInst<HSAIL_ASM::InstMemFence>(Brig::BRIG_OPCODE_MEMFENCE,
+                                                    Brig::BRIG_TYPE_NONE);
+    memfence.memoryOrder() =
+        II->getOperand(HSAIL_MEMFENCE::MEMORY_ORDER_INDEX).getImm();
+    memfence.globalSegmentMemoryScope() =
+        II->getOperand(HSAIL_MEMFENCE::GLOBAL_SCOPE_INDEX).getImm();
+    memfence.groupSegmentMemoryScope() =
+        II->getOperand(HSAIL_MEMFENCE::GROUP_SCOPE_INDEX).getImm();
+    memfence.imageSegmentMemoryScope() =
+        II->getOperand(HSAIL_MEMFENCE::IMAGE_SCOPE_INDEX).getImm();
+    return memfence;
+  }
   case HSAIL::ftz_f32: {
   // add_ftz_f32  $dst, $src, 0F00000000
     HSAIL_ASM::InstMod ftz = brigantine.addInst<HSAIL_ASM::InstMod>(

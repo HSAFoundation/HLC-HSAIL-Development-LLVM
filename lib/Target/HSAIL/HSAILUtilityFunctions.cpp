@@ -549,22 +549,6 @@ const llvm::MachineOperand &getLoadConstQual(const llvm::MachineInstr *MI)
   return getLoadConstQual(const_cast<llvm::MachineInstr*>(MI));
 }
 
-
-bool isLoad(const llvm::MachineInstr *MI)
-{
-  return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_LOAD);
-}
-
-bool isStore(const llvm::MachineInstr *MI)
-{
-  return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_STORE);
-}
-
-bool isConv(const llvm::MachineInstr *MI)
-{
-  return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_CONV);
-}
-
 unsigned getAddrSpace(const llvm::MachineInstr *MI)
 {
   assert(MI->hasOneMemOperand());\
@@ -862,11 +846,6 @@ bool isTernaryAtomicOp(const MachineInstr *MI)
 
   const MCInstrDesc &D = MI->getDesc();
   return ATOMIC_TERNARY_NUM_OPS == (D.getNumOperands() - D.getNumDefs());
-}
-
-bool isAtomicOp(const MachineInstr *MI)
-{
-  return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_ATOMIC);
 }
 
 bool isRetAtomicOp(const MachineInstr *MI)
