@@ -146,9 +146,25 @@ const llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getLoadConstQual(llvm::MachineInstr *MI);
 const llvm::MachineOperand &getLoadConstQual(const llvm::MachineInstr *MI);
 
-bool isLoad(const llvm::MachineInstr *MI);
-bool isStore(const llvm::MachineInstr *MI);
-bool isConv(const llvm::MachineInstr *MI);
+static inline bool isLoad(const llvm::MachineInstr *MI) {
+  return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_LOAD);
+}
+
+static inline bool isStore(const llvm::MachineInstr *MI) {
+  return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_STORE);
+}
+
+static inline bool isConv(const llvm::MachineInstr *MI) {
+  return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_CONV);
+}
+
+static inline bool isImageInst(const llvm::MachineInstr *MI) {
+  return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_IMAGEINST);
+}
+
+inline bool isCrosslaneInst(const llvm::MachineInstr *MI) {
+  return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_CROSSLANE);
+}
 
 unsigned getAddrSpace(const llvm::MachineInstr *MI);
 bool HSAILisArgInst(const llvm::TargetMachine &TM, const llvm::MachineInstr *MI);
@@ -160,7 +176,10 @@ bool notUsedInKernel(const llvm::GlobalVariable *GV);
 bool isIgnoredGV(const llvm::GlobalVariable *GV);
 bool sanitizeGlobalValueName(llvm::GlobalValue *GV);
 
-bool isAtomicOp(const llvm::MachineInstr *MI);
+static inline bool isAtomicOp(const llvm::MachineInstr *MI) {
+  return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_ATOMIC);
+}
+
 bool isRetAtomicOp(const llvm::MachineInstr *MI);
 bool isNoretAtomicOp(const llvm::MachineInstr *MI);
 

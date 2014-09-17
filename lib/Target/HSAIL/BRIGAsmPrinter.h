@@ -126,7 +126,6 @@ public:
 
 public:
 
-  HSAIL_ASM::Inst BrigEmitInstruction(const MachineInstr *MI);
   bool runOnMachineFunction(MachineFunction &F);
   bool isMacroFunc(const MachineInstr *MI);
   bool isIdentityCopy(const MachineInstr *MI) const;
@@ -170,8 +169,6 @@ protected:
 
   HSAIL_ASM::BrigContainer bc;
   HSAIL_ASM::Brigantine brigantine;
-
-  const char * getRegisterName(unsigned RegNo);
 
   void BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable, Constant *);
   void BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSAIL_ASM::Inst inst);

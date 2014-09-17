@@ -222,7 +222,9 @@ namespace llvm {
       IS_LOAD         = 4,
       IS_STORE        = 5,
       IS_CONV         = 6,
-      IS_ATOMIC       = 7
+      IS_ATOMIC       = 7,
+      IS_IMAGEINST    = 8,
+      IS_CROSSLANE    = 9
     };
   }
 

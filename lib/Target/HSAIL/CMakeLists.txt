@@ -8,7 +8,7 @@ tablegen(LLVM HSAILGenDAGISel.inc -gen-dag-isel)
 tablegen(LLVM HSAILGenSubtargetInfo.inc -gen-subtarget)
 tablegen(LLVM HSAILGenCallingConv.inc -gen-callingconv)
 tablegen(LLVM HSAILGenIntrinsics.inc -gen-tgt-intrinsic)
-tablegen(LLVM HSAILGenBrigWriter.inc -gen-brig-writer)
+tablegen(LLVM HSAILGenMnemonicMapper.inc -gen-mnemonic-mapper)
 
 add_public_tablegen_target(HSAILCommonTableGen)
 

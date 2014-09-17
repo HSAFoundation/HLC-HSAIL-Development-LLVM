@@ -18,8 +18,6 @@ class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
   : Instruction {
   field bits<32> Inst;
   bit hasWidthOperand = 0;
-  bit isImageInst = 0;
-  bit isCrossLaneInst = 0;
   let Namespace = "HSAIL";
   dag OutOperandList = outs;
   dag InOperandList = ins;
@@ -40,6 +38,10 @@ class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
   let TSFlags{6} = isConv;
   bit isAtomic = 0;
   let TSFlags{7} = isAtomic;
+  bit isImageInst = 0;
+  let TSFlags{8} = isImageInst;
+  bit isCrossLaneInst = 0;
+  let TSFlags{9} = isCrossLaneInst;
 }
 
 let TargetPrefix = "HSAIL", isTarget = 1 in {
