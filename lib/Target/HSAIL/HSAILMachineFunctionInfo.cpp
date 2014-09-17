@@ -125,14 +125,6 @@ HSAILMachineFunctionInfo::HSAILMachineFunctionInfo(MachineFunction& MF)
   mStackSize = -1;
 }
 
-HSAILMachineFunctionInfo::~HSAILMachineFunctionInfo()
-{
-  for (std::map<std::string, HSAILPrintfInfo*>::iterator pfb = printf_begin(),
-      pfe = printf_end(); pfb != pfe; ++pfb) {
-    delete pfb->second;
-  }
-}
-
 unsigned int
 HSAILMachineFunctionInfo::getCalleeSavedFrameSize() const
 {
@@ -477,27 +469,6 @@ HSAILMachineFunctionInfo::addErrorMsg(const char *msg, ErrorMsgEnum val)
   } else if (val == ALWAYS) {
     mErrors.insert(msg);
   }
-}
-
-  uint32_t
-HSAILMachineFunctionInfo::addPrintfString(std::string &name, unsigned offset)
-{
-  if (mPrintfMap.find(name) != mPrintfMap.end()) {
-    return mPrintfMap[name]->getPrintfID();
-  } else {
-    HSAILPrintfInfo *info = new HSAILPrintfInfo;
-    info->setPrintfID(mPrintfMap.size() + offset);
-    mPrintfMap[name] = info;
-    return info->getPrintfID();
-  }
-}
-
-  void
-HSAILMachineFunctionInfo::addPrintfOperand(std::string &name,
-    size_t idx,
-    uint32_t size)
-{
-  mPrintfMap[name]->addOperand(idx, size);
 }
 
   void
