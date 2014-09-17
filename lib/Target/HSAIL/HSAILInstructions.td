@@ -1036,10 +1036,6 @@ multiclass ShiftOpU64<SDNode op, string asm> {
   def _ir_u64 : HSAILInst<(outs GPR64:$dst), (ins i64imm:$src1, GPR32:$src2),
       !strconcat(asm, "\t $dst, $src1, $src2"),
       [(set (i64 GPR64:$dst), (op (i64 imm:$src1), (i32 GPR32:$src2)))]>;
-
-  def _ri64_u64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src1, i64imm:$src2),
-      !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (i64 GPR64:$dst), (op (i64 GPR64:$src1), (i64 imm:$src2)))]>;
 }
 
 multiclass TernaryOpU64<SDNode op, string asm> {
@@ -1127,13 +1123,9 @@ multiclass ShiftOpS64<SDNode op, string asm> {
       !strconcat(asm, "\t $dst, $src1, $src2"),
       [(set (i64 GPR64:$dst), (op (i64 GPR64:$src1), (i32 imm:$src2)))]>;
 
-  def _64_s64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src1, GPR64:$src2),
+  def _ir_s64 : HSAILInst<(outs GPR64:$dst), (ins i64imm:$src1, GPR32:$src2),
       !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (i64 GPR64:$dst), (op (i64 GPR64:$src1), (i64 GPR64:$src2)))]>;
-
-  def _ri64_s64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src1, i64imm:$src2),
-      !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (i64 GPR64:$dst), (op (i64 GPR64:$src1), (i64 imm:$src2)))]>;
+      [(set (i64 GPR64:$dst), (op (i64 imm:$src1), (i32 GPR32:$src2)))]>;
 }
 
 multiclass TernaryOpS64<SDNode op, string asm> {
