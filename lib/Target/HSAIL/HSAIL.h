@@ -101,7 +101,8 @@ ModulePass* createHSAILInsertKernelIndexMetadataPass();
 FunctionPass *createHSAILAddrSpaceCastPass();
 
 ModulePass *createHSAILPrintfRuntimeBindingKernArg(HSAILTargetMachine &TM);
-FunctionPass *createHSAILPrintfRuntimeBindingMetadata(HSAILTargetMachine &TM);
+ModulePass* createHSAILProducePrintfMetadataPass();
+FunctionPass *createHSAILConsumePrintfMetadataPass(HSAILTargetMachine &TM);
 
 ModulePass *createHSAILNullPtrInsertionPass();
 
