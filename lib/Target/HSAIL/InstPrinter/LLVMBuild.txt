@@ -1,4 +1,4 @@
-;===- ./lib/Target/HSAIL/LLVMBuild.txt -------------------------*- Conf -*--===;
+;===- ./lib/Target/HSAIL/InstPrinter/LLVMBuild.txt -----------*- Conf -*--===;
 ;
 ;                     The LLVM Compiler Infrastructure
 ;
@@ -15,18 +15,10 @@
 ;
 ;===------------------------------------------------------------------------===;
 
-[common]
-subdirectories = InstPrinter MCTargetDesc TargetInfo 
-
 [component_0]
-type = TargetGroup
-name = HSAIL
-parent = Target
-has_asmprinter = 1
-
-[component_1]
 type = Library
-name = HSAILCodeGen
+name = HSAILAsmPrinter
 parent = HSAIL
-required_libraries = AsmPrinter CodeGen Core HSAILAsmPrinter HSAILDesc MC SelectionDAG Support Target
+required_libraries = MC Support
 add_to_library_groups = HSAIL
+

@@ -35,6 +35,7 @@ set(sources
   HSAILMachineFunctionInfo.cpp
   HSAILMCAsmInfo.cpp
   HSAILMCCodeEmitter.cpp
+  HSAILMCInstLower.cpp
   HSAILModuleInfo.cpp
   HSAILParamManager.cpp
   HSAILRegisterInfo.cpp
@@ -79,6 +80,6 @@ target_link_libraries(LLVMHSAILCodeGen PRIVATE HSAIL)
 #   )
 #add_subdirectory(AsmParser)
 #add_subdirectory(Disassembler)
-#add_subdirectory(InstPrinter)
+add_subdirectory(InstPrinter)
 add_subdirectory(TargetInfo)
 add_subdirectory(MCTargetDesc)
