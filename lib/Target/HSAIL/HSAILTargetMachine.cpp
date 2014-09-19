@@ -11,10 +11,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "HSAILMCAsmInfo.h"
 #include "HSAILTargetMachine.h"
 #include "HSAIL.h"
-
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/MC/MCCodeGenInfo.h"
 #include "llvm/MC/MCCodeEmitter.h"
@@ -78,76 +76,10 @@ namespace llvm {
 
 }
 
-template<bool Is64Bit> static MCAsmInfo*
-createMCAsmInfo(const Target &T, StringRef TT) {
-  return new HSAILELFMCAsmInfo(TT);
-}
-
-// MC related code probably should be in MCTargetDesc subdir
-static MCCodeGenInfo *createHSAILMCCodeGenInfo(StringRef TT, Reloc::Model RM,
-                                               CodeModel::Model CM,
-                                               CodeGenOpt::Level OL)
-{
-  MCCodeGenInfo *X = new MCCodeGenInfo();
-  X->InitMCCodeGenInfo(RM, CM, OL);
-  return X;
-}
-
-static MCStreamer*
-createMCStreamer(const Target &T,
-                 const std::string &TT,
-                 MCContext &Ctx,
-                 //TargetAsmBackend &TAB,
-		 MCAsmBackend &TAB,
-                 raw_ostream &_OS,
-                 MCCodeEmitter *_Emitter,
-                 bool RelaxAll,
-                 bool NoExecStack) {
-  Triple TheTriple(TT);
-  
-  // pass 0 instead of &_OS, if you do not want DWARF data to be forwarded to the provided stream
-  // this stream will be deleted in the destructor of BRIGAsmPrinter
-  RawVectorOstream *rvos = new RawVectorOstream(&_OS); 
-
-  return createBRIGDwarfStreamer(Ctx, TAB, *rvos, _Emitter, RelaxAll, NoExecStack);
-}
-
-MCStreamer* llvm::createHSAILMCStreamer(const Target &T,
-                 StringRef TT,
-                 MCContext &Ctx,
-                 //TargetAsmBackend &TAB,
-	             MCAsmBackend &TAB,
-                 raw_ostream &_OS,
-                 MCCodeEmitter *_Emitter,
-                 const MCSubtargetInfo &MSI,
-                 bool RelaxAll,
-                 bool NoExecStack) {
-  return createMCStreamer(T, TT.str(), Ctx, TAB, _OS, _Emitter, RelaxAll, NoExecStack);
-}
-
 extern "C" void LLVMInitializeHSAILTarget() {
   // Register the target.
   RegisterTargetMachine<HSAIL_32TargetMachine> X(TheHSAIL_32Target);
   RegisterTargetMachine<HSAIL_64TargetMachine> Y(TheHSAIL_64Target);
-
-  // Register the target asm info.
-  RegisterMCAsmInfo<HSAILELFMCAsmInfo> A(TheHSAIL_32Target);
-  RegisterMCAsmInfo<HSAILELFMCAsmInfo> B(TheHSAIL_64Target);
-
-  RegisterMCCodeGenInfoFn C(TheHSAIL_32Target, createHSAILMCCodeGenInfo);
-  RegisterMCCodeGenInfoFn D(TheHSAIL_64Target, createHSAILMCCodeGenInfo);
-
-  TargetRegistry::RegisterMCCodeEmitter(TheHSAIL_32Target, createHSAIL_32MCCodeEmitterForLLVM32);
-  TargetRegistry::RegisterMCAsmBackend(TheHSAIL_32Target,
-                                    createHSAIL_32AsmBackendForLLVM32);
-  TargetRegistry::RegisterMCObjectStreamer(TheHSAIL_32Target,
-                                        createHSAILMCStreamer);
-
-  TargetRegistry::RegisterMCCodeEmitter(TheHSAIL_64Target, createHSAIL_64MCCodeEmitterForLLVM32);
-  TargetRegistry::RegisterMCAsmBackend(TheHSAIL_64Target,
-                                    createHSAIL_64AsmBackendForLLVM32);
-  TargetRegistry::RegisterMCObjectStreamer(TheHSAIL_64Target,
-                                        createHSAILMCStreamer);
 }
 
 
@@ -269,5 +201,3 @@ HSAIL_64TargetMachine::HSAIL_64TargetMachine(const Target &T, StringRef TT,
               "' does not match target 'hsail-64', expecting hsail64-pc-amdopencl.\n";
         }
 }
-
-extern "C" void LLVMInitializeHSAILTargetMC() {}
