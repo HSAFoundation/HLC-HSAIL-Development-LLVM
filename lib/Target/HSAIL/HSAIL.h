@@ -91,16 +91,12 @@ createHSAILPropagateImageOperandsPass();
 ModulePass *
 createHSAILSyntaxCleanupPass();
 
-/// Insert OpenCL global offsets as HSAIL kernargs
-ModulePass* createHSAILGlobalOffsetInsertionPass(HSAILTargetMachine &TM);
-
 /// Insert kernel index metadata for device enqueue.
 ModulePass* createHSAILInsertKernelIndexMetadataPass();
 
 /// Optimize and lower AddrSpaceCast
 FunctionPass *createHSAILAddrSpaceCastPass();
 
-ModulePass *createHSAILPrintfRuntimeBindingKernArg(HSAILTargetMachine &TM);
 ModulePass* createHSAILProducePrintfMetadataPass();
 FunctionPass *createHSAILConsumePrintfMetadataPass(HSAILTargetMachine &TM);
 
