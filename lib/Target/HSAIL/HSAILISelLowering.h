@@ -457,62 +457,6 @@ public:
   SDValue
   LowerATOMIC_STORE(SDValue Op, SelectionDAG &DAG) const;
 
-//===--------------------------------------------------------------------===//
-  // Inline Asm Support hooks
-  //
-
-  /// ExpandInlineAsm - This hook allows the target to expand an inline asm
-  /// call to be explicit llvm code if it wants to.  This is useful for
-  /// turning simple inline asms into LLVM intrinsics, which gives the
-  /// compiler more information about the behavior of the code.
-  virtual bool
-  ExpandInlineAsm(CallInst *CI) const;
-
-  /// ParseConstraints - Split up the constraint string from the inline
-  /// assembly value into the specific constraints and their prefixes,
-  /// and also tie in the associated operand values.
-  /// If this returns an empty vector, and if the constraint string itself
-  /// isn't empty, there was an error parsing.
-  virtual AsmOperandInfoVector
-  ParseConstraints(ImmutableCallSite CS) const;
-
-  /// Examine constraint type and operand type and determine a weight value.
-  /// The operand object must already have been set up with the operand type.
-  virtual ConstraintWeight
-  getMultipleConstraintMatchWeight(AsmOperandInfo &info, int maIndex) const;
-
-  /// Examine constraint string and operand type and determine a weight value.
-  /// The operand object must already have been set up with the operand type.
-  virtual ConstraintWeight
-  getSingleConstraintMatchWeight(AsmOperandInfo &info,
-                                 const char *constraint) const;
-
-  /// ComputeConstraintToUse - Determines the constraint code and constraint
-  /// type to use for the specific AsmOperandInfo, setting
-  /// OpInfo.ConstraintCode and OpInfo.ConstraintType.  If the actual operand
-  /// being passed in is available, it can be passed in as Op, otherwise an
-  /// empty SDValue can be passed.
-  virtual void
-  ComputeConstraintToUse(AsmOperandInfo &OpInfo,
-                         SDValue Op,
-                         SelectionDAG *DAG = 0) const;
-
-  /// getConstraintType - Given a constraint, return the type of constraint it
-  /// is for this target.
-  virtual ConstraintType
-  getConstraintType(const std::string &Constraint) const;
-
-  /*
-  /// getRegClassForInlineAsmConstraint - Given a constraint letter (e.g. "r"),
-  /// return a list of registers that can be used to satisfy the constraint.
-  /// This should only be used for C_RegisterClass constraints.
-  virtual std::vector<unsigned>
-  getRegClassForInlineAsmConstraint(const std::string &Constraint,
-                                    EVT VT) const;
-
-  */
-
-
   //===--------------------------------------------------------------------===//
   // Instruction Emitting Hooks
   //
