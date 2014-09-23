@@ -66,7 +66,6 @@ static unsigned int getMoveInstFromID(unsigned int ID) {
 HSAILInstrInfo::HSAILInstrInfo(HSAILSubtarget &st)
   : HSAILGenInstrInfo(),
 //  : TargetInstrInfoImpl(HSAILInsts, array_lengthof(HSAILInsts)),
-    ST(st),
     RI(st)
 {
   RS = new RegScavenger();
@@ -369,10 +368,8 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
     // Handle conditional branches.
 
     // First conditional branch
-    if (Cond.empty()) 
+    if (Cond.empty())
     {
-      MachineBasicBlock *TargetBB = I->getOperand(1).getMBB();
-
       FBB = TBB;
       TBB = I->getOperand(1).getMBB();
 
@@ -779,12 +776,10 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
                                     const TargetRegisterInfo *TRI) const
 {
   unsigned int Opc = 0;
-  MachineInstr *curMI = MI;
   MachineFunction &MF = *MBB.getParent();
   MachineFrameInfo &MFI = *MF.getFrameInfo();
   DebugLoc DL;
-  const HSAILRegisterInfo *HRI = ST.getRegisterInfo();
-  
+
   switch (RC->getID()) {
     default:
       assert(0 && "unrecognized TargetRegisterClass");
@@ -844,11 +839,9 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
                                      const TargetRegisterInfo *TRI) const
 {
   unsigned int Opc = 0;
-  MachineInstr *curMI = MI;
   MachineFunction &MF = *MBB.getParent();
   MachineFrameInfo &MFI = *MF.getFrameInfo();
   DebugLoc DL;
-  const HSAILRegisterInfo *HRI = ST.getRegisterInfo();
 
   switch (RC->getID()) {
     default:

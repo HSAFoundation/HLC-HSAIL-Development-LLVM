@@ -745,7 +745,6 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
       unsigned EltSize = (VT.getStoreSizeInBits() + 7) / 8;
       const VectorType *VecVT = dyn_cast<VectorType>(type);
       unsigned num_elems = VecVT ? VecVT->getNumElements() : 1;
-      unsigned Alignment = DL->getABITypeAlignment(type);
 
       for (unsigned i = 0; i < num_elems; i++) {
         MachinePointerInfo MPtrInfo(UndefValue::get(ArgPT), EltSize * i);
@@ -807,22 +806,6 @@ HSAILTargetLowering::LowerMemArgument(SDValue Chain,
                      false, false,false, 0);
 }
 
-static const TargetRegisterClass* getRegClassFromType(unsigned int type) {
-  switch (type) {
-  default:
-    assert(0 && "Passed in type does not match any register classes.");
-  case MVT::i1:
-    return &HSAIL::CRRegClass;
-  case MVT::i32:
-  case MVT::f32:
-    return &HSAIL::GPR32RegClass;
-  case MVT::i64:
-  case MVT::f64:
-    return &HSAIL::GPR64RegClass;
-  }
-}
-
-
 EVT HSAILTargetLowering::getValueType(Type *Ty, bool AllowUnknown ) const
 {
     EVT VT = EVT::getEVT(Ty, AllowUnknown);
@@ -864,7 +847,6 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
 {
     MachineFunction &MF = DAG.getMachineFunction();
     Type* EltTy = Ty->getScalarType();
-    MVT PtrTy = getPointerTy(AddressSpace);
     PointerType *ArgPT = PointerType::get(EltTy, AddressSpace);
     uint64_t offset = ((EltTy->getPrimitiveSizeInBits() + 7) / 8) * index;
 
@@ -1003,7 +985,7 @@ HSAILTargetLowering::LowerFormalArguments(SDValue Chain,
   MachineFunction &MF = DAG.getMachineFunction();
   HSAILMachineFunctionInfo *FuncInfo = MF.getInfo<HSAILMachineFunctionInfo>();
   HSAILParamManager &PM = FuncInfo->getParamManager();
-  const FunctionType *funcType = MF.getFunction()->getFunctionType();
+
   unsigned int j = 0;
   SDValue InFlag;
   unsigned AS = HSAIL::isKernelFunc(MF.getFunction()) ? HSAILAS::KERNARG_ADDRESS
@@ -1018,7 +1000,6 @@ HSAILTargetLowering::LowerFormalArguments(SDValue Chain,
   for(; AI != AE; ++AI) {
       Type *type = AI->getType();
       Type *sType = type->getScalarType();
-      PointerType *ArgPT = PointerType::get(sType, AS);
 
       EVT argVT = Ins[j].VT;
       if (sType->isIntegerTy(8)) argVT = MVT::i8;
@@ -1098,8 +1079,6 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   SDValue Chain                         = CLI.Chain;
   SDValue Callee                        = CLI.Callee;
   bool &isTailCall                      = CLI.IsTailCall;
-  CallingConv::ID CallConv              = CLI.CallConv;
-  bool isVarArg                         = CLI.IsVarArg;
 
   isTailCall = false;
   MachineFunction& MF = DAG.getMachineFunction();
@@ -1110,8 +1089,6 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   /*bool hasStructRet = (TheCall->getNumArgs())
     ? TheCall->getArgFlags(0).device()->isSRet()
     : false;*/
-
-  MachineFrameInfo *MFI = MF.getFrameInfo();
 
   unsigned int NumBytes = 0;//CCInfo.getNextStackOffset();
   if (isTailCall) {
@@ -1470,8 +1447,7 @@ HSAILTargetLowering::LowerADD(SDValue Op, SelectionDAG &DAG) const {
   const SDValue src = Op.getOperand(0).getOperand(0);
   EVT srcVT = src.getValueType();
   if(Op.getOperand(0).getOpcode() != ISD::TRUNCATE) return Op;
-  const SDValue dest = Op.getOperand(1);
-  EVT dstcVT = dest.getValueType();
+
   SDValue Zext = DAG.getNode(ISD::ZERO_EXTEND, dl, MVT::i32,Op.getOperand(1));
   SDValue Zext1 = DAG.getNode(ISD::ZERO_EXTEND, dl, srcVT,Op.getOperand(0)); 
   SDValue add_p = DAG.getNode(ISD::ADD, dl, srcVT,Zext1,Zext);

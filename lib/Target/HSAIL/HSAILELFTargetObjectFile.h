@@ -18,14 +18,12 @@ namespace llvm {
 class HSAILTargetMachine;
 
 class HSAIL32_DwarfTargetObjectFile : public TargetLoweringObjectFileELF {
-  const HSAILTargetMachine &TM;
 public:
   HSAIL32_DwarfTargetObjectFile(const HSAILTargetMachine &tm);
 
 };
 
 class HSAIL64_DwarfTargetObjectFile : public TargetLoweringObjectFileELF {
-  const HSAILTargetMachine &TM;
 public:
   HSAIL64_DwarfTargetObjectFile(const HSAILTargetMachine &tm);
 };

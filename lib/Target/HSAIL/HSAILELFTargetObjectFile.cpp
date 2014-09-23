@@ -10,8 +10,6 @@
 #include "HSAILELFTargetObjectFile.h"
 using namespace llvm;
 
-HSAIL32_DwarfTargetObjectFile::HSAIL32_DwarfTargetObjectFile(const HSAILTargetMachine &tm)
-  : TM(tm) {}
+HSAIL32_DwarfTargetObjectFile::HSAIL32_DwarfTargetObjectFile(const HSAILTargetMachine &tm) {}
 
-HSAIL64_DwarfTargetObjectFile::HSAIL64_DwarfTargetObjectFile(const HSAILTargetMachine &tm)
-  : TM(tm) {}
+HSAIL64_DwarfTargetObjectFile::HSAIL64_DwarfTargetObjectFile(const HSAILTargetMachine &tm) {}

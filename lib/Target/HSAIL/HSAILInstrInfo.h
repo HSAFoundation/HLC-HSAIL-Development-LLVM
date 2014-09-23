@@ -571,7 +571,6 @@ inline static bool isMem(const MachineInstr *MI, unsigned Op) {
 
   //class HSAILInstrInfo : public TargetInstrInfoImpl {
 class HSAILInstrInfo : public HSAILGenInstrInfo {
-  HSAILSubtarget &ST;
   const HSAILRegisterInfo RI;
 
 public:

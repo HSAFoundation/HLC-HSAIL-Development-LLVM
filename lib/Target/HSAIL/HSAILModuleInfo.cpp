@@ -749,25 +749,6 @@ void HSAILModuleInfo::printConstantValue(const Constant *CAval,
   }
 }
 
-static bool isStruct(Type * const T)
-{
-  if (!T) {
-    return false;
-  }
-  switch (T->getTypeID()) {
-  default:
-    return false;
-  case Type::PointerTyID:
-    return isStruct(T->getContainedType(0));
-  case Type::StructTyID:
-    return true;
-  case Type::ArrayTyID:
-  case Type::VectorTyID:
-    return isStruct(dyn_cast<SequentialType>(T)->getElementType());
-  };
-
-}
-
 /// Create a function ID if it is not known or return the known
 /// function ID.
 uint32_t HSAILModuleInfo::getOrCreateFunctionID(const GlobalValue* func) {
