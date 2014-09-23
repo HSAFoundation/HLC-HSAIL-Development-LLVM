@@ -177,7 +177,8 @@ protected:
   void BrigEmitOperandImage(const MachineInstr *MI, unsigned opNum);
   void BrigEmitImageInst(const MachineInstr *MI, HSAIL_ASM::InstImage inst);
 
-  void BrigEmitVecOperand(const MachineInstr *MI, unsigned opStart, unsigned numRegs);
+  void BrigEmitVecOperand(const MachineInstr *MI, unsigned opStart,
+                          unsigned numRegs, HSAIL_ASM::Inst inst);
   
   // Stream that captures DWARF data to the internal buffer
   RawVectorOstream* mDwarfStream;

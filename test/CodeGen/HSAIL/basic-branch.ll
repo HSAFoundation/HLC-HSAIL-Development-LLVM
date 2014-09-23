@@ -4,8 +4,7 @@
 ; HSAIL: ld_arg_align(4)_u32 [[VAL:\$s[0-9]+]], [%val];
 ; HSAIL: cmp_eq_b1_s32 [[CMP:\$c[0-9]+]], [[VAL]], 0;
 ; HSAIL: cbr_b1 [[CMP]], BB0_2;
-; HSAIL: mov_b32
-; HSAIL-NEXT: st_global_align(4)_u32
+; HSAIL: st_global_align(4)_u32 222
 ; HSAIL: {{^BB0_2:}}
 ; HSAIL: ret;
 define void @test_branch(i32 addrspace(1)* noalias %out, i32 addrspace(1)* noalias %in, i32 %val) nounwind {
