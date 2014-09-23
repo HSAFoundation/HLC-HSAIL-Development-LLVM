@@ -248,49 +248,6 @@ Brig::BrigTypeX getParametrizedAtomicBrigType(int opcode) {
   return Brig::BRIG_TYPE_INVALID;
 }
 
-static Type* emitBrigGVType(HSAIL_ASM::DirectiveVariable brigSym, Type *ty,
-                            DataLayout& DL) {
-
-  if (const ArrayType *ATy = dyn_cast<ArrayType>(ty)) {
-    brigSym.modifier().isArray() = true;
-    uint64_t numElems = ATy->getNumElements();
-
-    // Flatten multi-dimensional array declaration
-    while (ATy->getElementType()->isArrayTy()) {
-      ATy = dyn_cast<ArrayType>(ATy->getElementType());
-      numElems *= ATy->getNumElements();
-    }
-
-    // There are no vector types in HSAIL, so global declarations for
-    // arrays of composite types (vector, struct) are emitted as a single
-    // array of a scalar type.
-
-    // Flatten array of vector declaration
-    if (ATy->getElementType()->isVectorTy()) {
-      const VectorType *VT = cast<VectorType>(ATy->getElementType());
-      numElems *= VT->getNumElements();
-    }
-
-    // Flatten array of struct declaration
-    if (ATy->getElementType()->isStructTy()) {
-      StructType *ST = cast<StructType>(ATy->getElementType());
-      const StructLayout *layout = DL.getStructLayout(ST);
-      numElems *= layout->getSizeInBytes();
-    }
-
-    brigSym.dim() = numElems;
-    return emitBrigGVType(brigSym, ATy->getElementType(), DL);
-  }
-  return ty;
-}
-
-static Type* getGVType(Type *ty) {
-  if (const ArrayType *ATy = dyn_cast<ArrayType>(ty)) {
-    return getGVType(ATy->getElementType());
-  }
-  return ty;
-}
-
 class LLVM_LIBRARY_VISIBILITY StoreInitializer {
   Brig::BrigType16_t       m_type;
   BRIGAsmPrinter&          m_asmPrinter;
@@ -690,9 +647,6 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
 
   string nameString = ss.str();
 
-  unsigned int modifier = 0;
-  uint64_t numElems = 0;
-
   const DataLayout& DL = getDataLayout();
   Type *ty = GV->getType()->getElementType();
   if (ty->isIntegerTy(1)) {
@@ -827,7 +781,6 @@ bool  BRIGAsmPrinter::runOnMachineFunction(MachineFunction &lMF) {
   EmitFunctionEntryLabel();
   EmitFunctionBody();
 
-  Module &M = const_cast<Module &>(*F->getParent());
   // Clear local handles from image handles
   Subtarget->getImageHandles()->clearImageArgs();
 
@@ -1108,7 +1061,6 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
       MachineInstr::const_mop_iterator oi = II->operands_begin();
       MachineInstr::const_mop_iterator oe = II->operands_end();
       const GlobalValue *gv = (oi++)->getGlobal();;
-      bool isKernel = HSAIL::isKernelFunc(cast<Function>(gv));
 
       // Place a call
       HSAIL_ASM::InstBr call = brigantine.addInst<HSAIL_ASM::InstBr>(
@@ -1228,7 +1180,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   case HSAIL::RotateBit32_ri:
   case HSAIL::RotateByte32_ri: {
     HSAIL_ASM::InstBasic align = brigantine.addInst<HSAIL_ASM::InstBasic>(
-      II->getOpcode() == HSAIL::RotateByte32_ri ? Brig::BRIG_OPCODE_BYTEALIGN : Brig::BRIG_OPCODE_BITALIGN, 
+      II->getOpcode() == HSAIL::RotateByte32_ri ? Brig::BRIG_OPCODE_BYTEALIGN : Brig::BRIG_OPCODE_BITALIGN,
       Brig::BRIG_TYPE_B32);
     MachineOperand dest = II->getOperand(0);
     MachineOperand src = II->getOperand(1);
@@ -1493,7 +1445,6 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
   const Function *F = MF->getFunction();
 
   {
-    StringRef Name = F->getName();
     bool isKernel = HSAIL::isKernelFunc(F);
     if (isKernel) {
       // Emitting block data inside of kernel
@@ -1554,7 +1505,6 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     }
   }
 
-  const Module* M = MF->getMMI().getModule();
   DataLayout DL = getDataLayout();
 
   const MachineFrameInfo *MFI = MF->getFrameInfo();
@@ -2045,7 +1995,6 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned
   if (base.isGlobal()) {
     const GlobalValue *gv = base.getGlobal();
     std::stringstream ss;
-    const unsigned AddrSpace = gv->getType()->getAddressSpace();
 
     ss << getSymbolPrefix(*gv) << gv->getName().str();
     // Do not add offset since it will already be in offset field

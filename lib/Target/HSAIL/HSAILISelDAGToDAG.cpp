@@ -64,16 +64,10 @@ class HSAILDAGToDAGISel : public SelectionDAGISel {
   /// make the right decision when generating code for different targets.
   const HSAILSubtarget *Subtarget;
 
-  /// OptForSize - If true, selecto
-  /// OptForSize - If true, selector should try to optimize for code size
-  /// instead of performance.
-  bool OptForSize;
-
 public:
   explicit HSAILDAGToDAGISel(HSAILTargetMachine &tm, CodeGenOpt::Level OptLevel)
     : SelectionDAGISel(tm, OptLevel),
-      Subtarget(&tm.getSubtarget<HSAILSubtarget>()),
-      OptForSize(false) {}
+      Subtarget(&tm.getSubtarget<HSAILSubtarget>()) {}
 
   // Default constructor required for Initiallizing PASS
   explicit HSAILDAGToDAGISel()
@@ -421,7 +415,6 @@ SDNode* HSAILDAGToDAGISel::SelectINTRINSIC_WO_CHAIN(SDNode *Node)
 SDNode* HSAILDAGToDAGISel::SelectImageIntrinsic(SDNode *Node)
 {
   SDValue Chain = Node->getOperand(0);
-  DebugLoc dl = Node->getDebugLoc();
   SDNode *ResNode;
 
   unsigned IntNo = cast<ConstantSDNode>(Node->getOperand(1))->getZExtValue();
@@ -487,7 +480,6 @@ SDNode* HSAILDAGToDAGISel::SelectImageIntrinsic(SDNode *Node)
 SDNode* HSAILDAGToDAGISel::SelectCrossLaneIntrinsic(SDNode *Node)
 {
   SDValue Chain = Node->getOperand(0);
-  DebugLoc dl = Node->getDebugLoc();
   SDNode *ResNode;
 
   unsigned IntNo = cast<ConstantSDNode>(Node->getOperand(1))->getZExtValue();
@@ -793,9 +785,7 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
 
   EVT NVT = Node->getValueType(0);
   unsigned Opcode = Node->getOpcode();
-  DebugLoc dl = Node->getDebugLoc();
   SDNode *ResNode;
-  bool isKernel = isKernelFunc();
 
   DEBUG(dbgs() << "Selecting: "; Node->dump(CurDAG); dbgs() << '\n');
 
@@ -1061,26 +1051,6 @@ static bool check_type(const Value *ptr, unsigned int addrspace) {
 
   const Type *ptrType = ptr->getType();
   return dyn_cast<PointerType>(ptrType)->getAddressSpace() == addrspace;
-}
-
-
-static bool check_attribute(const Value *ptr, unsigned int addrspace) {
-  if (!ptr)
-    return false;
-
-  const Type *ptrType = ptr->getType();
-  if (ptrType->isPointerTy()) {
-    const PointerType *PT = dyn_cast<PointerType>(ptrType);
-    Type *CT = PT->getElementType();
-    const StructType *ST = dyn_cast<StructType>(CT);
-    unsigned as = PT->getAddressSpace();
-    
-    if (ST && (as == addrspace)) {
-      return true;
-    }
-    else return false;
-  }
-  return false;
 }
 
 bool HSAILDAGToDAGISel::isGlobalStore(StoreSDNode *N) const {

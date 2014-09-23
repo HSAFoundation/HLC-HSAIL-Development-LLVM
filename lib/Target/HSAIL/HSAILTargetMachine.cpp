@@ -129,8 +129,6 @@ void HSAILPassConfig::addIRPasses() {
 }
 
 bool HSAILPassConfig::addPreISel(){
-  HSAILTargetMachine &HSATM = getTM<HSAILTargetMachine>();
-
     addPass(createLCSSAPass()); // Required by early CFG opts
 
   return true;

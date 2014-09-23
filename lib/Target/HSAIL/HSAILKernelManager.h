@@ -144,7 +144,7 @@ private:
   uint32_t mUniqueID;
   bool mIsKernel;
   bool mWasKernel;
-  bool mCompilerWrite;
+
   /// Flag to specify if an image write has occured or not in order to not add a
   /// compiler specific write if no other writes to memory occured.
   bool mHasImageWrite;

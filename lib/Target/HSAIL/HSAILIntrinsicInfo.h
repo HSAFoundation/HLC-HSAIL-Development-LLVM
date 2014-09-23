@@ -38,7 +38,6 @@ namespace HSAILIntrinsic {
 /// HSAILIntrinsicInfo - Interface to description of machine intrinsic set
 ///
 class HSAILIntrinsicInfo : public TargetIntrinsicInfo {
-  HSAILTargetMachine *mTM;
 public:
   HSAILIntrinsicInfo(HSAILTargetMachine *tm);
 

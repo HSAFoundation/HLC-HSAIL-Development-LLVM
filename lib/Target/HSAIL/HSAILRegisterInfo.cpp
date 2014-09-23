@@ -246,8 +246,6 @@ HSAILRegisterInfo::saveScavengerRegisterToFI(MachineBasicBlock &MBB,
                                              unsigned Reg,
                                              int FI) const
 {
-  MachineFunction *MF = MBB.getParent();
-  const TargetMachine &TM = MF->getTarget();
   const HSAILInstrInfo &HII =
       *static_cast<const HSAILInstrInfo*>(ST.getInstrInfo());
   RegScavenger *RS = HII.getRS();

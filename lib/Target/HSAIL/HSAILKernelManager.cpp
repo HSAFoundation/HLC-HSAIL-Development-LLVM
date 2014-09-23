@@ -316,7 +316,7 @@ void HSAILKernelManager::processArgMetadata(OSTREAM_TYPE &ignored,
   uint32_t RWArg = 0;
   uint32_t NumArg = 0;
   uint32_t SamplerNum = 0;
-  uint32_t QueueNum = 0;
+
   while (Ip != Ep) {
     Type *cType = Ip->getType();
     if (cType->isIntOrIntVectorTy() || cType->isFPOrFPVectorTy()) {
@@ -472,8 +472,7 @@ void HSAILKernelManager::processArgMetadata(OSTREAM_TYPE &ignored,
 void HSAILKernelManager::printHeader(const std::string &name) 
 {
   mName = name;
-  std::string kernelName = name;
-  int kernelId = mAMI->getOrCreateFunctionID(kernelName);
+  mAMI->getOrCreateFunctionID(name);
 }
 
 /** 

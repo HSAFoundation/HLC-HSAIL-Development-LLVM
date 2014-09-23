@@ -100,7 +100,7 @@ bool HSAILIntrinsicInfo::isCrossLane(HSAILIntrinsic::ID intr)
 }
 
 HSAILIntrinsicInfo::HSAILIntrinsicInfo(HSAILTargetMachine *tm)
-  : TargetIntrinsicInfo(), mTM(tm) {}
+  : TargetIntrinsicInfo() {}
 
 std::string
 HSAILIntrinsicInfo::getName(unsigned int IntrID,

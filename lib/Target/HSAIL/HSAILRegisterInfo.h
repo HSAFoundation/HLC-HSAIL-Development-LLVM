@@ -35,8 +35,6 @@ namespace llvm {
 class HSAILRegisterInfo : public HSAILGenRegisterInfo {
 private:
   HSAILSubtarget &ST;
-  /// Is64Bit - Is the target 64-bits.
-  bool Is64Bit;
 
 public:
   HSAILRegisterInfo(HSAILSubtarget &st);
