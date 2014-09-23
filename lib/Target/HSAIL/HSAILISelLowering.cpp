@@ -324,9 +324,7 @@ HSAILTargetLowering::getRepRegClassFor(MVT VT) const
 
 /// getRepRegClassCostFor - Return the cost of the 'representative' register
 /// class for the specified value type.
-uint8_t
-HSAILTargetLowering::getRepRegClassCostFor(EVT VT) const
-{
+uint8_t HSAILTargetLowering::getRepRegClassCostFor(MVT VT) const {
   // Micah: Is this true that the reg class cost for everything is 1 in HSAIL?
   return 1;
 }
@@ -530,10 +528,10 @@ HSAILTargetLowering::getMaximalGlobalOffset() const
 /// ComputeNumSignBitsForTargetNode - This method can be implemented by
 /// targets that want to expose additional information about sign bits to the
 /// DAG Combiner.
-unsigned
-HSAILTargetLowering::ComputeNumSignBitsForTargetNode(SDValue Op,
-                                                     unsigned Depth) const
-{
+unsigned HSAILTargetLowering::ComputeNumSignBitsForTargetNode(
+  SDValue Op,
+  const SelectionDAG &DAG,
+  unsigned Depth) const {
   return 1;
 }
 
@@ -565,7 +563,7 @@ PerformBitalignCombine(SDNode *N, TargetLowering::DAGCombinerInfo &DCI, unsigned
     if (ConstantSDNode *AndMask = dyn_cast<ConstantSDNode>(Opr0.getOperand(1))) {
       uint64_t and_mask = AndMask->getZExtValue();
       uint64_t shr_val = SHR->getZExtValue() & 31U;
-      if (IID == HSAILIntrinsic::HSAIL_bytealign_b32) 
+      if (IID == HSAILIntrinsic::HSAIL_bytealign_b32)
         shr_val = (shr_val & 3U) << 3U;
       and_mask = ((and_mask >> shr_val) | (and_mask << (32U - shr_val))) & 0xffffffffu;
       Opr0 = Opr0->getOperand(0);
@@ -773,16 +771,6 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
 
   return DAG.getNode(HSAILISD::RET_FLAG, dl,
                      MVT::Other, RetOps);
-}
-
-/// isUsedByReturnOnly - Return true if result of the specified node is used
-/// by a return node only. This is used to determine whether it is possible
-/// to codegen a libcall as tail call at legalization time.
-bool
-HSAILTargetLowering::isUsedByReturnOnly(SDNode *N) const
-{
-  assert(!"When do we hit this?");
-  return false;
 }
 
 //===----------------------------------------------------------------------===//
@@ -1799,28 +1787,6 @@ HSAILTargetLowering::getRegClassForInlineAsmConstraint(const std::string &Constr
 }
 */
 
-/// LowerXConstraint - try to replace an X constraint, which matches anything,
-/// with another that has more specific requirements based on the type of the
-/// corresponding operand.  This returns null if there is no replacement to
-/// make.
-const char*
-HSAILTargetLowering::LowerXConstraint(EVT ConstraintVT) const
-{
-  assert(!"When do we hit this?");
-  return NULL;
-}
-
-/// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
-/// vector.  If it is invalid, don't add anything to Ops.
-void
-HSAILTargetLowering::LowerAsmOperandForConstraint(SDValue Op,
-                                                  char ConstraintLetter,
-                                                  std::vector<SDValue> &Ops,
-                                                  SelectionDAG &DAG) const
-{
-  assert(!"When do we hit this?");
-}
-
 //===--------------------------------------------------------------------===//
 // Addressing mode description hooks (used by LSR etc).
 //
@@ -1869,7 +1835,7 @@ HSAILTargetLowering::isTruncateFree(EVT VT1, EVT VT2) const
 /// all instructions that define 32-bit values implicit zero-extend the
 /// result out to 64 bits.
 bool
-HSAILTargetLowering::isZExtFree(const Type *Ty1, const Type *Ty2) const
+HSAILTargetLowering::isZExtFree(Type *Ty1, Type *Ty2) const
 {
   return false;
 }
