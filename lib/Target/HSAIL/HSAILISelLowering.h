@@ -507,8 +507,7 @@ public:
   virtual bool
   isLegalICmpImmediate(int64_t Imm) const;
 
-  virtual MVT
-  getShiftAmountTy(EVT LHSTy) const;
+  MVT getScalarShiftAmountTy(EVT LHSTy) const override;
 
 #if 0
   virtual void

@@ -1763,12 +1763,10 @@ HSAILTargetLowering::isLegalICmpImmediate(int64_t Imm) const
   return true;
 }
 
-MVT
-HSAILTargetLowering::getShiftAmountTy(EVT LHSTy) const
-{
+MVT HSAILTargetLowering::getScalarShiftAmountTy(EVT LHSTy) const {
   // Shift amounts in registers must be in S registers
   // Restrict shift amount to 32-bits.
-  return MVT::getIntegerVT(32);
+  return MVT::i32;
 }
 
 //
