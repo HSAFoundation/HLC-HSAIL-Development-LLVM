@@ -20,10 +20,8 @@ set(sources
   BRIGAsmPrinter.cpp
 #  BRIGDwarfCompileUnit.cpp
 #  BRIGDwarfDebug.cpp
-  BRIGDwarfStreamer.cpp
   HSAILDevice.cpp
   HSAILDeviceInfo.cpp
-  HSAILELFObjectWriter.cpp
   HSAILELFTargetObjectFile.cpp
   HSAILELFWriterInfo.cpp
   HSAILFrameLowering.cpp
@@ -41,7 +39,6 @@ set(sources
   HSAILSubtarget.cpp
   HSAILTargetMachine.cpp
   HSAILUtilityFunctions.cpp
-  RawVectorOstream.cpp
   HSAILFastISel.cpp
   HSAILOpaqueTypes.cpp
   )

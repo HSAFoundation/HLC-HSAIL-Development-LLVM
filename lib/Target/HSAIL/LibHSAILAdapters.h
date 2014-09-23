@@ -9,7 +9,6 @@
 #ifndef _LIB_HSAIL_ADAPTERS_H_
 #define _LIB_HSAIL_ADAPTERS_H_
 
-#include "RawVectorOstream.h"
 #include "libHSAIL/HSAILBrigObjectFile.h"
 
 #include <iosfwd>

@@ -9,7 +9,8 @@
 #ifndef _BRIG_ASM_PRINTER_H_
 #define _BRIG_ASM_PRINTER_H_
 
-#include <iostream>
+#include "BRIGAsmPrinter.h"
+
 #include "HSAIL.h"
 #include "HSAILBrig.h"
 #include "HSAILLLVMVersion.h"
@@ -24,7 +25,7 @@
 
 // below all are in assembler/libHSAIL
 //
-#include "RawVectorOstream.h"
+#include "MCTargetDesc/RawVectorOstream.h"
 #include "libHSAIL/HSAILItemBase.h"
 #include "libHSAIL/HSAILItems.h"
 #include "libHSAIL/HSAILParser.h"
