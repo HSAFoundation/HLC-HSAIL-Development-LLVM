@@ -16,7 +16,7 @@ add_public_tablegen_target(HSAILCommonTableGen)
 add_subdirectory(libHSAIL)
 
 set(sources
-  HSAILAsmBackend.cpp
+  HSAILAsmPrinter.cpp
   BRIGAsmPrinter.cpp
 #  BRIGDwarfCompileUnit.cpp
 #  BRIGDwarfDebug.cpp
@@ -33,8 +33,6 @@ set(sources
   HSAILISelLowering.cpp
   HSAILKernelManager.cpp
   HSAILMachineFunctionInfo.cpp
-  HSAILMCAsmInfo.cpp
-  HSAILMCCodeEmitter.cpp
   HSAILMCInstLower.cpp
   HSAILModuleInfo.cpp
   HSAILParamManager.cpp
