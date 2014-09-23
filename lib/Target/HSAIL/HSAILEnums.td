@@ -215,6 +215,60 @@ def BrigImageQuery : Operand<i32> {
   int CHANNELTYPE = 5;
 }
 
+def BrigKinds : Operand<i32> {
+  let PrintMethod = "printBrigKinds";
+  int NONE = 0x0000;
+  int DIRECTIVE_BEGIN = 0x1000;
+  int DIRECTIVE_ARG_BLOCK_END = 0x1000;
+  int DIRECTIVE_ARG_BLOCK_START = 0x1001;
+  int DIRECTIVE_COMMENT = 0x1002;
+  int DIRECTIVE_CONTROL = 0x1003;
+  int DIRECTIVE_EXTENSION = 0x1004;
+  int DIRECTIVE_FBARRIER = 0x1005;
+  int DIRECTIVE_FUNCTION = 0x1006;
+  int DIRECTIVE_INDIRECT_FUNCTION = 0x1007;
+  int DIRECTIVE_KERNEL = 0x1008;
+  int DIRECTIVE_LABEL = 0x1009;
+  int DIRECTIVE_LOC = 0x100a;
+  int DIRECTIVE_PRAGMA = 0x100b;
+  int DIRECTIVE_SIGNATURE = 0x100c;
+  int DIRECTIVE_VARIABLE = 0x100d;
+  int DIRECTIVE_VERSION = 0x100e;
+  int DIRECTIVE_END = 0x100f;
+  int INST_BEGIN = 0x2000;
+  int INST_ADDR = 0x2000;
+  int INST_ATOMIC = 0x2001;
+  int INST_BASIC = 0x2002;
+  int INST_BR = 0x2003;
+  int INST_CMP = 0x2004;
+  int INST_CVT = 0x2005;
+  int INST_IMAGE = 0x2006;
+  int INST_LANE = 0x2007;
+  int INST_MEM = 0x2008;
+  int INST_MEM_FENCE = 0x2009;
+  int INST_MOD = 0x200a;
+  int INST_QUERY_IMAGE = 0x200b;
+  int INST_QUERY_SAMPLER = 0x200c;
+  int INST_QUEUE = 0x200d;
+  int INST_SEG = 0x200e;
+  int INST_SEG_CVT = 0x200f;
+  int INST_SIGNAL = 0x2010;
+  int INST_SOURCE_TYPE = 0x2011;
+  int INST_END = 0x2012;
+  int OPERAND_BEGIN = 0x3000;
+  int OPERAND_ADDRESS = 0x3000;
+  int OPERAND_DATA = 0x3001;
+  int OPERAND_CODE_LIST = 0x3002;
+  int OPERAND_CODE_REF = 0x3003;
+  int OPERAND_IMAGE_PROPERTIES = 0x3004;
+  int OPERAND_OPERAND_LIST = 0x3005;
+  int OPERAND_REG = 0x3006;
+  int OPERAND_SAMPLER_PROPERTIES = 0x3007;
+  int OPERAND_STRING = 0x3008;
+  int OPERAND_WAVESIZE = 0x3009;
+  int OPERAND_END = 12298;
+}
+
 def BrigLinkage : Operand<i32> {
   let PrintMethod = "printBrigLinkage";
   int NONE = 0;
@@ -229,6 +283,14 @@ def BrigMachineModel : Operand<i32> {
   int SMALL = 0;
   int LARGE = 1;
   int UNDEF = 2;
+}
+
+def BrigMemoryFenceSegments : Operand<i32> {
+  let PrintMethod = "printBrigMemoryFenceSegments";
+  int GLOBAL = 0;
+  int GROUP = 1;
+  int IMAGE = 2;
+  int LAST = 3;
 }
 
 def BrigMemoryModifierMask : OperandWithDefaultOps<i32, (ops (i32 0))> {
@@ -248,6 +310,16 @@ def BrigMemoryOrder : Operand<i32> {
 
 def BrigMemoryScope : Operand<i32> {
   let PrintMethod = "printBrigMemoryScope";
+  int NONE = 0;
+  int WORKITEM = 1;
+  int WAVEFRONT = 2;
+  int WORKGROUP = 3;
+  int COMPONENT = 4;
+  int SYSTEM = 5;
+}
+
+def BrigMemoryScope2 : Operand<i32> {
+  let PrintMethod = "printBrigMemoryScope2";
   int NONE = 0;
   int WORKITEM = 1;
   int WAVEFRONT = 2;
@@ -449,11 +521,30 @@ def BrigPack : Operand<i32> {
   int PSAT = 12;
 }
 
+def BrigPackedTypeBits : Operand<i32> {
+  let PrintMethod = "printBrigPackedTypeBits";
+  int PACK_SHIFT = 5;
+  int BASE_MASK = 31;
+  int PACK_MASK = 96;
+  int PACK_NONE = 0;
+  int PACK_32 = 32;
+  int PACK_64 = 64;
+  int PACK_128 = 96;
+}
+
 def BrigProfile : Operand<i32> {
   let PrintMethod = "printBrigProfile";
   int BASE = 0;
   int FULL = 1;
   int UNDEF = 2;
+}
+
+def BrigRegisterKind : Operand<i32> {
+  let PrintMethod = "printBrigRegisterKind";
+  int CONTROL = 0;
+  int SINGLE = 1;
+  int DOUBLE = 2;
+  int QUAD = 3;
 }
 
 def BrigRound : Operand<i32> {
@@ -509,6 +600,15 @@ def BrigSamplerQuery : Operand<i32> {
   int FILTER = 2;
 }
 
+def BrigSectionIndex : Operand<i32> {
+  let PrintMethod = "printBrigSectionIndex";
+  int DATA = 0;
+  int CODE = 1;
+  int OPERAND = 2;
+  int BEGIN_IMPLEMENTATION_DEFINED = 3;
+  int IMPLEMENTATION_DEFINED = 3;
+}
+
 def BrigSegCvtModifierMask : Operand<i32> {
   let PrintMethod = "printBrigSegCvtModifierMask";
   int NONULL = 1;
@@ -528,8 +628,8 @@ def BrigSegment : Operand<i32> {
   int EXTSPACE0 = 9;
 }
 
-def BrigType : Operand<i32> {
-  let PrintMethod = "printBrigType";
+def BrigTypeX : Operand<i32> {
+  let PrintMethod = "printBrigTypeX";
   int NONE = 0;
   int U8 = 1;
   int U16 = 2;
@@ -587,6 +687,14 @@ def BrigVariableModifierMask : Operand<i32> {
   int CONST = 2;
   int ARRAY = 4;
   int FLEX_ARRAY = 8;
+}
+
+def BrigVersion : Operand<i32> {
+  let PrintMethod = "printBrigVersion";
+  int HSAIL_MAJOR = 0;
+  int HSAIL_MINOR = 20140528;
+  int BRIG_MAJOR = 0;
+  int BRIG_MINOR = 20140528;
 }
 
 def BrigWidth : OperandWithDefaultOps<i32, (ops (i32 1))> {

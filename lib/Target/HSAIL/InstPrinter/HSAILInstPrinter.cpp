@@ -1317,8 +1317,8 @@ void HSAILInstPrinter::printBrigSegment(const MCInst *MI, unsigned OpNo,
   }
 }
 
-void HSAILInstPrinter::printBrigType(const MCInst *MI, unsigned OpNo,
-                                     raw_ostream &O) {
+void HSAILInstPrinter::printBrigTypeX(const MCInst *MI, unsigned OpNo,
+                                      raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
   case BRIG_TYPE_U8:
     O << "_u8";
