@@ -43,15 +43,11 @@ HSAILSubtarget::HSAILSubtarget(llvm::StringRef TT, llvm::StringRef CPU, llvm::St
          HSAILDeviceInfo::MaxNumberCapabilities);
   mVersion = 0;
   mMetadata30 = true;
-  mIs32on64bit = false;
   mDefaultSize[0] = 64;
   mDefaultSize[1] = 1;
   mDefaultSize[2] = 1;
   std::string GPU = CPU.str() == "" ? "generic" : CPU.str();
   mIs64bit = is64bitTarget;
-  // Check for 32-bit target on 64-bit OS
-  if (sizeof(void *) == 8)
-    mIs32on64bit = !is64bitTarget;
   ParseSubtargetFeatures(GPU, FS);
   mDevName = GPU;
   mDevice = getDeviceFromName(GPU, this, mIs64bit);

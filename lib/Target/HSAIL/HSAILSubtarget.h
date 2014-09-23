@@ -142,7 +142,6 @@ protected:
   std::string mDevName;
   uint32_t mVersion;
   bool mIs64bit;
-  bool mIs32on64bit;
   bool mMetadata30;
   /// HSAILXXXLevel - none supported.
   HSAILXXXEnum HSAILXXXLevel;
