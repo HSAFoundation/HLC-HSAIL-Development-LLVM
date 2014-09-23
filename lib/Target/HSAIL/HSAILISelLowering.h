@@ -78,13 +78,11 @@ public:
   /// legal super-reg register class for the register class of the value type.
   /// For example, on i386 the rep register class for i8, i16, and i32 are GR32;
   /// while the rep register class is GR64 on x86_64.
-  virtual const TargetRegisterClass*
-  getRepRegClassFor(MVT VT) const;
+  const TargetRegisterClass *getRepRegClassFor(MVT VT) const override;
 
   /// getRepRegClassCostFor - Return the cost of the 'representative' register
   /// class for the specified value type.
-  virtual uint8_t
-  getRepRegClassCostFor(EVT VT) const;
+  uint8_t getRepRegClassCostFor(MVT VT) const override;
 
   /// getTgtMemIntrinsic: Given an intrinsic, checks if on the target the
   /// intrinsic will need to map to a MemIntrinsicNode (touches memory). If
@@ -216,9 +214,9 @@ public:
   /// ComputeNumSignBitsForTargetNode - This method can be implemented by
   /// targets that want to expose additional information about sign bits to the
   /// DAG Combiner.
-  virtual unsigned
-  ComputeNumSignBitsForTargetNode(SDValue Op,
-                                  unsigned Depth = 0) const;
+  unsigned ComputeNumSignBitsForTargetNode(SDValue Op,
+                                           const SelectionDAG &DAG,
+                                           unsigned Depth = 0) const override;
 
   /// isGAPlusOffset - Returns true (and the GlobalValue and the offset) if the
   /// node is a GlobalAddress + offset.
@@ -381,12 +379,6 @@ public:
               SDLoc dl,
               SelectionDAG &DAG) const;
 
-  /// isUsedByReturnOnly - Return true if result of the specified node is used
-  /// by a return node only. This is used to determine whether it is possible
-  /// to codegen a libcall as tail call at legalization time.
-  virtual bool
-  isUsedByReturnOnly(SDNode *N) const;
-
   /// LowerOperationWrapper - This callback is invoked by the type legalizer
   /// to legalize nodes with an illegal operand type but legal result types.
   /// It replaces the LowerOperation callback in the type Legalizer.
@@ -521,21 +513,6 @@ public:
   */
 
 
-  /// LowerXConstraint - try to replace an X constraint, which matches anything,
-  /// with another that has more specific requirements based on the type of the
-  /// corresponding operand.  This returns null if there is no replacement to
-  /// make.
-  virtual const char*
-  LowerXConstraint(EVT ConstraintVT) const;
-
-  /// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
-  /// vector.  If it is invalid, don't add anything to Ops.
-  virtual void
-  LowerAsmOperandForConstraint(SDValue Op,
-                               char ConstraintLetter,
-                               std::vector<SDValue> &Ops,
-                               SelectionDAG &DAG) const;
-
   //===--------------------------------------------------------------------===//
   // Instruction Emitting Hooks
   //
@@ -569,11 +546,9 @@ public:
   /// does not necessarily apply to truncate instructions. e.g. on x86-64,
   /// all instructions that define 32-bit values implicit zero-extend the
   /// result out to 64 bits.
-  virtual bool
-  isZExtFree(const Type *Ty1, const Type *Ty2) const;
+  bool isZExtFree(Type *Ty1, Type *Ty2) const override;
 
-  virtual bool
-  isZExtFree(EVT VT1, EVT VT2) const;
+  bool isZExtFree(EVT VT1, EVT VT2) const override;
 
   /// isNarrowingProfitable - Return true if it's profitable to narrow
   /// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
