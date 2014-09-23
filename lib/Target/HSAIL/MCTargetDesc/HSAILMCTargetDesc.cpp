@@ -21,9 +21,8 @@
 #include "llvm/MC/MCSubtargetInfo.h"
 #include "llvm/Support/TargetRegistry.h"
 
-// FIXME: Should not be including files from base directory
-#include "../BRIGDwarfStreamer.h"
-#include "../RawVectorOstream.h"
+#include "BRIGDwarfStreamer.h"
+#include "RawVectorOstream.h"
 
 using namespace llvm;
 

@@ -27,8 +27,6 @@
 #include "llvm/Analysis/LoopPass.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Transforms/Scalar.h"
-#include "RawVectorOstream.h"
-#include "BRIGDwarfStreamer.h"
 
 using namespace llvm;
 
