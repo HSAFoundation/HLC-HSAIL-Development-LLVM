@@ -26,3 +26,18 @@ entry:
   store <4 x i32> %tmp4, <4 x i32> addrspace(3)* %out, align 16
   ret void
 }
+
+define void @__OpenCL_trap_kernel(i64 %global_offset_0, i64 %global_offset_1, i64 %global_offset_2, i32 addrspace(1)* nocapture %pVal) nounwind {
+; CHECK-LABEL: trap
+; CHECK: {{\(42, \$s[0-9]+\)}}
+entry:
+  %arrayidx2 = getelementptr i32 addrspace(1)* %pVal, i64 1
+  %tmp5 = load i32 addrspace(1)* %arrayidx2, align 4
+  %conv = sext i32 %tmp5 to i64
+  %tmp6 = udiv i64 %conv, 13
+  %conv7 = trunc i64 %tmp6 to i32
+  %0 = insertelement <2 x i32> <i32 42, i32 undef>, i32 %conv7, i32 1
+  %arrayidx_v4 = bitcast i32 addrspace(1)* %pVal to <2 x i32> addrspace(1)*
+  store <2 x i32> %0, <2 x i32> addrspace(1)* %arrayidx_v4, align 4
+  ret void
+}
