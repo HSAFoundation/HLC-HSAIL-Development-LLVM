@@ -79,7 +79,7 @@ private:
 
   void printBrigSegment(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
-  void printBrigType(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printBrigTypeX(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
   void printBrigVariableModifierMask(const MCInst *MI, unsigned OpNo,
                                      raw_ostream &O);

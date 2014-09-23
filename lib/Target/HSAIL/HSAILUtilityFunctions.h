@@ -143,8 +143,8 @@ llvm::MachineOperand &getBrigType(llvm::MachineInstr *MI);
 const llvm::MachineOperand &getBrigType(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getWidth(llvm::MachineInstr *MI);
 const llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI);
-llvm::MachineOperand &getLoadConstQual(llvm::MachineInstr *MI);
-const llvm::MachineOperand &getLoadConstQual(const llvm::MachineInstr *MI);
+llvm::MachineOperand &getLoadModifierMask(llvm::MachineInstr *MI);
+const llvm::MachineOperand &getLoadModifierMask(const llvm::MachineInstr *MI);
 
 static inline bool isLoad(const llvm::MachineInstr *MI) {
   return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_LOAD);

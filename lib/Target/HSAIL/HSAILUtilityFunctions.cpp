@@ -537,16 +537,16 @@ const llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI)
   return getWidth(const_cast<llvm::MachineInstr*>(MI));
 }
 
-llvm::MachineOperand &getLoadConstQual(llvm::MachineInstr *MI)
+llvm::MachineOperand &getLoadModifierMask(llvm::MachineInstr *MI)
 {
   assert(hasAddress(MI) && MI->mayLoad() &&
          MI->getNumOperands() > HSAILADDRESS::ADDRESS_NUM_OPS + 2);
   return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS + 2);
 }
 
-const llvm::MachineOperand &getLoadConstQual(const llvm::MachineInstr *MI)
+const llvm::MachineOperand &getLoadModifierMask(const llvm::MachineInstr *MI)
 {
-  return getLoadConstQual(const_cast<llvm::MachineInstr*>(MI));
+  return getLoadModifierMask(const_cast<llvm::MachineInstr*>(MI));
 }
 
 unsigned getAddrSpace(const llvm::MachineInstr *MI)

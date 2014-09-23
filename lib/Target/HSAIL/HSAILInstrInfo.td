@@ -25,6 +25,7 @@ def In64BitMode  : Predicate<"Subtarget->is64Bit()">;
 // Custom Operands
 //===----------------------------------------------------------------------===//
 include "HSAILOperands.td"
+include "HSAILEnums.td"
 
 //===----------------------------------------------------------------------===//
 // Custom Selection DAG Type Profiles
@@ -40,8 +41,6 @@ include "HSAILNodes.td"
 // Custom Pattern DAG Nodes
 //===----------------------------------------------------------------------===//
 include "HSAILPatterns.td"
-
-include "HSAILEnums.td"
 
 //===----------------------------------------------------------------------===//
 // Instruction format classes

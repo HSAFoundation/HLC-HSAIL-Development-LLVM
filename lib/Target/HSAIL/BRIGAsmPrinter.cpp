@@ -1922,9 +1922,9 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitLoadOrStore(const MachineInstr *MI,
 
     // Emit const
     if(HSAILAS::GLOBAL_ADDRESS == as) {
-      const MachineOperand &const_op = HSAIL::getLoadConstQual(MI);
-      assert(const_op.isImm());
-      inst.modifier().isConst() = const_op.getImm();
+      const MachineOperand &Modifier = HSAIL::getLoadModifierMask(MI);
+      assert(Modifier.isImm());
+      inst.modifier().isConst() = Modifier.getImm() & Brig::BRIG_MEMORY_CONST;
     }
   }
 
