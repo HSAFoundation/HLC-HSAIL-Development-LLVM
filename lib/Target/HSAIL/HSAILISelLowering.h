@@ -469,18 +469,15 @@ public:
   /// The type may be VoidTy, in which case only return true if the addressing
   /// mode is legal for a load/store of any legal type.
   /// TODO: Handle pre/postinc as well.
-  virtual bool
-  isLegalAddressingMode(const AddrMode &AM, Type *Ty) const;
+  bool isLegalAddressingMode(const AddrMode &AM, Type *Ty) const override;
 
 
   /// isTruncateFree - Return true if it's free to truncate a value of
   /// type Ty1 to type Ty2. e.g. On x86 it's free to truncate a i32 value in
   /// register EAX to i16 by referencing its sub-register AX.
-  virtual bool
-  isTruncateFree(Type *Ty1, Type *Ty2) const;
+  bool isTruncateFree(Type *Ty1, Type *Ty2) const override;
 
-  virtual bool
-  isTruncateFree(EVT VT1, EVT VT2) const;
+  bool isTruncateFree(EVT VT1, EVT VT2) const override;
 
   /// isZExtFree - Return true if any actual instruction that defines a
   /// value of type Ty1 implicitly zero-extends the value to Ty2 in the result
@@ -497,15 +494,13 @@ public:
   /// isNarrowingProfitable - Return true if it's profitable to narrow
   /// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
   /// from i32 to i8 but not from i32 to i16.
-  virtual bool
-  isNarrowingProfitable(EVT VT1, EVT VT2) const;
+  bool isNarrowingProfitable(EVT VT1, EVT VT2) const override;
 
   /// isLegalICmpImmediate - Return true if the specified immediate is legal
   /// icmp immediate, that is the target has icmp instructions which can compare
   /// a register against the immediate without having to materialize the
   /// immediate into a register.
-  virtual bool
-  isLegalICmpImmediate(int64_t Imm) const;
+  bool isLegalICmpImmediate(int64_t Imm) const override;
 
   MVT getScalarShiftAmountTy(EVT LHSTy) const override;
 
