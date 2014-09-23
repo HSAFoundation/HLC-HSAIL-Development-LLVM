@@ -843,7 +843,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   if (HSAIL::isCrosslaneInst(II)) {
     const char *AsmStr = getInstMnemonic(II);
     HSAIL_ASM::Inst inst = HSAIL_ASM::parseMnemo(AsmStr, brigantine);
-    BrigEmitVecOperand(II, 0, 4);
+    BrigEmitVecOperand(II, 0, 4, inst);
     BrigEmitOperand(II, 4, inst);
     return inst;
   }
@@ -1893,12 +1893,6 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitLoadOrStore(const MachineInstr *MI,
   HSAIL_ASM::InstMem inst = brigantine.addInst<HSAIL_ASM::InstMem>
     (isLoad ? Brig::BRIG_OPCODE_LD : Brig::BRIG_OPCODE_ST);
 
-  if (vec_size == 1)
-    BrigEmitOperand(MI, 0, inst);
-  else
-    BrigEmitVecOperand(MI, 0, vec_size);
-  BrigEmitOperandLdStAddress(MI, vec_size);
-
   unsigned BT = HSAIL::getBrigType(MI).getImm();
   if (HSAIL_ASM::isBitType(BT))
     BT = HSAIL_ASM::getUnsignedType(HSAIL_ASM::getBrigTypeNumBits(BT));
@@ -1909,6 +1903,12 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitLoadOrStore(const MachineInstr *MI,
   inst.width()      = isLoad ? Brig::BRIG_WIDTH_1 : Brig::BRIG_WIDTH_NONE;
   inst.equivClass() = 0;
   inst.modifier().isConst() = 0;
+
+  if (vec_size == 1)
+    BrigEmitOperand(MI, 0, inst);
+  else
+    BrigEmitVecOperand(MI, 0, vec_size, inst);
+  BrigEmitOperandLdStAddress(MI, vec_size);
 
   if (EnableUniformOperations && isLoad) {
     // Emit width
@@ -1994,12 +1994,19 @@ HSAIL_ASM::OperandReg BRIGAsmPrinter::getBrigReg(MachineOperand s) {
 
 void BRIGAsmPrinter::BrigEmitVecOperand(
                             const MachineInstr *MI, unsigned opStart,
-                            unsigned numRegs) {
+                            unsigned numRegs, HSAIL_ASM::Inst inst) {
   assert(numRegs >=2 && numRegs <= 4);
   HSAIL_ASM::ItemList list;
   for(unsigned i=opStart; i<opStart + numRegs; ++i) {
-      // \todo olsemenov 20140331 should we support immediates here?
-      list.push_back(getBrigReg(MI->getOperand(i)));
+      const MachineOperand &MO = MI->getOperand(i);
+      if (MO.isReg()) {
+        list.push_back(getBrigReg(MO));
+      } else if (MO.isImm()) {
+        Brig::BrigType16_t const expType =
+          HSAIL_ASM::getOperandType(inst, m_opndList.size(),
+            brigantine.getMachineModel(), brigantine.getProfile());
+        list.push_back(brigantine.createImmed(MO.getImm(), expType));
+      }
   }
   m_opndList.push_back(brigantine.createOperandList(list));
 }
@@ -2013,7 +2020,7 @@ void BRIGAsmPrinter::BrigEmitImageInst(const MachineInstr *MI,
   {
     BrigEmitOperand(MI, opCnt++, inst);
   } else {
-    BrigEmitVecOperand(MI, opCnt, 4);
+    BrigEmitVecOperand(MI, opCnt, 4, inst);
     opCnt+=4;
   }
 
@@ -2037,12 +2044,12 @@ void BRIGAsmPrinter::BrigEmitImageInst(const MachineInstr *MI,
   case Brig::BRIG_GEOMETRY_1DA:
   case Brig::BRIG_GEOMETRY_2D:
   case Brig::BRIG_GEOMETRY_2DDEPTH:
-    BrigEmitVecOperand(MI, opCnt, 2); opCnt += 2;
+    BrigEmitVecOperand(MI, opCnt, 2, inst); opCnt += 2;
     break;
   case Brig::BRIG_GEOMETRY_2DA:
   case Brig::BRIG_GEOMETRY_2DADEPTH:
   case Brig::BRIG_GEOMETRY_3D:
-    BrigEmitVecOperand(MI, opCnt, 3); opCnt += 3;
+    BrigEmitVecOperand(MI, opCnt, 3, inst); opCnt += 3;
     break;
   }
 }

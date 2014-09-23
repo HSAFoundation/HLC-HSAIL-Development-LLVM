@@ -309,6 +309,11 @@ def : Pat<(StoreIsPtrNN<truncstorei16> (i32 GPR32:$val), ADDR:$ptr), (st_32_v1 G
 def : Pat<(StoreIsPtrNN<store>         (i64 GPR64:$val), ADDR:$ptr), (st_64_v1 GPR64:$val, ADDR:$ptr, 4)>;
 def : Pat<(StoreIsPtrNN<store>         (f64 GPR64:$val), ADDR:$ptr), (st_64_v1 GPR64:$val, ADDR:$ptr, 11)>;
 
+def : Pat<(StoreIsPtrNN<store>         (i32 imm:$val),   ADDR:$ptr), (st_32_v1 imm:$val,   ADDR:$ptr, 3)>;
+def : Pat<(StoreIsPtrNN<truncstorei8>  (i32 imm:$val),   ADDR:$ptr), (st_32_v1 imm:$val,   ADDR:$ptr, 1)>;
+def : Pat<(StoreIsPtrNN<truncstorei16> (i32 imm:$val),   ADDR:$ptr), (st_32_v1 imm:$val,   ADDR:$ptr, 2)>;
+def : Pat<(StoreIsPtrNN<store>         (i64 imm:$val),   ADDR:$ptr), (st_64_v1 imm:$val,   ADDR:$ptr, 4)>;
+
 // For segments where the address is 32-bit in both models.
 defm st_32_ptr32 : HSAIL_ST<GPR32, MEMOP32>;
 defm st_64_ptr32 : HSAIL_ST<GPR64, MEMOP32>;
@@ -319,6 +324,11 @@ def : Pat<(StoreIsPtr32<truncstorei8>  (i32 GPR32:$val), ADDR:$ptr), (st_32_ptr3
 def : Pat<(StoreIsPtr32<truncstorei16> (i32 GPR32:$val), ADDR:$ptr), (st_32_ptr32_v1 GPR32:$val, ADDR:$ptr, 2)>;
 def : Pat<(StoreIsPtr32<store>         (i64 GPR64:$val), ADDR:$ptr), (st_64_ptr32_v1 GPR64:$val, ADDR:$ptr, 4)>;
 def : Pat<(StoreIsPtr32<store>         (f64 GPR64:$val), ADDR:$ptr), (st_64_ptr32_v1 GPR64:$val, ADDR:$ptr, 11)>;
+
+def : Pat<(StoreIsPtr32<store>         (i32 imm:$val),   ADDR:$ptr), (st_32_ptr32_v1 imm:$val,   ADDR:$ptr, 3)>;
+def : Pat<(StoreIsPtr32<truncstorei8>  (i32 imm:$val),   ADDR:$ptr), (st_32_ptr32_v1 imm:$val,   ADDR:$ptr, 1)>;
+def : Pat<(StoreIsPtr32<truncstorei16> (i32 imm:$val),   ADDR:$ptr), (st_32_ptr32_v1 imm:$val,   ADDR:$ptr, 2)>;
+def : Pat<(StoreIsPtr32<store>         (i64 imm:$val),   ADDR:$ptr), (st_64_ptr32_v1 imm:$val,   ADDR:$ptr, 4)>;
 
 let hasAddress = 1, mayStore = 1, isPseudo = 1, hasSideEffects = 0 in {
   def st_b1_ptr32 : HSAILInst<(outs), (ins CR:$val, MEMOP32:$ptr, BRIG_TYPE_OPND:$t),

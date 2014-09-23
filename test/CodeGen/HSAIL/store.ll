@@ -6,8 +6,7 @@
 
 ; FUNC-LABEL: {{^}}prog function &store_i1_const
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL-DAG: mov_b32 [[REG:\$s[0-9]+]], 255;
-; HSAIL: st_global_u8 [[REG]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_global_u8 255, {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_i1_const(i1 addrspace(1)* %out) {
   store i1 true, i1 addrspace(1)* %out
@@ -182,8 +181,7 @@ define void @store_i64_i16(i16 addrspace(1)* %out, i64 %in) {
 
 ; FUNC-LABEL: {{^}}prog function &store_local_i1
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL-DAG: mov_b32 [[REG:\$s[0-9]+]], 255;
-; HSAIL: st_group_u8 [[REG]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_group_u8 255, {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_local_i1(i1 addrspace(3)* %out) {
   store i1 true, i1 addrspace(3)* %out
@@ -264,8 +262,7 @@ define void @store_local_i64_i16(i16 addrspace(3)* %out, i64 %in) {
 
 ; FUNC-LABEL: {{^}}prog function &store_private_i1
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL-DAG: mov_b32 [[REG:\$s[0-9]+]], 255;
-; HSAIL: st_private_u8 [[REG]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_private_u8 255, {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_private_i1(i1* %out) {
   store i1 true, i1* %out
@@ -346,8 +343,7 @@ define void @store_private_i64_i16(i16* %out, i64 %in) {
 
 ; FUNC-LABEL: {{^}}prog function &store_flat_i1
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
-; HSAIL-DAG: mov_b32 [[REG:\$s[0-9]+]], 255;
-; HSAIL: st_u8 [[REG]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: st_u8 255, {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_flat_i1(i1 addrspace(4)* %out) {
   store i1 true, i1 addrspace(4)* %out
