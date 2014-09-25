@@ -72,20 +72,6 @@
 #include <utility>
 using namespace llvm;
 
-static const HSAILConstPtr *getConstPtr(const HSAILKernel *krnl, const std::string &arg) {
-  if (!krnl) {
-    return NULL;
-  }
-  llvm::SmallVector<HSAILConstPtr, DEFAULT_VEC_SLOTS>::const_iterator begin, end;
-  for (begin = krnl->constPtr.begin(), end = krnl->constPtr.end();
-       begin != end; ++begin) {
-    if (!strcmp(begin->name.data(),arg.c_str())) {
-      return &(*begin);
-    }
-  }
-  return NULL;
-}
-
 void HSAILPrintfInfo::addOperand(size_t idx, uint32_t size) {
   mOperands.resize((unsigned)(idx + 1));
   mOperands[(unsigned)idx] = size;
@@ -141,7 +127,7 @@ HSAILMachineFunctionInfo::HSAILMachineFunctionInfo(MachineFunction& MF)
       reinterpret_cast<const HSAILTargetMachine*>(&MF.getTarget());
   HSAILModuleInfo *AMI = &(mmi.getObjFileInfo<HSAILModuleInfo>());
   AMI->processModule(mmi.getModule(), TM);
-  for (Module::const_iterator I = F->getParent()->begin(), 
+  for (Module::const_iterator I = F->getParent()->begin(),
       E = F->getParent()->end(); I != E; ++I) {
     // Map all the known names to a unique number
     AMI->getOrCreateFunctionID(I->getName());
@@ -231,36 +217,16 @@ HSAILMachineFunctionInfo::setUsesLocal()
   UsesLDS = true;
 }
 
-bool
-HSAILMachineFunctionInfo::usesLocal() const
-{
-  return UsesLDS;
-}
-
 void
 HSAILMachineFunctionInfo::setHasLocalArg()
 {
   LDSArg = true;
 }
 
-bool
-HSAILMachineFunctionInfo::hasLocalArg() const
-{
-  return LDSArg;
-}
-
-
-
 void
 HSAILMachineFunctionInfo::setUsesRegion()
 {
   UsesGDS = true;
-}
-
-bool
-HSAILMachineFunctionInfo::usesRegion() const
-{
-  return UsesGDS;
 }
 
 void
@@ -269,154 +235,6 @@ HSAILMachineFunctionInfo::setHasRegionArg()
   GDSArg = true;
 }
 
-bool
-HSAILMachineFunctionInfo::hasRegionArg() const
-{
-  return GDSArg;
-}
-
-
-bool
-HSAILMachineFunctionInfo::usesHWConstant(std::string name) const
-{
-  const HSAILConstPtr *curConst = getConstPtr(mKernel, name);
-  if (curConst) {
-    return curConst->usesHardware;
-  } else {
-    return false;
-  }
-}
-
-uint32_t
-HSAILMachineFunctionInfo::getLocal(uint32_t dim)
-{
-  if (mKernel && mKernel->sgv) {
-    HSAILKernelAttr *sgv = mKernel->sgv;
-    switch (dim) {
-    default: break;
-    case 0:
-    case 1:
-    case 2:
-      return sgv->reqGroupSize[dim];
-      break;
-    case 3:
-      return sgv->reqGroupSize[0] * sgv->reqGroupSize[1] * sgv->reqGroupSize[2];
-    };
-  }
-  switch (dim) {
-  default:
-    return 1;
-  case 3:
-    return mSTM->getDefaultSize(0) *
-           mSTM->getDefaultSize(1) *
-           mSTM->getDefaultSize(2);
-  case 2:
-  case 1:
-  case 0:
-    return mSTM->getDefaultSize(dim);
-    break;
-  };
-  return 1;
-}
-bool
-HSAILMachineFunctionInfo::isKernel() const
-{
-  return mKernel != NULL && mKernel->mKernel;
-}
-
-HSAILKernel*
-HSAILMachineFunctionInfo::getKernel()
-{
-  return mKernel;
-}
-
-std::string
-HSAILMachineFunctionInfo::getName()
-{
-  if (mMF) {
-    return mMF->getFunction()->getName();
-  } else {
-    return "";
-  }
-}
-
-uint32_t
-HSAILMachineFunctionInfo::getArgSize()
-{
-  if (mArgSize == -1) {
-    Function::const_arg_iterator I = mMF->getFunction()->arg_begin();
-    Function::const_arg_iterator Ie = mMF->getFunction()->arg_end();
-    uint32_t Counter = 0;
-    while (I != Ie) {
-      Type* curType = I->getType();
-      if (curType->isIntegerTy() || curType->isFloatingPointTy()) {
-        ++Counter;
-      } else if (const VectorType *VT = dyn_cast<VectorType>(curType)) {
-        Type *ET = VT->getElementType();
-        int numEle = VT->getNumElements();
-        switch (ET->getPrimitiveSizeInBits()) {
-          default:
-            if (numEle == 3) {
-              Counter++;
-            } else {
-              Counter += ((numEle + 2) >> 2);
-            }
-            break;
-          case 64:
-            if (numEle == 3) {
-              Counter += 2;
-            } else {
-              Counter += (numEle >> 1);
-            }
-            break;
-          case 16:
-          case 8:
-            switch (numEle) {
-              default:
-                Counter += ((numEle + 2) >> 2);
-              case 2:
-                Counter++;
-                break;
-            }
-            break;
-        }
-      } else if (const PointerType *PT = dyn_cast<PointerType>(curType)) {
-        Type *CT = PT->getElementType();
-        const StructType *ST = dyn_cast<StructType>(CT);
-        if (ST && ST->isOpaque()) {
-          if (IsImage(ST)) {
-            if (mSTM->device()->isSupported(HSAILDeviceInfo::Images)) {
-              Counter += 2;
-            } else {
-              addErrorMsg(hsa::CompilerErrorMessage[NO_IMAGE_SUPPORT]);
-            }
-          } else {
-            Counter++;
-          }
-        } else if (CT->isStructTy()
-            && PT->getAddressSpace() == HSAILAS::PRIVATE_ADDRESS) {
-          Counter += ((HSAIL::HSAILgetTypeSize(ST) + 15) & ~15) >> 4;
-        } else if (CT->isIntOrIntVectorTy()
-            || CT->isFPOrFPVectorTy()
-            || CT->isArrayTy()
-            || CT->isPointerTy()
-            || PT->getAddressSpace() != HSAILAS::PRIVATE_ADDRESS) {
-          ++Counter;
-        } else {
-          assert(0 && "Current type is not supported!");
-          addErrorMsg(hsa::CompilerErrorMessage[INTERNAL_ERROR]);
-        }
-      } else {
-        assert(0 && "Current type is not supported!");
-        addErrorMsg(hsa::CompilerErrorMessage[INTERNAL_ERROR]);
-      }
-      ++I;
-    }
-    // Convert from slots to bytes by multiplying by 16(shift by 4).
-    mArgSize = Counter << 4;
-  }
-  return (uint32_t)mArgSize;
-}
   uint32_t
 HSAILMachineFunctionInfo::getScratchSize()
 {
