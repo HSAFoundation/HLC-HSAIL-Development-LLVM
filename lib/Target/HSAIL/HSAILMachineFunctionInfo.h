@@ -277,26 +277,10 @@ namespace llvm
     void setSRetReturnReg(unsigned int Reg);
 
     void setUsesLocal();
-    bool usesLocal() const;
     void setHasLocalArg();
-    bool hasLocalArg() const;
 
     void setUsesRegion();
-    bool usesRegion() const;
     void setHasRegionArg();
-    bool hasRegionArg() const;
-
-    bool usesHWConstant(std::string name) const;
-    uint32_t getLocal(uint32_t);
-    bool isKernel() const;
-    HSAILKernel* getKernel();
-
-    std::string getName();
-
-    /// Get the size in bytes that are required to host all of
-    /// arguments based on the argument alignment rules in the HSAIL 
-    /// Metadata spec.
-    uint32_t getArgSize();
 
     /// Get the size in bytes that are required to host all of
     /// arguments and stack memory in scratch.
@@ -358,27 +342,12 @@ namespace llvm
     /// Add some literals to the number of reserved literals.
     void addReservedLiterals(uint32_t);
 
-    // Functions that return iterators to the beginning and end
-    // of the various literal maps.
-    // Functions that return the beginning and end of the 32bit literal map
-    lit32_iterator begin_32() { return mIntLits.begin(); }
-    lit32_iterator end_32() { return mIntLits.end(); }
-
-    // Functions that return the beginning and end of the 64bit literal map
-    lit64_iterator begin_64() { return mLongLits.begin(); }
-    lit64_iterator end_64() { return mLongLits.end(); }
-
-    // Functions that return the beginning and end of the 2x64bit literal map
-    lit128_iterator begin_128() { return mVecLits.begin(); }
-    lit128_iterator end_128() { return mVecLits.end(); }
-
     // Add a sampler to the set of known samplers for the current kernel.
     uint32_t addSampler(std::string name, uint32_t value);
-    
+
     // Iterators that point to the beginning and end of the sampler map.
     sampler_iterator sampler_begin() { return mSamplerMap.begin(); }
     sampler_iterator sampler_end() { return mSamplerMap.end(); }
-
 
     /// Set the flag for the memory ID to true for the current function.
     void setUsesMem(unsigned);
