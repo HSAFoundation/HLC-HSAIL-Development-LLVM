@@ -3,7 +3,6 @@
 #include "MCTargetDesc/BRIGDwarfStreamer.h"
 #include "HSAILKernelManager.h"
 #include "HSAILMachineFunctionInfo.h"
-#include "HSAILModuleInfo.h"
 #include "HSAILOpaqueTypes.h"
 #include "HSAILTargetMachine.h"
 #include "HSAILLLVMVersion.h"
@@ -765,7 +764,6 @@ bool  BRIGAsmPrinter::runOnMachineFunction(MachineFunction &lMF) {
   this->MF = &lMF;
   mMeta->setMF(&lMF);
   mMFI = lMF.getInfo<HSAILMachineFunctionInfo>();
-  mAMI = &(lMF.getMMI().getObjFileInfo<HSAILModuleInfo>());
   SetupMachineFunction(lMF);
   const Function *F = MF->getFunction();
   OutStreamer.SwitchSection(getObjFileLowering().SectionForGlobal(F, *Mang, TM));

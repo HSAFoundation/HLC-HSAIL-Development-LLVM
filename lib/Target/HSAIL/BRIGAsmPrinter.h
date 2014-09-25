@@ -38,7 +38,6 @@ namespace llvm {
 class Argument;
 class HSAILKernelManager;
 class HSAILMachineFunctionInfo;
-class HSAILModuleInfo;
 class MachineBasicBlock;
 class MachineConstantPoolValue;
 class MachineFunction;
@@ -165,7 +164,6 @@ protected:
   HSAILTargetMachine *mTM;
   HSAILKernelManager *mMeta;    /* metadata required by the runtime */
   HSAILMachineFunctionInfo *mMFI; /* current function being processed */
-  HSAILModuleInfo *mAMI;        /* current module being processed */
 
   /// name of the kernel wrapper of the current function
   std::string mKernelName;

@@ -67,7 +67,6 @@
 #include "llvm/Support/raw_ostream.h"
 #include <string>
 #include <set>
-#define CB_BASE_OFFSET 2
 
 namespace llvm {
   class Argument;
@@ -102,79 +101,28 @@ namespace llvm {
       /// Returns true if the image ID corresponds to a read write image.
       bool isReadWriteImage(const llvm::StringRef &name, uint32_t iID) const;
 
-      /// Gets the group size of the kernel for the given dimension.
-      uint32_t getRegion(const llvm::StringRef &name, uint32_t dim) const;
-
-      /// Get the offset of the array for the kernel.
-      int32_t getArrayOffset(const llvm::StringRef &name) const;
-
       /// Get a reference to the kernel metadata information for the given function
       /// name.
       HSAILKernel *getKernel(const llvm::StringRef &name);
-      bool isKernel(const llvm::StringRef &name) const;
-
-      /// Query if the kernel has a byte store.
-      bool byteStoreExists(llvm::StringRef S) const;
-
-      /// Query if the constant pointer is an argument.
-      bool isConstPtrArgument(const HSAILKernel *krnl, const llvm::StringRef &arg);
-
-      /// Query if the constant pointer is an array that is globally scoped.
-      bool isConstPtrArray(const HSAILKernel *krnl, const llvm::StringRef &arg);
 
       /// Query if the constant argument uses hardware or not
       bool usesHWConstant(const HSAILKernel *krnl, const llvm::StringRef &arg);
 
-      /// Query the size of the constant pointer.
-      uint32_t getConstPtrSize(const HSAILKernel *krnl, const llvm::StringRef &arg);
-
-      /// Query the offset of the constant pointer.
-      uint32_t getConstPtrOff(const HSAILKernel *krnl, const llvm::StringRef &arg);
-
       /// Query the constant buffer number for a constant pointer.
       uint32_t getConstPtrCB(const HSAILKernel *krnl, const llvm::StringRef &arg);
-
-      /// Query the Value* that the constant pointer originates from.
-      const Value *getConstPtrValue(const HSAILKernel *krnl, const llvm::StringRef &arg);
-
-      /// Get the ID of the argument.
-      int32_t getArgID(const Argument *arg);
 
       /// Get the unique function ID for the specific function name and create a new
       /// unique ID if it is not found.
       uint32_t getOrCreateFunctionID(const GlobalValue* func);
       uint32_t getOrCreateFunctionID(const std::string &func);
 
-      /// Calculate the offsets of the constant pool for the given kernel and
-      /// machine function.
-      void calculateCPOffsets(const MachineFunction *MF, HSAILKernel *krnl);
-
       void add_printf_offset(uint32_t offset) { mPrintfOffset += offset; }
       uint32_t get_printf_offset() { return mPrintfOffset; }
-
-      std::set<std::string>* getSamplerForKernel(llvm::StringRef &kernelName);
 
     public:
       llvm::StringMap<HSAILKernel*> mKernels;
 
     private:
-      /// Various functions that parse global value information and store them in
-      /// the global manager. This approach is used instead of dynamic parsing as it
-      /// might require more space, but should allow caching of data that gets
-      /// requested multiple times.
-      HSAILKernelAttr parseSGV(const GlobalVariable *GV);
-      HSAILLocalPrivateArg  parseLVGV(const GlobalVariable *GV);
-      HSAILLocalPrivateArg  parsePVGV(const GlobalVariable *GV);
-      void parseGlobalAnnotate(const GlobalVariable *G);
-      void parseImageAnnotate(const GlobalVariable *G);
-      void parseSamplerAnnotate(const GlobalVariable *GV);
-      void printConstantValue(const Constant *CAval,
-          OSTREAM_TYPE& O,
-          bool asByte);
-      void parseKernelInformation(const Value *V);
-      void parseAutoArray(const GlobalVariable *G, bool isRegion);
-      void parseArgTypeNames(const GlobalVariable *G);
-
       llvm::StringMap<HSAILKernelAttr> mKernelArgs;
       llvm::StringMap<HSAILArrayMem> mArrayMems;
       llvm::StringMap<uint32_t> mFuncNames;
