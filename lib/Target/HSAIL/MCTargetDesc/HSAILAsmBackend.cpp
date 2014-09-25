@@ -25,33 +25,6 @@ HSAILAsmBackend::createObjectWriter(raw_ostream &OS) const
   return NULL;
 }
 
-/// doesSectionRequireSymbols - Check whether the given section requires that
-/// all symbols (even temporaries) have symbol table entries.
-bool
-HSAILAsmBackend::doesSectionRequireSymbols(const MCSection &Section) const
-{
-  assert(!"When do we hit this?");
-  return false;
-}
-
-/// isSectionAtomizable - Check whether the given section can be split into
-/// atoms.
-/// \see MCAssembler::isSymbolLinkerVisible().
-bool
-HSAILAsmBackend::isSectionAtomizable(const MCSection &Section) const
-{
-  assert(!"When do we hit this?");
-  return false;
-}
-
-/// isVirtualSection - Check whether the given section is "virtual", that is
-/// has no actual object file contents.
-bool
-HSAILAsmBackend::isVirtualSection(const MCSection &Section) const
-{
-  assert(!"When do we hit this?");
-  return false;
-}
 
 // pulled from x86asmbackend.cpp, used in ApplyFixup
 //

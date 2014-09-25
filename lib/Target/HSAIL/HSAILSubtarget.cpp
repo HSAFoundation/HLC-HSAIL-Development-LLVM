@@ -90,28 +90,6 @@ HSAILSubtarget::getDefaultSize(uint32_t dim) const
 
 }
 
-unsigned
-HSAILSubtarget::getSpecialAddressLatency() const
-{
-  assert(!"When do we hit this?");
-  return 0;
-}
-#if 0
-bool
-HSAILSubtarget::enablePostRAScheduler(CodeGenOpt::Level OptLevel,
-                                      AntiDepBreakMode& Mode,
-                                      RegClassVector& CriticalPathRCs) const
-{
-  assert(!"When do we hit this?");
-  return false;
-}
-#endif
-void
-HSAILSubtarget::adjustSchedDependency(SUnit *def, SUnit *use, SDep& dep) const
-{
-  //assert(!"When do we hit this?");
-}
-
 std::string
 HSAILSubtarget::getDeviceName() const
 {
