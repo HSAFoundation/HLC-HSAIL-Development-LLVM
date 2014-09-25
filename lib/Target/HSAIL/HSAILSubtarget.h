@@ -181,30 +181,6 @@ public:
     return &FrameLowering;
   }
 
-  /// getSpecialAddressLatency - For targets where it is beneficial to
-  /// backschedule instructions that compute addresses, return a value
-  /// indicating the number of scheduling cycles of backscheduling that
-  /// should be attempted.
-  virtual unsigned
-  getSpecialAddressLatency() const;
-#if 0
-  // enablePostRAScheduler - If the target can benefit from post-regalloc
-  // scheduling and the specified optimization level meets the requirement
-  // return true to enable post-register-allocation scheduling. In
-  // CriticalPathRCs return any register classes that should only be broken
-  // if on the critical path.
-  virtual bool
-  enablePostRAScheduler(CodeGenOpt::Level OptLevel,
-                        AntiDepBreakMode& Mode,
-                        RegClassVector& CriticalPathRCs) const;
-#endif
-  // adjustSchedDependency - Perform target specific adjustments to
-  // the latency of a schedule dependency.
-  virtual void
-  adjustSchedDependency(SUnit *def,
-                        SUnit *use,
-                        SDep& dep) const;
-
   /// getStackAlignment - Returns the minimum alignment known to hold of the
   /// stack frame on entry to the function and which must be maintained by every
   /// function for this subtarget.

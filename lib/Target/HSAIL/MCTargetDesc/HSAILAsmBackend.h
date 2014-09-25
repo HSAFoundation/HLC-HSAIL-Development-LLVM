@@ -49,23 +49,6 @@ public:
   virtual MCObjectWriter*
   createObjectWriter(raw_ostream &OS) const;
 
-  /// doesSectionRequireSymbols - Check whether the given section requires that
-  /// all symbols (even temporaries) have symbol table entries.
-  virtual bool
-  doesSectionRequireSymbols(const MCSection &Section) const;
-
-  /// isSectionAtomizable - Check whether the given section can be split into
-  /// atoms.
-  ///
-  /// \see MCAssembler::isSymbolLinkerVisible().
-  virtual bool
-  isSectionAtomizable(const MCSection &Section) const;
-
-  /// isVirtualSection - Check whether the given section is "virtual", that is
-  /// has no actual object file contents.
-  virtual bool
-  isVirtualSection(const MCSection &Section) const;
-
   /// applyFixup - Apply the \arg Value for given \arg Fixup into the provided
   /// data fragment, at the offset specified by the fixup and following the
   /// fixup kind as appropriate.
