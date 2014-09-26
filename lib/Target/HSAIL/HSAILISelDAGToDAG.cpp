@@ -120,6 +120,8 @@ private:
              SDValue &Reg,
              SDValue &Offset);
 
+  bool SelectGPROrImm(SDValue In, SDValue &Src) const;
+
   bool
   TryFoldLoad(SDNode *P,
               SDValue N,
@@ -232,6 +234,17 @@ HSAILDAGToDAGISel::TryFoldLoad(SDNode *P,
 {
   assert(!"When do we hit this?");
   return false;
+}
+
+bool HSAILDAGToDAGISel::SelectGPROrImm(SDValue In, SDValue &Src) const {
+  if (ConstantSDNode *C = dyn_cast<ConstantSDNode>(In))
+    Src = CurDAG->getTargetConstant(C->getAPIntValue(), C->getValueType(0));
+  else if (ConstantFPSDNode *C = dyn_cast<ConstantFPSDNode>(In))
+    Src = CurDAG->getTargetConstantFP(C->getValueAPF(), C->getValueType(0));
+  else
+    Src = In;
+
+  return true;
 }
 
 /// getGlobalBaseReg - Return an SDNode that returns the value of

@@ -95,3 +95,4 @@ def tglobalroaddr_base64 : PatLeaf<(i64 tglobaladdr), [{
               && (GA->getAddressSpace() == Subtarget->getConstantAS());
 }]>;
 
+def GPROrImm : ComplexPattern<untyped, 1, "SelectGPROrImm">;

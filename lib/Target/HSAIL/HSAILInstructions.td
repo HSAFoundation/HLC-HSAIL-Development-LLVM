@@ -654,14 +654,11 @@ multiclass UnaryOpF32<SDNode op, string asm> {
       [(set (f32 GPR32:$dst), (op (f32 fpimm:$src)))]>;
 }
 
+// FIXME: THis should not be a multiclass
 multiclass BinaryOpF32<SDNode op, string asm> {
   def _f32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src1, GPR32:$src2),
       !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (f32 GPR32:$dst), (op (f32 GPR32:$src1), (f32 GPR32:$src2)))]>;
-
-  def _ri_f32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src1, f32imm:$src2),
-      !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (f32 GPR32:$dst), (op (f32 GPR32:$src1), (f32 fpimm:$src2)))]>;
+      [(set (f32 GPR32:$dst), (op (GPROrImm f32:$src1), (GPROrImm f32:$src2)))]>;
 }
 
 // non-commutative ops
@@ -724,11 +721,8 @@ multiclass UnaryOpF64<SDNode op, string asm> {
 multiclass BinaryOpF64<SDNode op, string asm> {
   def _f64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src1, GPR64:$src2),
       !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (f64 GPR64:$dst), (op (f64 GPR64:$src1), (f64 GPR64:$src2)))]>;
+      [(set (f64 GPR64:$dst), (op (GPROrImm f64:$src1), (GPROrImm f64:$src2)))]>;
 
-  def _ri_f64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src1, f64imm:$src2),
-      !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (f64 GPR64:$dst), (op (f64 GPR64:$src1), (f64 fpimm:$src2)))]>;
 }
 
 multiclass BinaryNCOpF64<SDNode op, string asm> {
@@ -861,11 +855,7 @@ multiclass UnaryPatU32<PatFrag op, string asm> {
 multiclass BinaryOpU32<SDNode op, string asm> {
   def _u32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src1, GPR32:$src2),
       !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (i32 GPR32:$dst), (op (i32 GPR32:$src1), (i32 GPR32:$src2)))]>;
-
-  def _ri_u32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src1, i32imm:$src2),
-      !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (i32 GPR32:$dst), (op (i32 GPR32:$src1), (i32 imm:$src2)))]>;
+      [(set (i32 GPR32:$dst), (op (GPROrImm i32:$src1), (GPROrImm i32:$src2)))]>;
 }
 
 multiclass BinaryNCOpU32<SDNode op, string asm> {
