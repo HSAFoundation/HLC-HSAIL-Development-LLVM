@@ -244,7 +244,8 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM)
   setSelectIsExpensive(true);
   setPow2SDivIsCheap(false);
   setPrefLoopAlignment(0);
-  setSchedulingPreference(Sched::ILP);
+  setSchedulingPreference((CodeGenOpt::None == TM.getOptLevel()) ?
+    Sched::Source : Sched::ILP);
 #ifdef _DEBUG
   const char* pScheduler = std::getenv("AMD_DEBUG_HSAIL_PRE_RA_SCHEDULER");
   if (pScheduler) {

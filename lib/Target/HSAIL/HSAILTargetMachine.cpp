@@ -116,12 +116,11 @@ HSAILTargetMachine::createPassConfig(PassManagerBase &PM) {
 }
 
 void HSAILPassConfig::addIRPasses() {
+  HSAILTargetMachine &HSATM = getTM<HSAILTargetMachine>();
+
   // AddrSpaceCast optimization and lowering. Add dead code elimination
   // to eliminate dead instructions (AddrSpaceCast, etc.).
-
-    addPass(createDeadCodeEliminationPass());
-
-    TargetPassConfig::addIRPasses();
+  TargetPassConfig::addIRPasses();
 }
 
 bool HSAILPassConfig::addPreISel(){

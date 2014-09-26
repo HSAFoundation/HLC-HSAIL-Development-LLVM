@@ -20,6 +20,7 @@
 def EnableExperimental : Predicate<"llvm::EnableExperimentalFeatures">;
 def In32BitMode  : Predicate<"!Subtarget->is64Bit()">;
 def In64BitMode  : Predicate<"Subtarget->is64Bit()">;
+def EnableOpt    : Predicate<"CodeGenOpt::None != TM.getOptLevel()">;
 
 //===----------------------------------------------------------------------===//
 // Custom Operands
