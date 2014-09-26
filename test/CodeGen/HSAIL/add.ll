@@ -85,3 +85,21 @@ entry:
   store i64 %0, i64 addrspace(1)* %out
   ret void
 }
+
+; FUNC-LABEL: {{^}}prog function &add_r_i_i32
+; HSAIL: add_u32 {{\$s[0-9]+}}, {{\$s[0-9]+}}, 123;
+define void @add_r_i_i32(i32 addrspace(1)* %out, i32 addrspace(1)* %in) {
+  %a = load i32 addrspace(1)* %in
+  %result = add i32 %a, 123
+  store i32 %result, i32 addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &add_r_i_i64
+; HSAIL: add_u64 {{\$d[0-9]+}}, {{\$d[0-9]+}}, 123;
+define void @add_r_i_i64(i64 addrspace(1)* %out, i64 addrspace(1)* %in) {
+  %a = load i64 addrspace(1)* %in
+  %result = add i64 %a, 123
+  store i64 %result, i64 addrspace(1)* %out
+  ret void
+}
