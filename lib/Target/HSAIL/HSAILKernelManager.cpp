@@ -301,14 +301,6 @@ void HSAILKernelManager::processArgMetadata(OSTREAM_TYPE &ignored,
   }
   uint32_t mCBSize = 0;
   int raw_uav_buffer = mSTM->device()->getResourceID(HSAILDevice::RAW_UAV_ID);
-  bool MultiUAV = mSTM->device()->isSupported(HSAILDeviceInfo::MultiUAV);
-  bool ArenaSegment =
-    mSTM->device()->isSupported(HSAILDeviceInfo::ArenaSegment);
-  if (MultiUAV || ArenaSegment) {
-    if (mSTM->device()->getGeneration() <= HSAILDeviceInfo::HD6XXX) {
-      raw_uav_buffer = mSTM->device()->getResourceID(HSAILDevice::ARENA_UAV_ID);
-    }
-  }
   uint32_t CounterNum = 0;
   uint32_t SemaNum = 0;
   uint32_t ROArg = 0;
@@ -645,31 +637,9 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
         RTI(brig) << oss.str();
       }
     }
-    if (isKernel && mSTM->device()->getGeneration() <= HSAILDeviceInfo::HD6XXX) {
-      if (mSTM->device()->getResourceID(HSAILDevice::RAW_UAV_ID) > mSTM->device()->getResourceID(HSAILDevice::ARENA_UAV_ID)) {
-        if (mMFI->uav_size() == 1) {
-          if (mSTM->device()->isSupported(HSAILDeviceInfo::ArenaSegment) && *(mMFI->uav_begin()) >= ARENA_SEGMENT_RESERVED_UAVS) {
-            RTI(brig) << "uavid:";
-          } else {
-            RTI(brig) << "uavid:" << *(mMFI->uav_begin());
-          }
-        } else if (mMFI->uav_count(mSTM->device()-> getResourceID(HSAILDevice::RAW_UAV_ID))) {
-          RTI(brig) << "uavid:" << mSTM->device()->getResourceID(HSAILDevice::RAW_UAV_ID);
-        } else {
-          RTI(brig) << "uavid:" << mSTM->device()->getResourceID(HSAILDevice::ARENA_UAV_ID);
-        }
-      } else if (!mSTM->device()->isSupported(HSAILDeviceInfo::ArenaSegment)
-                 && mMFI->uav_count(mSTM->device()-> getResourceID(HSAILDevice::RAW_UAV_ID))) {
-        RTI(brig) << "uavid:" << mSTM->device()->getResourceID(HSAILDevice::RAW_UAV_ID);
-      } else if (mMFI->uav_size() == 1) {
-        RTI(brig) << "uavid:" << *(mMFI->uav_begin());
-      } else {
-        RTI(brig) << "uavid:" << mSTM->device()->getResourceID(HSAILDevice::ARENA_UAV_ID);
-      }
-    } else if (isKernel && mSTM->device()->getGeneration() > HSAILDeviceInfo::HD6XXX) {
-        if (mMFI->printf_size() > 0) {
-          RTI(brig) << ";uavid:" << mSTM->device()->getResourceID(HSAILDevice::GLOBAL_ID);
-        }
+
+    if (isKernel && mMFI->printf_size() > 0) {
+      RTI(brig) << ";uavid:" << mSTM->device()->getResourceID(HSAILDevice::GLOBAL_ID);
     }
     if (isKernel) {
       RTI(brig) << "privateid:" << mSTM->device()->getResourceID(HSAILDevice::SCRATCH_ID);
@@ -702,9 +672,5 @@ uint32_t HSAILKernelManager::getUAVID(const Value *value) {
     return mValueIDMap[value];
   }
 
-  if (mSTM->device()->getGeneration() <= HSAILDeviceInfo::HD6XXX) {
-    return mSTM->device()->getResourceID(HSAILDevice::ARENA_UAV_ID);
-  } else {
-    return mSTM->device()->getResourceID(HSAILDevice::RAW_UAV_ID);
-  }
+  return mSTM->device()->getResourceID(HSAILDevice::RAW_UAV_ID);
 }
