@@ -86,8 +86,10 @@ def orShlAsMad : PatFrag<(ops node:$reg, node:$shift, node:$mask),
     return false;
 }]>;
 
+let Predicates = [EnableOpt] in {
 defm mad_u32 : TernaryFusedPairOp<"umad", "u32", i32, imm, GPR32, add, mul>;
 defm mad_u64 : TernaryFusedPairOp<"umad", "u64", i64, imm, GPR64, add, mul>;
+}
 
 // 32 bit integer multiplication is expensive operation on current HW,
 // The cost of 32 bit mul is 4 times higher than a cost of add. Therefor 
@@ -99,15 +101,19 @@ defm mad_u64 : TernaryFusedPairOp<"umad", "u64", i64, imm, GPR64, add, mul>;
 // Therefor folding of shift + add is commented out for 64 bit ops unless we
 // have a HW supporing 64 bit mads.
 //
+// let Predicates = [EnableOpt] in {
 // defm m2ad_u64 : TernaryFusedShlAdd<"mad_u64", i64, i64imm, shl64imm, GPR64>;
+// }
 
 // We do not define 64 bit const1 | (x << const2) folding, as we have 64 bit
 // or and shift, but no 64 bit mad.
 // As 32 bit integer multiplication is curently expensive, optimization is
 // commented out.
+// let Predicates = [EnableOpt] in {
 // def mor_u32 : Pat<(orShlAsMad GPR32:$src1,
 //                               (i32 shl32imm:$src2), (i32 imm:$src3)),
 //                   (umad_rii_u32 GPR32:$src1, shl32imm:$src2, imm:$src3)>;
+// }
 
 let Predicates = [EnableFPMAD] in {
     defm nfma_f32 : TernaryFusedPairOp<"nfma", "f32", f32, fpimm, GPR32,
@@ -141,12 +147,14 @@ multiclass ShrOp<string asm, string t, SDNode op, RegisterClass RC,
                   (!cast<HSAILInst>(asm#"_ir"#t) imm:$src1, GPR32:$src2)>;
 }
 
+let Predicates = [EnableOpt] in {
 defm shr_u32 : ShrOp<"shr", "_u32", srl, GPR32, i32, imm31>;
 defm shr_s32 : ShrOp<"shr", "_s32", sra, GPR32, i32, imm31>;
 defm shl_u32 : ShrOp<"shl", "_u32", shl, GPR32, i32, imm31>;
 defm shr_u64 : ShrOp<"shr", "_u64", srl, GPR64, i64, imm63>;
 defm shr_s64 : ShrOp<"shr", "_s64", sra, GPR64, i64, imm63>;
 defm shl_u64 : ShrOp<"shl", "_u64", shl, GPR64, i64, imm63>;
+}
 
 def popCnt : SDNodeXForm<imm, [{
     return CurDAG->getTargetConstant(CountPopulation_64(N->getZExtValue()), 
@@ -218,6 +226,7 @@ multiclass SignNeutralExtractOp<string asm, ValueType Ty, RegisterClass RC,
 
 // No signed extract operations are defined since HSAIL specifies extract as
 // left + right shifts rather than right shift + and
+let Predicates = [EnableOpt] in {
 def : Pat<(and (srl GPR32:$src1, (i32 isMax32bitShift:$src2)), (i32 isMask:$src3)),
           (media_bfe_rii_u32 GPR32:$src1, isMax32bitShift:$src2, isMask:$src3)>;
 
@@ -231,6 +240,7 @@ def : Pat<(SignNeutralExtract GPR32:$src1, (i32 isMax32bitShift:$src2),
           (media_bfe_rii_u32 GPR32:$src1, isMax32bitShift:$src2, isMask:$src3)>;
 
 defm extract_b64 : SignNeutralExtractOp<"bitextract_u64", i64, GPR64, isMax64bitShift>;
+}
 
 // BFI
 
@@ -371,13 +381,17 @@ multiclass BitSelect<int Bits, ValueType Ty, RegisterClass RC> {
                     (!cast<HSAILInst>("bitsel_rii_u"#Bits) RC:$src1, imm:$src2, imm:$src3)>;
 }
 
+let Predicates = [EnableOpt] in {
 defm bitselect_b32 : BitSelect<32, i32, GPR32>;
 defm bitselect_b64 : BitSelect<64, i64, GPR64>;
+}
 
 // pack
 
+let Predicates = [EnableOpt] in {
 def : Pat<(shl (i64 (anyext GPR32:$src)), (i32 32)),
           (pack_u32x2_u32_iri 0, GPR32:$src, 1)>;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // reciprocal
@@ -477,6 +491,7 @@ multiclass minmax<string prefix, string suffix, ValueType Ty, SDNode ImmTy,
                 (!cast<HSAILInst>(prefix#"_ir_"#suffix) ImmTy:$src1, RC:$src2)>;
 }
 
+let Predicates = [EnableOpt] in {
 defm min_s32  : minmax<"min", "s32", i32, imm,   GPR32, SETLT,  SETGT>;
 defm min_u32  : minmax<"min", "u32", i32, imm,   GPR32, SETULT, SETUGT>;
 defm max_s32  : minmax<"max", "s32", i32, imm,   GPR32, SETGT,  SETLT>;
@@ -489,8 +504,9 @@ defm minu_f64 : minmax<"min", "f64", f64, fpimm, GPR64, SETULT, SETUGT>;
 defm maxu_f64 : minmax<"max", "f64", f64, fpimm, GPR64, SETUGT, SETULT>;
 defm mino_f64 : minmax<"min", "f64", f64, fpimm, GPR64, SETOLT, SETOGT>;
 defm maxo_f64 : minmax<"max", "f64", f64, fpimm, GPR64, SETOGT, SETOLT>;
+}
 
-let Predicates = [EnableGCNMinMax] in {
+let Predicates = [EnableOpt, EnableGCNMinMax] in {
     defm minu_f32 : minmax<"gcn_min", "f32", f32, fpimm, GPR32, SETULT, SETUGT>;
     defm maxu_f32 : minmax<"gcn_max", "f32", f32, fpimm, GPR32, SETUGT, SETULT>;
     defm mino_f32 : minmax<"gcn_min", "f32", f32, fpimm, GPR32, SETOLT, SETOGT>;
@@ -499,12 +515,14 @@ let Predicates = [EnableGCNMinMax] in {
 
 ////////////////////////////////////////////////////////////////////////////////
 // Abs
+let Predicates = [EnableOpt] in {
 def : Pat<(xor (add (sra (i32 GPR32:$src), (i32 31)), (i32 GPR32:$src)),
                (sra (i32 GPR32:$src), (i32 31))),
           (abs_s32 GPR32:$src)>;
 def : Pat<(xor (add (sra (i64 GPR64:$src), (i32 63)), (i64 GPR64:$src)),
                (sra (i64 GPR64:$src), (i32 63))),
           (abs_s64 GPR64:$src)>;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // fadd y (fmul x, 1)
@@ -518,8 +536,10 @@ multiclass FusedAddMul1<HSAILInst op, ValueType Ty, RegisterClass RC,
                    (op RC:$src1, (Ty fpimm:$src2))>;
 }
 
+let Predicates = [EnableOpt] in {
 defm addmul1_f32 : FusedAddMul1<add_f32, f32, GPR32, fp32imm1>;
 defm addmul1_f64 : FusedAddMul1<add_f64, f64, GPR64, fp64imm1>;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // rotate
@@ -551,7 +571,7 @@ def RotateByte32const : PatFrag<(ops node:$reg, node:$shl, node:$shr),
     return false;
 }]>;
 
-let AddedComplexity = 1 in {
+let AddedComplexity = 1, Predicates = [EnableOpt] in {
 def : Pat<(RotateByte32const GPR32:$src1, (i32 isByteSzShiftNoXform),
                              (i32 isByteSzShift:$src3)),
           (media_bytealign_rri GPR32:$src1, GPR32:$src1, isByteSzShift:$src3)>;
@@ -571,6 +591,7 @@ def RotateBit32const : PatFrag<(ops node:$reg, node:$shl, node:$shr),
     return false;
 }]>;
 
+let Predicates = [EnableOpt] in {
 def : Pat<(RotateBit32const GPR32:$src1, (i32 imm), (i32 imm:$src3)),
           (media_bitalign_rri GPR32:$src1, GPR32:$src1, imm:$src3)>;
 
@@ -581,3 +602,4 @@ def : Pat<(or (shl (i32 GPR32:$src1), (and (i32 GPR32:$src2), imm31)),
 def : Pat<(or (shl (i32 GPR32:$src1), (i32 GPR32:$src2)),
               (srl (i32 GPR32:$src1), (sub imm32, (and (i32 GPR32:$src2), imm31)))),
           (media_bitalign_rrr GPR32:$src1, GPR32:$src1, (neg_s32 GPR32:$src2))>;
+}
