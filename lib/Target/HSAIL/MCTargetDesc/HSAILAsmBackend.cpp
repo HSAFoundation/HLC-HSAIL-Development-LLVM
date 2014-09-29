@@ -81,7 +81,6 @@ void HSAILAsmBackend::applyFixup(const MCFixup &Fixup, char *Data,
 bool
 HSAILAsmBackend::mayNeedRelaxation(const MCInst &Inst) const
 {
-  assert(!"When do we hit this?");
   return false;
 }
 
