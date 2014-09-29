@@ -20,26 +20,28 @@
 #include "llvm/Support/ELF.h"
 using namespace llvm;
 
-HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(StringRef &T)
-{
+HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(StringRef &T) {
   PrivateGlobalPrefix = "@";
   GlobalDirective = "global";
   HasSetDirective = false;
   HasDotTypeDotSizeDirective = false;
   HasSingleParameterDotFile = false;
 
-  // We must set SupportsDebugInformation to true in order for debug info  to 
-  // be generated.  This shouldn't cause unwanted output, because if the FE 
+  // We must set SupportsDebugInformation to true in order for debug info  to
+  // be generated.  This shouldn't cause unwanted output, because if the FE
   // does not produce debug metadata (no -g option) then there won't be (much)
   // debug info generated.
-  // TODO: we may need to especially ensure that when -g is not passed to the FE,
-  //        BRIGAsmPrinter does not create large ".text", etc., sections in order to
+  // TODO: we may need to especially ensure that when -g is not passed to the
+  // FE,
+  //        BRIGAsmPrinter does not create large ".text", etc., sections in
+  //        order to
   //        save space and I/O time.
   //
 
   // FIXME: Setting SupportsDebugInformation to true causes an assertion
   // failure in the AsmPrinter() destructor.
-  // Assertion `!DD && Handlers.empty() && "Debug/EH info didn't get finalized"' failed.
+  // Assertion `!DD && Handlers.empty() && "Debug/EH info didn't get finalized"'
+  // failed.
   SupportsDebugInformation = false;
 
   PointerSize = Triple(T).getArch() == Triple::hsail_64 ? 8 : 4;
@@ -53,9 +55,7 @@ HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(StringRef &T)
   Data64bitsDirective = "sectiondata_b64\t";
 }
 
-const MCSection*
-HSAILELFMCAsmInfo::getNonexecutableStackSection(MCContext &Ctx) const
-{
+const MCSection *
+HSAILELFMCAsmInfo::getNonexecutableStackSection(MCContext &Ctx) const {
   return NULL;
 }
-

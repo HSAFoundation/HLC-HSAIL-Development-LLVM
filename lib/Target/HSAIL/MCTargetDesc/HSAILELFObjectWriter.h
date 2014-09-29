@@ -14,17 +14,14 @@
 namespace llvm {
 class HSAILELFObjectWriter : public MCELFObjectTargetWriter {
 public:
-  HSAILELFObjectWriter(bool is64Bit,
-                       Triple::OSType OSType,
-                       uint16_t EMachine,
+  HSAILELFObjectWriter(bool is64Bit, Triple::OSType OSType, uint16_t EMachine,
                        bool HasRelocationAddend);
 
 protected:
-unsigned GetRelocType(const MCValue &Target, const MCFixup &Fixup,
+  unsigned GetRelocType(const MCValue &Target, const MCFixup &Fixup,
                         bool IsPCRel) const override {
-  return 0; // currently return 0, which means no relocation
-}
-
+    return 0; // currently return 0, which means no relocation
+  }
 };
 }
 
