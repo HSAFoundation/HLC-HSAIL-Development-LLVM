@@ -54,14 +54,7 @@ static unsigned getFixupKindLog2Size(unsigned Kind) {
 void HSAILAsmBackend::applyFixup(const MCFixup &Fixup, char *Data,
                                  unsigned DataSize, uint64_t Value,
                                  bool IsPCRel) const {
-#ifdef AMD_HSAIL_DEBUG_ENHANCED_LOGGING
-  errs() << "ApplyFixup called: kind=" << Fixup.getKind()
-         << ", offset=" << Fixup.getOffset() << ", value=" << Value
-         << ", datasize=" << DataSize << "\n";
-#endif // AMD_HSAIL_DEBUG_ENHANCED_LOGGING
-
   // pulled from x86asmbackend.cpp
-  //
   unsigned Size = 1 << getFixupKindLog2Size(Fixup.getKind());
 
   assert(Fixup.getOffset() + Size <= DataSize && "Invalid fixup offset!");
@@ -105,12 +98,6 @@ void HSAILAsmBackend::relaxInstruction(const MCInst &Inst, MCInst &Res) const {
 /// error.
 /// \return - True on success.
 bool HSAILAsmBackend::writeNopData(uint64_t Count, MCObjectWriter *OW) const {
-#ifdef AMD_HSAIL_DEBUG_ENHANCED_LOGGING
-  if (Count) {
-    errs() << "Emitting " << Count << " nops..."
-           << "\n";
-  }
-#endif // AMD_HSAIL_DEBUG_ENHANCED_LOGGING
   return true;
 }
 
