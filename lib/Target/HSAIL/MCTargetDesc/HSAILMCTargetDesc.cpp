@@ -35,21 +35,23 @@ static MCCodeGenInfo *createHSAILMCCodeGenInfo(StringRef TT, Reloc::Model RM,
   return X;
 }
 
-static MCStreamer* createBRIGStreamer(const Target &T, StringRef TT,
+static MCStreamer *createBRIGStreamer(const Target &T, StringRef TT,
                                       MCContext &Ctx, MCAsmBackend &TAB,
-                                      raw_ostream &_OS,  MCCodeEmitter *_Emitter,
+                                      raw_ostream &_OS, MCCodeEmitter *_Emitter,
                                       const MCSubtargetInfo &MSI, bool RelaxAll,
                                       bool NoExecStack) {
   Triple TheTriple(TT);
 
-  // pass 0 instead of &_OS, if you do not want DWARF data to be forwarded to the provided stream
+  // pass 0 instead of &_OS, if you do not want DWARF data to be forwarded to
+  // the provided stream
   // this stream will be deleted in the destructor of BRIGAsmPrinter
   RawVectorOstream *rvos = new RawVectorOstream(&_OS);
 
-  return createBRIGDwarfStreamer(Ctx, TAB, *rvos, _Emitter, RelaxAll, NoExecStack);
+  return createBRIGDwarfStreamer(Ctx, TAB, *rvos, _Emitter, RelaxAll,
+                                 NoExecStack);
 }
 
-static MCStreamer* createMCStreamer(const Target &T, StringRef TT,
+static MCStreamer *createMCStreamer(const Target &T, StringRef TT,
                                     MCContext &Ctx, MCAsmBackend &TAB,
                                     raw_ostream &_OS, MCCodeEmitter *_Emitter,
                                     const MCSubtargetInfo &MSI, bool RelaxAll,
@@ -79,6 +81,5 @@ extern "C" void LLVMInitializeHSAILTargetMC() {
   TargetRegistry::RegisterMCAsmBackend(TheHSAIL_64Target,
                                        createHSAIL_64AsmBackendForLLVM32);
   TargetRegistry::RegisterMCObjectStreamer(TheHSAIL_64Target,
-                                            createBRIGStreamer);
-
+                                           createBRIGStreamer);
 }

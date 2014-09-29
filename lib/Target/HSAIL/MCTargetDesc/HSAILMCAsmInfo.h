@@ -17,12 +17,12 @@
 #include "llvm/MC/MCAsmInfo.h"
 
 namespace llvm {
-  class Triple;
+class Triple;
 
-  struct HSAILELFMCAsmInfo : public MCAsmInfo {
-    explicit HSAILELFMCAsmInfo(StringRef &Triple);
-    virtual const MCSection *getNonexecutableStackSection(MCContext &Ctx) const;
-  };
+struct HSAILELFMCAsmInfo : public MCAsmInfo {
+  explicit HSAILELFMCAsmInfo(StringRef &Triple);
+  virtual const MCSection *getNonexecutableStackSection(MCContext &Ctx) const;
+};
 } // namespace llvm
 
 #endif // _HSAIL_MC_ASM_INFO_H_

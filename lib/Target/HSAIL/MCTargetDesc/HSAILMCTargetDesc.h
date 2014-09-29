@@ -12,7 +12,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-
 #ifndef LLVM_LIB_TARGET_HSAIL_MCTARGETDESC_HSAILMCTARGETDESC_H
 #define LLVM_LIB_TARGET_HSAIL_MCTARGETDESC_HSAILMCTARGETDESC_H
 
@@ -50,6 +49,5 @@ MCAsmBackend *createHSAIL_64AsmBackendForLLVM32(const Target &T,
                                                 StringRef TT, StringRef CPU);
 
 } // End llvm namespace
-
 
 #endif

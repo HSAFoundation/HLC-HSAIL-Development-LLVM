@@ -28,62 +28,43 @@
 namespace llvm {
 class HSAILMCCodeEmitter : public MCCodeEmitter {
   HSAILMCCodeEmitter(const HSAILMCCodeEmitter &); // DO NOT IMPLEMENT
-  void operator=(const HSAILMCCodeEmitter &); // DO NOT IMPLEMENT
+  void operator=(const HSAILMCCodeEmitter &);     // DO NOT IMPLEMENT
   const TargetMachine &TM;
   const TargetInstrInfo &TII;
   MCContext &Ctx;
   bool Is64BitMode;
+
 public:
   HSAILMCCodeEmitter(TargetMachine &tm, MCContext &ctx, bool is64Bit)
-    : TM(tm), TII(*TM.getSubtarget<HSAILSubtarget>().getInstrInfo()), Ctx(ctx) { Is64BitMode = is64Bit; }
+      : TM(tm), TII(*TM.getSubtarget<HSAILSubtarget>().getInstrInfo()),
+        Ctx(ctx) {
+    Is64BitMode = is64Bit;
+  }
 
   ~HSAILMCCodeEmitter() {}
 
-  void
-  EmitByte(unsigned char C, unsigned &CurByte, raw_ostream &OS) const;
+  void EmitByte(unsigned char C, unsigned &CurByte, raw_ostream &OS) const;
 
-  void
-  EmitConstant(uint64_t Val,
-               unsigned Size,
-               unsigned &CurByte,
-               raw_ostream &OS) const;
+  void EmitConstant(uint64_t Val, unsigned Size, unsigned &CurByte,
+                    raw_ostream &OS) const;
 
-  void
-  EmitImmediate(const MCOperand &Disp,
-                unsigned ImmSize,
-                MCFixupKind FixupKind,
-                unsigned &CurByte,
-                raw_ostream &OS,
-                SmallVectorImpl<MCFixup> &Fixups,
-                int ImmOffset = 0) const;
+  void EmitImmediate(const MCOperand &Disp, unsigned ImmSize,
+                     MCFixupKind FixupKind, unsigned &CurByte, raw_ostream &OS,
+                     SmallVectorImpl<MCFixup> &Fixups, int ImmOffset = 0) const;
 
-  void
-  EmitRegModRMByte(const MCOperand &ModRMReg,
-                   unsigned RegOpcodeFld,
-                   unsigned &CurByte,
-                   raw_ostream &OS) const;
+  void EmitRegModRMByte(const MCOperand &ModRMReg, unsigned RegOpcodeFld,
+                        unsigned &CurByte, raw_ostream &OS) const;
 
-  void
-  EmitSIBByte(unsigned SS,
-              unsigned Index,
-              unsigned Base,
-              unsigned &CurByte,
-              raw_ostream &OS) const;
+  void EmitSIBByte(unsigned SS, unsigned Index, unsigned Base,
+                   unsigned &CurByte, raw_ostream &OS) const;
 
-  void
-  EmitMemModRMByte(const MCInst &MI,
-                   unsigned Op,
-                   unsigned RegOpcodeField,
-                   uint64_t TSFlags,
-                   unsigned &CurByte,
-                   raw_ostream &OS,
-                   SmallVectorImpl<MCFixup> &Fixups) const;
+  void EmitMemModRMByte(const MCInst &MI, unsigned Op, unsigned RegOpcodeField,
+                        uint64_t TSFlags, unsigned &CurByte, raw_ostream &OS,
+                        SmallVectorImpl<MCFixup> &Fixups) const;
 
-  void
-  EncodeInstruction(const MCInst &MI,
-                    raw_ostream &OS,
-                    SmallVectorImpl<MCFixup> &Fixups,
-                    const MCSubtargetInfo &STI) const;
+  void EncodeInstruction(const MCInst &MI, raw_ostream &OS,
+                         SmallVectorImpl<MCFixup> &Fixups,
+                         const MCSubtargetInfo &STI) const;
   /*
   void
   EmitVEXOpcodePrefix(uint64_t TSFlags,
@@ -93,12 +74,9 @@ public:
                       const TargetInstrDesc &Desc,
                       raw_ostream &OS) const;
   */
-  void
-  EmitSegmentOverridePrefix(uint64_t TSFlags,
-                            unsigned &CurByte,
-                            int MemOperand,
-                            const MCInst &MI,
-                            raw_ostream &OS) const;
+  void EmitSegmentOverridePrefix(uint64_t TSFlags, unsigned &CurByte,
+                                 int MemOperand, const MCInst &MI,
+                                 raw_ostream &OS) const;
   /*
   void
   EmitOpcodePrefix(uint64_t TSFlags,
@@ -109,7 +87,7 @@ public:
                    raw_ostream &OS) const;
   */
 };
- 
+
 } // end anonymous namespace
 
 #endif
