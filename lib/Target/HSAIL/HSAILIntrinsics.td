@@ -703,6 +703,10 @@ def int_HSAIL_nullptr_group    : GCCBuiltin<"__hsail_nullptr_group">,
         Intrinsic<[llvm_i32_ty], [], [IntrNoMem]>;
 def int_HSAIL_nullptr_private  : GCCBuiltin<"__hsail_nullptr_private">,
         Intrinsic<[llvm_i32_ty], [], [IntrNoMem]>;
+def int_HSAIL_nullptr_readonly : GCCBuiltin<"__hsail_nullptr_readonly">,
+        Intrinsic<[llvm_anyptr_ty], [], [IntrNoMem]>;
+def int_HSAIL_nullptr_kernarg  : GCCBuiltin<"__hsail_nullptr_kernarg">,
+        Intrinsic<[llvm_anyptr_ty], [], [IntrNoMem]>;
 
 // ld_kernarg instructions have no side effects and can be CSE'd or even deleted if dead.
 def int_HSAIL_ld_kernarg_u32 : GCCBuiltin<"__hsail_ld_kernarg_u32">,
