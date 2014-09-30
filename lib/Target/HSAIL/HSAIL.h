@@ -197,11 +197,6 @@ extern Target TheHSAIL_32Target, TheHSAIL_64Target;
 #include "HSAILGenInstrNames.inc"
 */
 
-#define GET_REGINFO_ENUM
-#include "HSAILGenRegisterInfo.inc"
-#define GET_INSTRINFO_ENUM
-#include "HSAILGenInstrInfo.inc"
-
 namespace llvm {
   namespace HSAILAS {
 

@@ -15,8 +15,9 @@
 #define _HSAIL_REGISTER_INFO_H_
 
 #include "llvm/Target/TargetRegisterInfo.h"
-//#include "HSAILGenRegisterInfo.h.inc"
+
 #define GET_REGINFO_HEADER
+#define GET_REGINFO_ENUM
 #include "HSAILGenRegisterInfo.inc"
 
 namespace llvm {

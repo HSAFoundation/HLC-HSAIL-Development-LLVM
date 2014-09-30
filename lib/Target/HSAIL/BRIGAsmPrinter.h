@@ -12,6 +12,7 @@
 #include "BRIGAsmPrinter.h"
 
 #include "HSAIL.h"
+#include "HSAILInstrInfo.h"
 #include "HSAILBrig.h"
 #include "HSAILLLVMVersion.h"
 #include "HSAILSubtarget.h"
