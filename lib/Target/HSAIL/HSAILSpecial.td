@@ -169,22 +169,34 @@ def hsail_memfence : HSAILInst< (outs),
 let isAsCheapAsAMove = 1, isReMaterializable = 1 in {
   def nullptr_flat_u64  : HSAILInst<(outs GPR64:$dst), (ins),
             "nullptr_u64\t $dst",
-            [(set (i64 GPR64:$dst), (int_HSAIL_nullptr_flat))]>;
+            [(set (i64 GPR64:$dst), (int_HSAIL_nullptr_flat))]>, Requires<[In64BitMode]>;
   def nullptr_flat_u32  : HSAILInst<(outs GPR32:$dst), (ins),
             "nullptr_u32\t $dst",
-            [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_flat))]>;
+            [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_flat))]>, Requires<[In32BitMode]>;
   def nullptr_global_u64  : HSAILInst<(outs GPR64:$dst), (ins),
             "nullptr_global_u64\t $dst",
-            [(set (i64 GPR64:$dst), (int_HSAIL_nullptr_global))]>;
+            [(set (i64 GPR64:$dst), (int_HSAIL_nullptr_global))]>, Requires<[In64BitMode]>;
   def nullptr_global_u32  : HSAILInst<(outs GPR32:$dst), (ins),
             "nullptr_global_u32\t $dst",
-            [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_global))]>;
+            [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_global))]>, Requires<[In32BitMode]>;
   def nullptr_group_u32  : HSAILInst<(outs GPR32:$dst), (ins),
             "nullptr_group_u32\t $dst",
             [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_group))]>;
   def nullptr_private_u32  : HSAILInst<(outs GPR32:$dst), (ins),
             "nullptr_private_u32\t $dst",
             [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_private))]>;
+  def nullptr_readonly_u64  : HSAILInst<(outs GPR64:$dst), (ins),
+            "nullptr_readonly_u64\t $dst",
+            [(set (i64 GPR64:$dst), (int_HSAIL_nullptr_readonly))]>, Requires<[In64BitMode]>;
+  def nullptr_readonly_u32  : HSAILInst<(outs GPR32:$dst), (ins),
+            "nullptr_readonly_u32\t $dst",
+            [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_readonly))]>, Requires<[In32BitMode]>;
+  def nullptr_kernarg_u64   : HSAILInst<(outs GPR64:$dst), (ins),
+            "nullptr_kernarg_u64\t $dst",
+            [(set (i64 GPR64:$dst), (int_HSAIL_nullptr_kernarg))]>, Requires<[In64BitMode]>;
+  def nullptr_kernarg_u32   : HSAILInst<(outs GPR32:$dst), (ins),
+            "nullptr_kernarg_u32\t $dst",
+            [(set (i32 GPR32:$dst), (int_HSAIL_nullptr_kernarg))]>, Requires<[In32BitMode]>;
   def kernargbaseptr_u64 : HSAILInst<(outs GPR64:$dst), (ins ),
             "kernargbaseptr_u64 \t $dst", []>;
   def kernargbaseptr_u32 : HSAILInst<(outs GPR32:$dst), (ins ),
