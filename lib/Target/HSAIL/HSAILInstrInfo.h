@@ -21,6 +21,8 @@
 #include "llvm/ADT/SmallVector.h"
 
 #define GET_INSTRINFO_HEADER
+#define GET_INSTRINFO_ENUM
+#define GET_INSTRINFO_OPERAND_ENUM
 #include "HSAILGenInstrInfo.inc"
 
 namespace llvm {
