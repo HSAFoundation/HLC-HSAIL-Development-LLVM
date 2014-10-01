@@ -1379,7 +1379,7 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     // Dimension is in units of type length
     if (local_stack_size) {
       HSAIL_ASM::DirectiveVariable stack_for_locals =
-        brigantine.addArrayVariable("%privateStack", local_stack_size,
+        brigantine.addArrayVariable("%__privateStack", local_stack_size,
                      Brig::BRIG_SEGMENT_PRIVATE, Brig::BRIG_TYPE_U8);
       stack_for_locals.align() = getBrigAlignment(local_stack_align);
       stack_for_locals.allocation() = Brig::BRIG_ALLOCATION_AUTOMATIC;
@@ -1389,7 +1389,7 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     }
     if (spill_size) {
       HSAIL_ASM::DirectiveVariable spill = brigantine.addArrayVariable(
-        "%spillStack", spill_size, Brig::BRIG_SEGMENT_SPILL, Brig::BRIG_TYPE_U8);
+        "%__spillStack", spill_size, Brig::BRIG_SEGMENT_SPILL, Brig::BRIG_TYPE_U8);
       spill.align() = getBrigAlignment(spill_align);
       spill.allocation() = Brig::BRIG_ALLOCATION_AUTOMATIC;
       spill.linkage() = Brig::BRIG_LINKAGE_FUNCTION;
@@ -1861,11 +1861,11 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned
       return;
     }
     else if (spillMapforStack.find(addr) != spillMapforStack.end()) {
-      base_name = "%spillStack";
+      base_name = "%__spillStack";
       offset += spillMapforStack[addr];
     }
     else if (LocalVarMapforStack.find(addr) != LocalVarMapforStack.end()) {
-      base_name = "%privateStack";
+      base_name = "%__privateStack";
       offset += LocalVarMapforStack[addr];
     }
     else
