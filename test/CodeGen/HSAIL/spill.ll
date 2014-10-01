@@ -2,21 +2,21 @@
 
 ; FUNC-LABEL: {{^}}prog function &test_spill_branch_add
 ; HSAIL: {
-; HSAIL: align(4) spill_u8 %spillStack[12];
+; HSAIL: align(4) spill_u8 %__spillStack[12];
 ; HSAIL: @test_spill_branch_add_entry:
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
 ; HSAIL-DAG: ld_global_align(4)_u32 [[A:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
 ; HSAIL-DAG: ld_global_align(4)_u32 [[B:\$s[0-9]+]], {{\[}}[[IN]]+4{{\]}};
-; HSAIL-DAG: st_spill_align(4)_u32 [[A]], [%spillStack];
-; HSAIL-DAG: st_spill_align(4)_u32 [[B]], [%spillStack][8];
-; HSAIL-DAG: st_spill_align(4)_u32 [[OUT]], [%spillStack][4];
+; HSAIL-DAG: st_spill_align(4)_u32 [[A]], [%__spillStack];
+; HSAIL-DAG: st_spill_align(4)_u32 [[B]], [%__spillStack][8];
+; HSAIL-DAG: st_spill_align(4)_u32 [[OUT]], [%__spillStack][4];
 ; HSAIL: br BB0_1;
 
 ; HSAIL: BB0_1:
-; HSAIL-DAG: ld_spill_align(4)_u32 [[A_RELOAD:\$s[0-9]+]], [%spillStack];
-; HSAIL-DAG: ld_spill_align(4)_u32 [[B_RELOAD:\$s[0-9]+]], [%spillStack][8];
-; HSAIL-DAG: ld_spill_align(4)_u32 [[OUT_RELOAD:\$s[0-9]+]], [%spillStack][4];
+; HSAIL-DAG: ld_spill_align(4)_u32 [[A_RELOAD:\$s[0-9]+]], [%__spillStack];
+; HSAIL-DAG: ld_spill_align(4)_u32 [[B_RELOAD:\$s[0-9]+]], [%__spillStack][8];
+; HSAIL-DAG: ld_spill_align(4)_u32 [[OUT_RELOAD:\$s[0-9]+]], [%__spillStack][4];
 ; HSAIL-DAG: add_u32 [[RESULT:\$s[0-9]+]], [[A_RELOAD]], [[B_RELOAD]];
 ; HSAIL: st_global_align(4)_u32 [[RESULT]], {{\[}}[[OUT_RELOAD]]{{\]}};
 ; HSAIL: ret;

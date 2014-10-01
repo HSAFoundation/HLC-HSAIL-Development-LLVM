@@ -33,17 +33,17 @@ namespace llvm {
   static inline StringRef getKernenvArgName(unsigned ID) {
     switch (ID) {
     case HSAIL::KE_GOFFSET_0:
-      return "global_offset_0";
+      return "__global_offset_0";
     case HSAIL::KE_GOFFSET_1:
-      return "global_offset_1";
+      return "__global_offset_1";
     case HSAIL::KE_GOFFSET_2:
-      return "global_offset_2";
+      return "__global_offset_2";
     case HSAIL::KE_PRINTF_BFR:
-      return "printf_buffer";
+      return "__printf_buffer";
     case HSAIL::KE_VQ_PTR:
-      return "vqueue_pointer";
+      return "__vqueue_pointer";
     case HSAIL::KE_AQLWRAP_PTR:
-      return "aqlwrap_pointer";
+      return "__aqlwrap_pointer";
     default:
       llvm_unreachable("unexpected Kernenv argument ID");
     }
