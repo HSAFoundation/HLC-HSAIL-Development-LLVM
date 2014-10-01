@@ -1340,6 +1340,8 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
 
   size_t spill_size =0;
   size_t local_stack_size =0;
+  unsigned local_stack_align, spill_align;
+  local_stack_align = spill_align = DL.getABIIntegerTypeAlignment(32);
 
   spillMapforStack.clear();
   LocalVarMapforStack.clear();
@@ -1350,21 +1352,23 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     int obj_index = stk_object_indx_begin + stk_indx;
     if (!MFI->isDeadObjectIndex(obj_index)) {
       if (MFI->isSpillSlotObjectIndex(obj_index)) {
-        int obj_align = MFI->getObjectAlignment(obj_index);
+        unsigned obj_align = MFI->getObjectAlignment(obj_index);
         spill_size = (spill_size + obj_align - 1) / obj_align * obj_align;
         spillMapforStack[MFI->getObjectOffset(obj_index)] = spill_size;
         spill_size += MFI->getObjectSize(obj_index);
+        spill_align = std::max(spill_align, obj_align);
       }
       else {
-        int obj_offset = MFI->getObjectOffset(obj_index);
-        int obj_align = MFI->getObjectAlignment(obj_index);
+        unsigned obj_offset = MFI->getObjectOffset(obj_index);
+        unsigned obj_align = MFI->getObjectAlignment(obj_index);
         local_stack_size = (local_stack_size + obj_align - 1) /
                            obj_align * obj_align;
         LocalVarMapforStack[obj_offset] = local_stack_size;
-        int obj_size = MFI->getObjectSize(obj_index);
-        for (int cnt = 1 ; cnt < obj_size; cnt++)
+        unsigned obj_size = MFI->getObjectSize(obj_index);
+        for (unsigned cnt = 1 ; cnt < obj_size; cnt++)
           LocalVarMapforStack[obj_offset+cnt] = local_stack_size + cnt;
         local_stack_size  += obj_size;
+        local_stack_align = std::max(local_stack_align, obj_align);
       }
     }
   }
@@ -1372,13 +1376,12 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
   spill_size = spill_size + MFI->getOffsetAdjustment();
 
   if (stack_size) {
-    int const align = DL.getABIIntegerTypeAlignment(32);
     // Dimension is in units of type length
     if (local_stack_size) {
       HSAIL_ASM::DirectiveVariable stack_for_locals =
         brigantine.addArrayVariable("%privateStack", local_stack_size,
                      Brig::BRIG_SEGMENT_PRIVATE, Brig::BRIG_TYPE_U8);
-      stack_for_locals.align() = getBrigAlignment(align);
+      stack_for_locals.align() = getBrigAlignment(local_stack_align);
       stack_for_locals.allocation() = Brig::BRIG_ALLOCATION_AUTOMATIC;
       stack_for_locals.linkage() = Brig::BRIG_LINKAGE_FUNCTION;
       stack_for_locals.modifier().isDefinition() = 1;
@@ -1387,7 +1390,7 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     if (spill_size) {
       HSAIL_ASM::DirectiveVariable spill = brigantine.addArrayVariable(
         "%spillStack", spill_size, Brig::BRIG_SEGMENT_SPILL, Brig::BRIG_TYPE_U8);
-      spill.align() = getBrigAlignment(align);
+      spill.align() = getBrigAlignment(spill_align);
       spill.allocation() = Brig::BRIG_ALLOCATION_AUTOMATIC;
       spill.linkage() = Brig::BRIG_LINKAGE_FUNCTION;
       spill.modifier().isDefinition() = 1;
