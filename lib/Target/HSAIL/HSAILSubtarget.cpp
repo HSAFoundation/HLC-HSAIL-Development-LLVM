@@ -171,7 +171,7 @@ HSAILImageHandles::finalize() {
   char buf[16];
   for (unsigned i = 0; i < HSAILSamplers.size(); i++) {
     if (getSamplerSymbol(i).empty()) {
-      sprintf(buf, "%s%u", "Samp", index);
+      sprintf(buf, "%s%u", "__Samp", index);
       HSAILSamplers[i]->setSym(buf);
       index++;
     }
