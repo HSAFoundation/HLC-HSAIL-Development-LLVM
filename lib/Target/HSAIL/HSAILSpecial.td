@@ -79,7 +79,7 @@ let isAsCheapAsAMove = 1 in {
                         [(set (i32 GPR32:$dst),
                             (int_HSAIL_get_cu))]>;
 
-  let isNotDuplicable = 1 in {
+  let isNotDuplicable = 1, isBarrier = 1 in {
     def barrier : HSAILInst<(outs), (ins),
              "barrier", [(int_HSAIL_barrier)]>;
     def wavebarrier : HSAILInst<(outs), (ins),
@@ -92,10 +92,12 @@ let isAsCheapAsAMove = 1 in {
 ////////////////////////////////////////////////////////////////////////////////
 // SYNC OCL 2.0
 
-def hsail_memfence : HSAILInst< (outs),
+let isNotDuplicable = 1, isBarrier = 1 in {
+  def hsail_memfence : HSAILInst< (outs),
     (ins i32imm:$order, i32imm:$globalscope, i32imm:$groupscope, i32imm:$imagescope),
     "memfence_$order$globalscope$groupscope$imagescope",
     [(int_HSAIL_memfence (i32 imm:$order), (i32 imm:$globalscope), (i32 imm:$groupscope), (i32 imm:$imagescope))]>;
+}
 
 // Cross-Lane Operations
   class CrossLaneV4<string asm>
