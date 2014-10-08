@@ -96,10 +96,6 @@ size_t HSAILGenericDevice::getWavefrontSize() const {
   return HSAILDevice::WavefrontSize;
 }
 
-uint32_t HSAILGenericDevice::getGeneration() const {
-  return HSAILDeviceInfo::HD5XXX;
-}
-
 void HSAILGenericDevice::setCaps() {
   mSWBits.set(HSAILDeviceInfo::ArenaSegment);
   mHWBits.set(HSAILDeviceInfo::ArenaUAV);
@@ -210,11 +206,6 @@ uint32_t HSAILGenericDeviceFlat::getResourceID(uint32_t id) const {
 
 size_t HSAILGenericDeviceFlat::getWavefrontSize() const {
   return HSAILDevice::WavefrontSize;
-}
-
-uint32_t HSAILGenericDeviceFlat::getGeneration() const {
-  // CI
-  return HSAILDeviceInfo::HD8XXX;
 }
 
 void HSAILGenericDeviceFlat::setCaps() {
