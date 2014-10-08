@@ -65,27 +65,9 @@ public:
   void EncodeInstruction(const MCInst &MI, raw_ostream &OS,
                          SmallVectorImpl<MCFixup> &Fixups,
                          const MCSubtargetInfo &STI) const override;
-  /*
-  void
-  EmitVEXOpcodePrefix(uint64_t TSFlags,
-                      unsigned &CurByte,
-                      int MemOperand,
-                      const MCInst &MI,
-                      const TargetInstrDesc &Desc,
-                      raw_ostream &OS) const;
-  */
   void EmitSegmentOverridePrefix(uint64_t TSFlags, unsigned &CurByte,
                                  int MemOperand, const MCInst &MI,
                                  raw_ostream &OS) const;
-  /*
-  void
-  EmitOpcodePrefix(uint64_t TSFlags,
-                   unsigned &CurByte,
-                   int MemOperand,
-                   const MCInst &MI,
-                   const TargetInstrDesc &Desc,
-                   raw_ostream &OS) const;
-  */
 };
 
 } // end anonymous namespace
