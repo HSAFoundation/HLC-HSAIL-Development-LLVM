@@ -156,14 +156,6 @@ HSAILInstrInfo::isStoreToStackSlotPostFE(const MachineInstr *MI,
   return isStoreToStackSlot(MI, FrameIndex);
 }
 
-bool
-HSAILInstrInfo::getNextBranchInstr(MachineBasicBlock::iterator &iter,
-                                   MachineBasicBlock &MBB) const
-{
-  //return TargetInstrInfo::getNextBranchInstr(iter, MBB);
-  return false;
-}
-
 static bool
 IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg, 
   const MachineRegisterInfo &MRI,
@@ -886,67 +878,6 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
   }
 }
 
-MachineInstr*
-HSAILInstrInfo::foldMemoryOperandImpl(MachineFunction &MF,
-                                      MachineInstr *MI,
-                                      const SmallVectorImpl<unsigned> &Ops,
-                                      int FrameIndex) const
-{
-  //TODO: Implement this function
-  return NULL;
-}
-
-MachineInstr*
-HSAILInstrInfo::foldMemoryOperandImpl(MachineFunction &MF,
-                                      MachineInstr *MI,
-                                      const SmallVectorImpl<unsigned> &Ops,
-                                      MachineInstr *LoadMI) const
-{
-  //TODO: Implement this function
-  return NULL;
-}
-
-bool
-HSAILInstrInfo::canFoldMemoryOperand(const MachineInstr *MI,
-                                     const SmallVectorImpl<unsigned> &Ops) 
-                                     const
-{
-  //TODO: Implement this function
-  return false;
-}
-
-bool
-HSAILInstrInfo::unfoldMemoryOperand(MachineFunction &MF,
-                                    MachineInstr *MI,
-                                    unsigned Reg,
-                                    bool UnfoldLoad,
-                                    bool UnfoldStore,
-                                    SmallVectorImpl<MachineInstr*> &NewMIs) 
-                                    const
-{
-  //TODO: Implement this function
-  return false;
-}
-
-bool
-HSAILInstrInfo::unfoldMemoryOperand(SelectionDAG &DAG,
-                                    SDNode *N,
-                                    SmallVectorImpl<SDNode*> &NewNodes) const
-{
-  //TODO: Implement this function
-  return false;
-}
-
-unsigned
-HSAILInstrInfo::getOpcodeAfterMemoryUnfold(unsigned Opc,
-                                           bool UnfoldLoad,
-                                           bool UnfoldStore,
-                                           unsigned *LoadRegIndex) const
-{
-  //TODO: Implement this function
-  return 0;
-}
-
 bool
 HSAILInstrInfo::areLoadsFromSameBasePtr(SDNode *Node1,
                                         SDNode *Node2,
@@ -1066,11 +997,6 @@ HSAILInstrInfo::isSafeToMoveRegClassDefs(const TargetRegisterClass *RC) const
 {
   // Micah: HSAIL does not have any constraints about moving defs.
   return true;
-}
-unsigned
-HSAILInstrInfo::GetInstSizeInBytes(const MachineInstr *MI) const
-{
-  return 0;
 }
 
 void
@@ -1272,45 +1198,6 @@ HSAILInstrInfo::OptimizeCompareInstr(MachineInstr *CmpInstr,
   cmp_eq.eraseFromParent();
 
   return true;
-}
-
-int
-HSAILInstrInfo::getOperandLatency(const InstrItineraryData *ItinData,
-                                  const MachineInstr *DefMI,
-                                  unsigned DefIdx,
-                                  const MachineInstr *UseMI,
-                                  unsigned UseIdx) const
-{
-  //assert(!"When do we hit this?");
-  return 1;
-}
-
-int
-HSAILInstrInfo::getOperandLatency(const InstrItineraryData *ItinData,
-                                  SDNode *DefNode,
-                                  unsigned DefIdx,
-                                  SDNode *UseNode,
-                                  unsigned UseIdx) const
-{
-  //assert(!"When do we hit this?");
-  return 1;
-}
-
-unsigned
-HSAILInstrInfo::getInstrLatency(const InstrItineraryData *ItinData,
-                                const MachineInstr *MI,
-                                unsigned *PredCost) const
-{
-  //assert(!"When do we hit this?");
-  return 1;
-}
-
-int
-HSAILInstrInfo::getInstrLatency(const InstrItineraryData *ItinData,
-                                SDNode *Node) const
-{
-  //assert(!"When do we hit this?");
-  return 1;
 }
 
 /// Get a free GPR32 or insert spill and reload around specified instruction
