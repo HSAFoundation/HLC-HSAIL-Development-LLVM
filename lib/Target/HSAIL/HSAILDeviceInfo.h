@@ -59,17 +59,6 @@ namespace llvm
       // number.
       MaxNumberCapabilities = 0x20
     };
-    // These have to be in order with the older generations
-    // having the lower number enumerations.
-    enum Generation {
-      HD4XXX = 0, // 7XX based devices.
-      HD5XXX, // Evergreen based devices.
-      HD6XXX, // NI/Evergreen+ based devices.
-      HD7XXX, // SI based devices.
-      HD8XXX, // CI based devices.
-      HDTEST, // Experimental feature testing device.
-      HDNUMGEN
-    };
 
     extern bool is64bit;
   } // namespace HSAILDeviceInfo

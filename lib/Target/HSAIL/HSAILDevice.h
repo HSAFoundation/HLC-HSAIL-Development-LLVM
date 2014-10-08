@@ -113,9 +113,6 @@ public:
   // wavefront.
   virtual size_t getWavefrontSize() const = 0;
 
-  // Get the generational name of this specific device.
-  virtual uint32_t getGeneration() const = 0;
-
   // Get the stack alignment of this specific device.
   virtual uint32_t getStackAlignment() const;
 

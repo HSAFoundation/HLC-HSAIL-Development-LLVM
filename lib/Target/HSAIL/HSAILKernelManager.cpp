@@ -649,7 +649,6 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
         RTI(brig) << oss.str();
       }
     }
-    
     if (isKernel) {
       RTI(brig) << "privateid:" << mSTM->device()->getResourceID(HSAILDevice::SCRATCH_ID);
     }

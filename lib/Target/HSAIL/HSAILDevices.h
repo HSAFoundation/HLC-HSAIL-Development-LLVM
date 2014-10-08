@@ -64,7 +64,6 @@ public:
   virtual size_t getMaxLDSSize() const;
   virtual size_t getMaxGDSSize() const;
   virtual size_t getWavefrontSize() const;
-  virtual uint32_t getGeneration() const;
   virtual uint32_t getMaxNumUAVs() const;
   virtual uint32_t getResourceID(uint32_t) const;
   virtual FunctionPass* getIOExpansion(TargetMachine&, CodeGenOpt::Level) const;
@@ -82,7 +81,6 @@ public:
   virtual size_t getMaxLDSSize() const;
   virtual size_t getMaxGDSSize() const;
   virtual size_t getWavefrontSize() const;
-  virtual uint32_t getGeneration() const;
   virtual uint32_t getMaxNumUAVs() const;
   virtual uint32_t getResourceID(uint32_t) const;
   virtual FunctionPass* getIOExpansion(TargetMachine&, CodeGenOpt::Level) const;
