@@ -636,7 +636,6 @@ public:
   isStoreToStackSlotPostFE(const MachineInstr *MI,
                            int &FrameIndex) const;
 
-
   /// AnalyzeBranch - Analyze the branching code at the end of MBB, returning
   /// true if it cannot be understood (e.g. it's a switch dispatch or isn't
   /// implemented for a target).  Upon success, this returns false and returns
@@ -738,58 +737,7 @@ public:
                        const TargetRegisterClass *RC,
                        const TargetRegisterInfo *TRI) const;
 
-protected:
-  /// foldMemoryOperandImpl - Target-dependent implementation for
-  /// foldMemoryOperand. Target-independent code in foldMemoryOperand will
-  /// take care of adding a MachineMemOperand to the newly created instruction.
-  virtual MachineInstr*
-  foldMemoryOperandImpl(MachineFunction &MF,
-                        MachineInstr* MI,
-                        const SmallVectorImpl<unsigned> &Ops,
-                        int FrameIndex) const;
-
-  /// foldMemoryOperandImpl - Target-dependent implementation for
-  /// foldMemoryOperand. Target-independent code in foldMemoryOperand will
-  /// take care of adding a MachineMemOperand to the newly created instruction.
-  virtual MachineInstr*
-  foldMemoryOperandImpl(MachineFunction &MF,
-                        MachineInstr* MI,
-                        const SmallVectorImpl<unsigned> &Ops,
-                        MachineInstr* LoadMI) const;
 public:
-  /// canFoldMemoryOperand - Returns true for the specified load / store if
-  /// folding is possible.
-  virtual bool
-  canFoldMemoryOperand(const MachineInstr *MI,
-                       const SmallVectorImpl<unsigned> &Ops) const;
-
-  /// unfoldMemoryOperand - Separate a single instruction which folded a load or
-  /// a store or a load and a store into two or more instruction. If this is
-  /// possible, returns true as well as the new instructions by reference.
-  virtual bool
-  unfoldMemoryOperand(MachineFunction &MF,
-                      MachineInstr *MI,
-                      unsigned Reg,
-                      bool UnfoldLoad,
-                      bool UnfoldStore,
-                      SmallVectorImpl<MachineInstr*> &NewMIs) const;
-
-  virtual bool
-  unfoldMemoryOperand(SelectionDAG &DAG, SDNode *N,
-                      SmallVectorImpl<SDNode*> &NewNodes) const;
-
-  /// getOpcodeAfterMemoryUnfold - Returns the opcode of the would be new
-  /// instruction after load / store are unfolded from an instruction of the
-  /// specified opcode. It returns zero if the specified unfolding is not
-  /// possible. If LoadRegIndex is non-null, it is filled in with the operand
-  /// index of the operand which will hold the register holding the loaded
-  /// value.
-  virtual unsigned
-  getOpcodeAfterMemoryUnfold(unsigned Opc,
-                             bool UnfoldLoad,
-                             bool UnfoldStore,
-                             unsigned *LoadRegIndex = 0) const;
-
   /// areLoadsFromSameBasePtr - This is used by the pre-regalloc scheduler
   /// to determine if two loads are loading from the same base address. It
   /// should only return true if the base pointers are the same and the
@@ -846,37 +794,6 @@ public:
                        int Value,
                        const MachineRegisterInfo *MRI) const;
 
-  /// getOperandLatency - Compute and return the use operand latency of a given
-  /// pair of def and use.
-  /// In most cases, the static scheduling itinerary was enough to determine the
-  /// operand latency. But it may not be possible for instructions with variable
-  /// number of defs / uses.
-  virtual int
-  getOperandLatency(const InstrItineraryData *ItinData,
-                    const MachineInstr *DefMI,
-                    unsigned DefIdx,
-                    const MachineInstr *UseMI,
-                    unsigned UseIdx) const;
-
-  virtual int
-  getOperandLatency(const InstrItineraryData *ItinData,
-                    SDNode *DefNode,
-                    unsigned DefIdx,
-                    SDNode *UseNode,
-                    unsigned UseIdx) const;
-
-  /// getInstrLatency - Compute the instruction latency of a given instruction.
-  /// If the instruction has higher cost when predicated, it's returned via
-  /// PredCost.
-  virtual unsigned
-  getInstrLatency(const InstrItineraryData *ItinData,
-                  const MachineInstr *MI,
-                  unsigned *PredCost = 0) const;
-
-  virtual int
-  getInstrLatency(const InstrItineraryData *ItinData,
-                  SDNode *Node) const;
-
   /// Return true if the instruction is a register to register move and leave the
   /// source and dest operands in the passed parameters.
   bool
@@ -887,19 +804,12 @@ public:
                               unsigned int &DstSubIdx) const;
 
   bool
-  getNextBranchInstr(MachineBasicBlock::iterator &iter,
-                     MachineBasicBlock &MBB) const;
-
-  bool
   copyRegToReg(MachineBasicBlock &MBB,
                MachineBasicBlock::iterator I,
                unsigned DestReg, unsigned SrcReg,
                const TargetRegisterClass *DestRC,
                const TargetRegisterClass *SrcRC,
                DebugLoc DL) const;
-
-  unsigned
-  GetInstSizeInBytes(const MachineInstr *MI) const;
 
   RegScavenger *
   getRS() const {
