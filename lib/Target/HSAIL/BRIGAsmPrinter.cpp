@@ -818,6 +818,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     instAtomic.segment() = getAtomicSegment(II);
     instAtomic.memoryOrder() = getAtomicOrder(II);
     instAtomic.memoryScope() = getAtomicScope(II);
+    instAtomic.equivClass() = 0;
 
     if (hasRet)
       BrigEmitOperand(II, 0, instAtomic);
