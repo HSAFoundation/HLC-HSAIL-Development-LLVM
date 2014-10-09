@@ -48,29 +48,22 @@
 //==-----------------------------------------------------------------------===//
 #include "HSAILMachineFunctionInfo.h"
 #include "HSAILModuleInfo.h"
-#include "HSAILCompilerErrors.h"
-#include "HSAILModuleInfo.h"
-#include "HSAILSubtarget.h"
-#include "HSAILTargetMachine.h"
 #include "HSAILUtilityFunctions.h"
-#include "HSAILOpaqueTypes.h"
-#include "llvm/IR/Constants.h"
-#include "llvm/IR/DerivedTypes.h"
-#include "llvm/IR/Function.h"
-#include "llvm/IR/Instructions.h"
-#include "llvm/ADT/StringExtras.h"
-#include "llvm/CodeGen/MachineFrameInfo.h"
-#include "llvm/CodeGen/MachineModuleInfo.h"
-#include "llvm/CodeGen/MachineFunction.h"
-#include "llvm/Support/FormattedStream.h"
-#include <cstdio>
-#include <ostream>
-#include <algorithm>
-#include <string>
-#include <queue>
-#include <list>
-#include <utility>
 using namespace llvm;
+
+static const HSAILConstPtr *getConstPtr(const HSAILKernel *krnl, const std::string &arg) {
+  if (!krnl) {
+    return NULL;
+  }
+  llvm::SmallVector<HSAILConstPtr, DEFAULT_VEC_SLOTS>::const_iterator begin, end;
+  for (begin = krnl->constPtr.begin(), end = krnl->constPtr.end();
+       begin != end; ++begin) {
+    if (!strcmp(begin->name.data(),arg.c_str())) {
+      return &(*begin);
+    }
+  }
+  return NULL;
+}
 
 void HSAILPrintfInfo::addOperand(size_t idx, uint32_t size) {
   mOperands.resize((unsigned)(idx + 1));
@@ -94,15 +87,8 @@ uint32_t HSAILPrintfInfo::getOperandID(uint32_t idx) {
 }
 
 HSAILMachineFunctionInfo::HSAILMachineFunctionInfo(MachineFunction& MF)
-  : CalleeSavedFrameSize(0), BytesToPopOnReturn(0),
-  DecorationStyle(NONE), ReturnAddrIndex(0),
-  TailCallReturnAddrDelta(0),
-  SRetReturnReg(0), UsesLDS(false), LDSArg(false),
-  UsesGDS(false), GDSArg(false),
-  mReservedLits(11), RegisterPartitioning(0),
-  ParamManager(MF.getTarget().getSubtargetImpl()->getDataLayout())
-{
-  memset(mUsedMem, 0, sizeof(mUsedMem));
+  : RegisterPartitioning(0),
+    ParamManager(MF.getTarget().getSubtargetImpl()->getDataLayout()) {
   const Function *F = MF.getFunction();
   mMF = &MF;
   MachineModuleInfo &mmi = MF.getMMI();
@@ -125,89 +111,27 @@ HSAILMachineFunctionInfo::HSAILMachineFunctionInfo(MachineFunction& MF)
   mStackSize = -1;
 }
 
-unsigned int
-HSAILMachineFunctionInfo::getCalleeSavedFrameSize() const
+bool
+HSAILMachineFunctionInfo::usesHWConstant(std::string name) const
 {
-  return CalleeSavedFrameSize;
-}
-void
-HSAILMachineFunctionInfo::setCalleeSavedFrameSize(unsigned int bytes)
-{
-  CalleeSavedFrameSize = bytes;
-}
-unsigned int
-HSAILMachineFunctionInfo::getBytesToPopOnReturn() const
-{
-  return BytesToPopOnReturn;
-}
-void
-HSAILMachineFunctionInfo::setBytesToPopOnReturn(unsigned int bytes)
-{
-  BytesToPopOnReturn = bytes;
-}
-NameDecorationStyle
-HSAILMachineFunctionInfo::getDecorationStyle() const
-{
-  return DecorationStyle;
-}
-void
-HSAILMachineFunctionInfo::setDecorationStyle(NameDecorationStyle style)
-{
-  DecorationStyle = style;
-}
-int
-HSAILMachineFunctionInfo::getRAIndex() const
-{
-  return ReturnAddrIndex;
-}
-void
-HSAILMachineFunctionInfo::setRAIndex(int index)
-{
-  ReturnAddrIndex = index;
-}
-int
-HSAILMachineFunctionInfo::getTCReturnAddrDelta() const
-{
-  return TailCallReturnAddrDelta;
-}
-void
-HSAILMachineFunctionInfo::setTCReturnAddrDelta(int delta)
-{
-  TailCallReturnAddrDelta = delta;
-}
-unsigned int
-HSAILMachineFunctionInfo::getSRetReturnReg() const
-{
-  return SRetReturnReg;
-}
-void
-HSAILMachineFunctionInfo::setSRetReturnReg(unsigned int reg)
-{
-  SRetReturnReg = reg;
+  const HSAILConstPtr *curConst = getConstPtr(mKernel, name);
+  if (curConst) {
+    return curConst->usesHardware;
+  } else {
+    return false;
+  }
 }
 
-void
-HSAILMachineFunctionInfo::setUsesLocal()
+bool
+HSAILMachineFunctionInfo::isKernel() const
 {
-  UsesLDS = true;
+  return mKernel != NULL && mKernel->mKernel;
 }
 
-void
-HSAILMachineFunctionInfo::setHasLocalArg()
+HSAILKernel*
+HSAILMachineFunctionInfo::getKernel()
 {
-  LDSArg = true;
-}
-
-void
-HSAILMachineFunctionInfo::setUsesRegion()
-{
-  UsesGDS = true;
-}
-
-void
-HSAILMachineFunctionInfo::setHasRegionArg()
-{
-  GDSArg = true;
+  return mKernel;
 }
 
   uint32_t
@@ -314,145 +238,10 @@ HSAILMachineFunctionInfo::getStackSize()
 
 }
 
+// FIXME: Remove this
 uint32_t
 HSAILMachineFunctionInfo::addi32Literal(uint32_t val, int Opcode) {
-  // Since we have emulated 16/8/1 bit register types with a 32bit real
-  // register, we need to sign extend the constants to 32bits in order for
-  // comparisons against the constants to work correctly, this fixes some issues
-  // we had in conformance failing for saturation.
-  // if (Opcode == HSAIL::LOADCONST_i16) {
-  //   val = (((int32_t)val << 16) >> 16);
-  // } else if (Opcode == HSAIL::LOADCONST_i8) {
-  //   val = (((int32_t)val << 24) >> 24);
-  // }
-  // if (mIntLits.find(val) == mIntLits.end()) {
-  //   mIntLits[val] = getNumLiterals();
-  // }
   return mIntLits[val];
-}
-
-uint32_t
-HSAILMachineFunctionInfo::addi64Literal(uint64_t val) {
-  if (mLongLits.find(val) == mLongLits.end()) {
-    mLongLits[val] = getNumLiterals();
-  }
-  return mLongLits[val];
-}
-
-uint32_t
-HSAILMachineFunctionInfo::addi128Literal(uint64_t val_lo, uint64_t val_hi) {
-  std::pair<uint64_t, uint64_t> a;
-  a.first = val_lo;
-  a.second = val_hi;
-  if (mVecLits.find(a) == mVecLits.end()) {
-    mVecLits[a] = getNumLiterals();
-  }
-  return mVecLits[a];
-}
-
-uint32_t
-HSAILMachineFunctionInfo::addf32Literal(uint32_t val) {
-  if (mIntLits.find(val) == mIntLits.end()) {
-    mIntLits[val] = getNumLiterals();
-  }
-  return mIntLits[val];
-}
-
-uint32_t
-HSAILMachineFunctionInfo::addf32Literal(const ConstantFP *CFP) {
-  uint32_t val = (uint32_t)CFP->getValueAPF().bitcastToAPInt().getZExtValue();
-  if (mIntLits.find(val) == mIntLits.end()) {
-    mIntLits[val] = getNumLiterals();
-  }
-  return mIntLits[val];
-}
-
-uint32_t
-HSAILMachineFunctionInfo::addf64Literal(uint64_t val) {
-  if (mLongLits.find(val) == mLongLits.end()) {
-    mLongLits[val] = getNumLiterals();
-  }
-  return mLongLits[val];
-}
-
-uint32_t
-HSAILMachineFunctionInfo::addf64Literal(const ConstantFP *CFP) {
-  union dtol_union {
-    double d;
-    uint64_t ul;
-  } dval;
-  const APFloat &APF = CFP->getValueAPF();
-  if (&APF.getSemantics() == (const llvm::fltSemantics *)&APFloat::IEEEsingle) {
-    float fval = APF.convertToFloat();
-    dval.d = (double)fval;
-  } else {
-    dval.d = APF.convertToDouble();
-  }
-  if (mLongLits.find(dval.ul) == mLongLits.end()) {
-    mLongLits[dval.ul] = getNumLiterals();
-  }
-  return mLongLits[dval.ul];
-}
-
-  uint32_t
-HSAILMachineFunctionInfo::getIntLits(uint32_t offset)
-{
-  return mIntLits[offset];
-}
-
-  uint32_t
-HSAILMachineFunctionInfo::getLongLits(uint64_t offset)
-{
-  return mLongLits[offset];
-}
-
-  uint32_t
-HSAILMachineFunctionInfo::getVecLits(uint64_t low64, uint64_t high64)
-{
-  return mVecLits[std::pair<uint64_t, uint64_t>(low64, high64)];
-}
-
-size_t
-HSAILMachineFunctionInfo::getNumLiterals() const {
-  return mLongLits.size() + mIntLits.size() + mVecLits.size() + mReservedLits;
-}
-
-  void
-HSAILMachineFunctionInfo::addReservedLiterals(uint32_t size)
-{
-  mReservedLits += size;
-}
-
-  uint32_t
-HSAILMachineFunctionInfo::addSampler(std::string name, uint32_t val)
-{
-  if (mSamplerMap.find(name) != mSamplerMap.end()) {
-    SamplerInfo newVal = mSamplerMap[name];
-    newVal.val = val;
-    mSamplerMap[name] = newVal;
-    return mSamplerMap[name].idx;
-  } else {
-    SamplerInfo curVal;
-    curVal.name = name;
-    curVal.val = val;
-    curVal.idx = mSamplerMap.size();
-    mSamplerMap[name] = curVal;
-    return curVal.idx;
-  }
-}
-
-void
-HSAILMachineFunctionInfo::setUsesMem(unsigned id) {
-  assert(id < HSAILDevice::MAX_IDS &&
-      "Must set the ID to be less than MAX_IDS!");
-  mUsedMem[id] = true;
-}
-
-bool
-HSAILMachineFunctionInfo::usesMem(unsigned id) {
-  assert(id < HSAILDevice::MAX_IDS &&
-      "Must set the ID to be less than MAX_IDS!");
-  return mUsedMem[id];
 }
 
   void
