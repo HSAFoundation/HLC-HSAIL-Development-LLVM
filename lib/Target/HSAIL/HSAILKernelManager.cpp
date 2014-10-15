@@ -143,7 +143,6 @@ printfPrint(std::pair<const std::string, HSAILPrintfInfo *> &data, OSTREAM_TYPE 
 }
 
 void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
-                                      int raw_uav_buffer,
                                       int counter, bool isKernel,
                                       const Function *F, int pointerCount) {
   assert(F && "Cannot pass a NULL Pointer to F!");
@@ -170,11 +169,6 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
     assert(1);
     break;
   case HSAILAS::GLOBAL_ADDRESS:
-    if (mSTM->device()->isSupported(HSAILDeviceInfo::ArenaSegment)) {
-      if (ptrID >= ARENA_SEGMENT_RESERVED_UAVS) {
-        ptrID = 8;
-      }
-    }
     mMFI->uav_insert(ptrID);
     break;
   case HSAILAS::CONSTANT_ADDRESS: {
@@ -196,8 +190,7 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
   default:
   case HSAILAS::PRIVATE_ADDRESS:
     if (mSTM->device()->usesHardware(HSAILDeviceInfo::PrivateMem)) {
-      MemType = (mSTM->device()->isSupported(HSAILDeviceInfo::PrivateUAV)) 
-        ? "up\0" : "hp\0";
+      MemType = "hp\0";
     } else {
       MemType = "p\0";
       mMFI->uav_insert(ptrID);
@@ -303,7 +296,6 @@ void HSAILKernelManager::processArgMetadata(OSTREAM_TYPE &ignored,
     ++Ip;
   }
   uint32_t mCBSize = 0;
-  int raw_uav_buffer = mSTM->device()->getResourceID(HSAILDevice::RAW_UAV_ID);
   uint32_t CounterNum = 0;
   uint32_t SemaNum = 0;
   uint32_t ROArg = 0;
@@ -343,9 +335,6 @@ void HSAILKernelManager::processArgMetadata(OSTREAM_TYPE &ignored,
       if (ST && ST->isOpaque()) {
         OpaqueType OT = GetOpaqueType(ST);
         if (IsImage(OT)) {
-          if (!mSTM->device()->isSupported(HSAILDeviceInfo::Images)) {
-            mMFI->addErrorMsg(hsa::CompilerErrorMessage[NO_IMAGE_SUPPORT]);
-          }
            
           std::string imageArg("image:");
           imageArg += Ip->getName().str() + ":";
@@ -404,8 +393,7 @@ void HSAILKernelManager::processArgMetadata(OSTREAM_TYPE &ignored,
           const char *MemType = "uav";
           if (PT->getAddressSpace() == HSAILAS::PRIVATE_ADDRESS) {
               if (mSTM->device()->usesHardware(HSAILDeviceInfo::PrivateMem)) {
-              MemType = (mSTM->device()->isSupported(HSAILDeviceInfo::PrivateUAV))
-              ? "up\0" : "hp\0";
+              MemType = "hp\0";
               } else {
                MemType = "p\0";
               }
@@ -416,8 +404,7 @@ void HSAILKernelManager::processArgMetadata(OSTREAM_TYPE &ignored,
           mMFI->addMetadata(queueArg, true);
           ++mCBSize;
 		} else {
-          updatePtrArg(Ip, raw_uav_buffer, mCBSize, isKernel,
-                       F, pointerCount++);
+          updatePtrArg(Ip, mCBSize, isKernel, F, pointerCount++);
           ++mCBSize;
         }
       } else if (CT->getTypeID() == Type::StructTyID 
@@ -444,7 +431,7 @@ void HSAILKernelManager::processArgMetadata(OSTREAM_TYPE &ignored,
                  || CT->getTypeID() == Type::ArrayTyID
                  || CT->getTypeID() == Type::PointerTyID
                  || PT->getAddressSpace() != HSAILAS::PRIVATE_ADDRESS) {
-        updatePtrArg(Ip, raw_uav_buffer, mCBSize, isKernel, F, pointerCount++);
+        updatePtrArg(Ip, mCBSize, isKernel, F, pointerCount++);
         ++mCBSize;
       } else {
         assert(0 && "Cannot process current pointer argument");
@@ -586,9 +573,8 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
         bool usehwlocal = mSTM->device()->usesHardware(HSAILDeviceInfo::LocalMem);
         bool usehwprivate = mSTM->device()->usesHardware(HSAILDeviceInfo::PrivateMem);
         bool usehwregion = mSTM->device()->usesHardware(HSAILDeviceInfo::RegionMem);
-        bool useuavprivate = mSTM->device()->isSupported(HSAILDeviceInfo::PrivateUAV);
         // private memory
-        RTI(brig) << "memory:" << ((usehwprivate) ?  (useuavprivate) ? "uav" : "hw" : "" ) << "private:" << (((mMFI->getStackSize() + mMFI->getPrivateSize() + 15) & (~0xF)));
+        RTI(brig) << "memory:" << ((usehwprivate) ? "hw" : "" ) << "private:" << (((mMFI->getStackSize() + mMFI->getPrivateSize() + 15) & (~0xF)));
         // region memory
         RTI(brig) << "memory:" << ((usehwregion) ? "hw" : "") << "region:" << ((usehwregion) ? hwregion : hwregion + region);
         // local memory
@@ -622,13 +608,6 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
       RTI(brig) << oss.str();
     }
 
-    if (!mSTM->device()->isSupported(HSAILDeviceInfo::MacroDB) && !mMFI->intr_empty()) {
-      oss.str().clear();  
-      oss << "intrinsic:" << mMFI->intr_size();
-      binaryForEach(mMFI->intr_begin(), mMFI->intr_end(), HSAIL::HSAILcommaPrint, oss);
-      RTI(brig) << oss.str();
-    }
-  
     if (isKernel) {
       for (StringMap<SamplerInfo>::iterator 
         smb = mMFI->sampler_begin(),

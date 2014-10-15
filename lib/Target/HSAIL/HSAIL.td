@@ -30,11 +30,6 @@ def FeatureMetadata30 : SubtargetFeature<"metadata30",
   "true",
   "Enable generation of version 3.0 of the metadata spec">;
 
-def FeatureImages : SubtargetFeature<"images",
-  "CapsOverride[HSAILDeviceInfo::Images]",
-  "true",
-  "Enable image functions">;
-
 def FeatureDebug : SubtargetFeature<"debug",
   "CapsOverride[HSAILDeviceInfo::Debug]",
   "true",
@@ -47,7 +42,7 @@ def FeatureDebug : SubtargetFeature<"debug",
 class Proc<string Name, list<SubtargetFeature> Features>
  : Processor<Name, NoItineraries, Features>;
 
-def : Proc<"generic", [FeatureDebug, FeatureImages]>;
+def : Proc<"generic", [FeatureDebug]>;
 
 //===----------------------------------------------------------------------===//
 // Register File Description

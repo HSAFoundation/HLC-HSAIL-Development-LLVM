@@ -131,7 +131,6 @@ public:
 private:
 
   void updatePtrArg(llvm::Function::const_arg_iterator Ip,
-                    int raw_uav_buffer,
                     int counter,
                     bool isKernel,
                     const Function *F,
