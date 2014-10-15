@@ -106,19 +106,6 @@ uint32_t HSAILDevice::getStackAlignment() const
 
 void HSAILDevice::setCaps()
 {
-  mSWBits.set(HSAILDeviceInfo::HalfOps);
-  mSWBits.set(HSAILDeviceInfo::ByteOps);
-  mSWBits.set(HSAILDeviceInfo::ShortOps);
-  mSWBits.set(HSAILDeviceInfo::HW64BitDivMod);
-  if (mSTM->isOverride(HSAILDeviceInfo::NoInline)) {
-    mSWBits.set(HSAILDeviceInfo::NoInline);
-  }
-  if (mSTM->isOverride(HSAILDeviceInfo::MacroDB)) {
-    mSWBits.set(HSAILDeviceInfo::MacroDB);
-  }
-  if (mSTM->isOverride(HSAILDeviceInfo::NoAlias)) {
-    mSWBits.set(HSAILDeviceInfo::NoAlias);
-  }
   if (mSTM->isOverride(HSAILDeviceInfo::Debug)) {
     mSWBits.set(HSAILDeviceInfo::ConstantMem);
   } else {
@@ -129,11 +116,6 @@ void HSAILDevice::setCaps()
   } else {
     mHWBits.set(HSAILDeviceInfo::PrivateMem);
   }
-  if (mSTM->isOverride(HSAILDeviceInfo::BarrierDetect)) {
-    mSWBits.set(HSAILDeviceInfo::BarrierDetect);
-  }
-  mSWBits.set(HSAILDeviceInfo::ByteLDSOps);
-  mSWBits.set(HSAILDeviceInfo::LongOps);
 }
 
 HSAILDeviceInfo::ExecutionMode

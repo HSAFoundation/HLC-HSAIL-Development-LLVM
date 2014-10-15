@@ -239,12 +239,6 @@ namespace llvm
     func_iterator func_begin() { return mFuncs.begin(); }
     func_iterator func_end() { return mFuncs.end(); }
 
-    /// Add called intrinsics to the set of all intrinscis this function calls.
-    size_t intr_size() { return mIntrs.size(); }
-    bool intr_empty() { return mIntrs.empty(); }
-    intr_iterator intr_begin() { return mIntrs.begin(); }
-    intr_iterator intr_end() { return mIntrs.end(); }
-
     /// Add a semaphore
     void sema_insert(uint32_t id) { mSemaphore.insert(id); }
     bool sema_count(uint32_t id) { return mSemaphore.count(id); }

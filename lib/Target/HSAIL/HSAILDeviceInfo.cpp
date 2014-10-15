@@ -97,13 +97,6 @@ size_t HSAILGenericDevice::getWavefrontSize() const {
 }
 
 void HSAILGenericDevice::setCaps() {
-  mSWBits.set(HSAILDeviceInfo::ArenaSegment);
-  mHWBits.set(HSAILDeviceInfo::ArenaUAV);
-  mHWBits.set(HSAILDeviceInfo::Semaphore);
-  mSWBits.set(HSAILDeviceInfo::Signed24BitOps);
-  if (mSTM->isOverride(HSAILDeviceInfo::ByteStores)) {
-    mHWBits.set(HSAILDeviceInfo::ByteStores);
-  }
   if (mSTM->isOverride(HSAILDeviceInfo::Debug)) {
     mSWBits.set(HSAILDeviceInfo::LocalMem);
     mSWBits.set(HSAILDeviceInfo::RegionMem);
@@ -111,12 +104,6 @@ void HSAILGenericDevice::setCaps() {
     mHWBits.set(HSAILDeviceInfo::LocalMem);
     mHWBits.set(HSAILDeviceInfo::RegionMem);
   }
-  mHWBits.set(HSAILDeviceInfo::Images);
-  if (mSTM->isOverride(HSAILDeviceInfo::MultiUAV)) {
-    mHWBits.set(HSAILDeviceInfo::MultiUAV);
-  }
-  mSWBits.set(HSAILDeviceInfo::ArenaVectors);
-  mHWBits.set(HSAILDeviceInfo::TmrReg);
 }
 FunctionPass* 
 HSAILGenericDevice::getIOExpansion(
@@ -209,13 +196,6 @@ size_t HSAILGenericDeviceFlat::getWavefrontSize() const {
 }
 
 void HSAILGenericDeviceFlat::setCaps() {
-  mSWBits.set(HSAILDeviceInfo::ArenaSegment);
-  mHWBits.set(HSAILDeviceInfo::ArenaUAV);
-  mHWBits.set(HSAILDeviceInfo::Semaphore);
-  mSWBits.set(HSAILDeviceInfo::Signed24BitOps);
-  if (mSTM->isOverride(HSAILDeviceInfo::ByteStores)) {
-    mHWBits.set(HSAILDeviceInfo::ByteStores);
-  }
   if (mSTM->isOverride(HSAILDeviceInfo::Debug)) {
     mSWBits.set(HSAILDeviceInfo::LocalMem);
     mSWBits.set(HSAILDeviceInfo::RegionMem);
@@ -223,12 +203,6 @@ void HSAILGenericDeviceFlat::setCaps() {
     mHWBits.set(HSAILDeviceInfo::LocalMem);
     mHWBits.set(HSAILDeviceInfo::RegionMem);
   }
-  mHWBits.set(HSAILDeviceInfo::Images);
-  if (mSTM->isOverride(HSAILDeviceInfo::MultiUAV)) {
-    mHWBits.set(HSAILDeviceInfo::MultiUAV);
-  }
-  mSWBits.set(HSAILDeviceInfo::ArenaVectors);
-  mHWBits.set(HSAILDeviceInfo::TmrReg);
 }
 FunctionPass*
 HSAILGenericDeviceFlat::getIOExpansion(
