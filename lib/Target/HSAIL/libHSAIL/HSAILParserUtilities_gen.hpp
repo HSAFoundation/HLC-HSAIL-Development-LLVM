@@ -130,6 +130,17 @@ OpcodeParser getOpcodeParser(Brig::BrigOpcode16_t arg) {
     }
 }
 
+Parser::OperandParser Parser::getOperandParser(Brig::BrigOpcode16_t arg) {
+  using namespace Brig;
+  switch( arg ) {
+    case BRIG_OPCODE_CALL               : return &Parser::parseCallOperands;
+    case BRIG_OPCODE_ICALL              : return &Parser::parseCallOperands;
+    case BRIG_OPCODE_SBR                : return &Parser::parseSbrOperands;
+    case BRIG_OPCODE_SCALL              : return &Parser::parseCallOperands;
+    default : return &Parser::parseOperands;
+    }
+}
+
 int vecOpndIndex(Brig::BrigOpcode16_t arg) {
   using namespace Brig;
   switch( arg ) {
@@ -144,17 +155,6 @@ int vecOpndIndex(Brig::BrigOpcode16_t arg) {
     case BRIG_OPCODE_ST                 : return 0;
     case BRIG_OPCODE_STIMAGE            : return 0;
     default : return -1;
-    }
-}
-
-Parser::OperandParser Parser::getOperandParser(Brig::BrigOpcode16_t arg) {
-  using namespace Brig;
-  switch( arg ) {
-    case BRIG_OPCODE_CALL               : return &Parser::parseCallOperands;
-    case BRIG_OPCODE_ICALL              : return &Parser::parseCallOperands;
-    case BRIG_OPCODE_SBR                : return &Parser::parseSbrOperands;
-    case BRIG_OPCODE_SCALL              : return &Parser::parseCallOperands;
-    default : return &Parser::parseOperands;
     }
 }
 

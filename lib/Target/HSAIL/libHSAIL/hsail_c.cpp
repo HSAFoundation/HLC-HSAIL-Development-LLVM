@@ -1,5 +1,4 @@
 #include "hsail_c.h"
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include "HSAILBrigContainer.h"
@@ -38,19 +37,26 @@ struct Api {
 
 static int assemble(brig_container_t handle, std::istream& is)
 {
-  Scanner s(is, true);
-  Parser p(s, ((Api*)handle)->container);
-  p.parseSource();
-  Validator v(((Api*)handle)->container);
-
-  if (!v.validate(true)) {
-    std::stringstream ss;
-    ss << v.getErrorMsg(&is) << "\n";
-    int rc = v.getErrorCode();
-    ((Api*)handle)->errorText = ss.str();
-    return rc;
-  }
-  return 0;
+    try {
+        Scanner s(is, true);
+        Parser p(s, ((Api*)handle)->container);
+        p.parseSource();
+    }
+    catch(const SyntaxError& e) {
+        std::stringstream ss;
+        e.print(ss, is);
+        ((Api*)handle)->errorText = ss.str();
+        return 1;
+    }
+    Validator v(((Api*)handle)->container);
+    if (!v.validate(true)) {
+        std::stringstream ss;
+        ss << v.getErrorMsg(&is) << "\n";
+        int rc = v.getErrorCode();
+        ((Api*)handle)->errorText = ss.str();
+        return rc;
+    }
+    return 0;
 }
 
 }
@@ -85,7 +91,7 @@ HSAIL_C_API brig_container_t brig_container_create_copy(
   api->container.strings().setData(data_bytes);
   api->container.code().setData(code_bytes);
   api->container.operands().setData(operand_bytes);
-  api->container.debugInfo().setData(debug_bytes);
+  if (debug_bytes) { api->container.debugInfo().setData(debug_bytes); }
   return (brig_container_t)api;
 }
 

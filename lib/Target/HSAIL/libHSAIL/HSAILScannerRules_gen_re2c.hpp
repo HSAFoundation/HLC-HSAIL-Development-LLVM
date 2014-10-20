@@ -290,81 +290,81 @@ yy45:
     case '2':    goto yy57;
     case '3':    goto yy58;
     case 'a':    goto yy53;
-    case 'b':    goto yy64;
+    case 'b':    goto yy71;
     case 'c':    goto yy48;
     case 'd':    goto yy55;
     case 'e':    goto yy51;
     case 'f':    goto yy50;
-    case 'g':    goto yy69;
+    case 'g':    goto yy70;
     case 'h':    goto yy56;
-    case 'i':    goto yy67;
-    case 'k':    goto yy71;
-    case 'l':    goto yy63;
-    case 'm':    goto yy65;
+    case 'i':    goto yy69;
+    case 'k':    goto yy68;
+    case 'l':    goto yy67;
+    case 'm':    goto yy66;
     case 'n':    goto yy47;
-    case 'o':    goto yy66;
-    case 'p':    goto yy62;
+    case 'o':    goto yy65;
+    case 'p':    goto yy64;
     case 'r':    goto yy49;
-    case 's':    goto yy60;
-    case 'u':    goto yy61;
+    case 's':    goto yy63;
+    case 'u':    goto yy62;
     case 'v':    goto yy52;
     case 'w':    goto yy54;
-    case 'x':    goto yy68;
-    case 'z':    goto yy70;
+    case 'x':    goto yy61;
+    case 'z':    goto yy60;
     default:    goto yy46;
     }
 yy46:
     curPos = marker;
     switch (yyaccept) {
     case 0: 	goto yy44;
-    case 1: 	goto yy87;
-    case 2: 	goto yy177;
-    case 3: 	goto yy190;
-    case 4: 	goto yy198;
-    case 5: 	goto yy249;
-    case 6: 	goto yy286;
-    case 7: 	goto yy302;
-    case 8: 	goto yy322;
-    case 9: 	goto yy381;
-    case 10: 	goto yy391;
-    case 11: 	goto yy416;
+    case 1: 	goto yy159;
+    case 2: 	goto yy165;
+    case 3: 	goto yy180;
+    case 4: 	goto yy193;
+    case 5: 	goto yy218;
+    case 6: 	goto yy234;
+    case 7: 	goto yy244;
+    case 8: 	goto yy253;
+    case 9: 	goto yy279;
+    case 10: 	goto yy333;
+    case 11: 	goto yy414;
     case 12: 	goto yy475;
     case 13: 	goto yy534;
-    case 14: 	goto yy814;
+    case 14: 	goto yy811;
     }
 yy47:
     yych = *++curPos;
     switch (yych) {
-    case 'a':    goto yy791;
-    case 'e':    goto yy789;
+    case 'a':    goto yy789;
+    case 'e':    goto yy790;
     case 'o':    goto yy792;
-    case 'u':    goto yy790;
+    case 'u':    goto yy791;
     default:    goto yy46;
     }
 yy48:
     yych = *++curPos;
     switch (yych) {
-    case 'a':    goto yy753;
+    case 'a':    goto yy751;
     case 'h':    goto yy754;
     case 'm':    goto yy752;
-    case 'o':    goto yy751;
+    case 'o':    goto yy753;
     default:    goto yy46;
     }
 yy49:
     yych = *++curPos;
     switch (yych) {
     case 'e':    goto yy720;
-    case 'l':    goto yy722;
-    case 'o':    goto yy723;
-    case 'w':    goto yy721;
+    case 'l':    goto yy721;
+    case 'o':    goto yy722;
+    case 'w':    goto yy723;
     default:    goto yy46;
     }
 yy50:
     yych = *++curPos;
     switch (yych) {
     case '1':    goto yy676;
-    case '3':    goto yy678;
-    case '6':    goto yy677;
+    case '3':    goto yy677;
+    case '6':    goto yy678;
     case 'i':    goto yy679;
     case 't':    goto yy680;
     default:    goto yy46;
@@ -389,19 +389,19 @@ yy53:
     switch (yych) {
     case 'd':    goto yy620;
     case 'l':    goto yy623;
-    case 'n':    goto yy622;
-    case 'r':    goto yy621;
+    case 'n':    goto yy621;
+    case 'r':    goto yy622;
     default:    goto yy46;
     }
 yy54:
     yych = *++curPos;
     switch (yych) {
     case 'a':    goto yy541;
-    case 'g':    goto yy543;
-    case 'i':    goto yy546;
+    case 'g':    goto yy542;
+    case 'i':    goto yy543;
     case 'o':    goto yy544;
-    case 'r':    goto yy542;
-    case 'v':    goto yy545;
+    case 'r':    goto yy545;
+    case 'v':    goto yy546;
     default:    goto yy46;
     }
 yy55:
@@ -436,6 +436,28 @@ yy59:
     default:    goto yy46;
     }
 yy60:
+    yych = *++curPos;
+    switch (yych) {
+    case 'e':    goto yy468;
+    default:    goto yy46;
+    }
+yy61:
+    yych = *++curPos;
+    switch (yych) {
+    case 'o':    goto yy464;
+    default:    goto yy46;
+    }
+yy62:
+    yych = *++curPos;
+    switch (yych) {
+    case '1':    goto yy405;
+    case '3':    goto yy406;
+    case '6':    goto yy407;
+    case '8':    goto yy408;
+    case 'p':    goto yy409;
+    default:    goto yy46;
+    }
+yy63:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -483,38 +505,28 @@ yy60:
     case 'v':
     case 'w':
     case 'x':    goto yy46;
-    case '1':    goto yy281;
-    case '3':    goto yy280;
-    case '6':    goto yy278;
-    case '8':    goto yy272;
-    case '_':    goto yy287;
-    case 'a':    goto yy288;
-    case 'c':    goto yy275;
-    case 'd':    goto yy282;
-    case 'e':    goto yy279;
-    case 'g':    goto yy273;
-    case 'i':    goto yy270;
-    case 'l':    goto yy271;
-    case 'n':    goto yy277;
-    case 'p':    goto yy284;
-    case 's':    goto yy276;
-    case 't':    goto yy289;
-    case 'u':    goto yy269;
-    case 'y':    goto yy283;
-    case 'z':    goto yy274;
-    default:    goto yy285;
+    case '1':    goto yy195;
+    case '3':    goto yy196;
+    case '6':    goto yy197;
+    case '8':    goto yy198;
+    case '_':    goto yy194;
+    case 'a':    goto yy199;
+    case 'c':    goto yy200;
+    case 'd':    goto yy201;
+    case 'e':    goto yy202;
+    case 'g':    goto yy203;
+    case 'i':    goto yy204;
+    case 'l':    goto yy205;
+    case 'n':    goto yy206;
+    case 'p':    goto yy207;
+    case 's':    goto yy208;
+    case 't':    goto yy209;
+    case 'u':    goto yy210;
+    case 'y':    goto yy211;
+    case 'z':    goto yy212;
+    default:    goto yy192;
     }
-yy61:
-    yych = *++curPos;
-    switch (yych) {
-    case '1':    goto yy210;
-    case '3':    goto yy214;
-    case '6':    goto yy212;
-    case '8':    goto yy213;
-    case 'p':    goto yy211;
-    default:    goto yy46;
-    }
-yy62:
+yy64:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -577,106 +589,216 @@ yy62:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case '_':    goto yy178;
-    case 'p':    goto yy180;
-    case 'r':    goto yy181;
-    case 's':    goto yy179;
-    default:    goto yy176;
-    }
-yy63:
-    yych = *++curPos;
-    switch (yych) {
-    case 'd':    goto yy161;
-    case 'e':    goto yy163;
-    case 't':    goto yy162;
-    default:    goto yy46;
-    }
-yy64:
-    yych = *++curPos;
-    switch (yych) {
-    case '1':    goto yy140;
-    case '3':    goto yy142;
-    case '6':    goto yy141;
-    case '8':    goto yy143;
-    default:    goto yy46;
+    case '_':    goto yy160;
+    case 'p':    goto yy161;
+    case 'r':    goto yy162;
+    case 's':    goto yy163;
+    default:    goto yy158;
     }
 yy65:
     yych = *++curPos;
     switch (yych) {
-    case 'a':    goto yy133;
-    case 'i':    goto yy132;
+    case 'r':    goto yy155;
     default:    goto yy46;
     }
 yy66:
     yych = *++curPos;
     switch (yych) {
-    case 'r':    goto yy129;
+    case 'a':    goto yy147;
+    case 'i':    goto yy148;
     default:    goto yy46;
     }
 yy67:
     yych = *++curPos;
     switch (yych) {
-    case 'm':    goto yy123;
+    case 'd':    goto yy132;
+    case 'e':    goto yy133;
+    case 't':    goto yy134;
     default:    goto yy46;
     }
 yy68:
     yych = *++curPos;
     switch (yych) {
-    case 'o':    goto yy119;
+    case 'e':    goto yy124;
     default:    goto yy46;
     }
 yy69:
     yych = *++curPos;
     switch (yych) {
-    case 'e':    goto yy96;
-    case 'l':    goto yy97;
-    case 'r':    goto yy94;
-    case 't':    goto yy95;
+    case 'm':    goto yy118;
     default:    goto yy46;
     }
 yy70:
     yych = *++curPos;
     switch (yych) {
-    case 'e':    goto yy80;
+    case 'e':    goto yy93;
+    case 'l':    goto yy94;
+    case 'r':    goto yy95;
+    case 't':    goto yy96;
     default:    goto yy46;
     }
 yy71:
     yych = *++curPos;
     switch (yych) {
-    case 'e':    goto yy72;
+    case '1':    goto yy72;
+    case '3':    goto yy73;
+    case '6':    goto yy74;
+    case '8':    goto yy75;
     default:    goto yy46;
     }
 yy72:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 'r':    goto yy73;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '3':
+    case '4':
+    case '5':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    case '2':    goto yy85;
+    case '6':    goto yy84;
+    default:    goto yy86;
     }
 yy73:
     yych = *++curPos;
     switch (yych) {
-    case 'n':    goto yy74;
+    case '2':    goto yy81;
     default:    goto yy46;
     }
 yy74:
     yych = *++curPos;
     switch (yych) {
-    case 'a':    goto yy75;
+    case '4':    goto yy78;
     default:    goto yy46;
     }
 yy75:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 'r':    goto yy76;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy76;
     }
 yy76:
-    yych = *++curPos;
-    switch (yych) {
-    case 'g':    goto yy77;
-    default:    goto yy46;
-    }
-yy77:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_B8; return EMType; }
+yy78:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -742,193 +864,85 @@ yy77:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy78;
+    default:    goto yy79;
     }
-yy78:
+yy79:
     ++curPos;
     curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_KERNARG;               return EMSegment;             
-	default: return EEmpty; } }
-yy80:
-    yych = *++curPos;
-    switch (yych) {
-    case 'r':    goto yy81;
-    default:    goto yy46;
-    }
+    { brigId = Brig::BRIG_TYPE_B64; return EMType; }
 yy81:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 'o':    goto yy82;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy82;
     }
 yy82:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'i':    goto yy83;
-    default:    goto yy84;
-    }
-yy83:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case '_':    goto yy86;
-    default:    goto yy88;
-    }
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_B32; return EMType; }
 yy84:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_FLOAT_ZERO;              return EMRound;                }
-yy86:
-    yyaccept = 1;
-    yych = *(marker = ++curPos);
-    switch (yych) {
-    case 's':    goto yy89;
-    default:    goto yy87;
-    }
-yy87:
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_ZERO;            return EMRound;                }
-yy88:
-    yych = *++curPos;
-    goto yy87;
-yy89:
-    yych = *++curPos;
-    switch (yych) {
-    case 'a':    goto yy90;
-    default:    goto yy46;
-    }
-yy90:
-    yych = *++curPos;
-    switch (yych) {
-    case 't':    goto yy91;
-    default:    goto yy46;
-    }
-yy91:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -994,85 +1008,173 @@ yy91:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy92;
+    default:    goto yy91;
     }
-yy92:
+yy85:
+    yych = *++curPos;
+    switch (yych) {
+    case '8':    goto yy88;
+    default:    goto yy46;
+    }
+yy86:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_ZERO_SAT;        return EMRound;                }
+    { brigId = Brig::BRIG_TYPE_B1; return EMType; }
+yy88:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy89;
+    }
+yy89:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_B128; return EMType; }
+yy91:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_B16; return EMType; }
+yy93:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'u':    goto yy113;
+    default:    goto yy114;
+    }
 yy94:
     yych = *++curPos;
     switch (yych) {
-    case 'o':    goto yy114;
+    case 'o':    goto yy107;
     default:    goto yy46;
     }
 yy95:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'u':    goto yy109;
-    default:    goto yy110;
+    case 'o':    goto yy102;
+    default:    goto yy46;
     }
 yy96:
     ctxMarker = curPos + 1;
@@ -1139,34 +1241,98 @@ yy96:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case 'u':    goto yy106;
-    default:    goto yy104;
+    case 'u':    goto yy97;
+    default:    goto yy98;
     }
 yy97:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 'o':    goto yy98;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy100;
     }
 yy98:
-    yych = *++curPos;
-    switch (yych) {
-    case 'b':    goto yy99;
-    default:    goto yy46;
-    }
-yy99:
-    yych = *++curPos;
-    switch (yych) {
-    case 'a':    goto yy100;
-    default:    goto yy46;
-    }
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_GT; return EMCompare; }
 yy100:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_GTU; return EMCompare; }
+yy102:
     yych = *++curPos;
     switch (yych) {
-    case 'l':    goto yy101;
+    case 'u':    goto yy103;
     default:    goto yy46;
     }
-yy101:
+yy103:
+    yych = *++curPos;
+    switch (yych) {
+    case 'p':    goto yy104;
+    default:    goto yy46;
+    }
+yy104:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -1232,180 +1398,34 @@ yy101:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy102;
+    default:    goto yy105;
     }
-yy102:
+yy105:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstFenceContext: brigId = Brig::BRIG_MEMORY_FENCE_SEGMENT_GLOBAL;   return EMMemoryFenceSegments; 
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_GLOBAL;                return EMSegment;             
+	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_GROUP; return EMSegment;
+	case EInstModifierInstFenceContext: brigId = Brig::BRIG_MEMORY_FENCE_SEGMENT_GROUP; return EMMemoryFenceSegments;
 	default: return EEmpty; } }
-yy104:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_GE;                    return EMCompare;              }
-yy106:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy107;
-    }
 yy107:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_GEU;                   return EMCompare;              }
-yy109:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy112;
+    case 'b':    goto yy108;
+    default:    goto yy46;
+    }
+yy108:
+    yych = *++curPos;
+    switch (yych) {
+    case 'a':    goto yy109;
+    default:    goto yy46;
+    }
+yy109:
+    yych = *++curPos;
+    switch (yych) {
+    case 'l':    goto yy110;
+    default:    goto yy46;
     }
 yy110:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_GT;                    return EMCompare;              }
-yy112:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_GTU;                   return EMCompare;              }
-yy114:
-    yych = *++curPos;
-    switch (yych) {
-    case 'u':    goto yy115;
-    default:    goto yy46;
-    }
-yy115:
-    yych = *++curPos;
-    switch (yych) {
-    case 'p':    goto yy116;
-    default:    goto yy46;
-    }
-yy116:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -1471,22 +1491,110 @@ yy116:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy117;
+    default:    goto yy111;
     }
-yy117:
+yy111:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstFenceContext: brigId = Brig::BRIG_MEMORY_FENCE_SEGMENT_GROUP;    return EMMemoryFenceSegments; 
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_GROUP;                 return EMSegment;             
+	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_GLOBAL; return EMSegment;
+	case EInstModifierInstFenceContext: brigId = Brig::BRIG_MEMORY_FENCE_SEGMENT_GLOBAL; return EMMemoryFenceSegments;
 	default: return EEmpty; } }
+yy113:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy116;
+    }
+yy114:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_GE; return EMCompare; }
+yy116:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_GEU; return EMCompare; }
+yy118:
+    yych = *++curPos;
+    switch (yych) {
+    case 'a':    goto yy119;
+    default:    goto yy46;
+    }
 yy119:
     yych = *++curPos;
     switch (yych) {
-    case 'r':    goto yy120;
+    case 'g':    goto yy120;
     default:    goto yy46;
     }
 yy120:
+    yych = *++curPos;
+    switch (yych) {
+    case 'e':    goto yy121;
+    default:    goto yy46;
+    }
+yy121:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -1552,106 +1660,44 @@ yy120:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy121;
+    default:    goto yy122;
     }
-yy121:
+yy122:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_XOR;                    return EMAtomicOp;            
+	case EInstModifierInstFenceContext: brigId = Brig::BRIG_MEMORY_FENCE_SEGMENT_IMAGE; return EMMemoryFenceSegments;
 	default: return EEmpty; } }
-yy123:
-    yych = *++curPos;
-    switch (yych) {
-    case 'a':    goto yy124;
-    default:    goto yy46;
-    }
 yy124:
     yych = *++curPos;
     switch (yych) {
-    case 'g':    goto yy125;
+    case 'r':    goto yy125;
     default:    goto yy46;
     }
 yy125:
     yych = *++curPos;
     switch (yych) {
-    case 'e':    goto yy126;
+    case 'n':    goto yy126;
     default:    goto yy46;
     }
 yy126:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy127;
+    case 'a':    goto yy127;
+    default:    goto yy46;
     }
 yy127:
-    ++curPos;
-    curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierInstFenceContext: brigId = Brig::BRIG_MEMORY_FENCE_SEGMENT_IMAGE;    return EMMemoryFenceSegments; 
-	default: return EEmpty; } }
+    yych = *++curPos;
+    switch (yych) {
+    case 'r':    goto yy128;
+    default:    goto yy46;
+    }
+yy128:
+    yych = *++curPos;
+    switch (yych) {
+    case 'g':    goto yy129;
+    default:    goto yy46;
+    }
 yy129:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -1724,21 +1770,9 @@ yy130:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_OR;                     return EMAtomicOp;            
+	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_KERNARG; return EMSegment;
 	default: return EEmpty; } }
 yy132:
-    yych = *++curPos;
-    switch (yych) {
-    case 'n':    goto yy137;
-    default:    goto yy46;
-    }
-yy133:
-    yych = *++curPos;
-    switch (yych) {
-    case 'x':    goto yy134;
-    default:    goto yy46;
-    }
-yy134:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -1804,15 +1838,145 @@ yy134:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy135;
+    default:    goto yy145;
+    }
+yy133:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'u':    goto yy140;
+    default:    goto yy141;
+    }
+yy134:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'u':    goto yy135;
+    default:    goto yy136;
     }
 yy135:
-    ++curPos;
-    curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_MAX;                    return EMAtomicOp;            
-	default: return EEmpty; } }
-yy137:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -1880,21 +2044,25 @@ yy137:
     case 'z':    goto yy46;
     default:    goto yy138;
     }
+yy136:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_LT; return EMCompare; }
 yy138:
     ++curPos;
     curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_MIN;                    return EMAtomicOp;            
-	default: return EEmpty; } }
+    { brigId = Brig::BRIG_COMPARE_LTU; return EMCompare; }
 yy140:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
     case '0':
     case '1':
+    case '2':
     case '3':
     case '4':
     case '5':
+    case '6':
     case '7':
     case '8':
     case '9':
@@ -1950,166 +2118,34 @@ yy140:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case '2':    goto yy152;
-    case '6':    goto yy153;
-    default:    goto yy154;
+    default:    goto yy143;
     }
 yy141:
-    yych = *++curPos;
-    switch (yych) {
-    case '4':    goto yy149;
-    default:    goto yy46;
-    }
-yy142:
-    yych = *++curPos;
-    switch (yych) {
-    case '2':    goto yy146;
-    default:    goto yy46;
-    }
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_LE; return EMCompare; }
 yy143:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy144;
-    }
-yy144:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_B8;                       return EMType;                 }
-yy146:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy147;
-    }
+    { brigId = Brig::BRIG_COMPARE_LEU; return EMCompare; }
+yy145:
+    ++curPos;
+    curPos = ctxMarker;
+    { switch(ctx) {
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_LD; return EMAtomicOp;
+	default: return EEmpty; } }
 yy147:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_B32;                      return EMType;                 }
+    yych = *++curPos;
+    switch (yych) {
+    case 'x':    goto yy152;
+    default:    goto yy46;
+    }
+yy148:
+    yych = *++curPos;
+    switch (yych) {
+    case 'n':    goto yy149;
+    default:    goto yy46;
+    }
 yy149:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -2181,14 +2217,84 @@ yy149:
 yy150:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_B64;                      return EMType;                 }
+    { switch(ctx) {
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_MIN; return EMAtomicOp;
+	default: return EEmpty; } }
 yy152:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '8':    goto yy158;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy153;
     }
 yy153:
+    ++curPos;
+    curPos = ctxMarker;
+    { switch(ctx) {
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_MAX; return EMAtomicOp;
+	default: return EEmpty; } }
+yy155:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -2256,86 +2362,24 @@ yy153:
     case 'z':    goto yy46;
     default:    goto yy156;
     }
-yy154:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_B1;                       return EMType;                 }
 yy156:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_B16;                      return EMType;                 }
+    { switch(ctx) {
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_OR; return EMAtomicOp;
+	default: return EEmpty; } }
 yy158:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
+    ++curPos;
+yy159:
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_PACK_P; return EMPacking; }
+yy160:
+    yyaccept = 1;
+    yych = *(marker = ++curPos);
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
+    case 's':    goto yy187;
     default:    goto yy159;
     }
-yy159:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_B128;                     return EMType;                 }
 yy161:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -2402,75 +2446,14 @@ yy161:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy174;
+    case '_':    goto yy179;
+    default:    goto yy181;
     }
 yy162:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'u':    goto yy171;
-    default:    goto yy169;
+    case 'i':    goto yy172;
+    default:    goto yy46;
     }
 yy163:
     ctxMarker = curPos + 1;
@@ -2532,353 +2515,320 @@ yy163:
     case 'r':
     case 's':
     case 't':
+    case 'u':
     case 'v':
     case 'w':
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case 'u':    goto yy166;
-    default:    goto yy164;
+    case '_':    goto yy164;
+    default:    goto yy166;
     }
 yy164:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_LE;                    return EMCompare;              }
-yy166:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy167;
-    }
-yy167:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_LEU;                   return EMCompare;              }
-yy169:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_LT;                    return EMCompare;              }
-yy171:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy172;
-    }
-yy172:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_LTU;                   return EMCompare;              }
-yy174:
-    ++curPos;
-    curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_LD;                     return EMAtomicOp;            
-	default: return EEmpty; } }
-yy176:
-    ++curPos;
-yy177:
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_P;                        return EMPacking;              }
-yy178:
     yyaccept = 2;
     yych = *(marker = ++curPos);
     switch (yych) {
-    case 's':    goto yy205;
-    default:    goto yy177;
+    case 's':    goto yy167;
+    default:    goto yy165;
     }
-yy179:
-    ctxMarker = curPos + 1;
+yy165:
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_PACK_PS; return EMPacking; }
+yy166:
+    yych = *++curPos;
+    goto yy165;
+yy167:
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case '_':    goto yy197;
-    default:    goto yy199;
-    }
-yy180:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case '_':    goto yy191;
-    default:    goto yy189;
-    }
-yy181:
-    yych = *++curPos;
-    switch (yych) {
-    case 'i':    goto yy182;
+    case 'a':    goto yy168;
     default:    goto yy46;
     }
+yy168:
+    yych = *++curPos;
+    switch (yych) {
+    case 't':    goto yy169;
+    default:    goto yy46;
+    }
+yy169:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy170;
+    }
+yy170:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_PACK_PSSAT; return EMPacking; }
+yy172:
+    yych = *++curPos;
+    switch (yych) {
+    case 'v':    goto yy173;
+    default:    goto yy46;
+    }
+yy173:
+    yych = *++curPos;
+    switch (yych) {
+    case 'a':    goto yy174;
+    default:    goto yy46;
+    }
+yy174:
+    yych = *++curPos;
+    switch (yych) {
+    case 't':    goto yy175;
+    default:    goto yy46;
+    }
+yy175:
+    yych = *++curPos;
+    switch (yych) {
+    case 'e':    goto yy176;
+    default:    goto yy46;
+    }
+yy176:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy177;
+    }
+yy177:
+    ++curPos;
+    curPos = ctxMarker;
+    { switch(ctx) {
+	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_PRIVATE; return EMSegment;
+	default: return EEmpty; } }
+yy179:
+    yyaccept = 3;
+    yych = *(marker = ++curPos);
+    switch (yych) {
+    case 's':    goto yy182;
+    default:    goto yy180;
+    }
+yy180:
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_PACK_PP; return EMPacking; }
+yy181:
+    yych = *++curPos;
+    goto yy180;
 yy182:
     yych = *++curPos;
     switch (yych) {
-    case 'v':    goto yy183;
+    case 'a':    goto yy183;
     default:    goto yy46;
     }
 yy183:
     yych = *++curPos;
     switch (yych) {
-    case 'a':    goto yy184;
+    case 't':    goto yy184;
     default:    goto yy46;
     }
 yy184:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 't':    goto yy185;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy185;
     }
 yy185:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_PACK_PPSAT; return EMPacking; }
+yy187:
     yych = *++curPos;
     switch (yych) {
-    case 'e':    goto yy186;
+    case 'a':    goto yy188;
     default:    goto yy46;
     }
-yy186:
+yy188:
+    yych = *++curPos;
+    switch (yych) {
+    case 't':    goto yy189;
+    default:    goto yy46;
+    }
+yy189:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -2944,217 +2894,161 @@ yy186:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy187;
-    }
-yy187:
-    ++curPos;
-    curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_PRIVATE;               return EMSegment;             
-	default: return EEmpty; } }
-yy189:
-    ++curPos;
-yy190:
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_PP;                       return EMPacking;              }
-yy191:
-    yyaccept = 3;
-    yych = *(marker = ++curPos);
-    switch (yych) {
-    case 's':    goto yy192;
     default:    goto yy190;
     }
-yy192:
-    yych = *++curPos;
-    switch (yych) {
-    case 'a':    goto yy193;
-    default:    goto yy46;
-    }
-yy193:
-    yych = *++curPos;
-    switch (yych) {
-    case 't':    goto yy194;
-    default:    goto yy46;
-    }
-yy194:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy195;
-    }
-yy195:
+yy190:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_PPSAT;                    return EMPacking;              }
-yy197:
+    { brigId = Brig::BRIG_PACK_PSAT; return EMPacking; }
+yy192:
+    ++curPos;
+yy193:
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_PACK_S; return EMPacking; }
+yy194:
     yyaccept = 4;
     yych = *(marker = ++curPos);
     switch (yych) {
-    case 's':    goto yy200;
-    default:    goto yy198;
+    case 's':    goto yy400;
+    default:    goto yy193;
+    }
+yy195:
+    yych = *++curPos;
+    switch (yych) {
+    case '6':    goto yy387;
+    default:    goto yy46;
+    }
+yy196:
+    yych = *++curPos;
+    switch (yych) {
+    case '2':    goto yy377;
+    default:    goto yy46;
+    }
+yy197:
+    yych = *++curPos;
+    switch (yych) {
+    case '4':    goto yy370;
+    default:    goto yy46;
     }
 yy198:
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_PS;                       return EMPacking;              }
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'x':    goto yy357;
+    default:    goto yy358;
+    }
 yy199:
     yych = *++curPos;
-    goto yy198;
+    switch (yych) {
+    case 'm':    goto yy353;
+    default:    goto yy46;
+    }
 yy200:
     yych = *++curPos;
     switch (yych) {
-    case 'a':    goto yy201;
+    case 'a':    goto yy341;
+    case 'r':    goto yy340;
     default:    goto yy46;
     }
 yy201:
     yych = *++curPos;
     switch (yych) {
-    case 't':    goto yy202;
+    case 'o':    goto yy328;
     default:    goto yy46;
     }
 yy202:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy203;
+    case 'q':    goto yy322;
+    default:    goto yy46;
     }
 yy203:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_PSSAT;                    return EMPacking;              }
+    yych = *++curPos;
+    switch (yych) {
+    case 'e':    goto yy311;
+    case 't':    goto yy310;
+    default:    goto yy46;
+    }
+yy204:
+    yych = *++curPos;
+    switch (yych) {
+    case 'g':    goto yy301;
+    default:    goto yy46;
+    }
 yy205:
     yych = *++curPos;
     switch (yych) {
-    case 'a':    goto yy206;
+    case 'e':    goto yy290;
+    case 't':    goto yy289;
     default:    goto yy46;
     }
 yy206:
     yych = *++curPos;
     switch (yych) {
-    case 't':    goto yy207;
+    case 'a':    goto yy266;
+    case 'e':    goto yy265;
+    case 'u':    goto yy264;
     default:    goto yy46;
     }
 yy207:
@@ -3205,7 +3099,6 @@ yy207:
     case 'f':
     case 'g':
     case 'h':
-    case 'i':
     case 'j':
     case 'k':
     case 'l':
@@ -3223,19 +3116,11 @@ yy207:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy208;
+    case '_':    goto yy252;
+    case 'i':    goto yy251;
+    default:    goto yy254;
     }
 yy208:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_PSAT;                     return EMPacking;              }
-yy210:
-    yych = *++curPos;
-    switch (yych) {
-    case '6':    goto yy256;
-    default:    goto yy46;
-    }
-yy211:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -3283,6 +3168,7 @@ yy211:
     case 'f':
     case 'g':
     case 'h':
+    case 'i':
     case 'j':
     case 'k':
     case 'l':
@@ -3300,90 +3186,115 @@ yy211:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case 'i':    goto yy245;
-    default:    goto yy246;
+    case '_':    goto yy243;
+    default:    goto yy245;
+    }
+yy209:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy241;
+    }
+yy210:
+    yych = *++curPos;
+    switch (yych) {
+    case 'b':    goto yy229;
+    case 'p':    goto yy228;
+    default:    goto yy46;
+    }
+yy211:
+    yych = *++curPos;
+    switch (yych) {
+    case 's':    goto yy225;
+    default:    goto yy46;
     }
 yy212:
     yych = *++curPos;
     switch (yych) {
-    case '4':    goto yy238;
+    case 'e':    goto yy213;
     default:    goto yy46;
     }
 yy213:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'x':    goto yy225;
-    default:    goto yy226;
+    case 'r':    goto yy214;
+    default:    goto yy46;
     }
 yy214:
     yych = *++curPos;
     switch (yych) {
-    case '2':    goto yy215;
+    case 'o':    goto yy215;
     default:    goto yy46;
     }
 yy215:
+    yych = *++curPos;
+    switch (yych) {
+    case 'i':    goto yy216;
+    default:    goto yy46;
+    }
+yy216:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -3446,23 +3357,38 @@ yy215:
     case 'u':
     case 'v':
     case 'w':
+    case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case 'x':    goto yy218;
-    default:    goto yy216;
+    case '_':    goto yy217;
+    default:    goto yy219;
     }
-yy216:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U32;                      return EMType;                 }
+yy217:
+    yyaccept = 5;
+    yych = *(marker = ++curPos);
+    switch (yych) {
+    case 's':    goto yy220;
+    default:    goto yy218;
+    }
 yy218:
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_ZERO; return EMRound; }
+yy219:
+    yych = *++curPos;
+    goto yy218;
+yy220:
     yych = *++curPos;
     switch (yych) {
-    case '2':    goto yy220;
-    case '4':    goto yy219;
+    case 'a':    goto yy221;
     default:    goto yy46;
     }
-yy219:
+yy221:
+    yych = *++curPos;
+    switch (yych) {
+    case 't':    goto yy222;
+    default:    goto yy46;
+    }
+yy222:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -3530,7 +3456,11 @@ yy219:
     case 'z':    goto yy46;
     default:    goto yy223;
     }
-yy220:
+yy223:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_ZERO_SAT; return EMRound; }
+yy225:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -3596,32 +3526,16 @@ yy220:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy221;
-    }
-yy221:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U32X2;                    return EMType;                 }
-yy223:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U32X4;                    return EMType;                 }
-yy225:
-    yych = *++curPos;
-    switch (yych) {
-    case '1':    goto yy228;
-    case '4':    goto yy230;
-    case '8':    goto yy229;
-    default:    goto yy46;
+    default:    goto yy226;
     }
 yy226:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U8;                       return EMType;                 }
+    { brigId = Brig::BRIG_MEMORY_SCOPE_SYSTEM; return EMMemoryScope; }
 yy228:
     yych = *++curPos;
     switch (yych) {
-    case '6':    goto yy235;
+    case 'i':    goto yy232;
     default:    goto yy46;
     }
 yy229:
@@ -3690,9 +3604,15 @@ yy229:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy233;
+    default:    goto yy230;
     }
 yy230:
+    ++curPos;
+    curPos = ctxMarker;
+    { switch(ctx) {
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_SUB; return EMAtomicOp;
+	default: return EEmpty; } }
+yy232:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -3758,88 +3678,34 @@ yy230:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy231;
+    case '_':    goto yy233;
+    default:    goto yy235;
     }
-yy231:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U8X4;                     return EMType;                 }
 yy233:
-    ++curPos;
+    yyaccept = 6;
+    yych = *(marker = ++curPos);
+    switch (yych) {
+    case 's':    goto yy236;
+    default:    goto yy234;
+    }
+yy234:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U8X8;                     return EMType;                 }
+    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY; return EMRound; }
 yy235:
-    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    goto yy234;
+yy236:
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy236;
+    case 'a':    goto yy237;
+    default:    goto yy46;
     }
-yy236:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U8X16;                    return EMType;                 }
+yy237:
+    yych = *++curPos;
+    switch (yych) {
+    case 't':    goto yy238;
+    default:    goto yy46;
+    }
 yy238:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -3903,343 +3769,150 @@ yy238:
     case 'u':
     case 'v':
     case 'w':
+    case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case 'x':    goto yy241;
     default:    goto yy239;
     }
 yy239:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U64;                      return EMType;                 }
+    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY_SAT; return EMRound; }
 yy241:
-    yych = *++curPos;
-    switch (yych) {
-    case '2':    goto yy242;
-    default:    goto yy46;
-    }
-yy242:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy243;
-    }
+    ++curPos;
+    curPos = ctxMarker;
+    { switch(ctx) {
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_ST; return EMAtomicOp;
+	default: return EEmpty; } }
 yy243:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U64X2;                    return EMType;                 }
-yy245:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case '_':    goto yy250;
-    default:    goto yy248;
-    }
-yy246:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_FLOAT_PLUS_INFINITY;     return EMRound;                }
-yy248:
-    ++curPos;
-yy249:
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY;   return EMRound;                }
-yy250:
-    yyaccept = 5;
+    yyaccept = 7;
     yych = *(marker = ++curPos);
     switch (yych) {
-    case 's':    goto yy251;
+    case 's':    goto yy246;
+    default:    goto yy244;
+    }
+yy244:
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_PACK_SS; return EMPacking; }
+yy245:
+    yych = *++curPos;
+    goto yy244;
+yy246:
+    yych = *++curPos;
+    switch (yych) {
+    case 'a':    goto yy247;
+    default:    goto yy46;
+    }
+yy247:
+    yych = *++curPos;
+    switch (yych) {
+    case 't':    goto yy248;
+    default:    goto yy46;
+    }
+yy248:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
     default:    goto yy249;
     }
+yy249:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_PACK_SSSAT; return EMPacking; }
 yy251:
     yych = *++curPos;
     switch (yych) {
-    case 'a':    goto yy252;
+    case 'l':    goto yy260;
     default:    goto yy46;
     }
 yy252:
-    yych = *++curPos;
+    yyaccept = 8;
+    yych = *(marker = ++curPos);
     switch (yych) {
-    case 't':    goto yy253;
-    default:    goto yy46;
+    case 's':    goto yy255;
+    default:    goto yy253;
     }
 yy253:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy254;
-    }
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_PACK_SP; return EMPacking; }
 yy254:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY_SAT; return EMRound;                }
-yy256:
-    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    goto yy253;
+yy255:
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'x':    goto yy259;
-    default:    goto yy257;
-    }
-yy257:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U16;                      return EMType;                 }
-yy259:
-    yych = *++curPos;
-    switch (yych) {
-    case '2':    goto yy260;
-    case '4':    goto yy262;
-    case '8':    goto yy261;
+    case 'a':    goto yy256;
     default:    goto yy46;
     }
-yy260:
+yy256:
+    yych = *++curPos;
+    switch (yych) {
+    case 't':    goto yy257;
+    default:    goto yy46;
+    }
+yy257:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -4305,7 +3978,17 @@ yy260:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy267;
+    default:    goto yy258;
+    }
+yy258:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_PACK_SPSAT; return EMPacking; }
+yy260:
+    yych = *++curPos;
+    switch (yych) {
+    case 'l':    goto yy261;
+    default:    goto yy46;
     }
 yy261:
     ctxMarker = curPos + 1;
@@ -4373,9 +4056,95 @@ yy261:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy265;
+    default:    goto yy262;
     }
 yy262:
+    ++curPos;
+    curPos = ctxMarker;
+    { switch(ctx) {
+	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_SPILL; return EMSegment;
+	default: return EEmpty; } }
+yy264:
+    yych = *++curPos;
+    switch (yych) {
+    case 'm':    goto yy286;
+    default:    goto yy46;
+    }
+yy265:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'a':    goto yy272;
+    case 'u':    goto yy273;
+    default:    goto yy270;
+    }
+yy266:
+    yych = *++curPos;
+    switch (yych) {
+    case 'n':    goto yy267;
+    default:    goto yy46;
+    }
+yy267:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -4441,129 +4210,23 @@ yy262:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy263;
+    default:    goto yy268;
     }
-yy263:
+yy268:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U16X4;                    return EMType;                 }
-yy265:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U16X8;                    return EMType;                 }
-yy267:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U16X2;                    return EMType;                 }
-yy269:
-    yych = *++curPos;
-    switch (yych) {
-    case 'b':    goto yy470;
-    case 'p':    goto yy469;
-    default:    goto yy46;
-    }
+    { brigId = Brig::BRIG_COMPARE_SNAN; return EMCompare; }
 yy270:
-    yych = *++curPos;
-    switch (yych) {
-    case 'g':    goto yy460;
-    default:    goto yy46;
-    }
-yy271:
-    yych = *++curPos;
-    switch (yych) {
-    case 'e':    goto yy449;
-    case 't':    goto yy448;
-    default:    goto yy46;
-    }
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_SNE; return EMCompare; }
 yy272:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'x':    goto yy435;
-    default:    goto yy436;
+    case 'r':    goto yy276;
+    default:    goto yy46;
     }
 yy273:
-    yych = *++curPos;
-    switch (yych) {
-    case 'e':    goto yy423;
-    case 't':    goto yy424;
-    default:    goto yy46;
-    }
-yy274:
-    yych = *++curPos;
-    switch (yych) {
-    case 'e':    goto yy411;
-    default:    goto yy46;
-    }
-yy275:
-    yych = *++curPos;
-    switch (yych) {
-    case 'a':    goto yy398;
-    case 'r':    goto yy399;
-    default:    goto yy46;
-    }
-yy276:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -4629,54 +4292,113 @@ yy276:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case '_':    goto yy390;
-    default:    goto yy392;
+    default:    goto yy274;
+    }
+yy274:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_SNEU; return EMCompare; }
+yy276:
+    yych = *++curPos;
+    switch (yych) {
+    case 'i':    goto yy277;
+    default:    goto yy46;
     }
 yy277:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 'a':    goto yy366;
-    case 'e':    goto yy365;
-    case 'u':    goto yy367;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    case '_':    goto yy278;
+    default:    goto yy280;
     }
 yy278:
-    yych = *++curPos;
+    yyaccept = 9;
+    yych = *(marker = ++curPos);
     switch (yych) {
-    case '4':    goto yy358;
-    default:    goto yy46;
+    case 's':    goto yy281;
+    default:    goto yy279;
     }
 yy279:
-    yych = *++curPos;
-    switch (yych) {
-    case 'q':    goto yy352;
-    default:    goto yy46;
-    }
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN; return EMRound; }
 yy280:
     yych = *++curPos;
-    switch (yych) {
-    case '2':    goto yy342;
-    default:    goto yy46;
-    }
+    goto yy279;
 yy281:
     yych = *++curPos;
     switch (yych) {
-    case '6':    goto yy329;
+    case 'a':    goto yy282;
     default:    goto yy46;
     }
 yy282:
     yych = *++curPos;
     switch (yych) {
-    case 'o':    goto yy317;
+    case 't':    goto yy283;
     default:    goto yy46;
     }
 yy283:
-    yych = *++curPos;
-    switch (yych) {
-    case 's':    goto yy314;
-    default:    goto yy46;
-    }
-yy284:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -4724,6 +4446,7 @@ yy284:
     case 'f':
     case 'g':
     case 'h':
+    case 'i':
     case 'j':
     case 'k':
     case 'l':
@@ -4741,28 +4464,84 @@ yy284:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case '_':    goto yy301;
-    case 'i':    goto yy303;
-    default:    goto yy304;
+    default:    goto yy284;
     }
-yy285:
+yy284:
     ++curPos;
-yy286:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_S;                        return EMPacking;              }
-yy287:
-    yyaccept = 6;
-    yych = *(marker = ++curPos);
-    switch (yych) {
-    case 's':    goto yy296;
-    default:    goto yy286;
-    }
-yy288:
+    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN_SAT; return EMRound; }
+yy286:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 'm':    goto yy292;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy287;
     }
+yy287:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_SNUM; return EMCompare; }
 yy289:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -4823,26 +4602,86 @@ yy289:
     case 'r':
     case 's':
     case 't':
-    case 'u':
     case 'v':
     case 'w':
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy290;
+    case 'u':    goto yy298;
+    default:    goto yy296;
     }
 yy290:
-    ++curPos;
-    curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_ST;                     return EMAtomicOp;            
-	default: return EEmpty; } }
-yy292:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 'p':    goto yy293;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'u':    goto yy293;
+    default:    goto yy291;
     }
+yy291:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_SLE; return EMCompare; }
 yy293:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -4914,19 +4753,11 @@ yy293:
 yy294:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_SAMP;                     return EMType;                 }
+    { brigId = Brig::BRIG_COMPARE_SLEU; return EMCompare; }
 yy296:
-    yych = *++curPos;
-    switch (yych) {
-    case 'a':    goto yy297;
-    default:    goto yy46;
-    }
-yy297:
-    yych = *++curPos;
-    switch (yych) {
-    case 't':    goto yy298;
-    default:    goto yy46;
-    }
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_SLT; return EMCompare; }
 yy298:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -4998,33 +4829,27 @@ yy298:
 yy299:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_SSAT;                     return EMPacking;              }
+    { brigId = Brig::BRIG_COMPARE_SLTU; return EMCompare; }
 yy301:
-    yyaccept = 7;
-    yych = *(marker = ++curPos);
+    yych = *++curPos;
     switch (yych) {
-    case 's':    goto yy309;
-    default:    goto yy302;
+    case '3':    goto yy302;
+    case '6':    goto yy303;
+    default:    goto yy46;
     }
 yy302:
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_SP;                       return EMPacking;              }
+    yych = *++curPos;
+    switch (yych) {
+    case '2':    goto yy307;
+    default:    goto yy46;
+    }
 yy303:
     yych = *++curPos;
     switch (yych) {
-    case 'l':    goto yy305;
+    case '4':    goto yy304;
     default:    goto yy46;
     }
 yy304:
-    yych = *++curPos;
-    goto yy302;
-yy305:
-    yych = *++curPos;
-    switch (yych) {
-    case 'l':    goto yy306;
-    default:    goto yy46;
-    }
-yy306:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -5090,25 +4915,151 @@ yy306:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy307;
+    default:    goto yy305;
     }
-yy307:
+yy305:
     ++curPos;
     curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_SPILL;                 return EMSegment;             
-	default: return EEmpty; } }
-yy309:
+    { brigId = Brig::BRIG_TYPE_SIG64; return EMType; }
+yy307:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 'a':    goto yy310;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy308;
     }
+yy308:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_SIG32; return EMType; }
 yy310:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 't':    goto yy311;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'u':    goto yy319;
+    default:    goto yy317;
     }
 yy311:
     ctxMarker = curPos + 1;
@@ -5170,18 +5121,18 @@ yy311:
     case 'r':
     case 's':
     case 't':
-    case 'u':
     case 'v':
     case 'w':
     case 'x':
     case 'y':
     case 'z':    goto yy46;
+    case 'u':    goto yy314;
     default:    goto yy312;
     }
 yy312:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_SPSAT;                    return EMPacking;              }
+    { brigId = Brig::BRIG_COMPARE_SGE; return EMCompare; }
 yy314:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -5253,26 +5204,156 @@ yy314:
 yy315:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_SCOPE_SYSTEM;           return EMMemoryScope;          }
+    { brigId = Brig::BRIG_COMPARE_SGEU; return EMCompare; }
 yy317:
-    yych = *++curPos;
-    switch (yych) {
-    case 'w':    goto yy318;
-    default:    goto yy46;
-    }
-yy318:
-    yych = *++curPos;
-    switch (yych) {
-    case 'n':    goto yy319;
-    default:    goto yy46;
-    }
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_SGT; return EMCompare; }
 yy319:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 'i':    goto yy320;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy320;
     }
 yy320:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_SGTU; return EMCompare; }
+yy322:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'u':    goto yy325;
+    default:    goto yy323;
+    }
+yy323:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_SEQ; return EMCompare; }
+yy325:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -5338,186 +5419,31 @@ yy320:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case '_':    goto yy323;
-    default:    goto yy321;
-    }
-yy321:
-    ++curPos;
-yy322:
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY; return EMRound;                }
-yy323:
-    yyaccept = 8;
-    yych = *(marker = ++curPos);
-    switch (yych) {
-    case 's':    goto yy324;
-    default:    goto yy322;
-    }
-yy324:
-    yych = *++curPos;
-    switch (yych) {
-    case 'a':    goto yy325;
-    default:    goto yy46;
-    }
-yy325:
-    yych = *++curPos;
-    switch (yych) {
-    case 't':    goto yy326;
-    default:    goto yy46;
+    default:    goto yy326;
     }
 yy326:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy327;
-    }
-yy327:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY_SAT; return EMRound;                }
-yy329:
-    ctxMarker = curPos + 1;
+    { brigId = Brig::BRIG_COMPARE_SEQU; return EMCompare; }
+yy328:
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'x':    goto yy332;
-    default:    goto yy330;
-    }
-yy330:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S16;                      return EMType;                 }
-yy332:
-    yych = *++curPos;
-    switch (yych) {
-    case '2':    goto yy334;
-    case '4':    goto yy335;
-    case '8':    goto yy333;
+    case 'w':    goto yy329;
     default:    goto yy46;
     }
-yy333:
+yy329:
+    yych = *++curPos;
+    switch (yych) {
+    case 'n':    goto yy330;
+    default:    goto yy46;
+    }
+yy330:
+    yych = *++curPos;
+    switch (yych) {
+    case 'i':    goto yy331;
+    default:    goto yy46;
+    }
+yy331:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -5583,9 +5509,35 @@ yy333:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy340;
+    case '_':    goto yy332;
+    default:    goto yy334;
     }
+yy332:
+    yyaccept = 10;
+    yych = *(marker = ++curPos);
+    switch (yych) {
+    case 's':    goto yy335;
+    default:    goto yy333;
+    }
+yy333:
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY; return EMRound; }
 yy334:
+    yych = *++curPos;
+    goto yy333;
+yy335:
+    yych = *++curPos;
+    switch (yych) {
+    case 'a':    goto yy336;
+    default:    goto yy46;
+    }
+yy336:
+    yych = *++curPos;
+    switch (yych) {
+    case 't':    goto yy337;
+    default:    goto yy46;
+    }
+yy337:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -5653,7 +5605,30 @@ yy334:
     case 'z':    goto yy46;
     default:    goto yy338;
     }
-yy335:
+yy338:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY_SAT; return EMRound; }
+yy340:
+    yych = *++curPos;
+    switch (yych) {
+    case 'e':    goto yy349;
+    default:    goto yy46;
+    }
+yy341:
+    yych = *++curPos;
+    switch (yych) {
+    case 'c':    goto yy342;
+    case 'r':    goto yy343;
+    default:    goto yy46;
+    }
+yy342:
+    yych = *++curPos;
+    switch (yych) {
+    case 'q':    goto yy346;
+    default:    goto yy46;
+    }
+yy343:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -5719,99 +5694,12 @@ yy335:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy336;
+    default:    goto yy344;
     }
-yy336:
+yy344:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S16X4;                    return EMType;                 }
-yy338:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S16X2;                    return EMType;                 }
-yy340:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S16X8;                    return EMType;                 }
-yy342:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'x':    goto yy345;
-    default:    goto yy343;
-    }
-yy343:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S32;                      return EMType;                 }
-yy345:
-    yych = *++curPos;
-    switch (yych) {
-    case '2':    goto yy347;
-    case '4':    goto yy346;
-    default:    goto yy46;
-    }
+    { brigId = Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE; return EMMemoryOrder; }
 yy346:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -5878,153 +5766,19 @@ yy346:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy350;
+    default:    goto yy347;
     }
 yy347:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy348;
-    }
-yy348:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S32X2;                    return EMType;                 }
+    { brigId = Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE; return EMMemoryOrder; }
+yy349:
+    yych = *++curPos;
+    switch (yych) {
+    case 'l':    goto yy350;
+    default:    goto yy46;
+    }
 yy350:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S32X4;                    return EMType;                 }
-yy352:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'u':    goto yy353;
-    default:    goto yy354;
-    }
-yy353:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -6090,17 +5844,19 @@ yy353:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy356;
+    default:    goto yy351;
+    }
+yy351:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_MEMORY_ORDER_SC_RELEASE; return EMMemoryOrder; }
+yy353:
+    yych = *++curPos;
+    switch (yych) {
+    case 'p':    goto yy354;
+    default:    goto yy46;
     }
 yy354:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SEQ;                   return EMCompare;              }
-yy356:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SEQU;                  return EMCompare;              }
-yy358:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -6163,20 +5919,100 @@ yy358:
     case 'u':
     case 'v':
     case 'w':
+    case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case 'x':    goto yy361;
-    default:    goto yy359;
+    default:    goto yy355;
     }
-yy359:
+yy355:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S64;                      return EMType;                 }
-yy361:
+    { brigId = Brig::BRIG_TYPE_SAMP; return EMType; }
+yy357:
     yych = *++curPos;
     switch (yych) {
-    case '2':    goto yy362;
+    case '1':    goto yy360;
+    case '4':    goto yy361;
+    case '8':    goto yy362;
     default:    goto yy46;
+    }
+yy358:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_S8; return EMType; }
+yy360:
+    yych = *++curPos;
+    switch (yych) {
+    case '6':    goto yy367;
+    default:    goto yy46;
+    }
+yy361:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy365;
     }
 yy362:
     ctxMarker = curPos + 1;
@@ -6249,8 +6085,12 @@ yy362:
 yy363:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S64X2;                    return EMType;                 }
+    { brigId = Brig::BRIG_TYPE_S8X8; return EMType; }
 yy365:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_S8X4; return EMType; }
+yy367:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -6290,6 +6130,7 @@ yy365:
     case 'X':
     case 'Y':
     case 'Z':
+    case 'a':
     case 'b':
     case 'c':
     case 'd':
@@ -6309,28 +6150,19 @@ yy365:
     case 'r':
     case 's':
     case 't':
+    case 'u':
     case 'v':
     case 'w':
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case 'a':    goto yy377;
-    case 'u':    goto yy376;
-    default:    goto yy374;
-    }
-yy366:
-    yych = *++curPos;
-    switch (yych) {
-    case 'n':    goto yy371;
-    default:    goto yy46;
-    }
-yy367:
-    yych = *++curPos;
-    switch (yych) {
-    case 'm':    goto yy368;
-    default:    goto yy46;
+    default:    goto yy368;
     }
 yy368:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_S8X16; return EMType; }
+yy370:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -6393,367 +6225,465 @@ yy368:
     case 'u':
     case 'v':
     case 'w':
-    case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy369;
+    case 'x':    goto yy373;
+    default:    goto yy371;
     }
-yy369:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SNUM;                  return EMCompare;              }
 yy371:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy372;
-    }
-yy372:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SNAN;                  return EMCompare;              }
-yy374:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SNE;                   return EMCompare;              }
-yy376:
-    ctxMarker = curPos + 1;
+    { brigId = Brig::BRIG_TYPE_S64; return EMType; }
+yy373:
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy388;
-    }
-yy377:
-    yych = *++curPos;
-    switch (yych) {
-    case 'r':    goto yy378;
+    case '2':    goto yy374;
     default:    goto yy46;
+    }
+yy374:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy375;
+    }
+yy375:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_S64X2; return EMType; }
+yy377:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'x':    goto yy380;
+    default:    goto yy378;
     }
 yy378:
-    yych = *++curPos;
-    switch (yych) {
-    case 'i':    goto yy379;
-    default:    goto yy46;
-    }
-yy379:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case '_':    goto yy380;
-    default:    goto yy382;
-    }
-yy380:
-    yyaccept = 9;
-    yych = *(marker = ++curPos);
-    switch (yych) {
-    case 's':    goto yy383;
-    default:    goto yy381;
-    }
-yy381:
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN; return EMRound;                }
-yy382:
-    yych = *++curPos;
-    goto yy381;
-yy383:
-    yych = *++curPos;
-    switch (yych) {
-    case 'a':    goto yy384;
-    default:    goto yy46;
-    }
-yy384:
-    yych = *++curPos;
-    switch (yych) {
-    case 't':    goto yy385;
-    default:    goto yy46;
-    }
-yy385:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy386;
-    }
-yy386:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN_SAT; return EMRound;                }
+    { brigId = Brig::BRIG_TYPE_S32; return EMType; }
+yy380:
+    yych = *++curPos;
+    switch (yych) {
+    case '2':    goto yy382;
+    case '4':    goto yy381;
+    default:    goto yy46;
+    }
+yy381:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy385;
+    }
+yy382:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy383;
+    }
+yy383:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_S32X2; return EMType; }
+yy385:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_S32X4; return EMType; }
+yy387:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'x':    goto yy390;
+    default:    goto yy388;
+    }
 yy388:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SNEU;                  return EMCompare;              }
+    { brigId = Brig::BRIG_TYPE_S16; return EMType; }
 yy390:
-    yyaccept = 10;
-    yych = *(marker = ++curPos);
+    yych = *++curPos;
     switch (yych) {
-    case 's':    goto yy393;
-    default:    goto yy391;
+    case '2':    goto yy393;
+    case '4':    goto yy392;
+    case '8':    goto yy391;
+    default:    goto yy46;
     }
 yy391:
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_SS;                       return EMPacking;              }
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy398;
+    }
 yy392:
-    yych = *++curPos;
-    goto yy391;
-yy393:
-    yych = *++curPos;
-    switch (yych) {
-    case 'a':    goto yy394;
-    default:    goto yy46;
-    }
-yy394:
-    yych = *++curPos;
-    switch (yych) {
-    case 't':    goto yy395;
-    default:    goto yy46;
-    }
-yy395:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -6821,102 +6751,99 @@ yy395:
     case 'z':    goto yy46;
     default:    goto yy396;
     }
+yy393:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy394;
+    }
+yy394:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_S16X2; return EMType; }
 yy396:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_SSSAT;                    return EMPacking;              }
+    { brigId = Brig::BRIG_TYPE_S16X4; return EMType; }
 yy398:
-    yych = *++curPos;
-    switch (yych) {
-    case 'c':    goto yy405;
-    case 'r':    goto yy404;
-    default:    goto yy46;
-    }
-yy399:
-    yych = *++curPos;
-    switch (yych) {
-    case 'e':    goto yy400;
-    default:    goto yy46;
-    }
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_S16X8; return EMType; }
 yy400:
     yych = *++curPos;
     switch (yych) {
-    case 'l':    goto yy401;
+    case 'a':    goto yy401;
     default:    goto yy46;
     }
 yy401:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy402;
+    case 't':    goto yy402;
+    default:    goto yy46;
     }
 yy402:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_ORDER_SC_RELEASE;       return EMMemoryOrder;          }
-yy404:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -6982,15 +6909,31 @@ yy404:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy409;
+    default:    goto yy403;
     }
+yy403:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_PACK_SSAT; return EMPacking; }
 yy405:
     yych = *++curPos;
     switch (yych) {
-    case 'q':    goto yy406;
+    case '6':    goto yy451;
     default:    goto yy46;
     }
 yy406:
+    yych = *++curPos;
+    switch (yych) {
+    case '2':    goto yy441;
+    default:    goto yy46;
+    }
+yy407:
+    yych = *++curPos;
+    switch (yych) {
+    case '4':    goto yy434;
+    default:    goto yy46;
+    }
+yy408:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -7053,38 +6996,80 @@ yy406:
     case 'u':
     case 'v':
     case 'w':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'x':    goto yy421;
+    default:    goto yy422;
+    }
+yy409:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy407;
+    case 'i':    goto yy410;
+    default:    goto yy411;
     }
-yy407:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE;       return EMMemoryOrder;          }
-yy409:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE; return EMMemoryOrder;          }
-yy411:
-    yych = *++curPos;
-    switch (yych) {
-    case 'r':    goto yy412;
-    default:    goto yy46;
-    }
-yy412:
-    yych = *++curPos;
-    switch (yych) {
-    case 'o':    goto yy413;
-    default:    goto yy46;
-    }
-yy413:
-    yych = *++curPos;
-    switch (yych) {
-    case 'i':    goto yy414;
-    default:    goto yy46;
-    }
-yy414:
+yy410:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -7151,246 +7136,271 @@ yy414:
     case 'y':
     case 'z':    goto yy46;
     case '_':    goto yy415;
-    default:    goto yy417;
+    default:    goto yy413;
     }
+yy411:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_ROUND_FLOAT_PLUS_INFINITY; return EMRound; }
+yy413:
+    ++curPos;
+yy414:
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY; return EMRound; }
 yy415:
     yyaccept = 11;
     yych = *(marker = ++curPos);
     switch (yych) {
-    case 's':    goto yy418;
-    default:    goto yy416;
+    case 's':    goto yy416;
+    default:    goto yy414;
     }
 yy416:
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_ZERO; return EMRound;                }
+    yych = *++curPos;
+    switch (yych) {
+    case 'a':    goto yy417;
+    default:    goto yy46;
+    }
 yy417:
     yych = *++curPos;
-    goto yy416;
+    switch (yych) {
+    case 't':    goto yy418;
+    default:    goto yy46;
+    }
 yy418:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 'a':    goto yy419;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy419;
     }
 yy419:
-    yych = *++curPos;
-    switch (yych) {
-    case 't':    goto yy420;
-    default:    goto yy46;
-    }
-yy420:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy421;
-    }
-yy421:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_ZERO_SAT; return EMRound;                }
-yy423:
-    ctxMarker = curPos + 1;
+    { brigId = Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY_SAT; return EMRound; }
+yy421:
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'u':    goto yy432;
-    default:    goto yy430;
+    case '1':    goto yy424;
+    case '4':    goto yy425;
+    case '8':    goto yy426;
+    default:    goto yy46;
     }
+yy422:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_U8; return EMType; }
 yy424:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'u':    goto yy427;
-    default:    goto yy425;
+    case '6':    goto yy431;
+    default:    goto yy46;
     }
 yy425:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SGT;                   return EMCompare;              }
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy429;
+    }
+yy426:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy427;
+    }
 yy427:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_U8X8; return EMType; }
+yy429:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_U8X4; return EMType; }
+yy431:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -7456,17 +7466,91 @@ yy427:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy428;
+    default:    goto yy432;
     }
-yy428:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SGTU;                  return EMCompare;              }
-yy430:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SGE;                   return EMCompare;              }
 yy432:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_U8X16; return EMType; }
+yy434:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'x':    goto yy437;
+    default:    goto yy435;
+    }
+yy435:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_U64; return EMType; }
+yy437:
+    yych = *++curPos;
+    switch (yych) {
+    case '2':    goto yy438;
+    default:    goto yy46;
+    }
+yy438:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -7532,174 +7616,91 @@ yy432:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy433;
-    }
-yy433:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SGEU;                  return EMCompare;              }
-yy435:
-    yych = *++curPos;
-    switch (yych) {
-    case '1':    goto yy438;
-    case '4':    goto yy440;
-    case '8':    goto yy439;
-    default:    goto yy46;
-    }
-yy436:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S8;                       return EMType;                 }
-yy438:
-    yych = *++curPos;
-    switch (yych) {
-    case '6':    goto yy445;
-    default:    goto yy46;
+    default:    goto yy439;
     }
 yy439:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy443;
-    }
-yy440:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy441;
-    }
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_U64X2; return EMType; }
 yy441:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'x':    goto yy444;
+    default:    goto yy442;
+    }
+yy442:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S8X4;                     return EMType;                 }
-yy443:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S8X8;                     return EMType;                 }
+    { brigId = Brig::BRIG_TYPE_U32; return EMType; }
+yy444:
+    yych = *++curPos;
+    switch (yych) {
+    case '2':    goto yy446;
+    case '4':    goto yy445;
+    default:    goto yy46;
+    }
 yy445:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -7766,149 +7767,9 @@ yy445:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy446;
+    default:    goto yy449;
     }
 yy446:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S8X16;                    return EMType;                 }
-yy448:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'u':    goto yy457;
-    default:    goto yy455;
-    }
-yy449:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'u':    goto yy450;
-    default:    goto yy451;
-    }
-yy450:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -7974,20 +7835,232 @@ yy450:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy453;
+    default:    goto yy447;
     }
+yy447:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_U32X2; return EMType; }
+yy449:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_U32X4; return EMType; }
 yy451:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'x':    goto yy454;
+    default:    goto yy452;
+    }
+yy452:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SLE;                   return EMCompare;              }
-yy453:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SLEU;                  return EMCompare;              }
+    { brigId = Brig::BRIG_TYPE_U16; return EMType; }
+yy454:
+    yych = *++curPos;
+    switch (yych) {
+    case '2':    goto yy457;
+    case '4':    goto yy456;
+    case '8':    goto yy455;
+    default:    goto yy46;
+    }
 yy455:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SLT;                   return EMCompare;              }
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy462;
+    }
+yy456:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy460;
+    }
 yy457:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -8059,27 +8132,22 @@ yy457:
 yy458:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SLTU;                  return EMCompare;              }
+    { brigId = Brig::BRIG_TYPE_U16X2; return EMType; }
 yy460:
-    yych = *++curPos;
-    switch (yych) {
-    case '3':    goto yy462;
-    case '6':    goto yy461;
-    default:    goto yy46;
-    }
-yy461:
-    yych = *++curPos;
-    switch (yych) {
-    case '4':    goto yy466;
-    default:    goto yy46;
-    }
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_U16X4; return EMType; }
 yy462:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_U16X8; return EMType; }
+yy464:
     yych = *++curPos;
     switch (yych) {
-    case '2':    goto yy463;
+    case 'r':    goto yy465;
     default:    goto yy46;
     }
-yy463:
+yy465:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -8145,88 +8213,24 @@ yy463:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy464;
+    default:    goto yy466;
     }
-yy464:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_SIG32;                    return EMType;                 }
 yy466:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy467;
-    }
-yy467:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_SIG64;                    return EMType;                 }
+    { switch(ctx) {
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_XOR; return EMAtomicOp;
+	default: return EEmpty; } }
+yy468:
+    yych = *++curPos;
+    switch (yych) {
+    case 'r':    goto yy469;
+    default:    goto yy46;
+    }
 yy469:
     yych = *++curPos;
     switch (yych) {
-    case 'i':    goto yy473;
+    case 'o':    goto yy470;
     default:    goto yy46;
     }
 yy470:
@@ -8277,7 +8281,6 @@ yy470:
     case 'f':
     case 'g':
     case 'h':
-    case 'i':
     case 'j':
     case 'k':
     case 'l':
@@ -8295,15 +8298,10 @@ yy470:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy471;
+    case 'i':    goto yy471;
+    default:    goto yy472;
     }
 yy471:
-    ++curPos;
-    curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_SUB;                    return EMAtomicOp;            
-	default: return EEmpty; } }
-yy473:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -8372,11 +8370,15 @@ yy473:
     case '_':    goto yy476;
     default:    goto yy474;
     }
+yy472:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_ROUND_FLOAT_ZERO; return EMRound; }
 yy474:
     ++curPos;
 yy475:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY; return EMRound;                }
+    { brigId = Brig::BRIG_ROUND_INTEGER_ZERO; return EMRound; }
 yy476:
     yyaccept = 12;
     yych = *(marker = ++curPos);
@@ -8467,7 +8469,7 @@ yy479:
 yy480:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY_SAT; return EMRound;                }
+    { brigId = Brig::BRIG_ROUND_INTEGER_ZERO_SAT; return EMRound; }
 yy482:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -9430,12 +9432,12 @@ yy530:
 yy531:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_FLOAT_MINUS_INFINITY;    return EMRound;                }
+    { brigId = Brig::BRIG_ROUND_FLOAT_MINUS_INFINITY; return EMRound; }
 yy533:
     ++curPos;
 yy534:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_MINUS_INFINITY;  return EMRound;                }
+    { brigId = Brig::BRIG_ROUND_INTEGER_MINUS_INFINITY; return EMRound; }
 yy535:
     yyaccept = 13;
     yych = *(marker = ++curPos);
@@ -9526,7 +9528,7 @@ yy538:
 yy539:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_MINUS_INFINITY_SAT; return EMRound;                }
+    { brigId = Brig::BRIG_ROUND_INTEGER_MINUS_INFINITY_SAT; return EMRound; }
 yy541:
     yych = *++curPos;
     switch (yych) {
@@ -9534,10 +9536,72 @@ yy541:
     default:    goto yy46;
     }
 yy542:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 'a':    goto yy563;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy573;
     }
 yy543:
     ctxMarker = curPos + 1;
@@ -9582,7 +9646,6 @@ yy543:
     case 'a':
     case 'b':
     case 'c':
-    case 'd':
     case 'e':
     case 'f':
     case 'g':
@@ -9605,81 +9668,20 @@ yy543:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy561;
+    case 'd':    goto yy566;
+    default:    goto yy567;
     }
 yy544:
     yych = *++curPos;
     switch (yych) {
-    case 'i':    goto yy556;
+    case 'i':    goto yy561;
     default:    goto yy46;
     }
 yy545:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy554;
+    case 'a':    goto yy549;
+    default:    goto yy46;
     }
 yy546:
     ctxMarker = curPos + 1;
@@ -9724,6 +9726,7 @@ yy546:
     case 'a':
     case 'b':
     case 'c':
+    case 'd':
     case 'e':
     case 'f':
     case 'g':
@@ -9746,26 +9749,44 @@ yy546:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case 'd':    goto yy547;
-    default:    goto yy548;
+    default:    goto yy547;
     }
 yy547:
-    yych = *++curPos;
-    switch (yych) {
-    case 't':    goto yy550;
-    default:    goto yy46;
-    }
-yy548:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_SCOPE_WORKITEM;         return EMMemoryScope;          }
+    { brigId = Brig::BRIG_MEMORY_SCOPE_WAVEFRONT; return EMMemoryScope; }
+yy549:
+    yych = *++curPos;
+    switch (yych) {
+    case 'p':    goto yy550;
+    default:    goto yy46;
+    }
 yy550:
     yych = *++curPos;
     switch (yych) {
-    case 'h':    goto yy551;
+    case 'd':    goto yy552;
+    case 'i':    goto yy551;
     default:    goto yy46;
     }
 yy551:
+    yych = *++curPos;
+    switch (yych) {
+    case 'n':    goto yy557;
+    default:    goto yy46;
+    }
+yy552:
+    yych = *++curPos;
+    switch (yych) {
+    case 'e':    goto yy553;
+    default:    goto yy46;
+    }
+yy553:
+    yych = *++curPos;
+    switch (yych) {
+    case 'c':    goto yy554;
+    default:    goto yy46;
+    }
+yy554:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -9831,30 +9852,18 @@ yy551:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy552;
+    default:    goto yy555;
     }
-yy552:
+yy555:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-                      case EInstModifierInstQueryContext: brigId = Brig::BRIG_IMAGE_QUERY_WIDTH; return EMImageQuery;
-                      default:                            brigId = 0;                            return EMWidth;
-                      }
-                    }
-yy554:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_SCOPE_WAVEFRONT;        return EMMemoryScope;          }
-yy556:
-    yych = *++curPos;
-    switch (yych) {
-    case 'm':    goto yy557;
-    default:    goto yy46;
-    }
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WRAPDEC; return EMAtomicOp;
+	default: return EEmpty; } }
 yy557:
     yych = *++curPos;
     switch (yych) {
-    case 'g':    goto yy558;
+    case 'c':    goto yy558;
     default:    goto yy46;
     }
 yy558:
@@ -9928,43 +9937,110 @@ yy558:
 yy559:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_WOIMG;                    return EMType;                 }
+    { switch(ctx) {
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WRAPINC; return EMAtomicOp;
+	default: return EEmpty; } }
 yy561:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_SCOPE_WORKGROUP;        return EMMemoryScope;          }
-yy563:
     yych = *++curPos;
     switch (yych) {
-    case 'p':    goto yy564;
+    case 'm':    goto yy562;
     default:    goto yy46;
+    }
+yy562:
+    yych = *++curPos;
+    switch (yych) {
+    case 'g':    goto yy563;
+    default:    goto yy46;
+    }
+yy563:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy564;
     }
 yy564:
-    yych = *++curPos;
-    switch (yych) {
-    case 'd':    goto yy566;
-    case 'i':    goto yy565;
-    default:    goto yy46;
-    }
-yy565:
-    yych = *++curPos;
-    switch (yych) {
-    case 'n':    goto yy571;
-    default:    goto yy46;
-    }
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_WOIMG; return EMType; }
 yy566:
     yych = *++curPos;
     switch (yych) {
-    case 'e':    goto yy567;
+    case 't':    goto yy569;
     default:    goto yy46;
     }
 yy567:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_MEMORY_SCOPE_WORKITEM; return EMMemoryScope; }
+yy569:
     yych = *++curPos;
     switch (yych) {
-    case 'c':    goto yy568;
+    case 'h':    goto yy570;
     default:    goto yy46;
     }
-yy568:
+yy570:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -10030,94 +10106,20 @@ yy568:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy569;
+    default:    goto yy571;
     }
-yy569:
+yy571:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WRAPDEC;                return EMAtomicOp;            
-	default: return EEmpty; } }
-yy571:
-    yych = *++curPos;
-    switch (yych) {
-    case 'c':    goto yy572;
-    default:    goto yy46;
-    }
-yy572:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy573;
-    }
+                      case EInstModifierInstQueryContext: brigId = Brig::BRIG_IMAGE_QUERY_WIDTH; return EMImageQuery;
+                      default:                            brigId = 0;                            return EMWidth;
+                      }
+                    }
 yy573:
     ++curPos;
     curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WRAPINC;                return EMAtomicOp;            
-	default: return EEmpty; } }
+    { brigId = Brig::BRIG_MEMORY_SCOPE_WORKGROUP; return EMMemoryScope; }
 yy575:
     yych = *++curPos;
     switch (yych) {
@@ -10140,43 +10142,111 @@ yy577:
 yy578:
     yych = *++curPos;
     switch (yych) {
-    case 'e':    goto yy580;
-    case 'g':    goto yy582;
-    case 'l':    goto yy579;
-    case 'n':    goto yy581;
+    case 'e':    goto yy579;
+    case 'g':    goto yy580;
+    case 'l':    goto yy581;
+    case 'n':    goto yy582;
     default:    goto yy46;
     }
 yy579:
     yych = *++curPos;
     switch (yych) {
-    case 't':    goto yy593;
+    case 'q':    goto yy593;
     default:    goto yy46;
     }
 yy580:
     yych = *++curPos;
     switch (yych) {
-    case 'q':    goto yy590;
+    case 't':    goto yy589;
     default:    goto yy46;
     }
 yy581:
     yych = *++curPos;
     switch (yych) {
-    case 'e':    goto yy587;
+    case 't':    goto yy586;
     default:    goto yy46;
     }
 yy582:
     yych = *++curPos;
     switch (yych) {
-    case 't':    goto yy583;
+    case 'e':    goto yy583;
     default:    goto yy46;
     }
 yy583:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 'e':    goto yy584;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy584;
     }
 yy584:
+    ++curPos;
+    curPos = ctxMarker;
+    { switch(ctx) {
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAIT_NE; return EMAtomicOp;
+	default: return EEmpty; } }
+yy586:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -10242,88 +10312,20 @@ yy584:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy585;
+    default:    goto yy587;
     }
-yy585:
-    ++curPos;
-    curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAIT_GTE;               return EMAtomicOp;            
-	default: return EEmpty; } }
 yy587:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy588;
-    }
-yy588:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAIT_NE;                return EMAtomicOp;            
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAIT_LT; return EMAtomicOp;
 	default: return EEmpty; } }
+yy589:
+    yych = *++curPos;
+    switch (yych) {
+    case 'e':    goto yy590;
+    default:    goto yy46;
+    }
 yy590:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -10396,7 +10398,7 @@ yy591:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAIT_EQ;                return EMAtomicOp;            
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAIT_GTE; return EMAtomicOp;
 	default: return EEmpty; } }
 yy593:
     ctxMarker = curPos + 1;
@@ -10470,7 +10472,7 @@ yy594:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAIT_LT;                return EMAtomicOp;            
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAIT_EQ; return EMAtomicOp;
 	default: return EEmpty; } }
 yy596:
     yych = *++curPos;
@@ -10511,16 +10513,16 @@ yy601:
 yy602:
     yych = *++curPos;
     switch (yych) {
-    case 'e':    goto yy603;
+    case 'e':    goto yy606;
     case 'g':    goto yy605;
     case 'l':    goto yy604;
-    case 'n':    goto yy606;
+    case 'n':    goto yy603;
     default:    goto yy46;
     }
 yy603:
     yych = *++curPos;
     switch (yych) {
-    case 'q':    goto yy617;
+    case 'e':    goto yy617;
     default:    goto yy46;
     }
 yy604:
@@ -10538,7 +10540,7 @@ yy605:
 yy606:
     yych = *++curPos;
     switch (yych) {
-    case 'e':    goto yy607;
+    case 'q':    goto yy607;
     default:    goto yy46;
     }
 yy607:
@@ -10613,7 +10615,7 @@ yy608:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAITTIMEOUT_NE;         return EMAtomicOp;            
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAITTIMEOUT_EQ; return EMAtomicOp;
 	default: return EEmpty; } }
 yy610:
     yych = *++curPos;
@@ -10693,7 +10695,7 @@ yy612:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAITTIMEOUT_GTE;        return EMAtomicOp;            
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAITTIMEOUT_GTE; return EMAtomicOp;
 	default: return EEmpty; } }
 yy614:
     ctxMarker = curPos + 1;
@@ -10767,7 +10769,7 @@ yy615:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAITTIMEOUT_LT;         return EMAtomicOp;            
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAITTIMEOUT_LT; return EMAtomicOp;
 	default: return EEmpty; } }
 yy617:
     ctxMarker = curPos + 1;
@@ -10841,7 +10843,7 @@ yy618:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAITTIMEOUT_EQ;         return EMAtomicOp;            
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAITTIMEOUT_NE; return EMAtomicOp;
 	default: return EEmpty; } }
 yy620:
     yych = *++curPos;
@@ -10852,14 +10854,14 @@ yy620:
 yy621:
     yych = *++curPos;
     switch (yych) {
-    case 'g':    goto yy633;
-    case 'r':    goto yy632;
+    case 'd':    goto yy637;
     default:    goto yy46;
     }
 yy622:
     yych = *++curPos;
     switch (yych) {
-    case 'd':    goto yy629;
+    case 'g':    goto yy630;
+    case 'r':    goto yy629;
     default:    goto yy46;
     }
 yy623:
@@ -10953,86 +10955,12 @@ yy627:
     curPos = ctxMarker;
     { brigId = 0; return EMAlign;  }
 yy629:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy630;
+    case 'a':    goto yy633;
+    default:    goto yy46;
     }
 yy630:
-    ++curPos;
-    curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_AND;                    return EMAtomicOp;            
-	default: return EEmpty; } }
-yy632:
-    yych = *++curPos;
-    switch (yych) {
-    case 'a':    goto yy636;
-    default:    goto yy46;
-    }
-yy633:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -11098,20 +11026,92 @@ yy633:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy634;
+    default:    goto yy631;
     }
-yy634:
+yy631:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_ARG;                   return EMSegment;             
+	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_ARG; return EMSegment;
 	default: return EEmpty; } }
-yy636:
+yy633:
     yych = *++curPos;
     switch (yych) {
-    case 'y':    goto yy637;
+    case 'y':    goto yy634;
     default:    goto yy46;
     }
+yy634:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy635;
+    }
+yy635:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_IMAGE_QUERY_ARRAY;        return EMImageQuery; }
 yy637:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -11183,7 +11183,9 @@ yy637:
 yy638:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_IMAGE_QUERY_ARRAY;        return EMImageQuery; }
+    { switch(ctx) {
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_AND; return EMAtomicOp;
+	default: return EEmpty; } }
 yy640:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -11249,21 +11251,21 @@ yy640:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case 'r':    goto yy641;
-    default:    goto yy642;
+    case 'r':    goto yy643;
+    default:    goto yy641;
     }
 yy641:
+    ++curPos;
+    curPos = ctxMarker;
+    { switch(ctx) {
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_ADD; return EMAtomicOp;
+	default: return EEmpty; } }
+yy643:
     yych = *++curPos;
     switch (yych) {
     case 'e':    goto yy644;
     default:    goto yy46;
     }
-yy642:
-    ++curPos;
-    curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_ADD;                    return EMAtomicOp;            
-	default: return EEmpty; } }
 yy644:
     yych = *++curPos;
     switch (yych) {
@@ -11365,7 +11367,7 @@ yy649:
 yy650:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_SAMPLER_QUERY_ADDRESSING;      return EMSamplerQuery;         }
+    { brigId = Brig::BRIG_SAMPLER_QUERY_ADDRESSING; return EMSamplerQuery; }
 yy652:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -11734,7 +11736,7 @@ yy665:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_EXCH;                   return EMAtomicOp;            
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_EXCH; return EMAtomicOp;
 	default: return EEmpty; } }
 yy667:
     ctxMarker = curPos + 1;
@@ -11807,11 +11809,11 @@ yy667:
 yy668:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_EQ;                    return EMCompare;              }
+    { brigId = Brig::BRIG_COMPARE_EQ; return EMCompare; }
 yy670:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_EQU;                   return EMCompare;              }
+    { brigId = Brig::BRIG_COMPARE_EQU; return EMCompare; }
 yy672:
     yych = *++curPos;
     switch (yych) {
@@ -11899,13 +11901,13 @@ yy676:
 yy677:
     yych = *++curPos;
     switch (yych) {
-    case '4':    goto yy700;
+    case '2':    goto yy697;
     default:    goto yy46;
     }
 yy678:
     yych = *++curPos;
     switch (yych) {
-    case '2':    goto yy690;
+    case '4':    goto yy690;
     default:    goto yy46;
     }
 yy679:
@@ -12081,7 +12083,7 @@ yy687:
 yy688:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_SAMPLER_QUERY_FILTER;          return EMSamplerQuery;         }
+    { brigId = Brig::BRIG_SAMPLER_QUERY_FILTER; return EMSamplerQuery; }
 yy690:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -12147,20 +12149,19 @@ yy690:
     case 'w':
     case 'y':
     case 'z':    goto yy46;
-    case 'x':    goto yy691;
-    default:    goto yy692;
+    case 'x':    goto yy693;
+    default:    goto yy691;
     }
 yy691:
-    yych = *++curPos;
-    switch (yych) {
-    case '2':    goto yy695;
-    case '4':    goto yy694;
-    default:    goto yy46;
-    }
-yy692:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F32;                      return EMType;                 }
+    { brigId = Brig::BRIG_TYPE_F64; return EMType; }
+yy693:
+    yych = *++curPos;
+    switch (yych) {
+    case '2':    goto yy694;
+    default:    goto yy46;
+    }
 yy694:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -12227,9 +12228,13 @@ yy694:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy698;
+    default:    goto yy695;
     }
 yy695:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_F64X2; return EMType; }
+yy697:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -12292,98 +12297,23 @@ yy695:
     case 'u':
     case 'v':
     case 'w':
-    case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy696;
+    case 'x':    goto yy700;
+    default:    goto yy698;
     }
-yy696:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F32X2;                    return EMType;                 }
 yy698:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F32X4;                    return EMType;                 }
+    { brigId = Brig::BRIG_TYPE_F32; return EMType; }
 yy700:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'x':    goto yy703;
-    default:    goto yy701;
-    }
-yy701:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F64;                      return EMType;                 }
-yy703:
-    yych = *++curPos;
-    switch (yych) {
-    case '2':    goto yy704;
+    case '2':    goto yy702;
+    case '4':    goto yy701;
     default:    goto yy46;
     }
-yy704:
+yy701:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -12451,10 +12381,82 @@ yy704:
     case 'z':    goto yy46;
     default:    goto yy705;
     }
+yy702:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy703;
+    }
+yy703:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_F32X2; return EMType; }
 yy705:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F64X2;                    return EMType;                 }
+    { brigId = Brig::BRIG_TYPE_F32X4; return EMType; }
 yy707:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -12520,10 +12522,14 @@ yy707:
     case 'w':
     case 'y':
     case 'z':    goto yy46;
-    case 'x':    goto yy708;
-    default:    goto yy709;
+    case 'x':    goto yy710;
+    default:    goto yy708;
     }
 yy708:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_TYPE_F16; return EMType; }
+yy710:
     yych = *++curPos;
     switch (yych) {
     case '2':    goto yy713;
@@ -12531,10 +12537,6 @@ yy708:
     case '8':    goto yy711;
     default:    goto yy46;
     }
-yy709:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F16;                      return EMType;                 }
 yy711:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -12742,15 +12744,15 @@ yy713:
 yy714:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F16X2;                    return EMType;                 }
+    { brigId = Brig::BRIG_TYPE_F16X2; return EMType; }
 yy716:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F16X4;                    return EMType;                 }
+    { brigId = Brig::BRIG_TYPE_F16X4; return EMType; }
 yy718:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F16X8;                    return EMType;                 }
+    { brigId = Brig::BRIG_TYPE_F16X8; return EMType; }
 yy720:
     yych = *++curPos;
     switch (yych) {
@@ -12761,13 +12763,13 @@ yy720:
 yy721:
     yych = *++curPos;
     switch (yych) {
-    case 'i':    goto yy732;
+    case 'x':    goto yy734;
     default:    goto yy46;
     }
 yy722:
     yych = *++curPos;
     switch (yych) {
-    case 'x':    goto yy729;
+    case 'i':    goto yy729;
     default:    goto yy46;
     }
 yy723:
@@ -12859,8 +12861,20 @@ yy726:
 yy727:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_ROIMG;                    return EMType;                 }
+    { brigId = Brig::BRIG_TYPE_RWIMG; return EMType; }
 yy729:
+    yych = *++curPos;
+    switch (yych) {
+    case 'm':    goto yy730;
+    default:    goto yy46;
+    }
+yy730:
+    yych = *++curPos;
+    switch (yych) {
+    case 'g':    goto yy731;
+    default:    goto yy46;
+    }
+yy731:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -12926,24 +12940,12 @@ yy729:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy730;
+    default:    goto yy732;
     }
-yy730:
+yy732:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_ORDER_RELAXED;          return EMMemoryOrder;          }
-yy732:
-    yych = *++curPos;
-    switch (yych) {
-    case 'm':    goto yy733;
-    default:    goto yy46;
-    }
-yy733:
-    yych = *++curPos;
-    switch (yych) {
-    case 'g':    goto yy734;
-    default:    goto yy46;
-    }
+    { brigId = Brig::BRIG_TYPE_ROIMG; return EMType; }
 yy734:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -13015,7 +13017,7 @@ yy734:
 yy735:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_RWIMG;                    return EMType;                 }
+    { brigId = Brig::BRIG_MEMORY_ORDER_RELAXED; return EMMemoryOrder; }
 yy737:
     yych = *++curPos;
     switch (yych) {
@@ -13124,7 +13126,7 @@ yy744:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_READONLY;              return EMSegment;             
+	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_READONLY; return EMSegment;
 	default: return EEmpty; } }
 yy746:
     yych = *++curPos;
@@ -13210,25 +13212,25 @@ yy749:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_EXTSPACE0;             return EMSegment;             
+	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_EXTSPACE0; return EMSegment;
 	default: return EEmpty; } }
 yy751:
     yych = *++curPos;
     switch (yych) {
-    case 'n':    goto yy779;
-    case 'o':    goto yy780;
+    case 's':    goto yy786;
     default:    goto yy46;
     }
 yy752:
     yych = *++curPos;
     switch (yych) {
-    case 'p':    goto yy776;
+    case 'p':    goto yy783;
     default:    goto yy46;
     }
 yy753:
     yych = *++curPos;
     switch (yych) {
-    case 's':    goto yy773;
+    case 'n':    goto yy773;
+    case 'o':    goto yy774;
     default:    goto yy46;
     }
 yy754:
@@ -13455,79 +13457,23 @@ yy771:
     curPos = ctxMarker;
     { brigId = Brig::BRIG_IMAGE_QUERY_CHANNELORDER; return EMImageQuery; }
 yy773:
-    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy774;
+    case 's':    goto yy779;
+    default:    goto yy46;
     }
 yy774:
-    ++curPos;
-    curPos = ctxMarker;
-    { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_CAS;                    return EMAtomicOp;            
-	default: return EEmpty; } }
+    yych = *++curPos;
+    switch (yych) {
+    case 'r':    goto yy775;
+    default:    goto yy46;
+    }
+yy775:
+    yych = *++curPos;
+    switch (yych) {
+    case 'd':    goto yy776;
+    default:    goto yy46;
+    }
 yy776:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -13599,26 +13545,14 @@ yy776:
 yy777:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_SCOPE_COMPONENT;        return EMMemoryScope;          }
+    { brigId = Brig::BRIG_SAMPLER_QUERY_COORD; return EMSamplerQuery; }
 yy779:
     yych = *++curPos;
     switch (yych) {
-    case 's':    goto yy785;
+    case 't':    goto yy780;
     default:    goto yy46;
     }
 yy780:
-    yych = *++curPos;
-    switch (yych) {
-    case 'r':    goto yy781;
-    default:    goto yy46;
-    }
-yy781:
-    yych = *++curPos;
-    switch (yych) {
-    case 'd':    goto yy782;
-    default:    goto yy46;
-    }
-yy782:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -13684,18 +13618,84 @@ yy782:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy783;
+    default:    goto yy781;
     }
-yy783:
+yy781:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_SAMPLER_QUERY_COORD;           return EMSamplerQuery;         }
-yy785:
+    { brigId = Brig::BRIG_MEMORY_CONST;      return EMConst;   }
+yy783:
+    ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
-    case 't':    goto yy786;
-    default:    goto yy46;
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy784;
     }
+yy784:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_MEMORY_SCOPE_COMPONENT; return EMMemoryScope; }
 yy786:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -13767,8 +13767,16 @@ yy786:
 yy787:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_CONST;      return EMConst;   }
+    { switch(ctx) {
+	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_CAS; return EMAtomicOp;
+	default: return EEmpty; } }
 yy789:
+    yych = *++curPos;
+    switch (yych) {
+    case 'n':    goto yy820;
+    default:    goto yy46;
+    }
+yy790:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -13832,20 +13840,14 @@ yy789:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    case 'a':    goto yy808;
-    case 'u':    goto yy807;
-    default:    goto yy805;
-    }
-yy790:
-    yych = *++curPos;
-    switch (yych) {
-    case 'm':    goto yy802;
-    default:    goto yy46;
+    case 'a':    goto yy803;
+    case 'u':    goto yy802;
+    default:    goto yy804;
     }
 yy791:
     yych = *++curPos;
     switch (yych) {
-    case 'n':    goto yy799;
+    case 'm':    goto yy799;
     default:    goto yy46;
     }
 yy792:
@@ -14015,7 +14017,7 @@ yy799:
 yy800:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_NAN;                   return EMCompare;              }
+    { brigId = Brig::BRIG_COMPARE_NUM; return EMCompare; }
 yy802:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -14082,17 +14084,260 @@ yy802:
     case 'x':
     case 'y':
     case 'z':    goto yy46;
-    default:    goto yy803;
+    default:    goto yy818;
     }
 yy803:
+    yych = *++curPos;
+    switch (yych) {
+    case 'r':    goto yy806;
+    default:    goto yy46;
+    }
+yy804:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_NUM;                   return EMCompare;              }
-yy805:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_NE;                    return EMCompare;              }
+    { brigId = Brig::BRIG_COMPARE_NE; return EMCompare; }
+yy806:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    case 'i':    goto yy807;
+    default:    goto yy808;
+    }
 yy807:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    case '_':    goto yy812;
+    default:    goto yy810;
+    }
+yy808:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_ROUND_FLOAT_NEAR_EVEN; return EMRound; }
+yy810:
+    ++curPos;
+yy811:
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_ROUND_INTEGER_NEAR_EVEN; return EMRound; }
+yy812:
+    yyaccept = 14;
+    yych = *(marker = ++curPos);
+    switch (yych) {
+    case 's':    goto yy813;
+    default:    goto yy811;
+    }
+yy813:
+    yych = *++curPos;
+    switch (yych) {
+    case 'a':    goto yy814;
+    default:    goto yy46;
+    }
+yy814:
+    yych = *++curPos;
+    switch (yych) {
+    case 't':    goto yy815;
+    default:    goto yy46;
+    }
+yy815:
+    ctxMarker = curPos + 1;
+    yych = *++curPos;
+    switch (yych) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case 'A':
+    case 'B':
+    case 'C':
+    case 'D':
+    case 'E':
+    case 'F':
+    case 'G':
+    case 'H':
+    case 'I':
+    case 'J':
+    case 'K':
+    case 'L':
+    case 'M':
+    case 'N':
+    case 'O':
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'U':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+    case 'm':
+    case 'n':
+    case 'o':
+    case 'p':
+    case 'q':
+    case 'r':
+    case 's':
+    case 't':
+    case 'u':
+    case 'v':
+    case 'w':
+    case 'x':
+    case 'y':
+    case 'z':    goto yy46;
+    default:    goto yy816;
+    }
+yy816:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_ROUND_INTEGER_NEAR_EVEN_SAT; return EMRound; }
+yy818:
+    ++curPos;
+    curPos = ctxMarker;
+    { brigId = Brig::BRIG_COMPARE_NEU; return EMCompare; }
+yy820:
     ctxMarker = curPos + 1;
     yych = *++curPos;
     switch (yych) {
@@ -14160,253 +14405,10 @@ yy807:
     case 'z':    goto yy46;
     default:    goto yy821;
     }
-yy808:
-    yych = *++curPos;
-    switch (yych) {
-    case 'r':    goto yy809;
-    default:    goto yy46;
-    }
-yy809:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case 'i':    goto yy810;
-    default:    goto yy811;
-    }
-yy810:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    case '_':    goto yy815;
-    default:    goto yy813;
-    }
-yy811:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_FLOAT_NEAR_EVEN;         return EMRound;                }
-yy813:
-    ++curPos;
-yy814:
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_NEAR_EVEN;       return EMRound;                }
-yy815:
-    yyaccept = 14;
-    yych = *(marker = ++curPos);
-    switch (yych) {
-    case 's':    goto yy816;
-    default:    goto yy814;
-    }
-yy816:
-    yych = *++curPos;
-    switch (yych) {
-    case 'a':    goto yy817;
-    default:    goto yy46;
-    }
-yy817:
-    yych = *++curPos;
-    switch (yych) {
-    case 't':    goto yy818;
-    default:    goto yy46;
-    }
-yy818:
-    ctxMarker = curPos + 1;
-    yych = *++curPos;
-    switch (yych) {
-    case '0':
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case 'A':
-    case 'B':
-    case 'C':
-    case 'D':
-    case 'E':
-    case 'F':
-    case 'G':
-    case 'H':
-    case 'I':
-    case 'J':
-    case 'K':
-    case 'L':
-    case 'M':
-    case 'N':
-    case 'O':
-    case 'P':
-    case 'Q':
-    case 'R':
-    case 'S':
-    case 'T':
-    case 'U':
-    case 'V':
-    case 'W':
-    case 'X':
-    case 'Y':
-    case 'Z':
-    case 'a':
-    case 'b':
-    case 'c':
-    case 'd':
-    case 'e':
-    case 'f':
-    case 'g':
-    case 'h':
-    case 'i':
-    case 'j':
-    case 'k':
-    case 'l':
-    case 'm':
-    case 'n':
-    case 'o':
-    case 'p':
-    case 'q':
-    case 'r':
-    case 's':
-    case 't':
-    case 'u':
-    case 'v':
-    case 'w':
-    case 'x':
-    case 'y':
-    case 'z':    goto yy46;
-    default:    goto yy819;
-    }
-yy819:
-    ++curPos;
-    curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_NEAR_EVEN_SAT;   return EMRound;                }
 yy821:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_NEU;                   return EMCompare;              }
+    { brigId = Brig::BRIG_COMPARE_NAN; return EMCompare; }
 }
 
 }
@@ -14517,17 +14519,17 @@ ETokens Scanner::scanDefault(EScanContext ctx, Scanner::Token &t)
         case 'g':        goto yy886;
         case 'h':        goto yy884;
         case 'i':        goto yy882;
-        case 'j':        goto yy899;
+        case 'j':        goto yy897;
         case 'k':        goto yy873;
         case 'l':        goto yy878;
         case 'm':        goto yy890;
         case 'n':        goto yy888;
-        case 'o':        goto yy900;
+        case 'o':        goto yy898;
         case 'p':        goto yy875;
-        case 'q':        goto yy897;
+        case 'q':        goto yy899;
         case 'r':        goto yy877;
         case 's':        goto yy876;
-        case 't':        goto yy898;
+        case 't':        goto yy900;
         case 'u':        goto yy891;
         case 'v':        goto yy871;
         case 'w':        goto yy883;
@@ -14541,7 +14543,7 @@ yy838:
 yy839:
         ++curPos;
         switch ((yych = *curPos)) {
-        case '#':        goto yy3031;
+        case '#':        goto yy3051;
         default:        goto yy840;
         }
 yy840:
@@ -14579,7 +14581,7 @@ yy855:
         case '6':
         case '7':
         case '8':
-        case '9':        goto yy3022;
+        case '9':        goto yy3042;
         default:        goto yy856;
         }
 yy856:
@@ -14597,8 +14599,8 @@ yy863:
         yyaccept = 1;
         yych = *(marker = ++curPos);
         switch (yych) {
-        case '.':        goto yy3021;
-        case '0':        goto yy3020;
+        case '.':        goto yy3041;
+        case '0':        goto yy3040;
         case '1':
         case '2':
         case '3':
@@ -14616,8 +14618,8 @@ yy865:
         yyaccept = 2;
         yych = *(marker = ++curPos);
         switch (yych) {
-        case '.':        goto yy3021;
-        case '0':        goto yy3020;
+        case '.':        goto yy3041;
+        case '0':        goto yy3040;
         case '1':
         case '2':
         case '3':
@@ -14640,7 +14642,7 @@ yy869:
 yy871:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy3012;
+        case 'e':        goto yy3032;
         default:        goto yy872;
         }
 yy872:
@@ -14653,50 +14655,50 @@ yy872:
         case 4: 	goto yy919;
         case 5: 	goto yy940;
         case 6: 	goto yy976;
-        case 7: 	goto yy1821;
+        case 7: 	goto yy1828;
         }
 yy873:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2991;
+        case 'e':        goto yy3011;
         default:        goto yy872;
         }
 yy874:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2934;
-        case 'i':        goto yy2933;
-        case 'l':        goto yy2931;
-        case 'm':        goto yy2932;
-        case 'r':        goto yy2930;
-        case 't':        goto yy2929;
-        case 'u':        goto yy2935;
+        case 'b':        goto yy2954;
+        case 'i':        goto yy2953;
+        case 'l':        goto yy2952;
+        case 'm':        goto yy2951;
+        case 'r':        goto yy2950;
+        case 't':        goto yy2949;
+        case 'u':        goto yy2955;
         default:        goto yy872;
         }
 yy875:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2872;
-        case 'o':        goto yy2871;
-        case 'r':        goto yy2873;
+        case 'a':        goto yy2892;
+        case 'o':        goto yy2891;
+        case 'r':        goto yy2893;
         default:        goto yy872;
         }
 yy876:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2686;
-        case 'b':        goto yy2688;
-        case 'c':        goto yy2683;
-        case 'e':        goto yy2681;
-        case 'h':        goto yy2680;
-        case 'i':        goto yy2679;
-        case 'n':        goto yy2690;
-        case 'p':        goto yy2691;
-        case 'q':        goto yy2687;
-        case 'r':        goto yy2689;
-        case 't':        goto yy2685;
-        case 'u':        goto yy2684;
-        case 'y':        goto yy2682;
+        case 'a':        goto yy2708;
+        case 'b':        goto yy2707;
+        case 'c':        goto yy2706;
+        case 'e':        goto yy2705;
+        case 'h':        goto yy2704;
+        case 'i':        goto yy2703;
+        case 'n':        goto yy2710;
+        case 'p':        goto yy2711;
+        case 'q':        goto yy2702;
+        case 'r':        goto yy2709;
+        case 't':        goto yy2701;
+        case 'u':        goto yy2700;
+        case 'y':        goto yy2699;
         default:        goto yy872;
         }
 yy877:
@@ -14759,31 +14761,31 @@ yy877:
         case 'w':
         case 'y':
         case 'z':        goto yy872;
-        case 'a':        goto yy2535;
-        case 'd':        goto yy2530;
-        case 'e':        goto yy2528;
-        case 'g':        goto yy2533;
-        case 'i':        goto yy2529;
-        case 't':        goto yy2536;
-        case 'x':        goto yy2534;
-        default:        goto yy2531;
+        case 'a':        goto yy2553;
+        case 'd':        goto yy2550;
+        case 'e':        goto yy2549;
+        case 'g':        goto yy2552;
+        case 'i':        goto yy2548;
+        case 't':        goto yy2556;
+        case 'x':        goto yy2551;
+        default:        goto yy2554;
         }
 yy878:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2432;
-        case 'd':        goto yy2430;
-        case 'e':        goto yy2431;
-        case 'i':        goto yy2434;
-        case 'o':        goto yy2435;
-        case 'u':        goto yy2433;
+        case 'a':        goto yy2452;
+        case 'd':        goto yy2451;
+        case 'e':        goto yy2450;
+        case 'i':        goto yy2454;
+        case 'o':        goto yy2455;
+        case 'u':        goto yy2453;
         default:        goto yy872;
         }
 yy879:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2375;
-        case 'x':        goto yy2374;
+        case 'n':        goto yy2395;
+        case 'x':        goto yy2394;
         default:        goto yy872;
         }
 yy880:
@@ -14845,68 +14847,68 @@ yy880:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'b':        goto yy2233;
-        case 'c':        goto yy2228;
-        case 'd':        goto yy2229;
-        case 'g':        goto yy2234;
-        case 'l':        goto yy2230;
-        case 'n':        goto yy2232;
-        case 'r':        goto yy2231;
-        case 't':        goto yy2227;
-        default:        goto yy2235;
+        case 'b':        goto yy2254;
+        case 'c':        goto yy2253;
+        case 'd':        goto yy2252;
+        case 'g':        goto yy2251;
+        case 'l':        goto yy2250;
+        case 'n':        goto yy2249;
+        case 'r':        goto yy2248;
+        case 't':        goto yy2247;
+        default:        goto yy2255;
         }
 yy881:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2191;
-        case 'i':        goto yy2192;
+        case 'e':        goto yy2212;
+        case 'i':        goto yy2211;
         default:        goto yy872;
         }
 yy882:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy2159;
-        case 'n':        goto yy2160;
+        case 'c':        goto yy2180;
+        case 'n':        goto yy2179;
         default:        goto yy872;
         }
 yy883:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2075;
-        case 'g':        goto yy2076;
-        case 'i':        goto yy2074;
-        case 'o':        goto yy2073;
-        case 'v':        goto yy2077;
+        case 'a':        goto yy2097;
+        case 'g':        goto yy2096;
+        case 'i':        goto yy2095;
+        case 'o':        goto yy2094;
+        case 'v':        goto yy2093;
         default:        goto yy872;
         }
 yy884:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2055;
-        case 'e':        goto yy2056;
+        case 'a':        goto yy2075;
+        case 'e':        goto yy2076;
         default:        goto yy872;
         }
 yy885:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1889;
-        case 'b':        goto yy1892;
-        case 'e':        goto yy1893;
-        case 'h':        goto yy1895;
-        case 'l':        goto yy1891;
-        case 'm':        goto yy1890;
-        case 'o':        goto yy1887;
-        case 'u':        goto yy1888;
-        case 'v':        goto yy1894;
+        case 'a':        goto yy1914;
+        case 'b':        goto yy1913;
+        case 'e':        goto yy1912;
+        case 'h':        goto yy1915;
+        case 'l':        goto yy1911;
+        case 'm':        goto yy1910;
+        case 'o':        goto yy1909;
+        case 'u':        goto yy1908;
+        case 'v':        goto yy1907;
         default:        goto yy872;
         }
 yy886:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy1640;
-        case 'e':        goto yy1642;
+        case 'c':        goto yy1642;
+        case 'e':        goto yy1641;
         case 'l':        goto yy1643;
-        case 'r':        goto yy1641;
+        case 'r':        goto yy1640;
         default:        goto yy872;
         }
 yy887:
@@ -14918,14 +14920,14 @@ yy887:
 yy888:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy1559;
-        case 'e':        goto yy1560;
-        case 'f':        goto yy1554;
+        case 'c':        goto yy1560;
+        case 'e':        goto yy1559;
+        case 'f':        goto yy1558;
         case 'l':        goto yy1557;
-        case 'o':        goto yy1553;
-        case 'r':        goto yy1558;
-        case 's':        goto yy1555;
-        case 'u':        goto yy1556;
+        case 'o':        goto yy1556;
+        case 'r':        goto yy1555;
+        case 's':        goto yy1554;
+        case 'u':        goto yy1553;
         default:        goto yy872;
         }
 yy889:
@@ -14941,11 +14943,11 @@ yy889:
 yy890:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1296;
-        case 'e':        goto yy1300;
+        case 'a':        goto yy1300;
+        case 'e':        goto yy1299;
         case 'i':        goto yy1298;
-        case 'o':        goto yy1299;
-        case 'u':        goto yy1297;
+        case 'o':        goto yy1297;
+        case 'u':        goto yy1296;
         default:        goto yy872;
         }
 yy891:
@@ -14959,10 +14961,10 @@ yy892:
         switch (yych) {
         case 'a':        goto yy1118;
         case 'g':        goto yy1119;
-        case 'i':        goto yy1114;
-        case 'o':        goto yy1117;
-        case 'r':        goto yy1116;
-        case 'y':        goto yy1115;
+        case 'i':        goto yy1117;
+        case 'o':        goto yy1116;
+        case 'r':        goto yy1115;
+        case 'y':        goto yy1114;
         default:        goto yy872;
         }
 yy893:
@@ -15030,19 +15032,19 @@ yy896:
 yy897:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy1051;
+        case 'o':        goto yy1073;
         default:        goto yy872;
         }
 yy898:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1045;
+        case 'r':        goto yy1070;
         default:        goto yy872;
         }
 yy899:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1036;
+        case 'u':        goto yy1039;
         default:        goto yy872;
         }
 yy900:
@@ -15060,11 +15062,11 @@ yy901:
 yy902:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy1000;
+        case 'b':        goto yy1001;
         case 'c':
         case 'd':
         case 'q':        goto yy998;
-        case 'f':        goto yy1001;
+        case 'f':        goto yy1000;
         case 'l':        goto yy1002;
         case 's':        goto yy999;
         default:        goto yy872;
@@ -16667,13 +16669,13 @@ yy999:
 yy1000:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1014;
+        case 'u':        goto yy1014;
         default:        goto yy872;
         }
 yy1001:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy1009;
+        case 'a':        goto yy1009;
         default:        goto yy872;
         }
 yy1002:
@@ -16772,17 +16774,17 @@ yy1006:
 yy1007:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_MACHINE_LARGE;                 return ETargetMachine;         }
+        { brigId = Brig::BRIG_MACHINE_LARGE; return ETargetMachine; }
 yy1009:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy1010;
+        case 's':        goto yy1010;
         default:        goto yy872;
         }
 yy1010:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy1011;
+        case 'e':        goto yy1011;
         default:        goto yy872;
         }
 yy1011:
@@ -16857,17 +16859,17 @@ yy1011:
 yy1012:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_PROFILE_FULL;                  return ETargetProfile;         }
+        { brigId = Brig::BRIG_PROFILE_BASE; return ETargetProfile; }
 yy1014:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy1015;
+        case 'l':        goto yy1015;
         default:        goto yy872;
         }
 yy1015:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1016;
+        case 'l':        goto yy1016;
         default:        goto yy872;
         }
 yy1016:
@@ -16942,7 +16944,7 @@ yy1016:
 yy1017:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_PROFILE_BASE;                  return ETargetProfile;         }
+        { brigId = Brig::BRIG_PROFILE_FULL; return ETargetProfile; }
 yy1019:
         yych = *++curPos;
         switch (yych) {
@@ -17053,7 +17055,7 @@ yy1026:
 yy1027:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_MACHINE_SMALL;                 return ETargetMachine;         }
+        { brigId = Brig::BRIG_MACHINE_SMALL; return ETargetMachine; }
 yy1029:
         yych = *++curPos;
         switch (yych) {
@@ -17132,9 +17134,27 @@ yy1031:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_XOR;                    return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_XOR; return EInstruction;
 	default: return EEmpty; } }
 yy1033:
+        yych = *++curPos;
+        switch (yych) {
+        case 'u':        goto yy1034;
+        default:        goto yy872;
+        }
+yy1034:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy1035;
+        default:        goto yy872;
+        }
+yy1035:
+        yych = *++curPos;
+        switch (yych) {
+        case 'c':        goto yy1036;
+        default:        goto yy872;
+        }
+yy1036:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -17200,143 +17220,77 @@ yy1033:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1034;
+        default:        goto yy1037;
         }
-yy1034:
+yy1037:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_OR;                     return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_TRUNC; return EInstruction;
 	default: return EEmpty; } }
-yy1036:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy1037;
-        default:        goto yy872;
-        }
-yy1037:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy1038;
-        default:        goto yy872;
-        }
-yy1038:
-        yych = *++curPos;
-        switch (yych) {
-        case 'f':        goto yy1039;
-        default:        goto yy872;
-        }
 yy1039:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy1040;
+        case 'e':        goto yy1040;
         default:        goto yy872;
         }
 yy1040:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1041;
+        case 'r':        goto yy1042;
+        case 'u':        goto yy1041;
         default:        goto yy872;
         }
 yy1041:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1042;
+        case 'e':        goto yy1060;
         default:        goto yy872;
         }
 yy1042:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1043;
+        case 'y':        goto yy1043;
+        default:        goto yy872;
         }
 yy1043:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_JOINFBAR;               return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy1045;
+        case 's':        goto yy1044;
+        default:        goto yy872;
+        }
+yy1044:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy1052;
+        default:        goto yy872;
+        }
 yy1045:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy1046;
+        case 'm':        goto yy1046;
         default:        goto yy872;
         }
 yy1046:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy1047;
+        case 'a':        goto yy1047;
         default:        goto yy872;
         }
 yy1047:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy1048;
+        case 'g':        goto yy1048;
         default:        goto yy872;
         }
 yy1048:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1049;
+        default:        goto yy872;
+        }
+yy1049:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -17402,59 +17356,45 @@ yy1048:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1049;
+        default:        goto yy1050;
         }
-yy1049:
+yy1050:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_TRUNC;                  return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_QUERYIMAGE; return EInstruction;
 	default: return EEmpty; } }
-yy1051:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1052;
-        default:        goto yy872;
-        }
 yy1052:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1053;
-        case 'u':        goto yy1054;
+        case 'm':        goto yy1053;
         default:        goto yy872;
         }
 yy1053:
         yych = *++curPos;
         switch (yych) {
-        case 'y':        goto yy1065;
+        case 'p':        goto yy1054;
         default:        goto yy872;
         }
 yy1054:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1055;
+        case 'l':        goto yy1055;
         default:        goto yy872;
         }
 yy1055:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1057;
-        case 'p':        goto yy1056;
+        case 'e':        goto yy1056;
         default:        goto yy872;
         }
 yy1056:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1061;
+        case 'r':        goto yy1057;
         default:        goto yy872;
         }
 yy1057:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy1058;
-        default:        goto yy872;
-        }
-yy1058:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -17520,21 +17460,34 @@ yy1058:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1059;
+        default:        goto yy1058;
         }
-yy1059:
+yy1058:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_QUEUEID;                return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_QUERYSAMPLER; return EInstruction;
 	default: return EEmpty; } }
+yy1060:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy1062;
+        case 'p':        goto yy1061;
+        default:        goto yy872;
+        }
 yy1061:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1062;
+        case 't':        goto yy1066;
         default:        goto yy872;
         }
 yy1062:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy1063;
+        default:        goto yy872;
+        }
+yy1063:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -17600,64 +17553,21 @@ yy1062:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1063;
+        default:        goto yy1064;
         }
-yy1063:
+yy1064:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_QUEUEPTR;               return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_QUEUEID; return EInstruction;
 	default: return EEmpty; } }
-yy1065:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy1066;
-        case 's':        goto yy1067;
-        default:        goto yy872;
-        }
 yy1066:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy1076;
+        case 'r':        goto yy1067;
         default:        goto yy872;
         }
 yy1067:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy1068;
-        default:        goto yy872;
-        }
-yy1068:
-        yych = *++curPos;
-        switch (yych) {
-        case 'm':        goto yy1069;
-        default:        goto yy872;
-        }
-yy1069:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy1070;
-        default:        goto yy872;
-        }
-yy1070:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy1071;
-        default:        goto yy872;
-        }
-yy1071:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1072;
-        default:        goto yy872;
-        }
-yy1072:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy1073;
-        default:        goto yy872;
-        }
-yy1073:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -17723,30 +17633,122 @@ yy1073:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1074;
+        default:        goto yy1068;
         }
-yy1074:
+yy1068:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_QUERYSAMPLER;           return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_QUEUEPTR; return EInstruction;
 	default: return EEmpty; } }
+yy1070:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1071;
+        }
+yy1071:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_OR; return EInstruction;
+	default: return EEmpty; } }
+yy1073:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy1074;
+        default:        goto yy872;
+        }
+yy1074:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy1075;
+        default:        goto yy872;
+        }
+yy1075:
+        yych = *++curPos;
+        switch (yych) {
+        case 'f':        goto yy1076;
+        default:        goto yy872;
+        }
 yy1076:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1077;
+        case 'b':        goto yy1077;
         default:        goto yy872;
         }
 yy1077:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy1078;
+        case 'a':        goto yy1078;
         default:        goto yy872;
         }
 yy1078:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1079;
+        case 'r':        goto yy1079;
         default:        goto yy872;
         }
 yy1079:
@@ -17821,7 +17823,7 @@ yy1080:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_QUERYIMAGE;             return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_JOINFBAR; return EInstruction;
 	default: return EEmpty; } }
 yy1082:
         ctxMarker = curPos + 1;
@@ -17895,7 +17897,7 @@ yy1082:
 yy1083:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_3D;                   return EImageGeometry;         }
+        { brigId = Brig::BRIG_GEOMETRY_3D; return EImageGeometry; }
 yy1085:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -17968,7 +17970,7 @@ yy1085:
 yy1086:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_2D;                   return EImageGeometry;         }
+        { brigId = Brig::BRIG_GEOMETRY_2D; return EImageGeometry; }
 yy1088:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -18035,8 +18037,8 @@ yy1088:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'd':        goto yy1098;
-        default:        goto yy1096;
+        case 'd':        goto yy1096;
+        default:        goto yy1097;
         }
 yy1089:
         yych = *++curPos;
@@ -18134,17 +18136,17 @@ yy1093:
 yy1094:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_2DDEPTH;              return EImageGeometry;         }
+        { brigId = Brig::BRIG_GEOMETRY_2DDEPTH; return EImageGeometry; }
 yy1096:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_2DA;                  return EImageGeometry;         }
-yy1098:
         yych = *++curPos;
         switch (yych) {
         case 'e':        goto yy1099;
         default:        goto yy872;
         }
+yy1097:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_GEOMETRY_2DA; return EImageGeometry; }
 yy1099:
         yych = *++curPos;
         switch (yych) {
@@ -18235,7 +18237,7 @@ yy1102:
 yy1103:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_2DADEPTH;             return EImageGeometry;         }
+        { brigId = Brig::BRIG_GEOMETRY_2DADEPTH; return EImageGeometry; }
 yy1105:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -18301,11 +18303,15 @@ yy1105:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'a':        goto yy1106;
+        case 'a':        goto yy1108;
         case 'b':        goto yy1109;
-        default:        goto yy1107;
+        default:        goto yy1106;
         }
 yy1106:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_GEOMETRY_1D; return EImageGeometry; }
+yy1108:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -18374,10 +18380,6 @@ yy1106:
         case 'z':        goto yy872;
         default:        goto yy1112;
         }
-yy1107:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_1D;                   return EImageGeometry;         }
 yy1109:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -18450,24 +18452,18 @@ yy1109:
 yy1110:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_1DB;                  return EImageGeometry;         }
+        { brigId = Brig::BRIG_GEOMETRY_1DB; return EImageGeometry; }
 yy1112:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_1DA;                  return EImageGeometry;         }
+        { brigId = Brig::BRIG_GEOMETRY_1DA; return EImageGeometry; }
 yy1114:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1148;
+        case 't':        goto yy1183;
         default:        goto yy872;
         }
 yy1115:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy1139;
-        default:        goto yy872;
-        }
-yy1116:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -18533,12 +18529,18 @@ yy1116:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1137;
+        default:        goto yy1181;
+        }
+yy1116:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy1175;
+        default:        goto yy872;
         }
 yy1117:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1131;
+        case 't':        goto yy1131;
         default:        goto yy872;
         }
 yy1118:
@@ -18632,7 +18634,7 @@ yy1122:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_BGRA;            return EImageOrder;           
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_BGRA; return EImageOrder;
 	default: return EEmpty; } }
 yy1124:
         yych = *++curPos;
@@ -18730,143 +18732,74 @@ yy1129:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BARRIER;                return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BARRIER; return EInstruction;
 	default: return EEmpty; } }
 yy1131:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1132;
+        case 'a':        goto yy1137;
+        case 'e':        goto yy1136;
+        case 'i':        goto yy1135;
+        case 'm':        goto yy1134;
+        case 'r':        goto yy1133;
+        case 's':        goto yy1132;
         default:        goto yy872;
         }
 yy1132:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1133;
+        case 'e':        goto yy1168;
         default:        goto yy872;
         }
 yy1133:
         yych = *++curPos;
         switch (yych) {
-        case 'w':        goto yy1134;
+        case 'e':        goto yy1164;
         default:        goto yy872;
         }
 yy1134:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1135;
+        case 'a':        goto yy1159;
+        default:        goto yy872;
         }
 yy1135:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BORROW;                 return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy1152;
+        default:        goto yy872;
+        }
+yy1136:
+        yych = *++curPos;
+        switch (yych) {
+        case 'x':        goto yy1144;
+        default:        goto yy872;
+        }
 yy1137:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BR;                     return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'l':        goto yy1138;
+        default:        goto yy872;
+        }
+yy1138:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy1139;
+        default:        goto yy872;
+        }
 yy1139:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1140;
+        case 'g':        goto yy1140;
         default:        goto yy872;
         }
 yy1140:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1141;
+        case 'n':        goto yy1141;
         default:        goto yy872;
         }
 yy1141:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy1142;
-        default:        goto yy872;
-        }
-yy1142:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy1143;
-        default:        goto yy872;
-        }
-yy1143:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy1144;
-        default:        goto yy872;
-        }
-yy1144:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy1145;
-        default:        goto yy872;
-        }
-yy1145:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -18932,80 +18865,229 @@ yy1145:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1146;
+        default:        goto yy1142;
         }
-yy1146:
+yy1142:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BYTEALIGN;              return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITALIGN; return EInstruction;
 	default: return EEmpty; } }
+yy1144:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy1145;
+        default:        goto yy872;
+        }
+yy1145:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy1146;
+        default:        goto yy872;
+        }
+yy1146:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy1147;
+        default:        goto yy872;
+        }
+yy1147:
+        yych = *++curPos;
+        switch (yych) {
+        case 'c':        goto yy1148;
+        default:        goto yy872;
+        }
 yy1148:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1154;
-        case 'e':        goto yy1149;
-        case 'i':        goto yy1151;
-        case 'm':        goto yy1150;
-        case 'r':        goto yy1153;
-        case 's':        goto yy1152;
+        case 't':        goto yy1149;
         default:        goto yy872;
         }
 yy1149:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy1184;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1150;
         }
 yy1150:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy1179;
-        default:        goto yy872;
-        }
-yy1151:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy1172;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITEXTRACT; return EInstruction;
+	default: return EEmpty; } }
 yy1152:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1165;
+        case 's':        goto yy1153;
         default:        goto yy872;
         }
 yy1153:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1161;
+        case 'e':        goto yy1154;
         default:        goto yy872;
         }
 yy1154:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy1155;
+        case 'r':        goto yy1155;
         default:        goto yy872;
         }
 yy1155:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1156;
+        case 't':        goto yy1156;
         default:        goto yy872;
         }
 yy1156:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy1157;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1157;
         }
 yy1157:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITINSERT; return EInstruction;
+	default: return EEmpty; } }
+yy1159:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy1158;
+        case 's':        goto yy1160;
         default:        goto yy872;
         }
-yy1158:
+yy1160:
+        yych = *++curPos;
+        switch (yych) {
+        case 'k':        goto yy1161;
+        default:        goto yy872;
+        }
+yy1161:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -19071,21 +19153,21 @@ yy1158:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1159;
-        }
-yy1159:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITALIGN;               return EInstruction;          
-	default: return EEmpty; } }
-yy1161:
-        yych = *++curPos;
-        switch (yych) {
-        case 'v':        goto yy1162;
-        default:        goto yy872;
+        default:        goto yy1162;
         }
 yy1162:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITMASK; return EInstruction;
+	default: return EEmpty; } }
+yy1164:
+        yych = *++curPos;
+        switch (yych) {
+        case 'v':        goto yy1165;
+        default:        goto yy872;
+        }
+yy1165:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -19151,39 +19233,39 @@ yy1162:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1163;
+        default:        goto yy1166;
         }
-yy1163:
+yy1166:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITREV;                 return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITREV; return EInstruction;
 	default: return EEmpty; } }
-yy1165:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy1166;
-        default:        goto yy872;
-        }
-yy1166:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1167;
-        default:        goto yy872;
-        }
-yy1167:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy1168;
-        default:        goto yy872;
-        }
 yy1168:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1169;
+        case 'l':        goto yy1169;
         default:        goto yy872;
         }
 yy1169:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1170;
+        default:        goto yy872;
+        }
+yy1170:
+        yych = *++curPos;
+        switch (yych) {
+        case 'c':        goto yy1171;
+        default:        goto yy872;
+        }
+yy1171:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy1172;
+        default:        goto yy872;
+        }
+yy1172:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -19249,125 +19331,33 @@ yy1169:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1170;
+        default:        goto yy1173;
         }
-yy1170:
+yy1173:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITSELECT;              return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITSELECT; return EInstruction;
 	default: return EEmpty; } }
-yy1172:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy1173;
-        default:        goto yy872;
-        }
-yy1173:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1174;
-        default:        goto yy872;
-        }
-yy1174:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy1175;
-        default:        goto yy872;
-        }
 yy1175:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1176;
+        case 'r':        goto yy1176;
         default:        goto yy872;
         }
 yy1176:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1177;
+        case 'o':        goto yy1177;
+        default:        goto yy872;
         }
 yy1177:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITINSERT;              return EInstruction;          
-	default: return EEmpty; } }
-yy1179:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy1180;
+        case 'w':        goto yy1178;
         default:        goto yy872;
         }
-yy1180:
-        yych = *++curPos;
-        switch (yych) {
-        case 'k':        goto yy1181;
-        default:        goto yy872;
-        }
-yy1181:
+yy1178:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -19433,42 +19423,54 @@ yy1181:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1182;
+        default:        goto yy1179;
         }
-yy1182:
+yy1179:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITMASK;                return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BORROW; return EInstruction;
 	default: return EEmpty; } }
+yy1181:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BR; return EInstruction;
+	default: return EEmpty; } }
+yy1183:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1184;
+        default:        goto yy872;
+        }
 yy1184:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1185;
+        case 'a':        goto yy1185;
         default:        goto yy872;
         }
 yy1185:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1186;
+        case 'l':        goto yy1186;
         default:        goto yy872;
         }
 yy1186:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1187;
+        case 'i':        goto yy1187;
         default:        goto yy872;
         }
 yy1187:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy1188;
+        case 'g':        goto yy1188;
         default:        goto yy872;
         }
 yy1188:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1189;
+        case 'n':        goto yy1189;
         default:        goto yy872;
         }
 yy1189:
@@ -19543,7 +19545,7 @@ yy1190:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITEXTRACT;             return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BYTEALIGN; return EInstruction;
 	default: return EEmpty; } }
 yy1192:
         yych = *++curPos;
@@ -19660,29 +19662,29 @@ yy1200:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'c':        goto yy1201;
-        case 'h':        goto yy1202;
+        case 'c':        goto yy1203;
+        case 'h':        goto yy1204;
         case 'l':        goto yy1205;
-        default:        goto yy1203;
+        default:        goto yy1201;
         }
 yy1201:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_UNPACK; return EInstruction;
+	default: return EEmpty; } }
+yy1203:
         yych = *++curPos;
         switch (yych) {
         case 'v':        goto yy1212;
         default:        goto yy872;
         }
-yy1202:
+yy1204:
         yych = *++curPos;
         switch (yych) {
         case 'i':        goto yy1209;
         default:        goto yy872;
         }
-yy1203:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_UNPACK;                 return EInstruction;          
-	default: return EEmpty; } }
 yy1205:
         yych = *++curPos;
         switch (yych) {
@@ -19761,7 +19763,7 @@ yy1207:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_UNPACKLO;               return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_UNPACKLO; return EInstruction;
 	default: return EEmpty; } }
 yy1209:
         ctxMarker = curPos + 1;
@@ -19835,7 +19837,7 @@ yy1210:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_UNPACKHI;               return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_UNPACKHI; return EInstruction;
 	default: return EEmpty; } }
 yy1212:
         yych = *++curPos;
@@ -19915,7 +19917,7 @@ yy1214:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_UNPACKCVT;              return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_UNPACKCVT; return EInstruction;
 	default: return EEmpty; } }
 yy1216:
         yych = *++curPos;
@@ -20037,7 +20039,7 @@ yy1224:
 yy1225:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_COORD_UNNORMALIZED;            return ESamplerCoord;          }
+        { brigId = Brig::BRIG_COORD_UNNORMALIZED; return ESamplerCoord; }
 yy1227:
         yych = *++curPos;
         switch (yych) {
@@ -20140,7 +20142,7 @@ yy1232:
 yy1233:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_ADDRESSING_UNDEFINED;          return ESamplerAddressingMode;  }
+        { brigId = Brig::BRIG_ADDRESSING_UNDEFINED; return ESamplerAddressingMode; }
 yy1235:
         yych = *++curPos;
         switch (yych) {
@@ -20192,18 +20194,97 @@ yy1242:
 yy1243:
         yych = *++curPos;
         switch (yych) {
-        case '1':        goto yy1246;
-        case '3':        goto yy1244;
-        case '8':        goto yy1245;
+        case '1':        goto yy1244;
+        case '3':        goto yy1245;
+        case '8':        goto yy1246;
         default:        goto yy872;
         }
 yy1244:
         yych = *++curPos;
         switch (yych) {
-        case '2':        goto yy1252;
+        case '6':        goto yy1252;
         default:        goto yy872;
         }
 yy1245:
+        yych = *++curPos;
+        switch (yych) {
+        case '2':        goto yy1249;
+        default:        goto yy872;
+        }
+yy1246:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1247;
+        }
+yy1247:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_CHANNEL_TYPE_UNSIGNED_INT8; return EImageFormat; }
+yy1249:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -20272,89 +20353,10 @@ yy1245:
         case 'z':        goto yy872;
         default:        goto yy1250;
         }
-yy1246:
-        yych = *++curPos;
-        switch (yych) {
-        case '6':        goto yy1247;
-        default:        goto yy872;
-        }
-yy1247:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1248;
-        }
-yy1248:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNSIGNED_INT16;   return EImageFormat;           }
 yy1250:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNSIGNED_INT8;    return EImageFormat;           }
+        { brigId = Brig::BRIG_CHANNEL_TYPE_UNSIGNED_INT32; return EImageFormat; }
 yy1252:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -20427,7 +20429,7 @@ yy1252:
 yy1253:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNSIGNED_INT32;   return EImageFormat;           }
+        { brigId = Brig::BRIG_CHANNEL_TYPE_UNSIGNED_INT16; return EImageFormat; }
 yy1255:
         yych = *++curPos;
         switch (yych) {
@@ -20580,7 +20582,7 @@ yy1268:
 yy1269:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_SHORT_555;  return EImageFormat;           }
+        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_SHORT_555; return EImageFormat; }
 yy1271:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -20653,7 +20655,7 @@ yy1271:
 yy1272:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_SHORT_565;  return EImageFormat;           }
+        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_SHORT_565; return EImageFormat; }
 yy1274:
         yych = *++curPos;
         switch (yych) {
@@ -20663,8 +20665,8 @@ yy1274:
 yy1275:
         yych = *++curPos;
         switch (yych) {
-        case '1':        goto yy1278;
-        case '2':        goto yy1279;
+        case '1':        goto yy1279;
+        case '2':        goto yy1278;
         case '8':        goto yy1277;
         case '_':        goto yy1276;
         default:        goto yy872;
@@ -20747,13 +20749,13 @@ yy1277:
 yy1278:
         yych = *++curPos;
         switch (yych) {
-        case '6':        goto yy1283;
+        case '4':        goto yy1283;
         default:        goto yy872;
         }
 yy1279:
         yych = *++curPos;
         switch (yych) {
-        case '4':        goto yy1280;
+        case '6':        goto yy1280;
         default:        goto yy872;
         }
 yy1280:
@@ -20828,7 +20830,7 @@ yy1280:
 yy1281:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_INT24;      return EImageFormat;           }
+        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_INT16; return EImageFormat; }
 yy1283:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -20901,11 +20903,11 @@ yy1283:
 yy1284:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_INT16;      return EImageFormat;           }
+        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_INT24; return EImageFormat; }
 yy1286:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_INT8;       return EImageFormat;           }
+        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_INT8; return EImageFormat; }
 yy1288:
         yych = *++curPos;
         switch (yych) {
@@ -21008,69 +21010,187 @@ yy1293:
 yy1294:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_INT_101010; return EImageFormat;           }
+        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_INT_101010; return EImageFormat; }
 yy1296:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1346;
-        case 'x':        goto yy1345;
+        case 'l':        goto yy1405;
         default:        goto yy872;
         }
 yy1297:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy1330;
+        case 'v':        goto yy1402;
         default:        goto yy872;
         }
 yy1298:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy1313;
-        case 'r':        goto yy1312;
+        case 'n':        goto yy1385;
+        case 'r':        goto yy1384;
         default:        goto yy872;
         }
 yy1299:
         yych = *++curPos;
         switch (yych) {
-        case 'v':        goto yy1309;
+        case 'm':        goto yy1376;
         default:        goto yy872;
         }
 yy1300:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy1301;
+        case 'd':        goto yy1302;
+        case 'x':        goto yy1301;
         default:        goto yy872;
         }
 yy1301:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'f':        goto yy1302;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'e':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case 'c':        goto yy1314;
+        case 'd':        goto yy1318;
+        case 'f':        goto yy1317;
+        case 'w':        goto yy1313;
+        default:        goto yy1315;
         }
 yy1302:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1303;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case '2':        goto yy1303;
+        default:        goto yy1304;
         }
 yy1303:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy1304;
+        case '4':        goto yy1306;
         default:        goto yy872;
         }
 yy1304:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy1305;
-        default:        goto yy872;
-        }
-yy1305:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1306;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAD; return EInstruction;
+	default: return EEmpty; } }
 yy1306:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -21118,7 +21238,6 @@ yy1306:
         case 'e':
         case 'f':
         case 'g':
-        case 'h':
         case 'i':
         case 'j':
         case 'k':
@@ -21137,95 +21256,22 @@ yy1306:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1307;
+        case 'h':        goto yy1307;
+        default:        goto yy1308;
         }
 yy1307:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MEMFENCE;               return EInstruction;          
-	default: return EEmpty; } }
-yy1309:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1310;
-        }
-yy1310:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MOV;                    return EInstruction;          
-	default: return EEmpty; } }
-yy1312:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy1316;
+        case 'i':        goto yy1310;
         default:        goto yy872;
         }
-yy1313:
+yy1308:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAD24; return EInstruction;
+	default: return EEmpty; } }
+yy1310:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -21291,240 +21337,129 @@ yy1313:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1314;
+        default:        goto yy1311;
+        }
+yy1311:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAD24HI; return EInstruction;
+	default: return EEmpty; } }
+yy1313:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy1369;
+        default:        goto yy872;
         }
 yy1314:
+        yych = *++curPos;
+        switch (yych) {
+        case 'u':        goto yy1364;
+        default:        goto yy872;
+        }
+yy1315:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MIN;                    return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAX; return EInstruction;
 	default: return EEmpty; } }
-yy1316:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy1317;
-        default:        goto yy872;
-        }
 yy1317:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1318;
+        case 'l':        goto yy1336;
         default:        goto yy872;
         }
 yy1318:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1319;
+        case 'y':        goto yy1319;
         default:        goto yy872;
         }
 yy1319:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1320;
+        case 'n':        goto yy1320;
         default:        goto yy872;
         }
 yy1320:
         yych = *++curPos;
         switch (yych) {
-        case '_':        goto yy1321;
+        case 'a':        goto yy1321;
         default:        goto yy872;
         }
 yy1321:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1322;
+        case 'm':        goto yy1322;
         default:        goto yy872;
         }
 yy1322:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1323;
+        case 'i':        goto yy1323;
         default:        goto yy872;
         }
 yy1323:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1324;
+        case 'c':        goto yy1324;
         default:        goto yy872;
         }
 yy1324:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1325;
+        case 'g':        goto yy1325;
         default:        goto yy872;
         }
 yy1325:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1326;
+        case 'r':        goto yy1326;
         default:        goto yy872;
         }
 yy1326:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1327;
+        case 'o':        goto yy1327;
         default:        goto yy872;
         }
 yy1327:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1328;
+        case 'u':        goto yy1328;
+        default:        goto yy872;
         }
 yy1328:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_ADDRESSING_MIRRORED_REPEAT;    return ESamplerAddressingMode;  }
-yy1330:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case '2':        goto yy1332;
-        case 'h':        goto yy1331;
-        default:        goto yy1333;
+        case 'p':        goto yy1329;
+        default:        goto yy872;
+        }
+yy1329:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy1330;
+        default:        goto yy872;
+        }
+yy1330:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy1331;
+        default:        goto yy872;
         }
 yy1331:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1342;
+        case 'z':        goto yy1332;
         default:        goto yy872;
         }
 yy1332:
         yych = *++curPos;
         switch (yych) {
-        case '4':        goto yy1335;
+        case 'e':        goto yy1333;
         default:        goto yy872;
         }
 yy1333:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MUL;                    return EInstruction;          
-	default: return EEmpty; } }
-yy1335:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -21564,6 +21499,7 @@ yy1335:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -21571,6 +21507,7 @@ yy1335:
         case 'e':
         case 'f':
         case 'g':
+        case 'h':
         case 'i':
         case 'j':
         case 'k':
@@ -21589,170 +21526,80 @@ yy1335:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'h':        goto yy1336;
-        default:        goto yy1337;
+        default:        goto yy1334;
         }
+yy1334:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_CONTROL_MAXDYNAMICGROUPSIZE; return EControl; }
 yy1336:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1339;
+        case 'a':        goto yy1337;
         default:        goto yy872;
         }
 yy1337:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MUL24;                  return EInstruction;          
-	default: return EEmpty; } }
-yy1339:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1340;
+        case 't':        goto yy1338;
+        default:        goto yy872;
+        }
+yy1338:
+        yych = *++curPos;
+        switch (yych) {
+        case 'g':        goto yy1340;
+        case 'w':        goto yy1339;
+        default:        goto yy872;
+        }
+yy1339:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy1350;
+        default:        goto yy872;
         }
 yy1340:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MUL24HI;                return EInstruction;          
-	default: return EEmpty; } }
-yy1342:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1343;
+        case 'r':        goto yy1341;
+        default:        goto yy872;
+        }
+yy1341:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy1342;
+        default:        goto yy872;
+        }
+yy1342:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy1343;
+        default:        goto yy872;
         }
 yy1343:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MULHI;                  return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy1344;
+        default:        goto yy872;
+        }
+yy1344:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy1345;
+        default:        goto yy872;
+        }
 yy1345:
+        yych = *++curPos;
+        switch (yych) {
+        case 'z':        goto yy1346;
+        default:        goto yy872;
+        }
+yy1346:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1347;
+        default:        goto yy872;
+        }
+yy1347:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -21792,73 +21639,7 @@ yy1345:
         case 'X':
         case 'Y':
         case 'Z':
-        case 'a':
-        case 'b':
-        case 'e':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case 'c':        goto yy1359;
-        case 'd':        goto yy1362;
-        case 'f':        goto yy1361;
-        case 'w':        goto yy1360;
-        default:        goto yy1357;
-        }
-yy1346:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -21885,290 +21666,262 @@ yy1346:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case '2':        goto yy1347;
         default:        goto yy1348;
-        }
-yy1347:
-        yych = *++curPos;
-        switch (yych) {
-        case '4':        goto yy1350;
-        default:        goto yy872;
         }
 yy1348:
         ++curPos;
         curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAD;                    return EInstruction;          
-	default: return EEmpty; } }
+        { brigId = Brig::BRIG_CONTROL_MAXFLATGRIDSIZE; return EControl; }
 yy1350:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case 'h':        goto yy1351;
-        default:        goto yy1352;
+        case 'r':        goto yy1351;
+        default:        goto yy872;
         }
 yy1351:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1354;
+        case 'k':        goto yy1352;
         default:        goto yy872;
         }
 yy1352:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAD24;                  return EInstruction;          
-	default: return EEmpty; } }
-yy1354:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1355;
+        case 'g':        goto yy1353;
+        default:        goto yy872;
+        }
+yy1353:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy1354;
+        default:        goto yy872;
+        }
+yy1354:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy1355;
+        default:        goto yy872;
         }
 yy1355:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAD24HI;                return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'u':        goto yy1356;
+        default:        goto yy872;
+        }
+yy1356:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy1357;
+        default:        goto yy872;
+        }
 yy1357:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAX;                    return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy1358;
+        default:        goto yy872;
+        }
+yy1358:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy1359;
+        default:        goto yy872;
+        }
 yy1359:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy1415;
+        case 'z':        goto yy1360;
         default:        goto yy872;
         }
 yy1360:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1408;
+        case 'e':        goto yy1361;
         default:        goto yy872;
         }
 yy1361:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy1380;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1362;
         }
 yy1362:
-        yych = *++curPos;
-        switch (yych) {
-        case 'y':        goto yy1363;
-        default:        goto yy872;
-        }
-yy1363:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy1364;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_CONTROL_MAXFLATWORKGROUPSIZE; return EControl; }
 yy1364:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1365;
+        case 'i':        goto yy1365;
         default:        goto yy872;
         }
 yy1365:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy1366;
+        case 'd':        goto yy1366;
         default:        goto yy872;
         }
 yy1366:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1367;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1367;
         }
 yy1367:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy1368;
-        default:        goto yy872;
-        }
-yy1368:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy1369;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAXCUID; return EInstruction;
+	default: return EEmpty; } }
 yy1369:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1370;
+        case 'v':        goto yy1370;
         default:        goto yy872;
         }
 yy1370:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1371;
+        case 'e':        goto yy1371;
         default:        goto yy872;
         }
 yy1371:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy1372;
+        case 'i':        goto yy1372;
         default:        goto yy872;
         }
 yy1372:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1373;
+        case 'd':        goto yy1373;
         default:        goto yy872;
         }
 yy1373:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy1374;
-        default:        goto yy872;
-        }
-yy1374:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy1375;
-        default:        goto yy872;
-        }
-yy1375:
-        yych = *++curPos;
-        switch (yych) {
-        case 'z':        goto yy1376;
-        default:        goto yy872;
-        }
-yy1376:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1377;
-        default:        goto yy872;
-        }
-yy1377:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -22208,7 +21961,6 @@ yy1377:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -22235,110 +21987,265 @@ yy1377:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1378;
+        default:        goto yy1374;
         }
-yy1378:
+yy1374:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_MAXDYNAMICGROUPSIZE;   return EControl;               }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAXWAVEID; return EInstruction;
+	default: return EEmpty; } }
+yy1376:
+        yych = *++curPos;
+        switch (yych) {
+        case 'f':        goto yy1377;
+        default:        goto yy872;
+        }
+yy1377:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1378;
+        default:        goto yy872;
+        }
+yy1378:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy1379;
+        default:        goto yy872;
+        }
+yy1379:
+        yych = *++curPos;
+        switch (yych) {
+        case 'c':        goto yy1380;
+        default:        goto yy872;
+        }
 yy1380:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1381;
+        case 'e':        goto yy1381;
         default:        goto yy872;
         }
 yy1381:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1382;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1382;
         }
 yy1382:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy1383;
-        case 'w':        goto yy1384;
-        default:        goto yy872;
-        }
-yy1383:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy1399;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MEMFENCE; return EInstruction;
+	default: return EEmpty; } }
 yy1384:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1385;
+        case 'r':        goto yy1388;
         default:        goto yy872;
         }
 yy1385:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1386;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1386;
         }
 yy1386:
-        yych = *++curPos;
-        switch (yych) {
-        case 'k':        goto yy1387;
-        default:        goto yy872;
-        }
-yy1387:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy1388;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MIN; return EInstruction;
+	default: return EEmpty; } }
 yy1388:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1389;
+        case 'o':        goto yy1389;
         default:        goto yy872;
         }
 yy1389:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1390;
+        case 'r':        goto yy1390;
         default:        goto yy872;
         }
 yy1390:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy1391;
+        case 'e':        goto yy1391;
         default:        goto yy872;
         }
 yy1391:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1392;
+        case 'd':        goto yy1392;
         default:        goto yy872;
         }
 yy1392:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy1393;
+        case '_':        goto yy1393;
         default:        goto yy872;
         }
 yy1393:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1394;
+        case 'r':        goto yy1394;
         default:        goto yy872;
         }
 yy1394:
         yych = *++curPos;
         switch (yych) {
-        case 'z':        goto yy1395;
+        case 'e':        goto yy1395;
         default:        goto yy872;
         }
 yy1395:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1396;
+        case 'p':        goto yy1396;
         default:        goto yy872;
         }
 yy1396:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1397;
+        default:        goto yy872;
+        }
+yy1397:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy1398;
+        default:        goto yy872;
+        }
+yy1398:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy1399;
+        default:        goto yy872;
+        }
+yy1399:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -22405,54 +22312,178 @@ yy1396:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1397;
-        }
-yy1397:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_MAXFLATWORKGROUPSIZE;  return EControl;               }
-yy1399:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy1400;
-        default:        goto yy872;
+        default:        goto yy1400;
         }
 yy1400:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy1401;
-        default:        goto yy872;
-        }
-yy1401:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy1402;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_ADDRESSING_MIRRORED_REPEAT; return ESamplerAddressingMode; }
 yy1402:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1403;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1403;
         }
 yy1403:
-        yych = *++curPos;
-        switch (yych) {
-        case 'z':        goto yy1404;
-        default:        goto yy872;
-        }
-yy1404:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1405;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MOV; return EInstruction;
+	default: return EEmpty; } }
 yy1405:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
         case '0':
         case '1':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case '2':        goto yy1407;
+        case 'h':        goto yy1406;
+        default:        goto yy1408;
+        }
+yy1406:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy1417;
+        default:        goto yy872;
+        }
+yy1407:
+        yych = *++curPos;
+        switch (yych) {
+        case '4':        goto yy1410;
+        default:        goto yy872;
+        }
+yy1408:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MUL; return EInstruction;
+	default: return EEmpty; } }
+yy1410:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
         case '2':
         case '3':
         case '4':
@@ -22487,7 +22518,6 @@ yy1405:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -22495,7 +22525,6 @@ yy1405:
         case 'e':
         case 'f':
         case 'g':
-        case 'h':
         case 'i':
         case 'j':
         case 'k':
@@ -22514,37 +22543,22 @@ yy1405:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1406;
-        }
-yy1406:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_MAXFLATGRIDSIZE;       return EControl;               }
-yy1408:
-        yych = *++curPos;
-        switch (yych) {
-        case 'v':        goto yy1409;
-        default:        goto yy872;
-        }
-yy1409:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1410;
-        default:        goto yy872;
-        }
-yy1410:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy1411;
-        default:        goto yy872;
+        case 'h':        goto yy1411;
+        default:        goto yy1412;
         }
 yy1411:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1412;
+        case 'i':        goto yy1414;
         default:        goto yy872;
         }
 yy1412:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MUL24; return EInstruction;
+	default: return EEmpty; } }
+yy1414:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -22610,26 +22624,14 @@ yy1412:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1413;
+        default:        goto yy1415;
         }
-yy1413:
+yy1415:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAXWAVEID;              return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MUL24HI; return EInstruction;
 	default: return EEmpty; } }
-yy1415:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy1416;
-        default:        goto yy872;
-        }
-yy1416:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy1417;
-        default:        goto yy872;
-        }
 yy1417:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -22702,7 +22704,7 @@ yy1418:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAXCUID;                return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MULHI; return EInstruction;
 	default: return EEmpty; } }
 yy1420:
         yych = *++curPos;
@@ -25068,61 +25070,61 @@ yy1551:
 yy1553:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1617;
-        case 'r':        goto yy1615;
-        case 't':        goto yy1616;
+        case 'l':        goto yy1624;
         default:        goto yy872;
         }
 yy1554:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy1611;
+        case 'i':        goto yy1615;
+        case 'q':        goto yy1616;
         default:        goto yy872;
         }
 yy1555:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1603;
-        case 'q':        goto yy1602;
+        case 'c':        goto yy1605;
+        case 's':        goto yy1606;
         default:        goto yy872;
         }
 yy1556:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy1595;
+        case 'p':        goto yy1590;
+        case 'r':        goto yy1589;
+        case 't':        goto yy1591;
         default:        goto yy872;
         }
 yy1557:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1590;
+        case 'o':        goto yy1584;
         default:        goto yy872;
         }
 yy1558:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy1580;
-        case 's':        goto yy1581;
+        case 'm':        goto yy1580;
         default:        goto yy872;
         }
 yy1559:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1576;
+        case 'a':        goto yy1565;
+        case 'g':        goto yy1566;
+        case 'x':        goto yy1567;
         default:        goto yy872;
         }
 yy1560:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1561;
-        case 'g':        goto yy1562;
-        case 'x':        goto yy1563;
+        case 'o':        goto yy1561;
         default:        goto yy872;
         }
 yy1561:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1570;
+        case 's':        goto yy1562;
         default:        goto yy872;
         }
 yy1562:
@@ -25191,21 +25193,21 @@ yy1562:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1568;
+        default:        goto yy1563;
         }
 yy1563:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy1564;
-        default:        goto yy872;
-        }
-yy1564:
-        yych = *++curPos;
-        switch (yych) {
-        case '2':        goto yy1565;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NCOS; return EInstruction;
+	default: return EEmpty; } }
 yy1565:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy1574;
+        default:        goto yy872;
+        }
+yy1566:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -25271,39 +25273,119 @@ yy1565:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1566;
+        default:        goto yy1572;
         }
-yy1566:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NEXP2;                  return EInstruction;          
-	default: return EEmpty; } }
+yy1567:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy1568;
+        default:        goto yy872;
+        }
 yy1568:
+        yych = *++curPos;
+        switch (yych) {
+        case '2':        goto yy1569;
+        default:        goto yy872;
+        }
+yy1569:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1570;
+        }
+yy1570:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NEG;                    return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NEXP2; return EInstruction;
 	default: return EEmpty; } }
-yy1570:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1571;
-        default:        goto yy872;
-        }
-yy1571:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy1572;
-        default:        goto yy872;
-        }
 yy1572:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NEG; return EInstruction;
+	default: return EEmpty; } }
+yy1574:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1573;
+        case 'e':        goto yy1575;
         default:        goto yy872;
         }
-yy1573:
+yy1575:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy1576;
+        default:        goto yy872;
+        }
+yy1576:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy1577;
+        default:        goto yy872;
+        }
+yy1577:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -25370,191 +25452,105 @@ yy1573:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1574;
-        }
-yy1574:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_FILTER_NEAREST;    return ESamplerFilter; }
-yy1576:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy1577;
-        default:        goto yy872;
-        }
-yy1577:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
         default:        goto yy1578;
         }
 yy1578:
         ++curPos;
         curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NCOS;                   return EInstruction;          
-	default: return EEmpty; } }
+        { brigId = Brig::BRIG_FILTER_NEAREST;    return ESamplerFilter; }
 yy1580:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1587;
+        case 'a':        goto yy1581;
         default:        goto yy872;
         }
 yy1581:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'q':        goto yy1582;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1582;
         }
 yy1582:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy1583;
-        default:        goto yy872;
-        }
-yy1583:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy1584;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NFMA; return EInstruction;
+	default: return EEmpty; } }
 yy1584:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1585;
+        case 'g':        goto yy1585;
+        default:        goto yy872;
         }
 yy1585:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NRSQRT;                 return EInstruction;          
-	default: return EEmpty; } }
-yy1587:
+        yych = *++curPos;
+        switch (yych) {
+        case '2':        goto yy1586;
+        default:        goto yy872;
+        }
+yy1586:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -25620,27 +25616,89 @@ yy1587:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1588;
+        default:        goto yy1587;
         }
-yy1588:
+yy1587:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NRCP;                   return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NLOG2; return EInstruction;
 	default: return EEmpty; } }
-yy1590:
+yy1589:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy1591;
+        case 'm':        goto yy1596;
         default:        goto yy872;
+        }
+yy1590:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1594;
         }
 yy1591:
-        yych = *++curPos;
-        switch (yych) {
-        case '2':        goto yy1592;
-        default:        goto yy872;
-        }
-yy1592:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -25706,125 +25764,57 @@ yy1592:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1593;
+        default:        goto yy1592;
         }
-yy1593:
+yy1592:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NLOG2;                  return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NOT; return EInstruction;
 	default: return EEmpty; } }
-yy1595:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy1596;
-        default:        goto yy872;
-        }
+yy1594:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NOP; return EInstruction;
+	default: return EEmpty; } }
 yy1596:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1597;
+        case 'a':        goto yy1597;
         default:        goto yy872;
         }
 yy1597:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1598;
+        case 'l':        goto yy1598;
         default:        goto yy872;
         }
 yy1598:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1599;
+        case 'i':        goto yy1599;
         default:        goto yy872;
         }
 yy1599:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1600;
+        case 'z':        goto yy1600;
+        default:        goto yy872;
         }
 yy1600:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NULLPTR;                return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1601;
+        default:        goto yy872;
+        }
+yy1601:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy1602;
+        default:        goto yy872;
+        }
 yy1602:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy1607;
-        default:        goto yy872;
-        }
-yy1603:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy1604;
-        default:        goto yy872;
-        }
-yy1604:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -25864,6 +25854,7 @@ yy1604:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -25890,21 +25881,37 @@ yy1604:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1605;
+        default:        goto yy1603;
         }
-yy1605:
+yy1603:
         ++curPos;
         curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NSIN;                   return EInstruction;          
-	default: return EEmpty; } }
+        { brigId = Brig::BRIG_COORD_NORMALIZED; return ESamplerCoord; }
+yy1605:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy1612;
+        default:        goto yy872;
+        }
+yy1606:
+        yych = *++curPos;
+        switch (yych) {
+        case 'q':        goto yy1607;
+        default:        goto yy872;
+        }
 yy1607:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1608;
+        case 'r':        goto yy1608;
         default:        goto yy872;
         }
 yy1608:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy1609;
+        default:        goto yy872;
+        }
+yy1609:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -25970,20 +25977,14 @@ yy1608:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1609;
+        default:        goto yy1610;
         }
-yy1609:
+yy1610:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NSQRT;                  return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NRSQRT; return EInstruction;
 	default: return EEmpty; } }
-yy1611:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy1612;
-        default:        goto yy872;
-        }
 yy1612:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -26056,83 +26057,27 @@ yy1613:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NFMA;                   return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NRCP; return EInstruction;
 	default: return EEmpty; } }
 yy1615:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy1622;
+        case 'n':        goto yy1621;
         default:        goto yy872;
         }
 yy1616:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1620;
+        case 'r':        goto yy1617;
+        default:        goto yy872;
         }
 yy1617:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy1618;
+        default:        goto yy872;
+        }
+yy1618:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -26198,54 +26143,110 @@ yy1617:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1618;
+        default:        goto yy1619;
         }
-yy1618:
+yy1619:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NOP;                    return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NSQRT; return EInstruction;
 	default: return EEmpty; } }
-yy1620:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NOT;                    return EInstruction;          
-	default: return EEmpty; } }
+yy1621:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1622;
+        }
 yy1622:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy1623;
-        default:        goto yy872;
-        }
-yy1623:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy1624;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NSIN; return EInstruction;
+	default: return EEmpty; } }
 yy1624:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1625;
+        case 'l':        goto yy1625;
         default:        goto yy872;
         }
 yy1625:
         yych = *++curPos;
         switch (yych) {
-        case 'z':        goto yy1626;
+        case 'p':        goto yy1626;
         default:        goto yy872;
         }
 yy1626:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1627;
+        case 't':        goto yy1627;
         default:        goto yy872;
         }
 yy1627:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1628;
+        case 'r':        goto yy1628;
         default:        goto yy872;
         }
 yy1628:
@@ -26288,7 +26289,6 @@ yy1628:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -26320,7 +26320,9 @@ yy1628:
 yy1629:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_COORD_NORMALIZED;              return ESamplerCoord;          }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NULLPTR; return EInstruction;
+	default: return EEmpty; } }
 yy1631:
         yych = *++curPos;
         switch (yych) {
@@ -26433,21 +26435,21 @@ yy1638:
 yy1640:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy1703;
+        case 'i':        goto yy1878;
+        case 'o':        goto yy1877;
         default:        goto yy872;
         }
 yy1641:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1674;
-        case 'o':        goto yy1673;
+        case 'o':        goto yy1854;
+        case 't':        goto yy1855;
         default:        goto yy872;
         }
 yy1642:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1650;
-        case 't':        goto yy1651;
+        case 'n':        goto yy1650;
         default:        goto yy872;
         }
 yy1643:
@@ -26549,180 +26551,149 @@ yy1648:
 yy1650:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy1666;
+        case '_':        goto yy1651;
         default:        goto yy872;
         }
 yy1651:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1652;
+        case 'a':        goto yy1652;
+        case 'b':        goto yy1653;
+        case 'd':        goto yy1654;
+        case 'f':        goto yy1655;
+        case 'l':        goto yy1656;
+        case 'm':        goto yy1657;
+        case 'p':        goto yy1658;
+        case 'q':        goto yy1659;
+        case 'r':        goto yy1660;
+        case 's':        goto yy1661;
+        case 't':        goto yy1662;
         default:        goto yy872;
         }
 yy1652:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1653;
+        case 't':        goto yy1822;
         default:        goto yy872;
         }
 yy1653:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1654;
+        case '3':        goto yy1805;
+        case '4':        goto yy1804;
+        case 'f':        goto yy1803;
         default:        goto yy872;
         }
 yy1654:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1655;
+        case 'i':        goto yy1784;
         default:        goto yy872;
         }
 yy1655:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy1656;
+        case 'l':        goto yy1762;
+        case 'r':        goto yy1761;
         default:        goto yy872;
         }
 yy1656:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1657;
+        case 'd':        goto yy1758;
         default:        goto yy872;
         }
 yy1657:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1658;
+        case 'a':        goto yy1722;
+        case 'e':        goto yy1721;
+        case 'i':        goto yy1720;
+        case 'q':        goto yy1719;
+        case 's':        goto yy1718;
         default:        goto yy872;
         }
 yy1658:
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy1659;
+        case 'r':        goto yy1709;
         default:        goto yy872;
         }
 yy1659:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy1660;
+        case 's':        goto yy1704;
         default:        goto yy872;
         }
 yy1660:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1661;
+        case 'e':        goto yy1691;
         default:        goto yy872;
         }
 yy1661:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1662;
+        case 'a':        goto yy1676;
+        case 'l':        goto yy1675;
+        case 't':        goto yy1674;
         default:        goto yy872;
         }
 yy1662:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1663;
+        case 'r':        goto yy1663;
         default:        goto yy872;
         }
 yy1663:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1664;
+        case 'i':        goto yy1664;
+        default:        goto yy872;
         }
 yy1664:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GETDETECTEXCEPT;        return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'g':        goto yy1665;
+        default:        goto yy872;
+        }
+yy1665:
+        yych = *++curPos;
+        switch (yych) {
+        case '_':        goto yy1666;
+        default:        goto yy872;
+        }
 yy1666:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1667;
+        case 'p':        goto yy1667;
         default:        goto yy872;
         }
 yy1667:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1668;
+        case 'r':        goto yy1668;
         default:        goto yy872;
         }
 yy1668:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1669;
+        case 'e':        goto yy1669;
         default:        goto yy872;
         }
 yy1669:
         yych = *++curPos;
         switch (yych) {
-        case 'y':        goto yy1670;
+        case 'o':        goto yy1670;
         default:        goto yy872;
         }
 yy1670:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy1671;
+        default:        goto yy872;
+        }
+yy1671:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -26762,7 +26733,6 @@ yy1670:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -26789,68 +26759,102 @@ yy1670:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1671;
+        default:        goto yy1672;
         }
-yy1671:
+yy1672:
         ++curPos;
         curPos = ctxMarker;
-        { return EKWImageGeometry; }
-yy1673:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy1690;
-        default:        goto yy872;
-        }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNTRIG_PREOP; return EInstruction;
+	default: return EEmpty; } }
 yy1674:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1675;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1689;
         }
 yy1675:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy1677;
-        case 's':        goto yy1676;
+        case 'e':        goto yy1684;
         default:        goto yy872;
         }
 yy1676:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1685;
+        case 'd':        goto yy1677;
         default:        goto yy872;
         }
 yy1677:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1678;
+        case 'd':        goto yy1679;
+        case 'w':        goto yy1678;
         default:        goto yy872;
         }
 yy1678:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy1679;
-        default:        goto yy872;
-        }
-yy1679:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy1680;
-        default:        goto yy872;
-        }
-yy1680:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy1681;
-        default:        goto yy872;
-        }
-yy1681:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy1682;
-        default:        goto yy872;
-        }
-yy1682:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -26916,27 +26920,101 @@ yy1682:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1683;
+        default:        goto yy1682;
         }
-yy1683:
+yy1679:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1680;
+        }
+yy1680:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GRIDGROUPS;             return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNSADD; return EInstruction;
 	default: return EEmpty; } }
+yy1682:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNSADW; return EInstruction;
+	default: return EEmpty; } }
+yy1684:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1685;
+        default:        goto yy872;
+        }
 yy1685:
         yych = *++curPos;
         switch (yych) {
-        case 'z':        goto yy1686;
+        case 'p':        goto yy1686;
         default:        goto yy872;
         }
 yy1686:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1687;
-        default:        goto yy872;
-        }
-yy1687:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -27002,129 +27080,81 @@ yy1687:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1688;
+        default:        goto yy1687;
         }
-yy1688:
+yy1687:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GRIDSIZE;               return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNSLEEP; return EInstruction;
 	default: return EEmpty; } }
-yy1690:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy1691;
-        default:        goto yy872;
-        }
+yy1689:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNST; return EInstruction;
+	default: return EEmpty; } }
 yy1691:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case 'b':        goto yy1692;
-        default:        goto yy1693;
+        case 'g':        goto yy1692;
+        default:        goto yy872;
         }
 yy1692:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1695;
+        case 'i':        goto yy1693;
         default:        goto yy872;
         }
 yy1693:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_GROUP;     return ESegment; }
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy1694;
+        default:        goto yy872;
+        }
+yy1694:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy1695;
+        default:        goto yy872;
+        }
 yy1695:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy1696;
+        case '_':        goto yy1696;
         default:        goto yy872;
         }
 yy1696:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1697;
+        case 'a':        goto yy1697;
         default:        goto yy872;
         }
 yy1697:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1698;
+        case 'l':        goto yy1698;
         default:        goto yy872;
         }
 yy1698:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1699;
+        case 'l':        goto yy1699;
         default:        goto yy872;
         }
 yy1699:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1700;
+        case 'o':        goto yy1700;
         default:        goto yy872;
         }
 yy1700:
+        yych = *++curPos;
+        switch (yych) {
+        case 'c':        goto yy1701;
+        default:        goto yy872;
+        }
+yy1701:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -27190,117 +27220,137 @@ yy1700:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1701;
+        default:        goto yy1702;
         }
-yy1701:
+yy1702:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GROUPBASEPTR;           return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNREGIONALLOC; return EInstruction;
 	default: return EEmpty; } }
-yy1703:
-        yych = *++curPos;
-        switch (yych) {
-        case '_':        goto yy1704;
-        default:        goto yy872;
-        }
 yy1704:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1706;
-        case 'b':        goto yy1707;
-        case 'f':        goto yy1708;
-        case 'l':        goto yy1710;
-        case 'm':        goto yy1705;
-        case 'p':        goto yy1713;
-        case 'q':        goto yy1714;
-        case 'r':        goto yy1709;
-        case 's':        goto yy1711;
-        case 't':        goto yy1712;
+        case 'a':        goto yy1705;
         default:        goto yy872;
         }
 yy1705:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1848;
-        case 'e':        goto yy1851;
-        case 'i':        goto yy1850;
-        case 'q':        goto yy1849;
-        case 's':        goto yy1847;
+        case 'd':        goto yy1706;
         default:        goto yy872;
         }
 yy1706:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1815;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1707;
         }
 yy1707:
-        yych = *++curPos;
-        switch (yych) {
-        case '3':        goto yy1796;
-        case '4':        goto yy1798;
-        case 'f':        goto yy1797;
-        default:        goto yy872;
-        }
-yy1708:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy1774;
-        case 'r':        goto yy1773;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNQSAD; return EInstruction;
+	default: return EEmpty; } }
 yy1709:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1760;
+        case 'i':        goto yy1710;
         default:        goto yy872;
         }
 yy1710:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1757;
+        case 'o':        goto yy1711;
         default:        goto yy872;
         }
 yy1711:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1741;
-        case 'l':        goto yy1742;
-        case 't':        goto yy1740;
+        case 'r':        goto yy1712;
         default:        goto yy872;
         }
 yy1712:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1729;
+        case 'i':        goto yy1713;
         default:        goto yy872;
         }
 yy1713:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1720;
+        case 't':        goto yy1714;
         default:        goto yy872;
         }
 yy1714:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy1715;
+        case 'y':        goto yy1715;
         default:        goto yy872;
         }
 yy1715:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy1716;
-        default:        goto yy872;
-        }
-yy1716:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy1717;
-        default:        goto yy872;
-        }
-yy1717:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -27366,51 +27416,121 @@ yy1717:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1718;
+        default:        goto yy1716;
         }
-yy1718:
+yy1716:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNQSAD;                return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNPRIORITY; return EInstruction;
 	default: return EEmpty; } }
+yy1718:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy1754;
+        default:        goto yy872;
+        }
+yy1719:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy1746;
+        default:        goto yy872;
+        }
 yy1720:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1721;
+        case 'n':        goto yy1740;
         default:        goto yy872;
         }
 yy1721:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1722;
+        case 'd':        goto yy1736;
         default:        goto yy872;
         }
 yy1722:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1723;
+        case 'd':        goto yy1723;
+        case 'x':        goto yy1724;
         default:        goto yy872;
         }
 yy1723:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1724;
+        case 's':        goto yy1731;
+        case 'u':        goto yy1730;
         default:        goto yy872;
         }
 yy1724:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1725;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case '3':        goto yy1725;
+        default:        goto yy1726;
         }
 yy1725:
-        yych = *++curPos;
-        switch (yych) {
-        case 'y':        goto yy1726;
-        default:        goto yy872;
-        }
-yy1726:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -27476,60 +27596,172 @@ yy1726:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1727;
+        default:        goto yy1728;
         }
-yy1727:
+yy1726:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNPRIORITY;            return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMAX; return EInstruction;
 	default: return EEmpty; } }
-yy1729:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy1730;
-        default:        goto yy872;
-        }
+yy1728:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMAX3; return EInstruction;
+	default: return EEmpty; } }
 yy1730:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy1731;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1734;
         }
 yy1731:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '_':        goto yy1732;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1732;
         }
 yy1732:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy1733;
-        default:        goto yy872;
-        }
-yy1733:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy1734;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMADS; return EInstruction;
+	default: return EEmpty; } }
 yy1734:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1735;
-        default:        goto yy872;
-        }
-yy1735:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy1736;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMADU; return EInstruction;
+	default: return EEmpty; } }
 yy1736:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1737;
+        case '3':        goto yy1737;
         default:        goto yy872;
         }
 yy1737:
@@ -27604,7 +27836,7 @@ yy1738:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNTRIG_PREOP;          return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMED3; return EInstruction;
 	default: return EEmpty; } }
 yy1740:
         ctxMarker = curPos + 1;
@@ -27613,7 +27845,6 @@ yy1740:
         case '0':
         case '1':
         case '2':
-        case '3':
         case '4':
         case '5':
         case '6':
@@ -27672,33 +27903,10 @@ yy1740:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1755;
+        case '3':        goto yy1741;
+        default:        goto yy1742;
         }
 yy1741:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy1748;
-        default:        goto yy872;
-        }
-yy1742:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1743;
-        default:        goto yy872;
-        }
-yy1743:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1744;
-        default:        goto yy872;
-        }
-yy1744:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy1745;
-        default:        goto yy872;
-        }
-yy1745:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -27764,20 +27972,99 @@ yy1745:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1746;
+        default:        goto yy1744;
         }
-yy1746:
+yy1742:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNSLEEP;               return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMIN; return EInstruction;
 	default: return EEmpty; } }
-yy1748:
+yy1744:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMIN3; return EInstruction;
+	default: return EEmpty; } }
+yy1746:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1749;
-        case 'w':        goto yy1750;
+        case 'a':        goto yy1747;
         default:        goto yy872;
+        }
+yy1747:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy1748;
+        default:        goto yy872;
+        }
+yy1748:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case '4':        goto yy1749;
+        default:        goto yy1750;
         }
 yy1749:
         ctxMarker = curPos + 1;
@@ -27845,229 +28132,205 @@ yy1749:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1753;
+        default:        goto yy1752;
         }
 yy1750:
-        ctxMarker = curPos + 1;
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMQSAD; return EInstruction;
+	default: return EEmpty; } }
+yy1752:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMQSAD4; return EInstruction;
+	default: return EEmpty; } }
+yy1754:
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1751;
-        }
-yy1751:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNSADW;                return EInstruction;          
-	default: return EEmpty; } }
-yy1753:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNSADD;                return EInstruction;          
-	default: return EEmpty; } }
-yy1755:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNST;                  return EInstruction;          
-	default: return EEmpty; } }
-yy1757:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1758;
-        }
-yy1758:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNLD;                  return EInstruction;          
-	default: return EEmpty; } }
-yy1760:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy1761;
+        case 'd':        goto yy1755;
         default:        goto yy872;
         }
+yy1755:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1756;
+        }
+yy1756:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMSAD; return EInstruction;
+	default: return EEmpty; } }
+yy1758:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1759;
+        }
+yy1759:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNLD; return EInstruction;
+	default: return EEmpty; } }
 yy1761:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1762;
+        case 'e':        goto yy1769;
         default:        goto yy872;
         }
 yy1762:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1763;
+        case 'd':        goto yy1763;
         default:        goto yy872;
         }
 yy1763:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy1764;
+        case 'e':        goto yy1764;
         default:        goto yy872;
         }
 yy1764:
         yych = *++curPos;
         switch (yych) {
-        case '_':        goto yy1765;
+        case 'x':        goto yy1765;
         default:        goto yy872;
         }
 yy1765:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1766;
+        case 'p':        goto yy1766;
         default:        goto yy872;
         }
 yy1766:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy1767;
-        default:        goto yy872;
-        }
-yy1767:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy1768;
-        default:        goto yy872;
-        }
-yy1768:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy1769;
-        default:        goto yy872;
-        }
-yy1769:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy1770;
-        default:        goto yy872;
-        }
-yy1770:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -28133,45 +28396,64 @@ yy1770:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1771;
+        default:        goto yy1767;
         }
-yy1771:
+yy1767:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNREGIONALLOC;         return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNFLDEXP; return EInstruction;
 	default: return EEmpty; } }
+yy1769:
+        yych = *++curPos;
+        switch (yych) {
+        case 'x':        goto yy1770;
+        default:        goto yy872;
+        }
+yy1770:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy1771;
+        default:        goto yy872;
+        }
+yy1771:
+        yych = *++curPos;
+        switch (yych) {
+        case '_':        goto yy1772;
+        default:        goto yy872;
+        }
+yy1772:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1773;
+        case 'm':        goto yy1774;
+        default:        goto yy872;
+        }
 yy1773:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1781;
+        case 'x':        goto yy1780;
         default:        goto yy872;
         }
 yy1774:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1775;
+        case 'a':        goto yy1775;
         default:        goto yy872;
         }
 yy1775:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1776;
+        case 'n':        goto yy1776;
         default:        goto yy872;
         }
 yy1776:
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy1777;
+        case 't':        goto yy1777;
         default:        goto yy872;
         }
 yy1777:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy1778;
-        default:        goto yy872;
-        }
-yy1778:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -28237,144 +28519,143 @@ yy1778:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1779;
+        default:        goto yy1778;
         }
-yy1779:
+yy1778:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNFLDEXP;              return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNFREXP_MANT; return EInstruction;
 	default: return EEmpty; } }
-yy1781:
+yy1780:
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy1782;
+        case 'p':        goto yy1781;
         default:        goto yy872;
+        }
+yy1781:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1782;
         }
 yy1782:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy1783;
-        default:        goto yy872;
-        }
-yy1783:
-        yych = *++curPos;
-        switch (yych) {
-        case '_':        goto yy1784;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNFREXP_EXP; return EInstruction;
+	default: return EEmpty; } }
 yy1784:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1786;
-        case 'm':        goto yy1785;
+        case 'v':        goto yy1785;
         default:        goto yy872;
         }
 yy1785:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1791;
+        case 'r':        goto yy1786;
         default:        goto yy872;
         }
 yy1786:
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy1787;
+        case 'e':        goto yy1787;
         default:        goto yy872;
         }
 yy1787:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1788;
+        case 'l':        goto yy1788;
         default:        goto yy872;
         }
 yy1788:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1789;
+        case 'a':        goto yy1789;
+        default:        goto yy872;
         }
 yy1789:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNFREXP_EXP;           return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'x':        goto yy1790;
+        default:        goto yy872;
+        }
+yy1790:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1791;
+        default:        goto yy872;
+        }
 yy1791:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy1792;
+        case 'd':        goto yy1792;
         default:        goto yy872;
         }
 yy1792:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy1793;
-        default:        goto yy872;
-        }
-yy1793:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -28427,7 +28708,6 @@ yy1793:
         case 'k':
         case 'l':
         case 'm':
-        case 'n':
         case 'o':
         case 'p':
         case 'q':
@@ -28440,223 +28720,162 @@ yy1793:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1794;
+        case 'n':        goto yy1795;
+        default:        goto yy1793;
         }
-yy1794:
+yy1793:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNFREXP_MANT;          return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNDIVRELAXED; return EInstruction;
 	default: return EEmpty; } }
+yy1795:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy1796;
+        default:        goto yy872;
+        }
 yy1796:
         yych = *++curPos;
         switch (yych) {
-        case '2':        goto yy1808;
+        case 'r':        goto yy1797;
         default:        goto yy872;
         }
 yy1797:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy1805;
+        case 'r':        goto yy1798;
         default:        goto yy872;
         }
 yy1798:
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy1799;
+        case 'o':        goto yy1799;
         default:        goto yy872;
         }
 yy1799:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy1800;
+        case 'w':        goto yy1800;
         default:        goto yy872;
         }
 yy1800:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'h':        goto yy1801;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1801;
         }
 yy1801:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNDIVRELAXEDNARROW; return EInstruction;
+	default: return EEmpty; } }
+yy1803:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy1802;
+        case 'm':        goto yy1819;
         default:        goto yy872;
         }
-yy1802:
-        ctxMarker = curPos + 1;
+yy1804:
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1803;
+        case 'x':        goto yy1813;
+        default:        goto yy872;
         }
-yy1803:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNB4XCHG;              return EInstruction;          
-	default: return EEmpty; } }
 yy1805:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1806;
+        case '2':        goto yy1806;
+        default:        goto yy872;
         }
 yy1806:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNBFM;                 return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'x':        goto yy1807;
+        default:        goto yy872;
+        }
+yy1807:
+        yych = *++curPos;
+        switch (yych) {
+        case 'c':        goto yy1808;
+        default:        goto yy872;
+        }
 yy1808:
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy1809;
+        case 'h':        goto yy1809;
         default:        goto yy872;
         }
 yy1809:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy1810;
+        case 'g':        goto yy1810;
         default:        goto yy872;
         }
 yy1810:
-        yych = *++curPos;
-        switch (yych) {
-        case 'h':        goto yy1811;
-        default:        goto yy872;
-        }
-yy1811:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy1812;
-        default:        goto yy872;
-        }
-yy1812:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -28722,38 +28941,106 @@ yy1812:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1813;
+        default:        goto yy1811;
         }
-yy1813:
+yy1811:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNB32XCHG;             return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNB32XCHG; return EInstruction;
 	default: return EEmpty; } }
+yy1813:
+        yych = *++curPos;
+        switch (yych) {
+        case 'c':        goto yy1814;
+        default:        goto yy872;
+        }
+yy1814:
+        yych = *++curPos;
+        switch (yych) {
+        case 'h':        goto yy1815;
+        default:        goto yy872;
+        }
 yy1815:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1816;
+        case 'g':        goto yy1816;
         default:        goto yy872;
         }
 yy1816:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy1817;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1817;
         }
 yy1817:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy1818;
-        default:        goto yy872;
-        }
-yy1818:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy1819;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNB4XCHG; return EInstruction;
+	default: return EEmpty; } }
 yy1819:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -28781,6 +29068,7 @@ yy1819:
         case 'K':
         case 'L':
         case 'M':
+        case 'N':
         case 'O':
         case 'P':
         case 'Q':
@@ -28819,51 +29107,39 @@ yy1819:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'N':        goto yy1823;
-        case '_':        goto yy1820;
-        default:        goto yy1822;
+        default:        goto yy1820;
         }
 yy1820:
-        yyaccept = 7;
-        yych = *(marker = ++curPos);
-        switch (yych) {
-        case 'a':        goto yy1830;
-        case 'c':        goto yy1831;
-        default:        goto yy1821;
-        }
-yy1821:
+        ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNATOMIC;              return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNBFM; return EInstruction;
 	default: return EEmpty; } }
 yy1822:
         yych = *++curPos;
-        goto yy1821;
+        switch (yych) {
+        case 'o':        goto yy1823;
+        default:        goto yy872;
+        }
 yy1823:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1824;
+        case 'm':        goto yy1824;
         default:        goto yy872;
         }
 yy1824:
         yych = *++curPos;
         switch (yych) {
-        case 'R':        goto yy1825;
+        case 'i':        goto yy1825;
         default:        goto yy872;
         }
 yy1825:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1826;
+        case 'c':        goto yy1826;
         default:        goto yy872;
         }
 yy1826:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy1827;
-        default:        goto yy872;
-        }
-yy1827:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -28890,7 +29166,6 @@ yy1827:
         case 'K':
         case 'L':
         case 'M':
-        case 'N':
         case 'O':
         case 'P':
         case 'Q':
@@ -28929,57 +29204,50 @@ yy1827:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1828;
+        case 'N':        goto yy1830;
+        case '_':        goto yy1829;
+        default:        goto yy1827;
         }
-yy1828:
+yy1827:
         ++curPos;
+yy1828:
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNATOMICNORET;         return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNATOMIC; return EInstruction;
 	default: return EEmpty; } }
+yy1829:
+        yyaccept = 7;
+        yych = *(marker = ++curPos);
+        switch (yych) {
+        case 'a':        goto yy1838;
+        case 'c':        goto yy1837;
+        default:        goto yy1828;
+        }
 yy1830:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1840;
+        case 'o':        goto yy1831;
         default:        goto yy872;
         }
 yy1831:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1832;
+        case 'R':        goto yy1832;
         default:        goto yy872;
         }
 yy1832:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy1833;
+        case 'e':        goto yy1833;
         default:        goto yy872;
         }
 yy1833:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy1834;
+        case 't':        goto yy1834;
         default:        goto yy872;
         }
 yy1834:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy1835;
-        default:        goto yy872;
-        }
-yy1835:
-        yych = *++curPos;
-        switch (yych) {
-        case 'm':        goto yy1836;
-        default:        goto yy872;
-        }
-yy1836:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1837;
-        default:        goto yy872;
-        }
-yy1837:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -29045,39 +29313,51 @@ yy1837:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1838;
+        default:        goto yy1835;
         }
-yy1838:
+yy1835:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNCONSUME;             return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNATOMICNORET; return EInstruction;
 	default: return EEmpty; } }
+yy1837:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy1846;
+        default:        goto yy872;
+        }
+yy1838:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy1839;
+        default:        goto yy872;
+        }
+yy1839:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy1840;
+        default:        goto yy872;
+        }
 yy1840:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1841;
+        case 'e':        goto yy1841;
         default:        goto yy872;
         }
 yy1841:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1842;
+        case 'n':        goto yy1842;
         default:        goto yy872;
         }
 yy1842:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy1843;
+        case 'd':        goto yy1843;
         default:        goto yy872;
         }
 yy1843:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy1844;
-        default:        goto yy872;
-        }
-yy1844:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -29143,354 +29423,197 @@ yy1844:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1845;
+        default:        goto yy1844;
         }
-yy1845:
+yy1844:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNAPPEND;              return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNAPPEND; return EInstruction;
 	default: return EEmpty; } }
+yy1846:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy1847;
+        default:        goto yy872;
+        }
 yy1847:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1883;
+        case 's':        goto yy1848;
         default:        goto yy872;
         }
 yy1848:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1871;
-        case 'x':        goto yy1870;
+        case 'u':        goto yy1849;
         default:        goto yy872;
         }
 yy1849:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy1862;
+        case 'm':        goto yy1850;
         default:        goto yy872;
         }
 yy1850:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy1856;
+        case 'e':        goto yy1851;
         default:        goto yy872;
         }
 yy1851:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1852;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1852;
         }
 yy1852:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNCONSUME; return EInstruction;
+	default: return EEmpty; } }
+yy1854:
         yych = *++curPos;
         switch (yych) {
-        case '3':        goto yy1853;
+        case 'm':        goto yy1870;
         default:        goto yy872;
         }
-yy1853:
-        ctxMarker = curPos + 1;
+yy1855:
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1854;
+        case 'd':        goto yy1856;
+        default:        goto yy872;
         }
-yy1854:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMED3;                return EInstruction;          
-	default: return EEmpty; } }
 yy1856:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case '3':        goto yy1857;
-        default:        goto yy1858;
+        case 'e':        goto yy1857;
+        default:        goto yy872;
         }
 yy1857:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1860;
+        case 't':        goto yy1858;
+        default:        goto yy872;
         }
 yy1858:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMIN;                 return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1859;
+        default:        goto yy872;
+        }
+yy1859:
+        yych = *++curPos;
+        switch (yych) {
+        case 'c':        goto yy1860;
+        default:        goto yy872;
+        }
 yy1860:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMIN3;                return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy1861;
+        default:        goto yy872;
+        }
+yy1861:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1862;
+        default:        goto yy872;
+        }
 yy1862:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1863;
+        case 'x':        goto yy1863;
         default:        goto yy872;
         }
 yy1863:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1864;
+        case 'c':        goto yy1864;
         default:        goto yy872;
         }
 yy1864:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case '4':        goto yy1865;
-        default:        goto yy1866;
+        case 'e':        goto yy1865;
+        default:        goto yy872;
         }
 yy1865:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy1866;
+        default:        goto yy872;
+        }
+yy1866:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy1867;
+        default:        goto yy872;
+        }
+yy1867:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -29558,242 +29681,37 @@ yy1865:
         case 'z':        goto yy872;
         default:        goto yy1868;
         }
-yy1866:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMQSAD;               return EInstruction;          
-	default: return EEmpty; } }
 yy1868:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMQSAD4;              return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GETDETECTEXCEPT; return EInstruction;
 	default: return EEmpty; } }
 yy1870:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case '3':        goto yy1878;
-        default:        goto yy1879;
+        case 'e':        goto yy1871;
+        default:        goto yy872;
         }
 yy1871:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy1873;
-        case 'u':        goto yy1872;
+        case 't':        goto yy1872;
         default:        goto yy872;
         }
 yy1872:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1876;
+        case 'r':        goto yy1873;
+        default:        goto yy872;
         }
 yy1873:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1874;
+        case 'y':        goto yy1874;
+        default:        goto yy872;
         }
 yy1874:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMADS;                return EInstruction;          
-	default: return EEmpty; } }
-yy1876:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMADU;                return EInstruction;          
-	default: return EEmpty; } }
-yy1878:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -29833,6 +29751,7 @@ yy1878:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -29859,24 +29778,53 @@ yy1878:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1881;
+        default:        goto yy1875;
+        }
+yy1875:
+        ++curPos;
+        curPos = ctxMarker;
+        { return EKWImageGeometry; }
+yy1877:
+        yych = *++curPos;
+        switch (yych) {
+        case 'u':        goto yy1894;
+        default:        goto yy872;
+        }
+yy1878:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy1879;
+        default:        goto yy872;
         }
 yy1879:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMAX;                 return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'g':        goto yy1880;
+        case 's':        goto yy1881;
+        default:        goto yy872;
+        }
+yy1880:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy1887;
+        default:        goto yy872;
+        }
 yy1881:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMAX3;                return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy1882;
+        default:        goto yy872;
+        }
+yy1882:
+        yych = *++curPos;
+        switch (yych) {
+        case 'z':        goto yy1883;
+        default:        goto yy872;
+        }
 yy1883:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1884;
+        case 'e':        goto yy1884;
         default:        goto yy872;
         }
 yy1884:
@@ -29951,112 +29899,212 @@ yy1885:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMSAD;                return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GRIDSIZE; return EInstruction;
 	default: return EEmpty; } }
 yy1887:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy2033;
-        case 'n':        goto yy2031;
-        case 'o':        goto yy2030;
-        case 'p':        goto yy2032;
+        case 'o':        goto yy1888;
         default:        goto yy872;
         }
 yy1888:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2007;
-        case 'r':        goto yy2006;
+        case 'u':        goto yy1889;
         default:        goto yy872;
         }
 yy1889:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy1980;
-        case 'r':        goto yy1979;
-        case 's':        goto yy1981;
+        case 'p':        goto yy1890;
         default:        goto yy872;
         }
 yy1890:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1972;
-        case 'p':        goto yy1973;
+        case 's':        goto yy1891;
         default:        goto yy872;
         }
 yy1891:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1925;
-        case 'e':        goto yy1927;
-        case 'o':        goto yy1926;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1892;
         }
 yy1892:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy1922;
-        default:        goto yy872;
-        }
-yy1893:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy1918;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GRIDGROUPS; return EInstruction;
+	default: return EEmpty; } }
 yy1894:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1915;
+        case 'p':        goto yy1895;
         default:        goto yy872;
         }
 yy1895:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy1896;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case 'b':        goto yy1896;
+        default:        goto yy1897;
         }
 yy1896:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy1897;
+        case 'a':        goto yy1899;
         default:        goto yy872;
         }
 yy1897:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy1898;
-        default:        goto yy872;
-        }
-yy1898:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1899;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_SEGMENT_GROUP;     return ESegment; }
 yy1899:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy1900;
+        case 's':        goto yy1900;
         default:        goto yy872;
         }
 yy1900:
         yych = *++curPos;
         switch (yych) {
-        case '_':        goto yy1901;
+        case 'e':        goto yy1901;
         default:        goto yy872;
         }
 yy1901:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy1903;
-        case 't':        goto yy1902;
+        case 'p':        goto yy1902;
         default:        goto yy872;
         }
 yy1902:
         yych = *++curPos;
         switch (yych) {
-        case 'y':        goto yy1910;
+        case 't':        goto yy1903;
         default:        goto yy872;
         }
 yy1903:
@@ -30066,24 +30114,6 @@ yy1903:
         default:        goto yy872;
         }
 yy1904:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy1905;
-        default:        goto yy872;
-        }
-yy1905:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1906;
-        default:        goto yy872;
-        }
-yy1906:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy1907;
-        default:        goto yy872;
-        }
-yy1907:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -30123,7 +30153,6 @@ yy1907:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -30150,656 +30179,145 @@ yy1907:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1908;
+        default:        goto yy1905;
         }
-yy1908:
+yy1905:
         ++curPos;
         curPos = ctxMarker;
-        { return EKWImageChannelOrder; }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GROUPBASEPTR; return EInstruction;
+	default: return EEmpty; } }
+yy1907:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2072;
+        default:        goto yy872;
+        }
+yy1908:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2048;
+        case 'r':        goto yy2049;
+        default:        goto yy872;
+        }
+yy1909:
+        yych = *++curPos;
+        switch (yych) {
+        case 'm':        goto yy2025;
+        case 'n':        goto yy2024;
+        case 'o':        goto yy2023;
+        case 'p':        goto yy2026;
+        default:        goto yy872;
+        }
 yy1910:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy1911;
+        case 'o':        goto yy2016;
+        case 'p':        goto yy2017;
         default:        goto yy872;
         }
 yy1911:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1912;
+        case 'a':        goto yy1969;
+        case 'e':        goto yy1970;
+        case 'o':        goto yy1971;
         default:        goto yy872;
         }
 yy1912:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1913;
+        case 'i':        goto yy1965;
+        default:        goto yy872;
         }
 yy1913:
-        ++curPos;
-        curPos = ctxMarker;
-        { return EKWImageChannelType; }
-yy1915:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1916;
+        case 'r':        goto yy1962;
+        default:        goto yy872;
+        }
+yy1914:
+        yych = *++curPos;
+        switch (yych) {
+        case 'l':        goto yy1935;
+        case 'r':        goto yy1936;
+        case 's':        goto yy1937;
+        default:        goto yy872;
+        }
+yy1915:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy1916;
+        default:        goto yy872;
         }
 yy1916:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CVT;                    return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy1917;
+        default:        goto yy872;
+        }
+yy1917:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy1918;
+        default:        goto yy872;
+        }
 yy1918:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy1919;
+        case 'e':        goto yy1919;
         default:        goto yy872;
         }
 yy1919:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1920;
+        case 'l':        goto yy1920;
+        default:        goto yy872;
         }
 yy1920:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CEIL;                   return EInstruction;          
-	default: return EEmpty; } }
-yy1922:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1923;
+        case '_':        goto yy1921;
+        default:        goto yy872;
+        }
+yy1921:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy1923;
+        case 't':        goto yy1922;
+        default:        goto yy872;
+        }
+yy1922:
+        yych = *++curPos;
+        switch (yych) {
+        case 'y':        goto yy1930;
+        default:        goto yy872;
         }
 yy1923:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CBR;                    return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy1924;
+        default:        goto yy872;
+        }
+yy1924:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy1925;
+        default:        goto yy872;
+        }
 yy1925:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy1949;
-        case 's':        goto yy1948;
+        case 'e':        goto yy1926;
         default:        goto yy872;
         }
 yy1926:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy1944;
+        case 'r':        goto yy1927;
         default:        goto yy872;
         }
 yy1927:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy1928;
-        default:        goto yy872;
-        }
-yy1928:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy1929;
-        default:        goto yy872;
-        }
-yy1929:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy1930;
-        default:        goto yy872;
-        }
-yy1930:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1931;
-        default:        goto yy872;
-        }
-yy1931:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy1932;
-        default:        goto yy872;
-        }
-yy1932:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1933;
-        default:        goto yy872;
-        }
-yy1933:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy1934;
-        default:        goto yy872;
-        }
-yy1934:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy1935;
-        default:        goto yy872;
-        }
-yy1935:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1936;
-        default:        goto yy872;
-        }
-yy1936:
-        yych = *++curPos;
-        switch (yych) {
-        case 'x':        goto yy1937;
-        default:        goto yy872;
-        }
-yy1937:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy1938;
-        default:        goto yy872;
-        }
-yy1938:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1939;
-        default:        goto yy872;
-        }
-yy1939:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy1940;
-        default:        goto yy872;
-        }
-yy1940:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy1941;
-        default:        goto yy872;
-        }
-yy1941:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1942;
-        }
-yy1942:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CLEARDETECTEXCEPT;      return EInstruction;          
-	default: return EEmpty; } }
-yy1944:
-        yych = *++curPos;
-        switch (yych) {
-        case 'k':        goto yy1945;
-        default:        goto yy872;
-        }
-yy1945:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1946;
-        }
-yy1946:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CLOCK;                  return EInstruction;          
-	default: return EEmpty; } }
-yy1948:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy1969;
-        default:        goto yy872;
-        }
-yy1949:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy1950;
-        default:        goto yy872;
-        }
-yy1950:
-        yych = *++curPos;
-        switch (yych) {
-        case '_':        goto yy1951;
-        default:        goto yy872;
-        }
-yy1951:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy1952;
-        default:        goto yy872;
-        }
-yy1952:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy1953;
-        default:        goto yy872;
-        }
-yy1953:
-        yych = *++curPos;
-        switch (yych) {
-        case '_':        goto yy1954;
-        default:        goto yy872;
-        }
-yy1954:
-        yych = *++curPos;
-        switch (yych) {
-        case 'b':        goto yy1956;
-        case 'e':        goto yy1955;
-        default:        goto yy872;
-        }
-yy1955:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy1964;
-        default:        goto yy872;
-        }
-yy1956:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy1957;
-        default:        goto yy872;
-        }
-yy1957:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy1958;
-        default:        goto yy872;
-        }
-yy1958:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy1959;
-        default:        goto yy872;
-        }
-yy1959:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1960;
-        default:        goto yy872;
-        }
-yy1960:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy1961;
-        default:        goto yy872;
-        }
-yy1961:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -30866,22 +30384,505 @@ yy1961:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy1962;
+        default:        goto yy1928;
         }
-yy1962:
+yy1928:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_ADDRESSING_CLAMP_TO_BORDER;    return ESamplerAddressingMode;  }
-yy1964:
+        { return EKWImageChannelOrder; }
+yy1930:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy1965;
+        case 'p':        goto yy1931;
         default:        goto yy872;
         }
+yy1931:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1932;
+        default:        goto yy872;
+        }
+yy1932:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1933;
+        }
+yy1933:
+        ++curPos;
+        curPos = ctxMarker;
+        { return EKWImageChannelType; }
+yy1935:
+        yych = *++curPos;
+        switch (yych) {
+        case 'l':        goto yy1959;
+        default:        goto yy872;
+        }
+yy1936:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy1955;
+        default:        goto yy872;
+        }
+yy1937:
+        yych = *++curPos;
+        switch (yych) {
+        case 'q':        goto yy1938;
+        default:        goto yy872;
+        }
+yy1938:
+        yych = *++curPos;
+        switch (yych) {
+        case 'u':        goto yy1939;
+        default:        goto yy872;
+        }
+yy1939:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1940;
+        default:        goto yy872;
+        }
+yy1940:
+        yych = *++curPos;
+        switch (yych) {
+        case 'u':        goto yy1941;
+        default:        goto yy872;
+        }
+yy1941:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1942;
+        default:        goto yy872;
+        }
+yy1942:
+        yych = *++curPos;
+        switch (yych) {
+        case 'w':        goto yy1943;
+        default:        goto yy872;
+        }
+yy1943:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy1944;
+        default:        goto yy872;
+        }
+yy1944:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy1945;
+        default:        goto yy872;
+        }
+yy1945:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy1946;
+        default:        goto yy872;
+        }
+yy1946:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1947;
+        default:        goto yy872;
+        }
+yy1947:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy1948;
+        default:        goto yy872;
+        }
+yy1948:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy1949;
+        default:        goto yy872;
+        }
+yy1949:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy1950;
+        default:        goto yy872;
+        }
+yy1950:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1951;
+        default:        goto yy872;
+        }
+yy1951:
+        yych = *++curPos;
+        switch (yych) {
+        case 'x':        goto yy1952;
+        default:        goto yy872;
+        }
+yy1952:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1953;
+        }
+yy1953:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CASQUEUEWRITEINDEX; return EInstruction;
+	default: return EEmpty; } }
+yy1955:
+        yych = *++curPos;
+        switch (yych) {
+        case 'y':        goto yy1956;
+        default:        goto yy872;
+        }
+yy1956:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1957;
+        }
+yy1957:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CARRY; return EInstruction;
+	default: return EEmpty; } }
+yy1959:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1960;
+        }
+yy1960:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CALL; return EInstruction;
+	default: return EEmpty; } }
+yy1962:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1963;
+        }
+yy1963:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CBR; return EInstruction;
+	default: return EEmpty; } }
 yy1965:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1966;
+        case 'l':        goto yy1966;
         default:        goto yy872;
         }
 yy1966:
@@ -30924,7 +30925,6 @@ yy1966:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -30956,85 +30956,32 @@ yy1966:
 yy1967:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_ADDRESSING_CLAMP_TO_EDGE;      return ESamplerAddressingMode;  }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CEIL; return EInstruction;
+	default: return EEmpty; } }
 yy1969:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1970;
+        case 'm':        goto yy1993;
+        case 's':        goto yy1992;
+        default:        goto yy872;
         }
 yy1970:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CLASS;                  return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy1976;
+        default:        goto yy872;
+        }
+yy1971:
+        yych = *++curPos;
+        switch (yych) {
+        case 'c':        goto yy1972;
+        default:        goto yy872;
+        }
 yy1972:
         yych = *++curPos;
         switch (yych) {
-        case 'v':        goto yy1976;
+        case 'k':        goto yy1973;
         default:        goto yy872;
         }
 yy1973:
@@ -31109,105 +31056,48 @@ yy1974:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CMP;                    return EInstruction;          
-	case EMemoryScopeContext: brigId = Brig::BRIG_MEMORY_SCOPE2_COMPONENT;       return EMemoryScope;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CLOCK; return EInstruction;
 	default: return EEmpty; } }
 yy1976:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1977;
+        case 'r':        goto yy1977;
+        default:        goto yy872;
         }
 yy1977:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CMOV;                   return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy1978;
+        default:        goto yy872;
+        }
+yy1978:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy1979;
+        default:        goto yy872;
+        }
 yy1979:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2002;
+        case 't':        goto yy1980;
         default:        goto yy872;
         }
 yy1980:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy1999;
+        case 'e':        goto yy1981;
         default:        goto yy872;
         }
 yy1981:
         yych = *++curPos;
         switch (yych) {
-        case 'q':        goto yy1982;
+        case 'c':        goto yy1982;
         default:        goto yy872;
         }
 yy1982:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy1983;
+        case 't':        goto yy1983;
         default:        goto yy872;
         }
 yy1983:
@@ -31219,316 +31109,345 @@ yy1983:
 yy1984:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy1985;
+        case 'x':        goto yy1985;
         default:        goto yy872;
         }
 yy1985:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1986;
+        case 'c':        goto yy1986;
         default:        goto yy872;
         }
 yy1986:
         yych = *++curPos;
         switch (yych) {
-        case 'w':        goto yy1987;
+        case 'e':        goto yy1987;
         default:        goto yy872;
         }
 yy1987:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy1988;
+        case 'p':        goto yy1988;
         default:        goto yy872;
         }
 yy1988:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy1989;
+        case 't':        goto yy1989;
         default:        goto yy872;
         }
 yy1989:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy1990;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy1990;
         }
 yy1990:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy1991;
-        default:        goto yy872;
-        }
-yy1991:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy1992;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CLEARDETECTEXCEPT; return EInstruction;
+	default: return EEmpty; } }
 yy1992:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy1993;
+        case 's':        goto yy2013;
         default:        goto yy872;
         }
 yy1993:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy1994;
+        case 'p':        goto yy1994;
         default:        goto yy872;
         }
 yy1994:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy1995;
+        case '_':        goto yy1995;
         default:        goto yy872;
         }
 yy1995:
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy1996;
+        case 't':        goto yy1996;
         default:        goto yy872;
         }
 yy1996:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy1997;
+        case 'o':        goto yy1997;
+        default:        goto yy872;
         }
 yy1997:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CASQUEUEWRITEINDEX;     return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case '_':        goto yy1998;
+        default:        goto yy872;
+        }
+yy1998:
+        yych = *++curPos;
+        switch (yych) {
+        case 'b':        goto yy2000;
+        case 'e':        goto yy1999;
+        default:        goto yy872;
+        }
 yy1999:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2000;
-        }
-yy2000:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CALL;                   return EInstruction;          
-	default: return EEmpty; } }
-yy2002:
-        yych = *++curPos;
-        switch (yych) {
-        case 'y':        goto yy2003;
-        default:        goto yy872;
-        }
-yy2003:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2004;
-        }
-yy2004:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CARRY;                  return EInstruction;          
-	default: return EEmpty; } }
-yy2006:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2011;
-        default:        goto yy872;
-        }
-yy2007:
         yych = *++curPos;
         switch (yych) {
         case 'd':        goto yy2008;
         default:        goto yy872;
         }
+yy2000:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy2001;
+        default:        goto yy872;
+        }
+yy2001:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2002;
+        default:        goto yy872;
+        }
+yy2002:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2003;
+        default:        goto yy872;
+        }
+yy2003:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2004;
+        default:        goto yy872;
+        }
+yy2004:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2005;
+        default:        goto yy872;
+        }
+yy2005:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2006;
+        }
+yy2006:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_ADDRESSING_CLAMP_TO_BORDER; return ESamplerAddressingMode; }
 yy2008:
+        yych = *++curPos;
+        switch (yych) {
+        case 'g':        goto yy2009;
+        default:        goto yy872;
+        }
+yy2009:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2010;
+        default:        goto yy872;
+        }
+yy2010:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2011;
+        }
+yy2011:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_ADDRESSING_CLAMP_TO_EDGE; return ESamplerAddressingMode; }
+yy2013:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -31594,111 +31513,218 @@ yy2008:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2009;
+        default:        goto yy2014;
         }
-yy2009:
+yy2014:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CUID;                   return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CLASS; return EInstruction;
 	default: return EEmpty; } }
-yy2011:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2012;
-        default:        goto yy872;
-        }
-yy2012:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2013;
-        default:        goto yy872;
-        }
-yy2013:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2014;
-        default:        goto yy872;
-        }
-yy2014:
-        yych = *++curPos;
-        switch (yych) {
-        case 'w':        goto yy2015;
-        default:        goto yy872;
-        }
-yy2015:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy2016;
-        default:        goto yy872;
-        }
 yy2016:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2017;
+        case 'v':        goto yy2020;
         default:        goto yy872;
         }
 yy2017:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'k':        goto yy2018;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2018;
         }
 yy2018:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy2019;
-        default:        goto yy872;
-        }
-yy2019:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2020;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CMP; return EInstruction;
+	case EMemoryScopeContext: brigId = Brig::BRIG_MEMORY_SCOPE2_COMPONENT; return EMemoryScope;
+	default: return EEmpty; } }
 yy2020:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2021;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2021;
         }
 yy2021:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy2022;
-        default:        goto yy872;
-        }
-yy2022:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy2023;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CMOV; return EInstruction;
+	default: return EEmpty; } }
 yy2023:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy2024;
+        case 'r':        goto yy2044;
         default:        goto yy872;
         }
 yy2024:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2025;
+        case 's':        goto yy2040;
         default:        goto yy872;
         }
 yy2025:
         yych = *++curPos;
         switch (yych) {
-        case 'z':        goto yy2026;
+        case 'b':        goto yy2034;
         default:        goto yy872;
         }
 yy2026:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2027;
+        case 'y':        goto yy2027;
         default:        goto yy872;
         }
 yy2027:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy2028;
+        default:        goto yy872;
+        }
+yy2028:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2029;
+        default:        goto yy872;
+        }
+yy2029:
+        yych = *++curPos;
+        switch (yych) {
+        case 'g':        goto yy2030;
+        default:        goto yy872;
+        }
+yy2030:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2031;
+        default:        goto yy872;
+        }
+yy2031:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -31764,38 +31790,14 @@ yy2027:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2028;
+        default:        goto yy2032;
         }
-yy2028:
+yy2032:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CURRENTWORKGROUPSIZE;   return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_COPYSIGN; return EInstruction;
 	default: return EEmpty; } }
-yy2030:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2051;
-        default:        goto yy872;
-        }
-yy2031:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy2047;
-        default:        goto yy872;
-        }
-yy2032:
-        yych = *++curPos;
-        switch (yych) {
-        case 'y':        goto yy2040;
-        default:        goto yy872;
-        }
-yy2033:
-        yych = *++curPos;
-        switch (yych) {
-        case 'b':        goto yy2034;
-        default:        goto yy872;
-        }
 yy2034:
         yych = *++curPos;
         switch (yych) {
@@ -31886,113 +31888,15 @@ yy2038:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_COMBINE;                return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_COMBINE; return EInstruction;
 	default: return EEmpty; } }
 yy2040:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy2041;
+        case 't':        goto yy2041;
         default:        goto yy872;
         }
 yy2041:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2042;
-        default:        goto yy872;
-        }
-yy2042:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy2043;
-        default:        goto yy872;
-        }
-yy2043:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2044;
-        default:        goto yy872;
-        }
-yy2044:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2045;
-        }
-yy2045:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_COPYSIGN;               return EInstruction;          
-	default: return EEmpty; } }
-yy2047:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2048;
-        default:        goto yy872;
-        }
-yy2048:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -32059,19 +31963,19 @@ yy2048:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2049;
+        default:        goto yy2042;
         }
-yy2049:
+yy2042:
         ++curPos;
         curPos = ctxMarker;
         { brigId = 1; return EKWConst; }
-yy2051:
+yy2044:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2052;
+        case 'd':        goto yy2045;
         default:        goto yy872;
         }
-yy2052:
+yy2045:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -32138,22 +32042,64 @@ yy2052:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2053;
+        default:        goto yy2046;
         }
-yy2053:
+yy2046:
         ++curPos;
         curPos = ctxMarker;
         { return EKWSamplerCoord; }
+yy2048:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2069;
+        default:        goto yy872;
+        }
+yy2049:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2050;
+        default:        goto yy872;
+        }
+yy2050:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2051;
+        default:        goto yy872;
+        }
+yy2051:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2052;
+        default:        goto yy872;
+        }
+yy2052:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2053;
+        default:        goto yy872;
+        }
+yy2053:
+        yych = *++curPos;
+        switch (yych) {
+        case 'w':        goto yy2054;
+        default:        goto yy872;
+        }
+yy2054:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy2055;
+        default:        goto yy872;
+        }
 yy2055:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2063;
+        case 'r':        goto yy2056;
         default:        goto yy872;
         }
 yy2056:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2057;
+        case 'k':        goto yy2057;
         default:        goto yy872;
         }
 yy2057:
@@ -32165,131 +32111,304 @@ yy2057:
 yy2058:
         yych = *++curPos;
         switch (yych) {
-        case 'h':        goto yy2059;
+        case 'r':        goto yy2059;
         default:        goto yy872;
         }
 yy2059:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2060;
+        case 'o':        goto yy2060;
         default:        goto yy872;
         }
 yy2060:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2061;
+        case 'u':        goto yy2061;
+        default:        goto yy872;
         }
 yy2061:
-        ++curPos;
-        curPos = ctxMarker;
-        { return EKWImageHeight; }
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy2062;
+        default:        goto yy872;
+        }
+yy2062:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy2063;
+        default:        goto yy872;
+        }
 yy2063:
         yych = *++curPos;
         switch (yych) {
-        case 'f':        goto yy2064;
+        case 'i':        goto yy2064;
         default:        goto yy872;
         }
 yy2064:
         yych = *++curPos;
         switch (yych) {
-        case '_':        goto yy2065;
+        case 'z':        goto yy2065;
         default:        goto yy872;
         }
 yy2065:
         yych = *++curPos;
         switch (yych) {
-        case 'f':        goto yy2066;
+        case 'e':        goto yy2066;
         default:        goto yy872;
         }
 yy2066:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2067;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2067;
         }
 yy2067:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy2068;
-        default:        goto yy872;
-        }
-yy2068:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2069;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CURRENTWORKGROUPSIZE; return EInstruction;
+	default: return EEmpty; } }
 yy2069:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2070;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2070;
         }
 yy2070:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CUID; return EInstruction;
+	default: return EEmpty; } }
+yy2072:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2073;
+        }
+yy2073:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CVT; return EInstruction;
+	default: return EEmpty; } }
+yy2075:
+        yych = *++curPos;
+        switch (yych) {
+        case 'l':        goto yy2083;
+        default:        goto yy872;
+        }
+yy2076:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2077;
+        default:        goto yy872;
+        }
+yy2077:
+        yych = *++curPos;
+        switch (yych) {
+        case 'g':        goto yy2078;
+        default:        goto yy872;
+        }
+yy2078:
+        yych = *++curPos;
+        switch (yych) {
+        case 'h':        goto yy2079;
+        default:        goto yy872;
+        }
+yy2079:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2080;
+        default:        goto yy872;
+        }
+yy2080:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -32356,567 +32475,55 @@ yy2070:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2071;
+        default:        goto yy2081;
         }
-yy2071:
+yy2081:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_HALF_FLOAT;       return EImageFormat;           }
-yy2073:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2112;
-        default:        goto yy872;
-        }
-yy2074:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case 'd':        goto yy2105;
-        default:        goto yy2106;
-        }
-yy2075:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2083;
-        case 'v':        goto yy2082;
-        default:        goto yy872;
-        }
-yy2076:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2080;
-        }
-yy2077:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2078;
-        }
-yy2078:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EMemoryScopeContext: brigId = Brig::BRIG_MEMORY_SCOPE2_WAVEFRONT;       return EMemoryScope;          
-	default: return EEmpty; } }
-yy2080:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EMemoryScopeContext: brigId = Brig::BRIG_MEMORY_SCOPE2_WORKGROUP;       return EMemoryScope;          
-	default: return EEmpty; } }
-yy2082:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2091;
-        default:        goto yy872;
-        }
+        { return EKWImageHeight; }
 yy2083:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2084;
+        case 'f':        goto yy2084;
         default:        goto yy872;
         }
 yy2084:
         yych = *++curPos;
         switch (yych) {
-        case 'f':        goto yy2085;
+        case '_':        goto yy2085;
         default:        goto yy872;
         }
 yy2085:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2086;
+        case 'f':        goto yy2086;
         default:        goto yy872;
         }
 yy2086:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2087;
+        case 'l':        goto yy2087;
         default:        goto yy872;
         }
 yy2087:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2088;
+        case 'o':        goto yy2088;
         default:        goto yy872;
         }
 yy2088:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2089;
+        case 'a':        goto yy2089;
+        default:        goto yy872;
         }
 yy2089:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WAITFBAR;               return EInstruction;          
-	default: return EEmpty; } }
-yy2091:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2093;
-        case 'i':        goto yy2092;
+        case 't':        goto yy2090;
         default:        goto yy872;
         }
-yy2092:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy2102;
-        default:        goto yy872;
-        }
-yy2093:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2094;
-        default:        goto yy872;
-        }
-yy2094:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2095;
-        default:        goto yy872;
-        }
-yy2095:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2096;
-        default:        goto yy872;
-        }
-yy2096:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2097;
-        default:        goto yy872;
-        }
-yy2097:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2098;
-        default:        goto yy872;
-        }
-yy2098:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2099;
-        default:        goto yy872;
-        }
-yy2099:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2100;
-        }
-yy2100:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WAVEBARRIER;            return EInstruction;          
-	default: return EEmpty; } }
-yy2102:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2103;
-        }
-yy2103:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WAVEID;                 return EInstruction;          
-	default: return EEmpty; } }
-yy2105:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2108;
-        default:        goto yy872;
-        }
-yy2106:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EMemoryScopeContext: brigId = Brig::BRIG_MEMORY_SCOPE2_WORKITEM;        return EMemoryScope;          
-	default: return EEmpty; } }
-yy2108:
-        yych = *++curPos;
-        switch (yych) {
-        case 'h':        goto yy2109;
-        default:        goto yy872;
-        }
-yy2109:
+yy2090:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -32983,87 +32590,13 @@ yy2109:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2110;
+        default:        goto yy2091;
         }
-yy2110:
+yy2091:
         ++curPos;
         curPos = ctxMarker;
-        { return EKWImageWidth; }
-yy2112:
-        yych = *++curPos;
-        switch (yych) {
-        case 'k':        goto yy2113;
-        default:        goto yy872;
-        }
-yy2113:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy2115;
-        case 'i':        goto yy2114;
-        default:        goto yy872;
-        }
-yy2114:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2130;
-        default:        goto yy872;
-        }
-yy2115:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2116;
-        default:        goto yy872;
-        }
-yy2116:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy2117;
-        default:        goto yy872;
-        }
-yy2117:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy2118;
-        default:        goto yy872;
-        }
-yy2118:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy2119;
-        default:        goto yy872;
-        }
-yy2119:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2120;
-        case 's':        goto yy2121;
-        default:        goto yy872;
-        }
-yy2120:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy2127;
-        default:        goto yy872;
-        }
-yy2121:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2122;
-        default:        goto yy872;
-        }
-yy2122:
-        yych = *++curPos;
-        switch (yych) {
-        case 'z':        goto yy2123;
-        default:        goto yy872;
-        }
-yy2123:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2124;
-        default:        goto yy872;
-        }
-yy2124:
+        { brigId = Brig::BRIG_CHANNEL_TYPE_HALF_FLOAT; return EImageFormat; }
+yy2093:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -33129,14 +32662,488 @@ yy2124:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2125;
+        default:        goto yy2177;
         }
-yy2125:
+yy2094:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2130;
+        default:        goto yy872;
+        }
+yy2095:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case 'd':        goto yy2123;
+        default:        goto yy2124;
+        }
+yy2096:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2121;
+        }
+yy2097:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2098;
+        case 'v':        goto yy2099;
+        default:        goto yy872;
+        }
+yy2098:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2114;
+        default:        goto yy872;
+        }
+yy2099:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2100;
+        default:        goto yy872;
+        }
+yy2100:
+        yych = *++curPos;
+        switch (yych) {
+        case 'b':        goto yy2101;
+        case 'i':        goto yy2102;
+        default:        goto yy872;
+        }
+yy2101:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2106;
+        default:        goto yy872;
+        }
+yy2102:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2103;
+        default:        goto yy872;
+        }
+yy2103:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2104;
+        }
+yy2104:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKGROUPSIZE;          return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WAVEID; return EInstruction;
 	default: return EEmpty; } }
+yy2106:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2107;
+        default:        goto yy872;
+        }
+yy2107:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2108;
+        default:        goto yy872;
+        }
+yy2108:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2109;
+        default:        goto yy872;
+        }
+yy2109:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2110;
+        default:        goto yy872;
+        }
+yy2110:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2111;
+        default:        goto yy872;
+        }
+yy2111:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2112;
+        }
+yy2112:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WAVEBARRIER; return EInstruction;
+	default: return EEmpty; } }
+yy2114:
+        yych = *++curPos;
+        switch (yych) {
+        case 'f':        goto yy2115;
+        default:        goto yy872;
+        }
+yy2115:
+        yych = *++curPos;
+        switch (yych) {
+        case 'b':        goto yy2116;
+        default:        goto yy872;
+        }
+yy2116:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2117;
+        default:        goto yy872;
+        }
+yy2117:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2118;
+        default:        goto yy872;
+        }
+yy2118:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2119;
+        }
+yy2119:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WAITFBAR; return EInstruction;
+	default: return EEmpty; } }
+yy2121:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EMemoryScopeContext: brigId = Brig::BRIG_MEMORY_SCOPE2_WORKGROUP; return EMemoryScope;
+	default: return EEmpty; } }
+yy2123:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2126;
+        default:        goto yy872;
+        }
+yy2124:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EMemoryScopeContext: brigId = Brig::BRIG_MEMORY_SCOPE2_WORKITEM; return EMemoryScope;
+	default: return EEmpty; } }
+yy2126:
+        yych = *++curPos;
+        switch (yych) {
+        case 'h':        goto yy2127;
+        default:        goto yy872;
+        }
 yy2127:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -33177,6 +33184,7 @@ yy2127:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -33208,245 +33216,176 @@ yy2127:
 yy2128:
         ++curPos;
         curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKGROUPID;            return EInstruction;          
-	default: return EEmpty; } }
+        { return EKWImageWidth; }
 yy2130:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2131;
+        case 'k':        goto yy2131;
         default:        goto yy872;
         }
 yy2131:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy2132;
+        case 'g':        goto yy2132;
+        case 'i':        goto yy2133;
         default:        goto yy872;
         }
 yy2132:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2133;
-        case 'f':        goto yy2134;
-        case 'i':        goto yy2135;
+        case 'r':        goto yy2163;
         default:        goto yy872;
         }
 yy2133:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2153;
+        case 't':        goto yy2134;
         default:        goto yy872;
         }
 yy2134:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2139;
+        case 'e':        goto yy2135;
         default:        goto yy872;
         }
 yy2135:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2136;
+        case 'm':        goto yy2136;
         default:        goto yy872;
         }
 yy2136:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2137;
+        case 'a':        goto yy2137;
+        case 'f':        goto yy2138;
+        case 'i':        goto yy2139;
+        default:        goto yy872;
         }
 yy2137:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKITEMID;             return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'b':        goto yy2157;
+        default:        goto yy872;
+        }
+yy2138:
+        yych = *++curPos;
+        switch (yych) {
+        case 'l':        goto yy2143;
+        default:        goto yy872;
+        }
 yy2139:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2140;
+        case 'd':        goto yy2140;
         default:        goto yy872;
         }
 yy2140:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2141;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2141;
         }
 yy2141:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2142;
-        case 'i':        goto yy2143;
-        default:        goto yy872;
-        }
-yy2142:
-        yych = *++curPos;
-        switch (yych) {
-        case 'b':        goto yy2147;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKITEMID; return EInstruction;
+	default: return EEmpty; } }
 yy2143:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2144;
+        case 'a':        goto yy2144;
         default:        goto yy872;
         }
 yy2144:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2145;
+        case 't':        goto yy2145;
+        default:        goto yy872;
         }
 yy2145:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKITEMFLATID;         return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2146;
+        case 'i':        goto yy2147;
+        default:        goto yy872;
+        }
+yy2146:
+        yych = *++curPos;
+        switch (yych) {
+        case 'b':        goto yy2151;
+        default:        goto yy872;
+        }
 yy2147:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy2148;
+        case 'd':        goto yy2148;
         default:        goto yy872;
         }
 yy2148:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2149;
-        default:        goto yy872;
-        }
-yy2149:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy2150;
-        default:        goto yy872;
-        }
-yy2150:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -33512,33 +33451,33 @@ yy2150:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2151;
+        default:        goto yy2149;
         }
-yy2151:
+yy2149:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKITEMFLATABSID;      return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKITEMFLATID; return EInstruction;
 	default: return EEmpty; } }
+yy2151:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy2152;
+        default:        goto yy872;
+        }
+yy2152:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2153;
+        default:        goto yy872;
+        }
 yy2153:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy2154;
+        case 'd':        goto yy2154;
         default:        goto yy872;
         }
 yy2154:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2155;
-        default:        goto yy872;
-        }
-yy2155:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy2156;
-        default:        goto yy872;
-        }
-yy2156:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -33604,71 +33543,144 @@ yy2156:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2157;
+        default:        goto yy2155;
         }
-yy2157:
+yy2155:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKITEMABSID;          return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKITEMFLATABSID; return EInstruction;
 	default: return EEmpty; } }
+yy2157:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy2158;
+        default:        goto yy872;
+        }
+yy2158:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2159;
+        default:        goto yy872;
+        }
 yy2159:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2186;
+        case 'd':        goto yy2160;
         default:        goto yy872;
         }
 yy2160:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2161;
-        case 'i':        goto yy2163;
-        case 't':        goto yy2162;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2161;
         }
 yy2161:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2179;
-        default:        goto yy872;
-        }
-yy2162:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2171;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKITEMABSID; return EInstruction;
+	default: return EEmpty; } }
 yy2163:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2164;
+        case 'o':        goto yy2164;
         default:        goto yy872;
         }
 yy2164:
         yych = *++curPos;
         switch (yych) {
-        case 'f':        goto yy2165;
+        case 'u':        goto yy2165;
         default:        goto yy872;
         }
 yy2165:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2166;
+        case 'p':        goto yy2166;
         default:        goto yy872;
         }
 yy2166:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2167;
+        case 'i':        goto yy2168;
+        case 's':        goto yy2167;
         default:        goto yy872;
         }
 yy2167:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2168;
+        case 'i':        goto yy2172;
         default:        goto yy872;
         }
 yy2168:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2169;
+        default:        goto yy872;
+        }
+yy2169:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -33734,45 +33746,27 @@ yy2168:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2169;
+        default:        goto yy2170;
         }
-yy2169:
+yy2170:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_INITFBAR;               return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKGROUPID; return EInstruction;
 	default: return EEmpty; } }
-yy2171:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2172;
-        default:        goto yy872;
-        }
 yy2172:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy2173;
+        case 'z':        goto yy2173;
         default:        goto yy872;
         }
 yy2173:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2174;
+        case 'e':        goto yy2174;
         default:        goto yy872;
         }
 yy2174:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2175;
-        default:        goto yy872;
-        }
-yy2175:
-        yych = *++curPos;
-        switch (yych) {
-        case 'y':        goto yy2176;
-        default:        goto yy872;
-        }
-yy2176:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -33812,7 +33806,6 @@ yy2176:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -33839,36 +33832,44 @@ yy2176:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2177;
+        default:        goto yy2175;
         }
+yy2175:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKGROUPSIZE; return EInstruction;
+	default: return EEmpty; } }
 yy2177:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_INTENSITY;       return EImageOrder;           
+	case EMemoryScopeContext: brigId = Brig::BRIG_MEMORY_SCOPE2_WAVEFRONT; return EMemoryScope;
 	default: return EEmpty; } }
 yy2179:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2180;
+        case 'd':        goto yy2186;
+        case 'i':        goto yy2188;
+        case 't':        goto yy2187;
         default:        goto yy872;
         }
 yy2180:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2181;
+        case 'a':        goto yy2181;
         default:        goto yy872;
         }
 yy2181:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy2182;
+        case 'l':        goto yy2182;
         default:        goto yy872;
         }
 yy2182:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2183;
+        case 'l':        goto yy2183;
         default:        goto yy872;
         }
 yy2183:
@@ -33911,7 +33912,6 @@ yy2183:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -33943,106 +33943,49 @@ yy2183:
 yy2184:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = 1; return EKWIndirect; }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ICALL; return EInstruction;
+	default: return EEmpty; } }
 yy2186:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2187;
+        case 'i':        goto yy2204;
         default:        goto yy872;
         }
 yy2187:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2188;
+        case 'e':        goto yy2196;
         default:        goto yy872;
         }
 yy2188:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2189;
+        case 't':        goto yy2189;
+        default:        goto yy872;
         }
 yy2189:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ICALL;                  return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'f':        goto yy2190;
+        default:        goto yy872;
+        }
+yy2190:
+        yych = *++curPos;
+        switch (yych) {
+        case 'b':        goto yy2191;
+        default:        goto yy872;
+        }
 yy2191:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2201;
-        case 'c':        goto yy2199;
-        case 'p':        goto yy2200;
+        case 'a':        goto yy2192;
         default:        goto yy872;
         }
 yy2192:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy2193;
-        case 'v':        goto yy2194;
+        case 'r':        goto yy2193;
         default:        goto yy872;
         }
 yy2193:
@@ -34111,9 +34054,45 @@ yy2193:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2197;
+        default:        goto yy2194;
         }
 yy2194:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_INITFBAR; return EInstruction;
+	default: return EEmpty; } }
+yy2196:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2197;
+        default:        goto yy872;
+        }
+yy2197:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy2198;
+        default:        goto yy872;
+        }
+yy2198:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2199;
+        default:        goto yy872;
+        }
+yy2199:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2200;
+        default:        goto yy872;
+        }
+yy2200:
+        yych = *++curPos;
+        switch (yych) {
+        case 'y':        goto yy2201;
+        default:        goto yy872;
+        }
+yy2201:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -34153,6 +34132,7 @@ yy2194:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -34179,50 +34159,14 @@ yy2194:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2195;
-        }
-yy2195:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_DIV;                    return EInstruction;          
-	default: return EEmpty; } }
-yy2197:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_DIM;                    return EInstruction;          
-	default: return EEmpty; } }
-yy2199:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy2224;
-        default:        goto yy872;
-        }
-yy2200:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2210;
-        default:        goto yy872;
-        }
-yy2201:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy2202;
-        default:        goto yy872;
+        default:        goto yy2202;
         }
 yy2202:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy2203;
-        default:        goto yy872;
-        }
-yy2203:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2204;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_INTENSITY; return EImageOrder;
+	default: return EEmpty; } }
 yy2204:
         yych = *++curPos;
         switch (yych) {
@@ -34232,96 +34176,22 @@ yy2204:
 yy2205:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2206;
+        case 'e':        goto yy2206;
         default:        goto yy872;
         }
 yy2206:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy2207;
+        case 'c':        goto yy2207;
         default:        goto yy872;
         }
 yy2207:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2208;
-        }
-yy2208:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_DEBUGTRAP;              return EInstruction;          
-	default: return EEmpty; } }
-yy2210:
-        yych = *++curPos;
-        switch (yych) {
-        case 'h':        goto yy2211;
+        case 't':        goto yy2208;
         default:        goto yy872;
         }
-yy2211:
+yy2208:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -34361,6 +34231,7 @@ yy2211:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -34387,56 +34258,73 @@ yy2211:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case '_':        goto yy2214;
-        default:        goto yy2212;
+        default:        goto yy2209;
         }
-yy2212:
+yy2209:
         ++curPos;
         curPos = ctxMarker;
-        { switch(ctx) {
-                           case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_DEPTH; return EImageOrder;
-                           default: return EKWImageDepth;
-                           } }
+        { brigId = 1; return EKWIndirect; }
+yy2211:
+        yych = *++curPos;
+        switch (yych) {
+        case 'm':        goto yy2241;
+        case 'v':        goto yy2242;
+        default:        goto yy872;
+        }
+yy2212:
+        yych = *++curPos;
+        switch (yych) {
+        case 'b':        goto yy2215;
+        case 'c':        goto yy2213;
+        case 'p':        goto yy2214;
+        default:        goto yy872;
+        }
+yy2213:
+        yych = *++curPos;
+        switch (yych) {
+        case 'l':        goto yy2238;
+        default:        goto yy872;
+        }
 yy2214:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy2215;
+        case 't':        goto yy2224;
         default:        goto yy872;
         }
 yy2215:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2216;
+        case 'u':        goto yy2216;
         default:        goto yy872;
         }
 yy2216:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2217;
+        case 'g':        goto yy2217;
         default:        goto yy872;
         }
 yy2217:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2218;
+        case 't':        goto yy2218;
         default:        goto yy872;
         }
 yy2218:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy2219;
+        case 'r':        goto yy2219;
         default:        goto yy872;
         }
 yy2219:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2220;
+        case 'a':        goto yy2220;
         default:        goto yy872;
         }
 yy2220:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2221;
+        case 'p':        goto yy2221;
         default:        goto yy872;
         }
 yy2221:
@@ -34479,7 +34367,6 @@ yy2221:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -34512,9 +34399,15 @@ yy2222:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_DEPTH_STENCIL;   return EImageOrder;           
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_DEBUGTRAP; return EInstruction;
 	default: return EEmpty; } }
 yy2224:
+        yych = *++curPos;
+        switch (yych) {
+        case 'h':        goto yy2225;
+        default:        goto yy872;
+        }
+yy2225:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -34554,7 +34447,6 @@ yy2224:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -34581,82 +34473,59 @@ yy2224:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2225;
+        case '_':        goto yy2226;
+        default:        goto yy2227;
         }
-yy2225:
+yy2226:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy2229;
+        default:        goto yy872;
+        }
+yy2227:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = 1; return EKWDecl; }
-yy2227:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy2361;
-        default:        goto yy872;
-        }
-yy2228:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2327;
-        default:        goto yy872;
-        }
+        { switch(ctx) {
+                           case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_DEPTH; return EImageOrder;
+                           default: return EKWImageDepth;
+                           } }
 yy2229:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2298;
+        case 't':        goto yy2230;
         default:        goto yy872;
         }
 yy2230:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2284;
-        case 'l':        goto yy2283;
+        case 'e':        goto yy2231;
         default:        goto yy872;
         }
 yy2231:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy2264;
-        case 'r':        goto yy2263;
+        case 'n':        goto yy2232;
         default:        goto yy872;
         }
 yy2232:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2260;
+        case 'c':        goto yy2233;
         default:        goto yy872;
         }
 yy2233:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy2253;
-        case 's':        goto yy2254;
+        case 'i':        goto yy2234;
         default:        goto yy872;
         }
 yy2234:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2237;
+        case 'l':        goto yy2235;
         default:        goto yy872;
         }
 yy2235:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_A;               return EImageOrder;           
-	default: return EEmpty; } }
-yy2237:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2238;
-        default:        goto yy872;
-        }
-yy2238:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2239;
-        default:        goto yy872;
-        }
-yy2239:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -34699,11 +34568,13 @@ yy2239:
         case '_':
         case 'a':
         case 'b':
+        case 'c':
         case 'd':
         case 'e':
         case 'f':
         case 'g':
         case 'h':
+        case 'i':
         case 'j':
         case 'k':
         case 'l':
@@ -34721,45 +34592,156 @@ yy2239:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'c':        goto yy2241;
-        case 'i':        goto yy2240;
-        default:        goto yy2242;
+        default:        goto yy2236;
         }
-yy2240:
+yy2236:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_DEPTH_STENCIL; return EImageOrder;
+	default: return EEmpty; } }
+yy2238:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2250;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2239;
         }
+yy2239:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = 1; return EKWDecl; }
 yy2241:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2244;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2245;
         }
 yy2242:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_ALLOCATION_AGENT; return EAllocKind; }
-yy2244:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy2245;
-        default:        goto yy872;
-        }
-yy2245:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2246;
-        default:        goto yy872;
-        }
-yy2246:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2247;
-        default:        goto yy872;
-        }
-yy2247:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -34825,325 +34807,84 @@ yy2247:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2248;
+        default:        goto yy2243;
+        }
+yy2243:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_DIV; return EInstruction;
+	default: return EEmpty; } }
+yy2245:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_DIM; return EInstruction;
+	default: return EEmpty; } }
+yy2247:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy2381;
+        default:        goto yy872;
         }
 yy2248:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_AGENTCOUNT;             return EInstruction;          
-	default: return EEmpty; } }
-yy2250:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2251;
+        case 'g':        goto yy2362;
+        case 'r':        goto yy2361;
+        default:        goto yy872;
+        }
+yy2249:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2358;
+        default:        goto yy872;
+        }
+yy2250:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2344;
+        case 'l':        goto yy2343;
+        default:        goto yy872;
         }
 yy2251:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_AGENTID;                return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2327;
+        default:        goto yy872;
+        }
+yy2252:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2298;
+        default:        goto yy872;
+        }
 yy2253:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2257;
+        case 't':        goto yy2264;
         default:        goto yy872;
         }
 yy2254:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2255;
+        case 'g':        goto yy2257;
+        case 's':        goto yy2258;
+        default:        goto yy872;
         }
 yy2255:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ABS;                    return EInstruction;          
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_A; return EImageOrder;
 	default: return EEmpty; } }
 yy2257:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2258;
-        }
-yy2258:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_ABGR;            return EImageOrder;           
-	default: return EEmpty; } }
-yy2260:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2261;
-        }
-yy2261:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_AND;                    return EInstruction;          
-	default: return EEmpty; } }
-yy2263:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2271;
-        case 'i':        goto yy2270;
+        case 'r':        goto yy2261;
         default:        goto yy872;
         }
-yy2264:
+yy2258:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -35184,6 +34925,7 @@ yy2264:
         case 'Y':
         case 'Z':
         case 'a':
+        case 'b':
         case 'c':
         case 'd':
         case 'e':
@@ -35208,10 +34950,15 @@ yy2264:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'b':        goto yy2265;
-        default:        goto yy2266;
+        default:        goto yy2259;
         }
-yy2265:
+yy2259:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ABS; return EInstruction;
+	default: return EEmpty; } }
+yy2261:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -35278,134 +35025,120 @@ yy2265:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2268;
+        default:        goto yy2262;
         }
-yy2266:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_ARG;       return ESegment; }
-yy2268:
+yy2262:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_ARGB;            return EImageOrder;           
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_ABGR; return EImageOrder;
 	default: return EEmpty; } }
+yy2264:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2265;
+        default:        goto yy872;
+        }
+yy2265:
+        yych = *++curPos;
+        switch (yych) {
+        case 'v':        goto yy2266;
+        default:        goto yy872;
+        }
+yy2266:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2267;
+        default:        goto yy872;
+        }
+yy2267:
+        yych = *++curPos;
+        switch (yych) {
+        case 'l':        goto yy2268;
+        default:        goto yy872;
+        }
+yy2268:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2269;
+        default:        goto yy872;
+        }
+yy2269:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2270;
+        default:        goto yy872;
+        }
 yy2270:
         yych = *++curPos;
         switch (yych) {
-        case 'v':        goto yy2275;
+        case 'e':        goto yy2271;
         default:        goto yy872;
         }
 yy2271:
         yych = *++curPos;
         switch (yych) {
-        case 'y':        goto yy2272;
+        case 'c':        goto yy2272;
+        case 'i':        goto yy2273;
+        case 'm':        goto yy2274;
+        case 's':        goto yy2275;
         default:        goto yy872;
         }
 yy2272:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2273;
+        case 'o':        goto yy2292;
+        default:        goto yy872;
         }
 yy2273:
-        ++curPos;
-        curPos = ctxMarker;
-        { return EKWImageArray; }
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2289;
+        default:        goto yy872;
+        }
+yy2274:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2284;
+        default:        goto yy872;
+        }
 yy2275:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2276;
+        case 'h':        goto yy2276;
         default:        goto yy872;
         }
 yy2276:
         yych = *++curPos;
         switch (yych) {
-        case 'f':        goto yy2277;
+        case 'u':        goto yy2277;
         default:        goto yy872;
         }
 yy2277:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2278;
+        case 'f':        goto yy2278;
         default:        goto yy872;
         }
 yy2278:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2279;
+        case 'f':        goto yy2279;
         default:        goto yy872;
         }
 yy2279:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2280;
+        case 'l':        goto yy2280;
         default:        goto yy872;
         }
 yy2280:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2281;
+        default:        goto yy872;
+        }
+yy2281:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -35471,93 +35204,24 @@ yy2280:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2281;
+        default:        goto yy2282;
         }
-yy2281:
+yy2282:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ARRIVEFBAR;             return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ACTIVELANESHUFFLE; return EInstruction;
 	default: return EEmpty; } }
-yy2283:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case 'o':        goto yy2289;
-        default:        goto yy2290;
-        }
 yy2284:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy2285;
+        case 's':        goto yy2285;
         default:        goto yy872;
         }
 yy2285:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2286;
+        case 'k':        goto yy2286;
         default:        goto yy872;
         }
 yy2286:
@@ -35600,7 +35264,6 @@ yy2286:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -35632,18 +35295,10 @@ yy2286:
 yy2287:
         ++curPos;
         curPos = ctxMarker;
-        { return EKWAlign; }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ACTIVELANEMASK; return EInstruction;
+	default: return EEmpty; } }
 yy2289:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy2292;
-        default:        goto yy872;
-        }
-yy2290:
-        ++curPos;
-        curPos = ctxMarker;
-        { return EKWWidthAll;  }
-yy2292:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -35683,7 +35338,7 @@ yy2292:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
+        case 'a':
         case 'b':
         case 'c':
         case 'd':
@@ -35709,10 +35364,33 @@ yy2292:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'a':        goto yy2293;
-        default:        goto yy2294;
+        default:        goto yy2290;
+        }
+yy2290:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ACTIVELANEID; return EInstruction;
+	default: return EEmpty; } }
+yy2292:
+        yych = *++curPos;
+        switch (yych) {
+        case 'u':        goto yy2293;
+        default:        goto yy872;
         }
 yy2293:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2294;
+        default:        goto yy872;
+        }
+yy2294:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2295;
+        default:        goto yy872;
+        }
+yy2295:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -35780,15 +35458,11 @@ yy2293:
         case 'z':        goto yy872;
         default:        goto yy2296;
         }
-yy2294:
-        ++curPos;
-        curPos = ctxMarker;
-        { return EKWAlloc; }
 yy2296:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ALLOCA;                 return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ACTIVELANECOUNT; return EInstruction;
 	default: return EEmpty; } }
 yy2298:
         ctxMarker = curPos + 1;
@@ -35854,22 +35528,22 @@ yy2298:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'q':        goto yy2301;
+        case 'q':        goto yy2299;
         case 'r':        goto yy2302;
-        default:        goto yy2299;
+        default:        goto yy2300;
         }
 yy2299:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ADD;                    return EInstruction;          
-	default: return EEmpty; } }
-yy2301:
         yych = *++curPos;
         switch (yych) {
         case 'u':        goto yy2311;
         default:        goto yy872;
         }
+yy2300:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ADD; return EInstruction;
+	default: return EEmpty; } }
 yy2302:
         yych = *++curPos;
         switch (yych) {
@@ -36129,96 +35803,124 @@ yy2325:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ADDQUEUEWRITEINDEX;     return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ADDQUEUEWRITEINDEX; return EInstruction;
 	default: return EEmpty; } }
 yy2327:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2328;
+        case 'n':        goto yy2328;
         default:        goto yy872;
         }
 yy2328:
         yych = *++curPos;
         switch (yych) {
-        case 'v':        goto yy2329;
+        case 't':        goto yy2329;
         default:        goto yy872;
         }
 yy2329:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2330;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case 'c':        goto yy2331;
+        case 'i':        goto yy2330;
+        default:        goto yy2332;
         }
 yy2330:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2331;
+        case 'd':        goto yy2340;
         default:        goto yy872;
         }
 yy2331:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2332;
+        case 'o':        goto yy2334;
         default:        goto yy872;
         }
 yy2332:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2333;
-        default:        goto yy872;
-        }
-yy2333:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2334;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_ALLOCATION_AGENT; return EAllocKind; }
 yy2334:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy2337;
-        case 'i':        goto yy2335;
-        case 'm':        goto yy2338;
-        case 's':        goto yy2336;
+        case 'u':        goto yy2335;
         default:        goto yy872;
         }
 yy2335:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2358;
+        case 'n':        goto yy2336;
         default:        goto yy872;
         }
 yy2336:
         yych = *++curPos;
         switch (yych) {
-        case 'h':        goto yy2350;
+        case 't':        goto yy2337;
         default:        goto yy872;
         }
 yy2337:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy2344;
-        default:        goto yy872;
-        }
-yy2338:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2339;
-        default:        goto yy872;
-        }
-yy2339:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy2340;
-        default:        goto yy872;
-        }
-yy2340:
-        yych = *++curPos;
-        switch (yych) {
-        case 'k':        goto yy2341;
-        default:        goto yy872;
-        }
-yy2341:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -36284,18 +35986,161 @@ yy2341:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2342;
+        default:        goto yy2338;
         }
-yy2342:
+yy2338:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ACTIVELANEMASK;         return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_AGENTCOUNT; return EInstruction;
 	default: return EEmpty; } }
+yy2340:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2341;
+        }
+yy2341:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_AGENTID; return EInstruction;
+	default: return EEmpty; } }
+yy2343:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case 'o':        goto yy2349;
+        default:        goto yy2350;
+        }
 yy2344:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy2345;
+        case 'g':        goto yy2345;
         default:        goto yy872;
         }
 yy2345:
@@ -36305,12 +36150,6 @@ yy2345:
         default:        goto yy872;
         }
 yy2346:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2347;
-        default:        goto yy872;
-        }
-yy2347:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -36350,6 +36189,7 @@ yy2347:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -36376,45 +36216,92 @@ yy2347:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2348;
+        default:        goto yy2347;
         }
-yy2348:
+yy2347:
         ++curPos;
         curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ACTIVELANECOUNT;        return EInstruction;          
-	default: return EEmpty; } }
+        { return EKWAlign; }
+yy2349:
+        yych = *++curPos;
+        switch (yych) {
+        case 'c':        goto yy2352;
+        default:        goto yy872;
+        }
 yy2350:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy2351;
-        default:        goto yy872;
-        }
-yy2351:
-        yych = *++curPos;
-        switch (yych) {
-        case 'f':        goto yy2352;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { return EKWWidthAll;  }
 yy2352:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'f':        goto yy2353;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case 'a':        goto yy2353;
+        default:        goto yy2354;
         }
 yy2353:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy2354;
-        default:        goto yy872;
-        }
-yy2354:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2355;
-        default:        goto yy872;
-        }
-yy2355:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -36482,11 +36369,15 @@ yy2355:
         case 'z':        goto yy872;
         default:        goto yy2356;
         }
+yy2354:
+        ++curPos;
+        curPos = ctxMarker;
+        { return EKWAlloc; }
 yy2356:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ACTIVELANESHUFFLE;      return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ALLOCA; return EInstruction;
 	default: return EEmpty; } }
 yy2358:
         ctxMarker = curPos + 1;
@@ -36560,27 +36451,16 @@ yy2359:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ACTIVELANEID;           return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_AND; return EInstruction;
 	default: return EEmpty; } }
 yy2361:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy2362;
+        case 'a':        goto yy2369;
+        case 'i':        goto yy2368;
         default:        goto yy872;
         }
 yy2362:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2363;
-        default:        goto yy872;
-        }
-yy2363:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy2364;
-        default:        goto yy872;
-        }
-yy2364:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -36621,7 +36501,6 @@ yy2364:
         case 'Y':
         case 'Z':
         case 'a':
-        case 'b':
         case 'c':
         case 'd':
         case 'e':
@@ -36633,6 +36512,7 @@ yy2364:
         case 'k':
         case 'l':
         case 'm':
+        case 'n':
         case 'o':
         case 'p':
         case 'q':
@@ -36645,40 +36525,204 @@ yy2364:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'n':        goto yy2365;
-        default:        goto yy2366;
+        case 'b':        goto yy2363;
+        default:        goto yy2364;
         }
-yy2365:
+yy2363:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2368;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2366;
         }
+yy2364:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_SEGMENT_ARG;       return ESegment; }
 yy2366:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ATOMIC;                 return EInstruction;          
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_ARGB; return EImageOrder;
 	default: return EEmpty; } }
 yy2368:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2369;
+        case 'v':        goto yy2373;
         default:        goto yy872;
         }
 yy2369:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2370;
+        case 'y':        goto yy2370;
         default:        goto yy872;
         }
 yy2370:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2371;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2371;
         }
 yy2371:
+        ++curPos;
+        curPos = ctxMarker;
+        { return EKWImageArray; }
+yy2373:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2374;
+        default:        goto yy872;
+        }
+yy2374:
+        yych = *++curPos;
+        switch (yych) {
+        case 'f':        goto yy2375;
+        default:        goto yy872;
+        }
+yy2375:
+        yych = *++curPos;
+        switch (yych) {
+        case 'b':        goto yy2376;
+        default:        goto yy872;
+        }
+yy2376:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2377;
+        default:        goto yy872;
+        }
+yy2377:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2378;
+        default:        goto yy872;
+        }
+yy2378:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -36744,104 +36788,116 @@ yy2371:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2372;
+        default:        goto yy2379;
         }
-yy2372:
+yy2379:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ATOMICNORET;            return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ARRIVEFBAR; return EInstruction;
 	default: return EEmpty; } }
-yy2374:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy2416;
-        case 't':        goto yy2415;
-        default:        goto yy872;
-        }
-yy2375:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2376;
-        default:        goto yy872;
-        }
-yy2376:
-        yych = *++curPos;
-        switch (yych) {
-        case 'b':        goto yy2377;
-        default:        goto yy872;
-        }
-yy2377:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy2378;
-        default:        goto yy872;
-        }
-yy2378:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2379;
-        default:        goto yy872;
-        }
-yy2379:
-        yych = *++curPos;
-        switch (yych) {
-        case 'b':        goto yy2380;
-        case 'd':        goto yy2381;
-        default:        goto yy872;
-        }
-yy2380:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2399;
-        default:        goto yy872;
-        }
 yy2381:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2382;
+        case 'm':        goto yy2382;
         default:        goto yy872;
         }
 yy2382:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2383;
+        case 'i':        goto yy2383;
         default:        goto yy872;
         }
 yy2383:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2384;
+        case 'c':        goto yy2384;
         default:        goto yy872;
         }
 yy2384:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy2385;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case 'n':        goto yy2387;
+        default:        goto yy2385;
         }
 yy2385:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2386;
-        default:        goto yy872;
-        }
-yy2386:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2387;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ATOMIC; return EInstruction;
+	default: return EEmpty; } }
 yy2387:
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy2388;
+        case 'o':        goto yy2388;
         default:        goto yy872;
         }
 yy2388:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy2389;
+        case 'r':        goto yy2389;
         default:        goto yy872;
         }
 yy2389:
@@ -36853,40 +36909,10 @@ yy2389:
 yy2390:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy2391;
+        case 't':        goto yy2391;
         default:        goto yy872;
         }
 yy2391:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2392;
-        default:        goto yy872;
-        }
-yy2392:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2393;
-        default:        goto yy872;
-        }
-yy2393:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy2394;
-        default:        goto yy872;
-        }
-yy2394:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2395;
-        default:        goto yy872;
-        }
-yy2395:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy2396;
-        default:        goto yy872;
-        }
-yy2396:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -36926,7 +36952,6 @@ yy2396:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -36953,40 +36978,74 @@ yy2396:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2397;
+        default:        goto yy2392;
         }
-yy2397:
+yy2392:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_ENABLEDETECTEXCEPTIONS; return EControl;               }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ATOMICNORET; return EInstruction;
+	default: return EEmpty; } }
+yy2394:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy2436;
+        case 't':        goto yy2435;
+        default:        goto yy872;
+        }
+yy2395:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2396;
+        default:        goto yy872;
+        }
+yy2396:
+        yych = *++curPos;
+        switch (yych) {
+        case 'b':        goto yy2397;
+        default:        goto yy872;
+        }
+yy2397:
+        yych = *++curPos;
+        switch (yych) {
+        case 'l':        goto yy2398;
+        default:        goto yy872;
+        }
+yy2398:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2399;
+        default:        goto yy872;
+        }
 yy2399:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2400;
+        case 'b':        goto yy2400;
+        case 'd':        goto yy2401;
         default:        goto yy872;
         }
 yy2400:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2401;
+        case 'r':        goto yy2419;
         default:        goto yy872;
         }
 yy2401:
         yych = *++curPos;
         switch (yych) {
-        case 'k':        goto yy2402;
+        case 'e':        goto yy2402;
         default:        goto yy872;
         }
 yy2402:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2403;
+        case 't':        goto yy2403;
         default:        goto yy872;
         }
 yy2403:
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy2404;
+        case 'e':        goto yy2404;
         default:        goto yy872;
         }
 yy2404:
@@ -36998,46 +37057,70 @@ yy2404:
 yy2405:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2406;
+        case 't':        goto yy2406;
         default:        goto yy872;
         }
 yy2406:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy2407;
+        case 'e':        goto yy2407;
         default:        goto yy872;
         }
 yy2407:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2408;
+        case 'x':        goto yy2408;
         default:        goto yy872;
         }
 yy2408:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2409;
+        case 'c':        goto yy2409;
         default:        goto yy872;
         }
 yy2409:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2410;
+        case 'e':        goto yy2410;
         default:        goto yy872;
         }
 yy2410:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2411;
+        case 'p':        goto yy2411;
         default:        goto yy872;
         }
 yy2411:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy2412;
+        case 't':        goto yy2412;
         default:        goto yy872;
         }
 yy2412:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2413;
+        default:        goto yy872;
+        }
+yy2413:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy2414;
+        default:        goto yy872;
+        }
+yy2414:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2415;
+        default:        goto yy872;
+        }
+yy2415:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy2416;
+        default:        goto yy872;
+        }
+yy2416:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -37104,405 +37187,188 @@ yy2412:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2413;
-        }
-yy2413:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_ENABLEBREAKEXCEPTIONS; return EControl;               }
-yy2415:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2422;
-        default:        goto yy872;
-        }
-yy2416:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2417;
-        default:        goto yy872;
+        default:        goto yy2417;
         }
 yy2417:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2418;
-        default:        goto yy872;
-        }
-yy2418:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy2419;
-        default:        goto yy872;
-        }
-yy2419:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2420;
-        }
-yy2420:
         ++curPos;
         curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_EXPAND;                 return EInstruction;          
-	default: return EEmpty; } }
+        { brigId = Brig::BRIG_CONTROL_ENABLEDETECTEXCEPTIONS; return EControl; }
+yy2419:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2420;
+        default:        goto yy872;
+        }
+yy2420:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2421;
+        default:        goto yy872;
+        }
+yy2421:
+        yych = *++curPos;
+        switch (yych) {
+        case 'k':        goto yy2422;
+        default:        goto yy872;
+        }
 yy2422:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2423;
+        case 'e':        goto yy2423;
         default:        goto yy872;
         }
 yy2423:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy2424;
+        case 'x':        goto yy2424;
         default:        goto yy872;
         }
 yy2424:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2425;
+        case 'c':        goto yy2425;
         default:        goto yy872;
         }
 yy2425:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2426;
+        case 'e':        goto yy2426;
         default:        goto yy872;
         }
 yy2426:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2427;
+        case 'p':        goto yy2427;
         default:        goto yy872;
         }
 yy2427:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2428;
+        case 't':        goto yy2428;
+        default:        goto yy872;
         }
 yy2428:
-        ++curPos;
-        curPos = ctxMarker;
-        { return EKWExtension; }
-yy2430:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'g':
-        case 'h':
-        case 'j':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case 'a':        goto yy2481;
-        case 'f':        goto yy2482;
-        case 'i':        goto yy2480;
-        case 'k':        goto yy2486;
-        case 'q':        goto yy2483;
-        default:        goto yy2484;
+        case 'i':        goto yy2429;
+        default:        goto yy872;
+        }
+yy2429:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy2430;
+        default:        goto yy872;
+        }
+yy2430:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2431;
+        default:        goto yy872;
         }
 yy2431:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2468;
-        case 'r':        goto yy2467;
+        case 's':        goto yy2432;
         default:        goto yy872;
         }
 yy2432:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2455;
-        case 's':        goto yy2454;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2433;
         }
 yy2433:
-        yych = *++curPos;
-        switch (yych) {
-        case 'm':        goto yy2445;
-        default:        goto yy872;
-        }
-yy2434:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2439;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_CONTROL_ENABLEBREAKEXCEPTIONS; return EControl; }
 yy2435:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy2436;
+        case 'e':        goto yy2442;
         default:        goto yy872;
         }
 yy2436:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2437;
+        case 'a':        goto yy2437;
+        default:        goto yy872;
         }
 yy2437:
-        ++curPos;
-        curPos = ctxMarker;
-        { return EKWLoc; }
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2438;
+        default:        goto yy872;
+        }
+yy2438:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2439;
+        default:        goto yy872;
+        }
 yy2439:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2440;
-        default:        goto yy872;
-        }
-yy2440:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2441;
-        default:        goto yy872;
-        }
-yy2441:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2442;
-        default:        goto yy872;
-        }
-yy2442:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -37542,7 +37408,6 @@ yy2442:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -37569,16 +37434,36 @@ yy2442:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2443;
+        default:        goto yy2440;
         }
-yy2443:
+yy2440:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_FILTER_LINEAR;     return ESamplerFilter; }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_EXPAND; return EInstruction;
+	default: return EEmpty; } }
+yy2442:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2443;
+        default:        goto yy872;
+        }
+yy2443:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy2444;
+        default:        goto yy872;
+        }
+yy2444:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2445;
+        default:        goto yy872;
+        }
 yy2445:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2446;
+        case 'o':        goto yy2446;
         default:        goto yy872;
         }
 yy2446:
@@ -37588,27 +37473,83 @@ yy2446:
         default:        goto yy872;
         }
 yy2447:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2448;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2448;
         }
 yy2448:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2449;
-        default:        goto yy872;
-        }
-yy2449:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy2450;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { return EKWExtension; }
 yy2450:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2451;
+        case 'a':        goto yy2535;
+        case 'r':        goto yy2536;
         default:        goto yy872;
         }
 yy2451:
@@ -37651,24 +37592,18 @@ yy2451:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
-        case 'a':
         case 'b':
         case 'c':
         case 'd':
         case 'e':
-        case 'f':
         case 'g':
         case 'h':
-        case 'i':
         case 'j':
-        case 'k':
         case 'l':
         case 'm':
         case 'n':
         case 'o':
         case 'p':
-        case 'q':
         case 'r':
         case 's':
         case 't':
@@ -37678,39 +37613,39 @@ yy2451:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2452;
+        case 'a':        goto yy2489;
+        case 'f':        goto yy2490;
+        case 'i':        goto yy2491;
+        case 'k':        goto yy2492;
+        case 'q':        goto yy2493;
+        default:        goto yy2487;
         }
 yy2452:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_LUMINANCE;       return EImageOrder;           
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2474;
+        case 's':        goto yy2475;
+        default:        goto yy872;
+        }
+yy2453:
+        yych = *++curPos;
+        switch (yych) {
+        case 'm':        goto yy2465;
+        default:        goto yy872;
+        }
 yy2454:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2461;
+        case 'n':        goto yy2459;
         default:        goto yy872;
         }
 yy2455:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2456;
+        case 'c':        goto yy2456;
         default:        goto yy872;
         }
 yy2456:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2457;
-        default:        goto yy872;
-        }
-yy2457:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy2458;
-        default:        goto yy872;
-        }
-yy2458:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -37750,6 +37685,7 @@ yy2458:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -37776,33 +37712,31 @@ yy2458:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2459;
+        default:        goto yy2457;
         }
-yy2459:
+yy2457:
         ++curPos;
         curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LANEID;                 return EInstruction;          
-	default: return EEmpty; } }
+        { return EKWLoc; }
+yy2459:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2460;
+        default:        goto yy872;
+        }
+yy2460:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2461;
+        default:        goto yy872;
+        }
 yy2461:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2462;
+        case 'r':        goto yy2462;
         default:        goto yy872;
         }
 yy2462:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2463;
-        default:        goto yy872;
-        }
-yy2463:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2464;
-        default:        goto yy872;
-        }
-yy2464:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -37842,6 +37776,7 @@ yy2464:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -37868,421 +37803,240 @@ yy2464:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2465;
+        default:        goto yy2463;
         }
-yy2465:
+yy2463:
         ++curPos;
         curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LASTBIT;                return EInstruction;          
-	default: return EEmpty; } }
+        { brigId = Brig::BRIG_FILTER_LINEAR;     return ESamplerFilter; }
+yy2465:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2466;
+        default:        goto yy872;
+        }
+yy2466:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2467;
+        default:        goto yy872;
+        }
 yy2467:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy2477;
+        case 'a':        goto yy2468;
         default:        goto yy872;
         }
 yy2468:
         yych = *++curPos;
         switch (yych) {
-        case 'v':        goto yy2469;
+        case 'n':        goto yy2469;
         default:        goto yy872;
         }
 yy2469:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2470;
+        case 'c':        goto yy2470;
         default:        goto yy872;
         }
 yy2470:
         yych = *++curPos;
         switch (yych) {
-        case 'f':        goto yy2471;
+        case 'e':        goto yy2471;
         default:        goto yy872;
         }
 yy2471:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2472;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2472;
         }
 yy2472:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2473;
-        default:        goto yy872;
-        }
-yy2473:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2474;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_LUMINANCE; return EImageOrder;
+	default: return EEmpty; } }
 yy2474:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2475;
+        case 'e':        goto yy2482;
+        default:        goto yy872;
         }
 yy2475:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LEAVEFBAR;              return EInstruction;          
-	default: return EEmpty; } }
-yy2477:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2478;
+        case 't':        goto yy2476;
+        default:        goto yy872;
+        }
+yy2476:
+        yych = *++curPos;
+        switch (yych) {
+        case 'b':        goto yy2477;
+        default:        goto yy872;
+        }
+yy2477:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2478;
+        default:        goto yy872;
         }
 yy2478:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2479;
+        default:        goto yy872;
+        }
+yy2479:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2480;
+        }
+yy2480:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LERP;                   return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LASTBIT; return EInstruction;
 	default: return EEmpty; } }
-yy2480:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case 'm':        goto yy2520;
-        default:        goto yy2521;
-        }
-yy2481:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2518;
-        }
 yy2482:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2516;
+        case 'i':        goto yy2483;
+        default:        goto yy872;
         }
 yy2483:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy2489;
+        case 'd':        goto yy2484;
         default:        goto yy872;
         }
 yy2484:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LD;                     return EInstruction;          
-	default: return EEmpty; } }
-yy2486:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -38348,100 +38102,378 @@ yy2486:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2487;
+        default:        goto yy2485;
         }
+yy2485:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LANEID; return EInstruction;
+	default: return EEmpty; } }
 yy2487:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDK;                    return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LD; return EInstruction;
 	default: return EEmpty; } }
 yy2489:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2490;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2533;
         }
 yy2490:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy2491;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2531;
         }
 yy2491:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2492;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case 'm':        goto yy2523;
+        default:        goto yy2524;
         }
 yy2492:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2493;
-        case 'w':        goto yy2494;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2521;
         }
 yy2493:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2506;
+        case 'u':        goto yy2494;
         default:        goto yy872;
         }
 yy2494:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2495;
+        case 'e':        goto yy2495;
         default:        goto yy872;
         }
 yy2495:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2496;
+        case 'u':        goto yy2496;
         default:        goto yy872;
         }
 yy2496:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2497;
+        case 'e':        goto yy2497;
         default:        goto yy872;
         }
 yy2497:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2498;
+        case 'r':        goto yy2499;
+        case 'w':        goto yy2498;
         default:        goto yy872;
         }
 yy2498:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2499;
+        case 'r':        goto yy2510;
         default:        goto yy872;
         }
 yy2499:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2500;
+        case 'e':        goto yy2500;
         default:        goto yy872;
         }
 yy2500:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2501;
+        case 'a':        goto yy2501;
         default:        goto yy872;
         }
 yy2501:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2502;
+        case 'd':        goto yy2502;
         default:        goto yy872;
         }
 yy2502:
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy2503;
+        case 'i':        goto yy2503;
         default:        goto yy872;
         }
 yy2503:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2504;
+        default:        goto yy872;
+        }
+yy2504:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2505;
+        default:        goto yy872;
+        }
+yy2505:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2506;
+        default:        goto yy872;
+        }
+yy2506:
+        yych = *++curPos;
+        switch (yych) {
+        case 'x':        goto yy2507;
+        default:        goto yy872;
+        }
+yy2507:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -38507,57 +38539,63 @@ yy2503:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2504;
+        default:        goto yy2508;
         }
-yy2504:
+yy2508:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDQUEUEWRITEINDEX;      return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDQUEUEREADINDEX; return EInstruction;
 	default: return EEmpty; } }
-yy2506:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2507;
-        default:        goto yy872;
-        }
-yy2507:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy2508;
-        default:        goto yy872;
-        }
-yy2508:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2509;
-        default:        goto yy872;
-        }
-yy2509:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2510;
-        default:        goto yy872;
-        }
 yy2510:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2511;
+        case 'i':        goto yy2511;
         default:        goto yy872;
         }
 yy2511:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2512;
+        case 't':        goto yy2512;
         default:        goto yy872;
         }
 yy2512:
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy2513;
+        case 'e':        goto yy2513;
         default:        goto yy872;
         }
 yy2513:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2514;
+        default:        goto yy872;
+        }
+yy2514:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2515;
+        default:        goto yy872;
+        }
+yy2515:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2516;
+        default:        goto yy872;
+        }
+yy2516:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2517;
+        default:        goto yy872;
+        }
+yy2517:
+        yych = *++curPos;
+        switch (yych) {
+        case 'x':        goto yy2518;
+        default:        goto yy872;
+        }
+yy2518:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -38623,51 +38661,45 @@ yy2513:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2514;
+        default:        goto yy2519;
         }
-yy2514:
+yy2519:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDQUEUEREADINDEX;       return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDQUEUEWRITEINDEX; return EInstruction;
 	default: return EEmpty; } }
-yy2516:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDF;                    return EInstruction;          
-	default: return EEmpty; } }
-yy2518:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDA;                    return EInstruction;          
-	default: return EEmpty; } }
-yy2520:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2523;
-        default:        goto yy872;
-        }
 yy2521:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDI;                    return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDK; return EInstruction;
 	default: return EEmpty; } }
 yy2523:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy2524;
+        case 'a':        goto yy2526;
         default:        goto yy872;
         }
 yy2524:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDI; return EInstruction;
+	default: return EEmpty; } }
+yy2526:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2525;
+        case 'g':        goto yy2527;
         default:        goto yy872;
         }
-yy2525:
+yy2527:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2528;
+        default:        goto yy872;
+        }
+yy2528:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -38733,254 +38765,36 @@ yy2525:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2526;
+        default:        goto yy2529;
         }
-yy2526:
+yy2529:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDIMAGE;                return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDIMAGE; return EInstruction;
 	default: return EEmpty; } }
-yy2528:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2569;
-        case 'l':        goto yy2574;
-        case 'm':        goto yy2572;
-        case 'p':        goto yy2571;
-        case 'q':        goto yy2570;
-        case 't':        goto yy2573;
-        default:        goto yy872;
-        }
-yy2529:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2565;
-        default:        goto yy872;
-        }
-yy2530:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2558;
-        default:        goto yy872;
-        }
 yy2531:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_R;               return EImageOrder;           
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDF; return EInstruction;
 	default: return EEmpty; } }
 yy2533:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'y':
-        case 'z':        goto yy872;
-        case 'b':        goto yy2544;
-        case 'x':        goto yy2545;
-        default:        goto yy2546;
-        }
-yy2534:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2542;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDA; return EInstruction;
+	default: return EEmpty; } }
 yy2535:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2540;
+        case 'v':        goto yy2540;
+        default:        goto yy872;
         }
 yy2536:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2537;
+        case 'p':        goto yy2537;
         default:        goto yy872;
         }
 yy2537:
@@ -39023,7 +38837,6 @@ yy2537:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -39055,87 +38868,38 @@ yy2537:
 yy2538:
         ++curPos;
         curPos = ctxMarker;
-        { return EKWRTI; }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LERP; return EInstruction;
+	default: return EEmpty; } }
 yy2540:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RA;              return EImageOrder;           
-	default: return EEmpty; } }
-yy2542:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RX;              return EImageOrder;           
-	default: return EEmpty; } }
-yy2544:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'y':
-        case 'z':        goto yy872;
-        case 'a':        goto yy2552;
-        case 'x':        goto yy2553;
-        default:        goto yy2550;
+        case 'e':        goto yy2541;
+        default:        goto yy872;
+        }
+yy2541:
+        yych = *++curPos;
+        switch (yych) {
+        case 'f':        goto yy2542;
+        default:        goto yy872;
+        }
+yy2542:
+        yych = *++curPos;
+        switch (yych) {
+        case 'b':        goto yy2543;
+        default:        goto yy872;
+        }
+yy2543:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2544;
+        default:        goto yy872;
+        }
+yy2544:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2545;
+        default:        goto yy872;
         }
 yy2545:
         ctxMarker = curPos + 1;
@@ -39177,6 +38941,103 @@ yy2545:
         case 'X':
         case 'Y':
         case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2546;
+        }
+yy2546:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LEAVEFBAR; return EInstruction;
+	default: return EEmpty; } }
+yy2548:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2695;
+        default:        goto yy872;
+        }
+yy2549:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2585;
+        case 'l':        goto yy2588;
+        case 'm':        goto yy2589;
+        case 'p':        goto yy2587;
+        case 'q':        goto yy2586;
+        case 't':        goto yy2590;
+        default:        goto yy872;
+        }
+yy2550:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2578;
+        default:        goto yy872;
+        }
+yy2551:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
         case '_':
         case 'a':
         case 'b':
@@ -39204,26 +39065,8 @@ yy2545:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2548;
+        default:        goto yy2576;
         }
-yy2546:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RG;              return EImageOrder;           
-	default: return EEmpty; } }
-yy2548:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RGX;             return EImageOrder;           
-	default: return EEmpty; } }
-yy2550:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RGB;             return EImageOrder;           
-	default: return EEmpty; } }
 yy2552:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -39266,7 +39109,6 @@ yy2552:
         case 'Z':
         case '_':
         case 'a':
-        case 'b':
         case 'c':
         case 'd':
         case 'e':
@@ -39288,10 +39130,11 @@ yy2552:
         case 'u':
         case 'v':
         case 'w':
-        case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2556;
+        case 'b':        goto yy2564;
+        case 'x':        goto yy2565;
+        default:        goto yy2562;
         }
 yy2553:
         ctxMarker = curPos + 1;
@@ -39360,45 +39203,21 @@ yy2553:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2554;
+        default:        goto yy2560;
         }
 yy2554:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RGBX;            return EImageOrder;           
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_R; return EImageOrder;
 	default: return EEmpty; } }
 yy2556:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RGBA;            return EImageOrder;           
-	default: return EEmpty; } }
-yy2558:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy2559;
+        case 'i':        goto yy2557;
         default:        goto yy872;
         }
-yy2559:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2560;
-        default:        goto yy872;
-        }
-yy2560:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy2561;
-        default:        goto yy872;
-        }
-yy2561:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2562;
-        default:        goto yy872;
-        }
-yy2562:
+yy2557:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -39438,6 +39257,7 @@ yy2562:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -39464,294 +39284,352 @@ yy2562:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2563;
+        default:        goto yy2558;
         }
-yy2563:
+yy2558:
+        ++curPos;
+        curPos = ctxMarker;
+        { return EKWRTI; }
+yy2560:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_RDIMAGE;                return EInstruction;          
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RA; return EImageOrder;
 	default: return EEmpty; } }
-yy2565:
+yy2562:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RG; return EImageOrder;
+	default: return EEmpty; } }
+yy2564:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2566;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'y':
+        case 'z':        goto yy872;
+        case 'a':        goto yy2569;
+        case 'x':        goto yy2568;
+        default:        goto yy2570;
+        }
+yy2565:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2566;
         }
 yy2566:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2567;
-        }
-yy2567:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_RINT;                   return EInstruction;          
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RGX; return EImageOrder;
 	default: return EEmpty; } }
-yy2569:
+yy2568:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2672;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2574;
+        }
+yy2569:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2572;
         }
 yy2570:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy2594;
-        default:        goto yy872;
-        }
-yy2571:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2589;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RGB; return EImageOrder;
+	default: return EEmpty; } }
 yy2572:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2587;
-        }
-yy2573:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2585;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RGBA; return EImageOrder;
+	default: return EEmpty; } }
 yy2574:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2575;
-        default:        goto yy872;
-        }
-yy2575:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2576;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RGBX; return EImageOrder;
+	default: return EEmpty; } }
 yy2576:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy2577;
-        default:        goto yy872;
-        }
-yy2577:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2578;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RX; return EImageOrder;
+	default: return EEmpty; } }
 yy2578:
         yych = *++curPos;
         switch (yych) {
-        case 'f':        goto yy2579;
+        case 'm':        goto yy2579;
         default:        goto yy872;
         }
 yy2579:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2580;
+        case 'a':        goto yy2580;
         default:        goto yy872;
         }
 yy2580:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2581;
+        case 'g':        goto yy2581;
         default:        goto yy872;
         }
 yy2581:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2582;
+        case 'e':        goto yy2582;
         default:        goto yy872;
         }
 yy2582:
@@ -39826,33 +39704,33 @@ yy2583:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_RELEASEFBAR;            return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_RDIMAGE; return EInstruction;
 	default: return EEmpty; } }
 yy2585:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_RET;                    return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2688;
+        default:        goto yy872;
+        }
+yy2586:
+        yych = *++curPos;
+        switch (yych) {
+        case 'u':        goto yy2610;
+        default:        goto yy872;
+        }
 yy2587:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_REM;                    return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2605;
+        default:        goto yy872;
+        }
+yy2588:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2595;
+        default:        goto yy872;
+        }
 yy2589:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2590;
-        default:        goto yy872;
-        }
-yy2590:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2591;
-        default:        goto yy872;
-        }
-yy2591:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -39892,7 +39770,6 @@ yy2591:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -39919,23 +39796,92 @@ yy2591:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2592;
+        default:        goto yy2593;
         }
-yy2592:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_ADDRESSING_REPEAT;             return ESamplerAddressingMode;  }
-yy2594:
+yy2590:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2596;
-        case 'i':        goto yy2595;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2591;
         }
+yy2591:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_RET; return EInstruction;
+	default: return EEmpty; } }
+yy2593:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_REM; return EInstruction;
+	default: return EEmpty; } }
 yy2595:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2618;
+        case 'a':        goto yy2596;
         default:        goto yy872;
         }
 yy2596:
@@ -39947,112 +39893,120 @@ yy2596:
 yy2597:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2598;
+        case 'e':        goto yy2598;
         default:        goto yy872;
         }
 yy2598:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2599;
+        case 'f':        goto yy2599;
         default:        goto yy872;
         }
 yy2599:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2600;
+        case 'b':        goto yy2600;
         default:        goto yy872;
         }
 yy2600:
         yych = *++curPos;
         switch (yych) {
-        case 'w':        goto yy2601;
+        case 'a':        goto yy2601;
         default:        goto yy872;
         }
 yy2601:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2602;
+        case 'r':        goto yy2602;
         default:        goto yy872;
         }
 yy2602:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2603;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2603;
         }
 yy2603:
-        yych = *++curPos;
-        switch (yych) {
-        case 'k':        goto yy2604;
-        default:        goto yy872;
-        }
-yy2604:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy2605;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_RELEASEFBAR; return EInstruction;
+	default: return EEmpty; } }
 yy2605:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2606;
+        case 'a':        goto yy2606;
         default:        goto yy872;
         }
 yy2606:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2607;
+        case 't':        goto yy2607;
         default:        goto yy872;
         }
 yy2607:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy2608;
-        default:        goto yy872;
-        }
-yy2608:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy2609;
-        default:        goto yy872;
-        }
-yy2609:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy2610;
-        default:        goto yy872;
-        }
-yy2610:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy2611;
-        default:        goto yy872;
-        }
-yy2611:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2612;
-        default:        goto yy872;
-        }
-yy2612:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2613;
-        default:        goto yy872;
-        }
-yy2613:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy2614;
-        default:        goto yy872;
-        }
-yy2614:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy2615;
-        default:        goto yy872;
-        }
-yy2615:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -40119,67 +40073,116 @@ yy2615:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2616;
+        default:        goto yy2608;
         }
-yy2616:
+yy2608:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_REQUESTEDWORKGROUPSPERCU; return EControl;               }
+        { brigId = Brig::BRIG_ADDRESSING_REPEAT; return ESamplerAddressingMode; }
+yy2610:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2611;
+        case 'i':        goto yy2612;
+        default:        goto yy872;
+        }
+yy2611:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy2667;
+        default:        goto yy872;
+        }
+yy2612:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2613;
+        default:        goto yy872;
+        }
+yy2613:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2614;
+        default:        goto yy872;
+        }
+yy2614:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2616;
+        case 'n':        goto yy2615;
+        default:        goto yy872;
+        }
+yy2615:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy2647;
+        default:        goto yy872;
+        }
+yy2616:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2617;
+        case 'g':        goto yy2618;
+        case 'w':        goto yy2619;
+        default:        goto yy872;
+        }
+yy2617:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2643;
+        default:        goto yy872;
+        }
 yy2618:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2619;
+        case 'r':        goto yy2634;
         default:        goto yy872;
         }
 yy2619:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2621;
-        case 'n':        goto yy2620;
+        case 'o':        goto yy2620;
         default:        goto yy872;
         }
 yy2620:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2652;
+        case 'r':        goto yy2621;
         default:        goto yy872;
         }
 yy2621:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2622;
-        case 'g':        goto yy2624;
-        case 'w':        goto yy2623;
+        case 'k':        goto yy2622;
         default:        goto yy872;
         }
 yy2622:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2648;
+        case 'g':        goto yy2623;
         default:        goto yy872;
         }
 yy2623:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2634;
+        case 'r':        goto yy2624;
         default:        goto yy872;
         }
 yy2624:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2625;
+        case 'o':        goto yy2625;
         default:        goto yy872;
         }
 yy2625:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2626;
+        case 'u':        goto yy2626;
         default:        goto yy872;
         }
 yy2626:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2627;
+        case 'p':        goto yy2627;
         default:        goto yy872;
         }
 yy2627:
@@ -40278,74 +40281,123 @@ yy2631:
 yy2632:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_REQUIREDGRIDSIZE;      return EControl;               }
+        { brigId = Brig::BRIG_CONTROL_REQUIREDWORKGROUPSIZE; return EControl; }
 yy2634:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2635;
+        case 'i':        goto yy2635;
         default:        goto yy872;
         }
 yy2635:
         yych = *++curPos;
         switch (yych) {
-        case 'k':        goto yy2636;
+        case 'd':        goto yy2636;
         default:        goto yy872;
         }
 yy2636:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy2637;
+        case 's':        goto yy2637;
         default:        goto yy872;
         }
 yy2637:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2638;
+        case 'i':        goto yy2638;
         default:        goto yy872;
         }
 yy2638:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2639;
+        case 'z':        goto yy2639;
         default:        goto yy872;
         }
 yy2639:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy2640;
+        case 'e':        goto yy2640;
         default:        goto yy872;
         }
 yy2640:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy2641;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2641;
         }
 yy2641:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy2642;
-        default:        goto yy872;
-        }
-yy2642:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2643;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_CONTROL_REQUIREDGRIDSIZE; return EControl; }
 yy2643:
         yych = *++curPos;
         switch (yych) {
-        case 'z':        goto yy2644;
+        case 'm':        goto yy2644;
         default:        goto yy872;
         }
 yy2644:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2645;
-        default:        goto yy872;
-        }
-yy2645:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -40412,137 +40464,88 @@ yy2645:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2646;
+        default:        goto yy2645;
         }
-yy2646:
+yy2645:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_REQUIREDWORKGROUPSIZE; return EControl;               }
+        { brigId = Brig::BRIG_CONTROL_REQUIREDDIM; return EControl; }
+yy2647:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy2648;
+        default:        goto yy872;
+        }
 yy2648:
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy2649;
+        case 'a':        goto yy2649;
         default:        goto yy872;
         }
 yy2649:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2650;
+        case 'r':        goto yy2650;
+        default:        goto yy872;
         }
 yy2650:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_REQUIREDDIM;           return EControl;               }
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2651;
+        default:        goto yy872;
+        }
+yy2651:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2652;
+        default:        goto yy872;
+        }
 yy2652:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy2653;
+        case 'a':        goto yy2653;
         default:        goto yy872;
         }
 yy2653:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2654;
+        case 'l':        goto yy2654;
         default:        goto yy872;
         }
 yy2654:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2655;
+        case 'w':        goto yy2655;
         default:        goto yy872;
         }
 yy2655:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2656;
+        case 'o':        goto yy2656;
         default:        goto yy872;
         }
 yy2656:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2657;
+        case 'r':        goto yy2657;
         default:        goto yy872;
         }
 yy2657:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2658;
+        case 'k':        goto yy2658;
         default:        goto yy872;
         }
 yy2658:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2659;
+        case 'g':        goto yy2659;
         default:        goto yy872;
         }
 yy2659:
         yych = *++curPos;
         switch (yych) {
-        case 'w':        goto yy2660;
+        case 'r':        goto yy2660;
         default:        goto yy872;
         }
 yy2660:
@@ -40554,52 +40557,22 @@ yy2660:
 yy2661:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2662;
+        case 'u':        goto yy2662;
         default:        goto yy872;
         }
 yy2662:
         yych = *++curPos;
         switch (yych) {
-        case 'k':        goto yy2663;
+        case 'p':        goto yy2663;
         default:        goto yy872;
         }
 yy2663:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy2664;
+        case 's':        goto yy2664;
         default:        goto yy872;
         }
 yy2664:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2665;
-        default:        goto yy872;
-        }
-yy2665:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy2666;
-        default:        goto yy872;
-        }
-yy2666:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy2667;
-        default:        goto yy872;
-        }
-yy2667:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy2668;
-        default:        goto yy872;
-        }
-yy2668:
-        yych = *++curPos;
-        switch (yych) {
-        case 's':        goto yy2669;
-        default:        goto yy872;
-        }
-yy2669:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -40666,146 +40639,118 @@ yy2669:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2670;
+        default:        goto yy2665;
         }
-yy2670:
+yy2665:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_REQUIRENOPARTIALWORKGROUPS; return EControl;               }
+        { brigId = Brig::BRIG_CONTROL_REQUIRENOPARTIALWORKGROUPS; return EControl; }
+yy2667:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2668;
+        default:        goto yy872;
+        }
+yy2668:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2669;
+        default:        goto yy872;
+        }
+yy2669:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2670;
+        default:        goto yy872;
+        }
+yy2670:
+        yych = *++curPos;
+        switch (yych) {
+        case 'w':        goto yy2671;
+        default:        goto yy872;
+        }
+yy2671:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy2672;
+        default:        goto yy872;
+        }
 yy2672:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2673;
+        case 'r':        goto yy2673;
         default:        goto yy872;
         }
 yy2673:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2674;
+        case 'k':        goto yy2674;
         default:        goto yy872;
         }
 yy2674:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2675;
+        case 'g':        goto yy2675;
         default:        goto yy872;
         }
 yy2675:
         yych = *++curPos;
         switch (yych) {
-        case 'y':        goto yy2676;
+        case 'r':        goto yy2676;
         default:        goto yy872;
         }
 yy2676:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2677;
+        case 'o':        goto yy2677;
+        default:        goto yy872;
         }
 yy2677:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_READONLY;  return ESegment; }
+        yych = *++curPos;
+        switch (yych) {
+        case 'u':        goto yy2678;
+        default:        goto yy872;
+        }
+yy2678:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy2679;
+        default:        goto yy872;
+        }
 yy2679:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy2835;
+        case 's':        goto yy2680;
         default:        goto yy872;
         }
 yy2680:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2822;
-        case 'r':        goto yy2824;
-        case 'u':        goto yy2823;
+        case 'p':        goto yy2681;
         default:        goto yy872;
         }
 yy2681:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy2792;
-        case 'g':        goto yy2794;
-        case 't':        goto yy2793;
+        case 'e':        goto yy2682;
         default:        goto yy872;
         }
 yy2682:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy2789;
+        case 'r':        goto yy2683;
         default:        goto yy872;
         }
 yy2683:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2784;
+        case 'c':        goto yy2684;
         default:        goto yy872;
         }
 yy2684:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2781;
+        case 'u':        goto yy2685;
         default:        goto yy872;
         }
 yy2685:
@@ -40848,6 +40793,7 @@ yy2685:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -40856,12 +40802,15 @@ yy2685:
         case 'f':
         case 'g':
         case 'h':
+        case 'i':
         case 'j':
         case 'k':
         case 'l':
         case 'm':
         case 'n':
+        case 'o':
         case 'p':
+        case 'q':
         case 'r':
         case 's':
         case 't':
@@ -40871,61 +40820,37 @@ yy2685:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'i':        goto yy2743;
-        case 'o':        goto yy2744;
-        case 'q':        goto yy2742;
-        default:        goto yy2740;
+        default:        goto yy2686;
         }
 yy2686:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy2733;
-        default:        goto yy872;
-        }
-yy2687:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2729;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_CONTROL_REQUESTEDWORKGROUPSPERCU; return EControl; }
 yy2688:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy2721;
-        case 'r':        goto yy2722;
+        case 'o':        goto yy2689;
         default:        goto yy872;
         }
 yy2689:
         yych = *++curPos;
         switch (yych) {
-        case 'g':        goto yy2711;
+        case 'n':        goto yy2690;
         default:        goto yy872;
         }
 yy2690:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2697;
+        case 'l':        goto yy2691;
         default:        goto yy872;
         }
 yy2691:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2692;
+        case 'y':        goto yy2692;
         default:        goto yy872;
         }
 yy2692:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy2693;
-        default:        goto yy872;
-        }
-yy2693:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy2694;
-        default:        goto yy872;
-        }
-yy2694:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -40991,358 +40916,250 @@ yy2694:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2695;
+        default:        goto yy2693;
         }
-yy2695:
+yy2693:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_SPILL;     return ESegment; }
+        { brigId = Brig::BRIG_SEGMENT_READONLY;  return ESegment; }
+yy2695:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2696;
+        default:        goto yy872;
+        }
+yy2696:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2697;
+        }
 yy2697:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2698;
-        default:        goto yy872;
-        }
-yy2698:
-        yych = *++curPos;
-        switch (yych) {
-        case 'm':        goto yy2699;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_RINT; return EInstruction;
+	default: return EEmpty; } }
 yy2699:
         yych = *++curPos;
         switch (yych) {
-        case '_':        goto yy2700;
+        case 's':        goto yy2888;
         default:        goto yy872;
         }
 yy2700:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2701;
+        case 'b':        goto yy2885;
         default:        goto yy872;
         }
 yy2701:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2702;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'p':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case 'i':        goto yy2846;
+        case 'o':        goto yy2847;
+        case 'q':        goto yy2848;
+        default:        goto yy2844;
         }
 yy2702:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2703;
+        case 'r':        goto yy2840;
         default:        goto yy872;
         }
 yy2703:
         yych = *++curPos;
         switch (yych) {
-        case '1':        goto yy2705;
-        case '8':        goto yy2704;
+        case 'g':        goto yy2804;
         default:        goto yy872;
         }
 yy2704:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2709;
+        case 'l':        goto yy2791;
+        case 'r':        goto yy2792;
+        case 'u':        goto yy2793;
+        default:        goto yy872;
         }
 yy2705:
         yych = *++curPos;
         switch (yych) {
-        case '6':        goto yy2706;
+        case 'c':        goto yy2761;
+        case 'g':        goto yy2762;
+        case 't':        goto yy2763;
         default:        goto yy872;
         }
 yy2706:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2707;
+        case 'a':        goto yy2756;
+        default:        goto yy872;
         }
 yy2707:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_SNORM_INT16;      return EImageFormat;           }
+        yych = *++curPos;
+        switch (yych) {
+        case 'g':        goto yy2748;
+        case 'r':        goto yy2749;
+        default:        goto yy872;
+        }
+yy2708:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2741;
+        default:        goto yy872;
+        }
 yy2709:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_SNORM_INT8;       return EImageFormat;           }
+        yych = *++curPos;
+        switch (yych) {
+        case 'g':        goto yy2731;
+        default:        goto yy872;
+        }
+yy2710:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy2717;
+        default:        goto yy872;
+        }
 yy2711:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2712;
+        case 'i':        goto yy2712;
         default:        goto yy872;
         }
 yy2712:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'y':
-        case 'z':        goto yy872;
-        case 'a':        goto yy2716;
-        case 'x':        goto yy2713;
-        default:        goto yy2714;
+        case 'l':        goto yy2713;
+        default:        goto yy872;
         }
 yy2713:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2719;
+        case 'l':        goto yy2714;
+        default:        goto yy872;
         }
 yy2714:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_SRGB;            return EImageOrder;           
-	default: return EEmpty; } }
-yy2716:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -41382,7 +41199,6 @@ yy2716:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -41409,27 +41225,56 @@ yy2716:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2717;
+        default:        goto yy2715;
         }
+yy2715:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_SEGMENT_SPILL;     return ESegment; }
 yy2717:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_SRGBA;           return EImageOrder;           
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2718;
+        default:        goto yy872;
+        }
+yy2718:
+        yych = *++curPos;
+        switch (yych) {
+        case 'm':        goto yy2719;
+        default:        goto yy872;
+        }
 yy2719:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_SRGBX;           return EImageOrder;           
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case '_':        goto yy2720;
+        default:        goto yy872;
+        }
+yy2720:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2721;
+        default:        goto yy872;
+        }
 yy2721:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2725;
+        case 'n':        goto yy2722;
         default:        goto yy872;
         }
 yy2722:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2723;
+        default:        goto yy872;
+        }
+yy2723:
+        yych = *++curPos;
+        switch (yych) {
+        case '1':        goto yy2725;
+        case '8':        goto yy2724;
+        default:        goto yy872;
+        }
+yy2724:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -41469,6 +41314,7 @@ yy2722:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -41495,18 +41341,12 @@ yy2722:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2723;
+        default:        goto yy2729;
         }
-yy2723:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SBR;                    return EInstruction;          
-	default: return EEmpty; } }
 yy2725:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2726;
+        case '6':        goto yy2726;
         default:        goto yy872;
         }
 yy2726:
@@ -41581,16 +41421,18 @@ yy2726:
 yy2727:
         ++curPos;
         curPos = ctxMarker;
-        { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_SBGRA;           return EImageOrder;           
-	default: return EEmpty; } }
+        { brigId = Brig::BRIG_CHANNEL_TYPE_SNORM_INT16; return EImageFormat; }
 yy2729:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_CHANNEL_TYPE_SNORM_INT8; return EImageFormat; }
+yy2731:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2730;
+        case 'b':        goto yy2732;
         default:        goto yy872;
         }
-yy2730:
+yy2732:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -41630,6 +41472,82 @@ yy2730:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'y':
+        case 'z':        goto yy872;
+        case 'a':        goto yy2735;
+        case 'x':        goto yy2736;
+        default:        goto yy2733;
+        }
+yy2733:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_SRGB; return EImageOrder;
+	default: return EEmpty; } }
+yy2735:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -41656,15 +41574,9 @@ yy2730:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2731;
+        default:        goto yy2739;
         }
-yy2731:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SQRT;                   return EInstruction;          
-	default: return EEmpty; } }
-yy2733:
+yy2736:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -41704,6 +41616,7 @@ yy2733:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -41711,6 +41624,7 @@ yy2733:
         case 'e':
         case 'f':
         case 'g':
+        case 'h':
         case 'i':
         case 'j':
         case 'k':
@@ -41729,22 +41643,21 @@ yy2733:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'h':        goto yy2736;
-        default:        goto yy2734;
-        }
-yy2734:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SAD;                    return EInstruction;          
-	default: return EEmpty; } }
-yy2736:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2737;
-        default:        goto yy872;
+        default:        goto yy2737;
         }
 yy2737:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_SRGBX; return EImageOrder;
+	default: return EEmpty; } }
+yy2739:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_SRGBA; return EImageOrder;
+	default: return EEmpty; } }
+yy2741:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -41791,7 +41704,6 @@ yy2737:
         case 'e':
         case 'f':
         case 'g':
-        case 'h':
         case 'i':
         case 'j':
         case 'k':
@@ -41810,38 +41722,21 @@ yy2737:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2738;
+        case 'h':        goto yy2742;
+        default:        goto yy2743;
         }
-yy2738:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SADHI;                  return EInstruction;          
-	default: return EEmpty; } }
-yy2740:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ST;                     return EInstruction;          
-	default: return EEmpty; } }
 yy2742:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy2754;
+        case 'i':        goto yy2745;
         default:        goto yy872;
         }
 yy2743:
-        yych = *++curPos;
-        switch (yych) {
-        case 'm':        goto yy2748;
-        default:        goto yy872;
-        }
-yy2744:
-        yych = *++curPos;
-        switch (yych) {
-        case 'f':        goto yy2745;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SAD; return EInstruction;
+	default: return EEmpty; } }
 yy2745:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -41914,27 +41809,15 @@ yy2746:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_STOF;                   return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SADHI; return EInstruction;
 	default: return EEmpty; } }
 yy2748:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2749;
+        case 'r':        goto yy2752;
         default:        goto yy872;
         }
 yy2749:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy2750;
-        default:        goto yy872;
-        }
-yy2750:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2751;
-        default:        goto yy872;
-        }
-yy2751:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -42000,85 +41883,209 @@ yy2751:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2752;
+        default:        goto yy2750;
         }
-yy2752:
+yy2750:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_STIMAGE;                return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SBR; return EInstruction;
 	default: return EEmpty; } }
+yy2752:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2753;
+        default:        goto yy872;
+        }
+yy2753:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2754;
+        }
 yy2754:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2755;
-        default:        goto yy872;
-        }
-yy2755:
-        yych = *++curPos;
-        switch (yych) {
-        case 'u':        goto yy2756;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_SBGRA; return EImageOrder;
+	default: return EEmpty; } }
 yy2756:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2757;
+        case 'l':        goto yy2757;
         default:        goto yy872;
         }
 yy2757:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2758;
-        case 'w':        goto yy2759;
+        case 'l':        goto yy2758;
         default:        goto yy872;
         }
 yy2758:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2771;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2759;
         }
 yy2759:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2760;
-        default:        goto yy872;
-        }
-yy2760:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2761;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SCALL; return EInstruction;
+	default: return EEmpty; } }
 yy2761:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2762;
+        case 't':        goto yy2785;
         default:        goto yy872;
         }
 yy2762:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2763;
+        case 'm':        goto yy2778;
         default:        goto yy872;
         }
 yy2763:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2764;
+        case 'd':        goto yy2764;
         default:        goto yy872;
         }
 yy2764:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2765;
+        case 'e':        goto yy2765;
         default:        goto yy872;
         }
 yy2765:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2766;
+        case 't':        goto yy2766;
         default:        goto yy872;
         }
 yy2766:
@@ -42090,200 +42097,150 @@ yy2766:
 yy2767:
         yych = *++curPos;
         switch (yych) {
-        case 'x':        goto yy2768;
+        case 'c':        goto yy2768;
         default:        goto yy872;
         }
 yy2768:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2769;
+        case 't':        goto yy2769;
+        default:        goto yy872;
         }
 yy2769:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_STQUEUEWRITEINDEX;      return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2770;
+        default:        goto yy872;
+        }
+yy2770:
+        yych = *++curPos;
+        switch (yych) {
+        case 'x':        goto yy2771;
+        default:        goto yy872;
+        }
 yy2771:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2772;
+        case 'c':        goto yy2772;
         default:        goto yy872;
         }
 yy2772:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2773;
+        case 'e':        goto yy2773;
         default:        goto yy872;
         }
 yy2773:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2774;
+        case 'p':        goto yy2774;
         default:        goto yy872;
         }
 yy2774:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2775;
+        case 't':        goto yy2775;
         default:        goto yy872;
         }
 yy2775:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2776;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2776;
         }
 yy2776:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2777;
-        default:        goto yy872;
-        }
-yy2777:
-        yych = *++curPos;
-        switch (yych) {
-        case 'x':        goto yy2778;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SETDETECTEXCEPT; return EInstruction;
+	default: return EEmpty; } }
 yy2778:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2779;
+        case 'e':        goto yy2779;
+        default:        goto yy872;
         }
 yy2779:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_STQUEUEREADINDEX;       return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2780;
+        default:        goto yy872;
+        }
+yy2780:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2781;
+        default:        goto yy872;
+        }
 yy2781:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy2782;
+        default:        goto yy872;
+        }
+yy2782:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -42349,101 +42306,106 @@ yy2781:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2782;
+        default:        goto yy2783;
         }
-yy2782:
+yy2783:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SUB;                    return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SEGMENTP; return EInstruction;
 	default: return EEmpty; } }
-yy2784:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy2785;
-        default:        goto yy872;
-        }
 yy2785:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2786;
+        case 'i':        goto yy2786;
         default:        goto yy872;
         }
 yy2786:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2787;
+        case 'o':        goto yy2787;
+        default:        goto yy872;
         }
 yy2787:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2788;
+        default:        goto yy872;
+        }
+yy2788:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2789;
+        }
+yy2789:
         ++curPos;
         curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SCALL;                  return EInstruction;          
-	default: return EEmpty; } }
-yy2789:
+        { return EKWSection; }
+yy2791:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -42509,57 +42471,9 @@ yy2789:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2790;
+        default:        goto yy2802;
         }
-yy2790:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EMemoryScopeContext: brigId = Brig::BRIG_MEMORY_SCOPE2_SYSTEM;          return EMemoryScope;          
-	default: return EEmpty; } }
 yy2792:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2816;
-        default:        goto yy872;
-        }
-yy2793:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy2802;
-        default:        goto yy872;
-        }
-yy2794:
-        yych = *++curPos;
-        switch (yych) {
-        case 'm':        goto yy2795;
-        default:        goto yy872;
-        }
-yy2795:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2796;
-        default:        goto yy872;
-        }
-yy2796:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2797;
-        default:        goto yy872;
-        }
-yy2797:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2798;
-        default:        goto yy872;
-        }
-yy2798:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy2799;
-        default:        goto yy872;
-        }
-yy2799:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -42627,79 +42541,31 @@ yy2799:
         case 'z':        goto yy872;
         default:        goto yy2800;
         }
-yy2800:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SEGMENTP;               return EInstruction;          
-	default: return EEmpty; } }
-yy2802:
+yy2793:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2803;
+        case 'f':        goto yy2794;
         default:        goto yy872;
         }
-yy2803:
+yy2794:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2804;
+        case 'f':        goto yy2795;
         default:        goto yy872;
         }
-yy2804:
+yy2795:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2805;
+        case 'l':        goto yy2796;
         default:        goto yy872;
         }
-yy2805:
+yy2796:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy2806;
+        case 'e':        goto yy2797;
         default:        goto yy872;
         }
-yy2806:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2807;
-        default:        goto yy872;
-        }
-yy2807:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2808;
-        default:        goto yy872;
-        }
-yy2808:
-        yych = *++curPos;
-        switch (yych) {
-        case 'x':        goto yy2809;
-        default:        goto yy872;
-        }
-yy2809:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy2810;
-        default:        goto yy872;
-        }
-yy2810:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2811;
-        default:        goto yy872;
-        }
-yy2811:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy2812;
-        default:        goto yy872;
-        }
-yy2812:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2813;
-        default:        goto yy872;
-        }
-yy2813:
+yy2797:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -42765,33 +42631,97 @@ yy2813:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2814;
+        default:        goto yy2798;
         }
-yy2814:
+yy2798:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SETDETECTEXCEPT;        return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SHUFFLE; return EInstruction;
 	default: return EEmpty; } }
-yy2816:
+yy2800:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SHR; return EInstruction;
+	default: return EEmpty; } }
+yy2802:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SHL; return EInstruction;
+	default: return EEmpty; } }
+yy2804:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2817;
+        case 'n':        goto yy2805;
         default:        goto yy872;
         }
-yy2817:
+yy2805:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2818;
+        case 'a':        goto yy2806;
+        case 'e':        goto yy2807;
         default:        goto yy872;
         }
-yy2818:
+yy2806:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2819;
+        case 'l':        goto yy2824;
+        case 't':        goto yy2825;
         default:        goto yy872;
         }
-yy2819:
+yy2807:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2808;
+        default:        goto yy872;
+        }
+yy2808:
+        yych = *++curPos;
+        switch (yych) {
+        case '_':        goto yy2809;
+        default:        goto yy872;
+        }
+yy2809:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2810;
+        default:        goto yy872;
+        }
+yy2810:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2811;
+        default:        goto yy872;
+        }
+yy2811:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2812;
+        default:        goto yy872;
+        }
+yy2812:
+        yych = *++curPos;
+        switch (yych) {
+        case '1':        goto yy2813;
+        case '3':        goto yy2814;
+        case '8':        goto yy2815;
+        default:        goto yy872;
+        }
+yy2813:
+        yych = *++curPos;
+        switch (yych) {
+        case '6':        goto yy2821;
+        default:        goto yy872;
+        }
+yy2814:
+        yych = *++curPos;
+        switch (yych) {
+        case '2':        goto yy2818;
+        default:        goto yy872;
+        }
+yy2815:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -42858,13 +42788,13 @@ yy2819:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2820;
+        default:        goto yy2816;
         }
-yy2820:
+yy2816:
         ++curPos;
         curPos = ctxMarker;
-        { return EKWSection; }
-yy2822:
+        { brigId = Brig::BRIG_CHANNEL_TYPE_SIGNED_INT8; return EImageFormat; }
+yy2818:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -42904,6 +42834,7 @@ yy2822:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -42930,14 +42861,85 @@ yy2822:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2833;
+        default:        goto yy2819;
         }
-yy2823:
+yy2819:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_CHANNEL_TYPE_SIGNED_INT32; return EImageFormat; }
+yy2821:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'f':        goto yy2827;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2822;
         }
+yy2822:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_CHANNEL_TYPE_SIGNED_INT16; return EImageFormat; }
 yy2824:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -42991,7 +42993,6 @@ yy2824:
         case 'k':
         case 'l':
         case 'm':
-        case 'n':
         case 'o':
         case 'p':
         case 'q':
@@ -43004,33 +43005,28 @@ yy2824:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2825;
+        case 'n':        goto yy2833;
+        default:        goto yy2831;
         }
 yy2825:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SHR;                    return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'u':        goto yy2826;
+        default:        goto yy872;
+        }
+yy2826:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2827;
+        default:        goto yy872;
+        }
 yy2827:
         yych = *++curPos;
         switch (yych) {
-        case 'f':        goto yy2828;
+        case 'e':        goto yy2828;
         default:        goto yy872;
         }
 yy2828:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy2829;
-        default:        goto yy872;
-        }
-yy2829:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2830;
-        default:        goto yy872;
-        }
-yy2830:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -43070,6 +43066,7 @@ yy2830:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -43096,396 +43093,300 @@ yy2830:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2831;
+        default:        goto yy2829;
         }
+yy2829:
+        ++curPos;
+        curPos = ctxMarker;
+        { return EKWSignature; }
 yy2831:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SHUFFLE;                return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SIGNAL; return EInstruction;
 	default: return EEmpty; } }
 yy2833:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SHL;                    return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy2834;
+        default:        goto yy872;
+        }
+yy2834:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2835;
+        default:        goto yy872;
+        }
 yy2835:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2836;
+        case 'e':        goto yy2836;
         default:        goto yy872;
         }
 yy2836:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2837;
-        case 'e':        goto yy2838;
+        case 't':        goto yy2837;
         default:        goto yy872;
         }
 yy2837:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2855;
-        case 't':        goto yy2856;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2838;
         }
 yy2838:
-        yych = *++curPos;
-        switch (yych) {
-        case 'd':        goto yy2839;
-        default:        goto yy872;
-        }
-yy2839:
-        yych = *++curPos;
-        switch (yych) {
-        case '_':        goto yy2840;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SIGNALNORET; return EInstruction;
+	default: return EEmpty; } }
 yy2840:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2841;
+        case 't':        goto yy2841;
         default:        goto yy872;
         }
 yy2841:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2842;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2842;
         }
 yy2842:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2843;
-        default:        goto yy872;
-        }
-yy2843:
-        yych = *++curPos;
-        switch (yych) {
-        case '1':        goto yy2844;
-        case '3':        goto yy2845;
-        case '8':        goto yy2846;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SQRT; return EInstruction;
+	default: return EEmpty; } }
 yy2844:
-        yych = *++curPos;
-        switch (yych) {
-        case '6':        goto yy2852;
-        default:        goto yy872;
-        }
-yy2845:
-        yych = *++curPos;
-        switch (yych) {
-        case '2':        goto yy2849;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ST; return EInstruction;
+	default: return EEmpty; } }
 yy2846:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2847;
+        case 'm':        goto yy2879;
+        default:        goto yy872;
         }
 yy2847:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_SIGNED_INT8;      return EImageFormat;           }
-yy2849:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2850;
+        case 'f':        goto yy2876;
+        default:        goto yy872;
+        }
+yy2848:
+        yych = *++curPos;
+        switch (yych) {
+        case 'u':        goto yy2849;
+        default:        goto yy872;
+        }
+yy2849:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2850;
+        default:        goto yy872;
         }
 yy2850:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_SIGNED_INT32;     return EImageFormat;           }
-yy2852:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case '_':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2853;
+        case 'u':        goto yy2851;
+        default:        goto yy872;
+        }
+yy2851:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2852;
+        default:        goto yy872;
+        }
+yy2852:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2854;
+        case 'w':        goto yy2853;
+        default:        goto yy872;
         }
 yy2853:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_SIGNED_INT16;     return EImageFormat;           }
-yy2855:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case 'n':        goto yy2864;
-        default:        goto yy2862;
+        case 'r':        goto yy2865;
+        default:        goto yy872;
+        }
+yy2854:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2855;
+        default:        goto yy872;
+        }
+yy2855:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2856;
+        default:        goto yy872;
         }
 yy2856:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy2857;
+        case 'd':        goto yy2857;
         default:        goto yy872;
         }
 yy2857:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2858;
+        case 'i':        goto yy2858;
         default:        goto yy872;
         }
 yy2858:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2859;
+        case 'n':        goto yy2859;
         default:        goto yy872;
         }
 yy2859:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2860;
+        default:        goto yy872;
+        }
+yy2860:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2861;
+        default:        goto yy872;
+        }
+yy2861:
+        yych = *++curPos;
+        switch (yych) {
+        case 'x':        goto yy2862;
+        default:        goto yy872;
+        }
+yy2862:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -43525,7 +43426,6 @@ yy2859:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -43552,245 +43452,229 @@ yy2859:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2860;
+        default:        goto yy2863;
         }
-yy2860:
-        ++curPos;
-        curPos = ctxMarker;
-        { return EKWSignature; }
-yy2862:
+yy2863:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SIGNAL;                 return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_STQUEUEREADINDEX; return EInstruction;
 	default: return EEmpty; } }
-yy2864:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy2865;
-        default:        goto yy872;
-        }
 yy2865:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2866;
+        case 'i':        goto yy2866;
         default:        goto yy872;
         }
 yy2866:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2867;
+        case 't':        goto yy2867;
         default:        goto yy872;
         }
 yy2867:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2868;
+        case 'e':        goto yy2868;
         default:        goto yy872;
         }
 yy2868:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2869;
+        case 'i':        goto yy2869;
+        default:        goto yy872;
         }
 yy2869:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SIGNALNORET;            return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2870;
+        default:        goto yy872;
+        }
+yy2870:
+        yych = *++curPos;
+        switch (yych) {
+        case 'd':        goto yy2871;
+        default:        goto yy872;
+        }
 yy2871:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy2921;
+        case 'e':        goto yy2872;
         default:        goto yy872;
         }
 yy2872:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy2891;
+        case 'x':        goto yy2873;
         default:        goto yy872;
         }
 yy2873:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2874;
-        case 'i':        goto yy2876;
-        case 'o':        goto yy2875;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2874;
         }
 yy2874:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy2886;
-        default:        goto yy872;
-        }
-yy2875:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy2883;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_STQUEUEWRITEINDEX; return EInstruction;
+	default: return EEmpty; } }
 yy2876:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'v':        goto yy2877;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2877;
         }
 yy2877:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2878;
-        default:        goto yy872;
-        }
-yy2878:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2879;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_STOF; return EInstruction;
+	default: return EEmpty; } }
 yy2879:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2880;
+        case 'a':        goto yy2880;
         default:        goto yy872;
         }
 yy2880:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2881;
+        case 'g':        goto yy2881;
+        default:        goto yy872;
         }
 yy2881:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_PRIVATE;   return ESegment; }
-yy2883:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2882;
+        default:        goto yy872;
+        }
+yy2882:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -43830,7 +43714,6 @@ yy2883:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -43857,24 +43740,88 @@ yy2883:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2884;
+        default:        goto yy2883;
         }
-yy2884:
+yy2883:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_LINKAGE_PROGRAM; return ELinkage; }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_STIMAGE; return EInstruction;
+	default: return EEmpty; } }
+yy2885:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2886;
+        }
 yy2886:
-        yych = *++curPos;
-        switch (yych) {
-        case 'm':        goto yy2887;
-        default:        goto yy872;
-        }
-yy2887:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2888;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SUB; return EInstruction;
+	default: return EEmpty; } }
 yy2888:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -43915,7 +43862,6 @@ yy2888:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -43947,259 +43893,302 @@ yy2888:
 yy2889:
         ++curPos;
         curPos = ctxMarker;
-        { return EKWPragma; }
+        { switch(ctx) {
+	case EMemoryScopeContext: brigId = Brig::BRIG_MEMORY_SCOPE2_SYSTEM; return EMemoryScope;
+	default: return EEmpty; } }
 yy2891:
         yych = *++curPos;
         switch (yych) {
-        case 'k':        goto yy2892;
+        case 'p':        goto yy2941;
         default:        goto yy872;
         }
 yy2892:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'd':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        case 'c':        goto yy2893;
-        case 'e':        goto yy2894;
-        default:        goto yy2895;
+        case 'c':        goto yy2911;
+        default:        goto yy872;
         }
 yy2893:
         yych = *++curPos;
         switch (yych) {
-        case 'v':        goto yy2917;
+        case 'a':        goto yy2894;
+        case 'i':        goto yy2896;
+        case 'o':        goto yy2895;
         default:        goto yy872;
         }
 yy2894:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2897;
+        case 'g':        goto yy2906;
         default:        goto yy872;
         }
 yy2895:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_PACK;                   return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'g':        goto yy2903;
+        default:        goto yy872;
+        }
+yy2896:
+        yych = *++curPos;
+        switch (yych) {
+        case 'v':        goto yy2897;
+        default:        goto yy872;
+        }
 yy2897:
         yych = *++curPos;
         switch (yych) {
-        case 'c':        goto yy2899;
-        case 'i':        goto yy2898;
+        case 'a':        goto yy2898;
         default:        goto yy872;
         }
 yy2898:
         yych = *++curPos;
         switch (yych) {
-        case 'd':        goto yy2914;
+        case 't':        goto yy2899;
         default:        goto yy872;
         }
 yy2899:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2900;
+        case 'e':        goto yy2900;
         default:        goto yy872;
         }
 yy2900:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'm':        goto yy2901;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2901;
         }
 yy2901:
-        yych = *++curPos;
-        switch (yych) {
-        case 'p':        goto yy2902;
-        default:        goto yy872;
-        }
-yy2902:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy2903;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_SEGMENT_PRIVATE;   return ESegment; }
 yy2903:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy2904;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2904;
         }
 yy2904:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2905;
-        default:        goto yy872;
-        }
-yy2905:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2906;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_LINKAGE_PROGRAM; return ELinkage; }
 yy2906:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2907;
+        case 'm':        goto yy2907;
         default:        goto yy872;
         }
 yy2907:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy2908;
+        case 'a':        goto yy2908;
         default:        goto yy872;
         }
 yy2908:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy2909;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2909;
         }
 yy2909:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2910;
-        default:        goto yy872;
-        }
-yy2910:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy2911;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { return EKWPragma; }
 yy2911:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2912;
+        case 'k':        goto yy2912;
+        default:        goto yy872;
         }
 yy2912:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_PACKETCOMPLETIONSIG;    return EInstruction;          
-	default: return EEmpty; } }
-yy2914:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -44241,9 +44230,7 @@ yy2914:
         case 'Z':
         case 'a':
         case 'b':
-        case 'c':
         case 'd':
-        case 'e':
         case 'f':
         case 'g':
         case 'h':
@@ -44265,125 +44252,48 @@ yy2914:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2915;
+        case 'c':        goto yy2915;
+        case 'e':        goto yy2916;
+        default:        goto yy2913;
         }
-yy2915:
+yy2913:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_PACKETID;               return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_PACK; return EInstruction;
 	default: return EEmpty; } }
+yy2915:
+        yych = *++curPos;
+        switch (yych) {
+        case 'v':        goto yy2937;
+        default:        goto yy872;
+        }
+yy2916:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2917;
+        default:        goto yy872;
+        }
 yy2917:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2918;
+        case 'c':        goto yy2918;
+        case 'i':        goto yy2919;
         default:        goto yy872;
         }
 yy2918:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2919;
-        }
-yy2919:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_PACKCVT;                return EInstruction;          
-	default: return EEmpty; } }
-yy2921:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy2922;
-        default:        goto yy872;
-        }
-yy2922:
         yych = *++curPos;
         switch (yych) {
         case 'o':        goto yy2923;
         default:        goto yy872;
         }
-yy2923:
+yy2919:
         yych = *++curPos;
         switch (yych) {
-        case 'u':        goto yy2924;
+        case 'd':        goto yy2920;
         default:        goto yy872;
         }
-yy2924:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2925;
-        default:        goto yy872;
-        }
-yy2925:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2926;
-        default:        goto yy872;
-        }
-yy2926:
+yy2920:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -44449,64 +44359,154 @@ yy2926:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2927;
+        default:        goto yy2921;
         }
-yy2927:
+yy2921:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_POPCOUNT;               return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_PACKETID; return EInstruction;
 	default: return EEmpty; } }
+yy2923:
+        yych = *++curPos;
+        switch (yych) {
+        case 'm':        goto yy2924;
+        default:        goto yy872;
+        }
+yy2924:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy2925;
+        default:        goto yy872;
+        }
+yy2925:
+        yych = *++curPos;
+        switch (yych) {
+        case 'l':        goto yy2926;
+        default:        goto yy872;
+        }
+yy2926:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2927;
+        default:        goto yy872;
+        }
+yy2927:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2928;
+        default:        goto yy872;
+        }
+yy2928:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2929;
+        default:        goto yy872;
+        }
 yy2929:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy2987;
+        case 'o':        goto yy2930;
         default:        goto yy872;
         }
 yy2930:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2982;
+        case 'n':        goto yy2931;
         default:        goto yy872;
         }
 yy2931:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2969;
-        case 'o':        goto yy2970;
+        case 's':        goto yy2932;
         default:        goto yy872;
         }
 yy2932:
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2966;
+        case 'i':        goto yy2933;
         default:        goto yy872;
         }
 yy2933:
         yych = *++curPos;
         switch (yych) {
-        case 'l':        goto yy2952;
-        case 'r':        goto yy2953;
+        case 'g':        goto yy2934;
         default:        goto yy872;
         }
 yy2934:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 'a':        goto yy2944;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2935;
         }
 yy2935:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2936;
-        default:        goto yy872;
-        }
-yy2936:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy2937;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_PACKETCOMPLETIONSIG; return EInstruction;
+	default: return EEmpty; } }
 yy2937:
         yych = *++curPos;
         switch (yych) {
@@ -44514,24 +44514,6 @@ yy2937:
         default:        goto yy872;
         }
 yy2938:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2939;
-        default:        goto yy872;
-        }
-yy2939:
-        yych = *++curPos;
-        switch (yych) {
-        case 'o':        goto yy2940;
-        default:        goto yy872;
-        }
-yy2940:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2941;
-        default:        goto yy872;
-        }
-yy2941:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -44571,7 +44553,6 @@ yy2941:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -44598,43 +44579,45 @@ yy2941:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2942;
+        default:        goto yy2939;
         }
-yy2942:
+yy2939:
         ++curPos;
         curPos = ctxMarker;
-        { return EKWFunction; }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_PACKCVT; return EInstruction;
+	default: return EEmpty; } }
+yy2941:
+        yych = *++curPos;
+        switch (yych) {
+        case 'c':        goto yy2942;
+        default:        goto yy872;
+        }
+yy2942:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy2943;
+        default:        goto yy872;
+        }
+yy2943:
+        yych = *++curPos;
+        switch (yych) {
+        case 'u':        goto yy2944;
+        default:        goto yy872;
+        }
 yy2944:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2945;
+        case 'n':        goto yy2945;
         default:        goto yy872;
         }
 yy2945:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy2946;
+        case 't':        goto yy2946;
         default:        goto yy872;
         }
 yy2946:
-        yych = *++curPos;
-        switch (yych) {
-        case 'i':        goto yy2947;
-        default:        goto yy872;
-        }
-yy2947:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2948;
-        default:        goto yy872;
-        }
-yy2948:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2949;
-        default:        goto yy872;
-        }
-yy2949:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -44674,7 +44657,6 @@ yy2949:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -44701,40 +44683,62 @@ yy2949:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2950;
+        default:        goto yy2947;
         }
-yy2950:
+yy2947:
         ++curPos;
         curPos = ctxMarker;
-        { return EKWFbarrier; }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_POPCOUNT; return EInstruction;
+	default: return EEmpty; } }
+yy2949:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy3007;
+        default:        goto yy872;
+        }
+yy2950:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy3002;
+        default:        goto yy872;
+        }
+yy2951:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy2999;
+        default:        goto yy872;
+        }
 yy2952:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2961;
+        case 'a':        goto yy2986;
+        case 'o':        goto yy2987;
         default:        goto yy872;
         }
 yy2953:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy2954;
+        case 'l':        goto yy2972;
+        case 'r':        goto yy2973;
         default:        goto yy872;
         }
 yy2954:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2955;
+        case 'a':        goto yy2964;
         default:        goto yy872;
         }
 yy2955:
         yych = *++curPos;
         switch (yych) {
-        case 'b':        goto yy2956;
+        case 'n':        goto yy2956;
         default:        goto yy872;
         }
 yy2956:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy2957;
+        case 'c':        goto yy2957;
         default:        goto yy872;
         }
 yy2957:
@@ -44744,92 +44748,24 @@ yy2957:
         default:        goto yy872;
         }
 yy2958:
-        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2959;
+        case 'i':        goto yy2959;
+        default:        goto yy872;
         }
 yy2959:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FIRSTBIT;               return EInstruction;          
-	default: return EEmpty; } }
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy2960;
+        default:        goto yy872;
+        }
+yy2960:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy2961;
+        default:        goto yy872;
+        }
 yy2961:
-        yych = *++curPos;
-        switch (yych) {
-        case 'e':        goto yy2962;
-        default:        goto yy872;
-        }
-yy2962:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2963;
-        default:        goto yy872;
-        }
-yy2963:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -44896,13 +44832,43 @@ yy2963:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2964;
+        default:        goto yy2962;
         }
-yy2964:
+yy2962:
         ++curPos;
         curPos = ctxMarker;
-        { return EKWSamplerFilter; }
+        { return EKWFunction; }
+yy2964:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2965;
+        default:        goto yy872;
+        }
+yy2965:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2966;
+        default:        goto yy872;
+        }
 yy2966:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2967;
+        default:        goto yy872;
+        }
+yy2967:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2968;
+        default:        goto yy872;
+        }
+yy2968:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2969;
+        default:        goto yy872;
+        }
+yy2969:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -44942,6 +44908,7 @@ yy2966:
         case 'X':
         case 'Y':
         case 'Z':
+        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -44968,40 +44935,135 @@ yy2966:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2967;
-        }
-yy2967:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FMA;                    return EInstruction;          
-	default: return EEmpty; } }
-yy2969:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2979;
-        default:        goto yy872;
+        default:        goto yy2970;
         }
 yy2970:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2972;
-        case 'o':        goto yy2971;
-        default:        goto yy872;
-        }
-yy2971:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2976;
-        default:        goto yy872;
-        }
+        ++curPos;
+        curPos = ctxMarker;
+        { return EKWFbarrier; }
 yy2972:
         yych = *++curPos;
         switch (yych) {
-        case 't':        goto yy2973;
+        case 't':        goto yy2981;
         default:        goto yy872;
         }
 yy2973:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy2974;
+        default:        goto yy872;
+        }
+yy2974:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2975;
+        default:        goto yy872;
+        }
+yy2975:
+        yych = *++curPos;
+        switch (yych) {
+        case 'b':        goto yy2976;
+        default:        goto yy872;
+        }
+yy2976:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy2977;
+        default:        goto yy872;
+        }
+yy2977:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2978;
+        default:        goto yy872;
+        }
+yy2978:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2979;
+        }
+yy2979:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FIRSTBIT; return EInstruction;
+	default: return EEmpty; } }
+yy2981:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy2982;
+        default:        goto yy872;
+        }
+yy2982:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2983;
+        default:        goto yy872;
+        }
+yy2983:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -45068,251 +45130,111 @@ yy2973:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2974;
-        }
-yy2974:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_FLOAT;            return EImageFormat;           }
-yy2976:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2977;
-        }
-yy2977:
-        ++curPos;
-        curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FLOOR;                  return EInstruction;          
-	default: return EEmpty; } }
-yy2979:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2980;
-        }
-yy2980:
-        ++curPos;
-        curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_FLAT;      return ESegment; }
-yy2982:
-        yych = *++curPos;
-        switch (yych) {
-        case 'c':        goto yy2983;
-        default:        goto yy872;
-        }
-yy2983:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy2984;
-        default:        goto yy872;
+        default:        goto yy2984;
         }
 yy2984:
-        ctxMarker = curPos + 1;
-        yych = *++curPos;
-        switch (yych) {
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-        case 'A':
-        case 'B':
-        case 'C':
-        case 'D':
-        case 'E':
-        case 'F':
-        case 'G':
-        case 'H':
-        case 'I':
-        case 'J':
-        case 'K':
-        case 'L':
-        case 'M':
-        case 'N':
-        case 'O':
-        case 'P':
-        case 'Q':
-        case 'R':
-        case 'S':
-        case 'T':
-        case 'U':
-        case 'V':
-        case 'W':
-        case 'X':
-        case 'Y':
-        case 'Z':
-        case 'a':
-        case 'b':
-        case 'c':
-        case 'd':
-        case 'e':
-        case 'f':
-        case 'g':
-        case 'h':
-        case 'i':
-        case 'j':
-        case 'k':
-        case 'l':
-        case 'm':
-        case 'n':
-        case 'o':
-        case 'p':
-        case 'q':
-        case 'r':
-        case 's':
-        case 't':
-        case 'u':
-        case 'v':
-        case 'w':
-        case 'x':
-        case 'y':
-        case 'z':        goto yy872;
-        default:        goto yy2985;
-        }
-yy2985:
         ++curPos;
         curPos = ctxMarker;
-        { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FRACT;                  return EInstruction;          
-	default: return EEmpty; } }
+        { return EKWSamplerFilter; }
+yy2986:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2996;
+        default:        goto yy872;
+        }
 yy2987:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy2988;
+        case 'a':        goto yy2989;
+        case 'o':        goto yy2988;
         default:        goto yy872;
         }
 yy2988:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy2993;
+        default:        goto yy872;
+        }
+yy2989:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy2990;
+        default:        goto yy872;
+        }
+yy2990:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy2991;
+        }
+yy2991:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_CHANNEL_TYPE_FLOAT; return EImageFormat; }
+yy2993:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -45378,52 +45300,15 @@ yy2988:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy2989;
+        default:        goto yy2994;
         }
-yy2989:
+yy2994:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FTOS;                   return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FLOOR; return EInstruction;
 	default: return EEmpty; } }
-yy2991:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2992;
-        default:        goto yy872;
-        }
-yy2992:
-        yych = *++curPos;
-        switch (yych) {
-        case 'n':        goto yy2993;
-        default:        goto yy872;
-        }
-yy2993:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy2995;
-        case 'e':        goto yy2994;
-        default:        goto yy872;
-        }
-yy2994:
-        yych = *++curPos;
-        switch (yych) {
-        case 'l':        goto yy3009;
-        default:        goto yy872;
-        }
-yy2995:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy2996;
-        default:        goto yy872;
-        }
 yy2996:
-        yych = *++curPos;
-        switch (yych) {
-        case 'g':        goto yy2997;
-        default:        goto yy872;
-        }
-yy2997:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -45464,6 +45349,7 @@ yy2997:
         case 'Y':
         case 'Z':
         case 'a':
+        case 'b':
         case 'c':
         case 'd':
         case 'e':
@@ -45488,50 +45374,99 @@ yy2997:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        case 'b':        goto yy2998;
-        default:        goto yy2999;
+        default:        goto yy2997;
         }
-yy2998:
-        yych = *++curPos;
-        switch (yych) {
-        case 'a':        goto yy3001;
-        default:        goto yy872;
-        }
-yy2999:
+yy2997:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_KERNARG;   return ESegment; }
-yy3001:
+        { brigId = Brig::BRIG_SEGMENT_FLAT;      return ESegment; }
+yy2999:
+        ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy3002;
-        default:        goto yy872;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy3000;
         }
+yy3000:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FMA; return EInstruction;
+	default: return EEmpty; } }
 yy3002:
         yych = *++curPos;
         switch (yych) {
-        case 'e':        goto yy3003;
+        case 'c':        goto yy3003;
         default:        goto yy872;
         }
 yy3003:
         yych = *++curPos;
         switch (yych) {
-        case 'p':        goto yy3004;
+        case 't':        goto yy3004;
         default:        goto yy872;
         }
 yy3004:
-        yych = *++curPos;
-        switch (yych) {
-        case 't':        goto yy3005;
-        default:        goto yy872;
-        }
-yy3005:
-        yych = *++curPos;
-        switch (yych) {
-        case 'r':        goto yy3006;
-        default:        goto yy872;
-        }
-yy3006:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -45597,15 +45532,21 @@ yy3006:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy3007;
+        default:        goto yy3005;
         }
-yy3007:
+yy3005:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_KERNARGBASEPTR;         return EInstruction;          
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FRACT; return EInstruction;
 	default: return EEmpty; } }
-yy3009:
+yy3007:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy3008;
+        default:        goto yy872;
+        }
+yy3008:
         ctxMarker = curPos + 1;
         yych = *++curPos;
         switch (yych) {
@@ -45645,7 +45586,6 @@ yy3009:
         case 'X':
         case 'Y':
         case 'Z':
-        case '_':
         case 'a':
         case 'b':
         case 'c':
@@ -45672,40 +45612,49 @@ yy3009:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy3010;
+        default:        goto yy3009;
         }
-yy3010:
+yy3009:
         ++curPos;
         curPos = ctxMarker;
-        { return EKWKernel; }
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FTOS; return EInstruction;
+	default: return EEmpty; } }
+yy3011:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy3012;
+        default:        goto yy872;
+        }
 yy3012:
         yych = *++curPos;
         switch (yych) {
-        case 'r':        goto yy3013;
+        case 'n':        goto yy3013;
         default:        goto yy872;
         }
 yy3013:
         yych = *++curPos;
         switch (yych) {
-        case 's':        goto yy3014;
+        case 'a':        goto yy3015;
+        case 'e':        goto yy3014;
         default:        goto yy872;
         }
 yy3014:
         yych = *++curPos;
         switch (yych) {
-        case 'i':        goto yy3015;
+        case 'l':        goto yy3029;
         default:        goto yy872;
         }
 yy3015:
         yych = *++curPos;
         switch (yych) {
-        case 'o':        goto yy3016;
+        case 'r':        goto yy3016;
         default:        goto yy872;
         }
 yy3016:
         yych = *++curPos;
         switch (yych) {
-        case 'n':        goto yy3017;
+        case 'g':        goto yy3017;
         default:        goto yy872;
         }
 yy3017:
@@ -45748,6 +45697,188 @@ yy3017:
         case 'X':
         case 'Y':
         case 'Z':
+        case 'a':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        case 'b':        goto yy3018;
+        default:        goto yy3019;
+        }
+yy3018:
+        yych = *++curPos;
+        switch (yych) {
+        case 'a':        goto yy3021;
+        default:        goto yy872;
+        }
+yy3019:
+        ++curPos;
+        curPos = ctxMarker;
+        { brigId = Brig::BRIG_SEGMENT_KERNARG;   return ESegment; }
+yy3021:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy3022;
+        default:        goto yy872;
+        }
+yy3022:
+        yych = *++curPos;
+        switch (yych) {
+        case 'e':        goto yy3023;
+        default:        goto yy872;
+        }
+yy3023:
+        yych = *++curPos;
+        switch (yych) {
+        case 'p':        goto yy3024;
+        default:        goto yy872;
+        }
+yy3024:
+        yych = *++curPos;
+        switch (yych) {
+        case 't':        goto yy3025;
+        default:        goto yy872;
+        }
+yy3025:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy3026;
+        default:        goto yy872;
+        }
+yy3026:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy3027;
+        }
+yy3027:
+        ++curPos;
+        curPos = ctxMarker;
+        { switch(ctx) {
+	case EDefaultContext: brigId = Brig::BRIG_OPCODE_KERNARGBASEPTR; return EInstruction;
+	default: return EEmpty; } }
+yy3029:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
         case '_':
         case 'a':
         case 'b':
@@ -45775,13 +45906,116 @@ yy3017:
         case 'x':
         case 'y':
         case 'z':        goto yy872;
-        default:        goto yy3018;
+        default:        goto yy3030;
         }
-yy3018:
+yy3030:
+        ++curPos;
+        curPos = ctxMarker;
+        { return EKWKernel; }
+yy3032:
+        yych = *++curPos;
+        switch (yych) {
+        case 'r':        goto yy3033;
+        default:        goto yy872;
+        }
+yy3033:
+        yych = *++curPos;
+        switch (yych) {
+        case 's':        goto yy3034;
+        default:        goto yy872;
+        }
+yy3034:
+        yych = *++curPos;
+        switch (yych) {
+        case 'i':        goto yy3035;
+        default:        goto yy872;
+        }
+yy3035:
+        yych = *++curPos;
+        switch (yych) {
+        case 'o':        goto yy3036;
+        default:        goto yy872;
+        }
+yy3036:
+        yych = *++curPos;
+        switch (yych) {
+        case 'n':        goto yy3037;
+        default:        goto yy872;
+        }
+yy3037:
+        ctxMarker = curPos + 1;
+        yych = *++curPos;
+        switch (yych) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'A':
+        case 'B':
+        case 'C':
+        case 'D':
+        case 'E':
+        case 'F':
+        case 'G':
+        case 'H':
+        case 'I':
+        case 'J':
+        case 'K':
+        case 'L':
+        case 'M':
+        case 'N':
+        case 'O':
+        case 'P':
+        case 'Q':
+        case 'R':
+        case 'S':
+        case 'T':
+        case 'U':
+        case 'V':
+        case 'W':
+        case 'X':
+        case 'Y':
+        case 'Z':
+        case '_':
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+        case 'g':
+        case 'h':
+        case 'i':
+        case 'j':
+        case 'k':
+        case 'l':
+        case 'm':
+        case 'n':
+        case 'o':
+        case 'p':
+        case 'q':
+        case 'r':
+        case 's':
+        case 't':
+        case 'u':
+        case 'v':
+        case 'w':
+        case 'x':
+        case 'y':
+        case 'z':        goto yy872;
+        default:        goto yy3038;
+        }
+yy3038:
         ++curPos;
         curPos = ctxMarker;
         { return EKWVersion; }
-yy3020:
+yy3040:
         yych = *++curPos;
         switch (yych) {
         case '.':        goto yy917;
@@ -45798,10 +46032,10 @@ yy3020:
         case 'E':
         case 'e':        goto yy920;
         case 'X':
-        case 'x':        goto yy3028;
+        case 'x':        goto yy3048;
         default:        goto yy872;
         }
-yy3021:
+yy3041:
         yych = *++curPos;
         switch (yych) {
         case '0':
@@ -45813,10 +46047,10 @@ yy3021:
         case '6':
         case '7':
         case '8':
-        case '9':        goto yy3022;
+        case '9':        goto yy3042;
         default:        goto yy872;
         }
-yy3022:
+yy3042:
         yyaccept = 4;
         marker = ++curPos;
         yych = *curPos;
@@ -45830,22 +46064,22 @@ yy3022:
         case '6':
         case '7':
         case '8':
-        case '9':        goto yy3022;
+        case '9':        goto yy3042;
         case 'D':
         case 'd':        goto yy924;
         case 'E':
-        case 'e':        goto yy3024;
+        case 'e':        goto yy3044;
         case 'F':
         case 'f':        goto yy926;
         case 'H':
         case 'h':        goto yy928;
         default:        goto yy919;
         }
-yy3024:
+yy3044:
         yych = *++curPos;
         switch (yych) {
         case '+':
-        case '-':        goto yy3025;
+        case '-':        goto yy3045;
         case '0':
         case '1':
         case '2':
@@ -45855,10 +46089,10 @@ yy3024:
         case '6':
         case '7':
         case '8':
-        case '9':        goto yy3026;
+        case '9':        goto yy3046;
         default:        goto yy872;
         }
-yy3025:
+yy3045:
         yych = *++curPos;
         switch (yych) {
         case '0':
@@ -45870,10 +46104,10 @@ yy3025:
         case '6':
         case '7':
         case '8':
-        case '9':        goto yy3026;
+        case '9':        goto yy3046;
         default:        goto yy872;
         }
-yy3026:
+yy3046:
         ++curPos;
         yych = *curPos;
         switch (yych) {
@@ -45886,7 +46120,7 @@ yy3026:
         case '6':
         case '7':
         case '8':
-        case '9':        goto yy3026;
+        case '9':        goto yy3046;
         case 'D':
         case 'd':        goto yy924;
         case 'F':
@@ -45895,7 +46129,7 @@ yy3026:
         case 'h':        goto yy928;
         default:        goto yy919;
         }
-yy3028:
+yy3048:
         yych = *++curPos;
         switch (yych) {
         case '0':
@@ -45919,10 +46153,10 @@ yy3028:
         case 'c':
         case 'd':
         case 'e':
-        case 'f':        goto yy3029;
+        case 'f':        goto yy3049;
         default:        goto yy872;
         }
-yy3029:
+yy3049:
         ++curPos;
         yych = *curPos;
         switch (yych) {
@@ -45948,12 +46182,12 @@ yy3029:
         case 'c':
         case 'd':
         case 'e':
-        case 'f':        goto yy3029;
+        case 'f':        goto yy3049;
         case 'P':
         case 'p':        goto yy979;
         default:        goto yy872;
         }
-yy3031:
+yy3051:
         ++curPos;
         { scanEmbeddedText(t); return EEmbeddedText; }
 }
@@ -45979,36 +46213,36 @@ bool Scanner::continueMLComment()
         char yych;
         yych = *curPos;
         switch (yych) {
-        case '\n':        goto yy3038;
-        case '\r':        goto yy3037;
-        case '*':        goto yy3035;
-        default:        goto yy3040;
+        case '\n':        goto yy3058;
+        case '\r':        goto yy3057;
+        case '*':        goto yy3055;
+        default:        goto yy3060;
         }
-yy3035:
+yy3055:
         ++curPos;
         switch ((yych = *curPos)) {
-        case '/':        goto yy3042;
-        default:        goto yy3036;
+        case '/':        goto yy3062;
+        default:        goto yy3056;
         }
-yy3036:
+yy3056:
         { goto NLdone; }
-yy3037:
+yy3057:
         yych = *++curPos;
         switch (yych) {
-        case '\n':        goto yy3041;
-        default:        goto yy3036;
+        case '\n':        goto yy3061;
+        default:        goto yy3056;
         }
-yy3038:
+yy3058:
         ++curPos;
-yy3039:
+yy3059:
         { nextLine(curPos); begin = curPos; goto NLdone; }
-yy3040:
+yy3060:
         yych = *++curPos;
-        goto yy3036;
-yy3041:
+        goto yy3056;
+yy3061:
         yych = *++curPos;
-        goto yy3039;
-yy3042:
+        goto yy3059;
+yy3062:
         ++curPos;
         { t.m_text.end = t.m_text.begin = curPos; return false; }
 }
@@ -46023,40 +46257,40 @@ NLdone:
         char yych;
         yych = *curPos;
         switch (yych) {
-        case 0x00:        goto yy3051;
-        case '\n':        goto yy3049;
-        case '\r':        goto yy3048;
-        case '*':        goto yy3046;
-        default:        goto yy3053;
+        case 0x00:        goto yy3071;
+        case '\n':        goto yy3069;
+        case '\r':        goto yy3068;
+        case '*':        goto yy3066;
+        default:        goto yy3073;
         }
-yy3046:
+yy3066:
         ++curPos;
         switch ((yych = *curPos)) {
-        case '/':        goto yy3055;
-        default:        goto yy3047;
+        case '/':        goto yy3075;
+        default:        goto yy3067;
         }
-yy3047:
+yy3067:
         { continue; }
-yy3048:
+yy3068:
         yych = *++curPos;
         switch (yych) {
-        case '\n':        goto yy3054;
-        default:        goto yy3047;
+        case '\n':        goto yy3074;
+        default:        goto yy3067;
         }
-yy3049:
+yy3069:
         ++curPos;
-yy3050:
+yy3070:
         { t.m_text.begin = begin; t.m_text.end = prevPos; return true; }
-yy3051:
+yy3071:
         ++curPos;
         { t.m_text.begin = begin; t.m_text.end = prevPos; syntaxError(prevPos, "Premature end of comment"); }
-yy3053:
+yy3073:
         yych = *++curPos;
-        goto yy3047;
-yy3054:
+        goto yy3067;
+yy3074:
         yych = *++curPos;
-        goto yy3050;
-yy3055:
+        goto yy3070;
+yy3075:
         ++curPos;
         { t.m_text.begin = begin; t.m_text.end = prevPos; return true; }
 }
@@ -46075,31 +46309,31 @@ void Scanner::skipWhitespaces(Scanner::Token& t)
         char yych;
         yych = *(marker = curPos);
         switch (yych) {
-        case 0x00:        goto yy3066;
+        case 0x00:        goto yy3086;
         case '\t':
-        case ' ':        goto yy3060;
-        case '\n':        goto yy3064;
-        case '\r':        goto yy3062;
-        default:        goto yy3059;
+        case ' ':        goto yy3080;
+        case '\n':        goto yy3084;
+        case '\r':        goto yy3082;
+        default:        goto yy3079;
         }
-yy3059:
+yy3079:
         { break; }
-yy3060:
+yy3080:
         ++curPos;
         { continue; }
-yy3062:
+yy3082:
         yych = *++curPos;
         switch (yych) {
-        case '\n':        goto yy3064;
-        default:        goto yy3063;
+        case '\n':        goto yy3084;
+        default:        goto yy3083;
         }
-yy3063:
+yy3083:
         curPos = marker;
-        goto yy3059;
-yy3064:
+        goto yy3079;
+yy3084:
         ++curPos;
         { nextLine(curPos); continue; }
-yy3066:
+yy3086:
         ++curPos;
         { curPos = prevPos; break; }
 }

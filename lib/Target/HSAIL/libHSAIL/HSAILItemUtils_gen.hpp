@@ -38,6 +38,32 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 // SOFTWARE.
+inline bool instSupportsFtz(Brig::BrigOpcode16_t arg) {
+  using namespace Brig;
+  switch( arg ) {
+    case BRIG_OPCODE_ABS                : return true;
+    case BRIG_OPCODE_ADD                : return true;
+    case BRIG_OPCODE_CEIL               : return true;
+    case BRIG_OPCODE_CMP                : return true;
+    case BRIG_OPCODE_COPYSIGN           : return true;
+    case BRIG_OPCODE_CVT                : return true;
+    case BRIG_OPCODE_DIV                : return true;
+    case BRIG_OPCODE_FLOOR              : return true;
+    case BRIG_OPCODE_FMA                : return true;
+    case BRIG_OPCODE_FRACT              : return true;
+    case BRIG_OPCODE_MAX                : return true;
+    case BRIG_OPCODE_MIN                : return true;
+    case BRIG_OPCODE_MUL                : return true;
+    case BRIG_OPCODE_MULHI              : return true;
+    case BRIG_OPCODE_NEG                : return true;
+    case BRIG_OPCODE_RINT               : return true;
+    case BRIG_OPCODE_SQRT               : return true;
+    case BRIG_OPCODE_SUB                : return true;
+    case BRIG_OPCODE_TRUNC              : return true;
+    default : return false;
+    }
+}
+
 template <typename RetType, typename Visitor> RetType visitOpcode_gen(HSAIL_ASM::Inst inst, Visitor& vis) {
   using namespace Brig;
   switch( inst.opcode() ) {
@@ -96,6 +122,8 @@ template <typename RetType, typename Visitor> RetType visitOpcode_gen(HSAIL_ASM:
     case BRIG_OPCODE_GCNB4XCHG          : return vis.visitOpcode_GCNB4XCHG                      (HSAIL_ASM::InstBasic(inst));
     case BRIG_OPCODE_GCNBFM             : return vis.visitOpcode_GCNBFM                         (HSAIL_ASM::InstBasic(inst));
     case BRIG_OPCODE_GCNCONSUME         : return vis.visitOpcode_GCNCONSUME                     (HSAIL_ASM::InstAddr(inst));
+    case BRIG_OPCODE_GCNDIVRELAXED      : return vis.visitOpcode_GCNDIVRELAXED                  (HSAIL_ASM::InstBasic(inst));
+    case BRIG_OPCODE_GCNDIVRELAXEDNARROW : return vis.visitOpcode_GCNDIVRELAXEDNARROW            (HSAIL_ASM::InstBasic(inst));
     case BRIG_OPCODE_GCNFLDEXP          : return vis.visitOpcode_GCNFLDEXP                      (HSAIL_ASM::InstBasic(inst));
     case BRIG_OPCODE_GCNFREXP_EXP       : return vis.visitOpcode_GCNFREXP_EXP                   (HSAIL_ASM::InstBasic(inst));
     case BRIG_OPCODE_GCNFREXP_MANT      : return vis.visitOpcode_GCNFREXP_MANT                  (HSAIL_ASM::InstBasic(inst));
@@ -212,32 +240,6 @@ template <typename RetType, typename Visitor> RetType visitOpcode_gen(HSAIL_ASM:
     case BRIG_OPCODE_WORKITEMID         : return vis.visitOpcode_WORKITEMID                     (HSAIL_ASM::InstBasic(inst));
     case BRIG_OPCODE_XOR                : return vis.visitOpcode_XOR                            (HSAIL_ASM::InstBasic(inst));
     default : return RetType();
-    }
-}
-
-inline bool instSupportsFtz(Brig::BrigOpcode16_t arg) {
-  using namespace Brig;
-  switch( arg ) {
-    case BRIG_OPCODE_ABS                : return true;
-    case BRIG_OPCODE_ADD                : return true;
-    case BRIG_OPCODE_CEIL               : return true;
-    case BRIG_OPCODE_CMP                : return true;
-    case BRIG_OPCODE_COPYSIGN           : return true;
-    case BRIG_OPCODE_CVT                : return true;
-    case BRIG_OPCODE_DIV                : return true;
-    case BRIG_OPCODE_FLOOR              : return true;
-    case BRIG_OPCODE_FMA                : return true;
-    case BRIG_OPCODE_FRACT              : return true;
-    case BRIG_OPCODE_MAX                : return true;
-    case BRIG_OPCODE_MIN                : return true;
-    case BRIG_OPCODE_MUL                : return true;
-    case BRIG_OPCODE_MULHI              : return true;
-    case BRIG_OPCODE_NEG                : return true;
-    case BRIG_OPCODE_RINT               : return true;
-    case BRIG_OPCODE_SQRT               : return true;
-    case BRIG_OPCODE_SUB                : return true;
-    case BRIG_OPCODE_TRUNC              : return true;
-    default : return false;
     }
 }
 

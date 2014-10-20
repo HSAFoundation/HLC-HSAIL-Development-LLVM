@@ -1,22 +1,6 @@
-//===-- HSAILBrig.h - Definitions for BRIG files --------------------------===//
-//
-//                     The LLVM Compiler Infrastructure
-//
-// This file is distributed under the University of Illinois Open Source
-// License. See LICENSE.TXT for details.
-//
-//===----------------------------------------------------------------------===//
-//
-// This file defines the HSAIL specific subclass of TargetMachine.
-//
-//===----------------------------------------------------------------------===//
-
-#ifndef HSAILBRIG_H_
-#define HSAILBRIG_H_
-
 typedef uint32_t BrigVersion32_t;
 
-enum BrigVersion { //.nowrap //.nodump
+enum BrigVersion { //.nowrap //.nodump //.nollvm
     BRIG_VERSION_HSAIL_MAJOR = 0,
     BRIG_VERSION_HSAIL_MINOR = 20140528,
     BRIG_VERSION_BRIG_MAJOR = 0,
@@ -102,16 +86,17 @@ typedef uint8_t BrigVariableModifier8_t;
 typedef uint8_t BrigWidth8_t;
 
 enum BrigKinds {
+    //.nollvm
     //.wname={ s/^BRIG_KIND//; MACRO2Name($_) }
     //.mnemo=$wname{ $wname }
-    //.sizeof=$wname{ "sizeof(Brig$wname)" }
+    //.sizeof=$wname{ "sizeof(".$structs->{"Brig".$wname}->{rawbrig}.")" }
     //.sizeof_switch //.sizeof_proto="int size_of_brig_record(unsigned arg)" //.sizeof_default="return -1"
 
     //.isBodyOnly={ "false" }
-    //.isBodyOnly_switch //.isBodyOnly_proto="bool isBodyOnly(Directive d)" //.isBodyOnly_arg="d.brig()->kind"
+    //.isBodyOnly_switch //.isBodyOnly_proto="bool isBodyOnly(Directive d)" //.isBodyOnly_arg="d.kind()"
     //.isBodyOnly_default="assert(false); return false"
     //.isToplevelOnly={ "false" }
-    //.isToplevelOnly_switch //.isToplevelOnly_proto="bool isToplevelOnly(Directive d)" //.isToplevelOnly_arg="d.brig()->kind"
+    //.isToplevelOnly_switch //.isToplevelOnly_proto="bool isToplevelOnly(Directive d)" //.isToplevelOnly_arg="d.kind()"
     //.isToplevelOnly_default="assert(false); return false"
 
 
@@ -180,6 +165,7 @@ enum BrigAlignment {
     //.rbytes=$bytes{ $bytes }
     //.rbytes_switch //.rbytes_reverse //.rbytes_proto="Brig::BrigAlignment num2align(uint64_t arg)"
     //.rbytes_default="return BRIG_ALIGNMENT_LAST"
+    //.print=$bytes{ $bytes>1 ? "_align($bytes)" : "" }
     BRIG_ALIGNMENT_NONE = 0, //.no_mnemo
     BRIG_ALIGNMENT_1 = 1,  //.mnemo=""
     BRIG_ALIGNMENT_2 = 2,
@@ -213,6 +199,7 @@ enum BrigAtomicOperation { //.tdcaption="Atomic Operations"
     //.mnemo={ s/^BRIG_ATOMIC_//;lc }
     //.mnemo_token=_EMAtomicOp
     //.mnemo_context=EInstModifierInstAtomicContext
+    //.print=$mnemo{ "_$mnemo" }
     BRIG_ATOMIC_ADD = 0,
     BRIG_ATOMIC_AND = 1,
     BRIG_ATOMIC_CAS = 2,
@@ -239,6 +226,7 @@ enum BrigAtomicOperation { //.tdcaption="Atomic Operations"
 enum BrigCompareOperation { //.tdcaption="Comparison Operators"
     //.mnemo={ s/^BRIG_COMPARE_//;lc }
     //.mnemo_token=_EMCompare
+    //.print=$mnemo{ "_$mnemo" }
     BRIG_COMPARE_EQ = 0,
     BRIG_COMPARE_NE = 1,
     BRIG_COMPARE_LT = 2,
@@ -272,6 +260,7 @@ enum BrigCompareOperation { //.tdcaption="Comparison Operators"
 enum BrigControlDirective {
     //.mnemo={ s/^BRIG_CONTROL_//;lc }
     //.mnemo_token=EControl
+    //.print=$mnemo{ $mnemo }
     BRIG_CONTROL_NONE = 0, //.skip
     BRIG_CONTROL_ENABLEBREAKEXCEPTIONS = 1,
     BRIG_CONTROL_ENABLEDETECTEXCEPTIONS = 2,
@@ -294,6 +283,7 @@ enum BrigImageChannelOrder {
     //.mnemo={ s/^BRIG_CHANNEL_ORDER_?//;lc }
     //.mnemo_token=EImageOrder
     //.mnemo_context=EImageOrderContext
+    //.print=$mnemo{ $mnemo }
 
     BRIG_CHANNEL_ORDER_A = 0,
     BRIG_CHANNEL_ORDER_R = 1,
@@ -323,6 +313,7 @@ enum BrigImageChannelOrder {
 enum BrigImageChannelType {
     //.mnemo={ s/^BRIG_CHANNEL_TYPE_//;lc }
     //.mnemo_token=EImageFormat
+    //.print=$mnemo{ $mnemo }
 
     BRIG_CHANNEL_TYPE_SNORM_INT8 = 0,
     BRIG_CHANNEL_TYPE_SNORM_INT16 = 1,
@@ -348,6 +339,12 @@ enum BrigImageChannelType {
 enum BrigImageGeometry { //.tdcaption="Geometry"
     //.mnemo={ s/^BRIG_GEOMETRY_//;lc }
     //.mnemo_token=EImageGeometry
+    //.dim={/_([0-9]+D)(A)?/ ? $1+(defined $2?1:0) : undef}
+    //.dim_switch //.dim_proto="unsigned getBrigGeometryDim(unsigned geo)" //.dim_arg="geo"
+    //.dim_default="assert(0); return 0"
+    //.depth={/DEPTH$/?"true":"false"}
+    //.depth_switch //.depth_proto="bool isBrigGeometryDepth(unsigned geo)" //.depth_arg="geo"
+    //.depth_default="return false"
     BRIG_GEOMETRY_1D = 0,
     BRIG_GEOMETRY_2D = 1,
     BRIG_GEOMETRY_3D = 2,
@@ -363,6 +360,7 @@ enum BrigImageGeometry { //.tdcaption="Geometry"
 
 enum BrigImageQuery {
     //.mnemo={ s/^BRIG_IMAGE_QUERY_//;lc }
+    //.print=$mnemo{ $mnemo }
     BRIG_IMAGE_QUERY_WIDTH = 0,
     BRIG_IMAGE_QUERY_HEIGHT = 1,
     BRIG_IMAGE_QUERY_DEPTH = 2,
@@ -383,6 +381,7 @@ enum BrigLinkage {
 enum BrigMachineModel {
     //.mnemo={ s/^BRIG_MACHINE_//; '$'.lc }
     //.mnemo_token=ETargetMachine
+    //.print=$mnemo{ $mnemo }
     BRIG_MACHINE_SMALL = 0, // 32-bit model (all addresses are 32 bits;
     // a pointer fits into an s register)
     BRIG_MACHINE_LARGE = 1, // 64-bit model (all addresses are 64 bits;
@@ -391,23 +390,27 @@ enum BrigMachineModel {
     BRIG_MACHINE_UNDEF = 2 //.skip
 };
 
-enum BrigMemoryModifierMask {
+enum BrigMemoryModifierMask { //.tddef=0
     BRIG_MEMORY_CONST = 1
 };
 
 enum BrigMemoryOrder {
     //.mnemo={ s/^BRIG_MEMORY_ORDER_//; lc }
     //.mnemo_token=_EMMemoryOrder
+    //.print=$mnemo{ "_$mnemo" }
     BRIG_MEMORY_ORDER_NONE = 0, //.mnemo=""
     BRIG_MEMORY_ORDER_RELAXED = 1, //.mnemo=rlx
     BRIG_MEMORY_ORDER_SC_ACQUIRE = 2, //.mnemo=scacq
     BRIG_MEMORY_ORDER_SC_RELEASE = 3, //.mnemo=screl
-    BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE = 4 //.mnemo=scar
+    BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE = 4, //.mnemo=scar
+
+    BRIG_MEMORY_ORDER_LAST = 5 //.skip
 };
 
 enum BrigMemoryScope {
     //.mnemo={ s/^BRIG_MEMORY_SCOPE_//; lc }
     //.mnemo_token=_EMMemoryScope
+    //.print=$mnemo{ $mnemo }
     BRIG_MEMORY_SCOPE_NONE = 0, //.mnemo=""
     BRIG_MEMORY_SCOPE_WORKITEM = 1, //.mnemo=wi
     BRIG_MEMORY_SCOPE_WAVEFRONT = 2, //.mnemo=wv
@@ -421,6 +424,7 @@ enum BrigMemoryScope2 { // tbd HACK!
     //.mnemo_token=EMemoryScope
     //.mnemo_scanner=Instructions
     //.mnemo_context=EMemoryScopeContext
+    //.nollvm
     BRIG_MEMORY_SCOPE2_NONE = 0, //.mnemo=""
     BRIG_MEMORY_SCOPE2_WORKITEM = 1, //.mnemo=wi
     BRIG_MEMORY_SCOPE2_WAVEFRONT = 2, //.mnemo=wv
@@ -465,6 +469,8 @@ enum BrigOpcode { //.tdcaption="Instruction Opcodes"
 
     //.numdst={undef}
     //.numdst_switch //.numdst_proto="int instNumDstOperands(Brig::BrigOpcode16_t arg)" //.numdst_default="return 1"
+
+    //.print=$mnemo{ $mnemo }
     BRIG_OPCODE_NOP = 0, //.k=NOP //.hasType=false
     BRIG_OPCODE_ABS = 1, //.k=BASIC_OR_MOD
     BRIG_OPCODE_ADD = 2, //.k=BASIC_OR_MOD
@@ -636,11 +642,14 @@ enum BrigOpcode { //.tdcaption="Instruction Opcodes"
     BRIG_OPCODE_GCNB32XCHG = (1u << 15) | 26, //.mnemo=gcn_b32xchg
     BRIG_OPCODE_GCNMAX = (1u << 15) | 27,
     BRIG_OPCODE_GCNMIN = (1u << 15) | 28,
+    BRIG_OPCODE_GCNDIVRELAXED = (1u << 15) | 29,
+    BRIG_OPCODE_GCNDIVRELAXEDNARROW = (1u << 15) | 30,
 };
 
 enum BrigPack { //.tdcaption="Packing"
     //.mnemo={ s/^BRIG_PACK_//;s/SAT$/_sat/;lc }
     //.mnemo_token=_EMPacking
+    //.print=$mnemo{ "_$mnemo" }
     BRIG_PACK_NONE = 0, //.mnemo=""
     BRIG_PACK_PP = 1,
     BRIG_PACK_PS = 2,
@@ -659,6 +668,7 @@ enum BrigPack { //.tdcaption="Packing"
 enum BrigProfile {
     //.mnemo={ s/^BRIG_PROFILE_//;'$'.lc }
     //.mnemo_token=ETargetProfile
+    //.print=$mnemo{ $mnemo }
     BRIG_PROFILE_BASE = 0,
     BRIG_PROFILE_FULL = 1,
 
@@ -667,9 +677,9 @@ enum BrigProfile {
 
 enum BrigRegisterKind {
     //.mnemo={ s/^BRIG_REGISTER_//;'$'.lc(substr($_,0,1)) }
-
     //.bits={ }
     //.bits_switch //.bits_proto="unsigned getRegBits(Brig::BrigRegisterKind16_t arg)" //.bits_default="return (unsigned)-1"
+    //.nollvm
     BRIG_REGISTER_CONTROL = 0, //.bits=1
     BRIG_REGISTER_SINGLE = 1,  //.bits=32
     BRIG_REGISTER_DOUBLE = 2,  //.bits=64
@@ -677,9 +687,10 @@ enum BrigRegisterKind {
 };
 
 enum BrigRound {
-    //.mnemo
+    //.mnemo={}
     //.mnemo_fn=round2str //.mnemo_token=_EMRound
-    BRIG_ROUND_NONE = 0,
+    //.print=$mnemo{ "_$mnemo" }
+    BRIG_ROUND_NONE = 0, //.no_mnemo
     BRIG_ROUND_FLOAT_NEAR_EVEN = 1, //.mnemo=near
     BRIG_ROUND_FLOAT_ZERO = 2, //.mnemo=zero
     BRIG_ROUND_FLOAT_PLUS_INFINITY = 3, //.mnemo=up
@@ -715,12 +726,14 @@ enum BrigSamplerAddressing {
 enum BrigSamplerCoordNormalization {
     //.mnemo={ s/^BRIG_COORD_//;lc }
     //.mnemo_token=ESamplerCoord
+    //.print=$mnemo{ $mnemo }
     BRIG_COORD_UNNORMALIZED = 0,
     BRIG_COORD_NORMALIZED = 1
 };
 
 enum BrigSamplerFilter {
     //.mnemo={ s/^BRIG_FILTER_//;lc }
+    //.print=$mnemo{ $mnemo }
     BRIG_FILTER_NEAREST = 0,
     BRIG_FILTER_LINEAR = 1
 };
@@ -728,12 +741,13 @@ enum BrigSamplerFilter {
 enum BrigSamplerQuery {
     //.mnemo={ s/^BRIG_SAMPLER_QUERY_//;lc }
     //.mnemo_token=_EMSamplerQuery
+    //.print=$mnemo{ $mnemo }
     BRIG_SAMPLER_QUERY_ADDRESSING = 0,
     BRIG_SAMPLER_QUERY_COORD = 1,
     BRIG_SAMPLER_QUERY_FILTER = 2
 };
 
-enum BrigSectionIndex {
+enum BrigSectionIndex { //.nollvm
     //.mnemo={ s/^BRIG_SECTION_INDEX_/HSA_/;lc }
     BRIG_SECTION_INDEX_DATA = 0,
     BRIG_SECTION_INDEX_CODE = 1,
@@ -745,13 +759,14 @@ enum BrigSectionIndex {
 };
 
 enum BrigSegCvtModifierMask {
-    BRIG_SEG_CVT_NONULL = 1 //.mnemo="nonull"
+    BRIG_SEG_CVT_NONULL = 1 //.mnemo="nonull" //.print="_nonull"
 };
 
 enum BrigSegment {
     //.mnemo={ s/^BRIG_SEGMENT_//;lc}
     //.mnemo_token=_EMSegment
     //.mnemo_context=EInstModifierContext
+    //.print=$mnemo{ $mnemo ? "_$mnemo" : "" }
     BRIG_SEGMENT_NONE = 0, //.mnemo=""
     BRIG_SEGMENT_FLAT = 1, //.mnemo=""
     BRIG_SEGMENT_GLOBAL = 2,
@@ -765,7 +780,7 @@ enum BrigSegment {
 };
 
 enum BrigPackedTypeBits {
-    //.nodump
+    //.nodump //.nollvm
     BRIG_TYPE_PACK_SHIFT = 5,
     BRIG_TYPE_BASE_MASK = (1 << BRIG_TYPE_PACK_SHIFT) - 1,
     BRIG_TYPE_PACK_MASK = 3 << BRIG_TYPE_PACK_SHIFT,
@@ -787,7 +802,9 @@ enum BrigTypeX {
     //.dispatch_proto="template<typename RetType, typename Visitor>\nRetType dispatchByType_gen(unsigned type, Visitor& v)"
     //.dispatch={ /^BRIG_TYPE_([BUSF]|SIG)[0-9]+/ ? "v.template visit< BrigType<$_> >()" : "v.visitNone(type)" }
     //.dispatch_arg="type" //.dispatch_default="return v.visitNone(type)"
-    BRIG_TYPE_NONE = 0, //.mnemo=""
+    //.tdname=BrigType
+    //.print=$mnemo{ "_$mnemo" }
+    BRIG_TYPE_NONE = 0, //.mnemo="" //.print=""
     BRIG_TYPE_U8 = 1, //.ctype=uint8_t // unsigned integer 8 bits
     BRIG_TYPE_U16 = 2, //.ctype=uint16_t // unsigned integer 16 bits
     BRIG_TYPE_U32 = 3, //.ctype=uint32_t // unsigned integer 32 bits
@@ -850,7 +867,8 @@ enum BrigVariableModifierMask {
     BRIG_SYMBOL_FLEX_ARRAY = 8
 };
 
-enum BrigWidth {
+enum BrigWidth { //.tddef=1
+    //.print={ s/^BRIG_WIDTH_//; "_width($_)" }
     BRIG_WIDTH_NONE = 0,
     BRIG_WIDTH_1 = 1,
     BRIG_WIDTH_2 = 2,
@@ -905,13 +923,12 @@ struct BrigAluModifier { //.isroot //.standalone
 
 struct BrigBase { //.nowrap
     uint16_t byteCount;
-    BrigKinds16_t kind;
+    uint16_t kind;
 };
 
-struct BrigCode { //.generic //.isroot //.section=BRIG_SECTION_INDEX_CODE
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-};
+//.alias Code:Base { //.generic //.isroot //.section=BRIG_SECTION_INDEX_CODE };
+//.alias Directive:Code { //.generic };
+//.alias Operand:Base { //.generic //.isroot //.section=BRIG_SECTION_INDEX_OPERAND };
 
 struct BrigData {
     //.nowrap
@@ -942,38 +959,28 @@ struct BrigVariableModifier { //.isroot //.standalone
     //^^ bool isFlexArray; //.wtype=BitValRef<3>
 };
 
-struct BrigDirective { //.generic //.parent=BrigCode
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-};
-
 struct BrigDirectiveArgBlockEnd {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
 };
 
 struct BrigDirectiveArgBlockStart {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
 };
 
 struct BrigDirectiveComment {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigDataOffsetString32_t name;
 };
 
 struct BrigDirectiveControl {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigControlDirective16_t control;
     uint16_t reserved; //.defValue=0
     BrigDataOffsetOperandList32_t operands;
 };
 
 struct BrigDirectiveExecutable { //.generic
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigDataOffsetString32_t name;
     uint16_t outArgCount; //.defValue=0
     uint16_t inArgCount;  //.defValue=0
@@ -986,109 +993,47 @@ struct BrigDirectiveExecutable { //.generic
     uint16_t reserved; //.defValue=0
 };
 
+//.alias DirectiveKernel:DirectiveExecutable { };
+//.alias DirectiveFunction:DirectiveExecutable { };
+//.alias DirectiveSignature:DirectiveExecutable { };
+//.alias DirectiveIndirectFunction:DirectiveExecutable { };
+
 struct BrigDirectiveExtension {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigDataOffsetString32_t name;
 };
 
 struct BrigDirectiveFbarrier {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigDataOffsetString32_t name;
-    BrigExecutableModifier modifier; //.acc=subItem<ExecutableModifier> //.wtype=ExecutableModifier
-    BrigLinkage8_t linkage;
-    uint16_t reserved; //.defValue=0
-};
-
-struct BrigDirectiveFunction { //.parent=BrigDirectiveExecutable
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigDataOffsetString32_t name;
-    uint16_t outArgCount; //.defValue=0
-    uint16_t inArgCount;  //.defValue=0
-    BrigCodeOffset32_t firstInArg;
-    BrigCodeOffset32_t firstCodeBlockEntry;
-    BrigCodeOffset32_t nextModuleEntry;
-    uint32_t codeBlockEntryCount; //.defValue=0
-    BrigExecutableModifier modifier; //.acc=subItem<ExecutableModifier> //.wtype=ExecutableModifier
-    BrigLinkage8_t linkage;
-    uint16_t reserved; //.defValue=0
-};
-
-struct BrigDirectiveIndirectFunction { //.parent=BrigDirectiveExecutable
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigDataOffsetString32_t name;
-    uint16_t outArgCount; //.defValue=0
-    uint16_t inArgCount;  //.defValue=0
-    BrigCodeOffset32_t firstInArg;
-    BrigCodeOffset32_t firstCodeBlockEntry;
-    BrigCodeOffset32_t nextModuleEntry;
-    uint32_t codeBlockEntryCount; //.defValue=0
-    BrigExecutableModifier modifier; //.acc=subItem<ExecutableModifier> //.wtype=ExecutableModifier
-    BrigLinkage8_t linkage;
-    uint16_t reserved; //.defValue=0
-};
-
-struct BrigDirectiveKernel { //.parent=BrigDirectiveExecutable
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigDataOffsetString32_t name;
-    uint16_t outArgCount; //.defValue=0
-    uint16_t inArgCount;  //.defValue=0
-    BrigCodeOffset32_t firstInArg;
-    BrigCodeOffset32_t firstCodeBlockEntry;
-    BrigCodeOffset32_t nextModuleEntry;
-    uint32_t codeBlockEntryCount; //.defValue=0
-    BrigExecutableModifier modifier; //.acc=subItem<ExecutableModifier> //.wtype=ExecutableModifier
-    BrigLinkage8_t linkage;
-    uint16_t reserved; //.defValue=0
-};
-
-struct BrigDirectiveSignature { //.parent=BrigDirectiveExecutable
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigDataOffsetString32_t name;
-    uint16_t outArgCount; //.defValue=0
-    uint16_t inArgCount;  //.defValue=0
-    BrigCodeOffset32_t firstInArg;
-    BrigCodeOffset32_t firstCodeBlockEntry;
-    BrigCodeOffset32_t nextModuleEntry;
-    uint32_t codeBlockEntryCount; //.defValue=0
     BrigExecutableModifier modifier; //.acc=subItem<ExecutableModifier> //.wtype=ExecutableModifier
     BrigLinkage8_t linkage;
     uint16_t reserved; //.defValue=0
 };
 
 struct BrigDirectiveLabel {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigDataOffsetString32_t name;
 };
 
 struct BrigDirectiveLoc {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigDataOffsetString32_t filename;
     uint32_t line;
     uint32_t column; //.defValue=1
 };
 
 struct BrigDirectiveNone { //.enum=BRIG_KIND_NONE
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
 };
 
 struct BrigDirectivePragma {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigDataOffsetOperandList32_t operands;
 };
 
 struct BrigDirectiveVariable {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigDataOffsetString32_t name;
     BrigOperandOffset32_t init;
     BrigType16_t type;
@@ -1102,8 +1047,7 @@ struct BrigDirectiveVariable {
 };
 
 struct BrigDirectiveVersion {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigVersion32_t hsailMajor; //.wtype=ValRef<uint32_t>
     BrigVersion32_t hsailMinor; //.wtype=ValRef<uint32_t>
     BrigVersion32_t brigMajor;  //.wtype=ValRef<uint32_t>
@@ -1113,9 +1057,8 @@ struct BrigDirectiveVersion {
     uint16_t reserved; //.defValue=0
 };
 
-struct BrigInst { //.generic //.parent=BrigCode
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+struct BrigInstBase { //.wname=Inst //.generic //.parent=BrigCode
+    BrigBase base;
     BrigOpcode16_t opcode;
     BrigType16_t type;
     BrigDataOffsetOperandList32_t operands;
@@ -1124,21 +1067,13 @@ struct BrigInst { //.generic //.parent=BrigCode
 };
 
 struct BrigInstAddr {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigSegment8_t segment;
     uint8_t reserved[3]; //.defValue=0
 };
 
 struct BrigInstAtomic {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigSegment8_t segment;
     BrigMemoryOrder8_t memoryOrder;
     BrigMemoryScope8_t memoryScope;
@@ -1148,29 +1083,17 @@ struct BrigInstAtomic {
 };
 
 struct BrigInstBasic {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
 };
 
 struct BrigInstBr {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigWidth8_t width;
     uint8_t reserved[3]; //.defValue=0
 };
 
 struct BrigInstCmp {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigType16_t sourceType;
     BrigAluModifier modifier; //.acc=subItem<AluModifier> //.wtype=AluModifier
     BrigCompareOperation8_t compare;
@@ -1179,21 +1102,13 @@ struct BrigInstCmp {
 };
 
 struct BrigInstCvt {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigType16_t sourceType;
     BrigAluModifier modifier; //.acc=subItem<AluModifier> //.wtype=AluModifier
 };
 
 struct BrigInstImage {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigType16_t imageType;
     BrigType16_t coordType;
     BrigImageGeometry8_t geometry;
@@ -1202,22 +1117,14 @@ struct BrigInstImage {
 };
 
 struct BrigInstLane {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigType16_t sourceType;
     BrigWidth8_t width;
     uint8_t reserved; //.defValue=0
 };
 
 struct BrigInstMem {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigSegment8_t segment;
     BrigAlignment8_t align;
     uint8_t equivClass;
@@ -1227,11 +1134,7 @@ struct BrigInstMem {
 };
 
 struct BrigInstMemFence {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigMemoryOrder8_t memoryOrder;
     BrigMemoryScope8_t globalSegmentMemoryScope;
     BrigMemoryScope8_t groupSegmentMemoryScope;
@@ -1239,11 +1142,7 @@ struct BrigInstMemFence {
 };
 
 struct BrigInstMod {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigAluModifier modifier; //.acc=subItem<AluModifier> //.wtype=AluModifier
 
     BrigPack8_t pack;
@@ -1251,96 +1150,60 @@ struct BrigInstMod {
 };
 
 struct BrigInstQueryImage {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigType16_t imageType;
     BrigImageGeometry8_t geometry;
     BrigImageQuery8_t imageQuery;
 };
 
 struct BrigInstQuerySampler {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigSamplerQuery8_t samplerQuery;
     uint8_t reserved[3]; //.defValue=0
 };
 
 struct BrigInstQueue {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigSegment8_t segment;
     BrigMemoryOrder8_t memoryOrder;
     uint16_t reserved; //.defValue=0
 };
 
 struct BrigInstSeg {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigSegment8_t segment;
     uint8_t reserved[3]; //.defValue=0
 };
 
 struct BrigInstSegCvt {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigType16_t sourceType;
     BrigSegment8_t segment;
     BrigSegCvtModifier modifier; //.acc=subItem<SegCvtModifier> //.wtype=SegCvtModifier
 };
 
 struct BrigInstSignal {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigType16_t signalType;
     BrigMemoryOrder8_t memoryOrder;
     BrigAtomicOperation8_t signalOperation;
 };
 
 struct BrigInstSourceType {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-    BrigOpcode16_t opcode;
-    BrigType16_t type;
-    BrigDataOffsetOperandList32_t operands;
+    BrigInstBase base;
     BrigType16_t sourceType;
     uint16_t reserved; //.defValue=0
 };
 
-struct BrigOperand { //.generic //.isroot //.section=BRIG_SECTION_INDEX_OPERAND
-    uint16_t byteCount;
-    BrigKinds16_t kind;
-};
-
-
 struct BrigOperandAddress {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigCodeOffset32_t symbol; //.wtype=ItemRef<DirectiveVariable>
     BrigOperandOffset32_t reg; //.wtype=ItemRef<OperandReg>
     BrigUInt64 offset; //.acc=subItem<UInt64> //.wtype=UInt64
 };
 
 struct BrigOperandCodeList {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigDataOffsetCodeList32_t elements;
     //+hcode unsigned elementCount();
     //+implcode inline unsigned KLASS::elementCount() { return elements().size(); }
@@ -1349,20 +1212,17 @@ struct BrigOperandCodeList {
 };
 
 struct BrigOperandCodeRef {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigCodeOffset32_t ref;
 };
 
 struct BrigOperandData {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigDataOffsetString32_t data;
 };
 
 struct BrigOperandImageProperties {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigUInt64 width;  //.acc=subItem<UInt64> //.wtype=UInt64
     BrigUInt64 height; //.acc=subItem<UInt64> //.wtype=UInt64
     BrigUInt64 depth;  //.acc=subItem<UInt64> //.wtype=UInt64
@@ -1374,8 +1234,7 @@ struct BrigOperandImageProperties {
 };
 
 struct BrigOperandOperandList {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigDataOffsetOperandList32_t elements;
     //+hcode unsigned elementCount();
     //+implcode inline unsigned KLASS::elementCount() { return elements().size(); }
@@ -1384,15 +1243,13 @@ struct BrigOperandOperandList {
 };
 
 struct BrigOperandReg {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigRegisterKind16_t regKind;
     uint16_t regNum;
 };
 
 struct BrigOperandSamplerProperties {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigSamplerCoordNormalization8_t coord;
     BrigSamplerFilter8_t filter;
     BrigSamplerAddressing8_t addressing;
@@ -1400,14 +1257,12 @@ struct BrigOperandSamplerProperties {
 };
 
 struct BrigOperandString {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
     BrigDataOffsetString32_t string;
 };
 
 struct BrigOperandWavesize {
-    uint16_t byteCount;
-    BrigKinds16_t kind;
+    BrigBase base;
 };
 
 //.ignore{
@@ -1431,10 +1286,10 @@ enum BrigMemoryFenceSegments { // for internal use only
     //.mnemo={ s/^BRIG_MEMORY_FENCE_SEGMENT_//;lc }
     //.mnemo_token=_EMMemoryFenceSegments
     //.mnemo_context=EInstModifierInstFenceContext
+    //.nollvm
     BRIG_MEMORY_FENCE_SEGMENT_GLOBAL = 0,
     BRIG_MEMORY_FENCE_SEGMENT_GROUP = 1,
     BRIG_MEMORY_FENCE_SEGMENT_IMAGE = 2,
     BRIG_MEMORY_FENCE_SEGMENT_LAST = 3 //.skip
 };
 
-#endif //HSAILBRIG_H_

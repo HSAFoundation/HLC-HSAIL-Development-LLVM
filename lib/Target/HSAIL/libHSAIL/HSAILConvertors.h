@@ -73,7 +73,14 @@ template <typename DstBrigType, typename SrcBrigType,
           template<typename, typename> class Convertor,
           typename SrcCType>
 bool assign(typename DstBrigType::CType* dst,SrcCType src, const char** errMsg=NULL) {
-    *dst = convert<DstBrigType,SrcBrigType,Convertor,SrcCType>(src);
+    try {
+        *dst = convert<DstBrigType,SrcBrigType,Convertor,SrcCType>(src);
+    } catch (const ConversionError& e) {
+        if (errMsg) {
+            *errMsg = e.what();
+        }
+        return false;
+    }
     return true;
 }
 
@@ -118,7 +125,7 @@ struct LengthOnlyRuleConvert {
         return *reinterpret_cast<const DstType*>(&src);
     }
     DstType getBits(false_type*) const { // when sizeof(DstType) != sizeof(SrcType)
-        llvm_unreachable("literal size must match size of operand type");
+        throw ConversionError("literal size must match size of operand type");
     }
 
     DstType visit(...) const {
@@ -137,7 +144,7 @@ struct TruncateRuleConvert {
         return *reinterpret_cast<const DstType*>(&src);
     }
     DstType getBits(false_type*) const { // when sizeof(DstType) > sizeof(SrcType)
-        llvm_unreachable("literal size must match or exceed size of operand type");
+        throw ConversionError("literal size must match or exceed size of operand type");
     }
 
     DstType visit(...) const {
@@ -171,14 +178,14 @@ struct LosslessConvert {
         NativeType s = static_cast<NativeType>(src);
         DstType res(&s);
         if ((SrcType)(res.floatValue()) != src) {
-            llvm_unreachable("conversion loses precision, use float literal");
+            throw ConversionError("conversion loses precision, use float literal");
         }
         return res;
     }
     // int = int
     DstType visit(BrigTypeNF*, BrigTypeNF*) const {
     	 if (src > (std::numeric_limits< typename make_unsigned<DstType>::type >::max)()) {
-            llvm_unreachable("value doesn't fit into destination");
+            throw ConversionError("value doesn't fit into destination");
         }
         return static_cast<DstType>(src);
     }
@@ -189,13 +196,13 @@ struct LosslessConvert {
         typedef typename make_unsigned<SrcType>::type UnsSrcType;
         if ( (src < 0 && src < (std::numeric_limits<SgnDstType>::min)() ) ||
              (src > 0 && (static_cast<UnsSrcType>(src) > (std::numeric_limits<UnsDstType>::max)())) ) {
-            llvm_unreachable("value doesn't fit into destination");
+            throw ConversionError("value doesn't fit into destination");
         }
         return static_cast<DstType>(static_cast<SgnDstType>(src));
     }
 
     DstType visit(BrigTypeNF*, BrigType<Brig::BRIG_TYPE_B128>*) const {
-        llvm_unreachable("conversion of b128 not supported yet");
+        throw ConversionError("conversion of b128 not supported yet");
     }
 
     DstType visit(BrigTypeNF*, BrigType<Brig::BRIG_TYPE_B1>*) const {
@@ -203,17 +210,17 @@ struct LosslessConvert {
     }
 
     DstType visit(BrigTypeF*, BrigType<Brig::BRIG_TYPE_B128>*) const {
-        llvm_unreachable("conversion not supported");
+        throw ConversionError("conversion not supported");
     }
     DstType visit(BrigTypeF*, BrigType<Brig::BRIG_TYPE_B1>*) const {
-        llvm_unreachable("conversion not supported");
+        throw ConversionError("conversion not supported");
     }
 
     DstType visit(BrigType<Brig::BRIG_TYPE_B128>*, BrigTypeNF*) const { return convert<DstBrigType,SrcBrigType,StaticCastConvert>(src); }
     DstType visit(BrigType<Brig::BRIG_TYPE_B128>*, BrigTypeS*)  const { return convert<DstBrigType,SrcBrigType,StaticCastConvert>(src); }
 
     DstType visit(...) const { // error for all the rest combinations of types
-        llvm_unreachable("invalid operand type");
+        throw ConversionError("invalid operand type");
     }
 };
 
@@ -276,11 +283,11 @@ struct ConvertImmediate {
     // packed[M] = packed[N], M!=N
     template <typename DstElemType,size_t M,typename SrcElemType,size_t N>
     DstType visit(BrigTypePacked<DstElemType,M>*, BrigTypePacked<SrcElemType,N>*) const {
-        llvm_unreachable("dimensions of packed destination and source should match");
+        throw ConversionError("dimensions of packed destination and source should match");
     }
 
     DstType visit(...) const { // error for all the rest combinations of types
-        llvm_unreachable("invalid operand type");
+        throw ConversionError("invalid operand type");
     }
 };
 
@@ -292,7 +299,7 @@ struct BoundCheckedConvert
     typedef typename SrcBrigType::CType SrcType;
     SrcType src;
 
-    static void throwError() { llvm_unreachable("value is out of bounds"); }
+    static void throwError() { throw ConversionError("value is out of bounds"); }
 
     // intX_t = intX_t
     DstType visit(BrigTypeS*,BrigTypeS*) const {
@@ -330,7 +337,7 @@ struct ConvertIfNonNegativeInt {
     // (u)intX_t = intX_t
     DstType visit(BrigTypeInt*,BrigTypeS*) const {
         if (src < SrcType()) {
-            llvm_unreachable("positive value or zero is expected");
+            throw ConversionError("positive value or zero is expected");
         }
         return convert<DstBrigType,SrcBrigType,BoundCheckedConvert>(src);
     }
@@ -350,7 +357,7 @@ struct ConvertIfPositiveInt {
 
     DstType visit(...) const {
         if (src <= SrcType()) {
-            llvm_unreachable("positive value is expected");
+            throw ConversionError("positive value is expected");
         }
         return convert<DstBrigType,SrcBrigType,ConvertIfNonNegativeInt>(src);
     }
