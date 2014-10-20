@@ -54,6 +54,7 @@
 
 namespace HSAIL_ASM {
 
+class BrigAccessor;
 class ItemBase;
 
 template <typename Dst, typename Src> struct copy_const { typedef Dst type; };
@@ -407,7 +408,7 @@ public:
     int size() const {
       std::ptrdiff_t length = data().length();
       assert((length & 3) == 0);
-      return length / 4;
+      return (int)(length / 4);
     }
 
     /// @}
@@ -494,6 +495,14 @@ public:
     const Brig::BrigBase* brig() const { return m_section->getData<Brig::BrigBase>(m_offset); }
     Brig::BrigBase* brig() { return m_section->getData<Brig::BrigBase>(m_offset); }
 
+	unsigned kind() const { return brig()->kind; }
+	unsigned byteCount() const { return brig()->byteCount; }
+
+	void initBrigBase(unsigned byteCount, unsigned kind) {
+		brig()->byteCount = byteCount;
+		brig()->kind = kind;
+	}
+
     /// return non-null if wrapper points to an item.
     operator bool_type() const { return m_offset != 0 ? &ItemBase::toCompare : NULL; }
 
@@ -579,7 +588,8 @@ public:
 /// return true if SrcItem is of a DstItem type.
 template <typename DstItem, typename SrcItem>
 inline bool isa(SrcItem src) {
-    return isa<DstItem>(src);
+    DstItem dst = src;
+    return dst!=false;
 }
 
 /// grows an item size. Item should be the last item in it's section.

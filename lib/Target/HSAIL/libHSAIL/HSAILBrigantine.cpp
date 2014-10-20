@@ -40,7 +40,6 @@
 // SOFTWARE.
 #include "HSAILBrigantine.h"
 
-#include "llvm/Support/ErrorHandling.h"
 #include <strstream>
 
 
@@ -75,7 +74,7 @@ void BrigantineNoEx::handleError(const SyntaxError& e)
 
 void Brigantine::handleError(const SyntaxError& e)
 {
-    llvm_unreachable(e.what().c_str());
+    throw e;
 }
 
 void Brigantine::brigWriteError(const char *errMsg, const SourceInfo* srcInfo)
@@ -201,19 +200,21 @@ void Brigantine::startBody()
 
     DirectiveExecutable func = m_func;
     if (func && func.outArgCount() > 0) {
-        DirectiveVariable sym = func.next();
+        Code cur = func.next();
         for(uint32_t i=func.outArgCount(); i>0; --i) {
+            DirectiveVariable sym = cur;
             assert(sym);
             addSymbolToFunctionScope(sym);
-            sym = sym.next();
+            cur = cur.next();
         }
     }
     if (m_func.inArgCount() > 0) {
-        DirectiveVariable sym = m_func.firstInArg();
+        Code cur = m_func.firstInArg();
         for(uint32_t i=m_func.inArgCount(); i>0; --i) {
+            DirectiveVariable sym = cur;
             assert(sym);
             addSymbolToFunctionScope(sym);
-            sym = sym.next();
+            cur = cur.next();
         }
     }
 }
@@ -474,13 +475,10 @@ OperandRegVector Brigantine::createOperandRegVec(
 }
 */
 
-OperandCodeRef Brigantine::createFuncRef(const SRef& fnName, const SourceInfo* srcInfo) {
-    DirectiveExecutable fn = m_globalScope->get<DirectiveFunction>(fnName);
+OperandCodeRef Brigantine::createExecutableRef(const SRef& name, const SourceInfo* srcInfo) {
+    DirectiveExecutable fn = m_globalScope->get<DirectiveExecutable>(name);
     if (!fn) {
-        fn = m_globalScope->get<DirectiveIndirectFunction>(fnName);
-    }
-    if (!fn) {
-        brigWriteError("Unknown function",srcInfo);
+        brigWriteError("Unknown executable reference",srcInfo);
         return OperandCodeRef();
     }
     return createCodeRef(fn,srcInfo);

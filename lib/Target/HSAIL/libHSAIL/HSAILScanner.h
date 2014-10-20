@@ -340,6 +340,7 @@ public:
     void readSingleStringLiteral(std::string& outString);
 
     void syntaxError(const std::string& message, const SrcLoc& srcLoc) const {
+        throw SyntaxError(message, srcLoc);
     }
 
     void syntaxError(const std::string& message, CToken* t) const {
@@ -355,11 +356,16 @@ public:
     static EScanContext getTokenContext(ETokens token);
 
     unsigned eatToken(ETokens token, const char* message=NULL) {
+        try {
             CToken& t = scan(getTokenContext(token));
             if (t.kind()!=token) {
                 throwTokenExpected(token, message, t.srcLoc());
             }
             return t.brigId();
+        } catch (const SyntaxError& e) {
+            throwTokenExpected(token, message, e.where());
+            return EEmpty;
+        }
     }
 
     Optional<unsigned> tryEatToken(ETokens token) {

@@ -41,7 +41,7 @@
 #ifndef INCLUDED_BRIG_H
 #define INCLUDED_BRIG_H
 
-#include "llvm/Support/DataTypes.h"
+#include <stdint.h>
 
 namespace Brig {
 #include "Brig_new.hpp"
