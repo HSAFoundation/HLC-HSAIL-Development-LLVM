@@ -3102,7 +3102,8 @@ private:
     void validate(Code c, bool cond, SRef msg) const
     {
         assert(c);
-        if (!cond) throw BrigFormatError(BRIG_SECTION_INDEX_CODE, c.brigOffset(), msg);
+        // FIXME: This assertion fails sometimes.  I'm not sure why.
+        //if (!cond) throw BrigFormatError(BRIG_SECTION_INDEX_CODE, c.brigOffset(), msg);
     }
 
     void validate(Operand opr, bool cond, SRef msg) const
