@@ -1091,7 +1091,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
       m_opndList.push_back(
         brigantine.createCodeList(ret_list));
       m_opndList.push_back(
-        brigantine.createFuncRef(std::string("&") + gv->getName().str()));
+        brigantine.createExecutableRef(std::string("&") + gv->getName().str()));
       m_opndList.push_back(
         brigantine.createCodeList(call_paramlist));
 
@@ -1334,7 +1334,7 @@ void BRIGAsmPrinter::EmitEndOfAsmFile(Module &M) {
 
   if (!isValid) {
     std::cerr << vld.getErrorMsg(NULL) << '\n';
-    HSAIL_ASM::dump(bc);
+    HSAIL_ASM::dump(bc, std::cerr);
     if(DumpOnFailFilename.size() > 0) {
       std::string info;
 
