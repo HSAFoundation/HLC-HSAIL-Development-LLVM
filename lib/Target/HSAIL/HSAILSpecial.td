@@ -41,17 +41,17 @@ let isAsCheapAsAMove = 1 in {
 
   def get_work_dim: HSAILInst<(outs GPR32:$dst), (ins),
                     "dim_u32\t$dst",
-                    [(set (i32 GPR32:$dst), 
+                    [(set (i32 GPR32:$dst),
                       (int_HSAIL_get_work_dim))]>;
 
   def get_workitemid_flat : HSAILInst<(outs GPR32:$dst), (ins),
                     "workitemflatid_u32\t$dst",
-                    [(set (i32 GPR32:$dst), 
+                    [(set (i32 GPR32:$dst),
                       (int_HSAIL_workitemid_flat))]>;
 
   def get_workitemid_flatabs : HSAILInst<(outs GPR32:$dst), (ins),
                     "workitemflatabsid_u32\t$dst",
-                    [(set (i32 GPR32:$dst), 
+                    [(set (i32 GPR32:$dst),
                       (int_HSAIL_workitemid_flatabs))]>;
 
   def get_lane_id : HSAILInst<(outs GPR32:$dst), (ins),

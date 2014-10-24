@@ -70,7 +70,7 @@ let isCompare = 1 in {
   }
 
   // Comparison of signed integers.
-  // 
+  //
   // Equality operators are independent of sign in LLVM. We choose to
   // implement them using signed HSAIL operations, simply because the
   // pattern names fit in with others in the list!
@@ -96,7 +96,7 @@ let isCompare = 1 in {
   //
   // Note the resulting mapping of TD records to HSAIL instructions
   // for cmp. Examples:
-  // 
+  //
   // TD record "cmp_i1_eq_i1_rr"   --> HSAIL instruction "cmp_eq_b1_b1"
   // TD record "cmp_i32_eq_f32_ri" --> HSAIL instruction "cmp_eq_u32_f32"
   // TD record "cmp_i1_eq_i32_ri"  --> HSAIL instruction "cmp_eq_b1_s32"
@@ -123,7 +123,7 @@ let isCompare = 1 in {
 ////////////////////////////////////////////////////////////////////////////////
 // floating-point classify instructions
 
-multiclass FPClassIntr<Intrinsic intr, string asm, RegisterClass OpRC, 
+multiclass FPClassIntr<Intrinsic intr, string asm, RegisterClass OpRC,
                         ValueType OpVT, Operand OpImmTy> {
   def _rr : HSAILInst<(outs CR:$dst), (ins OpRC:$src1, GPR32:$src2),
       !strconcat(asm, "\t $dst, $src1, $src2"),

@@ -31,7 +31,7 @@ multiclass TernaryFusedPairOp<string prefix, string suffix,
     def _rir : Pat<(op1 (op2 RC:$src1, (Ty ImmTy:$src2)), RC:$src3),
                    (!cast<HSAILInst>(prefix#"_rir_"#suffix)
                      RC:$src1, ImmTy:$src2, RC:$src3)>;
-  
+
     def _rii : Pat<(op1 (op2 RC:$src1, (Ty ImmTy:$src2)), (Ty ImmTy:$src3)),
                    (!cast<HSAILInst>(prefix#"_rii_"#suffix)
                      RC:$src1, ImmTy:$src2, ImmTy:$src3)>;
@@ -44,7 +44,7 @@ def getShiftMult32 : SDNodeXForm<imm, [{
 }]>;
 
 def getShiftMult64 : SDNodeXForm<imm, [{
-    return CurDAG->getTargetConstant(((uint64_t)1u) << (N->getZExtValue()), 
+    return CurDAG->getTargetConstant(((uint64_t)1u) << (N->getZExtValue()),
                                      MVT::i64);
 }]>;
 
@@ -57,26 +57,26 @@ def shl64imm : PatLeaf<(imm), [{
 }], getShiftMult64>;
 
 // shift + add -> mad
-multiclass TernaryFusedShlAdd<string asm, ValueType Ty, Operand OpTy, 
+multiclass TernaryFusedShlAdd<string asm, ValueType Ty, Operand OpTy,
                               PatLeaf ImmTy, RegisterClass RC> {
 
     def _rir : HSAILInst<(outs RC:$dst), (ins RC:$src1, OpTy:$src2, RC:$src3),
         !strconcat(asm, "\t $dst, $src1, $src2, $src3"),
-        [(set (Ty RC:$dst), (add 
-            (shl (Ty RC:$src1), (i32 ImmTy:$src2)), 
+        [(set (Ty RC:$dst), (add
+            (shl (Ty RC:$src1), (i32 ImmTy:$src2)),
             (Ty RC:$src3)))]>;
-  
+
     def _rii : HSAILInst<(outs RC:$dst), (ins RC:$src1, OpTy:$src2, OpTy:$src3),
         !strconcat(asm, "\t $dst, $src1, $src2, $src3"),
         [(set (Ty RC:$dst), (add
-            (shl (Ty RC:$src1), (i32 ImmTy:$src2)), 
+            (shl (Ty RC:$src1), (i32 ImmTy:$src2)),
             (Ty imm:$src3)))]>;
 }
 
 // Pre-optimized (const1 + (x << const2)) -> const1 | (x << const2).
 // This requires mutual check of const1 and const2 to ensure last bit# set in
 // const1 < const2 (i.e. or can be changed to add).
-def orShlAsMad : PatFrag<(ops node:$reg, node:$shift, node:$mask), 
+def orShlAsMad : PatFrag<(ops node:$reg, node:$shift, node:$mask),
                          (or (shl node:$reg, node:$shift), node:$mask), [{
     ConstantSDNode *CNShift, *CNMask;
     if ((CNShift = dyn_cast<ConstantSDNode>(N->getOperand(0)->getOperand(1))) &&
@@ -92,11 +92,11 @@ defm mad_u64 : TernaryFusedPairOp<"umad", "u64", i64, imm, GPR64, add, mul>;
 }
 
 // 32 bit integer multiplication is expensive operation on current HW,
-// The cost of 32 bit mul is 4 times higher than a cost of add. Therefor 
+// The cost of 32 bit mul is 4 times higher than a cost of add. Therefor
 // shift + add fusion is commented out as not beneficial at the moment.
 // defm m2ad_u32 : TernaryFusedShlAdd<"mad_u32", i32, i32imm, shl32imm, GPR32>;
 //
-// There are no 64 bit muls and mads in SI, but there are 64 bit shifts and 
+// There are no 64 bit muls and mads in SI, but there are 64 bit shifts and
 // adds. Reversing shifts from multipier is an unneeded burden for SC.
 // Therefor folding of shift + add is commented out for 64 bit ops unless we
 // have a HW supporing 64 bit mads.
@@ -157,7 +157,7 @@ defm shl_u64 : ShrOp<"shl", "_u64", shl, GPR64, i64, imm63>;
 }
 
 def popCnt : SDNodeXForm<imm, [{
-    return CurDAG->getTargetConstant(CountPopulation_64(N->getZExtValue()), 
+    return CurDAG->getTargetConstant(CountPopulation_64(N->getZExtValue()),
                                      MVT::i32);
 }]>;
 
@@ -184,18 +184,18 @@ multiclass ExtractOp<string asm, ValueType Ty, RegisterClass RC, PatLeaf ShImm,
     def _rii : HSAILInst<(outs RC:$dst), (ins RC:$src1, i32imm:$src2,
                                           i32imm:$src3),
         !strconcat(asm, "\t $dst, $src1, $src2, $src3"),
-        [(set (Ty RC:$dst), (and 
+        [(set (Ty RC:$dst), (and
             (op (Ty RC:$src1), (i32 ShImm:$src2)), (Ty isMask:$src3)))]>;
 
     def _rri : HSAILInst<(outs RC:$dst), (ins RC:$src1, GPR32:$src2,
                                           i32imm:$src3),
         !strconcat(asm, "\t $dst, $src1, $src2, $src3"),
-        [(set (Ty RC:$dst), (and 
+        [(set (Ty RC:$dst), (and
             (op (Ty RC:$src1), (i32 GPR32:$src2)), (Ty isMask:$src3)))]>;
 }
 
 // Pattren for extract where we can use unsigned insn for signed argumet.
-def SignNeutralExtract : PatFrag<(ops node:$reg, node:$shift, node:$mask), 
+def SignNeutralExtract : PatFrag<(ops node:$reg, node:$shift, node:$mask),
                                  (and (sra node:$reg, node:$shift), node:$mask),
                                  [{
     ConstantSDNode *CNShift, *CNMask;
@@ -244,7 +244,7 @@ defm extract_b64 : SignNeutralExtractOp<"bitextract_u64", i64, GPR64, isMax64bit
 
 // BFI
 
-def bfiImmIRR : PatFrag<(ops node:$src1, node:$src2, node:$src3, node:$src4), 
+def bfiImmIRR : PatFrag<(ops node:$src1, node:$src2, node:$src3, node:$src4),
                         (or (and node:$src2, node:$src1),
                             (and node:$src3, node:$src4)), [{
     // check if src1 == ~src4
@@ -531,7 +531,7 @@ multiclass FusedAddMul1<HSAILInst op, ValueType Ty, RegisterClass RC,
 
     def _rri : Pat<(fadd RC:$src1, (fmul RC:$src2, one)),
                    (op RC:$src1, RC:$src2)>;
-  
+
     def _iri : Pat<(fadd (fmul RC:$src1, one), (Ty fpimm:$src2)),
                    (op RC:$src1, (Ty fpimm:$src2))>;
 }
@@ -557,7 +557,7 @@ def isByteSzShiftNoXform : byteSzShift;
 
 def isByteSzShift : byteSzShift<byteSzImm>;
 
-def RotateByte32const : PatFrag<(ops node:$reg, node:$shl, node:$shr), 
+def RotateByte32const : PatFrag<(ops node:$reg, node:$shl, node:$shr),
                                 (or (shl node:$reg, node:$shl),
                                     (srl node:$reg, node:$shr)),
                                 [{
@@ -577,7 +577,7 @@ def : Pat<(RotateByte32const GPR32:$src1, (i32 isByteSzShiftNoXform),
           (media_bytealign_rri GPR32:$src1, GPR32:$src1, isByteSzShift:$src3)>;
 }
 
-def RotateBit32const : PatFrag<(ops node:$reg, node:$shl, node:$shr), 
+def RotateBit32const : PatFrag<(ops node:$reg, node:$shl, node:$shr),
                                (or (shl node:$reg, node:$shl),
                                    (srl node:$reg, node:$shr)),
                                [{

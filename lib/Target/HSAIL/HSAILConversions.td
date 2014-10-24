@@ -102,8 +102,8 @@ def cvt_s32_f64 : HSAILInst<(outs GPR64:$dst), (ins GPR32:$src),
                      (sint_to_fp (i32 GPR32:$src)))]>;
 
 // f32 => f64
-// ftz conversion complies our OpenCL contract wrt f64 denorms, 
-// because f32->f64 would not yield f64 denorms, so whether f64 is 
+// ftz conversion complies our OpenCL contract wrt f64 denorms,
+// because f32->f64 would not yield f64 denorms, so whether f64 is
 // flushed or not does not really matter.
 def cvt_f32_f64 : HSAILInst<(outs GPR64:$dst), (ins GPR32:$src),
                  "cvt_ftz_f64_f32\t$dst, $src",
@@ -208,65 +208,65 @@ def hsail_cvt_s32_zeroi_f32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
 
 ////////////////////////////////////////////////////////////////////////////////
 // support for explicit conversions
-class ConvertIntr<Intrinsic intr, string asm, 
-                  RegisterClass FromRc, ValueType FromTy, 
+class ConvertIntr<Intrinsic intr, string asm,
+                  RegisterClass FromRc, ValueType FromTy,
                   RegisterClass ToRc, ValueType ToTy> : HSAILInst<
   (outs ToRc:$dst), (ins FromRc:$src),
   !strconcat(asm, "\t $dst, $src"),
   [(set (ToTy ToRc:$dst), (intr (FromTy FromRc:$src)))]>;
 
 // float to int
-def cvt_s32_neari_f32 : ConvertIntr<int_HSAIL_cvt_s32_neari_f32, 
+def cvt_s32_neari_f32 : ConvertIntr<int_HSAIL_cvt_s32_neari_f32,
                         "cvt_ftz_neari_s32_f32", GPR32, f32, GPR32, i32>;
-def cvt_s32_downi_f32 : ConvertIntr<int_HSAIL_cvt_s32_downi_f32, 
+def cvt_s32_downi_f32 : ConvertIntr<int_HSAIL_cvt_s32_downi_f32,
                         "cvt_ftz_downi_s32_f32", GPR32, f32, GPR32, i32>;
-def cvt_s32_upi_f32   : ConvertIntr<int_HSAIL_cvt_s32_upi_f32, 
+def cvt_s32_upi_f32   : ConvertIntr<int_HSAIL_cvt_s32_upi_f32,
                         "cvt_ftz_upi_s32_f32", GPR32, f32, GPR32, i32>;
-def cvt_s32_zeroi_f32 : ConvertIntr<int_HSAIL_cvt_s32_zeroi_f32, 
+def cvt_s32_zeroi_f32 : ConvertIntr<int_HSAIL_cvt_s32_zeroi_f32,
                         "cvt_ftz_zeroi_s32_f32", GPR32, f32, GPR32, i32>;
 
 // float to unsigned int
-def cvt_u32_neari_f32 : ConvertIntr<int_HSAIL_cvt_u32_neari_f32, 
+def cvt_u32_neari_f32 : ConvertIntr<int_HSAIL_cvt_u32_neari_f32,
                         "cvt_ftz_neari_u32_f32", GPR32, f32, GPR32, i32>;
-def cvt_u32_downi_f32 : ConvertIntr<int_HSAIL_cvt_u32_downi_f32, 
+def cvt_u32_downi_f32 : ConvertIntr<int_HSAIL_cvt_u32_downi_f32,
                         "cvt_ftz_downi_u32_f32", GPR32, f32, GPR32, i32>;
-def cvt_u32_upi_f32   : ConvertIntr<int_HSAIL_cvt_u32_upi_f32, 
+def cvt_u32_upi_f32   : ConvertIntr<int_HSAIL_cvt_u32_upi_f32,
                         "cvt_ftz_upi_u32_f32", GPR32, f32, GPR32, i32>;
-def cvt_u32_zeroi_f32 : ConvertIntr<int_HSAIL_cvt_u32_zeroi_f32, 
+def cvt_u32_zeroi_f32 : ConvertIntr<int_HSAIL_cvt_u32_zeroi_f32,
                         "cvt_ftz_zeroi_u32_f32", GPR32, f32, GPR32, i32>;
-                        
+
  // float to long
-def cvt_s64_neari_f32 : ConvertIntr<int_HSAIL_cvt_s64_neari_f32, 
+def cvt_s64_neari_f32 : ConvertIntr<int_HSAIL_cvt_s64_neari_f32,
                         "cvt_ftz_neari_s64_f32", GPR32, f32, GPR64, i64>;
-def cvt_s64_downi_f32 : ConvertIntr<int_HSAIL_cvt_s64_downi_f32, 
+def cvt_s64_downi_f32 : ConvertIntr<int_HSAIL_cvt_s64_downi_f32,
                         "cvt_ftz_downi_s64_f32", GPR32, f32, GPR64, i64>;
-def cvt_s64_upi_f32   : ConvertIntr<int_HSAIL_cvt_s64_upi_f32, 
+def cvt_s64_upi_f32   : ConvertIntr<int_HSAIL_cvt_s64_upi_f32,
                         "cvt_ftz_upi_s64_f32", GPR32, f32, GPR64, i64>;
-def cvt_s64_zeroi_f32 : ConvertIntr<int_HSAIL_cvt_s64_zeroi_f32, 
+def cvt_s64_zeroi_f32 : ConvertIntr<int_HSAIL_cvt_s64_zeroi_f32,
                         "cvt_ftz_zeroi_s64_f32", GPR32, f32, GPR64, i64>;
-                        
+
 // float to unsigned long
-def cvt_u64_neari_f32 : ConvertIntr<int_HSAIL_cvt_u64_neari_f32, 
+def cvt_u64_neari_f32 : ConvertIntr<int_HSAIL_cvt_u64_neari_f32,
                         "cvt_ftz_neari_u64_f32", GPR32, f32, GPR64, i64>;
-def cvt_u64_downi_f32 : ConvertIntr<int_HSAIL_cvt_u64_downi_f32, 
+def cvt_u64_downi_f32 : ConvertIntr<int_HSAIL_cvt_u64_downi_f32,
                         "cvt_ftz_downi_u64_f32", GPR32, f32, GPR64, i64>;
-def cvt_u64_upi_f32   : ConvertIntr<int_HSAIL_cvt_u64_upi_f32, 
+def cvt_u64_upi_f32   : ConvertIntr<int_HSAIL_cvt_u64_upi_f32,
                         "cvt_ftz_upi_u64_f32", GPR32, f32, GPR64, i64>;
-def cvt_u64_zeroi_f32 : ConvertIntr<int_HSAIL_cvt_u64_zeroi_f32, 
+def cvt_u64_zeroi_f32 : ConvertIntr<int_HSAIL_cvt_u64_zeroi_f32,
                         "cvt_ftz_zeroi_u64_f32", GPR32, f32, GPR64, i64>;
-                        
+
 // double to int
-def cvt_s32_neari_f64 : ConvertIntr<int_HSAIL_cvt_s32_neari_f64, 
+def cvt_s32_neari_f64 : ConvertIntr<int_HSAIL_cvt_s32_neari_f64,
                         "cvt_neari_s32_f64", GPR64, f64, GPR32, i32>;
-def cvt_s32_downi_f64 : ConvertIntr<int_HSAIL_cvt_s32_downi_f64, 
+def cvt_s32_downi_f64 : ConvertIntr<int_HSAIL_cvt_s32_downi_f64,
                         "cvt_downi_s32_f64", GPR64, f64, GPR32, i32>;
-def cvt_s32_upi_f64   : ConvertIntr<int_HSAIL_cvt_s32_upi_f64, 
+def cvt_s32_upi_f64   : ConvertIntr<int_HSAIL_cvt_s32_upi_f64,
                         "cvt_upi_s32_f64", GPR64, f64, GPR32, i32>;
-def cvt_s32_zeroi_f64 : ConvertIntr<int_HSAIL_cvt_s32_zeroi_f64, 
+def cvt_s32_zeroi_f64 : ConvertIntr<int_HSAIL_cvt_s32_zeroi_f64,
                         "cvt_zeroi_s32_f64", GPR64, f64, GPR32, i32>;
-                        
+
 // double to unsigned int
-def cvt_u32_neari_f64 : ConvertIntr<int_HSAIL_cvt_u32_neari_f64, 
+def cvt_u32_neari_f64 : ConvertIntr<int_HSAIL_cvt_u32_neari_f64,
                         "cvt_neari_u32_f64", GPR64, f64, GPR32, i32>;
 def cvt_u32_downi_f64 : ConvertIntr<int_HSAIL_cvt_u32_downi_f64,
                         "cvt_downi_u32_f64", GPR64, f64, GPR32, i32>;
@@ -274,7 +274,7 @@ def cvt_u32_upi_f64   : ConvertIntr<int_HSAIL_cvt_u32_upi_f64,
                         "cvt_upi_u32_f64", GPR64, f64, GPR32, i32>;
 def cvt_u32_zeroi_f64 : ConvertIntr<int_HSAIL_cvt_u32_zeroi_f64,
                         "cvt_zeroi_u32_f64", GPR64, f64, GPR32, i32>;
-                        
+
 // double to long
 def cvt_s64_neari_f64 : ConvertIntr<int_HSAIL_cvt_s64_neari_f64,
                         "cvt_neari_s64_f64", GPR64, f64, GPR64, i64>;
@@ -284,7 +284,7 @@ def cvt_s64_upi_f64   : ConvertIntr<int_HSAIL_cvt_s64_upi_f64,
                         "cvt_upi_s64_f64", GPR64, f64, GPR64, i64>;
 def cvt_s64_zeroi_f64 : ConvertIntr<int_HSAIL_cvt_s64_zeroi_f64,
                         "cvt_zeroi_s64_f64", GPR64, f64, GPR64, i64>;
-                        
+
 // double to unsigned long
 def cvt_u64_neari_f64 : ConvertIntr<int_HSAIL_cvt_u64_neari_f64,
                         "cvt_neari_u64_f64", GPR64, f64, GPR64, i64>;
@@ -294,11 +294,11 @@ def cvt_u64_upi_f64   : ConvertIntr<int_HSAIL_cvt_u64_upi_f64,
                         "cvt_upi_u64_f64", GPR64, f64, GPR64, i64>;
 def cvt_u64_zeroi_f64 : ConvertIntr<int_HSAIL_cvt_u64_zeroi_f64,
                         "cvt_zeroi_u64_f64", GPR64, f64, GPR64, i64>;
-                        
+
 // half to float
 def cvt_f32_f16       : ConvertIntr<int_HSAIL_cvt_f32_f16,
                         "cvt_f32_f16", GPR32, i32, GPR32, f32>;
-                        
+
 // float to half
 def cvt_zero_f16_f32  : ConvertIntr<int_HSAIL_cvt_zero_f16_f32,
                         "cvt_zero_f16_f32", GPR32, f32, GPR32, f32>;
@@ -308,7 +308,7 @@ def cvt_down_f16_f32  : ConvertIntr<int_HSAIL_cvt_down_f16_f32,
                         "cvt_down_f16_f32", GPR32, f32, GPR32, f32>;
 def cvt_up_f16_f32    : ConvertIntr<int_HSAIL_cvt_up_f16_f32,
                         "cvt_up_f16_f32", GPR32, f32, GPR32, f32>;
-                        
+
 // double to half
 def cvt_zero_f16_f64  : ConvertIntr<int_HSAIL_cvt_zero_f16_f64,
                         "cvt_zero_f16_f64", GPR64, f64, GPR32, f32>;

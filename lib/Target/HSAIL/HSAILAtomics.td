@@ -38,9 +38,9 @@ class AtomicCounter32<Intrinsic intr, string asm>:
 }
 
 let hasAddress = 1, addressOpNum = 1 in {
-  def gcn_atomic_append : AtomicCounter32<int_HSAIL_gcn_atomic_append_u32, 
+  def gcn_atomic_append : AtomicCounter32<int_HSAIL_gcn_atomic_append_u32,
       "gcn_atomic_append_u32">;
-  def gcn_atomic_consume : AtomicCounter32<int_HSAIL_gcn_atomic_consume_u32, 
+  def gcn_atomic_consume : AtomicCounter32<int_HSAIL_gcn_atomic_consume_u32,
       "gcn_atomic_consume_u32">;
 }
 
