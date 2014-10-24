@@ -14,11 +14,11 @@
 #ifndef _HSAIL_INSTRUCTION_INFO_H_
 #define _HSAIL_INSTRUCTION_INFO_H_
 
-#include "llvm/Target/TargetInstrInfo.h"
-#include "HSAIL.h"
 #include "HSAILRegisterInfo.h"
+#include "llvm/Target/TargetInstrInfo.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/SmallVector.h"
+
 
 #define GET_INSTRINFO_HEADER
 #define GET_INSTRINFO_ENUM
@@ -86,6 +86,11 @@ namespace HSAIL {
   /// e.g. turning COND_E to COND_NE.
   CondCode GetOppositeBranchCondition(HSAIL::CondCode CC);
 
+  int16_t getNamedOperandIdx(uint16_t Opcode, uint16_t NamedIndex);
+
+  // FIXME: This is a thin wrapper around the similarly named and generated
+  // getLdStVectorOpcode, which we should use directly.
+  int getVectorLdStOpcode(uint16_t Opcode, unsigned vsize);
 }
 
 /// HSAILII - This namespace holds all of the target specific flags that

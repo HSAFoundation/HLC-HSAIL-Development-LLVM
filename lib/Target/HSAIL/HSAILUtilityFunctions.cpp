@@ -54,8 +54,9 @@
 //===----------------------------------------------------------------------===//
 #include "HSAILUtilityFunctions.h"
 #include "HSAILBrig.h"
-#include "HSAILMachineFunctionInfo.h"
+#include "HSAILInstrInfo.h"
 #include "HSAILISelLowering.h"
+#include "HSAILMachineFunctionInfo.h"
 #include "HSAILOpaqueTypes.h"
 #include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/Constants.h"
@@ -73,11 +74,6 @@
 #include <cstdio>
 #include <queue>
 #include <list>
-
-// Bring in the implementation for InstrMappings
-#define GET_INSTRMAP_INFO
-#include "HSAILGenInstrInfo.inc"
-#undef GET_INSTRMAP_INFO
 
 using namespace llvm;
 
@@ -856,13 +852,6 @@ bool isRetAtomicOp(const MachineInstr *MI)
 bool isNoretAtomicOp(const MachineInstr *MI)
 {
   return isAtomicOp(MI) && MI->getDesc().getNumDefs() == 0;
-}
-
-int getVectorLdStOpcode(uint16_t Opcode, unsigned vsize) {
-  // HSAIL::vec_size enum is generated from instruction mappings and defined in
-  // HSAILGenInstrInfo.inc. It starts with vec_size_1 value which is equal to
-  // zero, so we need to subtract one from size.
-  return HSAIL::getLdStVectorOpcode(Opcode, HSAIL::vec_size(vsize - 1));
 }
 
 static SDValue generateFenceIntrinsicHelper(SDValue Chain, SDLoc dl,

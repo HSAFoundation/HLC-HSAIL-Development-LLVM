@@ -3,11 +3,9 @@
 // This file contains the HSAIL implementation of the TargetInstrInfo class.
 //
 //===---------------------------------------------------------------------===//
-
-#include <queue>
+#include "HSAILInstrInfo.h"
 #include "HSAILBrig.h"
 #include "HSAILTargetMachine.h"
-#include "HSAILInstrInfo.h"
 #include "HSAILUtilityFunctions.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/ADT/DenseMap.h"
@@ -25,10 +23,11 @@
 #include "llvm/Pass.h"
 #include "llvm/ADT/SmallPtrSet.h"
 
-#define GET_INSTRINFO_CTOR
-#define GET_INSTRINFO_MC_DESC
+#include <queue>
+
 #define GET_INSTRINFO_CTOR_DTOR
-//#define GET_INSTRINFO_ENUM
+#define GET_INSTRINFO_NAMED_OPS
+#define GET_INSTRMAP_INFO
 #include "HSAILGenInstrInfo.inc"
 using namespace llvm;
 namespace llvm {
@@ -1275,4 +1274,12 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
   }
   return HSAILGenInstrInfo::expandPostRAPseudo(MI);
 }
+}
+
+// FIXME: Should just use generated version directly.
+int HSAIL::getVectorLdStOpcode(uint16_t Opcode, unsigned vsize) {
+  // HSAIL::vec_size enum is generated from instruction mappings and defined in
+  // HSAILGenInstrInfo.inc. It starts with vec_size_1 value which is equal to
+  // zero, so we need to subtract one from size.
+  return HSAIL::getLdStVectorOpcode(Opcode, HSAIL::vec_size(vsize - 1));
 }
