@@ -101,10 +101,10 @@ let isNotDuplicable = 1, isBarrier = 1 in {
 
 // Cross-Lane Operations
   class CrossLaneV4<string asm>
-		: HSAILInst<(outs GPR64:$dest1, GPR64:$dest2,  GPR64:$dest3,  GPR64:$dest4),
+		: HSAILInst<(outs GPR64:$dest0, GPR64:$dest1,  GPR64:$dest2,  GPR64:$dest3),
 					(ins CR:$src1),
 					!strconcat(asm,
-							   " ( $dest1, $dest2, $dest3, $dest4 ), "
+							   " ( $dest0, $dest1, $dest2, $dest3 ), "
 							   "$src1"), []> {
     let isCrossLaneInst = 1;
   }
