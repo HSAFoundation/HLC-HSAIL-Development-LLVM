@@ -171,41 +171,41 @@ defm shr : ShiftOpS64<sra, "shr_s64">;
 ////////////////////////////////////////////////////////////////////////////////
 // cmov (1-bit, 32-bit, and 64-bit; integer and float)
 
-def cmov_b1 : HSAILInst<(outs CR:$dest), (ins CR:$cond, CR:$tval, CR:$fval),
-               "cmov_b1\t$dest, $cond, $tval, $fval",
+def cmov_b1 : HSAILInst<(outs CR:$dest), (ins CR:$src0, CR:$src1, CR:$src2),
+               "cmov_b1\t$dest, $src0, $src1, $src2",
                [(set (i1 CR:$dest),
-                     (select (i1 CR:$cond), (i1 CR:$tval), (i1 CR:$fval)))]>;
+                     (select (i1 CR:$src0), (i1 CR:$src1), (i1 CR:$src2)))]>;
 
 multiclass cmov<string asm, ValueType Ty, Operand OpTy, SDNode ImmTy,
                 RegisterClass RC> {
 
-    def _rr : HSAILInst<(outs RC:$dest), (ins CR:$cond, RC:$tval, RC:$fval),
-                        !strconcat(asm, "\t $dest, $cond, $tval, $fval"),
+    def _rr : HSAILInst<(outs RC:$dest), (ins CR:$src0, RC:$src1, RC:$src2),
+                        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
                         [(set (Ty RC:$dest),
-                              (select (i1 CR:$cond),
-                                      (Ty RC:$tval),
-                                      (Ty RC:$fval)))]>;
+                              (select (i1 CR:$src0),
+                                      (Ty RC:$src1),
+                                      (Ty RC:$src2)))]>;
 
-    def _ri : HSAILInst<(outs RC:$dest), (ins CR:$cond, RC:$tval, OpTy:$fval),
-                        !strconcat(asm, "\t $dest, $cond, $tval, $fval"),
+    def _ri : HSAILInst<(outs RC:$dest), (ins CR:$src0, RC:$src1, OpTy:$src2),
+                        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
                         [(set (Ty RC:$dest),
-                              (select (i1 CR:$cond),
-                                      (Ty RC:$tval),
-                                      (Ty ImmTy:$fval)))]>;
+                              (select (i1 CR:$src0),
+                                      (Ty RC:$src1),
+                                      (Ty ImmTy:$src2)))]>;
 
-    def _ir : HSAILInst<(outs RC:$dest), (ins CR:$cond, OpTy:$tval, RC:$fval),
-                        !strconcat(asm, "\t $dest, $cond, $tval, $fval"),
+    def _ir : HSAILInst<(outs RC:$dest), (ins CR:$src0, OpTy:$src1, RC:$src2),
+                        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
                         [(set (Ty RC:$dest),
-                              (select (i1 CR:$cond),
-                                      (Ty ImmTy:$tval),
-                                      (Ty RC:$fval)))]>;
+                              (select (i1 CR:$src0),
+                                      (Ty ImmTy:$src1),
+                                      (Ty RC:$src2)))]>;
 
-    def _ii : HSAILInst<(outs RC:$dest), (ins CR:$cond, OpTy:$tval, OpTy:$fval),
-                        !strconcat(asm, "\t $dest, $cond, $tval, $fval"),
+    def _ii : HSAILInst<(outs RC:$dest), (ins CR:$src0, OpTy:$src1, OpTy:$src2),
+                        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
                         [(set (Ty RC:$dest),
-                              (select (i1 CR:$cond),
-                                      (Ty ImmTy:$tval),
-                                      (Ty ImmTy:$fval)))]>;
+                              (select (i1 CR:$src0),
+                                      (Ty ImmTy:$src1),
+                                      (Ty ImmTy:$src2)))]>;
 }
 
 defm cmov_b32_i : cmov<"cmov_b32", i32, i32imm, imm,   GPR32>;
