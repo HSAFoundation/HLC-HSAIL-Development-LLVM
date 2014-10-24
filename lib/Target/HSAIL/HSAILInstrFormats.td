@@ -24,6 +24,8 @@ class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
   let AsmString   = !strconcat(asmstr, " ;");
   let Pattern = pattern;
 
+  let UseNamedOperandTable = 1;
+
   // Target specific flags
   // Important! Keep in sync with HSAIL.h::HSAILTSFLAG
   bit hasAddress = 0;
