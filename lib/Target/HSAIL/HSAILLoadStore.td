@@ -1,123 +1,123 @@
 ////////////////////////////////////////////////////////////////////////////////
-// stof, ftos -- not matched, inserted in MachineInstr lowering 
+// stof, ftos -- not matched, inserted in MachineInstr lowering
 // 32 bit
-def global_stof_u32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
-                     "stof_global_u32\t$dst, $src",
+def global_stof_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
+                     "stof_global_u32\t$dest, $src",
                      []>;
 
-def group_stof_u32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
-                     "stof_group_u32\t$dst, $src",
+def group_stof_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
+                     "stof_group_u32\t$dest, $src",
                      []>;
 
-def constant_stof_u32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
-                     "stof_readonly_u32\t$dst, $src",
+def constant_stof_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
+                     "stof_readonly_u32\t$dest, $src",
                      []>;
 
-def private_stof_u32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
-                     "stof_private_u32\t$dst, $src",
+def private_stof_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
+                     "stof_private_u32\t$dest, $src",
                      []>;
 
-def global_ftos_u32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
-                     "ftos_global_u32\t$dst, $src",
+def global_ftos_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
+                     "ftos_global_u32\t$dest, $src",
                      []>;
 
-def group_ftos_u32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
-                     "ftos_group_u32\t$dst, $src",
+def group_ftos_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
+                     "ftos_group_u32\t$dest, $src",
                      []>;
 
-def constant_ftos_u32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
-                     "ftos_readonly_u32\t$dst, $src",
+def constant_ftos_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
+                     "ftos_readonly_u32\t$dest, $src",
                      []>;
 
-def private_ftos_u32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
-                     "ftos_private_u32\t$dst, $src",
+def private_ftos_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
+                     "ftos_private_u32\t$dest, $src",
                      []>;
 // 64 bit
-def global_stof_u64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src),
-                     "stof_global_u64\t$dst, $src",
+def global_stof_u64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
+                     "stof_global_u64\t$dest, $src",
                      []>;
 
-def group_stof_u64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src),
-                     "stof_group_u64\t$dst, $src",
+def group_stof_u64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
+                     "stof_group_u64\t$dest, $src",
                      []>;
 
-def constant_stof_u64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src),
-                     "stof_readonly_u64\t$dst, $src",
+def constant_stof_u64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
+                     "stof_readonly_u64\t$dest, $src",
                      []>;
 
-def private_stof_u64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src),
-                     "stof_private_u64\t$dst, $src",
+def private_stof_u64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
+                     "stof_private_u64\t$dest, $src",
                      []>;
 
-def global_ftos_u64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src),
-                     "ftos_global_u64\t$dst, $src",
+def global_ftos_u64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
+                     "ftos_global_u64\t$dest, $src",
                      []>;
 
-def group_ftos_u64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src),
-                     "ftos_group_u64\t$dst, $src",
+def group_ftos_u64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
+                     "ftos_group_u64\t$dest, $src",
                      []>;
 
-def constant_ftos_u64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src),
-                     "ftos_readonly_u64\t$dst, $src",
+def constant_ftos_u64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
+                     "ftos_readonly_u64\t$dest, $src",
                      []>;
 
-def private_ftos_u64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src),
-                     "ftos_private_u64\t$dst, $src",
+def private_ftos_u64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
+                     "ftos_private_u64\t$dest, $src",
                      []>;
 
 // stof/ftos for address space casting.
 multiclass AddrSpaceCastInst<Intrinsic intr, string asm> {
-  def _r_addr32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
-      asm#"_u32_u32"#"\t $dst, $src",
-      [(set (i32 GPR32:$dst), (intr (i32 GPR32:$src)))]>, Requires<[In32BitMode]>;
+  def _r_addr32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
+      asm#"_u32_u32"#"\t $dest, $src",
+      [(set (i32 GPR32:$dest), (intr (i32 GPR32:$src)))]>, Requires<[In32BitMode]>;
 
-  def _i_addr32 : HSAILInst<(outs GPR32:$dst), (ins i32imm:$src),
-      asm#"_u32_u32"#"\t $dst, $src",
-      [(set (i32 GPR32:$dst), (intr (i32 imm:$src)))]>, Requires<[In32BitMode]>;
+  def _i_addr32 : HSAILInst<(outs GPR32:$dest), (ins i32imm:$src),
+      asm#"_u32_u32"#"\t $dest, $src",
+      [(set (i32 GPR32:$dest), (intr (i32 imm:$src)))]>, Requires<[In32BitMode]>;
 
-  def _r_addr64 : HSAILInst<(outs GPR64:$dst), (ins GPR64:$src),
-      asm#"_u64_u64"#"\t $dst, $src",
-      [(set (i64 GPR64:$dst), (intr (i64 GPR64:$src)))]>, Requires<[In64BitMode]>;
+  def _r_addr64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
+      asm#"_u64_u64"#"\t $dest, $src",
+      [(set (i64 GPR64:$dest), (intr (i64 GPR64:$src)))]>, Requires<[In64BitMode]>;
 
-  def _i_addr64 : HSAILInst<(outs GPR64:$dst), (ins i64imm:$src),
-      asm#"_u64_u64"#"\t $dst, $src",
-      [(set (i64 GPR64:$dst), (intr (i64 imm:$src)))]>, Requires<[In64BitMode]>;
+  def _i_addr64 : HSAILInst<(outs GPR64:$dest), (ins i64imm:$src),
+      asm#"_u64_u64"#"\t $dest, $src",
+      [(set (i64 GPR64:$dest), (intr (i64 imm:$src)))]>, Requires<[In64BitMode]>;
 }
 
 multiclass FToSInst32<Intrinsic intr, string asm> {
-  def _r_addr32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
-      asm#"_u32_u32"#"\t $dst, $src",
-      [(set (i32 GPR32:$dst), (intr (i32 GPR32:$src)))]>, Requires<[In32BitMode]>;
+  def _r_addr32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
+      asm#"_u32_u32"#"\t $dest, $src",
+      [(set (i32 GPR32:$dest), (intr (i32 GPR32:$src)))]>, Requires<[In32BitMode]>;
 
-  def _i_addr32 : HSAILInst<(outs GPR32:$dst), (ins i32imm:$src),
-      asm#"_u32_u32"#"\t $dst, $src",
-      [(set (i32 GPR32:$dst), (intr (i32 imm:$src)))]>, Requires<[In32BitMode]>;
+  def _i_addr32 : HSAILInst<(outs GPR32:$dest), (ins i32imm:$src),
+      asm#"_u32_u32"#"\t $dest, $src",
+      [(set (i32 GPR32:$dest), (intr (i32 imm:$src)))]>, Requires<[In32BitMode]>;
 
-  def _r_addr64 : HSAILInst<(outs GPR32:$dst), (ins GPR64:$src),
-      asm#"_u32_u64"#"\t $dst, $src",
-      [(set (i32 GPR32:$dst), (intr (i64 GPR64:$src)))]>, Requires<[In64BitMode]>;
+  def _r_addr64 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
+      asm#"_u32_u64"#"\t $dest, $src",
+      [(set (i32 GPR32:$dest), (intr (i64 GPR64:$src)))]>, Requires<[In64BitMode]>;
 
-  def _i_addr64 : HSAILInst<(outs GPR32:$dst), (ins i64imm:$src),
-      asm#"_u32_u64"#"\t $dst, $src",
-      [(set (i32 GPR32:$dst), (intr (i64 imm:$src)))]>, Requires<[In64BitMode]>;
+  def _i_addr64 : HSAILInst<(outs GPR32:$dest), (ins i64imm:$src),
+      asm#"_u32_u64"#"\t $dest, $src",
+      [(set (i32 GPR32:$dest), (intr (i64 imm:$src)))]>, Requires<[In64BitMode]>;
 }
 
 multiclass SToFInst32<Intrinsic intr, string asm> {
-  def _r_addr32 : HSAILInst<(outs GPR32:$dst), (ins GPR32:$src),
-      asm#"_u32_u32"#"\t $dst, $src",
-      [(set (i32 GPR32:$dst), (intr (i32 GPR32:$src)))]>, Requires<[In32BitMode]>;
+  def _r_addr32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
+      asm#"_u32_u32"#"\t $dest, $src",
+      [(set (i32 GPR32:$dest), (intr (i32 GPR32:$src)))]>, Requires<[In32BitMode]>;
 
-  def _i_addr32 : HSAILInst<(outs GPR32:$dst), (ins i32imm:$src),
-      asm#"_u32_u32"#"\t $dst, $src",
-      [(set (i32 GPR32:$dst), (intr (i32 imm:$src)))]>, Requires<[In32BitMode]>;
+  def _i_addr32 : HSAILInst<(outs GPR32:$dest), (ins i32imm:$src),
+      asm#"_u32_u32"#"\t $dest, $src",
+      [(set (i32 GPR32:$dest), (intr (i32 imm:$src)))]>, Requires<[In32BitMode]>;
 
-  def _r_addr64 : HSAILInst<(outs GPR64:$dst), (ins GPR32:$src),
-      asm#"_u64_u32"#"\t $dst, $src",
-      [(set (i64 GPR64:$dst), (intr (i32 GPR32:$src)))]>, Requires<[In64BitMode]>;
+  def _r_addr64 : HSAILInst<(outs GPR64:$dest), (ins GPR32:$src),
+      asm#"_u64_u32"#"\t $dest, $src",
+      [(set (i64 GPR64:$dest), (intr (i32 GPR32:$src)))]>, Requires<[In64BitMode]>;
 
-  def _i_addr64 : HSAILInst<(outs GPR64:$dst), (ins i32imm:$src),
-      asm#"_u64_u32"#"\t $dst, $src",
-      [(set (i64 GPR64:$dst), (intr (i32 imm:$src)))]>, Requires<[In64BitMode]>;
+  def _i_addr64 : HSAILInst<(outs GPR64:$dest), (ins i32imm:$src),
+      asm#"_u64_u32"#"\t $dest, $src",
+      [(set (i64 GPR64:$dest), (intr (i32 imm:$src)))]>, Requires<[In64BitMode]>;
 }
 
 defm stof_global  : AddrSpaceCastInst<int_HSAIL_addrspacecast_g2f, "stof_global">;
@@ -132,21 +132,21 @@ defm ftos_private : FToSInst32<int_HSAIL_addrspacecast_f2p, "ftos_private">;
 
 // segmentp
 multiclass SegmentPInst<Intrinsic intr, string asm> {
-  def _r_addr32 : HSAILInst<(outs CR:$dst), (ins GPR32:$src),
-      asm#"_b1_u32"#"\t $dst, $src",
-      [(set (i1 CR:$dst), (intr (i32 GPR32:$src)))]>;
+  def _r_addr32 : HSAILInst<(outs CR:$dest), (ins GPR32:$src),
+      asm#"_b1_u32"#"\t $dest, $src",
+      [(set (i1 CR:$dest), (intr (i32 GPR32:$src)))]>;
 
-  def _i_addr32 : HSAILInst<(outs CR:$dst), (ins i32imm:$src),
-      asm#"_b1_u32"#"\t $dst, $src",
-      [(set (i1 CR:$dst), (intr (i32 imm:$src)))]>;
+  def _i_addr32 : HSAILInst<(outs CR:$dest), (ins i32imm:$src),
+      asm#"_b1_u32"#"\t $dest, $src",
+      [(set (i1 CR:$dest), (intr (i32 imm:$src)))]>;
 
-  def _r : HSAILInst<(outs CR:$dst), (ins GPR64:$src),
-      asm#"_b1_u64"#"\t $dst, $src",
-      [(set (i1 CR:$dst), (intr (i64 GPR64:$src)))]>;
+  def _r : HSAILInst<(outs CR:$dest), (ins GPR64:$src),
+      asm#"_b1_u64"#"\t $dest, $src",
+      [(set (i1 CR:$dest), (intr (i64 GPR64:$src)))]>;
 
-  def _i : HSAILInst<(outs CR:$dst), (ins i64imm:$src),
-      asm#"_b1_u64"#"\t $dst, $src",
-      [(set (i1 CR:$dst), (intr (i64 imm:$src)))]>;
+  def _i : HSAILInst<(outs CR:$dest), (ins i64imm:$src),
+      asm#"_b1_u64"#"\t $dest, $src",
+      [(set (i1 CR:$dest), (intr (i64 imm:$src)))]>;
 }
 
 defm segmentp_global  : SegmentPInst<int_HSAIL_segmentp_global, "segmentp_global">;
@@ -179,32 +179,32 @@ multiclass HSAIL_LD<RegisterClass RC, DAGOperand MPtr>
 {
   let hasAddress = 1, isLoad = 1, mayLoad = 1, hasSideEffects = 0 in {
     let addressOpNum = 1 in {
-      def _v1: HSAILInst<(outs RC:$dst),
+      def _v1: HSAILInst<(outs RC:$dest),
                          (ins MPtr:$address, BrigTypeX:$t, BrigWidth:$w,
                               BrigMemoryModifierMask:$m),
-                        "ld_$w$m$t\t$dst, $address", []>,
+                        "ld_$w$m$t\t$dest, $address", []>,
                LdStVectorMap<NAME, 1>;
     }
 
     let addressOpNum = 2 in {
-      def _v2 : HSAILInst<(outs RC:$dst1, RC:$dst2),
+      def _v2 : HSAILInst<(outs RC:$dest0, RC:$dest1),
                           (ins MPtr:$address, BrigTypeX:$t, BrigWidth:$w,
                                BrigMemoryModifierMask:$m),
-                           "ld_v2_$w$m$t\t($dst1, $dst2 ), $address", []>,
+                           "ld_v2_$w$m$t\t($dest0, $dest1 ), $address", []>,
                LdStVectorMap<NAME, 2>;
     }
     let addressOpNum = 3 in {
-      def _v3 : HSAILInst<(outs RC:$dst1, RC:$dst2, RC:$dst3),
+      def _v3 : HSAILInst<(outs RC:$dest0, RC:$dest1, RC:$dest2),
                           (ins MPtr:$address, BrigTypeX:$t, BrigWidth:$w,
                                BrigMemoryModifierMask:$m),
-                           "ld_v3_$w$m$t\t($dst1, $dst2, $dst3 ), $address", []>,
+                           "ld_v3_$w$m$t\t($dest0, $dest1, $dest2 ), $address", []>,
                 LdStVectorMap<NAME, 3>;
     }
     let addressOpNum = 4 in {
-      def _v4 : HSAILInst<(outs RC:$dst1, RC:$dst2, RC:$dst3, RC:$dst4),
+      def _v4 : HSAILInst<(outs RC:$dest0, RC:$dest1, RC:$dest2, RC:$dest3),
                           (ins MPtr:$address, BrigTypeX:$t, BrigWidth:$w,
                                BrigMemoryModifierMask:$m),
-                           "ld_v4_$w$m$t\t($dst1, $dst2, $dst3, $dst4 ), $address", []>,
+                           "ld_v4_$w$m$t\t($dest0, $dest1, $dest2, $dest3 ), $address", []>,
                 LdStVectorMap<NAME, 4>;
     }
   }
@@ -253,9 +253,9 @@ let hasSideEffects = 1, hasCtrlDep = 1 in {
 }
 
 let hasAddress = 1, mayLoad = 1, isPseudo = 1, hasSideEffects = 0 in {
-  def ld_b1_ptr32 : HSAILInst<(outs CR:$dst), (ins MEMOP32:$address, BrigTypeX:$t,
+  def ld_b1_ptr32 : HSAILInst<(outs CR:$dest), (ins MEMOP32:$address, BrigTypeX:$t,
                                  BrigWidth:$w, BrigMemoryModifierMask:$m),
-                              "ld_b1_$w$m$t\t$dst, $address", []>;
+                              "ld_b1_$w$m$t\t$dest, $address", []>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -265,82 +265,82 @@ multiclass HSAIL_ST<RegisterClass RC, DAGOperand MPtr>
 {
   let hasAddress = 1, isStore = 1, mayStore = 1, hasSideEffects = 0 in {
     let addressOpNum = 1 in {
-      def _v1 : HSAILInst<(outs), (ins RC:$val,
+      def _v1 : HSAILInst<(outs), (ins RC:$src,
                                        MPtr:$address, BrigTypeX:$t),
-                          "st_$t\t$val, $address", []>,
+                          "st_$t\t$src, $address", []>,
                 LdStVectorMap<NAME, 1>;
     }
 
     let addressOpNum = 2 in {
-      def _v2 : HSAILInst<(outs), (ins RC:$val1, RC:$val2,
+      def _v2 : HSAILInst<(outs), (ins RC:$src0, RC:$src1,
                                        MPtr:$address, BrigTypeX:$t),
-                          "st_v2_$t\t($val1, $val2 ), $address", []>,
+                          "st_v2_$t\t($src0, $src1 ), $address", []>,
                 LdStVectorMap<NAME, 2>;
     }
     let addressOpNum = 3 in {
-      def _v3 : HSAILInst<(outs), (ins RC:$val1, RC:$val2, RC:$val3,
+      def _v3 : HSAILInst<(outs), (ins RC:$src0, RC:$src1, RC:$src2,
                                        MPtr:$address, BrigTypeX:$t),
-                          "st_v3_$t\t($val1, $val2, $val3 ), $address", []>,
+                          "st_v3_$t\t($src0, $src1, $src2 ), $address", []>,
                 LdStVectorMap<NAME, 3>;
     }
     let addressOpNum = 4 in {
-      def _v4 : HSAILInst<(outs), (ins RC:$val1, RC:$val2, RC:$val3, RC:$val4,
+      def _v4 : HSAILInst<(outs), (ins RC:$src0, RC:$src1, RC:$src2, RC:$src3,
                                        MPtr:$address, BrigTypeX:$t),
-                          "st_v4_$t\t($val1, $val2, $val3, $val4 ), $address", []>,
+                          "st_v4_$t\t($src0, $src1, $src2, $src3 ), $address", []>,
                 LdStVectorMap<NAME, 4>;
     }
   }
 }
 
-class StoreIsPtr32<PatFrag pf> : PatFrag<(ops node:$val, node:$address), (pf node:$val, node:$address),
+class StoreIsPtr32<PatFrag pf> : PatFrag<(ops node:$src0, node:$address), (pf node:$src0, node:$address),
                             [{ return MemOpHasPtr32(N); }]>;
 
-class StoreIsPtrNN<PatFrag pf> : PatFrag<(ops node:$val, node:$address), (pf node:$val, node:$address),
+class StoreIsPtrNN<PatFrag pf> : PatFrag<(ops node:$src0, node:$address), (pf node:$src0, node:$address),
                             [{ return !MemOpHasPtr32(N); }]>;
 
 // For segments where the address is 32/64-bit depending on machine model.
 defm st_32 : HSAIL_ST<GPR32, MEMOP>;
 defm st_64 : HSAIL_ST<GPR64, MEMOP>;
 
-def : Pat<(StoreIsPtrNN<store>         (i32 GPR32:$val), ADDR:$address), (st_32_v1 GPR32:$val, ADDR:$address, BrigTypeX.U32)>;
-def : Pat<(StoreIsPtrNN<store>         (f32 GPR32:$val), ADDR:$address), (st_32_v1 GPR32:$val, ADDR:$address, BrigTypeX.F32)>;
-def : Pat<(StoreIsPtrNN<truncstorei8>  (i32 GPR32:$val), ADDR:$address), (st_32_v1 GPR32:$val, ADDR:$address, BrigTypeX.U8)>;
-def : Pat<(StoreIsPtrNN<truncstorei16> (i32 GPR32:$val), ADDR:$address), (st_32_v1 GPR32:$val, ADDR:$address, BrigTypeX.U16)>;
-def : Pat<(StoreIsPtrNN<store>         (i64 GPR64:$val), ADDR:$address), (st_64_v1 GPR64:$val, ADDR:$address, BrigTypeX.U64)>;
-def : Pat<(StoreIsPtrNN<store>         (f64 GPR64:$val), ADDR:$address), (st_64_v1 GPR64:$val, ADDR:$address, BrigTypeX.F64)>;
+def : Pat<(StoreIsPtrNN<store>         (i32 GPR32:$src0), ADDR:$address), (st_32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.U32)>;
+def : Pat<(StoreIsPtrNN<store>         (f32 GPR32:$src0), ADDR:$address), (st_32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.F32)>;
+def : Pat<(StoreIsPtrNN<truncstorei8>  (i32 GPR32:$src0), ADDR:$address), (st_32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.U8)>;
+def : Pat<(StoreIsPtrNN<truncstorei16> (i32 GPR32:$src0), ADDR:$address), (st_32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.U16)>;
+def : Pat<(StoreIsPtrNN<store>         (i64 GPR64:$src0), ADDR:$address), (st_64_v1 GPR64:$src0, ADDR:$address, BrigTypeX.U64)>;
+def : Pat<(StoreIsPtrNN<store>         (f64 GPR64:$src0), ADDR:$address), (st_64_v1 GPR64:$src0, ADDR:$address, BrigTypeX.F64)>;
 
-def : Pat<(StoreIsPtrNN<store>         (i32 imm:$val),   ADDR:$address), (st_32_v1 imm:$val,   ADDR:$address, BrigTypeX.U32)>;
-def : Pat<(StoreIsPtrNN<truncstorei8>  (i32 imm:$val),   ADDR:$address), (st_32_v1 imm:$val,   ADDR:$address, BrigTypeX.U8)>;
-def : Pat<(StoreIsPtrNN<truncstorei16> (i32 imm:$val),   ADDR:$address), (st_32_v1 imm:$val,   ADDR:$address, BrigTypeX.U16)>;
-def : Pat<(StoreIsPtrNN<store>         (i64 imm:$val),   ADDR:$address), (st_64_v1 imm:$val,   ADDR:$address, BrigTypeX.U64)>;
+def : Pat<(StoreIsPtrNN<store>         (i32 imm:$src0),   ADDR:$address), (st_32_v1 imm:$src0,   ADDR:$address, BrigTypeX.U32)>;
+def : Pat<(StoreIsPtrNN<truncstorei8>  (i32 imm:$src0),   ADDR:$address), (st_32_v1 imm:$src0,   ADDR:$address, BrigTypeX.U8)>;
+def : Pat<(StoreIsPtrNN<truncstorei16> (i32 imm:$src0),   ADDR:$address), (st_32_v1 imm:$src0,   ADDR:$address, BrigTypeX.U16)>;
+def : Pat<(StoreIsPtrNN<store>         (i64 imm:$src0),   ADDR:$address), (st_64_v1 imm:$src0,   ADDR:$address, BrigTypeX.U64)>;
 
 // For segments where the address is 32-bit in both models.
 defm st_32_ptr32 : HSAIL_ST<GPR32, MEMOP32>;
 defm st_64_ptr32 : HSAIL_ST<GPR64, MEMOP32>;
 
-def : Pat<(StoreIsPtr32<store>         (i32 GPR32:$val), ADDR:$address), (st_32_ptr32_v1 GPR32:$val, ADDR:$address, BrigTypeX.U32)>;
-def : Pat<(StoreIsPtr32<store>         (f32 GPR32:$val), ADDR:$address), (st_32_ptr32_v1 GPR32:$val, ADDR:$address, BrigTypeX.F32)>;
-def : Pat<(StoreIsPtr32<truncstorei8>  (i32 GPR32:$val), ADDR:$address), (st_32_ptr32_v1 GPR32:$val, ADDR:$address, BrigTypeX.U8)>;
-def : Pat<(StoreIsPtr32<truncstorei16> (i32 GPR32:$val), ADDR:$address), (st_32_ptr32_v1 GPR32:$val, ADDR:$address, BrigTypeX.U16)>;
-def : Pat<(StoreIsPtr32<store>         (i64 GPR64:$val), ADDR:$address), (st_64_ptr32_v1 GPR64:$val, ADDR:$address, BrigTypeX.U64)>;
-def : Pat<(StoreIsPtr32<store>         (f64 GPR64:$val), ADDR:$address), (st_64_ptr32_v1 GPR64:$val, ADDR:$address, BrigTypeX.F64)>;
+def : Pat<(StoreIsPtr32<store>         (i32 GPR32:$src0), ADDR:$address), (st_32_ptr32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.U32)>;
+def : Pat<(StoreIsPtr32<store>         (f32 GPR32:$src0), ADDR:$address), (st_32_ptr32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.F32)>;
+def : Pat<(StoreIsPtr32<truncstorei8>  (i32 GPR32:$src0), ADDR:$address), (st_32_ptr32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.U8)>;
+def : Pat<(StoreIsPtr32<truncstorei16> (i32 GPR32:$src0), ADDR:$address), (st_32_ptr32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.U16)>;
+def : Pat<(StoreIsPtr32<store>         (i64 GPR64:$src0), ADDR:$address), (st_64_ptr32_v1 GPR64:$src0, ADDR:$address, BrigTypeX.U64)>;
+def : Pat<(StoreIsPtr32<store>         (f64 GPR64:$src0), ADDR:$address), (st_64_ptr32_v1 GPR64:$src0, ADDR:$address, BrigTypeX.F64)>;
 
-def : Pat<(StoreIsPtr32<store>         (i32 imm:$val),   ADDR:$address), (st_32_ptr32_v1 imm:$val,   ADDR:$address, BrigTypeX.U32)>;
-def : Pat<(StoreIsPtr32<truncstorei8>  (i32 imm:$val),   ADDR:$address), (st_32_ptr32_v1 imm:$val,   ADDR:$address, BrigTypeX.U8)>;
-def : Pat<(StoreIsPtr32<truncstorei16> (i32 imm:$val),   ADDR:$address), (st_32_ptr32_v1 imm:$val,   ADDR:$address, BrigTypeX.U16)>;
-def : Pat<(StoreIsPtr32<store>         (i64 imm:$val),   ADDR:$address), (st_64_ptr32_v1 imm:$val,   ADDR:$address, BrigTypeX.U64)>;
+def : Pat<(StoreIsPtr32<store>         (i32 imm:$src0),   ADDR:$address), (st_32_ptr32_v1 imm:$src0,   ADDR:$address, BrigTypeX.U32)>;
+def : Pat<(StoreIsPtr32<truncstorei8>  (i32 imm:$src0),   ADDR:$address), (st_32_ptr32_v1 imm:$src0,   ADDR:$address, BrigTypeX.U8)>;
+def : Pat<(StoreIsPtr32<truncstorei16> (i32 imm:$src0),   ADDR:$address), (st_32_ptr32_v1 imm:$src0,   ADDR:$address, BrigTypeX.U16)>;
+def : Pat<(StoreIsPtr32<store>         (i64 imm:$src0),   ADDR:$address), (st_64_ptr32_v1 imm:$src0,   ADDR:$address, BrigTypeX.U64)>;
 
 let hasAddress = 1, mayStore = 1, isPseudo = 1, hasSideEffects = 0 in {
-  def st_b1_ptr32 : HSAILInst<(outs), (ins CR:$val, MEMOP32:$address, BrigTypeX:$t),
-                              "st_b1_$t\t$val, $address", []>;
+  def st_b1_ptr32 : HSAILInst<(outs), (ins CR:$src0, MEMOP32:$address, BrigTypeX:$t),
+                              "st_b1_$t\t$src0, $address", []>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // load memory address
 
 class LdaAddr<RegisterClass RC, DAGOperand MPtr>
-      : HSAILInst<(outs RC:$dst), (ins MPtr:$addr, BrigSegment:$segment),
-      "lda_$segment\t$dst, $addr", []> {
+      : HSAILInst<(outs RC:$dest), (ins MPtr:$addr, BrigSegment:$segment),
+      "lda_$segment\t$dest, $addr", []> {
   let hasAddress = 1;
   let addressOpNum = 1;
   let neverHasSideEffects = 1;
