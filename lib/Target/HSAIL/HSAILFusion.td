@@ -20,21 +20,21 @@ multiclass TernaryFusedPairOp<string prefix, string suffix,
                               ValueType Ty, SDNode ImmTy,
                               RegisterClass RC, SDNode op1, SDNode op2> {
 
-    def _rrr : Pat<(op1 (op2 RC:$src1, RC:$src2), RC:$src3),
+    def _rrr : Pat<(op1 (op2 RC:$src0, RC:$src1), RC:$src2),
                    (!cast<HSAILInst>(prefix#"_"#suffix)
-                     RC:$src1, RC:$src2, RC:$src3)>;
+                     RC:$src0, RC:$src1, RC:$src2)>;
 
-    def _rri : Pat<(op1 (op2 RC:$src1, RC:$src2), (Ty ImmTy:$src3)),
+    def _rri : Pat<(op1 (op2 RC:$src0, RC:$src1), (Ty ImmTy:$src2)),
                    (!cast<HSAILInst>(prefix#"_rri_"#suffix)
-                     RC:$src1, RC:$src2, ImmTy:$src3)>;
+                     RC:$src0, RC:$src1, ImmTy:$src2)>;
 
-    def _rir : Pat<(op1 (op2 RC:$src1, (Ty ImmTy:$src2)), RC:$src3),
+    def _rir : Pat<(op1 (op2 RC:$src0, (Ty ImmTy:$src1)), RC:$src2),
                    (!cast<HSAILInst>(prefix#"_rir_"#suffix)
-                     RC:$src1, ImmTy:$src2, RC:$src3)>;
+                     RC:$src0, ImmTy:$src1, RC:$src2)>;
 
-    def _rii : Pat<(op1 (op2 RC:$src1, (Ty ImmTy:$src2)), (Ty ImmTy:$src3)),
+    def _rii : Pat<(op1 (op2 RC:$src0, (Ty ImmTy:$src1)), (Ty ImmTy:$src2)),
                    (!cast<HSAILInst>(prefix#"_rii_"#suffix)
-                     RC:$src1, ImmTy:$src2, ImmTy:$src3)>;
+                     RC:$src0, ImmTy:$src1, ImmTy:$src2)>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,17 +60,17 @@ def shl64imm : PatLeaf<(imm), [{
 multiclass TernaryFusedShlAdd<string asm, ValueType Ty, Operand OpTy,
                               PatLeaf ImmTy, RegisterClass RC> {
 
-    def _rir : HSAILInst<(outs RC:$dst), (ins RC:$src1, OpTy:$src2, RC:$src3),
-        !strconcat(asm, "\t $dst, $src1, $src2, $src3"),
-        [(set (Ty RC:$dst), (add
-            (shl (Ty RC:$src1), (i32 ImmTy:$src2)),
-            (Ty RC:$src3)))]>;
+    def _rir : HSAILInst<(outs RC:$dest), (ins RC:$src0, OpTy:$src1, RC:$src2),
+        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
+        [(set (Ty RC:$dest), (add
+            (shl (Ty RC:$src0), (i32 ImmTy:$src1)),
+            (Ty RC:$src2)))]>;
 
-    def _rii : HSAILInst<(outs RC:$dst), (ins RC:$src1, OpTy:$src2, OpTy:$src3),
-        !strconcat(asm, "\t $dst, $src1, $src2, $src3"),
-        [(set (Ty RC:$dst), (add
-            (shl (Ty RC:$src1), (i32 ImmTy:$src2)),
-            (Ty imm:$src3)))]>;
+    def _rii : HSAILInst<(outs RC:$dest), (ins RC:$src0, OpTy:$src1, OpTy:$src2),
+        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
+        [(set (Ty RC:$dest), (add
+            (shl (Ty RC:$src0), (i32 ImmTy:$src1)),
+            (Ty imm:$src2)))]>;
 }
 
 // Pre-optimized (const1 + (x << const2)) -> const1 | (x << const2).
@@ -110,9 +110,9 @@ defm mad_u64 : TernaryFusedPairOp<"umad", "u64", i64, imm, GPR64, add, mul>;
 // As 32 bit integer multiplication is curently expensive, optimization is
 // commented out.
 // let Predicates = [EnableOpt] in {
-// def mor_u32 : Pat<(orShlAsMad GPR32:$src1,
-//                               (i32 shl32imm:$src2), (i32 imm:$src3)),
-//                   (umad_rii_u32 GPR32:$src1, shl32imm:$src2, imm:$src3)>;
+// def mor_u32 : Pat<(orShlAsMad GPR32:$src0,
+//                               (i32 shl32imm:$src1), (i32 imm:$src2)),
+//                   (umad_rii_u32 GPR32:$src0, shl32imm:$src1, imm:$src2)>;
 // }
 
 let Predicates = [EnableFPMAD] in {
@@ -140,11 +140,11 @@ def imm63 : PatLeaf<(imm), [{
 multiclass ShrOp<string asm, string t, SDNode op, RegisterClass RC,
                  ValueType Ty, PatLeaf ShImm> {
 
-    def _rr : Pat<(op RC:$src1, (and GPR32:$src2, (i32 ShImm))),
-                  (!cast<HSAILInst>(asm##t) RC:$src1, GPR32:$src2)>;
+    def _rr : Pat<(op RC:$src0, (and GPR32:$src1, (i32 ShImm))),
+                  (!cast<HSAILInst>(asm##t) RC:$src0, GPR32:$src1)>;
 
-    def _ir : Pat<(op (Ty imm:$src1), (and GPR32:$src2, (i32 ShImm))),
-                  (!cast<HSAILInst>(asm#"_ir"#t) imm:$src1, GPR32:$src2)>;
+    def _ir : Pat<(op (Ty imm:$src0), (and GPR32:$src1, (i32 ShImm))),
+                  (!cast<HSAILInst>(asm#"_ir"#t) imm:$src0, GPR32:$src1)>;
 }
 
 let Predicates = [EnableOpt] in {
@@ -181,17 +181,17 @@ def isMax64bitShift : PatLeaf<(imm), [{
 // Most common use looks like: (x & 0xFF00) >> 8
 multiclass ExtractOp<string asm, ValueType Ty, RegisterClass RC, PatLeaf ShImm,
                      SDNode op> {
-    def _rii : HSAILInst<(outs RC:$dst), (ins RC:$src1, i32imm:$src2,
-                                          i32imm:$src3),
-        !strconcat(asm, "\t $dst, $src1, $src2, $src3"),
-        [(set (Ty RC:$dst), (and
-            (op (Ty RC:$src1), (i32 ShImm:$src2)), (Ty isMask:$src3)))]>;
+    def _rii : HSAILInst<(outs RC:$dest), (ins RC:$src0, i32imm:$src1,
+                                          i32imm:$src2),
+        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
+        [(set (Ty RC:$dest), (and
+            (op (Ty RC:$src0), (i32 ShImm:$src1)), (Ty isMask:$src2)))]>;
 
-    def _rri : HSAILInst<(outs RC:$dst), (ins RC:$src1, GPR32:$src2,
-                                          i32imm:$src3),
-        !strconcat(asm, "\t $dst, $src1, $src2, $src3"),
-        [(set (Ty RC:$dst), (and
-            (op (Ty RC:$src1), (i32 GPR32:$src2)), (Ty isMask:$src3)))]>;
+    def _rri : HSAILInst<(outs RC:$dest), (ins RC:$src0, GPR32:$src1,
+                                          i32imm:$src2),
+        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
+        [(set (Ty RC:$dest), (and
+            (op (Ty RC:$src0), (i32 GPR32:$src1)), (Ty isMask:$src2)))]>;
 }
 
 // Pattren for extract where we can use unsigned insn for signed argumet.
@@ -217,36 +217,36 @@ def SignNeutralExtract : PatFrag<(ops node:$reg, node:$shift, node:$mask),
 
 multiclass SignNeutralExtractOp<string asm, ValueType Ty, RegisterClass RC,
                                 PatLeaf ShImm> {
-    def _rii : HSAILInst<(outs RC:$dst), (ins RC:$src1, i32imm:$src2,
-                                          i32imm:$src3),
-        !strconcat(asm, "\t $dst, $src1, $src2, $src3"),
-        [(set (Ty RC:$dst), (SignNeutralExtract (Ty RC:$src1),
-                                (i32 ShImm:$src2), (Ty isMask:$src3)))]>;
+    def _rii : HSAILInst<(outs RC:$dest), (ins RC:$src0, i32imm:$src1,
+                                          i32imm:$src2),
+        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
+        [(set (Ty RC:$dest), (SignNeutralExtract (Ty RC:$src0),
+                                (i32 ShImm:$src1), (Ty isMask:$src2)))]>;
 }
 
 // No signed extract operations are defined since HSAIL specifies extract as
 // left + right shifts rather than right shift + and
 let Predicates = [EnableOpt] in {
-def : Pat<(and (srl GPR32:$src1, (i32 isMax32bitShift:$src2)), (i32 isMask:$src3)),
-          (media_bfe_rii_u32 GPR32:$src1, isMax32bitShift:$src2, isMask:$src3)>;
+def : Pat<(and (srl GPR32:$src0, (i32 isMax32bitShift:$src1)), (i32 isMask:$src2)),
+          (media_bfe_rii_u32 GPR32:$src0, isMax32bitShift:$src1, isMask:$src2)>;
 
-def : Pat<(and (srl GPR32:$src1, GPR32:$src2), (i32 isMask:$src3)),
-          (media_bfe_rri_u32 GPR32:$src1, GPR32:$src2, isMask:$src3)>;
+def : Pat<(and (srl GPR32:$src0, GPR32:$src1), (i32 isMask:$src2)),
+          (media_bfe_rri_u32 GPR32:$src0, GPR32:$src1, isMask:$src2)>;
 
 defm extract_u64 : ExtractOp<"bitextract_u64", i64, GPR64, isMax64bitShift, srl>;
 
-def : Pat<(SignNeutralExtract GPR32:$src1, (i32 isMax32bitShift:$src2),
-                              (i32 isMask:$src3)),
-          (media_bfe_rii_u32 GPR32:$src1, isMax32bitShift:$src2, isMask:$src3)>;
+def : Pat<(SignNeutralExtract GPR32:$src0, (i32 isMax32bitShift:$src1),
+                              (i32 isMask:$src2)),
+          (media_bfe_rii_u32 GPR32:$src0, isMax32bitShift:$src1, isMask:$src2)>;
 
 defm extract_b64 : SignNeutralExtractOp<"bitextract_u64", i64, GPR64, isMax64bitShift>;
 }
 
 // BFI
 
-def bfiImmIRR : PatFrag<(ops node:$src1, node:$src2, node:$src3, node:$src4),
-                        (or (and node:$src2, node:$src1),
-                            (and node:$src3, node:$src4)), [{
+def bfiImmIRR : PatFrag<(ops node:$src0, node:$src1, node:$src2, node:$src4),
+                        (or (and node:$src1, node:$src0),
+                            (and node:$src2, node:$src4)), [{
     // check if src1 == ~src4
     ConstantSDNode *CN1, *CN2;
     if ((CN1 = dyn_cast<ConstantSDNode>(N->getOperand(0)->getOperand(1))) &&
@@ -256,10 +256,10 @@ def bfiImmIRR : PatFrag<(ops node:$src1, node:$src2, node:$src3, node:$src4),
     return false;
 }]>;
 
-def bfiImmIIR3 : PatFrag<(ops node:$src1, node:$src2, node:$src3),
+def bfiImmIIR3 : PatFrag<(ops node:$src0, node:$src1, node:$src2),
                           (xor
-                               (xor node:$src3, (and node:$src3, node:$src1)),
-                               node:$src2), [{
+                               (xor node:$src2, (and node:$src2, node:$src0)),
+                               node:$src1), [{
     // check if src2 & src1 == src2
     ConstantSDNode *CN1, *CN2;
     if ((CN1 = dyn_cast<ConstantSDNode>(N->getOperand(0)->getOperand(1)->
@@ -273,112 +273,112 @@ def bfiImmIIR3 : PatFrag<(ops node:$src1, node:$src2, node:$src3),
 
 multiclass BitSelect<int Bits, ValueType Ty, RegisterClass RC> {
 
-    def _rrr : Pat<(or (and RC:$src1,
-                            RC:$src2),
-                       (and RC:$src3,
-                            (not RC:$src1))),
-                   (!cast<HSAILInst>("bitsel_u"#Bits) RC:$src1, RC:$src2, RC:$src3)>;
+    def _rrr : Pat<(or (and RC:$src0,
+                            RC:$src1),
+                       (and RC:$src2,
+                            (not RC:$src0))),
+                   (!cast<HSAILInst>("bitsel_u"#Bits) RC:$src0, RC:$src1, RC:$src2)>;
 
-    def _irr : Pat<(bfiImmIRR (Ty imm:$src1), RC:$src2,
-                              RC:$src3, (Ty imm)),
-                   (!cast<HSAILInst>("bitsel_irr_u"#Bits) imm:$src1, RC:$src2, RC:$src3)>;
+    def _irr : Pat<(bfiImmIRR (Ty imm:$src0), RC:$src1,
+                              RC:$src2, (Ty imm)),
+                   (!cast<HSAILInst>("bitsel_irr_u"#Bits) imm:$src0, RC:$src1, RC:$src2)>;
 
-    def _rir : Pat<(or (and RC:$src1,
-                            (Ty imm:$src2)),
-                       (and RC:$src3,
-                            (not RC:$src1))),
-                   (!cast<HSAILInst>("bitsel_rir_u"#Bits) RC:$src1, imm:$src2, RC:$src3)>;
+    def _rir : Pat<(or (and RC:$src0,
+                            (Ty imm:$src1)),
+                       (and RC:$src2,
+                            (not RC:$src0))),
+                   (!cast<HSAILInst>("bitsel_rir_u"#Bits) RC:$src0, imm:$src1, RC:$src2)>;
 
-    def _rii : Pat<(or (and RC:$src1,
-                            (Ty imm:$src2)),
-                       (and (not RC:$src1),
-                            (Ty imm:$src3))),
-                   (!cast<HSAILInst>("bitsel_rii_u"#Bits) RC:$src1, imm:$src2, imm:$src3)>;
+    def _rii : Pat<(or (and RC:$src0,
+                            (Ty imm:$src1)),
+                       (and (not RC:$src0),
+                            (Ty imm:$src2))),
+                   (!cast<HSAILInst>("bitsel_rii_u"#Bits) RC:$src0, imm:$src1, imm:$src2)>;
 
     // Alternative rii pattern: (src1 & src2) | ((src1 & src3) ^ src3)
-    def _rii1 : Pat<(or (and RC:$src1,
-                             (Ty imm:$src2)),
-                        (xor (and RC:$src1,
-                                  (Ty imm:$src3)),
-                             (Ty imm:$src3))),
-                   (!cast<HSAILInst>("bitsel_rii_u"#Bits) RC:$src1, imm:$src2, imm:$src3)>;
+    def _rii1 : Pat<(or (and RC:$src0,
+                             (Ty imm:$src1)),
+                        (xor (and RC:$src0,
+                                  (Ty imm:$src2)),
+                             (Ty imm:$src2))),
+                   (!cast<HSAILInst>("bitsel_rii_u"#Bits) RC:$src0, imm:$src1, imm:$src2)>;
 
-    def _rri : Pat<(or (and RC:$src1,
-                            RC:$src2),
-                       (and (not RC:$src1),
-                            (Ty imm:$src3))),
-                   (!cast<HSAILInst>("bitsel_rri_u"#Bits) RC:$src1, RC:$src2, imm:$src3)>;
+    def _rri : Pat<(or (and RC:$src0,
+                            RC:$src1),
+                       (and (not RC:$src0),
+                            (Ty imm:$src2))),
+                   (!cast<HSAILInst>("bitsel_rri_u"#Bits) RC:$src0, RC:$src1, imm:$src2)>;
 
     // Alternative rri pattern: (src1 & src2) | ((src1 & src3) ^ src3)
-    def _rri1 : Pat<(or (and RC:$src1,
-                             RC:$src2),
-                        (xor (and RC:$src1,
-                                  (Ty imm:$src3)),
-                             (Ty imm:$src3))),
-                   (!cast<HSAILInst>("bitsel_rri_u"#Bits) RC:$src1, RC:$src2, imm:$src3)>;
+    def _rri1 : Pat<(or (and RC:$src0,
+                             RC:$src1),
+                        (xor (and RC:$src0,
+                                  (Ty imm:$src2)),
+                             (Ty imm:$src2))),
+                   (!cast<HSAILInst>("bitsel_rri_u"#Bits) RC:$src0, RC:$src1, imm:$src2)>;
 
     // Alternative pattern: (src3 ^ (src1 & (src2 ^ src3)))
-    def _rrr2 : Pat<(xor RC:$src3,
-                         (and RC:$src1,
-                              (xor RC:$src2,
-                                   RC:$src3))),
-                    (!cast<HSAILInst>("bitsel_u"#Bits) RC:$src1, RC:$src2, RC:$src3)>;
+    def _rrr2 : Pat<(xor RC:$src2,
+                         (and RC:$src0,
+                              (xor RC:$src1,
+                                   RC:$src2))),
+                    (!cast<HSAILInst>("bitsel_u"#Bits) RC:$src0, RC:$src1, RC:$src2)>;
 
-    def _irr2 : Pat<(xor RC:$src3,
+    def _irr2 : Pat<(xor RC:$src2,
+                         (and (xor RC:$src1,
+                                   RC:$src2),
+                              (Ty imm:$src0))),
+                    (!cast<HSAILInst>("bitsel_irr_u"#Bits) imm:$src0, RC:$src1, RC:$src2)>;
+
+    def _iir2 : Pat<(xor RC:$src2,
                          (and (xor RC:$src2,
-                                   RC:$src3),
-                              (Ty imm:$src1))),
-                    (!cast<HSAILInst>("bitsel_irr_u"#Bits) imm:$src1, RC:$src2, RC:$src3)>;
+                                   (Ty imm:$src1)),
+                              (Ty imm:$src0))),
+                    (!cast<HSAILInst>("bitsel_iir_u"#Bits) imm:$src0, imm:$src1, RC:$src2)>;
 
-    def _iir2 : Pat<(xor RC:$src3,
-                         (and (xor RC:$src3,
-                                   (Ty imm:$src2)),
-                              (Ty imm:$src1))),
-                    (!cast<HSAILInst>("bitsel_iir_u"#Bits) imm:$src1, imm:$src2, RC:$src3)>;
-
-    def _rir2 : Pat<(xor RC:$src3,
-                         (and RC:$src1,
-                              (xor RC:$src3,
-                                   (Ty imm:$src2)))),
-                    (!cast<HSAILInst>("bitsel_rir_u"#Bits) RC:$src1, imm:$src2, RC:$src3)>;
-
-    def _rri2 : Pat<(xor (and RC:$src1,
+    def _rir2 : Pat<(xor RC:$src2,
+                         (and RC:$src0,
                               (xor RC:$src2,
-                                   (Ty imm:$src3))),
-                         (Ty imm:$src3)),
-                    (!cast<HSAILInst>("bitsel_rri_u"#Bits) RC:$src1, RC:$src2, imm:$src3)>;
+                                   (Ty imm:$src1)))),
+                    (!cast<HSAILInst>("bitsel_rir_u"#Bits) RC:$src0, imm:$src1, RC:$src2)>;
+
+    def _rri2 : Pat<(xor (and RC:$src0,
+                              (xor RC:$src1,
+                                   (Ty imm:$src2))),
+                         (Ty imm:$src2)),
+                    (!cast<HSAILInst>("bitsel_rri_u"#Bits) RC:$src0, RC:$src1, imm:$src2)>;
 
     // Alternative pattern: ((src3 & src1) ^ src3) ^ (src2 & src1)
-    def _rrr3 : Pat<(xor (xor RC:$src3,
-                              (and RC:$src1,
-                                   RC:$src3)),
-                         (and RC:$src1,
-                              RC:$src2)),
-                    (!cast<HSAILInst>("bitsel_u"#Bits) RC:$src1, RC:$src2, RC:$src3)>;
+    def _rrr3 : Pat<(xor (xor RC:$src2,
+                              (and RC:$src0,
+                                   RC:$src2)),
+                         (and RC:$src0,
+                              RC:$src1)),
+                    (!cast<HSAILInst>("bitsel_u"#Bits) RC:$src0, RC:$src1, RC:$src2)>;
 
-    def _irr3 : Pat<(xor (xor RC:$src3,
-                              (and RC:$src3,
-                                   (Ty imm:$src1))),
-                         (and RC:$src2,
+    def _irr3 : Pat<(xor (xor RC:$src2,
+                              (and RC:$src2,
+                                   (Ty imm:$src0))),
+                         (and RC:$src1,
+                              (Ty imm:$src0))),
+                    (!cast<HSAILInst>("bitsel_irr_u"#Bits) imm:$src0, RC:$src1, RC:$src2)>;
+
+    def _iir3 : Pat<(bfiImmIIR3 (Ty imm:$src0), (Ty imm:$src1), RC:$src2),
+                    (!cast<HSAILInst>("bitsel_iir_u"#Bits) imm:$src0, imm:$src1, RC:$src2)>;
+
+    def _rri3 : Pat<(xor (xor (and RC:$src0,
+                                   (Ty imm:$src2)),
+                              (Ty imm:$src2)),
+                         (and RC:$src0,
+                              RC:$src1)),
+                   (!cast<HSAILInst>("bitsel_rri_u"#Bits) RC:$src0, RC:$src1, imm:$src2)>;
+
+    def _rii3 : Pat<(xor (xor (and RC:$src0,
+                                   (Ty imm:$src2)),
+                              (Ty imm:$src2)),
+                         (and RC:$src0,
                               (Ty imm:$src1))),
-                    (!cast<HSAILInst>("bitsel_irr_u"#Bits) imm:$src1, RC:$src2, RC:$src3)>;
-
-    def _iir3 : Pat<(bfiImmIIR3 (Ty imm:$src1), (Ty imm:$src2), RC:$src3),
-                    (!cast<HSAILInst>("bitsel_iir_u"#Bits) imm:$src1, imm:$src2, RC:$src3)>;
-
-    def _rri3 : Pat<(xor (xor (and RC:$src1,
-                                   (Ty imm:$src3)),
-                              (Ty imm:$src3)),
-                         (and RC:$src1,
-                              RC:$src2)),
-                   (!cast<HSAILInst>("bitsel_rri_u"#Bits) RC:$src1, RC:$src2, imm:$src3)>;
-
-    def _rii3 : Pat<(xor (xor (and RC:$src1,
-                                   (Ty imm:$src3)),
-                              (Ty imm:$src3)),
-                         (and RC:$src1,
-                              (Ty imm:$src2))),
-                    (!cast<HSAILInst>("bitsel_rii_u"#Bits) RC:$src1, imm:$src2, imm:$src3)>;
+                    (!cast<HSAILInst>("bitsel_rii_u"#Bits) RC:$src0, imm:$src1, imm:$src2)>;
 }
 
 let Predicates = [EnableOpt] in {
@@ -450,14 +450,14 @@ let Predicates = [UnsafeFPMath] in {
     }
 
     let AddedComplexity = 10 in {
-        def : Pat<(f32 (fdiv GPR32:$src1, (int_HSAIL_nsqrt_f32 GPR32:$src2))),
-                  (f32 (mul_f32 GPR32:$src1, (nrsqrt_f32 (f32 GPR32:$src2))))>;
-        def : Pat<(f32 (fdiv fpimm:$src1, (int_HSAIL_nsqrt_f32 GPR32:$src2))),
-                  (f32 (mul_f32 fpimm:$src1, (nrsqrt_f32 (f32 GPR32:$src2))))>;
-        def : Pat<(f64 (fdiv GPR64:$src1, (int_HSAIL_nsqrt_f64 GPR64:$src2))),
-                  (f64 (mul_f64 GPR64:$src1, (nrsqrt_f64 (f64 GPR64:$src2))))>;
-        def : Pat<(f64 (fdiv fpimm:$src1, (int_HSAIL_nsqrt_f64 GPR64:$src2))),
-                  (f64 (mul_f64 fpimm:$src1, (nrsqrt_f64 (f64 GPR64:$src2))))>;
+        def : Pat<(f32 (fdiv GPR32:$src0, (int_HSAIL_nsqrt_f32 GPR32:$src1))),
+                  (f32 (mul_f32 GPR32:$src0, (nrsqrt_f32 (f32 GPR32:$src1))))>;
+        def : Pat<(f32 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f32 GPR32:$src1))),
+                  (f32 (mul_f32 fpimm:$src0, (nrsqrt_f32 (f32 GPR32:$src1))))>;
+        def : Pat<(f64 (fdiv GPR64:$src0, (int_HSAIL_nsqrt_f64 GPR64:$src1))),
+                  (f64 (mul_f64 GPR64:$src0, (nrsqrt_f64 (f64 GPR64:$src1))))>;
+        def : Pat<(f64 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f64 GPR64:$src1))),
+                  (f64 (mul_f64 fpimm:$src0, (nrsqrt_f64 (f64 GPR64:$src1))))>;
     }
 }
 
@@ -466,29 +466,29 @@ let Predicates = [UnsafeFPMath] in {
 multiclass minmax<string prefix, string suffix, ValueType Ty, SDNode ImmTy,
                   RegisterClass RC, CondCode cc12, CondCode cc21> {
 
-    def _rr12 : Pat<(select (i1 (setcc (Ty RC:$src1), (Ty RC:$src2), cc12)),
-                            (Ty RC:$src1), (Ty RC:$src2)),
-                (!cast<HSAILInst>(prefix#"_"#suffix) RC:$src1, RC:$src2)>;
+    def _rr12 : Pat<(select (i1 (setcc (Ty RC:$src0), (Ty RC:$src1), cc12)),
+                            (Ty RC:$src0), (Ty RC:$src1)),
+                (!cast<HSAILInst>(prefix#"_"#suffix) RC:$src0, RC:$src1)>;
 
-    def _ri12 : Pat<(select (i1 (setcc RC:$src1, ImmTy:$src2, cc12)),
-                            RC:$src1, ImmTy:$src2),
-                (!cast<HSAILInst>(prefix#"_ri_"#suffix) RC:$src1, ImmTy:$src2)>;
+    def _ri12 : Pat<(select (i1 (setcc RC:$src0, ImmTy:$src1, cc12)),
+                            RC:$src0, ImmTy:$src1),
+                (!cast<HSAILInst>(prefix#"_ri_"#suffix) RC:$src0, ImmTy:$src1)>;
 
-    def _ir12 : Pat<(select (i1 (setcc ImmTy:$src1, RC:$src2, cc12)),
-                            ImmTy:$src1, RC:$src2),
-                (!cast<HSAILInst>(prefix#"_ir_"#suffix) ImmTy:$src1, RC:$src2)>;
+    def _ir12 : Pat<(select (i1 (setcc ImmTy:$src0, RC:$src1, cc12)),
+                            ImmTy:$src0, RC:$src1),
+                (!cast<HSAILInst>(prefix#"_ir_"#suffix) ImmTy:$src0, RC:$src1)>;
 
-    def _rr21 : Pat<(select (i1 (setcc (Ty RC:$src1), (Ty RC:$src2), cc21)),
-                                (Ty RC:$src2), (Ty RC:$src1)),
-                (!cast<HSAILInst>(prefix#"_"#suffix) RC:$src1, RC:$src2)>;
+    def _rr21 : Pat<(select (i1 (setcc (Ty RC:$src0), (Ty RC:$src1), cc21)),
+                                (Ty RC:$src1), (Ty RC:$src0)),
+                (!cast<HSAILInst>(prefix#"_"#suffix) RC:$src0, RC:$src1)>;
 
-    def _ri21 : Pat<(select (i1 (setcc RC:$src1, ImmTy:$src2, cc21)),
-                            ImmTy:$src2, RC:$src1),
-                (!cast<HSAILInst>(prefix#"_ri_"#suffix) RC:$src1, ImmTy:$src2)>;
+    def _ri21 : Pat<(select (i1 (setcc RC:$src0, ImmTy:$src1, cc21)),
+                            ImmTy:$src1, RC:$src0),
+                (!cast<HSAILInst>(prefix#"_ri_"#suffix) RC:$src0, ImmTy:$src1)>;
 
-    def _ir21 : Pat<(select (i1 (setcc ImmTy:$src1, RC:$src2, cc21)),
-                            RC:$src2, ImmTy:$src1),
-                (!cast<HSAILInst>(prefix#"_ir_"#suffix) ImmTy:$src1, RC:$src2)>;
+    def _ir21 : Pat<(select (i1 (setcc ImmTy:$src0, RC:$src1, cc21)),
+                            RC:$src1, ImmTy:$src0),
+                (!cast<HSAILInst>(prefix#"_ir_"#suffix) ImmTy:$src0, RC:$src1)>;
 }
 
 let Predicates = [EnableOpt] in {
@@ -529,11 +529,11 @@ def : Pat<(xor (add (sra (i64 GPR64:$src), (i32 63)), (i64 GPR64:$src)),
 multiclass FusedAddMul1<HSAILInst op, ValueType Ty, RegisterClass RC,
                         PatLeaf one> {
 
-    def _rri : Pat<(fadd RC:$src1, (fmul RC:$src2, one)),
-                   (op RC:$src1, RC:$src2)>;
+    def _rri : Pat<(fadd RC:$src0, (fmul RC:$src1, one)),
+                   (op RC:$src0, RC:$src1)>;
 
-    def _iri : Pat<(fadd (fmul RC:$src1, one), (Ty fpimm:$src2)),
-                   (op RC:$src1, (Ty fpimm:$src2))>;
+    def _iri : Pat<(fadd (fmul RC:$src0, one), (Ty fpimm:$src1)),
+                   (op RC:$src0, (Ty fpimm:$src1))>;
 }
 
 let Predicates = [EnableOpt] in {
@@ -572,9 +572,9 @@ def RotateByte32const : PatFrag<(ops node:$reg, node:$shl, node:$shr),
 }]>;
 
 let AddedComplexity = 1, Predicates = [EnableOpt] in {
-def : Pat<(RotateByte32const GPR32:$src1, (i32 isByteSzShiftNoXform),
-                             (i32 isByteSzShift:$src3)),
-          (media_bytealign_rri GPR32:$src1, GPR32:$src1, isByteSzShift:$src3)>;
+def : Pat<(RotateByte32const GPR32:$src0, (i32 isByteSzShiftNoXform),
+                             (i32 isByteSzShift:$src2)),
+          (media_bytealign_rri GPR32:$src0, GPR32:$src0, isByteSzShift:$src2)>;
 }
 
 def RotateBit32const : PatFrag<(ops node:$reg, node:$shl, node:$shr),
@@ -592,14 +592,14 @@ def RotateBit32const : PatFrag<(ops node:$reg, node:$shl, node:$shr),
 }]>;
 
 let Predicates = [EnableOpt] in {
-def : Pat<(RotateBit32const GPR32:$src1, (i32 imm), (i32 imm:$src3)),
-          (media_bitalign_rri GPR32:$src1, GPR32:$src1, imm:$src3)>;
+def : Pat<(RotateBit32const GPR32:$src0, (i32 imm), (i32 imm:$src2)),
+          (media_bitalign_rri GPR32:$src0, GPR32:$src0, imm:$src2)>;
 
-def : Pat<(or (shl (i32 GPR32:$src1), (and (i32 GPR32:$src2), imm31)),
-              (srl (i32 GPR32:$src1), (and (ineg (i32 GPR32:$src2)), imm31))),
-          (media_bitalign_rrr GPR32:$src1, GPR32:$src1, (neg_s32 GPR32:$src2))>;
+def : Pat<(or (shl (i32 GPR32:$src0), (and (i32 GPR32:$src1), imm31)),
+              (srl (i32 GPR32:$src0), (and (ineg (i32 GPR32:$src1)), imm31))),
+          (media_bitalign_rrr GPR32:$src0, GPR32:$src0, (neg_s32 GPR32:$src1))>;
 
-def : Pat<(or (shl (i32 GPR32:$src1), (i32 GPR32:$src2)),
-              (srl (i32 GPR32:$src1), (sub imm32, (and (i32 GPR32:$src2), imm31)))),
-          (media_bitalign_rrr GPR32:$src1, GPR32:$src1, (neg_s32 GPR32:$src2))>;
+def : Pat<(or (shl (i32 GPR32:$src0), (i32 GPR32:$src1)),
+              (srl (i32 GPR32:$src0), (sub imm32, (and (i32 GPR32:$src1), imm31)))),
+          (media_bitalign_rrr GPR32:$src0, GPR32:$src0, (neg_s32 GPR32:$src1))>;
 }
