@@ -5,13 +5,13 @@ let isCompare = 1 in {
   multiclass CmpRRInst<PatFrag op, string asm
                       , ValueType outTy, RegisterClass outRC
                       , ValueType inTy, RegisterClass inRC, Operand immTy, SDNode immSDTy> {
-    def _rr : HSAILInst<(outs outRC:$dst), (ins inRC:$src1, inRC:$src2),
-        !strconcat(asm, "\t $dst, $src1, $src2"),
-        [(set (outTy outRC:$dst), (op (inTy inRC:$src1), (inTy inRC:$src2)))]>;
+    def _rr : HSAILInst<(outs outRC:$dest), (ins inRC:$src0, inRC:$src1),
+        !strconcat(asm, "\t $dest, $src0, $src1"),
+        [(set (outTy outRC:$dest), (op (inTy inRC:$src0), (inTy inRC:$src1)))]>;
 
-    def _ri : HSAILInst<(outs outRC:$dst), (ins inRC:$src1, immTy:$src2),
-        !strconcat(asm, "\t $dst, $src1, $src2"),
-        [(set (outTy outRC:$dst), (op (inTy inRC:$src1), (inTy immSDTy:$src2)))]>;
+    def _ri : HSAILInst<(outs outRC:$dest), (ins inRC:$src0, immTy:$src1),
+        !strconcat(asm, "\t $dest, $src0, $src1"),
+        [(set (outTy outRC:$dest), (op (inTy inRC:$src0), (inTy immSDTy:$src1)))]>;
   }
 
   // Floating point comparisons instantiated for different precisions.
@@ -125,21 +125,21 @@ let isCompare = 1 in {
 
 multiclass FPClassIntr<Intrinsic intr, string asm, RegisterClass OpRC,
                         ValueType OpVT, Operand OpImmTy> {
-  def _rr : HSAILInst<(outs CR:$dst), (ins OpRC:$src1, GPR32:$src2),
-      !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (i1 CR:$dst), (intr (OpVT OpRC:$src1), (i32 GPR32:$src2)))]>;
+  def _rr : HSAILInst<(outs CR:$dest), (ins OpRC:$src0, GPR32:$src1),
+      !strconcat(asm, "\t $dest, $src0, $src1"),
+      [(set (i1 CR:$dest), (intr (OpVT OpRC:$src0), (i32 GPR32:$src1)))]>;
 
-  def _ri : HSAILInst<(outs CR:$dst), (ins OpRC:$src1, i32imm:$src2),
-      !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (i1 CR:$dst), (intr (OpVT OpRC:$src1), (i32 imm:$src2)))]>;
+  def _ri : HSAILInst<(outs CR:$dest), (ins OpRC:$src0, i32imm:$src1),
+      !strconcat(asm, "\t $dest, $src0, $src1"),
+      [(set (i1 CR:$dest), (intr (OpVT OpRC:$src0), (i32 imm:$src1)))]>;
 
-  def _ir : HSAILInst<(outs CR:$dst), (ins OpImmTy:$src1, GPR32:$src2),
-      !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (i1 CR:$dst), (intr (OpVT fpimm:$src1), (i32 GPR32:$src2)))]>;
+  def _ir : HSAILInst<(outs CR:$dest), (ins OpImmTy:$src0, GPR32:$src1),
+      !strconcat(asm, "\t $dest, $src0, $src1"),
+      [(set (i1 CR:$dest), (intr (OpVT fpimm:$src0), (i32 GPR32:$src1)))]>;
 
-  def _ii : HSAILInst<(outs CR:$dst), (ins OpImmTy:$src1, i32imm:$src2),
-      !strconcat(asm, "\t $dst, $src1, $src2"),
-      [(set (i1 CR:$dst), (intr (OpVT fpimm:$src1), (i32 imm:$src2)))]>;
+  def _ii : HSAILInst<(outs CR:$dest), (ins OpImmTy:$src0, i32imm:$src1),
+      !strconcat(asm, "\t $dest, $src0, $src1"),
+      [(set (i1 CR:$dest), (intr (OpVT fpimm:$src0), (i32 imm:$src1)))]>;
 }
 
 defm class_f32 : FPClassIntr<int_HSAIL_class_f32, "class_b1_f32",
