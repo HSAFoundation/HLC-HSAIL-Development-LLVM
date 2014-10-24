@@ -142,7 +142,7 @@ HSAILRegisterInfo::getReservedRegs(const MachineFunction &MF) const
     else if (RegSlots > (NumSlotsTotal - 8)) RegSlots = NumSlotsTotal - 8;
 
     MFI->setRegisterPartitioning(RegSlots);
-    DEBUG(dbgs() << "\nFunction: " << MF.getFunction()->getName().data()
+    DEBUG(dbgs() << "\nFunction: " << MF.getFunction()->getName()
                  << " VR count: 32 bit = " << rc32 << ", 64 bit = " << rc64
                  << ", register file partitioning: " << RegSlots*2
                  << " $s + " << NumSlotsTotal-RegSlots << " $d\n\n");
