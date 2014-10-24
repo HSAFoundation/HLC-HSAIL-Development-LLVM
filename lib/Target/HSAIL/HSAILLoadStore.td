@@ -180,71 +180,71 @@ multiclass HSAIL_LD<RegisterClass RC, DAGOperand MPtr>
   let hasAddress = 1, isLoad = 1, mayLoad = 1, hasSideEffects = 0 in {
     let addressOpNum = 1 in {
       def _v1: HSAILInst<(outs RC:$dst),
-                         (ins MPtr:$ptr, BrigTypeX:$t, BrigWidth:$w,
+                         (ins MPtr:$address, BrigTypeX:$t, BrigWidth:$w,
                               BrigMemoryModifierMask:$m),
-                        "ld_$w$m$t\t$dst, $ptr", []>,
+                        "ld_$w$m$t\t$dst, $address", []>,
                LdStVectorMap<NAME, 1>;
     }
 
     let addressOpNum = 2 in {
       def _v2 : HSAILInst<(outs RC:$dst1, RC:$dst2),
-                          (ins MPtr:$ptr, BrigTypeX:$t, BrigWidth:$w,
+                          (ins MPtr:$address, BrigTypeX:$t, BrigWidth:$w,
                                BrigMemoryModifierMask:$m),
-                           "ld_v2_$w$m$t\t($dst1, $dst2 ), $ptr", []>,
+                           "ld_v2_$w$m$t\t($dst1, $dst2 ), $address", []>,
                LdStVectorMap<NAME, 2>;
     }
     let addressOpNum = 3 in {
       def _v3 : HSAILInst<(outs RC:$dst1, RC:$dst2, RC:$dst3),
-                          (ins MPtr:$ptr, BrigTypeX:$t, BrigWidth:$w,
+                          (ins MPtr:$address, BrigTypeX:$t, BrigWidth:$w,
                                BrigMemoryModifierMask:$m),
-                           "ld_v3_$w$m$t\t($dst1, $dst2, $dst3 ), $ptr", []>,
+                           "ld_v3_$w$m$t\t($dst1, $dst2, $dst3 ), $address", []>,
                 LdStVectorMap<NAME, 3>;
     }
     let addressOpNum = 4 in {
       def _v4 : HSAILInst<(outs RC:$dst1, RC:$dst2, RC:$dst3, RC:$dst4),
-                          (ins MPtr:$ptr, BrigTypeX:$t, BrigWidth:$w,
+                          (ins MPtr:$address, BrigTypeX:$t, BrigWidth:$w,
                                BrigMemoryModifierMask:$m),
-                           "ld_v4_$w$m$t\t($dst1, $dst2, $dst3, $dst4 ), $ptr", []>,
+                           "ld_v4_$w$m$t\t($dst1, $dst2, $dst3, $dst4 ), $address", []>,
                 LdStVectorMap<NAME, 4>;
     }
   }
 }
 
-class LoadIsPtr32<PatFrag pf> : PatFrag<(ops node:$ptr), (pf node:$ptr),
+class LoadIsPtr32<PatFrag pf> : PatFrag<(ops node:$address), (pf node:$address),
                             [{ return MemOpHasPtr32(N); }]>;
 
-class LoadIsPtrNN<PatFrag pf> : PatFrag<(ops node:$ptr), (pf node:$ptr),
+class LoadIsPtrNN<PatFrag pf> : PatFrag<(ops node:$address), (pf node:$address),
                             [{ return !MemOpHasPtr32(N); }]>;
 
 // For segments where the address is 32/64-bit depending on machine model.
 defm ld_32 : HSAIL_LD<GPR32, MEMOP>;
 defm ld_64 : HSAIL_LD<GPR64, MEMOP>;
 
-def : Pat<(i32 (LoadIsPtrNN<load>        ADDR:$ptr)), (ld_32_v1 ADDR:$ptr, BrigTypeX.U32)>;
-def : Pat<(f32 (LoadIsPtrNN<load>        ADDR:$ptr)), (ld_32_v1 ADDR:$ptr, BrigTypeX.F32)>;
-def : Pat<(i32 (LoadIsPtrNN<extloadi8>   ADDR:$ptr)), (ld_32_v1 ADDR:$ptr, BrigTypeX.B8)>;
-def : Pat<(i32 (LoadIsPtrNN<sextloadi8>  ADDR:$ptr)), (ld_32_v1 ADDR:$ptr, BrigTypeX.S8)>;
-def : Pat<(i32 (LoadIsPtrNN<zextloadi8>  ADDR:$ptr)), (ld_32_v1 ADDR:$ptr, BrigTypeX.U8)>;
-def : Pat<(i32 (LoadIsPtrNN<extloadi16>  ADDR:$ptr)), (ld_32_v1 ADDR:$ptr, BrigTypeX.B16)>;
-def : Pat<(i32 (LoadIsPtrNN<sextloadi16> ADDR:$ptr)), (ld_32_v1 ADDR:$ptr, BrigTypeX.S16)>;
-def : Pat<(i32 (LoadIsPtrNN<zextloadi16> ADDR:$ptr)), (ld_32_v1 ADDR:$ptr, BrigTypeX.U16)>;
-def : Pat<(i64 (LoadIsPtrNN<load>        ADDR:$ptr)), (ld_64_v1 ADDR:$ptr, BrigTypeX.U64)>;
-def : Pat<(f64 (LoadIsPtrNN<load>        ADDR:$ptr)), (ld_64_v1 ADDR:$ptr, BrigTypeX.F64)>;
+def : Pat<(i32 (LoadIsPtrNN<load>        ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.U32)>;
+def : Pat<(f32 (LoadIsPtrNN<load>        ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.F32)>;
+def : Pat<(i32 (LoadIsPtrNN<extloadi8>   ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.B8)>;
+def : Pat<(i32 (LoadIsPtrNN<sextloadi8>  ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.S8)>;
+def : Pat<(i32 (LoadIsPtrNN<zextloadi8>  ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.U8)>;
+def : Pat<(i32 (LoadIsPtrNN<extloadi16>  ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.B16)>;
+def : Pat<(i32 (LoadIsPtrNN<sextloadi16> ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.S16)>;
+def : Pat<(i32 (LoadIsPtrNN<zextloadi16> ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.U16)>;
+def : Pat<(i64 (LoadIsPtrNN<load>        ADDR:$address)), (ld_64_v1 ADDR:$address, BrigTypeX.U64)>;
+def : Pat<(f64 (LoadIsPtrNN<load>        ADDR:$address)), (ld_64_v1 ADDR:$address, BrigTypeX.F64)>;
 
 // For segments where the address is 32-bit in both models.
 defm ld_32_ptr32 : HSAIL_LD<GPR32, MEMOP32>;
 defm ld_64_ptr32 : HSAIL_LD<GPR64, MEMOP32>;
 
-def : Pat<(i32 (LoadIsPtr32<load>        ADDR:$ptr)), (ld_32_ptr32_v1 ADDR:$ptr, BrigTypeX.U32)>;
-def : Pat<(f32 (LoadIsPtr32<load>        ADDR:$ptr)), (ld_32_ptr32_v1 ADDR:$ptr, BrigTypeX.F32)>;
-def : Pat<(i32 (LoadIsPtr32<extloadi8>   ADDR:$ptr)), (ld_32_ptr32_v1 ADDR:$ptr, BrigTypeX.B8)>;
-def : Pat<(i32 (LoadIsPtr32<sextloadi8>  ADDR:$ptr)), (ld_32_ptr32_v1 ADDR:$ptr, BrigTypeX.S8)>;
-def : Pat<(i32 (LoadIsPtr32<zextloadi8>  ADDR:$ptr)), (ld_32_ptr32_v1 ADDR:$ptr, BrigTypeX.U8)>;
-def : Pat<(i32 (LoadIsPtr32<extloadi16>  ADDR:$ptr)), (ld_32_ptr32_v1 ADDR:$ptr, BrigTypeX.B16)>;
-def : Pat<(i32 (LoadIsPtr32<sextloadi16> ADDR:$ptr)), (ld_32_ptr32_v1 ADDR:$ptr, BrigTypeX.S16)>;
-def : Pat<(i32 (LoadIsPtr32<zextloadi16> ADDR:$ptr)), (ld_32_ptr32_v1 ADDR:$ptr, BrigTypeX.U16)>;
-def : Pat<(i64 (LoadIsPtr32<load>        ADDR:$ptr)), (ld_64_ptr32_v1 ADDR:$ptr, BrigTypeX.U64)>;
-def : Pat<(f64 (LoadIsPtr32<load>        ADDR:$ptr)), (ld_64_ptr32_v1 ADDR:$ptr, BrigTypeX.F64)>;
+def : Pat<(i32 (LoadIsPtr32<load>        ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U32)>;
+def : Pat<(f32 (LoadIsPtr32<load>        ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.F32)>;
+def : Pat<(i32 (LoadIsPtr32<extloadi8>   ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.B8)>;
+def : Pat<(i32 (LoadIsPtr32<sextloadi8>  ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.S8)>;
+def : Pat<(i32 (LoadIsPtr32<zextloadi8>  ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U8)>;
+def : Pat<(i32 (LoadIsPtr32<extloadi16>  ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.B16)>;
+def : Pat<(i32 (LoadIsPtr32<sextloadi16> ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.S16)>;
+def : Pat<(i32 (LoadIsPtr32<zextloadi16> ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U16)>;
+def : Pat<(i64 (LoadIsPtr32<load>        ADDR:$address)), (ld_64_ptr32_v1 ADDR:$address, BrigTypeX.U64)>;
+def : Pat<(f64 (LoadIsPtr32<load>        ADDR:$address)), (ld_64_ptr32_v1 ADDR:$address, BrigTypeX.F64)>;
 
 let hasSideEffects = 1, hasCtrlDep = 1 in {
   // It is not safe to move ld_arg as it can be in an argscope
@@ -253,9 +253,9 @@ let hasSideEffects = 1, hasCtrlDep = 1 in {
 }
 
 let hasAddress = 1, mayLoad = 1, isPseudo = 1, hasSideEffects = 0 in {
-  def ld_b1_ptr32 : HSAILInst<(outs CR:$dst), (ins MEMOP32:$ptr, BrigTypeX:$t,
+  def ld_b1_ptr32 : HSAILInst<(outs CR:$dst), (ins MEMOP32:$address, BrigTypeX:$t,
                                  BrigWidth:$w, BrigMemoryModifierMask:$m),
-                              "ld_b1_$w$m$t\t$dst, $ptr", []>;
+                              "ld_b1_$w$m$t\t$dst, $address", []>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -266,73 +266,73 @@ multiclass HSAIL_ST<RegisterClass RC, DAGOperand MPtr>
   let hasAddress = 1, isStore = 1, mayStore = 1, hasSideEffects = 0 in {
     let addressOpNum = 1 in {
       def _v1 : HSAILInst<(outs), (ins RC:$val,
-                                       MPtr:$ptr, BrigTypeX:$t),
-                          "st_$t\t$val, $ptr", []>,
+                                       MPtr:$address, BrigTypeX:$t),
+                          "st_$t\t$val, $address", []>,
                 LdStVectorMap<NAME, 1>;
     }
 
     let addressOpNum = 2 in {
       def _v2 : HSAILInst<(outs), (ins RC:$val1, RC:$val2,
-                                       MPtr:$ptr, BrigTypeX:$t),
-                          "st_v2_$t\t($val1, $val2 ), $ptr", []>,
+                                       MPtr:$address, BrigTypeX:$t),
+                          "st_v2_$t\t($val1, $val2 ), $address", []>,
                 LdStVectorMap<NAME, 2>;
     }
     let addressOpNum = 3 in {
       def _v3 : HSAILInst<(outs), (ins RC:$val1, RC:$val2, RC:$val3,
-                                       MPtr:$ptr, BrigTypeX:$t),
-                          "st_v3_$t\t($val1, $val2, $val3 ), $ptr", []>,
+                                       MPtr:$address, BrigTypeX:$t),
+                          "st_v3_$t\t($val1, $val2, $val3 ), $address", []>,
                 LdStVectorMap<NAME, 3>;
     }
     let addressOpNum = 4 in {
       def _v4 : HSAILInst<(outs), (ins RC:$val1, RC:$val2, RC:$val3, RC:$val4,
-                                       MPtr:$ptr, BrigTypeX:$t),
-                          "st_v4_$t\t($val1, $val2, $val3, $val4 ), $ptr", []>,
+                                       MPtr:$address, BrigTypeX:$t),
+                          "st_v4_$t\t($val1, $val2, $val3, $val4 ), $address", []>,
                 LdStVectorMap<NAME, 4>;
     }
   }
 }
 
-class StoreIsPtr32<PatFrag pf> : PatFrag<(ops node:$val, node:$ptr), (pf node:$val, node:$ptr),
+class StoreIsPtr32<PatFrag pf> : PatFrag<(ops node:$val, node:$address), (pf node:$val, node:$address),
                             [{ return MemOpHasPtr32(N); }]>;
 
-class StoreIsPtrNN<PatFrag pf> : PatFrag<(ops node:$val, node:$ptr), (pf node:$val, node:$ptr),
+class StoreIsPtrNN<PatFrag pf> : PatFrag<(ops node:$val, node:$address), (pf node:$val, node:$address),
                             [{ return !MemOpHasPtr32(N); }]>;
 
 // For segments where the address is 32/64-bit depending on machine model.
 defm st_32 : HSAIL_ST<GPR32, MEMOP>;
 defm st_64 : HSAIL_ST<GPR64, MEMOP>;
 
-def : Pat<(StoreIsPtrNN<store>         (i32 GPR32:$val), ADDR:$ptr), (st_32_v1 GPR32:$val, ADDR:$ptr, BrigTypeX.U32)>;
-def : Pat<(StoreIsPtrNN<store>         (f32 GPR32:$val), ADDR:$ptr), (st_32_v1 GPR32:$val, ADDR:$ptr, BrigTypeX.F32)>;
-def : Pat<(StoreIsPtrNN<truncstorei8>  (i32 GPR32:$val), ADDR:$ptr), (st_32_v1 GPR32:$val, ADDR:$ptr, BrigTypeX.U8)>;
-def : Pat<(StoreIsPtrNN<truncstorei16> (i32 GPR32:$val), ADDR:$ptr), (st_32_v1 GPR32:$val, ADDR:$ptr, BrigTypeX.U16)>;
-def : Pat<(StoreIsPtrNN<store>         (i64 GPR64:$val), ADDR:$ptr), (st_64_v1 GPR64:$val, ADDR:$ptr, BrigTypeX.U64)>;
-def : Pat<(StoreIsPtrNN<store>         (f64 GPR64:$val), ADDR:$ptr), (st_64_v1 GPR64:$val, ADDR:$ptr, BrigTypeX.F64)>;
+def : Pat<(StoreIsPtrNN<store>         (i32 GPR32:$val), ADDR:$address), (st_32_v1 GPR32:$val, ADDR:$address, BrigTypeX.U32)>;
+def : Pat<(StoreIsPtrNN<store>         (f32 GPR32:$val), ADDR:$address), (st_32_v1 GPR32:$val, ADDR:$address, BrigTypeX.F32)>;
+def : Pat<(StoreIsPtrNN<truncstorei8>  (i32 GPR32:$val), ADDR:$address), (st_32_v1 GPR32:$val, ADDR:$address, BrigTypeX.U8)>;
+def : Pat<(StoreIsPtrNN<truncstorei16> (i32 GPR32:$val), ADDR:$address), (st_32_v1 GPR32:$val, ADDR:$address, BrigTypeX.U16)>;
+def : Pat<(StoreIsPtrNN<store>         (i64 GPR64:$val), ADDR:$address), (st_64_v1 GPR64:$val, ADDR:$address, BrigTypeX.U64)>;
+def : Pat<(StoreIsPtrNN<store>         (f64 GPR64:$val), ADDR:$address), (st_64_v1 GPR64:$val, ADDR:$address, BrigTypeX.F64)>;
 
-def : Pat<(StoreIsPtrNN<store>         (i32 imm:$val),   ADDR:$ptr), (st_32_v1 imm:$val,   ADDR:$ptr, BrigTypeX.U32)>;
-def : Pat<(StoreIsPtrNN<truncstorei8>  (i32 imm:$val),   ADDR:$ptr), (st_32_v1 imm:$val,   ADDR:$ptr, BrigTypeX.U8)>;
-def : Pat<(StoreIsPtrNN<truncstorei16> (i32 imm:$val),   ADDR:$ptr), (st_32_v1 imm:$val,   ADDR:$ptr, BrigTypeX.U16)>;
-def : Pat<(StoreIsPtrNN<store>         (i64 imm:$val),   ADDR:$ptr), (st_64_v1 imm:$val,   ADDR:$ptr, BrigTypeX.U64)>;
+def : Pat<(StoreIsPtrNN<store>         (i32 imm:$val),   ADDR:$address), (st_32_v1 imm:$val,   ADDR:$address, BrigTypeX.U32)>;
+def : Pat<(StoreIsPtrNN<truncstorei8>  (i32 imm:$val),   ADDR:$address), (st_32_v1 imm:$val,   ADDR:$address, BrigTypeX.U8)>;
+def : Pat<(StoreIsPtrNN<truncstorei16> (i32 imm:$val),   ADDR:$address), (st_32_v1 imm:$val,   ADDR:$address, BrigTypeX.U16)>;
+def : Pat<(StoreIsPtrNN<store>         (i64 imm:$val),   ADDR:$address), (st_64_v1 imm:$val,   ADDR:$address, BrigTypeX.U64)>;
 
 // For segments where the address is 32-bit in both models.
 defm st_32_ptr32 : HSAIL_ST<GPR32, MEMOP32>;
 defm st_64_ptr32 : HSAIL_ST<GPR64, MEMOP32>;
 
-def : Pat<(StoreIsPtr32<store>         (i32 GPR32:$val), ADDR:$ptr), (st_32_ptr32_v1 GPR32:$val, ADDR:$ptr, BrigTypeX.U32)>;
-def : Pat<(StoreIsPtr32<store>         (f32 GPR32:$val), ADDR:$ptr), (st_32_ptr32_v1 GPR32:$val, ADDR:$ptr, BrigTypeX.F32)>;
-def : Pat<(StoreIsPtr32<truncstorei8>  (i32 GPR32:$val), ADDR:$ptr), (st_32_ptr32_v1 GPR32:$val, ADDR:$ptr, BrigTypeX.U8)>;
-def : Pat<(StoreIsPtr32<truncstorei16> (i32 GPR32:$val), ADDR:$ptr), (st_32_ptr32_v1 GPR32:$val, ADDR:$ptr, BrigTypeX.U16)>;
-def : Pat<(StoreIsPtr32<store>         (i64 GPR64:$val), ADDR:$ptr), (st_64_ptr32_v1 GPR64:$val, ADDR:$ptr, BrigTypeX.U64)>;
-def : Pat<(StoreIsPtr32<store>         (f64 GPR64:$val), ADDR:$ptr), (st_64_ptr32_v1 GPR64:$val, ADDR:$ptr, BrigTypeX.F64)>;
+def : Pat<(StoreIsPtr32<store>         (i32 GPR32:$val), ADDR:$address), (st_32_ptr32_v1 GPR32:$val, ADDR:$address, BrigTypeX.U32)>;
+def : Pat<(StoreIsPtr32<store>         (f32 GPR32:$val), ADDR:$address), (st_32_ptr32_v1 GPR32:$val, ADDR:$address, BrigTypeX.F32)>;
+def : Pat<(StoreIsPtr32<truncstorei8>  (i32 GPR32:$val), ADDR:$address), (st_32_ptr32_v1 GPR32:$val, ADDR:$address, BrigTypeX.U8)>;
+def : Pat<(StoreIsPtr32<truncstorei16> (i32 GPR32:$val), ADDR:$address), (st_32_ptr32_v1 GPR32:$val, ADDR:$address, BrigTypeX.U16)>;
+def : Pat<(StoreIsPtr32<store>         (i64 GPR64:$val), ADDR:$address), (st_64_ptr32_v1 GPR64:$val, ADDR:$address, BrigTypeX.U64)>;
+def : Pat<(StoreIsPtr32<store>         (f64 GPR64:$val), ADDR:$address), (st_64_ptr32_v1 GPR64:$val, ADDR:$address, BrigTypeX.F64)>;
 
-def : Pat<(StoreIsPtr32<store>         (i32 imm:$val),   ADDR:$ptr), (st_32_ptr32_v1 imm:$val,   ADDR:$ptr, BrigTypeX.U32)>;
-def : Pat<(StoreIsPtr32<truncstorei8>  (i32 imm:$val),   ADDR:$ptr), (st_32_ptr32_v1 imm:$val,   ADDR:$ptr, BrigTypeX.U8)>;
-def : Pat<(StoreIsPtr32<truncstorei16> (i32 imm:$val),   ADDR:$ptr), (st_32_ptr32_v1 imm:$val,   ADDR:$ptr, BrigTypeX.U16)>;
-def : Pat<(StoreIsPtr32<store>         (i64 imm:$val),   ADDR:$ptr), (st_64_ptr32_v1 imm:$val,   ADDR:$ptr, BrigTypeX.U64)>;
+def : Pat<(StoreIsPtr32<store>         (i32 imm:$val),   ADDR:$address), (st_32_ptr32_v1 imm:$val,   ADDR:$address, BrigTypeX.U32)>;
+def : Pat<(StoreIsPtr32<truncstorei8>  (i32 imm:$val),   ADDR:$address), (st_32_ptr32_v1 imm:$val,   ADDR:$address, BrigTypeX.U8)>;
+def : Pat<(StoreIsPtr32<truncstorei16> (i32 imm:$val),   ADDR:$address), (st_32_ptr32_v1 imm:$val,   ADDR:$address, BrigTypeX.U16)>;
+def : Pat<(StoreIsPtr32<store>         (i64 imm:$val),   ADDR:$address), (st_64_ptr32_v1 imm:$val,   ADDR:$address, BrigTypeX.U64)>;
 
 let hasAddress = 1, mayStore = 1, isPseudo = 1, hasSideEffects = 0 in {
-  def st_b1_ptr32 : HSAILInst<(outs), (ins CR:$val, MEMOP32:$ptr, BrigTypeX:$t),
-                              "st_b1_$t\t$val, $ptr", []>;
+  def st_b1_ptr32 : HSAILInst<(outs), (ins CR:$val, MEMOP32:$address, BrigTypeX:$t),
+                              "st_b1_$t\t$val, $address", []>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -349,18 +349,18 @@ class LdaAddr<RegisterClass RC, DAGOperand MPtr>
 def lda_32 : LdaAddr<GPR32, MEMOP32>;
 def lda_64 : LdaAddr<GPR64, MEMOP>;
 
-def : Pat<(i32 (IL_lda_group    ADDR:$ptr)), (lda_32 ADDR:$ptr, BrigSegment.GROUP)>, Requires<[In32BitMode]>;
-def : Pat<(i32 (IL_lda_private  ADDR:$ptr)), (lda_32 ADDR:$ptr, BrigSegment.PRIVATE)>, Requires<[In32BitMode]>;
+def : Pat<(i32 (IL_lda_group    ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.GROUP)>, Requires<[In32BitMode]>;
+def : Pat<(i32 (IL_lda_private  ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.PRIVATE)>, Requires<[In32BitMode]>;
 
 // Patterns for 64 bit mode with conversion of loaded 32 bit address.
 // TODO_HSA: The cvt operations are necessary until LLVM supports
 //           different pointer widths in address spaces.
-def : Pat<(i64 (IL_lda_group    ADDR:$ptr)), (cvt_u32_u64 (lda_32 ADDR:$ptr, BrigSegment.GROUP))>, Requires<[In64BitMode]>;
-def : Pat<(i64 (IL_lda_private  ADDR:$ptr)), (cvt_u32_u64 (lda_32 ADDR:$ptr, BrigSegment.PRIVATE))>, Requires<[In64BitMode]>;
+def : Pat<(i64 (IL_lda_group    ADDR:$address)), (cvt_u32_u64 (lda_32 ADDR:$address, BrigSegment.GROUP))>, Requires<[In64BitMode]>;
+def : Pat<(i64 (IL_lda_private  ADDR:$address)), (cvt_u32_u64 (lda_32 ADDR:$address, BrigSegment.PRIVATE))>, Requires<[In64BitMode]>;
 
-def : Pat<(i32 (IL_lda_flat     ADDR:$ptr)), (lda_32 ADDR:$ptr, BrigSegment.FLAT)>, Requires<[In32BitMode]>;
-def : Pat<(i64 (IL_lda_flat     ADDR:$ptr)), (lda_64 ADDR:$ptr, BrigSegment.FLAT)>, Requires<[In64BitMode]>;
-def : Pat<(i32 (IL_lda_global   ADDR:$ptr)), (lda_32 ADDR:$ptr, BrigSegment.GLOBAL)>, Requires<[In32BitMode]>;
-def : Pat<(i64 (IL_lda_global   ADDR:$ptr)), (lda_64 ADDR:$ptr, BrigSegment.GLOBAL)>, Requires<[In64BitMode]>;
-def : Pat<(i32 (IL_lda_readonly ADDR:$ptr)), (lda_32 ADDR:$ptr, BrigSegment.READONLY)>, Requires<[In32BitMode]>;
-def : Pat<(i64 (IL_lda_readonly ADDR:$ptr)), (lda_64 ADDR:$ptr, BrigSegment.READONLY)>, Requires<[In64BitMode]>;
+def : Pat<(i32 (IL_lda_flat     ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.FLAT)>, Requires<[In32BitMode]>;
+def : Pat<(i64 (IL_lda_flat     ADDR:$address)), (lda_64 ADDR:$address, BrigSegment.FLAT)>, Requires<[In64BitMode]>;
+def : Pat<(i32 (IL_lda_global   ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.GLOBAL)>, Requires<[In32BitMode]>;
+def : Pat<(i64 (IL_lda_global   ADDR:$address)), (lda_64 ADDR:$address, BrigSegment.GLOBAL)>, Requires<[In64BitMode]>;
+def : Pat<(i32 (IL_lda_readonly ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.READONLY)>, Requires<[In32BitMode]>;
+def : Pat<(i64 (IL_lda_readonly ADDR:$address)), (lda_64 ADDR:$address, BrigSegment.READONLY)>, Requires<[In64BitMode]>;
