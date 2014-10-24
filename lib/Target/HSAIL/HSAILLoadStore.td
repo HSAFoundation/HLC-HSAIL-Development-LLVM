@@ -173,7 +173,7 @@ def getLdStVectorOpcode : InstrMapping {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// ld (integer, singed and unsigned, 32-bit and 64-bit;
+// ld (integer, signed and unsigned, 32-bit and 64-bit;
 //     float, 32-bit and 64-bit; addr, 32bit and 64-bit)
 multiclass HSAIL_LD<RegisterClass RC, DAGOperand MPtr>
 {
