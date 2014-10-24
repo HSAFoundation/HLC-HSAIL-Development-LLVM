@@ -5,40 +5,40 @@ let isImageInst=1 in {
 
 // Image read
 class ReadImage1D<string asm>
-      : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
-                  (ins GPR64:$src1, GPR64:$src2, GPR32:$src3),
+      : HSAILInst<(outs GPR32:$destR, GPR32:$destG,  GPR32:$destB,  GPR32:$destA),
+                  (ins GPR64:$image, GPR64:$sampler, GPR32:$coordWidth),
                   !strconcat(asm,
-                             "( $dst1, $dst2, $dst3, $dst4 ), "
-                             "$src1, $src2, $src3"), []>;
+                             "( $destR, $destG, $destB, $destA ), "
+                             "$image, $sampler, $coordWidth"), []>;
 
 class ReadImage2D<string asm>
-      : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
-                  (ins GPR64:$src1, GPR64:$src2, GPR32:$src3, GPR32:$src4),
+      : HSAILInst<(outs GPR32:$destR, GPR32:$destG,  GPR32:$destB,  GPR32:$destA),
+                  (ins GPR64:$image, GPR64:$sampler, GPR32:$coordWidth, GPR32:$coordHeight),
                   !strconcat(asm,
-                             "( $dst1, $dst2, $dst3, $dst4 ), "
-                             "$src1, $src2, ( $src3, $src4 )"), []>;
+                             "( $destR, $destG, $destB, $destA ), "
+                             "$image, $sampler, ( $coordWidth, $coordHeight )"), []>;
 
 
 class ReadImage3D<string asm>
-      : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
-                  (ins GPR64:$src1, GPR64:$src2, GPR32:$src3, GPR32:$src4, GPR32:$src5),
+      : HSAILInst<(outs GPR32:$destR, GPR32:$destG,  GPR32:$destB,  GPR32:$destA),
+                  (ins GPR64:$image, GPR64:$sampler, GPR32:$coordWidth, GPR32:$coordHeight, GPR32:$coordDepth),
                   !strconcat(asm,
-                             "( $dst1, $dst2, $dst3, $dst4 ), "
-                             "$src1, $src2, ( $src3, $src4, $src5 )"), []>;
+                             "( $destR, $destG, $destB, $destA ), "
+                             "$image, $sampler, ( $coordWidth, $coordHeight, $coordDepth )"), []>;
 
 class ReadImage2DDepth<string asm>
       : HSAILInst<(outs GPR32:$dst),
-                  (ins GPR64:$src1, GPR64:$src2, GPR32:$src3, GPR32:$src4),
+                  (ins GPR64:$image, GPR64:$sampler, GPR32:$coordWidth, GPR32:$coordHeight),
                   !strconcat(asm,
                              "( $dst ), "
-                             "$src1, $src2, ( $src3, $src4 )"), []>;
+                             "$image, $sampler, ( $coordWidth, $coordHeight )"), []>;
 
 class ReadImage2DArrayDepth<string asm>
       : HSAILInst<(outs GPR32:$dst),
-                  (ins GPR64:$src1, GPR64:$src2, GPR32:$src3, GPR32:$src4, GPR32:$src5),
+                  (ins GPR64:$image, GPR64:$sampler, GPR32:$coordWidth, GPR32:$coordHeight, GPR32:$coordArrayIndex),
                   !strconcat(asm,
                              "( $dst ), "
-                             "$src1, $src2, ( $src3, $src4, $src5 )"), []>;
+                             "$image, $sampler, ( $coordWidth, $coordHeight, $coordArrayIndex )"), []>;
 
 // read image 1d
 
@@ -99,39 +99,39 @@ def rd_imgf_2dadepth_f32 : ReadImage2DArrayDepth<"rdimage_2dadepth_f32_roimg_f32
 
 // Image loads
 class LoadImage1D<string asm>
-      : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
-                  (ins GPR64:$src1, GPR32:$src2),
+      : HSAILInst<(outs GPR32:$destR, GPR32:$destG,  GPR32:$destB,  GPR32:$destA),
+                  (ins GPR64:$image, GPR32:$coordWidth),
                   !strconcat(asm,
-                             "( $dst1, $dst2, $dst3, $dst4 ), "
-                             "$src1, $src2"), []>;
+                             "( $destR, $destG, $destB, $destA ), "
+                             "$image, $coordWidth"), []>;
 
 class LoadImage2D<string asm>
-      : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
-                  (ins GPR64:$src1, GPR32:$src2, GPR32:$src3),
+      : HSAILInst<(outs GPR32:$destR, GPR32:$destG,  GPR32:$destB,  GPR32:$destA),
+                  (ins GPR64:$image, GPR32:$coordWidth, GPR32:$coordHeight),
                   !strconcat(asm,
-                             "( $dst1, $dst2, $dst3, $dst4 ), "
-                             "$src1, ( $src2, $src3 )"), []>;
+                             "( $destR, $destG, $destB, $destA ), "
+                             "$image, ( $coordWidth, $coordHeight )"), []>;
 
 class LoadImage3D<string asm>
-      : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
-                  (ins GPR64:$src1, GPR32:$src2, GPR32:$src3, GPR32:$src4),
+      : HSAILInst<(outs GPR32:$destR, GPR32:$destG,  GPR32:$destB,  GPR32:$destA),
+                  (ins GPR64:$image, GPR32:$coordWidth, GPR32:$coordHeight, GPR32:$coordDepth),
                   !strconcat(asm,
-                             "( $dst1, $dst2, $dst3, $dst4 ), "
-                             "$src1, ( $src2, $src3, $src4 )"), []>;
+                             "( $destR, $destG, $destB, $destA ), "
+                             "$image, ( $coordWidth, $coordHeight, $coordDepth )"), []>;
 
 class LoadImage2DDepth<string asm>
       : HSAILInst<(outs GPR32:$dst),
-                  (ins GPR64:$src1, GPR32:$src2, GPR32:$src3),
+                  (ins GPR64:$image, GPR32:$coordWidth, GPR32:$coordHeight),
                   !strconcat(asm,
                              "( $dst ), "
-                             "$src1, ( $src2, $src3 )"), []>;
+                             "$image, ( $coordWidth, $coordHeight )"), []>;
 
 class LoadImage2DArrayDepth<string asm>
       : HSAILInst<(outs GPR32:$dst),
-                  (ins GPR64:$src1, GPR32:$src2, GPR32:$src3, GPR32:$src4),
+                  (ins GPR64:$image, GPR32:$coordWidth, GPR32:$coordHeight, GPR32:$coordArrayIndex),
                   !strconcat(asm,
                              "( $dst ), "
-                             "$src1, ( $src2, $src3, $src4 )"), []>;
+                             "$image, ( $coordWidth, $coordHeight, $coordArrayIndex )"), []>;
 
 // load image 1d
 
@@ -178,62 +178,64 @@ def ld_imgf_2dadepth_u32 : LoadImage2DArrayDepth<"ldimage_2dadepth_f32_rwimg_u32
 // Image store
 class StImage1d<Intrinsic intr, string asm, ValueType ValTy,
         ValueType CoordTy> :  HSAILInst<(outs),
-        (ins GPR32:$src1, GPR32:$src2, GPR32:$src3, GPR32:$src4,
-          GPR64:$src5, GPR32:$src6),
-        !strconcat(asm, "\t ( $src1, $src2, $src3, $src4 ), $src5, "
-                        "$src6"),
-        [(intr (ValTy GPR32:$src1), (ValTy GPR32:$src2),
-          (ValTy GPR32:$src3), (ValTy GPR32:$src4),
-            (i64 GPR64:$src5),
-            (CoordTy GPR32:$src6))]>;
+        (ins GPR32:$srcR, GPR32:$srcG, GPR32:$srcB, GPR32:$srcA,
+          GPR64:$image, GPR32:$coordWidth),
+        !strconcat(asm, "\t ( $srcR, $srcG, $srcB, $srcA ), $image, "
+                        "$coordWidth"),
+        [(intr (ValTy GPR32:$srcR), (ValTy GPR32:$srcG),
+          (ValTy GPR32:$srcB), (ValTy GPR32:$srcA),
+            (i64 GPR64:$image),
+            (CoordTy GPR32:$coordWidth))]>;
 
 class StImage2d<Intrinsic intr, string asm, ValueType ValTy,
         ValueType CoordTy> :  HSAILInst<(outs),
-        (ins GPR32:$src1, GPR32:$src2, GPR32:$src3, GPR32:$src4,
-                GPR64:$src5, GPR32:$src6, GPR32:$src7),
-        !strconcat(asm, "\t ( $src1, $src2, $src3, $src4 ), $src5, "
-                        "( $src6, $src7 )"),
-        [(intr (ValTy GPR32:$src1), (ValTy GPR32:$src2),
-          (ValTy GPR32:$src3), (ValTy GPR32:$src4),
-            (i64 GPR64:$src5),
-            (CoordTy GPR32:$src6), (CoordTy GPR32:$src7))]>;
+        (ins GPR32:$srcR, GPR32:$srcG, GPR32:$srcB, GPR32:$srcA,
+                GPR64:$image, GPR32:$coordWidth, GPR32:$coordHeight),
+        !strconcat(asm, "\t ( $srcR, $srcG, $srcB, $srcA ), $image, "
+                        "( $coordWidth, $coordHeight )"),
+        [(intr (ValTy GPR32:$srcR), (ValTy GPR32:$srcG),
+          (ValTy GPR32:$srcB), (ValTy GPR32:$srcA),
+            (i64 GPR64:$image),
+            (CoordTy GPR32:$coordWidth), (CoordTy GPR32:$coordHeight))]>;
 
+// FIXME: What is $src9? I don't see it in the spec.
 class StImage3d<Intrinsic intr, string asm, ValueType ValTy,
         ValueType CoordTy> :  HSAILInst<(outs),
-        (ins GPR32:$src1, GPR32:$src2, GPR32:$src3, GPR32:$src4,
-          GPR64:$src5,
-          GPR32:$src6, GPR32:$src7, GPR32:$src8, GPR32:$src9),
-        !strconcat(asm, "\t ( $src1, $src2, $src3, $src4 ), $src5, "
-                        "( $src6, $src7, $src8, $src9 )"),
-        [(intr (ValTy GPR32:$src1), (ValTy GPR32:$src2),
-          (ValTy GPR32:$src3), (ValTy GPR32:$src4),
-            (i64 GPR64:$src5),
-            (CoordTy GPR32:$src6), (CoordTy GPR32:$src7),
-            (CoordTy GPR32:$src8), (CoordTy GPR32:$src9))]>;
+        (ins GPR32:$srcR, GPR32:$srcG, GPR32:$srcB, GPR32:$srcA,
+          GPR64:$image,
+          GPR32:$coordWidth, GPR32:$coordHeight, GPR32:$coordDepth, GPR32:$src9),
+        !strconcat(asm, "\t ( $srcR, $srcG, $srcB, $srcA ), $image, "
+                        "( $coordWidth, $coordHeight, $coordDepth, $src9 )"),
+        [(intr (ValTy GPR32:$srcR), (ValTy GPR32:$srcG),
+          (ValTy GPR32:$srcB), (ValTy GPR32:$srcA),
+            (i64 GPR64:$image),
+            (CoordTy GPR32:$coordWidth), (CoordTy GPR32:$coordHeight),
+            (CoordTy GPR32:$coordDepth), (CoordTy GPR32:$src9))]>;
 
 //image 2.0 2d depth
 class StImage2dDepth<Intrinsic intr, string asm, ValueType ValTy,
         ValueType CoordTy> :  HSAILInst<(outs),
-        (ins GPR32:$src1,
-            GPR64:$src2, GPR32:$src3, GPR32:$src4),
-        !strconcat(asm, "\t $src1, $src2, "
-                        "( $src3, $src4 )"),
-        [(intr (ValTy GPR32:$src1),
-            (i64 GPR64:$src2),
-            (CoordTy GPR32:$src3), (CoordTy GPR32:$src4))]>;
+        (ins GPR32:$srcR,
+            GPR64:$image, GPR32:$coordWidth, GPR32:$coordHeight),
+        !strconcat(asm, "\t $srcR, $image, "
+                        "( $coordWidth, $coordHeight )"),
+        [(intr (ValTy GPR32:$srcR),
+            (i64 GPR64:$image),
+            (CoordTy GPR32:$coordWidth), (CoordTy GPR32:$coordHeight))]>;
 
+// FIXME: What is $src6? I don't see it in the spec.
 //image 2.0 2d array depth
 class StImage2dArrayDepth<Intrinsic intr, string asm, ValueType ValTy,
         ValueType CoordTy> :  HSAILInst<(outs),
-        (ins GPR32:$src1,
-            GPR64:$src2,
-			GPR32:$src3, GPR32:$src4, GPR32:$src5, GPR32:$src6),
-        !strconcat(asm, "\t $src1, $src2, "
-                        "( $src3, $src4, $src5, $src6 )"),
-        [(intr (ValTy GPR32:$src1),
-            (i64 GPR64:$src2),
-            (CoordTy GPR32:$src3), (CoordTy GPR32:$src4),
-			(CoordTy GPR32:$src5), (CoordTy GPR32:$src6))]>;
+        (ins GPR32:$srcR,
+            GPR64:$image,
+			GPR32:$coordWidth, GPR32:$coordHeight, GPR32:$coordArrayIndex, GPR32:$src6),
+        !strconcat(asm, "\t $srcR, $image, "
+                        "( $coordWidth, $coordHeight, $coordArrayIndex, $src6 )"),
+        [(intr (ValTy GPR32:$srcR),
+            (i64 GPR64:$image),
+            (CoordTy GPR32:$coordWidth), (CoordTy GPR32:$coordHeight),
+			(CoordTy GPR32:$coordArrayIndex), (CoordTy GPR32:$src6))]>;
 
 // store image 1d
 def stimagef_1d_i32 : StImage1d<int_HSAIL_stimagef_1d_i32,
@@ -295,9 +297,9 @@ def stimagef_2dadepth_i32 : StImage2dArrayDepth<int_HSAIL_stimagef_2dadepth_i32,
 
 // Query image
 class QueryImage<Intrinsic intr, string asm> : HSAILInst<
-        (outs GPR32:$dst), (ins GPR64:$src),
-        !strconcat(asm, "\t $dst, $src"),
-        [(set (i32 GPR32:$dst), (intr (i64 GPR64:$src)))]>;
+        (outs GPR32:$dest), (ins GPR64:$image),
+        !strconcat(asm, "\t $dest, $image"),
+        [(set (i32 GPR32:$dest), (intr (i64 GPR64:$image)))]>;
 
 def query_width_1d : QueryImage<int_HSAIL_query_width_1d,  "queryimage_1d_width_u32_rwimg">;
 def query_width_1db: QueryImage<int_HSAIL_query_width_1db, "queryimage_1db_width_u32_rwimg">;
