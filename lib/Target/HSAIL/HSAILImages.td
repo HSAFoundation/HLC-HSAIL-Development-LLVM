@@ -7,14 +7,14 @@ let isImageInst=1 in {
 class ReadImage1D<string asm>
       : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
                   (ins GPR64:$src1, GPR64:$src2, GPR32:$src3),
-                  !strconcat(asm, 
+                  !strconcat(asm,
                              "( $dst1, $dst2, $dst3, $dst4 ), "
                              "$src1, $src2, $src3"), []>;
 
 class ReadImage2D<string asm>
       : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
                   (ins GPR64:$src1, GPR64:$src2, GPR32:$src3, GPR32:$src4),
-                  !strconcat(asm, 
+                  !strconcat(asm,
                              "( $dst1, $dst2, $dst3, $dst4 ), "
                              "$src1, $src2, ( $src3, $src4 )"), []>;
 
@@ -22,7 +22,7 @@ class ReadImage2D<string asm>
 class ReadImage3D<string asm>
       : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
                   (ins GPR64:$src1, GPR64:$src2, GPR32:$src3, GPR32:$src4, GPR32:$src5),
-                  !strconcat(asm, 
+                  !strconcat(asm,
                              "( $dst1, $dst2, $dst3, $dst4 ), "
                              "$src1, $src2, ( $src3, $src4, $src5 )"), []>;
 
@@ -101,21 +101,21 @@ def rd_imgf_2dadepth_f32 : ReadImage2DArrayDepth<"rdimage_2dadepth_f32_roimg_f32
 class LoadImage1D<string asm>
       : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
                   (ins GPR64:$src1, GPR32:$src2),
-                  !strconcat(asm, 
+                  !strconcat(asm,
                              "( $dst1, $dst2, $dst3, $dst4 ), "
                              "$src1, $src2"), []>;
 
 class LoadImage2D<string asm>
       : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
                   (ins GPR64:$src1, GPR32:$src2, GPR32:$src3),
-                  !strconcat(asm, 
+                  !strconcat(asm,
                              "( $dst1, $dst2, $dst3, $dst4 ), "
                              "$src1, ( $src2, $src3 )"), []>;
 
 class LoadImage3D<string asm>
       : HSAILInst<(outs GPR32:$dst1, GPR32:$dst2,  GPR32:$dst3,  GPR32:$dst4),
                   (ins GPR64:$src1, GPR32:$src2, GPR32:$src3, GPR32:$src4),
-                  !strconcat(asm, 
+                  !strconcat(asm,
                              "( $dst1, $dst2, $dst3, $dst4 ), "
                              "$src1, ( $src2, $src3, $src4 )"), []>;
 
@@ -176,38 +176,38 @@ def ld_imgf_2ddepth_u32 : LoadImage2DDepth<"ldimage_2ddepth_f32_rwimg_u32">;
 def ld_imgf_2dadepth_u32 : LoadImage2DArrayDepth<"ldimage_2dadepth_f32_rwimg_u32">;
 
 // Image store
-class StImage1d<Intrinsic intr, string asm, ValueType ValTy, 
+class StImage1d<Intrinsic intr, string asm, ValueType ValTy,
         ValueType CoordTy> :  HSAILInst<(outs),
-        (ins GPR32:$src1, GPR32:$src2, GPR32:$src3, GPR32:$src4, 
+        (ins GPR32:$src1, GPR32:$src2, GPR32:$src3, GPR32:$src4,
           GPR64:$src5, GPR32:$src6),
         !strconcat(asm, "\t ( $src1, $src2, $src3, $src4 ), $src5, "
                         "$src6"),
-        [(intr (ValTy GPR32:$src1), (ValTy GPR32:$src2), 
+        [(intr (ValTy GPR32:$src1), (ValTy GPR32:$src2),
           (ValTy GPR32:$src3), (ValTy GPR32:$src4),
-            (i64 GPR64:$src5), 
+            (i64 GPR64:$src5),
             (CoordTy GPR32:$src6))]>;
 
-class StImage2d<Intrinsic intr, string asm, ValueType ValTy, 
+class StImage2d<Intrinsic intr, string asm, ValueType ValTy,
         ValueType CoordTy> :  HSAILInst<(outs),
-        (ins GPR32:$src1, GPR32:$src2, GPR32:$src3, GPR32:$src4, 
+        (ins GPR32:$src1, GPR32:$src2, GPR32:$src3, GPR32:$src4,
                 GPR64:$src5, GPR32:$src6, GPR32:$src7),
         !strconcat(asm, "\t ( $src1, $src2, $src3, $src4 ), $src5, "
                         "( $src6, $src7 )"),
-        [(intr (ValTy GPR32:$src1), (ValTy GPR32:$src2), 
+        [(intr (ValTy GPR32:$src1), (ValTy GPR32:$src2),
           (ValTy GPR32:$src3), (ValTy GPR32:$src4),
-            (i64 GPR64:$src5), 
+            (i64 GPR64:$src5),
             (CoordTy GPR32:$src6), (CoordTy GPR32:$src7))]>;
 
-class StImage3d<Intrinsic intr, string asm, ValueType ValTy, 
-        ValueType CoordTy> :  HSAILInst<(outs), 
-        (ins GPR32:$src1, GPR32:$src2, GPR32:$src3, GPR32:$src4, 
-          GPR64:$src5, 
+class StImage3d<Intrinsic intr, string asm, ValueType ValTy,
+        ValueType CoordTy> :  HSAILInst<(outs),
+        (ins GPR32:$src1, GPR32:$src2, GPR32:$src3, GPR32:$src4,
+          GPR64:$src5,
           GPR32:$src6, GPR32:$src7, GPR32:$src8, GPR32:$src9),
         !strconcat(asm, "\t ( $src1, $src2, $src3, $src4 ), $src5, "
                         "( $src6, $src7, $src8, $src9 )"),
-        [(intr (ValTy GPR32:$src1), (ValTy GPR32:$src2), 
+        [(intr (ValTy GPR32:$src1), (ValTy GPR32:$src2),
           (ValTy GPR32:$src3), (ValTy GPR32:$src4),
-            (i64 GPR64:$src5), 
+            (i64 GPR64:$src5),
             (CoordTy GPR32:$src6), (CoordTy GPR32:$src7),
             (CoordTy GPR32:$src8), (CoordTy GPR32:$src9))]>;
 
@@ -299,7 +299,7 @@ class QueryImage<Intrinsic intr, string asm> : HSAILInst<
         !strconcat(asm, "\t $dst, $src"),
         [(set (i32 GPR32:$dst), (intr (i64 GPR64:$src)))]>;
 
-def query_width_1d : QueryImage<int_HSAIL_query_width_1d,  "queryimage_1d_width_u32_rwimg">; 
+def query_width_1d : QueryImage<int_HSAIL_query_width_1d,  "queryimage_1d_width_u32_rwimg">;
 def query_width_1db: QueryImage<int_HSAIL_query_width_1db, "queryimage_1db_width_u32_rwimg">;
 def query_width_1da: QueryImage<int_HSAIL_query_width_1da, "queryimage_1da_width_u32_rwimg">;
 def query_width_2d : QueryImage<int_HSAIL_query_width_2d,  "queryimage_2d_width_u32_rwimg">;
@@ -317,14 +317,14 @@ def query_height_2dadepth : QueryImage<int_HSAIL_query_height_2dadepth, "queryim
 
 def query_depth : QueryImage<int_HSAIL_query_depth_3d, "queryimage_3d_depth_u32_rwimg">;
 
-def query_format_1d : QueryImage<int_HSAIL_query_format_1d,  "queryimage_1d_channeltype_u32_rwimg">; 
+def query_format_1d : QueryImage<int_HSAIL_query_format_1d,  "queryimage_1d_channeltype_u32_rwimg">;
 def query_format_1db: QueryImage<int_HSAIL_query_format_1db, "queryimage_1db_channeltype_u32_rwimg">;
 def query_format_1da: QueryImage<int_HSAIL_query_format_1da, "queryimage_1da_channeltype_u32_rwimg">;
 def query_format_2d : QueryImage<int_HSAIL_query_format_2d,  "queryimage_2d_channeltype_u32_rwimg">;
 def query_format_2da: QueryImage<int_HSAIL_query_format_2da, "queryimage_2da_channeltype_u32_rwimg">;
 def query_format_3d : QueryImage<int_HSAIL_query_format_3d,  "queryimage_3d_channeltype_u32_rwimg">;
 
-def query_order_1d : QueryImage<int_HSAIL_query_order_1d,  "queryimage_1d_channelorder_u32_rwimg">; 
+def query_order_1d : QueryImage<int_HSAIL_query_order_1d,  "queryimage_1d_channelorder_u32_rwimg">;
 def query_order_1db: QueryImage<int_HSAIL_query_order_1db, "queryimage_1db_channelorder_u32_rwimg">;
 def query_order_1da: QueryImage<int_HSAIL_query_order_1da, "queryimage_1da_channelorder_u32_rwimg">;
 def query_order_2d : QueryImage<int_HSAIL_query_order_2d,  "queryimage_2d_channelorder_u32_rwimg">;
