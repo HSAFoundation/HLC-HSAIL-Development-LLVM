@@ -196,8 +196,6 @@ bool isTernaryAtomicOp(const llvm::MachineInstr *MI);
 int getAtomicNoretVersion(uint16_t Opcode);
 int getAtomicPtr32Version(uint16_t Opcode);
 
-int getVectorLdStOpcode(uint16_t Opcode, unsigned vsize);
-
 SDValue generateFenceIntrinsic(SDValue Chain, SDLoc dl,
         unsigned memSeg,
         unsigned brigMemoryOrder,

@@ -50,4 +50,13 @@ MCAsmBackend *createHSAIL_64AsmBackendForLLVM32(const Target &T,
 
 } // End llvm namespace
 
+#define GET_REGINFO_ENUM
+#include "HSAILGenRegisterInfo.inc"
+
+#define GET_INSTRINFO_ENUM
+#include "HSAILGenInstrInfo.inc"
+
+#define GET_SUBTARGETINFO_ENUM
+#include "HSAILGenSubtargetInfo.inc"
+
 #endif

@@ -26,6 +26,16 @@
 
 using namespace llvm;
 
+#define GET_INSTRINFO_MC_DESC
+#include "HSAILGenInstrInfo.inc"
+
+#define GET_SUBTARGETINFO_MC_DESC
+#include "HSAILGenSubtargetInfo.inc"
+
+#define GET_REGINFO_MC_DESC
+#include "HSAILGenRegisterInfo.inc"
+
+
 // MC related code probably should be in MCTargetDesc subdir
 static MCCodeGenInfo *createHSAILMCCodeGenInfo(StringRef TT, Reloc::Model RM,
                                                CodeModel::Model CM,

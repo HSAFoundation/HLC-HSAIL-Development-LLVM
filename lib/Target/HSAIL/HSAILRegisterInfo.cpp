@@ -371,6 +371,5 @@ HSAILRegisterInfo::getRegPressureLimit(const TargetRegisterClass *RC,
   return 0;
 }
 
-#define GET_REGINFO_MC_DESC
 #define GET_REGINFO_TARGET_DESC
 #include "HSAILGenRegisterInfo.inc"
