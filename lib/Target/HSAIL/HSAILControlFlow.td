@@ -2,8 +2,8 @@
 // call
 
 let isNotDuplicable = 1, isCall = 1 in {
-         def target_call : HSAILInst<(outs ), (ins calltarget:$dst, variable_ops),
-            "call $dst", []>;
+         def target_call : HSAILInst<(outs ), (ins calltarget:$dest, variable_ops),
+            "call $dest", []>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -31,15 +31,15 @@ let isTerminator = 1, isReturn = 1, isBarrier = 1, hasCtrlDep = 1,
 
 let isBranch = 1, isTerminator = 1, hasCtrlDep = 1 in {
   let isBarrier = 1 in {
-    def branch : HSAILInst<(outs), (ins target:$disp),
-             "br\t$disp",
-             [(br bb:$disp)]>;
+    def branch : HSAILInst<(outs), (ins target:$label),
+             "br\t$label",
+             [(br bb:$label)]>;
   }
-  def branch_cond : HSAILInst<(outs), (ins CR:$cond, target:$disp),
-                "cbr_b1\t$cond, $disp",
-                [(brcond (i1 CR:$cond), (bb:$disp))]>;
-  def branch_ind : HSAILInst<(outs), (ins GPR32:$disp),
-                "br\t$disp ",
-        [(brind GPR32:$disp)]>;
+  def branch_cond : HSAILInst<(outs), (ins CR:$src, target:$label),
+                "cbr_b1\t$src, $label",
+                [(brcond (i1 CR:$src), (bb:$label))]>;
+  def branch_ind : HSAILInst<(outs), (ins GPR32:$label),
+                "br\t$label ",
+        [(brind GPR32:$label)]>;
 }
 
