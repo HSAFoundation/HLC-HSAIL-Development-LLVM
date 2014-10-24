@@ -174,303 +174,303 @@ multiclass TernaryIntrU32<Intrinsic intr, string asm> {
 multiclass CrossLaneIntrB1<Intrinsic intr, string asm> {
   let hasWidthOperand = 1 in {
     def rrrr_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, GPR32:$src1, GPR32:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, GPR32:$laneId, GPR32:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 GPR32:$src1),
-                  (i32 GPR32:$src2), (i1 CR:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 GPR32:$laneId),
+                  (i32 GPR32:$identity), (i1 CR:$useIdentity)))]>;
     def iiii_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins i1imm:$src0, i32imm:$src1, i1imm:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i1imm:$src, i32imm:$laneId, i1imm:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i1 imm:$src0), (i32 imm:$src1),
-                  (i1 imm:$src2), (i1 imm:$src3)))]>;
+            (intr (i1 imm:$src), (i32 imm:$laneId),
+                  (i1 imm:$identity), (i1 imm:$useIdentity)))]>;
     def irrr_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins i1imm:$src0, GPR32:$src1, GPR32:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i1imm:$src, GPR32:$laneId, GPR32:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i1 imm:$src0), (i32 GPR32:$src1),
-                  (i32 GPR32:$src2), (i1 CR:$src3)))]>;
+            (intr (i1 imm:$src), (i32 GPR32:$laneId),
+                  (i32 GPR32:$identity), (i1 CR:$useIdentity)))]>;
     def rirr_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, i32imm:$src1, GPR32:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, i32imm:$laneId, GPR32:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 imm:$src1),
-                  (i32 GPR32:$src2), (i1 CR:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 imm:$laneId),
+                  (i32 GPR32:$identity), (i1 CR:$useIdentity)))]>;
     def rrir_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, GPR32:$src1, i1imm:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, GPR32:$laneId, i1imm:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 GPR32:$src1),
-                  (i1 imm:$src2), (i1 CR:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 GPR32:$laneId),
+                  (i1 imm:$identity), (i1 CR:$useIdentity)))]>;
     def rrri_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, GPR32:$src1, GPR32:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, GPR32:$laneId, GPR32:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 GPR32:$src1),
-                  (i32 GPR32:$src2), (i1 imm:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 GPR32:$laneId),
+                  (i32 GPR32:$identity), (i1 imm:$useIdentity)))]>;
     def iirr_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins i1imm:$src0, i32imm:$src1, GPR32:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i1imm:$src, i32imm:$laneId, GPR32:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i1 imm:$src0), (i32 imm:$src1),
-                  (i32 GPR32:$src2), (i1 CR:$src3)))]>;
+            (intr (i1 imm:$src), (i32 imm:$laneId),
+                  (i32 GPR32:$identity), (i1 CR:$useIdentity)))]>;
     def rrii_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, GPR32:$src1, i1imm:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, GPR32:$laneId, i1imm:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 GPR32:$src1),
-                  (i1 imm:$src2), (i1 imm:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 GPR32:$laneId),
+                  (i1 imm:$identity), (i1 imm:$useIdentity)))]>;
     def irir_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins i1imm:$src0, GPR32:$src1, i1imm:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i1imm:$src, GPR32:$laneId, i1imm:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i1 imm:$src0), (i32 GPR32:$src1),
-                  (i1 imm:$src2), (i1 CR:$src3)))]>;
+            (intr (i1 imm:$src), (i32 GPR32:$laneId),
+                  (i1 imm:$identity), (i1 CR:$useIdentity)))]>;
     def irri_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins i1imm:$src0, GPR32:$src1, GPR32:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i1imm:$src, GPR32:$laneId, GPR32:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i1 imm:$src0), (i32 GPR32:$src1),
-                  (i32 GPR32:$src2), (i1 imm:$src3)))]>;
+            (intr (i1 imm:$src), (i32 GPR32:$laneId),
+                  (i32 GPR32:$identity), (i1 imm:$useIdentity)))]>;
     def riir_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, i32imm:$src1, i1imm:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, i32imm:$laneId, i1imm:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 imm:$src1),
-                  (i1 imm:$src2), (i1 CR:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 imm:$laneId),
+                  (i1 imm:$identity), (i1 CR:$useIdentity)))]>;
     def riri_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, i32imm:$src1, GPR32:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, i32imm:$laneId, GPR32:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 imm:$src1),
-                  (i32 GPR32:$src2), (i1 imm:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 imm:$laneId),
+                  (i32 GPR32:$identity), (i1 imm:$useIdentity)))]>;
     def iiir_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins i1imm:$src0, i32imm:$src1, i1imm:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i1imm:$src, i32imm:$laneId, i1imm:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i1 imm:$src0), (i32 imm:$src1),
-                  (i1 imm:$src2), (i1 CR:$src3)))]>;
+            (intr (i1 imm:$src), (i32 imm:$laneId),
+                  (i1 imm:$identity), (i1 CR:$useIdentity)))]>;
     def iiri_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins i1imm:$src0, i32imm:$src1, GPR32:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i1imm:$src, i32imm:$laneId, GPR32:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i1 imm:$src0), (i32 imm:$src1),
-                  (i32 GPR32:$src2), (i1 imm:$src3)))]>;
+            (intr (i1 imm:$src), (i32 imm:$laneId),
+                  (i32 GPR32:$identity), (i1 imm:$useIdentity)))]>;
     def irii_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins i1imm:$src0, GPR32:$src1, i1imm:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i1imm:$src, GPR32:$laneId, i1imm:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i1 imm:$src0), (i32 GPR32:$src1),
-                  (i1 imm:$src2), (i1 imm:$src3)))]>;
+            (intr (i1 imm:$src), (i32 GPR32:$laneId),
+                  (i1 imm:$identity), (i1 imm:$useIdentity)))]>;
     def riii_b1 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, i32imm:$src1, i1imm:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, i32imm:$laneId, i1imm:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 imm:$src1),
-                  (i1 imm:$src2), (i1 imm:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 imm:$laneId),
+                  (i1 imm:$identity), (i1 imm:$useIdentity)))]>;
   }
 }
 
 multiclass CrossLaneIntrB32<Intrinsic intr, string asm> {
   let hasWidthOperand = 1 in {
     def rrrr_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, GPR32:$src1, GPR32:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, GPR32:$laneId, GPR32:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 GPR32:$src1),
-                  (i32 GPR32:$src2), (i1 CR:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 GPR32:$laneId),
+                  (i32 GPR32:$identity), (i1 CR:$useIdentity)))]>;
     def iiii_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins i32imm:$src0, i32imm:$src1, i32imm:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i32imm:$src, i32imm:$laneId, i32imm:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 imm:$src0), (i32 imm:$src1),
-                  (i32 imm:$src2), (i1 imm:$src3)))]>;
+            (intr (i32 imm:$src), (i32 imm:$laneId),
+                  (i32 imm:$identity), (i1 imm:$useIdentity)))]>;
     def irrr_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins i32imm:$src0, GPR32:$src1, GPR32:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i32imm:$src, GPR32:$laneId, GPR32:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 imm:$src0), (i32 GPR32:$src1),
-                  (i32 GPR32:$src2), (i1 CR:$src3)))]>;
+            (intr (i32 imm:$src), (i32 GPR32:$laneId),
+                  (i32 GPR32:$identity), (i1 CR:$useIdentity)))]>;
     def rirr_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, i32imm:$src1, GPR32:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, i32imm:$laneId, GPR32:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 imm:$src1),
-                  (i32 GPR32:$src2), (i1 CR:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 imm:$laneId),
+                  (i32 GPR32:$identity), (i1 CR:$useIdentity)))]>;
     def rrir_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, GPR32:$src1, i32imm:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, GPR32:$laneId, i32imm:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 GPR32:$src1),
-                  (i32 imm:$src2), (i1 CR:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 GPR32:$laneId),
+                  (i32 imm:$identity), (i1 CR:$useIdentity)))]>;
     def rrri_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, GPR32:$src1, GPR32:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, GPR32:$laneId, GPR32:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 GPR32:$src1),
-                  (i32 GPR32:$src2), (i1 imm:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 GPR32:$laneId),
+                  (i32 GPR32:$identity), (i1 imm:$useIdentity)))]>;
     def iirr_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins i32imm:$src0, i32imm:$src1, GPR32:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i32imm:$src, i32imm:$laneId, GPR32:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 imm:$src0), (i32 imm:$src1),
-                  (i32 GPR32:$src2), (i1 CR:$src3)))]>;
+            (intr (i32 imm:$src), (i32 imm:$laneId),
+                  (i32 GPR32:$identity), (i1 CR:$useIdentity)))]>;
     def rrii_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, GPR32:$src1, i32imm:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, GPR32:$laneId, i32imm:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 GPR32:$src1),
-                  (i32 imm:$src2), (i1 imm:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 GPR32:$laneId),
+                  (i32 imm:$identity), (i1 imm:$useIdentity)))]>;
     def irir_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins i32imm:$src0, GPR32:$src1, i32imm:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i32imm:$src, GPR32:$laneId, i32imm:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 imm:$src0), (i32 GPR32:$src1),
-                  (i32 imm:$src2), (i1 CR:$src3)))]>;
+            (intr (i32 imm:$src), (i32 GPR32:$laneId),
+                  (i32 imm:$identity), (i1 CR:$useIdentity)))]>;
     def irri_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins i32imm:$src0, GPR32:$src1, GPR32:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i32imm:$src, GPR32:$laneId, GPR32:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 imm:$src0), (i32 GPR32:$src1),
-                  (i32 GPR32:$src2), (i1 imm:$src3)))]>;
+            (intr (i32 imm:$src), (i32 GPR32:$laneId),
+                  (i32 GPR32:$identity), (i1 imm:$useIdentity)))]>;
     def riir_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, i32imm:$src1, i32imm:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, i32imm:$laneId, i32imm:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 imm:$src1),
-                  (i32 imm:$src2), (i1 CR:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 imm:$laneId),
+                  (i32 imm:$identity), (i1 CR:$useIdentity)))]>;
     def riri_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, i32imm:$src1, GPR32:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, i32imm:$laneId, GPR32:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 imm:$src1),
-                  (i32 GPR32:$src2), (i1 imm:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 imm:$laneId),
+                  (i32 GPR32:$identity), (i1 imm:$useIdentity)))]>;
     def iiir_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins i32imm:$src0, i32imm:$src1, i32imm:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i32imm:$src, i32imm:$laneId, i32imm:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 imm:$src0), (i32 imm:$src1),
-                  (i32 imm:$src2), (i1 CR:$src3)))]>;
+            (intr (i32 imm:$src), (i32 imm:$laneId),
+                  (i32 imm:$identity), (i1 CR:$useIdentity)))]>;
     def iiri_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins i32imm:$src0, i32imm:$src1, GPR32:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i32imm:$src, i32imm:$laneId, GPR32:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 imm:$src0), (i32 imm:$src1),
-                  (i32 GPR32:$src2), (i1 imm:$src3)))]>;
+            (intr (i32 imm:$src), (i32 imm:$laneId),
+                  (i32 GPR32:$identity), (i1 imm:$useIdentity)))]>;
     def irii_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins i32imm:$src0, GPR32:$src1, i32imm:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i32imm:$src, GPR32:$laneId, i32imm:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 imm:$src0), (i32 GPR32:$src1),
-                  (i32 imm:$src2), (i1 imm:$src3)))]>;
+            (intr (i32 imm:$src), (i32 GPR32:$laneId),
+                  (i32 imm:$identity), (i1 imm:$useIdentity)))]>;
     def riii_b32 : HSAILInst<(outs GPR32:$dst),
-      (ins GPR32:$src0, i32imm:$src1, i32imm:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR32:$src, i32imm:$laneId, i32imm:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i32 GPR32:$dst),
-            (intr (i32 GPR32:$src0), (i32 imm:$src1),
-                  (i32 imm:$src2), (i1 imm:$src3)))]>;
+            (intr (i32 GPR32:$src), (i32 imm:$laneId),
+                  (i32 imm:$identity), (i1 imm:$useIdentity)))]>;
   }
 }
 
 multiclass CrossLaneIntrB64<Intrinsic intr, string asm> {
   let hasWidthOperand = 1 in {
     def rrrr_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins GPR64:$src0, GPR32:$src1, GPR64:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR64:$src, GPR32:$laneId, GPR64:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 GPR64:$src0), (i32 GPR32:$src1),
-                  (i64 GPR64:$src2), (i1 CR:$src3)))]>;
+            (intr (i64 GPR64:$src), (i32 GPR32:$laneId),
+                  (i64 GPR64:$identity), (i1 CR:$useIdentity)))]>;
     def iiii_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins i64imm:$src0, i32imm:$src1, i64imm:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i64imm:$src, i32imm:$laneId, i64imm:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 imm:$src0), (i32 imm:$src1),
-                  (i64 imm:$src2), (i1 imm:$src3)))]>;
+            (intr (i64 imm:$src), (i32 imm:$laneId),
+                  (i64 imm:$identity), (i1 imm:$useIdentity)))]>;
     def irrr_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins i64imm:$src0, GPR32:$src1, GPR64:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i64imm:$src, GPR32:$laneId, GPR64:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 imm:$src0), (i32 GPR32:$src1),
-                  (i64 GPR64:$src2), (i1 CR:$src3)))]>;
+            (intr (i64 imm:$src), (i32 GPR32:$laneId),
+                  (i64 GPR64:$identity), (i1 CR:$useIdentity)))]>;
     def rirr_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins GPR64:$src0, i32imm:$src1, GPR64:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR64:$src, i32imm:$laneId, GPR64:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 GPR64:$src0), (i32 imm:$src1),
-                  (i64 GPR64:$src2), (i1 CR:$src3)))]>;
+            (intr (i64 GPR64:$src), (i32 imm:$laneId),
+                  (i64 GPR64:$identity), (i1 CR:$useIdentity)))]>;
     def rrir_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins GPR64:$src0, GPR32:$src1, i64imm:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR64:$src, GPR32:$laneId, i64imm:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 GPR64:$src0), (i32 GPR32:$src1),
-                  (i64 imm:$src2), (i1 CR:$src3)))]>;
+            (intr (i64 GPR64:$src), (i32 GPR32:$laneId),
+                  (i64 imm:$identity), (i1 CR:$useIdentity)))]>;
     def rrri_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins GPR64:$src0, GPR32:$src1, GPR64:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR64:$src, GPR32:$laneId, GPR64:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 GPR64:$src0), (i32 GPR32:$src1),
-                  (i64 GPR64:$src2), (i1 imm:$src3)))]>;
+            (intr (i64 GPR64:$src), (i32 GPR32:$laneId),
+                  (i64 GPR64:$identity), (i1 imm:$useIdentity)))]>;
     def iirr_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins i64imm:$src0, i32imm:$src1, GPR64:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i64imm:$src, i32imm:$laneId, GPR64:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 imm:$src0), (i32 imm:$src1),
-                  (i64 GPR64:$src2), (i1 CR:$src3)))]>;
+            (intr (i64 imm:$src), (i32 imm:$laneId),
+                  (i64 GPR64:$identity), (i1 CR:$useIdentity)))]>;
     def rrii_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins GPR64:$src0, GPR32:$src1, i64imm:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR64:$src, GPR32:$laneId, i64imm:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 GPR64:$src0), (i32 GPR32:$src1),
-                  (i64 imm:$src2), (i1 imm:$src3)))]>;
+            (intr (i64 GPR64:$src), (i32 GPR32:$laneId),
+                  (i64 imm:$identity), (i1 imm:$useIdentity)))]>;
     def irir_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins i64imm:$src0, GPR32:$src1, i64imm:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i64imm:$src, GPR32:$laneId, i64imm:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 imm:$src0), (i32 GPR32:$src1),
-                  (i64 imm:$src2), (i1 CR:$src3)))]>;
+            (intr (i64 imm:$src), (i32 GPR32:$laneId),
+                  (i64 imm:$identity), (i1 CR:$useIdentity)))]>;
     def irri_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins i64imm:$src0, GPR32:$src1, GPR64:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i64imm:$src, GPR32:$laneId, GPR64:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 imm:$src0), (i32 GPR32:$src1),
-                  (i64 GPR64:$src2), (i1 imm:$src3)))]>;
+            (intr (i64 imm:$src), (i32 GPR32:$laneId),
+                  (i64 GPR64:$identity), (i1 imm:$useIdentity)))]>;
     def riir_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins GPR64:$src0, i32imm:$src1, i64imm:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR64:$src, i32imm:$laneId, i64imm:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 GPR64:$src0), (i32 imm:$src1),
-                  (i64 imm:$src2), (i1 CR:$src3)))]>;
+            (intr (i64 GPR64:$src), (i32 imm:$laneId),
+                  (i64 imm:$identity), (i1 CR:$useIdentity)))]>;
     def riri_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins GPR64:$src0, i32imm:$src1, GPR64:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR64:$src, i32imm:$laneId, GPR64:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 GPR64:$src0), (i32 imm:$src1),
-                  (i64 GPR64:$src2), (i1 imm:$src3)))]>;
+            (intr (i64 GPR64:$src), (i32 imm:$laneId),
+                  (i64 GPR64:$identity), (i1 imm:$useIdentity)))]>;
     def iiir_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins i64imm:$src0, i32imm:$src1, i64imm:$src2, CR:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i64imm:$src, i32imm:$laneId, i64imm:$identity, CR:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 imm:$src0), (i32 imm:$src1),
-                  (i64 imm:$src2), (i1 CR:$src3)))]>;
+            (intr (i64 imm:$src), (i32 imm:$laneId),
+                  (i64 imm:$identity), (i1 CR:$useIdentity)))]>;
     def iiri_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins i64imm:$src0, i32imm:$src1, GPR64:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i64imm:$src, i32imm:$laneId, GPR64:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 imm:$src0), (i32 imm:$src1),
-                  (i64 GPR64:$src2), (i1 imm:$src3)))]>;
+            (intr (i64 imm:$src), (i32 imm:$laneId),
+                  (i64 GPR64:$identity), (i1 imm:$useIdentity)))]>;
     def irii_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins i64imm:$src0, GPR32:$src1, i64imm:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins i64imm:$src, GPR32:$laneId, i64imm:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 imm:$src0), (i32 GPR32:$src1),
-                  (i64 imm:$src2), (i1 imm:$src3)))]>;
+            (intr (i64 imm:$src), (i32 GPR32:$laneId),
+                  (i64 imm:$identity), (i1 imm:$useIdentity)))]>;
     def riii_b64 : HSAILInst<(outs GPR64:$dst),
-      (ins GPR64:$src0, i32imm:$src1, i64imm:$src2, i1imm:$src3),
-      !strconcat(asm, " $dst, $src0, $src1, $src2, $src3"),
+      (ins GPR64:$src, i32imm:$laneId, i64imm:$identity, i1imm:$useIdentity),
+      !strconcat(asm, " $dst, $src, $laneId, $identity, $useIdentity"),
       [(set (i64 GPR64:$dst),
-            (intr (i64 GPR64:$src0), (i32 imm:$src1),
-                  (i64 imm:$src2), (i1 imm:$src3)))]>;
+            (intr (i64 GPR64:$src), (i32 imm:$laneId),
+                  (i64 imm:$identity), (i1 imm:$useIdentity)))]>;
   }
 }
 

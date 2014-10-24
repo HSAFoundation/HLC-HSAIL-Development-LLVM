@@ -39,6 +39,7 @@ def int_HSAIL_activelanecount_width_u32_b1 : GCCBuiltin<
 	                          "__hsail_activelanecount_wavewidth_u32_b1">,
                               Intrinsic<[llvm_i32_ty], [llvm_i1_ty], []>;
 
+// FIXME: This seems to be completely broken.
 def int_HSAIL_activelaneshuffle_b1 : GCCBuiltin<
 	                          "__hsail_activelaneshuffle_b1">,
                               Intrinsic<[llvm_anyint_ty], [llvm_anyint_ty,
@@ -76,6 +77,7 @@ def int_HSAIL_activelanemask_v4_width_b64_b1 : GCCBuiltin<
 
 // For OCL 2.0 64-bit built-ins
 
+// FIXME: These should be i64 / i32 instead of llvm_anyint_ty
 def int_HSAIL_activelaneshuffle_b64 : GCCBuiltin<
 	                          "__hsail_activelaneshuffle_b64">,
                               Intrinsic<[llvm_anyint_ty], [llvm_anyint_ty,
