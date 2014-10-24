@@ -722,7 +722,6 @@ void BRIGAsmPrinter::emitMacroFunc(const MachineInstr *MI, raw_ostream &O) {
   }
 }
 
-#define TWINE_TO_STR(_a) Twine(_a).str()
 void BRIGAsmPrinter::EmitBasicBlockStart(const MachineBasicBlock &MBB) {
   std::ostringstream o;
   bool insert_spaces=false;
