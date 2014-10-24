@@ -39,7 +39,7 @@ let isBranch = 1, isTerminator = 1, hasCtrlDep = 1 in {
                 "cbr_b1\t$cond, $disp",
                 [(brcond (i1 CR:$cond), (bb:$disp))]>;
   def branch_ind : HSAILInst<(outs), (ins GPR32:$disp),
-                "br\t$disp ", 
+                "br\t$disp ",
         [(brind GPR32:$disp)]>;
 }
 
