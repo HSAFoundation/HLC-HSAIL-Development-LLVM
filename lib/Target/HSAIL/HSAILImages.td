@@ -27,17 +27,17 @@ class ReadImage3D<string asm>
                              "$image, $sampler, ( $coordWidth, $coordHeight, $coordDepth )"), []>;
 
 class ReadImage2DDepth<string asm>
-      : HSAILInst<(outs GPR32:$dst),
+      : HSAILInst<(outs GPR32:$destR),
                   (ins GPR64:$image, GPR64:$sampler, GPR32:$coordWidth, GPR32:$coordHeight),
                   !strconcat(asm,
-                             "( $dst ), "
+                             "( $destR ), "
                              "$image, $sampler, ( $coordWidth, $coordHeight )"), []>;
 
 class ReadImage2DArrayDepth<string asm>
-      : HSAILInst<(outs GPR32:$dst),
+      : HSAILInst<(outs GPR32:$destR),
                   (ins GPR64:$image, GPR64:$sampler, GPR32:$coordWidth, GPR32:$coordHeight, GPR32:$coordArrayIndex),
                   !strconcat(asm,
-                             "( $dst ), "
+                             "( $destR ), "
                              "$image, $sampler, ( $coordWidth, $coordHeight, $coordArrayIndex )"), []>;
 
 // read image 1d
@@ -120,17 +120,17 @@ class LoadImage3D<string asm>
                              "$image, ( $coordWidth, $coordHeight, $coordDepth )"), []>;
 
 class LoadImage2DDepth<string asm>
-      : HSAILInst<(outs GPR32:$dst),
+      : HSAILInst<(outs GPR32:$destR),
                   (ins GPR64:$image, GPR32:$coordWidth, GPR32:$coordHeight),
                   !strconcat(asm,
-                             "( $dst ), "
+                             "( $destR ), "
                              "$image, ( $coordWidth, $coordHeight )"), []>;
 
 class LoadImage2DArrayDepth<string asm>
-      : HSAILInst<(outs GPR32:$dst),
+      : HSAILInst<(outs GPR32:$destR),
                   (ins GPR64:$image, GPR32:$coordWidth, GPR32:$coordHeight, GPR32:$coordArrayIndex),
                   !strconcat(asm,
-                             "( $dst ), "
+                             "( $destR ), "
                              "$image, ( $coordWidth, $coordHeight, $coordArrayIndex )"), []>;
 
 // load image 1d
