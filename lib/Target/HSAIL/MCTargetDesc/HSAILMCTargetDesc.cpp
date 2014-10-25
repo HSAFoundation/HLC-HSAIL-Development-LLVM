@@ -14,6 +14,7 @@
 
 #include "HSAILMCTargetDesc.h"
 #include "HSAILMCAsmInfo.h"
+#include "InstPrinter/HSAILInstPrinter.h"
 #include "llvm/MC/MCCodeGenInfo.h"
 #include "llvm/MC/MCInstrInfo.h"
 #include "llvm/MC/MCRegisterInfo.h"
@@ -59,6 +60,15 @@ static MCStreamer *createBRIGStreamer(const Target &T, StringRef TT,
 
   return createBRIGDwarfStreamer(Ctx, TAB, *rvos, _Emitter, RelaxAll,
                                  NoExecStack);
+}
+
+static MCInstPrinter *createHSAILMCInstPrinter(const Target &T,
+                                               unsigned SyntaxVariant,
+                                               const MCAsmInfo &MAI,
+                                               const MCInstrInfo &MII,
+                                               const MCRegisterInfo &MRI,
+                                               const MCSubtargetInfo &STI) {
+  return new HSAILInstPrinter(MAI, MII, MRI);
 }
 
 static MCStreamer *createMCStreamer(const Target &T, StringRef TT,
