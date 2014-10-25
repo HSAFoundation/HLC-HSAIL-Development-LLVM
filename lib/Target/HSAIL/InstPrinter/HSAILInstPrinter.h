@@ -32,6 +32,7 @@ public:
 
 private:
   void printImmediate(uint32_t Imm, raw_ostream &O);
+  void printAddrMode3Op(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
   void printBrigAlignment(const MCInst *MI, unsigned OpNo, raw_ostream &O);

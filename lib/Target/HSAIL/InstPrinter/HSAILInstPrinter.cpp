@@ -33,6 +33,50 @@ void HSAILInstPrinter::printImmediate(uint32_t Imm, raw_ostream &O) {
   O << formatHex(static_cast<uint64_t>(Imm));
 }
 
+void HSAILInstPrinter::printAddrMode3Op(const MCInst *MI,
+                                        unsigned OpNo,
+                                        raw_ostream &O) {
+  const MCOperand &BaseOp = MI->getOperand(OpNo);
+  const MCOperand &RegOp = MI->getOperand(OpNo + 1);
+  const MCOperand &OffsetOp = MI->getOperand(OpNo + 2);
+
+  assert(RegOp.isReg() && OffsetOp.isImm());
+
+  unsigned AddrReg = RegOp.getReg();
+  int64_t Offset = OffsetOp.getImm();
+
+  if (BaseOp.isReg()) {
+    // FIXME: Why is this allowed to be a register?
+    assert(BaseOp.getReg() == HSAIL::NoRegister);
+  } else if (BaseOp.isExpr())
+    O << '[' << '%' << *BaseOp.getExpr() << ']';
+  else
+    llvm_unreachable("Unexpected type for base address operand");
+
+  // Have both register and immediate offset.
+  if (AddrReg != HSAIL::NoRegister && Offset != 0) {
+    O << '[' << getRegisterName(AddrReg);
+
+    // If the offset is negative, it will be printed with the appropriate -
+    // already.
+    if (Offset > 0)
+      O << '+';
+
+    O << formatDec(Offset) << ']';
+    return;
+  }
+
+  // Only register offset.
+  if (AddrReg != HSAIL::NoRegister) {
+    O << '[' << getRegisterName(AddrReg) << ']';
+    return;
+  }
+
+  // Only have immediate offset.
+  if (Offset != 0)
+    O << '[' << formatDec(Offset) << ']';
+}
+
 void HSAILInstPrinter::printBrigAlignment(const MCInst *MI, unsigned OpNo,
                                           raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {

@@ -9,11 +9,13 @@ def PtrRC32: Operand<i32>, PointerLikeRegClass<32>;
 
 // Memory operand: base, register and offset.
 def MEMOP  : Operand<iPTR> {
-    let MIOperandInfo = (ops PtrRC, PtrRC, PtrRC);
+  let MIOperandInfo = (ops PtrRC:$base, PtrRC:$reg, PtrRC:$offset);
+  let PrintMethod = "printAddrMode3Op";
 }
 
 def MEMOP32  : Operand<i32> {
-    let MIOperandInfo = (ops PtrRC32, PtrRC32, PtrRC32);
+  let MIOperandInfo = (ops PtrRC32:$base, PtrRC32:$reg, PtrRC32:$offset);
+  let PrintMethod = "printAddrMode3Op";
 }
 
 def calltarget : Operand<i32>;
