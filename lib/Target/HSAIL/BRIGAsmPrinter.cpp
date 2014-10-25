@@ -2098,7 +2098,3 @@ extern "C" void LLVMInitializeBRIGAsmPrinter() {
   RegisterAsmPrinter<BRIGAsmPrinter> X(TheHSAIL_32Target);
   RegisterAsmPrinter<BRIGAsmPrinter> Y(TheHSAIL_64Target);
 }
-
-extern "C" void LLVMInitializeHSAILAsmPrinter() {
-  LLVMInitializeBRIGAsmPrinter();
-}

@@ -29,17 +29,14 @@
 using namespace llvm;
 
 static AsmPrinter *createHSAILAsmPrinterPass(TargetMachine &tm,
-                                              MCStreamer &Streamer) {
+                                             MCStreamer &Streamer) {
   return new HSAILAsmPrinter(tm, Streamer);
 }
 
-#if 0
-// FIXME: Uncomment when are using the llvm based asm printer.
 extern "C" void LLVMInitializeHSAILAsmPrinter() {
-  TargetRegistry::RegisterAsmPrinter(TheHSAILTarget, createHSAILAsmPrinterPass);
+  TargetRegistry::RegisterAsmPrinter(TheHSAIL_32Target, createHSAILAsmPrinterPass);
+  TargetRegistry::RegisterAsmPrinter(TheHSAIL_64Target, createHSAILAsmPrinterPass);
 }
-
-#endif
 
 HSAILAsmPrinter::HSAILAsmPrinter(TargetMachine &TM, MCStreamer &Streamer)
     : AsmPrinter(TM, Streamer) {
