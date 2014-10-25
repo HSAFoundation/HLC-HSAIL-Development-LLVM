@@ -91,13 +91,18 @@ extern "C" void LLVMInitializeHSAILTargetMC() {
 
   TargetRegistry::RegisterMCCodeEmitter(TheHSAIL_32Target,
                                         createHSAIL_32MCCodeEmitterForLLVM32);
+  TargetRegistry::RegisterMCInstPrinter(TheHSAIL_32Target,
+                                        createHSAILMCInstPrinter);
   TargetRegistry::RegisterMCAsmBackend(TheHSAIL_32Target,
                                        createHSAIL_32AsmBackendForLLVM32);
   TargetRegistry::RegisterMCObjectStreamer(TheHSAIL_32Target,
                                            createBRIGStreamer);
 
+
   TargetRegistry::RegisterMCCodeEmitter(TheHSAIL_64Target,
                                         createHSAIL_64MCCodeEmitterForLLVM32);
+  TargetRegistry::RegisterMCInstPrinter(TheHSAIL_64Target,
+                                        createHSAILMCInstPrinter);
   TargetRegistry::RegisterMCAsmBackend(TheHSAIL_64Target,
                                        createHSAIL_64AsmBackendForLLVM32);
   TargetRegistry::RegisterMCObjectStreamer(TheHSAIL_64Target,

@@ -33,6 +33,11 @@ using namespace llvm;
 static cl::opt<bool> DisableHSAILCFGOpts("disable-hsail-cfg-opts",
   cl::desc("Disable hsail control flow optimizations"));
 
+static cl::opt<bool>
+UseStandardAsmPrinter("hsail-asmprinter",
+                      cl::desc("Use standard LLVM AsmPrinter instead of BRIGAsmPrinter"));
+
+
 // TODO_HSA: As soon as -enable-experimetal llc option is not needed anymore
 //           the code block below shall be removed.
 namespace llvm {
@@ -79,6 +84,9 @@ extern "C" void LLVMInitializeHSAILTarget() {
 }
 
 
+extern "C" void LLVMInitializeBRIGAsmPrinter();
+
+
 /// HSAILTargetMachine ctor -
 ///
 HSAILTargetMachine::HSAILTargetMachine(const Target &T, StringRef TT,
@@ -88,12 +96,17 @@ HSAILTargetMachine::HSAILTargetMachine(const Target &T, StringRef TT,
   Subtarget(TT, CPU, FS, is64bitTarget, *this),
   //  DLInfo(Subtarget.getDataLayout()),
   //  InstrInfo(*this),
-  //  TLInfo(*this), 
+  //  TLInfo(*this),
   IntrinsicInfo(this)
  {
      initAsmInfo();
      setAsmVerbosityDefault(true);
 
+     // FIXME: Hack to enable command line switch to switch between
+     // BRIGAsmPrinter and HSAILAsmPrinter. Override the default registered
+     // AsmPrinter to use the BRIGAsmPrinter.
+     if (!UseStandardAsmPrinter)
+       LLVMInitializeBRIGAsmPrinter();
 }
 
 bool HSAILTargetMachine::addPassesToEmitFile(PassManagerBase &PM,
@@ -102,12 +115,16 @@ bool HSAILTargetMachine::addPassesToEmitFile(PassManagerBase &PM,
                                              bool DisableVerify,
                                              AnalysisID StartAfter,
                                              AnalysisID StopAfter) {
-  HSAILFileType = FT;
+  HSAILFileType = FT; // FIXME: Remove this.
 
-  // Use CGFT_ObjectFile regardless on the output format.
-  // To process CGFT_AssemblyFile we will later disassemble generated BRIG.
-  return LLVMTargetMachine::addPassesToEmitFile(PM, Out, CGFT_ObjectFile,
-    DisableVerify, StartAfter, StopAfter);
+  if (!UseStandardAsmPrinter) {
+    // Use CGFT_ObjectFile regardless on the output format.
+    // To process CGFT_AssemblyFile we will later disassemble generated BRIG.
+    FT = CGFT_ObjectFile;
+  }
+
+  return LLVMTargetMachine::addPassesToEmitFile(PM, Out, FT, DisableVerify,
+                                                StartAfter, StopAfter);
 }
 
 TargetPassConfig*
