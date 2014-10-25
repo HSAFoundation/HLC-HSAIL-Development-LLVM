@@ -48,6 +48,7 @@ HSAILAsmPrinter::HSAILAsmPrinter(TargetMachine &TM, MCStreamer &Streamer)
 bool HSAILAsmPrinter::runOnMachineFunction(MachineFunction &MF) {
   SetupMachineFunction(MF);
 
+  EmitFunctionEntryLabel();
   OutStreamer.SwitchSection(getObjFileLowering().getTextSection());
   EmitFunctionBody();
 
