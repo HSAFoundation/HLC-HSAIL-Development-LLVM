@@ -1,4 +1,4 @@
-//===-- HSAILAsmPrinter.cpp - HSAIL Assebly printer  ---------------------===//
+//===-- HSAILAsmPrinter.cpp - HSAIL Assebly printer  ----------------------===//
 //
 //                     The LLVM Compiler Infrastructure
 //
