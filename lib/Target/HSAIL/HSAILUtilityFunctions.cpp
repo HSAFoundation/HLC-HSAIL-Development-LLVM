@@ -81,44 +81,6 @@ namespace llvm {
 
 namespace HSAIL {
 
-int64_t HSAIL_GET_SCALAR_SIZE(Type *A) {
-  return A->getScalarSizeInBits();
-}
-
-void HSAILprintSDNode(const SDNode *N) {
-  printf("Opcode: %u isTargetOpcode: %d isMachineOpcode: %d\n",
-         N->getOpcode(), N->isTargetOpcode(), N->isMachineOpcode());
-  printf("Empty: %d OneUse: %d Size: %d NodeID: %d\n",
-         N->use_empty(), N->hasOneUse(), (int)N->use_size(), N->getNodeId());
-  for (unsigned int i = 0; i < N->getNumOperands(); ++i) {
-    printf("OperandNum: %u ValueCount: %u ValueType: %d\n",
-           i, N->getNumValues(), N->getValueType(0) .getSimpleVT().SimpleTy);
-    HSAILprintSDValue(N->getOperand(i), 0);
-  }
-}
-
-void HSAILprintSDValue(const SDValue &Op, int level) {
-  printf("\nOp: %p OpCode: %u NumOperands: %u ", &Op, Op.getOpcode(),
-         Op.getNumOperands());
-  printf("IsTarget: %d IsMachine: %d ", Op.isTargetOpcode(),
-         Op.isMachineOpcode());
-  if (Op.isMachineOpcode()) {
-    printf("MachineOpcode: %u\n", Op.getMachineOpcode());
-  } else {
-    printf("\n");
-  }
-  EVT vt = Op.getValueType();
-  printf("ValueType: %d \n", vt.getSimpleVT().SimpleTy);
-  printf("UseEmpty: %d OneUse: %d\n", Op.use_empty(), Op.hasOneUse());
-  if (level) {
-    printf("Children for %d:\n", level);
-    for (unsigned int i = 0; i < Op.getNumOperands(); ++i) {
-      printf("Child %d->%u:", level, i);
-      HSAILprintSDValue(Op.getOperand(i), level - 1);
-    }
-  }
-}
-
 size_t HSAILgetTypeSize(const Type *T, bool dereferencePtr) {
   size_t size = 0;
   if (!T) {
@@ -191,7 +153,7 @@ size_t HSAILgetTypeSize(const VectorType *VT, bool dereferencePtr) {
   if (!VT) return 0;
   if (VT->getNumElements() != 3) {
     return VT->getBitWidth() >> 3;
-  } 
+  }
   return HSAILgetTypeSize(VT->getElementType(), dereferencePtr) * 4;
 }
 
@@ -405,57 +367,6 @@ unsigned HSAILgetAlignTypeQualifier(Type *ty, const DataLayout& DL,
   assert(align && (align & (align - 1)) == 0);
 
   return align;
-}
-
-const Value *HSAILgetBasePointerValue(const Value *V)
-{
-  if (!V) {
-    return NULL;
-  }
-  const Value *ret = NULL;
-  ValueMap<const Value *, bool> ValueBitMap;
-  std::queue<const Value *, std::list<const Value *> > ValueQueue;
-  ValueQueue.push(V);
-  while (!ValueQueue.empty()) {
-    V = ValueQueue.front();
-    if (ValueBitMap.find(V) == ValueBitMap.end()) {
-      ValueBitMap[V] = true;
-      if (dyn_cast<Argument>(V) && dyn_cast<PointerType>(V->getType())) {
-        ret = V;
-        break;
-      } else if (dyn_cast<GlobalVariable>(V)) {
-        ret = V;
-        break;
-      } else if (dyn_cast<Constant>(V)) {
-        const ConstantExpr *CE = dyn_cast<ConstantExpr>(V);
-        if (CE) {
-          ValueQueue.push(CE->getOperand(0));
-        }
-      } else if (const AllocaInst *AI = dyn_cast<AllocaInst>(V)) {
-        ret = AI;
-        break;
-      } else if (const Instruction *I = dyn_cast<Instruction>(V)) {
-        uint32_t numOps = I->getNumOperands();
-        for (uint32_t x = 0; x < numOps; ++x) {
-          ValueQueue.push(I->getOperand(x));
-        }
-      } else {
-        // assert(0 && "Found a Value that we didn't know how to handle!");
-      }
-    }
-    ValueQueue.pop();
-  }
-  return ret;
-}
-
-const Value *HSAILgetBasePointerValue(const MachineInstr *MI) {
-  const Value *moVal = NULL;
-  if (!MI->memoperands_empty()) {
-    const MachineMemOperand *memOp = (*MI->memoperands_begin());
-    moVal = memOp ? memOp->getValue() : NULL;
-    moVal = HSAILgetBasePointerValue(moVal);
-  }
-  return moVal;
 }
 
 bool HSAILcommaPrint(int i, raw_ostream &O) {

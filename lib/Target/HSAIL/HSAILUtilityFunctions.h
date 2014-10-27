@@ -84,10 +84,6 @@ class DebugLoc;
 
 namespace HSAIL {
 
-// Debug functions for SDNode and SDValue.
-void HSAILprintSDValue(const llvm::SDValue &Op, int level);
-void HSAILprintSDNode(const llvm::SDNode *N);
-
 // Group of functions that recursively calculate the size of a structure based
 // on it's sub-types.
 size_t HSAILgetTypeSize(const llvm::Type *T, bool dereferencePtr = false);
@@ -117,16 +113,11 @@ Brig::BrigType16_t HSAILgetBrigType(llvm::Type* type, bool is64Bit, bool Signed 
 unsigned HSAILgetAlignTypeQualifier(llvm::Type *ty, const llvm::DataLayout& DL,
                                     bool isPreferred);
 
-const llvm::Value *HSAILgetBasePointerValue(const llvm::Value *V);
-const llvm::Value *HSAILgetBasePointerValue(const llvm::MachineInstr *MI);
-
 const char *
-HSAILgetTypeName(llvm::Type *ptr, 
-                 const char *symTab, 
+HSAILgetTypeName(llvm::Type *ptr,
+                 const char *symTab,
                  llvm::HSAILMachineFunctionInfo *mMFI,
                  bool signedType);
-
-int64_t HSAIL_GET_SCALAR_SIZE(llvm::Type* A);
 
 bool HSAILcommaPrint(int i, OSTREAM_TYPE &O);
 
