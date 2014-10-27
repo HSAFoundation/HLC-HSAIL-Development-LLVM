@@ -168,6 +168,7 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM)
   setLoadExtAction(ISD::EXTLOAD, MVT::v8i16, Expand);
   setLoadExtAction(ISD::EXTLOAD, MVT::v16i16, Expand);
 
+  setLoadExtAction(ISD::EXTLOAD, MVT::i1, Promote);
   setLoadExtAction(ISD::EXTLOAD, MVT::i8, Custom);
   setLoadExtAction(ISD::EXTLOAD, MVT::v2i8, Expand);
   setLoadExtAction(ISD::EXTLOAD, MVT::v4i8, Expand);
@@ -181,6 +182,7 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM)
   setLoadExtAction(ISD::ZEXTLOAD, MVT::v8i16, Expand);
   setLoadExtAction(ISD::ZEXTLOAD, MVT::v16i16, Expand);
 
+  setLoadExtAction(ISD::ZEXTLOAD, MVT::i1, Promote);
   setLoadExtAction(ISD::ZEXTLOAD, MVT::i8, Custom);
   setLoadExtAction(ISD::ZEXTLOAD, MVT::v2i8, Expand);
   setLoadExtAction(ISD::ZEXTLOAD, MVT::v4i8, Expand);
@@ -208,6 +210,7 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM)
   setLoadExtAction(ISD::SEXTLOAD, MVT::v8i16, Expand);
   setLoadExtAction(ISD::SEXTLOAD, MVT::v16i16, Expand);
 
+  setLoadExtAction(ISD::SEXTLOAD, MVT::i1, Promote);
   setLoadExtAction(ISD::SEXTLOAD, MVT::i8, Custom);
   setLoadExtAction(ISD::SEXTLOAD, MVT::v2i8, Expand);
   setLoadExtAction(ISD::SEXTLOAD, MVT::v4i8, Expand);
@@ -1420,19 +1423,21 @@ HSAILTargetLowering::LowerBSWAP(SDValue Op, SelectionDAG &DAG) const {
   const SDValue src = Op.getOperand(0);
   const SDValue opr0 = DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
            DAG.getConstant(HSAILIntrinsic::HSAIL_bytealign_b32, MVT::i32),
-           src, src, DAG.getConstant(3, MVT::i32));  
+           src, src, DAG.getConstant(3, MVT::i32));
   const SDValue opr1 = DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
            DAG.getConstant(HSAILIntrinsic::HSAIL_bytealign_b32, MVT::i32),
-           src, src, DAG.getConstant(1, MVT::i32));  
+           src, src, DAG.getConstant(1, MVT::i32));
   return DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
            DAG.getConstant(HSAILIntrinsic::HSAIL_bitsel_u32, MVT::i32),
-           DAG.getConstant(0x00ff00ff, VT), opr0, opr1);  
+           DAG.getConstant(0x00ff00ff, VT), opr0, opr1);
 }
 
-SDValue 
+SDValue
 HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
+  SDLoc dl(Op);
+
   EVT VT = Op.getValueType();
-  SDLoc dl = SDLoc(Op);
+  LoadSDNode *LD = cast<LoadSDNode>(Op);
 
   if (VT.getSimpleVT() == MVT::i1) {
     // Since there are no 1 bit load operations, the load operations are
@@ -1449,7 +1454,11 @@ HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
                      LD->isVolatile(),  LD->isNonTemporal(), LD->isInvariant(), 0);
 
     SDValue Result = DAG.getNode(ISD::TRUNCATE, dl, MVT::i1, NewLD);
-    SDValue Ops[] = { Result, SDValue(NewLD.getNode(), 1) };
+    SDValue Ops[] = {
+      Result,
+      NewLD.getValue(1)
+    };
+
     return DAG.getMergeValues(Ops, dl);
   }
 
@@ -1458,7 +1467,6 @@ HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
   // with illegal types.
   // See "EXTLOAD should always be supported!" assert in LegalizeDAG.cpp.
   if (VT.getSimpleVT() != MVT::i64) return Op;
-  LoadSDNode *LD = cast<LoadSDNode>(Op.getNode());
   ISD::LoadExtType extType = LD->getExtensionType();
 
   if (extType == ISD::SEXTLOAD && LD->hasNUsesOfValue(1, 0)) {
@@ -1484,24 +1492,20 @@ HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
     }
   }
 
-  // Do load into 32-bit register.
-  SDValue load = DAG.getLoad(ISD::UNINDEXED, extType, MVT::i32, dl,
-    Op.getOperand(0), Op.getOperand(1), Op.getOperand(2),
-    LD->getMemoryVT(), LD->getMemOperand());
-  // Extend
-  SDValue extend;
-  switch (extType) {
-  case ISD::SEXTLOAD:
-   extend = DAG.getSExtOrTrunc(load, dl, MVT::i64); break;
-  case ISD::EXTLOAD:
-  case ISD::ZEXTLOAD:
-    extend = DAG.getZExtOrTrunc(load, dl, MVT::i64); break;
-  default:
-    llvm_unreachable("Should be processing ext load");
-  }
+  // Do extload into 32-bit register, then extend that.
+  SDValue NewLD = DAG.getExtLoad(extType, dl, MVT::i32, LD->getChain(),
+                                 LD->getBasePtr(), MVT::i8, LD->getMemOperand());
+
+  SDValue Ops[] = {
+    DAG.getNode(ISD::getExtForLoadExtType(extType), dl, MVT::i64, NewLD),
+    NewLD.getValue(1)
+  };
+
   // Replace chain in all uses.
-  DAG.ReplaceAllUsesOfValueWith(Op.getValue(1), load.getValue(1));
-  return extend;
+  // XXX: Do we really need to do this?
+  DAG.ReplaceAllUsesOfValueWith(Op.getValue(1), NewLD.getValue(1));
+
+  return DAG.getMergeValues(Ops, dl);
 }
 
 SDValue HSAILTargetLowering::LowerSTORE(SDValue Op, SelectionDAG &DAG) const {
