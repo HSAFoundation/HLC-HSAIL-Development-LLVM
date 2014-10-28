@@ -1505,8 +1505,6 @@ HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
 }
 
 SDValue HSAILTargetLowering::LowerSTORE(SDValue Op, SelectionDAG &DAG) const {
-  assert(Op.getOperand(1).getValueType() == MVT::i1 &&
-         "Custom lowering only for i1 stores");
   // Since there are no 1 bit store operations, the store operations are
   // converted to 8 bit stores.
   // First, sign extend to 32 bits, then use a truncating store to 8 bits.
@@ -1518,6 +1516,9 @@ SDValue HSAILTargetLowering::LowerSTORE(SDValue Op, SelectionDAG &DAG) const {
   SDValue BasePtr = ST->getBasePtr();
   SDValue Value = ST->getValue();
   MachineMemOperand *MMO = ST->getMemOperand();
+
+  assert(Value.getValueType() == MVT::i1 &&
+         "Custom lowering only for i1 stores");
 
   Value = DAG.getNode(ISD::SIGN_EXTEND, dl, MVT::i32, Value);
   return DAG.getTruncStore(Chain, dl, Value, BasePtr, MVT::i8, MMO);
