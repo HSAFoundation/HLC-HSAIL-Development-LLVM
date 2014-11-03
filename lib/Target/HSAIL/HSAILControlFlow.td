@@ -10,12 +10,12 @@ let isNotDuplicable = 1, isCall = 1 in {
 // lower and raise the stack
 
 let isNotDuplicable = 1, hasSideEffects = 1 in {
-    def arg_scope_start : HSAILInst<(outs), (ins i32imm:$amt),
-                   "; begin of call sequence $amt",
-                    [(IL_callseq_start timm:$amt)]>;
-    def arg_scope_end   : HSAILInst<(outs), (ins i32imm:$amt1, i32imm:$amt2),
-                   "; end of call sequence $amt1 $amt2",
-                   [(IL_callseq_end timm:$amt1, timm:$amt2)]>;
+    def arg_scope_start : HSAILInst<(outs), (ins i32imm:$src0),
+                   "; begin of call sequence $src0",
+                    [(IL_callseq_start timm:$src0)]>;
+    def arg_scope_end   : HSAILInst<(outs), (ins i32imm:$src0, i32imm:$src1),
+                   "; end of call sequence $src0 $src1",
+                   [(IL_callseq_end timm:$src0, timm:$src1)]>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
