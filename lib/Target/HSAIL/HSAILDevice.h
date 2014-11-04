@@ -59,7 +59,6 @@
 #define _HSAILDEVICEIMPL_H_
 #include "HSAIL.h"
 #include "HSAILDeviceInfo.h"
-#include "HSAILLLVMVersion.h"
 #include "llvm/CodeGen/AsmPrinter.h"
 #include "llvm/ADT/BitVector.h"
 namespace llvm {
@@ -127,7 +126,7 @@ public:
     TargetMachine&, CodeGenOpt::Level) const = 0;
 
   // Interface to get the Asm printer for each device.
-  virtual AsmPrinter* getAsmPrinter(HSAIL_ASM_PRINTER_ARGUMENTS) const = 0;
+  virtual AsmPrinter* getAsmPrinter(TargetMachine& TM, MCStreamer &Streamer) const = 0;
 
   // Interface to get the Pointer manager pass for each device.
   virtual FunctionPass*  getPointerManager(

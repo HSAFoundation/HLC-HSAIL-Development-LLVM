@@ -5,7 +5,6 @@
 #include "HSAILMachineFunctionInfo.h"
 #include "HSAILOpaqueTypes.h"
 #include "HSAILTargetMachine.h"
-#include "HSAILLLVMVersion.h"
 #include "HSAILUtilityFunctions.h"
 #include "llvm/IR/Argument.h"
 #include "llvm/IR/Constants.h"
@@ -403,8 +402,8 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
   globalVar.init() = brigantine.createOperandData(init);
 }
 
-BRIGAsmPrinter::BRIGAsmPrinter(HSAIL_ASM_PRINTER_ARGUMENTS)
-  : AsmPrinter(ASM_PRINTER_ARGUMENTS),
+BRIGAsmPrinter::BRIGAsmPrinter(TargetMachine& TM, MCStreamer &Streamer)
+  : AsmPrinter(TM, Streamer),
     brigantine(bc) {
 
   Subtarget = &TM.getSubtarget<HSAILSubtarget>();

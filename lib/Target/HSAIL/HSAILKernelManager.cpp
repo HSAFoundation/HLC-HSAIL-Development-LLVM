@@ -61,7 +61,6 @@
 #include "HSAILTargetMachine.h"
 #include "HSAILUtilityFunctions.h"
 #include "HSAILOpaqueTypes.h"
-#include "HSAILLLVMVersion.h"
 #include "libHSAIL/HSAILBrigantine.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
@@ -107,7 +106,7 @@ typedef enum clk_arg_qualifier_t
 
 } // end of namespace clk
 
-static bool errorPrint(const char *ptr, OSTREAM_TYPE &O) {
+static bool errorPrint(const char *ptr, raw_ostream &O) {
   if (ptr[0] == 'E') {
     O << ";error:" << ptr << "\n";
   } else {
@@ -117,7 +116,7 @@ static bool errorPrint(const char *ptr, OSTREAM_TYPE &O) {
 }
 
 static bool
-printfPrint(std::pair<const std::string, HSAILPrintfInfo *> &data, OSTREAM_TYPE &O) {
+printfPrint(std::pair<const std::string, HSAILPrintfInfo *> &data, raw_ostream &O) {
   O << ";printf_fmt:" << data.second->getPrintfID();
   // Number of operands
   O << ":" << data.second->getNumOperands();
@@ -280,9 +279,9 @@ void HSAILKernelManager::clear() {
   mHasOutputInst = false;
 }
 
-void HSAILKernelManager::processArgMetadata(OSTREAM_TYPE &ignored,
+void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
                                             uint32_t buf,
-                                            bool isKernel) 
+                                            bool isKernel)
 {
   const Function *F = mMF->getFunction();
   const char * symTab = "NoSymTab";

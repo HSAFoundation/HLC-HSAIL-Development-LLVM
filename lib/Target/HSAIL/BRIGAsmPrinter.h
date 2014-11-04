@@ -14,7 +14,6 @@
 #include "HSAIL.h"
 #include "HSAILInstrInfo.h"
 #include "HSAILBrig.h"
-#include "HSAILLLVMVersion.h"
 #include "HSAILSubtarget.h"
 #include "llvm/IR/GlobalVariable.h"
 #include "llvm/ADT/DenseMap.h"
@@ -74,7 +73,7 @@ class LLVM_LIBRARY_VISIBILITY BRIGAsmPrinter : public AsmPrinter {
   unsigned reg32Counter;
   unsigned reg64Counter;
 public:
-  explicit BRIGAsmPrinter(HSAIL_ASM_PRINTER_ARGUMENTS);
+  explicit BRIGAsmPrinter(TargetMachine& TM, MCStreamer &Streamer);
 
   virtual ~BRIGAsmPrinter();
 
