@@ -20,7 +20,6 @@
 #include "HSAILIntrinsicInfo.h"
 #include "HSAILISelLowering.h"
 #include "HSAILSubtarget.h"
-#include "HSAILLLVMVersion.h"
 
 #include "llvm/CodeGen/Passes.h"
 #include "llvm/IR/DataLayout.h"
@@ -114,7 +113,7 @@ public:
   virtual const HSAILSelectionDAGInfo*
   getSelectionDAGInfo() const { return &TSInfo; }
 
-  void dump(OSTREAM_TYPE &O);
+  void dump(raw_ostream &O);
   void setDebug(bool debugMode);
   bool getDebug() const;
 };

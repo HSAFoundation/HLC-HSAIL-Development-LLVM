@@ -57,7 +57,6 @@
 
 #include "HSAIL.h"
 #include "HSAILBrig.h"
-#include "HSAILLLVMVersion.h"
 #include "HSAILTargetMachine.h"
 #include "llvm/ADT/SmallVector.h"
 
@@ -119,7 +118,7 @@ HSAILgetTypeName(llvm::Type *ptr,
                  llvm::HSAILMachineFunctionInfo *mMFI,
                  bool signedType);
 
-bool HSAILcommaPrint(int i, OSTREAM_TYPE &O);
+bool HSAILcommaPrint(int i, raw_ostream &O);
 
 // Helper functions that check the opcode for status information
 bool hasAddress(const llvm::MachineInstr *MI);

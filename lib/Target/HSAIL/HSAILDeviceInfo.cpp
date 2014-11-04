@@ -114,7 +114,7 @@ HSAILGenericDevice::getIOExpansion(
 }
 
 AsmPrinter*
-HSAILGenericDevice::getAsmPrinter(HSAIL_ASM_PRINTER_ARGUMENTS) const
+HSAILGenericDevice::getAsmPrinter(TargetMachine& TM, MCStreamer &Streamer) const
 {
   // return new HSAILEGAsmPrinter(ASM_PRINTER_ARGUMENTS);
   return 0x0;
@@ -213,7 +213,7 @@ HSAILGenericDeviceFlat::getIOExpansion(
 }
 
 AsmPrinter*
-HSAILGenericDeviceFlat::getAsmPrinter(HSAIL_ASM_PRINTER_ARGUMENTS) const
+HSAILGenericDeviceFlat::getAsmPrinter(TargetMachine& TM, MCStreamer &Streamer) const
 {
   // return new HSAILEGAsmPrinter(ASM_PRINTER_ARGUMENTS);
   return 0x0;

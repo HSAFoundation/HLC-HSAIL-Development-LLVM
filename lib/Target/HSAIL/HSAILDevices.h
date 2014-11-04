@@ -67,7 +67,7 @@ public:
   virtual uint32_t getMaxNumUAVs() const;
   virtual uint32_t getResourceID(uint32_t) const;
   virtual FunctionPass* getIOExpansion(TargetMachine&, CodeGenOpt::Level) const;
-  virtual AsmPrinter* getAsmPrinter(HSAIL_ASM_PRINTER_ARGUMENTS) const;
+  virtual AsmPrinter* getAsmPrinter(TargetMachine& TM, MCStreamer &Streamer) const;
   virtual FunctionPass* getPointerManager(
     TargetMachine&, CodeGenOpt::Level) const;
 protected:
@@ -84,7 +84,7 @@ public:
   virtual uint32_t getMaxNumUAVs() const;
   virtual uint32_t getResourceID(uint32_t) const;
   virtual FunctionPass* getIOExpansion(TargetMachine&, CodeGenOpt::Level) const;
-  virtual AsmPrinter* getAsmPrinter(HSAIL_ASM_PRINTER_ARGUMENTS) const;
+  virtual AsmPrinter* getAsmPrinter(TargetMachine& TM, MCStreamer &Streamer) const;
   virtual FunctionPass* getPointerManager(
     TargetMachine&, CodeGenOpt::Level) const;
 protected:

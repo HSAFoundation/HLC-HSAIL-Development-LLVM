@@ -56,7 +56,6 @@
 #define _HSAIL_MACHINE_MODULE_INFO_H_
 #include "HSAIL.h"
 #include "HSAILKernel.h"
-#include "HSAILLLVMVersion.h"
 #include "llvm/IR/Module.h"
 #include "llvm/ADT/DenseSet.h"
 #include "llvm/ADT/DenseMap.h"

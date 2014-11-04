@@ -57,7 +57,6 @@
 #define _HSAILKERNELMANAGER_H_
 #include "HSAIL.h"
 #include "HSAILDevice.h"
-#include "HSAILLLVMVersion.h"
 #include "llvm/ADT/DenseSet.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/SmallVector.h"
@@ -105,7 +104,7 @@ public:
 
   /// Process the specific kernel parsing out the parameter information for the
   /// kernel.
-  void processArgMetadata(OSTREAM_TYPE &ignored,
+  void processArgMetadata(raw_ostream &ignored,
                           uint32_t buf, bool kernel);
 
 
