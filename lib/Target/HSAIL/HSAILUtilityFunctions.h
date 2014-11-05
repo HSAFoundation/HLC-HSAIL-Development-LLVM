@@ -83,16 +83,6 @@ class DebugLoc;
 
 namespace HSAIL {
 
-// Group of functions that recursively calculate the number of elements of a
-// structure based on it's sub-types.
-size_t HSAILgetNumElements(llvm::Type * const T);
-size_t HSAILgetNumElements(llvm::StructType * const ST);
-size_t HSAILgetNumElements(llvm::IntegerType * const IT);
-size_t HSAILgetNumElements(llvm::FunctionType * const FT);
-size_t HSAILgetNumElements(llvm::ArrayType * const AT);
-size_t HSAILgetNumElements(llvm::VectorType * const VT);
-size_t HSAILgetNumElements(llvm::PointerType * const PT);
-
 uint64_t getNumElementsInHSAILType(llvm::Type* type,
                                    const llvm::DataLayout& dataLayout);
 bool HSAILrequiresArray(llvm::Type* type);
