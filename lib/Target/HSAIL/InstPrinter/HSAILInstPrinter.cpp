@@ -20,6 +20,9 @@
 
 using namespace llvm;
 
+HSAILInstPrinter::HSAILInstPrinter(const MCAsmInfo &MAI, const MCInstrInfo &MII,
+                                   const MCRegisterInfo &MRI)
+  : MCInstPrinter(MAI, MII, MRI) {}
 
 void HSAILInstPrinter::printInst(const MCInst *MI, raw_ostream &OS,
                                  StringRef Annot) {
