@@ -38,7 +38,7 @@ HSAILSubtarget::HSAILSubtarget(llvm::StringRef TT, llvm::StringRef CPU, llvm::St
                   getStackAlignment(), 0),
     TargetTriple(TT)
 {
-  memset(CapsOverride, 0, sizeof(*CapsOverride) * 
+  memset(CapsOverride, 0, sizeof(*CapsOverride) *
          HSAILDeviceInfo::MaxNumberCapabilities);
   mVersion = 0;
   mMetadata30 = true;
@@ -49,12 +49,13 @@ HSAILSubtarget::HSAILSubtarget(llvm::StringRef TT, llvm::StringRef CPU, llvm::St
   mIs64bit = is64bitTarget;
   ParseSubtargetFeatures(GPU, FS);
   mDevName = GPU;
-  mDevice = getDeviceFromName(GPU, this, mIs64bit);
+  mDevice = new HSAILDevice(this); // FIXME: Remove this
+
   // The constructor for TargetLoweringBase calls
   // HSAILSubtarget::getDataLayout(), so we need to initialize
   // HSAILTargetLowering after we have determined the device.
   TLInfo.reset(new HSAILTargetLowering(TM));
-  HSAILDeviceInfo::is64bit = mIs64bit;
+  HSAILDevice::is64bit = mIs64bit; // FIXME
   imageHandles = new HSAILImageHandles();
 }
 
@@ -67,7 +68,7 @@ HSAILSubtarget::isOverride(HSAILDeviceInfo::Caps caps) const
 }
 
 bool
-HSAILSubtarget::is64Bit() const 
+HSAILSubtarget::is64Bit() const
 {
   return mIs64bit;
 }
