@@ -201,19 +201,7 @@ public:
   void ParseSubtargetFeatures( llvm::StringRef CPU,
             llvm::StringRef FS);
 
-  // Address space mappings are defined in HSAIL.h
-  unsigned getFlatAS() const { return HSAILAS::FLAT_ADDRESS; }
-  unsigned getGlobalAS() const { return HSAILAS::GLOBAL_ADDRESS; }
-  unsigned getConstantAS() const { return HSAILAS::CONSTANT_ADDRESS; }
-  unsigned getGroupAS() const { return HSAILAS::GROUP_ADDRESS; }
-  unsigned getPrivateAS() const { return HSAILAS::PRIVATE_ADDRESS; }
-  unsigned getSpillAS() const { return HSAILAS::SPILL_ADDRESS; }
-  unsigned getRegionAS() const { return HSAILAS::REGION_ADDRESS; }
-  unsigned getKernargAS() const { return HSAILAS::KERNARG_ADDRESS; }
-  unsigned getArgAS() const { return HSAILAS::ARG_ADDRESS; }
-
   HSAILImageHandles* getImageHandles() const { return imageHandles; }
-
 };
 
 } // End llvm namespace
