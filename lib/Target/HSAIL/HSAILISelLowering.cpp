@@ -1204,15 +1204,15 @@ HSAILTargetLowering::LowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const {
   unsigned addrSpace = dyn_cast<PointerType>(ptrType)->getAddressSpace();
   unsigned opcode;
 
-  if (addrSpace == Subtarget->getFlatAS()) {
+  if (addrSpace == HSAILAS::FLAT_ADDRESS) {
     opcode = HSAILISD::LDA_FLAT;
-  } else if (addrSpace == Subtarget->getGlobalAS()) {
+  } else if (addrSpace == HSAILAS::GLOBAL_ADDRESS) {
     opcode = HSAILISD::LDA_GLOBAL;
-  } else if (addrSpace == Subtarget->getGroupAS()) {
+  } else if (addrSpace == HSAILAS::GROUP_ADDRESS) {
     opcode = HSAILISD::LDA_GROUP;
-  } else if (addrSpace == Subtarget->getPrivateAS()) {
+  } else if (addrSpace == HSAILAS::PRIVATE_ADDRESS) {
     opcode = HSAILISD::LDA_PRIVATE;
-  } else if (addrSpace == Subtarget->getConstantAS()) {
+  } else if (addrSpace == HSAILAS::CONSTANT_ADDRESS) {
     opcode = HSAILISD::LDA_READONLY;
   } else {
     assert(!"cannot lower GlobalAddress");
