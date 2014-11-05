@@ -154,12 +154,6 @@ public:
   bool isSupported(HSAILDeviceInfo::Caps Mode) const;
   bool usesHardware(HSAILDeviceInfo::Caps Mode) const;
   bool usesSoftware(HSAILDeviceInfo::Caps Mode) const;
-  virtual std::string getDataLayout() const;
-  static const unsigned int MAX_LDS_SIZE_700 = 16384;
-  static const unsigned int MAX_LDS_SIZE_800 = 32768;
-  static const unsigned int WavefrontSize = 64;
-  static const unsigned int HalfWavefrontSize = 32;
-  static const unsigned int QuarterWavefrontSize = 16;
 
   // FIXME: Remove this.
   static bool is64bit;

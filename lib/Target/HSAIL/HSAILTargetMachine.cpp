@@ -89,24 +89,25 @@ extern "C" void LLVMInitializeBRIGAsmPrinter();
 
 /// HSAILTargetMachine ctor -
 ///
-HSAILTargetMachine::HSAILTargetMachine(const Target &T, StringRef TT,
-    StringRef CPU, StringRef FS,const TargetOptions &Options, Reloc::Model RM, CodeModel::Model CM,CodeGenOpt::Level OL, bool is64bitTarget )
-:
+HSAILTargetMachine::HSAILTargetMachine(const Target &T,
+                                       StringRef TT,
+                                       StringRef CPU,
+                                       StringRef FS,
+                                       const TargetOptions &Options,
+                                       Reloc::Model RM,
+                                       CodeModel::Model CM,
+                                       CodeGenOpt::Level OL) :
   LLVMTargetMachine(T, TT, CPU, FS,Options, RM, CM,OL),
-  Subtarget(TT, CPU, FS, is64bitTarget, *this),
-  //  DLInfo(Subtarget.getDataLayout()),
-  //  InstrInfo(*this),
-  //  TLInfo(*this),
-  IntrinsicInfo(this)
- {
-     initAsmInfo();
-     setAsmVerbosityDefault(true);
+  Subtarget(TT, CPU, FS, *this),
+  IntrinsicInfo(this) {
+  initAsmInfo();
+  setAsmVerbosityDefault(true);
 
-     // FIXME: Hack to enable command line switch to switch between
-     // BRIGAsmPrinter and HSAILAsmPrinter. Override the default registered
-     // AsmPrinter to use the BRIGAsmPrinter.
-     if (!UseStandardAsmPrinter)
-       LLVMInitializeBRIGAsmPrinter();
+  // FIXME: Hack to enable command line switch to switch between
+  // BRIGAsmPrinter and HSAILAsmPrinter. Override the default registered
+  // AsmPrinter to use the BRIGAsmPrinter.
+  if (!UseStandardAsmPrinter)
+    LLVMInitializeBRIGAsmPrinter();
 }
 
 bool HSAILTargetMachine::addPassesToEmitFile(PassManagerBase &PM,
@@ -179,42 +180,49 @@ bool HSAILPassConfig::addPostRegAlloc()
 //===----------------------------------------------------------------------===//
 // HSAIL_32Machine functions
 //===----------------------------------------------------------------------===//
-HSAIL_32TargetMachine::HSAIL_32TargetMachine(const Target &T, StringRef TT,
-    StringRef CPU, StringRef FS,const TargetOptions &Options, Reloc::Model RM, CodeModel::Model CM,CodeGenOpt::Level OL)
-  : HSAILTargetMachine(T, TT, CPU, FS,Options, RM, CM,OL, false /* is64bitTarget */),
-    DLInfo("e-p:32:32-f64:64:64-i64:64:64-f80:32:32-f128:128:128-n32"),
-    TSInfo(*this) {
+HSAIL_32TargetMachine::HSAIL_32TargetMachine(const Target &T,
+                                             StringRef TT,
+                                             StringRef CPU,
+                                             StringRef FS,
+                                             const TargetOptions &Options,
+                                             Reloc::Model RM,
+                                             CodeModel::Model CM,
+                                             CodeGenOpt::Level OL) :
+  HSAILTargetMachine(T, TT, CPU, FS,Options, RM, CM, OL),
+  TSInfo(*this) {
+  Triple TheTriple(TT);
 
-        Triple TheTriple(TT);
-
-        // Check for mismatch in target triple settings and data layout. Note the target
-        // triple comes from the module (unless overridden on command line). It's just a
-        // warning, but users should know if they're specifying --march=hsail-64 on a
-        // 32-bit module or --march=hsail on a 64-bit module.
-        if ( TheTriple.getArch() == Triple::hsail_64 ) {
-          errs() << "warning: target triple '" << TT <<
-              "' does not match target 'hsail', expecting hsail-pc-amdopencl.\n";
-        }
+  // Check for mismatch in target triple settings and data layout. Note the target
+  // triple comes from the module (unless overridden on command line). It's just a
+  // warning, but users should know if they're specifying --march=hsail-64 on a
+  // 32-bit module or --march=hsail on a 64-bit module.
+  if (TheTriple.getArch() == Triple::hsail64) {
+    errs() << "warning: target triple '" << TT <<
+      "' does not match target 'hsail', expecting hsail-pc-amdopencl.\n";
+  }
 }
-
 
 //===----------------------------------------------------------------------===//
 // HSAIL_64Machine functions
 //===----------------------------------------------------------------------===//
-HSAIL_64TargetMachine::HSAIL_64TargetMachine(const Target &T, StringRef TT,
-    StringRef CPU, StringRef FS,const TargetOptions &Options, Reloc::Model RM, CodeModel::Model CM,CodeGenOpt::Level OL)
-  : HSAILTargetMachine(T, TT, CPU, FS,Options, RM, CM,OL, true /* is64bitTarget */),
-    DLInfo("e-p:64:64-s:64-f64:64:64-i64:64:64-f80:128:128-f128:128:128-n32:64"),
-    TSInfo(*this) {
+HSAIL_64TargetMachine::HSAIL_64TargetMachine(const Target &T,
+                                             StringRef TT,
+                                             StringRef CPU,
+                                             StringRef FS,
+                                             const TargetOptions &Options,
+                                             Reloc::Model RM,
+                                             CodeModel::Model CM,
+                                             CodeGenOpt::Level OL) :
+  HSAILTargetMachine(T, TT, CPU, FS,Options, RM, CM, OL),
+  TSInfo(*this) {
+  Triple TheTriple(TT);
 
-        Triple TheTriple(TT);
-
-        // Check for mismatch in target triple settings and data layout. Note the target
-        // triple comes from the module (unless overridden on command line). It's just a
-        // warning, but users should know if they're specifying --march=hsail-64 on a
-        // 32-bit module.
-        if ( TheTriple.getArch() == Triple::hsail ) {
-          errs() << "warning: target triple '" << TT <<
-              "' does not match target 'hsail-64', expecting hsail64-pc-amdopencl.\n";
-        }
+  // Check for mismatch in target triple settings and data layout. Note the target
+  // triple comes from the module (unless overridden on command line). It's just a
+  // warning, but users should know if they're specifying --march=hsail-64 on a
+  // 32-bit module.
+  if (TheTriple.getArch() == Triple::hsail) {
+    errs() << "warning: target triple '" << TT <<
+      "' does not match target 'hsail-64', expecting hsail64-pc-amdopencl.\n";
+  }
 }
