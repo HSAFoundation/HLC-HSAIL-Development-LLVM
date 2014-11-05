@@ -47,15 +47,17 @@
 //
 //==-----------------------------------------------------------------------===//
 #include "HSAILDevice.h"
-#include "HSAILDeviceInfo.h"
 #include "HSAILSubtarget.h"
+
 using namespace llvm;
+
+bool HSAILDevice::is64bit = false;
+
 // Default implementation for all of the classes.
 HSAILDevice::HSAILDevice(HSAILSubtarget *ST) : mSTM(ST)
 {
   mHWBits.resize(HSAILDeviceInfo::MaxNumberCapabilities);
   mSWBits.resize(HSAILDeviceInfo::MaxNumberCapabilities);
-  setCaps();
   mDeviceFlag = OCL_DEVICE_ALL;
 }
 
@@ -65,12 +67,7 @@ HSAILDevice::~HSAILDevice()
     mSWBits.clear();
 }
 
-size_t HSAILDevice::getMaxGDSSize() const
-{
-  return 0;
-}
-
-uint32_t 
+uint32_t
 HSAILDevice::getDeviceFlag() const
 {
   return mDeviceFlag;
@@ -104,18 +101,37 @@ uint32_t HSAILDevice::getStackAlignment() const
   return 16;
 }
 
-void HSAILDevice::setCaps()
-{
-  if (mSTM->isOverride(HSAILDeviceInfo::Debug)) {
-    mSWBits.set(HSAILDeviceInfo::ConstantMem);
-  } else {
-    mHWBits.set(HSAILDeviceInfo::ConstantMem);
-  }
-  if (mSTM->isOverride(HSAILDeviceInfo::Debug)) {
-    mSWBits.set(HSAILDeviceInfo::PrivateMem);
-  } else {
-    mHWBits.set(HSAILDeviceInfo::PrivateMem);
-  }
+uint32_t HSAILDevice::getResourceID(uint32_t id) const {
+  switch(id) {
+  default:
+    assert(0 && "ID type passed in is unknown!");
+    break;
+  case CONSTANT_ID:
+  case RAW_UAV_ID:
+    return DEFAULT_RAW_UAV_ID;
+  case GLOBAL_ID:
+  case ARENA_UAV_ID:
+    return DEFAULT_ARENA_UAV_ID;
+  case LDS_ID:
+    if (usesHardware(HSAILDeviceInfo::LocalMem)) {
+      return DEFAULT_LDS_ID;
+    } else {
+      return DEFAULT_ARENA_UAV_ID;
+    }
+  case GDS_ID:
+    if (usesHardware(HSAILDeviceInfo::RegionMem)) {
+      return DEFAULT_GDS_ID;
+    } else {
+      return DEFAULT_ARENA_UAV_ID;
+    }
+  case SCRATCH_ID:
+    if (usesHardware(HSAILDeviceInfo::PrivateMem)) {
+      return DEFAULT_SCRATCH_ID;
+    } else {
+      return DEFAULT_ARENA_UAV_ID;
+    }
+  };
+  return 0;
 }
 
 HSAILDeviceInfo::ExecutionMode

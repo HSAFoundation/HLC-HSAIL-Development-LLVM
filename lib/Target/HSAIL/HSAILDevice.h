@@ -58,13 +58,48 @@
 #ifndef _HSAILDEVICEIMPL_H_
 #define _HSAILDEVICEIMPL_H_
 #include "HSAIL.h"
-#include "HSAILDeviceInfo.h"
 #include "llvm/CodeGen/AsmPrinter.h"
 #include "llvm/ADT/BitVector.h"
+
 namespace llvm {
   class HSAILSubtarget;
   class HSAILIOExpansion;
   class HSAILPointerManager;
+
+// FIXME: Remove this
+namespace HSAILDeviceInfo
+{
+// Each Capabilities can be executed using a hardware instruction,
+// emulated with a sequence of software instructions, or not
+// supported at all.
+enum ExecutionMode {
+  Unsupported = 0, // Unsupported feature on the card(Default value)
+  Software, // This is the execution mode that is set if the
+  // feature is emulated in software
+  Hardware  // This execution mode is set if the feature exists
+  // natively in hardware
+};
+
+// Any changes to this needs to have a corresponding update to the
+// twiki page GPUMetadataABI
+enum Caps {
+  ConstantMem      = 0x8,  // Constant/CB memory.
+  LocalMem         = 0x9,  // Local/LDS memory.
+  PrivateMem       = 0xA,  // Scratch/Private/Stack memory.
+  RegionMem        = 0xB,  // OCL GDS Memory Extension.
+  // Debug mode implies that no hardware features or optimizations
+  // are performned and that all memory access go through a single
+  // uav(Arena on HD5XXX/HD6XXX and Raw on HD4XXX).
+  Debug            = 0x12, // Debug mode is enabled.
+  // If more capabilities are required, then
+  // this number needs to be increased.
+  // All capabilities must come before this
+  // number.
+  MaxNumberCapabilities = 0x20
+};
+
+} // namespace HSAILDeviceInfo
+
 //===----------------------------------------------------------------------===//
 // Interface for data that is specific to a single device
 //===----------------------------------------------------------------------===//
@@ -85,14 +120,6 @@ public:
     MAX_IDS      = 7
   } IO_TYPE_IDS;
 
-  // Returns the max LDS size that the hardware supports.  Size is in
-  // bytes.
-  virtual size_t getMaxLDSSize() const = 0;
-
-  // Returns the max GDS size that the hardware supports if the GDS is
-  // supported by the hardware.  Size is in bytes.
-  virtual size_t getMaxGDSSize() const;
-
   // Returns the max number of hardware constant address spaces that
   // are supported by this device.
   virtual size_t getMaxNumCBs() const;
@@ -108,29 +135,11 @@ public:
   // Get the flag that corresponds to the device.
   virtual uint32_t getDeviceFlag() const;
 
-  // Returns the number of work-items that exist in a single hardware
-  // wavefront.
-  virtual size_t getWavefrontSize() const = 0;
-
   // Get the stack alignment of this specific device.
   virtual uint32_t getStackAlignment() const;
 
   // Get the resource ID for this specific device.
-  virtual uint32_t getResourceID(uint32_t DeviceID) const = 0;
-
-  // Get the max number of UAV's for this device.
-  virtual uint32_t getMaxNumUAVs() const = 0;
-
-  // Interface to get the IO Expansion pass for each device.
-  virtual FunctionPass*  getIOExpansion(
-    TargetMachine&, CodeGenOpt::Level) const = 0;
-
-  // Interface to get the Asm printer for each device.
-  virtual AsmPrinter* getAsmPrinter(TargetMachine& TM, MCStreamer &Streamer) const = 0;
-
-  // Interface to get the Pointer manager pass for each device.
-  virtual FunctionPass*  getPointerManager(
-    TargetMachine&, CodeGenOpt::Level) const = 0;
+  uint32_t getResourceID(uint32_t DeviceID) const;
 
   // API utilizing more detailed capabilities of each family of
   // cards. If a capability is supported, then either usesHardware or
@@ -151,8 +160,11 @@ public:
   static const unsigned int WavefrontSize = 64;
   static const unsigned int HalfWavefrontSize = 32;
   static const unsigned int QuarterWavefrontSize = 16;
+
+  // FIXME: Remove this.
+  static bool is64bit;
+
 protected:
-  virtual void setCaps();
   llvm::BitVector mHWBits;
   llvm::BitVector mSWBits;
   HSAILSubtarget *mSTM;

@@ -172,7 +172,7 @@ size_t HSAILgetTypeSize(const PointerType *PT, bool dereferencePtr) {
     }
     return size;
   } else {
-    return HSAILDeviceInfo::is64bit?8:4;
+    return HSAILDevice::is64bit ? 8 : 4;
   }
 }
 

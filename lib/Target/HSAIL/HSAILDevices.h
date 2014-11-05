@@ -61,34 +61,12 @@ class HSAILGenericDevice : public HSAILDevice {
 public:
   HSAILGenericDevice(HSAILSubtarget *ST);
   virtual ~HSAILGenericDevice();
-  virtual size_t getMaxLDSSize() const;
-  virtual size_t getMaxGDSSize() const;
-  virtual size_t getWavefrontSize() const;
-  virtual uint32_t getMaxNumUAVs() const;
-  virtual uint32_t getResourceID(uint32_t) const;
-  virtual FunctionPass* getIOExpansion(TargetMachine&, CodeGenOpt::Level) const;
-  virtual AsmPrinter* getAsmPrinter(TargetMachine& TM, MCStreamer &Streamer) const;
-  virtual FunctionPass* getPointerManager(
-    TargetMachine&, CodeGenOpt::Level) const;
-protected:
-  virtual void setCaps();
 }; // HSAILGenericDevice
 
 class HSAILGenericDeviceFlat : public HSAILDevice {
 public:
   HSAILGenericDeviceFlat(HSAILSubtarget *ST);
   virtual ~HSAILGenericDeviceFlat();
-  virtual size_t getMaxLDSSize() const;
-  virtual size_t getMaxGDSSize() const;
-  virtual size_t getWavefrontSize() const;
-  virtual uint32_t getMaxNumUAVs() const;
-  virtual uint32_t getResourceID(uint32_t) const;
-  virtual FunctionPass* getIOExpansion(TargetMachine&, CodeGenOpt::Level) const;
-  virtual AsmPrinter* getAsmPrinter(TargetMachine& TM, MCStreamer &Streamer) const;
-  virtual FunctionPass* getPointerManager(
-    TargetMachine&, CodeGenOpt::Level) const;
-protected:
-  virtual void setCaps();
 }; // HSAILGenericDeviceFlat
 }
 

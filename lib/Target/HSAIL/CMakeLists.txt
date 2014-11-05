@@ -20,7 +20,6 @@ set(sources
 #  BRIGDwarfCompileUnit.cpp
 #  BRIGDwarfDebug.cpp
   HSAILDevice.cpp
-  HSAILDeviceInfo.cpp
   HSAILInstrInfo.cpp
   HSAILIntrinsicInfo.cpp
   HSAILISelDAGToDAG.cpp

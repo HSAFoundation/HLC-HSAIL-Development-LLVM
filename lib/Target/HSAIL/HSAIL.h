@@ -41,8 +41,6 @@
 
 const unsigned int RESERVED_FUNCS = 1024;
 
-#include "HSAILDeviceInfo.h"
-
 namespace llvm {
 
 class FunctionPass;
@@ -144,10 +142,10 @@ createHSAIL_64MCCodeEmitter(const Target &T,
                             TargetMachine &TM,
                             MCContext &Ctx);
 
-MCCodeEmitter* createHSAIL_32MCCodeEmitterForLLVM32(const MCInstrInfo &II, 
+MCCodeEmitter* createHSAIL_32MCCodeEmitterForLLVM32(const MCInstrInfo &II,
 		                 const MCRegisterInfo &MRI,
                                  const MCSubtargetInfo &STI, MCContext &Ctx);
-MCCodeEmitter* createHSAIL_64MCCodeEmitterForLLVM32(const MCInstrInfo &II, 
+MCCodeEmitter* createHSAIL_64MCCodeEmitterForLLVM32(const MCInstrInfo &II,
 		                 const MCRegisterInfo &MRI,
                                  const MCSubtargetInfo &STI, MCContext &Ctx);
 
