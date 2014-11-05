@@ -47,122 +47,17 @@
 //
 //==-----------------------------------------------------------------------===//
 #include "HSAILDevice.h"
-#include "HSAILSubtarget.h"
 
 using namespace llvm;
 
 bool HSAILDevice::is64bit = false;
 
 // Default implementation for all of the classes.
-HSAILDevice::HSAILDevice(HSAILSubtarget *ST) : mSTM(ST)
+HSAILDevice::HSAILDevice(HSAILSubtarget *)
 {
-  mHWBits.resize(HSAILDeviceInfo::MaxNumberCapabilities);
-  mSWBits.resize(HSAILDeviceInfo::MaxNumberCapabilities);
-  mDeviceFlag = OCL_DEVICE_ALL;
 }
 
 HSAILDevice::~HSAILDevice()
 {
-    mHWBits.clear();
-    mSWBits.clear();
-}
-
-uint32_t
-HSAILDevice::getDeviceFlag() const
-{
-  return mDeviceFlag;
-}
-
-size_t HSAILDevice::getMaxNumCBs() const
-{
-  if (usesHardware(HSAILDeviceInfo::ConstantMem)) {
-    return HW_MAX_NUM_CB;
-  }
-
-  return 0;
-}
-
-size_t HSAILDevice::getMaxCBSize() const
-{
-  if (usesHardware(HSAILDeviceInfo::ConstantMem)) {
-    return MAX_CB_SIZE;
-  }
-
-  return 0;
-}
-
-size_t HSAILDevice::getMaxScratchSize() const
-{
-  return 65536;
-}
-
-uint32_t HSAILDevice::getStackAlignment() const
-{
-  return 16;
-}
-
-uint32_t HSAILDevice::getResourceID(uint32_t id) const {
-  switch(id) {
-  default:
-    assert(0 && "ID type passed in is unknown!");
-    break;
-  case CONSTANT_ID:
-  case RAW_UAV_ID:
-    return DEFAULT_RAW_UAV_ID;
-  case GLOBAL_ID:
-  case ARENA_UAV_ID:
-    return DEFAULT_ARENA_UAV_ID;
-  case LDS_ID:
-    if (usesHardware(HSAILDeviceInfo::LocalMem)) {
-      return DEFAULT_LDS_ID;
-    } else {
-      return DEFAULT_ARENA_UAV_ID;
-    }
-  case GDS_ID:
-    if (usesHardware(HSAILDeviceInfo::RegionMem)) {
-      return DEFAULT_GDS_ID;
-    } else {
-      return DEFAULT_ARENA_UAV_ID;
-    }
-  case SCRATCH_ID:
-    if (usesHardware(HSAILDeviceInfo::PrivateMem)) {
-      return DEFAULT_SCRATCH_ID;
-    } else {
-      return DEFAULT_ARENA_UAV_ID;
-    }
-  };
-  return 0;
-}
-
-HSAILDeviceInfo::ExecutionMode
-HSAILDevice::getExecutionMode(HSAILDeviceInfo::Caps Caps) const
-{
-  if (mHWBits[Caps]) {
-    assert(!mSWBits[Caps] && "Cannot set both SW and HW caps");
-    return HSAILDeviceInfo::Hardware;
-  }
-
-  if (mSWBits[Caps]) {
-    assert(!mHWBits[Caps] && "Cannot set both SW and HW caps");
-    return HSAILDeviceInfo::Software;
-  }
-
-  return HSAILDeviceInfo::Unsupported;
-
-}
-
-bool HSAILDevice::isSupported(HSAILDeviceInfo::Caps Mode) const
-{
-  return getExecutionMode(Mode) != HSAILDeviceInfo::Unsupported;
-}
-
-bool HSAILDevice::usesHardware(HSAILDeviceInfo::Caps Mode) const
-{
-  return getExecutionMode(Mode) == HSAILDeviceInfo::Hardware;
-}
-
-bool HSAILDevice::usesSoftware(HSAILDeviceInfo::Caps Mode) const
-{
-  return getExecutionMode(Mode) == HSAILDeviceInfo::Software;
 }
 

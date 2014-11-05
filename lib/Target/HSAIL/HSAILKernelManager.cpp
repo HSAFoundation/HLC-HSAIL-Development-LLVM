@@ -170,7 +170,7 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
     mMFI->uav_insert(ptrID);
     break;
   case HSAILAS::CONSTANT_ADDRESS: {
-    if (isKernel && mSTM->device()->usesHardware(HSAILDeviceInfo::ConstantMem)){
+    if (isKernel){
       const HSAILKernel* t = mAMI->getKernel(F->getName());
       if (mAMI->usesHWConstant(t, Ip->getName())) {
         MemType = /*(isSI) ? "uc\0" :*/ "hc\0";
@@ -183,36 +183,21 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
       MemType = "c\0";
       mMFI->uav_insert(ptrID);
     }
-    break; 
+    break;
   }
   default:
   case HSAILAS::PRIVATE_ADDRESS:
-    if (mSTM->device()->usesHardware(HSAILDeviceInfo::PrivateMem)) {
-      MemType = "hp\0";
-    } else {
-      MemType = "p\0";
-      mMFI->uav_insert(ptrID);
-    }
+    MemType = "hp\0";
     break;
   case HSAILAS::REGION_ADDRESS:
     mMFI->setUsesRegion();
-    if (mSTM->device()->usesHardware(HSAILDeviceInfo::RegionMem)) {
-      MemType = "hr\0";
-      ptrID = 0;
-    } else {
-      MemType = "r\0";
-      mMFI->uav_insert(ptrID);
-    }
+    MemType = "hr\0";
+    ptrID = 0;
     break;
   case HSAILAS::GROUP_ADDRESS:
     mMFI->setUsesLocal();
-    if (mSTM->device()->usesHardware(HSAILDeviceInfo::LocalMem)) {
-      MemType = "hl\0";
-      ptrID = 1;
-    } else {
-      MemType = "l\0";
-      mMFI->uav_insert(ptrID);
-    }
+    MemType = "hl\0";
+    ptrID = 1;
     break;
   };
   ptrArg += std::string(MemType) + ":";
@@ -390,11 +375,7 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
           PointerType *PT = cast<PointerType>(Ip->getType());
           const char *MemType = "uav";
           if (PT->getAddressSpace() == HSAILAS::PRIVATE_ADDRESS) {
-              if (mSTM->device()->usesHardware(HSAILDeviceInfo::PrivateMem)) {
-              MemType = "hp\0";
-              } else {
-               MemType = "p\0";
-              }
+            MemType = "hp\0";
           }
           queueArg += Ip->getName().str() + ":"
             + HSAIL::HSAILgetTypeName(PT, symTab, mMFI, mMFI->isSignedIntType(Ip))
@@ -568,15 +549,12 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
         size_t hwlocal = ((kernel->curHWSize + 3) & (~0x3));
         size_t region = kernel->curRSize;
         size_t hwregion = ((kernel->curHWRSize + 3) & (~0x3));
-        bool usehwlocal = mSTM->device()->usesHardware(HSAILDeviceInfo::LocalMem);
-        bool usehwprivate = mSTM->device()->usesHardware(HSAILDeviceInfo::PrivateMem);
-        bool usehwregion = mSTM->device()->usesHardware(HSAILDeviceInfo::RegionMem);
         // private memory
-        RTI(brig) << "memory:" << ((usehwprivate) ? "hw" : "" ) << "private:" << (((mMFI->getStackSize() + mMFI->getPrivateSize() + 15) & (~0xF)));
+        RTI(brig) << "memory:" << "hwprivate:" << (((mMFI->getStackSize() + mMFI->getPrivateSize() + 15) & (~0xF)));
         // region memory
-        RTI(brig) << "memory:" << ((usehwregion) ? "hw" : "") << "region:" << ((usehwregion) ? hwregion : hwregion + region);
+        RTI(brig) << "memory:" << "hwregion:" << hwregion;
         // local memory
-        RTI(brig) << "memory:" << ((usehwlocal) ? "hw" : "") << "local:" << ((usehwlocal) ? hwlocal : hwlocal + local)+mMFI->getGroupSize();
+        RTI(brig) << "memory:" << "hwlocal:" << hwlocal + mMFI->getGroupSize();
         if (kernel && isKernel && kernel->sgv) {
           if (kernel->sgv->mHasRWG) {
             RTI(brig) << "cws:" << kernel->sgv->reqGroupSize[0] << ":" << kernel->sgv->reqGroupSize[1] << ":" << kernel->sgv->reqGroupSize[2];
@@ -627,7 +605,7 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
       }
     }
     if (isKernel) {
-      RTI(brig) << "privateid:" << mSTM->device()->getResourceID(HSAILDevice::SCRATCH_ID);
+      RTI(brig) << "privateid:" << DEFAULT_SCRATCH_ID;
     }
     // Metadata for the device enqueue.
     if (kernel && isKernel) {
@@ -657,5 +635,5 @@ uint32_t HSAILKernelManager::getUAVID(const Value *value) {
     return mValueIDMap[value];
   }
 
-  return mSTM->device()->getResourceID(HSAILDevice::RAW_UAV_ID);
+  return DEFAULT_RAW_UAV_ID;
 }
