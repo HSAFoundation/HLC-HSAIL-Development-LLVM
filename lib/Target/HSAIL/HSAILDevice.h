@@ -108,64 +108,8 @@ public:
   HSAILDevice(HSAILSubtarget *ST);
   virtual ~HSAILDevice();
 
-  // Enum values for the various memory types.
-  enum {
-    RAW_UAV_ID   = 0,
-    ARENA_UAV_ID = 1,
-    LDS_ID       = 2,
-    GDS_ID       = 3,
-    SCRATCH_ID   = 4,
-    CONSTANT_ID  = 5,
-    GLOBAL_ID    = 6,
-    MAX_IDS      = 7
-  } IO_TYPE_IDS;
-
-  // Returns the max number of hardware constant address spaces that
-  // are supported by this device.
-  virtual size_t getMaxNumCBs() const;
-
-  // Returns the max number of bytes a single hardware constant buffer
-  // can support.  Size is in bytes.
-  virtual size_t getMaxCBSize() const;
-
-  // Returns the max number of bytes allowed by the hardware scratch
-  // buffer.  Size is in bytes.
-  virtual size_t getMaxScratchSize() const;
-
-  // Get the flag that corresponds to the device.
-  virtual uint32_t getDeviceFlag() const;
-
-  // Get the stack alignment of this specific device.
-  virtual uint32_t getStackAlignment() const;
-
-  // Get the resource ID for this specific device.
-  uint32_t getResourceID(uint32_t DeviceID) const;
-
-  // API utilizing more detailed capabilities of each family of
-  // cards. If a capability is supported, then either usesHardware or
-  // usesSoftware returned true.  If usesHardware returned true, then
-  // usesSoftware must return false for the same capability.  Hardware
-  // execution means that the feature is done natively by the hardware
-  // and is not emulated by the softare.  Software execution means
-  // that the feature could be done in the hardware, but there is
-  // software that emulates it with possibly using the hardware for
-  // support since the hardware does not fully comply with OpenCL
-  // specs.
-  bool isSupported(HSAILDeviceInfo::Caps Mode) const;
-  bool usesHardware(HSAILDeviceInfo::Caps Mode) const;
-  bool usesSoftware(HSAILDeviceInfo::Caps Mode) const;
-
   // FIXME: Remove this.
   static bool is64bit;
-
-protected:
-  llvm::BitVector mHWBits;
-  llvm::BitVector mSWBits;
-  HSAILSubtarget *mSTM;
-  uint32_t mDeviceFlag;
-private:
-  HSAILDeviceInfo::ExecutionMode getExecutionMode(
-    HSAILDeviceInfo::Caps Caps) const;
 }; // HSAILDevice
 
 } // namespace llvm
