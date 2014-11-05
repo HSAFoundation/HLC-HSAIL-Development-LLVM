@@ -20,21 +20,6 @@ include "llvm/Target/Target.td"
 // HSAIL Subtarget features.
 //===----------------------------------------------------------------------===//
 
-def Feature64BitPtr : SubtargetFeature<"64BitPtr",
-  "mIs64bit",
-  "false",
-  "Specify if 64bit addressing should be used.">;
-
-def FeatureMetadata30 : SubtargetFeature<"metadata30",
-  "mMetadata30",
-  "true",
-  "Enable generation of version 3.0 of the metadata spec">;
-
-def FeatureDebug : SubtargetFeature<"debug",
-  "CapsOverride[HSAILDeviceInfo::Debug]",
-  "true",
-  "Debug mode is enabled, so disable hardware accelerated address spaces.">;
-  
 //===----------------------------------------------------------------------===//
 // HSAIL processors supported.
 //===----------------------------------------------------------------------===//
@@ -42,7 +27,7 @@ def FeatureDebug : SubtargetFeature<"debug",
 class Proc<string Name, list<SubtargetFeature> Features>
  : Processor<Name, NoItineraries, Features>;
 
-def : Proc<"generic", [FeatureDebug]>;
+def : Proc<"generic", []>;
 
 //===----------------------------------------------------------------------===//
 // Register File Description

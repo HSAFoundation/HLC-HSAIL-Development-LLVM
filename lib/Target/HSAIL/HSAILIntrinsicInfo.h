@@ -14,14 +14,16 @@
 #ifndef _HSAIL_INTRINSIC_INFO_H_
 #define _HSAIL_INTRINSIC_INFO_H_
 
-#include "llvm/Target/TargetIntrinsicInfo.h"
 #include "llvm/IR/Intrinsics.h"
+#include "llvm/Target/TargetIntrinsicInfo.h"
 
 namespace llvm {
 
 class Function;
 class Module;
 class Type;
+
+class HSAILTargetMachine;
 
 namespace HSAILIntrinsic {
   enum ID {

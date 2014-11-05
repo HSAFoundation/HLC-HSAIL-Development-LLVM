@@ -31,81 +31,56 @@
 #include "llvm/ADT/SmallVector.h"
 using namespace llvm;
 
-HSAILSubtarget::HSAILSubtarget(llvm::StringRef TT, llvm::StringRef CPU, llvm::StringRef FS,
-    bool is64bitTarget, HSAILTargetMachine &TM)
-  : HSAILGenSubtargetInfo( TT, CPU, FS ), InstrInfo(*this),
-    FrameLowering(TargetFrameLowering::StackGrowsUp,
-                  getStackAlignment(), 0),
-    TargetTriple(TT)
-{
-  memset(CapsOverride, 0, sizeof(*CapsOverride) *
-         HSAILDeviceInfo::MaxNumberCapabilities);
-  mVersion = 0;
-  mMetadata30 = true;
-  mDefaultSize[0] = 64;
-  mDefaultSize[1] = 1;
-  mDefaultSize[2] = 1;
-  std::string GPU = CPU.str() == "" ? "generic" : CPU.str();
-  mIs64bit = is64bitTarget;
-  ParseSubtargetFeatures(GPU, FS);
-  mDevName = GPU;
+static std::string computeDataLayout(const HSAILSubtarget &ST) {
+  if (ST.is64Bit()) {
+    return "e-p:64:64:64-i1:8:8-i8:8:8-i16:16:16"
+           "-i32:32:32-i64:64:64-f32:32:32-f64:64:64-f80:32:32"
+           "-v16:16:16-v24:32:32-v32:32:32-v48:64:64-v64:64:64"
+           "-v96:128:128-v128:128:128-v192:256:256-v256:256:256"
+           "-v512:512:512-v1024:1024:1024-v2048:2048:2048"
+           "-n32:64";
+  }
+
+  return "e-p:32:32:32-i1:8:8-i8:8:8-i16:16:16"
+         "-i32:32:32-i64:64:64-f32:32:32-f64:64:64-f80:32:32"
+         "-v16:16:16-v24:32:32-v32:32:32-v48:64:64-v64:64:64"
+         "-v96:128:128-v128:128:128-v192:256:256-v256:256:256"
+         "-v512:512:512-v1024:1024:1024-v2048:2048:2048"
+         "-n32:64";
+}
+
+HSAILSubtarget::HSAILSubtarget(StringRef TT, StringRef CPU, StringRef FS,
+                               HSAILTargetMachine &TM) :
+  HSAILGenSubtargetInfo(TT, CPU, FS),
+  TargetTriple(TT),
+  DevName(CPU.empty() ? "generic" : CPU.str()),
+  Is64Bit(TargetTriple.getArch() == Triple::hsail64),
+  DL(computeDataLayout(initializeSubtargetDependencies(DevName, FS))),
+  FrameLowering(TargetFrameLowering::StackGrowsUp, 16, 0),
+  TLInfo(),
+  InstrInfo(),
+  imageHandles(new HSAILImageHandles()),
+  mDevice(nullptr) {
+  HSAILDevice::is64bit = Is64Bit; // FIXME
   mDevice = new HSAILDevice(this); // FIXME: Remove this
 
   // The constructor for TargetLoweringBase calls
   // HSAILSubtarget::getDataLayout(), so we need to initialize
   // HSAILTargetLowering after we have determined the device.
+  InstrInfo.reset(new HSAILInstrInfo(*this));
   TLInfo.reset(new HSAILTargetLowering(TM));
-  HSAILDevice::is64bit = mIs64bit; // FIXME
-  imageHandles = new HSAILImageHandles();
 }
 
-bool
-HSAILSubtarget::isOverride(HSAILDeviceInfo::Caps caps) const
-{
-  assert(caps < HSAILDeviceInfo::MaxNumberCapabilities &&
-      "Caps index is out of bounds!");
-  return CapsOverride[caps];
-}
-
-bool
-HSAILSubtarget::is64Bit() const
-{
-  return mIs64bit;
-}
-
-bool
-HSAILSubtarget::supportMetadata30() const
-{
-  return mMetadata30;
-}
-
-size_t
-HSAILSubtarget::getDefaultSize(uint32_t dim) const
-{
-  if (dim >= 3) {
-    return 1;
-  } else {
-    return mDefaultSize[dim];
-  }
-
-}
-
-std::string
-HSAILSubtarget::getDeviceName() const
-{
-  return mDevName;
-}
-
-const HSAILDevice *
-HSAILSubtarget::device() const
-{
-  return mDevice;
+HSAILSubtarget &HSAILSubtarget::initializeSubtargetDependencies(StringRef GPU,
+                                                                StringRef FS) {
+  ParseSubtargetFeatures(GPU, FS);
+  return *this;
 }
 
 //
 // Support for processing Image and Sampler kernel args and operands.
 //
-unsigned 
+unsigned
 HSAILImageHandles::findOrCreateImageHandle(const char* sym) {
   // Check for image arg with same value already present
   std::string symStr = sym;
@@ -131,7 +106,7 @@ HSAILImageHandles::findOrCreateSamplerHandle(unsigned int u) {
   return HSAILSamplers.size() - 1;
 }
 
-HSAILSamplerHandle* 
+HSAILSamplerHandle*
 HSAILImageHandles::getSamplerHandle(unsigned index) {
   assert(index < HSAILSamplers.size() && "Invalid sampler index");
   return HSAILSamplers[index];
