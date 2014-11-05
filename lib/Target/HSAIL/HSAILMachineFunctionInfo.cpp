@@ -137,13 +137,16 @@ HSAILMachineFunctionInfo::getKernel()
   uint32_t
 HSAILMachineFunctionInfo::getScratchSize()
 {
+  const DataLayout *DL = mMF->getTarget().getSubtargetImpl()->getDataLayout();
+
   if (mScratchSize == -1) {
     mScratchSize = 0;
     Function::const_arg_iterator I = mMF->getFunction()->arg_begin();
     Function::const_arg_iterator Ie = mMF->getFunction()->arg_end();
     while (I != Ie) {
+      // FIXME: Mishandling byval structs
       Type *curType = I->getType();
-      mScratchSize += ((HSAIL::HSAILgetTypeSize(curType) + 15) & ~15);
+      mScratchSize += RoundUpToAlignment(DL->getTypeStoreSize(curType), 16);
       ++I;
     }
     // mScratchSize += ((mScratchSize + 15) & ~15); // possible typo: doubling mScratchSize
@@ -154,6 +157,8 @@ HSAILMachineFunctionInfo::getScratchSize()
 size_t HSAILMachineFunctionInfo::getPrivateSize()
 {
   if (mPrivateMemSize == -1) {
+    const DataLayout *DL = mMF->getTarget().getSubtargetImpl()->getDataLayout();
+
     mPrivateMemSize = 0;
     SmallPtrSet<const GlobalVariable*,16> thisFuncPvtVarsSet;
     for (MachineFunction::const_iterator I = mMF->begin(), E = mMF->end(); I != E; ++I){
@@ -165,7 +170,7 @@ size_t HSAILMachineFunctionInfo::getPrivateSize()
             if (const GlobalVariable *GV =  dyn_cast<GlobalVariable>(MO.getGlobal())){
               if  (GV->getType()->getAddressSpace() == HSAILAS::PRIVATE_ADDRESS){
                 if( thisFuncPvtVarsSet.insert(GV) ){
-                  mPrivateMemSize += HSAIL::HSAILgetTypeSize(GV->getType(),true);
+                  mPrivateMemSize += DL->getTypeAllocSize(GV->getType()->getElementType());
                 }
               }
             }
@@ -181,6 +186,8 @@ size_t HSAILMachineFunctionInfo::getPrivateSize()
 size_t HSAILMachineFunctionInfo::getGroupSize()
 {
   if (mGroupMemSize == -1) {
+    const DataLayout *DL = mMF->getTarget().getSubtargetImpl()->getDataLayout();
+
     mGroupMemSize = 0;
     SmallPtrSet<const GlobalVariable*,16> thisFuncGrpVarsSet;
     for (MachineFunction::const_iterator I = mMF->begin(), E = mMF->end(); I != E; ++I){
@@ -192,7 +199,7 @@ size_t HSAILMachineFunctionInfo::getGroupSize()
             if (const GlobalVariable *GV =  dyn_cast<GlobalVariable>(MO.getGlobal())){
               if  (GV->getType()->getAddressSpace() == HSAILAS::GROUP_ADDRESS){
                 if( thisFuncGrpVarsSet.insert(GV) ){
-                  mGroupMemSize += HSAIL::HSAILgetTypeSize(GV->getType(),true);
+                  mGroupMemSize += DL->getTypeAllocSize(GV->getType()->getElementType());
                 }
               }
             }

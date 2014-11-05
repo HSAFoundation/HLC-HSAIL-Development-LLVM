@@ -83,16 +83,6 @@ class DebugLoc;
 
 namespace HSAIL {
 
-// Group of functions that recursively calculate the size of a structure based
-// on it's sub-types.
-size_t HSAILgetTypeSize(const llvm::Type *T, bool dereferencePtr = false);
-size_t HSAILgetTypeSize(const llvm::StructType *ST, bool dereferencePtr = false);
-size_t HSAILgetTypeSize(const llvm::IntegerType *IT, bool dereferencePtr = false);
-size_t HSAILgetTypeSize(const llvm::FunctionType *FT, bool dereferencePtr = false);
-size_t HSAILgetTypeSize(const llvm::ArrayType *AT, bool dereferencePtr = false);
-size_t HSAILgetTypeSize(const llvm::VectorType *VT, bool dereferencePtr = false);
-size_t HSAILgetTypeSize(const llvm::PointerType *PT, bool dereferencePtr = false);
-
 // Group of functions that recursively calculate the number of elements of a
 // structure based on it's sub-types.
 size_t HSAILgetNumElements(llvm::Type * const T);
