@@ -153,8 +153,15 @@ unsigned HSAILParamManager::getParamByOffset(unsigned &Offset) const {
 /// returns a unique argument name for flattened vector component.
 std::string HSAILParamManager::mangleArg(Mangler *Mang,
                                          const StringRef argName) {
-  if (argName.empty()) return argName;
-  SmallString<256> NameStr;
-  Mang->getNameWithPrefix(NameStr, argName);
-  return NameStr.str();
+  if (argName.empty())
+    return "";
+
+  std::string NameStrStorage;
+
+  {
+    raw_string_ostream NameStr(NameStrStorage);
+    Mang->getNameWithPrefix(NameStr, argName);
+  }
+
+  return std::move(NameStrStorage);
 }
