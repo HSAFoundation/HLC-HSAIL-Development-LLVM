@@ -722,23 +722,29 @@ void BRIGAsmPrinter::emitMacroFunc(const MachineInstr *MI, raw_ostream &O) {
 }
 
 void BRIGAsmPrinter::EmitBasicBlockStart(const MachineBasicBlock &MBB) {
-  std::ostringstream o;
-  bool insert_spaces=false;
+  std::string StrStorage;
+  raw_string_ostream o(StrStorage);
+  bool insert_spaces = false;
 
   if (MBB.pred_empty() || isBlockOnlyReachableByFallthrough(&MBB)) {
     o << "// BB#" << MBB.getNumber() << ":";
-    insert_spaces=true;
+    insert_spaces = true;
   } else {
     StringRef name = MBB.getSymbol()->getName();
     brigantine.addLabel(HSAIL_ASM::SRef(name.begin(), name.end()));
   }
-  if (const BasicBlock *BB = MBB.getBasicBlock())
-    if  (BB->hasName())
-      o << ( insert_spaces ? "                                ":"")
-        <<"// %" << BB->getName();
-  if (o.str().length()) {
-    brigantine.addComment(o.str().c_str());
+
+  if (const BasicBlock *BB = MBB.getBasicBlock()) {
+    if (BB->hasName()) {
+      if (insert_spaces)
+        o << "                                ";
+      o << "// %" << BB->getName();
+    }
   }
+
+  const std::string &Str = o.str();
+  if (!Str.empty())
+    brigantine.addComment(Str.c_str());
 
   AsmPrinter::EmitBasicBlockStart(MBB);
 }
@@ -1454,15 +1460,20 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
 uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
                                               const StringRef argName,
                                               bool isSExt) {
-  std::ostringstream stream;
-  if (argName.empty()) {
-    stream << "%arg_p" << paramCounter;
-  } else {
-    stream << "%" << HSAILParamManager::mangleArg(Mang, argName);
+  std::string name;
+  {
+    raw_string_ostream stream(name);
+
+    if (argName.empty()) {
+      stream << "%arg_p" << paramCounter;
+    } else {
+      std::string Str = HSAILParamManager::mangleArg(Mang, argName);
+      stream << '%' << Str;
+    }
   }
+
   paramCounter++;
 
-  std::string const name = stream.str();
   const Brig::BrigSegment8_t symSegment = isKernel ? Brig::BRIG_SEGMENT_KERNARG
                                                    : Brig::BRIG_SEGMENT_ARG;
 
@@ -1520,14 +1531,19 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
   bool isKernel = HSAIL::isKernelFunc(F);
   const HSAILParamManager &PM = MF->getInfo<HSAILMachineFunctionInfo>()->
         getParamManager();
-  std::stringstream ss;
-  ss << "&" << F->getName();
-  HSAIL_ASM::DirectiveExecutable fx;
-  if (isKernel) {
-    fx = brigantine.declKernel(ss.str());
-  } else {
-    fx = brigantine.declFunc(ss.str());
+
+  std::string NameWithPrefix;
+
+  {
+    raw_string_ostream ss(NameWithPrefix);
+    ss << '&' << F->getName();
   }
+
+  HSAIL_ASM::DirectiveExecutable fx;
+  if (isKernel)
+    fx = brigantine.declKernel(NameWithPrefix);
+  else
+    fx = brigantine.declFunc(NameWithPrefix);
 
   fx.linkage() = F->isExternalLinkage(F->getLinkage()) ?
     Brig::BRIG_LINKAGE_PROGRAM :
