@@ -180,28 +180,28 @@ multiclass HSAIL_LD<RegisterClass RC, DAGOperand MPtr>
   let isLoad = 1, mayLoad = 1, hasSideEffects = 0 in {
     def _v1: HSAILInst<(outs RC:$dest),
                        (ins MPtr:$address, BrigTypeX:$TypeLength, BrigWidth:$width,
-                            BrigMemoryModifierMask:$m),
-                      "ld$width$m$TypeLength\t$dest, $address", []>,
+                            BrigMemoryModifierMask:$mask),
+                      "ld$width$mask$TypeLength\t$dest, $address", []>,
              LdStVectorMap<NAME, 1>;
 
     def _v2 : HSAILInst<(outs RC:$dest0, RC:$dest1),
                         (ins MPtr:$address, BrigTypeX:$TypeLength, BrigWidth:$width,
-                             BrigMemoryModifierMask:$m),
-                         "ld_v2$width$m$TypeLength\t($dest0, $dest1 ), $address", []>,
+                             BrigMemoryModifierMask:$mask),
+                         "ld_v2$width$mask$TypeLength\t($dest0, $dest1 ), $address", []>,
              LdStVectorMap<NAME, 2>;
 
 
     def _v3 : HSAILInst<(outs RC:$dest0, RC:$dest1, RC:$dest2),
                         (ins MPtr:$address, BrigTypeX:$TypeLength, BrigWidth:$width,
-                             BrigMemoryModifierMask:$m),
-                         "ld_v3$width$m$TypeLength\t($dest0, $dest1, $dest2 ), $address", []>,
+                             BrigMemoryModifierMask:$mask),
+                         "ld_v3$width$mask$TypeLength\t($dest0, $dest1, $dest2 ), $address", []>,
               LdStVectorMap<NAME, 3>;
 
 
     def _v4 : HSAILInst<(outs RC:$dest0, RC:$dest1, RC:$dest2, RC:$dest3),
                         (ins MPtr:$address, BrigTypeX:$TypeLength, BrigWidth:$width,
-                             BrigMemoryModifierMask:$m),
-                         "ld_v4$width$m$TypeLength\t($dest0, $dest1, $dest2, $dest3 ), $address", []>,
+                             BrigMemoryModifierMask:$mask),
+                         "ld_v4$width$mask$TypeLength\t($dest0, $dest1, $dest2, $dest3 ), $address", []>,
               LdStVectorMap<NAME, 4>;
 
   }
@@ -251,8 +251,8 @@ let hasSideEffects = 1, hasCtrlDep = 1 in {
 
 let mayLoad = 1, isPseudo = 1, hasSideEffects = 0 in {
   def ld_b1_ptr32 : HSAILInst<(outs CR:$dest), (ins MEMOP32:$address, BrigTypeX:$TypeLength,
-                               BrigWidth:$width, BrigMemoryModifierMask:$m),
-                              "ld_b1$width$m$TypeLength\t$dest, $address", []>;
+                               BrigWidth:$width, BrigMemoryModifierMask:$mask),
+                              "ld_b1$width$mask$TypeLength\t$dest, $address", []>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
