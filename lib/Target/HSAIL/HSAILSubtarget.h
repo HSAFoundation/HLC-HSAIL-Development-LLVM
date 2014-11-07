@@ -18,35 +18,21 @@
 #include "HSAILFrameLowering.h"
 #include "HSAILInstrInfo.h"
 #include "HSAILISelLowering.h"
-#include "llvm/ADT/Triple.h"
-#include "llvm/Target/TargetSubtargetInfo.h"
-#include "llvm/IR/CallingConv.h"
+
+#include "llvm/ADT/SmallVector.h"
 #include "llvm/IR/DataLayout.h"
+#include "llvm/Target/TargetSubtargetInfo.h"
+
 #define GET_SUBTARGETINFO_HEADER
 #include "HSAILGenSubtargetInfo.inc"
 
-#include <string>
-#include <cstdio>
-#include "llvm/ADT/SmallVector.h"
-#define MAX_CB_SIZE (1 << 16)
-
 namespace llvm {
-class GlobalValue;
 class HSAILTargetMachine;
-class TargetMachine;
-
-/// PICStyles - The X86 backend supports a number of different styles of PIC.
-namespace PICStyles {
-  enum Style {
-    None              // Set when in -static mode (not PIC or DynamicNoPIC mode).
-  };
-}
 
 class HSAILSamplerHandle {
 private:
   std::string   mSym;
   unsigned int  mVal;
-  //bool          mGlobal;
   bool          mIsRO;
   bool          mEmitted;
 
@@ -54,7 +40,6 @@ public:
   HSAILSamplerHandle(HSAILSamplerHandle &copy) {
     mSym = copy.mSym;
     mVal = copy.mVal;
-    //mGlobal = copy.mGlobal;
     mIsRO = copy.mIsRO;
     mEmitted = copy.mEmitted;
   }
@@ -62,14 +47,12 @@ public:
   HSAILSamplerHandle(/*bool isImage, */const char* sym) {
     mSym = sym;
     mVal = 0;
-    //mGlobal = false;
     mIsRO = false;
     mEmitted = false;
   }
 
   HSAILSamplerHandle(/*bool isImage, */unsigned int u) {
     mVal = u;
-    //mGlobal = false;
     mIsRO = false;
     mEmitted = false;
 }
@@ -77,19 +60,10 @@ public:
   inline void setSym(std::string str) { mSym = str; }
   inline std::string getSym() { return mSym; }
   inline unsigned int getVal() { return mVal; }
-  //inline bool isGlobal()  { return mGlobal; }
-  //inline void setGlobal() { mGlobal = true; }
   inline bool isRO() { return mIsRO; }
   inline void setRO() { mIsRO = true; }
   inline bool isEmitted() { return mEmitted; }
   inline void setEmitted() { mEmitted = true; }
-
-  inline void dump() { 
-    //printf("mSym: %s, mVal: %d, mGlobal: %d, mEmitted: %d", 
-      //mSym.c_str(), mVal, mGlobal, mEmitted); 
-    printf("mSym: %s, mVal: %u, RO: %d, mEmitted: %d",
-           mSym.c_str(), mVal, mIsRO, mEmitted);
-  }
 };
 
 class HSAILImageHandles {
@@ -103,7 +77,7 @@ private:
 public:
   HSAILImageHandles() {index = 0;}
   // TODO_HSA Add a destructor
-  
+
   SmallVector<HSAILSamplerHandle*, 16> getSamplerHandles() { return HSAILSamplers; }
   HSAILSamplerHandle* getSamplerHandle(unsigned index);
 
@@ -118,8 +92,6 @@ public:
 
   void finalize();
   void clearImageArgs();
-
-  void dump();
 };
 
 class HSAILKernelManager;

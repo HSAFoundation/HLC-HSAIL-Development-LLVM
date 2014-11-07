@@ -147,28 +147,9 @@ HSAILImageHandles::finalize() {
       index++;
     }
   }
-  //printf("ImageHandles after finalize\n");
-  //dump();
 }
 
 void
 HSAILImageHandles::clearImageArgs() {
   HSAILImageArgs.clear();
 }
-
-void
-HSAILImageHandles::dump() {
-  printf("Image args: ");
-  for (unsigned i = 0; i < HSAILImageArgs.size(); i++) {
-    printf("[%u] %s ", i, HSAILImageArgs[i].c_str());
-  }
-  printf("\n");
-  printf("Samplers:\n");
-  for (unsigned i = 0; i < HSAILSamplers.size(); i++) {
-    printf("[%u] ", i);
-    HSAILSamplers[i]->dump();
-    printf("\n");
-  }
-  printf("\n");
-}
-
