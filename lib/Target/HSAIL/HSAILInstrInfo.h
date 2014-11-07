@@ -824,6 +824,15 @@ public:
   bool
   expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const;
 
+  /// \brief Returns the operand named \p Op.  If \p MI does not have an
+  /// operand named \c Op, this function returns nullptr.
+  MachineOperand *getNamedOperand(MachineInstr &MI, unsigned OperandName) const;
+
+  const MachineOperand *getNamedOperand(const MachineInstr &MI,
+                                        unsigned OpName) const {
+    return getNamedOperand(const_cast<MachineInstr &>(MI), OpName);
+  }
+
 private:
   RegScavenger *RS;
 
