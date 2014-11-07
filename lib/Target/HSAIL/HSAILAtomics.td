@@ -59,14 +59,14 @@ def gcn_atomic_consume : AtomicCounter32<int_HSAIL_gcn_atomic_consume_u32,
 multiclass AtomicMaybeRet<dag OutList, dag InList, bit isPtr32, string args> {
   let hasPostISelHook = 1 in {
     def NAME#_ret   : HSAILInst<OutList, InList,
-                               "atomic_$op$segment$order$scope$ty $dest, [$address], "#args, []>,
+                               "atomic_$op$segment$order$scope$TypeLength $dest, [$address], "#args, []>,
                       AtomicRetMap<NAME, 1>,
                       AtomicPtr32Map<!subst("_ptr32", "", NAME#_ret), isPtr32>;
   }
 
 
   def NAME#_noret : HSAILInst<(outs), InList,
-                             "atomic_$op$segment$order$scope$ty [$address], "#args, []>,
+                             "atomic_$op$segment$order$scope$TypeLength [$address], "#args, []>,
                     AtomicRetMap<NAME, 0>,
                     AtomicPtr32Map<!subst("_ptr32", "", NAME#_noret), isPtr32>;
 }
@@ -75,34 +75,34 @@ let isAtomic = 1 in {
   multiclass AtomicRRInst<dag OutList, RegisterClass inRC, Operand immTy, Operand MemTy, bit isPtr32> {
     def NAME#_unary : HSAILInst<OutList,
       (ins i32imm:$op, i32imm:$segment, i32imm:$order, i32imm:$scope,
-           i32imm:$ty, MemTy:$address),
-       "atomic_$op$segment$order$scope$ty $dest, [$address]", []>,
+           i32imm:$TypeLength, MemTy:$address),
+       "atomic_$op$segment$order$scope$TypeLength $dest, [$address]", []>,
        AtomicPtr32Map<!subst("_ptr32", "", NAME#_unary), isPtr32>;
 
 
     defm NAME#_binary_i   : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$segment, i32imm:$order, i32imm:$scope,
-                                           i32imm:$ty, MemTy:$address, immTy:$src0),
+                                           i32imm:$TypeLength, MemTy:$address, immTy:$src0),
                                       isPtr32, "$src0">;
     defm NAME#_binary_r   : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$segment, i32imm:$order, i32imm:$scope,
-                                           i32imm:$ty, MemTy:$address, inRC:$src0),
+                                           i32imm:$TypeLength, MemTy:$address, inRC:$src0),
                                       isPtr32, "$src0">;
     defm NAME#_ternary_ii : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$segment, i32imm:$order, i32imm:$scope,
-                                           i32imm:$ty, MemTy:$address, immTy:$src0, immTy:$src1),
+                                           i32imm:$TypeLength, MemTy:$address, immTy:$src0, immTy:$src1),
                                       isPtr32, "$src0, $src1">;
     defm NAME#_ternary_ir : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$segment, i32imm:$order, i32imm:$scope,
-                                           i32imm:$ty, MemTy:$address, immTy:$src0, inRC:$src1),
+                                           i32imm:$TypeLength, MemTy:$address, immTy:$src0, inRC:$src1),
                                       isPtr32, "$src0, $src1">;
     defm NAME#_ternary_ri : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$segment, i32imm:$order, i32imm:$scope,
-                                           i32imm:$ty, MemTy:$address, inRC:$src0, immTy:$src1),
+                                           i32imm:$TypeLength, MemTy:$address, inRC:$src0, immTy:$src1),
                                       isPtr32, "$src0, $src1">;
     defm NAME#_ternary_rr : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$segment, i32imm:$order, i32imm:$scope,
-                                           i32imm:$ty, MemTy:$address, inRC:$src0, inRC:$src1),
+                                           i32imm:$TypeLength, MemTy:$address, inRC:$src0, inRC:$src1),
                                       isPtr32, "$src0, $src1">;
   }
 }

@@ -179,29 +179,29 @@ multiclass HSAIL_LD<RegisterClass RC, DAGOperand MPtr>
 {
   let isLoad = 1, mayLoad = 1, hasSideEffects = 0 in {
     def _v1: HSAILInst<(outs RC:$dest),
-                       (ins MPtr:$address, BrigTypeX:$t, BrigWidth:$width,
+                       (ins MPtr:$address, BrigTypeX:$TypeLength, BrigWidth:$width,
                             BrigMemoryModifierMask:$m),
-                      "ld$width$m$t\t$dest, $address", []>,
+                      "ld$width$m$TypeLength\t$dest, $address", []>,
              LdStVectorMap<NAME, 1>;
 
     def _v2 : HSAILInst<(outs RC:$dest0, RC:$dest1),
-                        (ins MPtr:$address, BrigTypeX:$t, BrigWidth:$width,
+                        (ins MPtr:$address, BrigTypeX:$TypeLength, BrigWidth:$width,
                              BrigMemoryModifierMask:$m),
-                         "ld_v2$width$m$t\t($dest0, $dest1 ), $address", []>,
+                         "ld_v2$width$m$TypeLength\t($dest0, $dest1 ), $address", []>,
              LdStVectorMap<NAME, 2>;
 
 
     def _v3 : HSAILInst<(outs RC:$dest0, RC:$dest1, RC:$dest2),
-                        (ins MPtr:$address, BrigTypeX:$t, BrigWidth:$width,
+                        (ins MPtr:$address, BrigTypeX:$TypeLength, BrigWidth:$width,
                              BrigMemoryModifierMask:$m),
-                         "ld_v3$width$m$t\t($dest0, $dest1, $dest2 ), $address", []>,
+                         "ld_v3$width$m$TypeLength\t($dest0, $dest1, $dest2 ), $address", []>,
               LdStVectorMap<NAME, 3>;
 
 
     def _v4 : HSAILInst<(outs RC:$dest0, RC:$dest1, RC:$dest2, RC:$dest3),
-                        (ins MPtr:$address, BrigTypeX:$t, BrigWidth:$width,
+                        (ins MPtr:$address, BrigTypeX:$TypeLength, BrigWidth:$width,
                              BrigMemoryModifierMask:$m),
-                         "ld_v4$width$m$t\t($dest0, $dest1, $dest2, $dest3 ), $address", []>,
+                         "ld_v4$width$m$TypeLength\t($dest0, $dest1, $dest2, $dest3 ), $address", []>,
               LdStVectorMap<NAME, 4>;
 
   }
@@ -250,9 +250,9 @@ let hasSideEffects = 1, hasCtrlDep = 1 in {
 }
 
 let mayLoad = 1, isPseudo = 1, hasSideEffects = 0 in {
-  def ld_b1_ptr32 : HSAILInst<(outs CR:$dest), (ins MEMOP32:$address, BrigTypeX:$t,
+  def ld_b1_ptr32 : HSAILInst<(outs CR:$dest), (ins MEMOP32:$address, BrigTypeX:$TypeLength,
                                BrigWidth:$width, BrigMemoryModifierMask:$m),
-                              "ld_b1$width$m$t\t$dest, $address", []>;
+                              "ld_b1$width$m$TypeLength\t$dest, $address", []>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -262,23 +262,23 @@ multiclass HSAIL_ST<RegisterClass RC, DAGOperand MPtr>
 {
   let isStore = 1, mayStore = 1, hasSideEffects = 0 in {
     def _v1 : HSAILInst<(outs), (ins RC:$src,
-                                     MPtr:$address, BrigTypeX:$t),
-                        "st$t\t$src, $address", []>,
+                                     MPtr:$address, BrigTypeX:$TypeLength),
+                        "st$TypeLength\t$src, $address", []>,
               LdStVectorMap<NAME, 1>;
 
     def _v2 : HSAILInst<(outs), (ins RC:$src0, RC:$src1,
-                                     MPtr:$address, BrigTypeX:$t),
-                        "st_v2$t\t($src0, $src1 ), $address", []>,
+                                     MPtr:$address, BrigTypeX:$TypeLength),
+                        "st_v2$TypeLength\t($src0, $src1 ), $address", []>,
               LdStVectorMap<NAME, 2>;
 
     def _v3 : HSAILInst<(outs), (ins RC:$src0, RC:$src1, RC:$src2,
-                                     MPtr:$address, BrigTypeX:$t),
-                        "st_v3$t\t($src0, $src1, $src2 ), $address", []>,
+                                     MPtr:$address, BrigTypeX:$TypeLength),
+                        "st_v3$TypeLength\t($src0, $src1, $src2 ), $address", []>,
               LdStVectorMap<NAME, 3>;
 
     def _v4 : HSAILInst<(outs), (ins RC:$src0, RC:$src1, RC:$src2, RC:$src3,
-                                     MPtr:$address, BrigTypeX:$t),
-                        "st_v4$t\t($src0, $src1, $src2, $src3 ), $address", []>,
+                                     MPtr:$address, BrigTypeX:$TypeLength),
+                        "st_v4$TypeLength\t($src0, $src1, $src2, $src3 ), $address", []>,
               LdStVectorMap<NAME, 4>;
   }
 }
@@ -322,8 +322,8 @@ def : Pat<(StoreIsPtr32<truncstorei16> (i32 imm:$src0),   ADDR:$address), (st_32
 def : Pat<(StoreIsPtr32<store>         (i64 imm:$src0),   ADDR:$address), (st_64_ptr32_v1 imm:$src0,   ADDR:$address, BrigTypeX.U64)>;
 
 let mayStore = 1, isPseudo = 1, hasSideEffects = 0 in {
-  def st_b1_ptr32 : HSAILInst<(outs), (ins CR:$src0, MEMOP32:$address, BrigTypeX:$t),
-                              "st_b1$t\t$src0, $address", []>;
+  def st_b1_ptr32 : HSAILInst<(outs), (ins CR:$src0, MEMOP32:$address, BrigTypeX:$TypeLength),
+                              "st_b1$TypeLength\t$src0, $address", []>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
