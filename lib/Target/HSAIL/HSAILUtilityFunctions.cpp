@@ -233,11 +233,11 @@ const llvm::MachineOperand &getOffset(const llvm::MachineInstr *MI)
   return getOffset(const_cast<MachineInstr*>(MI));
 }
 
-llvm::MachineOperand &getBrigType(llvm::MachineInstr *MI)
-{
-  assert(hasAddress(MI) && (MI->mayLoad() || MI->mayStore()) &&
-         MI->getNumOperands() > HSAILADDRESS::ADDRESS_NUM_OPS);
-  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS);
+// FIXME: Remove this
+llvm::MachineOperand &getBrigType(llvm::MachineInstr *MI) {
+  int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::TypeLength);
+  assert(Idx != -1);
+  return MI->getOperand(Idx);
 }
 
 const llvm::MachineOperand &getBrigType(const llvm::MachineInstr *MI)
@@ -245,11 +245,11 @@ const llvm::MachineOperand &getBrigType(const llvm::MachineInstr *MI)
   return getBrigType(const_cast<llvm::MachineInstr*>(MI));
 }
 
-llvm::MachineOperand &getWidth(llvm::MachineInstr *MI)
-{
-  assert(hasAddress(MI) && MI->mayLoad() &&
-         MI->getNumOperands() > HSAILADDRESS::ADDRESS_NUM_OPS + 1);
-  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS + 1);
+// FIXME: Remove this
+llvm::MachineOperand &getWidth(llvm::MachineInstr *MI) {
+  int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::width);
+  assert(Idx != -1);
+  return MI->getOperand(Idx);
 }
 
 const llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI)
