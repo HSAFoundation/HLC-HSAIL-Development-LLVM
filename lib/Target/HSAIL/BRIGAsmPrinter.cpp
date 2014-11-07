@@ -243,7 +243,7 @@ void StoreInitializer::initVarWithAddress(const Value *V, const std::string Var,
   initstr << "initvarwithaddress:" << Var << ":" << dataSizeInBytes() <<
     ":" << HSAIL_ASM::getBrigTypeNumBytes(m_type) << ":" <<
     BRIGAsmPrinter::getSymbolPrefix(*dyn_cast<GlobalVariable>(V)) <<
-    V->getName().data() << ":" << Offset.toString(10, false);
+    V->getName() << ':' << Offset.toString(10, false);
   HSAIL_ASM::DirectivePragma pgm = m_asmPrinter.brigantine.append<HSAIL_ASM::DirectivePragma>();
   HSAIL_ASM::ItemList opnds;
   opnds.push_back(m_asmPrinter.brigantine.createOperandString(initstr.str()));
