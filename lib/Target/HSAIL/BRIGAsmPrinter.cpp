@@ -417,6 +417,7 @@ BRIGAsmPrinter::BRIGAsmPrinter(TargetMachine& TM, MCStreamer &Streamer)
   reg32Counter = 0;
   reg64Counter = 0;
   mTM = reinterpret_cast<HSAILTargetMachine*>(&TM);
+  TII = mTM->getSubtarget<HSAILSubtarget>().getInstrInfo();
   mMeta = new HSAILKernelManager(mTM);
   mMFI = NULL;
   mBuffer = 0;
