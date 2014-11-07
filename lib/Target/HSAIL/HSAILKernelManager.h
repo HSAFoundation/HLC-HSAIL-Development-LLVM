@@ -56,7 +56,6 @@
 #ifndef _HSAILKERNELMANAGER_H_
 #define _HSAILKERNELMANAGER_H_
 #include "HSAIL.h"
-#include "HSAILDevice.h"
 #include "llvm/ADT/DenseSet.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/SmallVector.h"

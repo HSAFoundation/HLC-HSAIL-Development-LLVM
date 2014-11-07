@@ -54,7 +54,6 @@
 #ifndef _HSAILMACHINEFUNCTIONINFO_H_
 #define _HSAILMACHINEFUNCTIONINFO_H_
 #include "HSAIL.h"
-#include "HSAILDevice.h"
 #include "HSAILKernel.h"
 #include "HSAILParamManager.h"
 #include "llvm/CodeGen/MachineFunction.h"

@@ -51,7 +51,6 @@
 #include "HSAILKernelManager.h"
 #include "AMDOpenCLKernenv.h"
 #include "HSAILAlgorithms.tpp"
-#include "HSAILDevices.h"
 #include "HSAILCompilerErrors.h"
 #include "HSAILKernel.h"
 #include "HSAILMachineFunctionInfo.h"

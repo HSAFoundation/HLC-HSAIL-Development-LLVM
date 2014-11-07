@@ -15,7 +15,6 @@
 #define _HSAIL_SUBTARGET_H_
 
 #include "HSAIL.h"
-#include "HSAILDevice.h"
 #include "HSAILFrameLowering.h"
 #include "HSAILInstrInfo.h"
 #include "HSAILISelLowering.h"
@@ -124,7 +123,6 @@ public:
 };
 
 class HSAILKernelManager;
-class HSAILDevice;
 
 class HSAILSubtarget : public HSAILGenSubtargetInfo {
 protected:
@@ -138,9 +136,6 @@ protected:
 
   // FIXME: It makes no sense for this to be here.
   HSAILImageHandles *imageHandles;
-
-  // FIXME: This should be merged to here
-  const HSAILDevice *mDevice;
 
 public:
 
@@ -170,7 +165,6 @@ public:
 
   void ParseSubtargetFeatures(StringRef CPU, StringRef FS);
 
-  bool isOverride(HSAILDeviceInfo::Caps) const;
   bool is64Bit() const {
     return Is64Bit;
   }
@@ -178,11 +172,6 @@ public:
   // FIXME: Remove this
   bool supportMetadata30() const {
     return true;
-  }
-
-  // FIXME: Remove this
-  const HSAILDevice* device() const {
-    return mDevice;
   }
 
   const DataLayout *getDataLayout() const override {
