@@ -257,11 +257,11 @@ const llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI)
   return getWidth(const_cast<llvm::MachineInstr*>(MI));
 }
 
-llvm::MachineOperand &getLoadModifierMask(llvm::MachineInstr *MI)
-{
-  assert(hasAddress(MI) && MI->mayLoad() &&
-         MI->getNumOperands() > HSAILADDRESS::ADDRESS_NUM_OPS + 2);
-  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::ADDRESS_NUM_OPS + 2);
+// FIXME: Remove this
+llvm::MachineOperand &getLoadModifierMask(llvm::MachineInstr *MI) {
+  int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::mask);
+  assert(Idx != -1);
+  return MI->getOperand(Idx);
 }
 
 const llvm::MachineOperand &getLoadModifierMask(const llvm::MachineInstr *MI)
