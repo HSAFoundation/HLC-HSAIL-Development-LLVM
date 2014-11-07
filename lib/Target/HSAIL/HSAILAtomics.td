@@ -37,12 +37,12 @@ class AtomicCounter32<Intrinsic intr, string asm>:
 {
 }
 
-let hasAddress = 1, addressOpNum = 1 in {
-  def gcn_atomic_append : AtomicCounter32<int_HSAIL_gcn_atomic_append_u32,
-      "gcn_atomic_append_u32">;
-  def gcn_atomic_consume : AtomicCounter32<int_HSAIL_gcn_atomic_consume_u32,
-      "gcn_atomic_consume_u32">;
-}
+
+def gcn_atomic_append : AtomicCounter32<int_HSAIL_gcn_atomic_append_u32,
+  "gcn_atomic_append_u32">;
+def gcn_atomic_consume : AtomicCounter32<int_HSAIL_gcn_atomic_consume_u32,
+  "gcn_atomic_consume_u32">;
+
 
 /// Declare atomic opcodes, but don't match. All atomic instructions
 /// are custom-lowered in ISelDAGToDAG.
@@ -57,30 +57,28 @@ let hasAddress = 1, addressOpNum = 1 in {
 /// this format is changed.
 
 multiclass AtomicMaybeRet<dag OutList, dag InList, bit isPtr32, string args> {
-  let addressOpNum = 6, hasPostISelHook = 1 in {
+  let hasPostISelHook = 1 in {
     def NAME#_ret   : HSAILInst<OutList, InList,
                                "atomic_$op$segment$order$scope$ty $dest, [$address], "#args, []>,
                       AtomicRetMap<NAME, 1>,
                       AtomicPtr32Map<!subst("_ptr32", "", NAME#_ret), isPtr32>;
   }
 
-  let addressOpNum = 5 in {
-    def NAME#_noret : HSAILInst<(outs), InList,
-                               "atomic_$op$segment$order$scope$ty [$address], "#args, []>,
-                      AtomicRetMap<NAME, 0>,
-                      AtomicPtr32Map<!subst("_ptr32", "", NAME#_noret), isPtr32>;
-  }
+
+  def NAME#_noret : HSAILInst<(outs), InList,
+                             "atomic_$op$segment$order$scope$ty [$address], "#args, []>,
+                    AtomicRetMap<NAME, 0>,
+                    AtomicPtr32Map<!subst("_ptr32", "", NAME#_noret), isPtr32>;
 }
 
-let hasAddress = 1, isAtomic = 1 in {
+let isAtomic = 1 in {
   multiclass AtomicRRInst<dag OutList, RegisterClass inRC, Operand immTy, Operand MemTy, bit isPtr32> {
-    let addressOpNum = 6 in {
-      def NAME#_unary     :      HSAILInst<OutList,
-                                      (ins i32imm:$op, i32imm:$segment, i32imm:$order, i32imm:$scope,
-                                           i32imm:$ty, MemTy:$address),
-                                      "atomic_$op$segment$order$scope$ty $dest, [$address]", []>,
-                                 AtomicPtr32Map<!subst("_ptr32", "", NAME#_unary), isPtr32>;
-    }
+    def NAME#_unary : HSAILInst<OutList,
+      (ins i32imm:$op, i32imm:$segment, i32imm:$order, i32imm:$scope,
+           i32imm:$ty, MemTy:$address),
+       "atomic_$op$segment$order$scope$ty $dest, [$address]", []>,
+       AtomicPtr32Map<!subst("_ptr32", "", NAME#_unary), isPtr32>;
+
 
     defm NAME#_binary_i   : AtomicMaybeRet<OutList,
                                       (ins i32imm:$op, i32imm:$segment, i32imm:$order, i32imm:$scope,

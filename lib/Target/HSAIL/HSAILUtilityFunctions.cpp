@@ -188,17 +188,16 @@ bool HSAILcommaPrint(int i, raw_ostream &O) {
   return false;
 }
 
+// FIXME: Remove this
 bool hasAddress(const llvm::MachineInstr *MI)
 {
-  return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::HAS_ADDRESS);
+  return HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address) != -1;
 }
 
+// FIXME: Remove this wrapper.
 int addressOpNum(const llvm::MachineInstr *MI)
 {
-  return ((MI->getDesc().TSFlags & (1ULL << HSAILTSFLAGS::ADDRESS_OP_NUM0)) +
-          (MI->getDesc().TSFlags & (1ULL << HSAILTSFLAGS::ADDRESS_OP_NUM1)) +
-          (MI->getDesc().TSFlags & (1ULL << HSAILTSFLAGS::ADDRESS_OP_NUM2))) >> 
-            HSAILTSFLAGS::ADDRESS_OP_NUM0;
+  return HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address);
 }
 
 llvm::MachineOperand &getBase(llvm::MachineInstr *MI)

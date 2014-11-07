@@ -210,10 +210,6 @@ namespace llvm {
   // See HSAILInstFormats.td
   namespace HSAILTSFLAGS {
     enum {
-      HAS_ADDRESS = 0,
-      ADDRESS_OP_NUM0 = 1,
-      ADDRESS_OP_NUM1 = 2,
-      ADDRESS_OP_NUM2 = 3,
       IS_LOAD         = 4,
       IS_STORE        = 5,
       IS_CONV         = 6,
