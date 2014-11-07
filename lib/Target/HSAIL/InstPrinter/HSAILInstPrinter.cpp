@@ -1537,7 +1537,8 @@ void HSAILInstPrinter::printBrigWidth(const MCInst *MI, unsigned OpNo,
     O << "_width(NONE)";
     break;
   case BRIG_WIDTH_1:
-    O << "_width(1)";
+    // This is the default. If omitted, this is interpreted as 1.
+    //O << "_width(1)";
     break;
   case BRIG_WIDTH_2:
     O << "_width(2)";
