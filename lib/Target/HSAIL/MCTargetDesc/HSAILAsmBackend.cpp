@@ -11,7 +11,7 @@
 #include "HSAILAsmBackend.h"
 using namespace llvm;
 
-HSAILAsmBackend::HSAILAsmBackend(const ASM_BACKEND_CLASS &T) {}
+HSAILAsmBackend::HSAILAsmBackend(const MCAsmBackend &T) {}
 
 // hack to enable construction of old-style HSAILAsmBackend
 HSAILAsmBackend::HSAILAsmBackend(int dummy) {}
@@ -101,13 +101,13 @@ bool HSAILAsmBackend::writeNopData(uint64_t Count, MCObjectWriter *OW) const {
   return true;
 }
 
-ASM_BACKEND_CLASS *llvm::createHSAIL_32AsmBackend(const ASM_BACKEND_CLASS &T,
-                                                  const std::string &TT) {
+MCAsmBackend *llvm::createHSAIL_32AsmBackend(const MCAsmBackend &T,
+                                             const std::string &TT) {
   return new ELFHSAIL_32AsmBackend(T, Triple(TT).getOS());
 }
 
-ASM_BACKEND_CLASS *llvm::createHSAIL_64AsmBackend(const ASM_BACKEND_CLASS &T,
-                                                  const std::string &TT) {
+MCAsmBackend *llvm::createHSAIL_64AsmBackend(const MCAsmBackend &T,
+                                             const std::string &TT) {
   return new ELFHSAIL_64AsmBackend(T, Triple(TT).getOS());
 }
 

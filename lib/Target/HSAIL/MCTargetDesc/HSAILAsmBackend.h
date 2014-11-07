@@ -15,24 +15,16 @@
 #include "llvm/MC/MCFixupKindInfo.h"
 #include "llvm/MC/MCSectionELF.h"
 #include "llvm/Support/ELF.h"
-//#if LLVM_VERSION >= 3316
 #include "llvm/MC/MCAsmBackend.h"
-#define ASM_BACKEND_CLASS MCAsmBackend
 
 #include "llvm/Support/TargetRegistry.h"
-
-//#else
-//#include "llvm/Target/TargetAsmBackend.h"
-//#define ASM_BACKEND_CLASS TargetAsmBackend
-//#include "llvm/Target/TargetRegistry.h"
-//#endif
 
 using namespace llvm;
 
 namespace {
-class HSAILAsmBackend : public ASM_BACKEND_CLASS {
+class HSAILAsmBackend : public MCAsmBackend {
 public:
-  HSAILAsmBackend(const ASM_BACKEND_CLASS &T);
+  HSAILAsmBackend(const MCAsmBackend &T);
 
   // dirty hack to enable construction of old-style backend in LLVM3.0
   // environment
@@ -82,7 +74,7 @@ public:
 class ELFHSAILAsmBackend : public HSAILAsmBackend {
 public:
   Triple::OSType OSType;
-  ELFHSAILAsmBackend(const ASM_BACKEND_CLASS &T, Triple::OSType _OSType)
+  ELFHSAILAsmBackend(const MCAsmBackend &T, Triple::OSType _OSType)
       : HSAILAsmBackend(T), OSType(_OSType) {}
 
   virtual bool doesSectionRequireSymbols(const MCSection &Section) const {
@@ -93,7 +85,7 @@ public:
 
 class ELFHSAIL_32AsmBackend : public ELFHSAILAsmBackend {
 public:
-  ELFHSAIL_32AsmBackend(const ASM_BACKEND_CLASS &T, Triple::OSType OSType)
+  ELFHSAIL_32AsmBackend(const MCAsmBackend &T, Triple::OSType OSType)
       : ELFHSAILAsmBackend(T, OSType) {}
 
   MCObjectWriter *createObjectWriter(raw_ostream &OS) const {
@@ -105,7 +97,7 @@ public:
 
 class ELFHSAIL_64AsmBackend : public ELFHSAILAsmBackend {
 public:
-  ELFHSAIL_64AsmBackend(const ASM_BACKEND_CLASS &T, Triple::OSType OSType)
+  ELFHSAIL_64AsmBackend(const MCAsmBackend &T, Triple::OSType OSType)
       : ELFHSAILAsmBackend(T, OSType) {}
 
   MCObjectWriter *createObjectWriter(raw_ostream &OS) const {
