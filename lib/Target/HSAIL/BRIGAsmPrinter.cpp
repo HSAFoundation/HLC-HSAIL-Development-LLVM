@@ -248,8 +248,10 @@ void StoreInitializer::initVarWithAddress(const Value *V, const std::string Var,
   HSAIL_ASM::ItemList opnds;
   opnds.push_back(m_asmPrinter.brigantine.createOperandString(initstr.str()));
   pgm.operands() = opnds;
-  (m_asmPrinter.getSubtarget().is64Bit()) ?
-    pushValue<Brig::BRIG_TYPE_B64>(0) : pushValue<Brig::BRIG_TYPE_B32>(0);
+  if (m_asmPrinter.getSubtarget().is64Bit())
+    pushValue<Brig::BRIG_TYPE_B64>(0);
+  else
+    pushValue<Brig::BRIG_TYPE_B32>(0);
 }
 
 void StoreInitializer::append(const Constant *CV, const std::string Var) {
