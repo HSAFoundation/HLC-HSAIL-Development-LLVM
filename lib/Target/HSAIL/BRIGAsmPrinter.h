@@ -159,6 +159,7 @@ protected:
   virtual void emitMacroFunc(const MachineInstr *MI, raw_ostream &O);
 
   HSAILTargetMachine *mTM;
+  const HSAILInstrInfo *TII;
   HSAILKernelManager *mMeta;    /* metadata required by the runtime */
   HSAILMachineFunctionInfo *mMFI; /* current function being processed */
 
