@@ -28,10 +28,6 @@ class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
 
   // Target specific flags
   // Important! Keep in sync with HSAIL.h::HSAILTSFLAG
-  bit hasAddress = 0;
-  let TSFlags{0} = hasAddress;
-  bits<3> addressOpNum = 0;
-  let TSFlags{3-1} = addressOpNum;
   bit isLoad = 0;
   let TSFlags{4} = isLoad;
   bit isStore = 0;
