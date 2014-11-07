@@ -1,4 +1,4 @@
-; RUN: llc -march=hsail-64 -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL -check-prefix=FUNC %s
+; RUN: llc -march=hsail64 -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL -check-prefix=FUNC %s
 
 ; FUNC-LABEL: {{^}}prog kernel &no_align_on_kernarg(
 ; HSAIL-NOT: align(4)
