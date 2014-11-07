@@ -498,13 +498,19 @@ public:
         }
         if (total > 0)
         {
+
             unsigned i = 0;
             for(; i < (total - 1); ++i)
             {
                 m_self->printValue(data[i]);
                 m_self->print(", ");
             }
-            m_self->printValue(data[i]);
+
+            // FIXME: Hack to avoid aligned access of unaligned data.
+            CType temp;
+            std::memcpy(&temp, &data[i], sizeof(temp));
+            m_self->printValue(temp);
+            //m_self->printValue(data[i]);
         }
     }
 
