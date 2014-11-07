@@ -15,7 +15,6 @@
 #include "HSAILSubtarget.h"
 #include "HSAILFrameLowering.h"
 #include "HSAILInstrInfo.h"
-#include "HSAILDevice.h"
 
 #define GET_SUBTARGETINFO_ENUM
 #define GET_SUBTARGETINFO_TARGET_DESC
@@ -59,10 +58,7 @@ HSAILSubtarget::HSAILSubtarget(StringRef TT, StringRef CPU, StringRef FS,
   FrameLowering(TargetFrameLowering::StackGrowsUp, 16, 0),
   TLInfo(),
   InstrInfo(),
-  imageHandles(new HSAILImageHandles()),
-  mDevice(nullptr) {
-  HSAILDevice::is64bit = Is64Bit; // FIXME
-  mDevice = new HSAILDevice(this); // FIXME: Remove this
+  imageHandles(new HSAILImageHandles()) {
 
   // The constructor for TargetLoweringBase calls
   // HSAILSubtarget::getDataLayout(), so we need to initialize
