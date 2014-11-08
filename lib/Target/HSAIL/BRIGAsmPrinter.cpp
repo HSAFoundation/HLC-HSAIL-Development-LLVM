@@ -84,15 +84,6 @@ static cl::opt<bool>DisableValidator("disable-validator",
 static cl::opt<bool> PrintBeforeBRIG("print-before-brig",
   llvm::cl::desc("Print LLVM IR just before emitting BRIG"), cl::Hidden);
 
-
-unsigned MAX(unsigned a, unsigned b) {
-  return a > b ? a: b;
-}
-
-unsigned MAX(unsigned a, unsigned b, unsigned c) {
-  return (a > b) ? ( (a > c ) ? a : c ) : (b > c) ? b : c;
-}
-
 namespace HSAIL_ATOMIC_OPS {
   enum {
     OPCODE_INDEX = 0,
