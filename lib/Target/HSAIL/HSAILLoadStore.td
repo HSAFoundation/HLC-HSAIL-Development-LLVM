@@ -154,9 +154,9 @@ defm segmentp_local   : SegmentPInst<int_HSAIL_segmentp_local, "segmentp_group">
 defm segmentp_private : SegmentPInst<int_HSAIL_segmentp_private, "segmentp_private">;
 
 let isNotDuplicable = 1, hasCtrlDep = 1, hasSideEffects = 1 in {
-  def arg_decl : HSAILInst<(outs ), (ins PtrRC:$src0, BrigTypeX:$brig_type, i32imm:$size,
-                                     i32imm:$alignnment),
-                                     "align $alignnment arg_$brig_type\t$src0[$size]", []>;
+  def arg_decl : HSAILInst<(outs), (ins PtrRC:$symbol, BrigTypeX:$TypeLength, i32imm:$size,
+                                    i32imm:$alignment),
+                                    "align $alignment arg_$TypeLength\t$symbol[$size]", []>;
 }
 
 class LdStVectorMap<string op, int size> {

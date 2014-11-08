@@ -833,6 +833,15 @@ public:
     return getNamedOperand(const_cast<MachineInstr &>(MI), OpName);
   }
 
+  int64_t getNamedModifierOperand(const MachineInstr &MI,
+                                  unsigned OpName) const {
+    return getNamedOperand(MI, OpName)->getImm();
+  }
+
+  int64_t getNamedModifierOperand(MachineInstr &MI, unsigned OpName) const {
+    return getNamedOperand(MI, OpName)->getImm();
+  }
+
 private:
   RegScavenger *RS;
 

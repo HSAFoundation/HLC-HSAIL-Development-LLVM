@@ -84,79 +84,48 @@ static cl::opt<bool>DisableValidator("disable-validator",
 static cl::opt<bool> PrintBeforeBRIG("print-before-brig",
   llvm::cl::desc("Print LLVM IR just before emitting BRIG"), cl::Hidden);
 
-namespace HSAIL_ATOMIC_OPS {
-  enum {
-    OPCODE_INDEX = 0,
-    SEGMENT_INDEX = 1,
-    ORDER_INDEX = 2,
-    SCOPE_INDEX = 3,
-    TYPE_INDEX = 4
-  };
+
+Brig::BrigAtomicOperation
+BRIGAsmPrinter::getAtomicOpcode(const MachineInstr *MI) const {
+  int64_t Val = TII->getNamedModifierOperand(*MI, HSAIL::OpName::op);
+  assert(Val >= Brig::BRIG_ATOMIC_ADD && Val <= Brig::BRIG_ATOMIC_XOR);
+  return static_cast<Brig::BrigAtomicOperation>(Val);
 }
 
-namespace HSAIL_MEMFENCE {
-  enum {
-    MEMORY_ORDER_INDEX = 0,
-    GLOBAL_SCOPE_INDEX = 1,
-    GROUP_SCOPE_INDEX = 2,
-    IMAGE_SCOPE_INDEX = 3
-  };
+Brig::BrigSegment
+BRIGAsmPrinter::getAtomicSegment(const MachineInstr *MI) const {
+  int64_t Val = TII->getNamedModifierOperand(*MI, HSAIL::OpName::segment);
+  assert(Val > 0 && Val < Brig::BRIG_SEGMENT_EXTSPACE0);
+  return static_cast<Brig::BrigSegment>(Val);
 }
 
-static int getAtomicParameter(const llvm::MachineInstr *MI, unsigned index) {
-  assert(HSAIL::isAtomicOp(MI));
-
-  int offset = 0;
-
-  //Ret versions have destination operand at 0 index, so offset parameters index by 1
-  if (HSAIL::isRetAtomicOp(MI))
-    offset = 1;
-
-  llvm::MachineOperand opc = MI->getOperand(index + offset);
-
-  assert(opc.isImm());
-  return opc.getImm();
+Brig::BrigMemoryOrder
+BRIGAsmPrinter::getAtomicOrder(const MachineInstr *MI) const {
+  int64_t Val = TII->getNamedModifierOperand(*MI, HSAIL::OpName::order);
+  assert(Val > 0 && Val <= Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE);
+  return static_cast<Brig::BrigMemoryOrder>(Val);
 }
 
-static Brig::BrigAtomicOperation getAtomicOpcode(const llvm::MachineInstr *MI) {
-  int val = getAtomicParameter(MI, HSAIL_ATOMIC_OPS::OPCODE_INDEX);
-  assert(val >= Brig::BRIG_ATOMIC_ADD && val <= Brig::BRIG_ATOMIC_XOR);
-  return (Brig::BrigAtomicOperation)val;
+Brig::BrigMemoryScope
+BRIGAsmPrinter::getAtomicScope(const MachineInstr *MI) const {
+  int64_t Val = TII->getNamedModifierOperand(*MI, HSAIL::OpName::scope);
+  assert(Val > 0 && Val <= Brig::BRIG_MEMORY_SCOPE_SYSTEM);
+  return static_cast<Brig::BrigMemoryScope>(Val);
 }
 
-static Brig::BrigSegment getAtomicSegment(const llvm::MachineInstr *MI) {
-  int val = getAtomicParameter(MI, HSAIL_ATOMIC_OPS::SEGMENT_INDEX);
-  assert(val > 0 && val < Brig::BRIG_SEGMENT_EXTSPACE0);
-  return (Brig::BrigSegment)val;
-}
-
-static Brig::BrigMemoryOrder getAtomicOrder(const llvm::MachineInstr *MI) {
-  int val = getAtomicParameter(MI, HSAIL_ATOMIC_OPS::ORDER_INDEX);
-  assert(val > 0 && val <= Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE);
-  return (Brig::BrigMemoryOrder)val;
-}
-
-static Brig::BrigMemoryScope getAtomicScope(const llvm::MachineInstr *MI) {
-  int val = getAtomicParameter(MI, HSAIL_ATOMIC_OPS::SCOPE_INDEX);
-  assert(val > 0 && val <= Brig::BRIG_MEMORY_SCOPE_SYSTEM);
-  return (Brig::BrigMemoryScope)val;
-}
-
-static Brig::BrigTypeX getAtomicType(const llvm::MachineInstr *MI) {
-  int val = getAtomicParameter(MI, HSAIL_ATOMIC_OPS::TYPE_INDEX);
-  switch (val) {
+Brig::BrigTypeX BRIGAsmPrinter::getAtomicType(const MachineInstr *MI) const {
+  int Val = TII->getNamedModifierOperand(*MI, HSAIL::OpName::TypeLength);
+  switch (Val) {
   case Brig::BRIG_TYPE_B32:
   case Brig::BRIG_TYPE_S32:
   case Brig::BRIG_TYPE_U32:
   case Brig::BRIG_TYPE_B64:
   case Brig::BRIG_TYPE_S64:
   case Brig::BRIG_TYPE_U64:
-    break;
-    default:
+    return static_cast<Brig::BrigTypeX>(Val);
+  default:
     llvm_unreachable("Unknown BrigType");
   }
-
-  return (Brig::BrigTypeX)val;
 }
 
 class LLVM_LIBRARY_VISIBILITY StoreInitializer {
@@ -820,8 +789,10 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
     if (hasRet)
       BrigEmitOperand(II, 0, instAtomic);
-    BrigEmitOperandLdStAddress(II, HSAIL_ATOMIC_OPS::TYPE_INDEX + 1 +
-                               (hasRet ? 1 : 0));
+
+    int AddressIdx = HSAIL::getNamedOperandIdx(II->getOpcode(),
+                                               HSAIL::OpName::address);
+    BrigEmitOperandLdStAddress(II, AddressIdx);
     if (HSAIL::isTernaryAtomicOp(II)) {
       BrigEmitOperand(II, II->getNumOperands() - 2, instAtomic);
     }
@@ -926,7 +897,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
       .addInst<HSAIL_ASM::InstAddr>(Brig::BRIG_OPCODE_LDA);
     BrigEmitOperand(II, 0, lda);
     BrigEmitOperandLdStAddress(II, 1);
-    lda.segment() = II->getOperand(4).getImm();
+    lda.segment() = TII->getNamedOperand(*II, HSAIL::OpName::segment)->getImm();
     lda.type() = (II->getOpcode() == HSAIL::lda_32) ? Brig::BRIG_TYPE_U32
                                                     : Brig::BRIG_TYPE_U64;
     return lda;
@@ -997,13 +968,14 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
         brigantine.addInst<HSAIL_ASM::InstMemFence>(Brig::BRIG_OPCODE_MEMFENCE,
                                                     Brig::BRIG_TYPE_NONE);
     memfence.memoryOrder() =
-        II->getOperand(HSAIL_MEMFENCE::MEMORY_ORDER_INDEX).getImm();
+      TII->getNamedModifierOperand(*II, HSAIL::OpName::order);
     memfence.globalSegmentMemoryScope() =
-        II->getOperand(HSAIL_MEMFENCE::GLOBAL_SCOPE_INDEX).getImm();
+      TII->getNamedModifierOperand(*II, HSAIL::OpName::globalscope);
     memfence.groupSegmentMemoryScope() =
-        II->getOperand(HSAIL_MEMFENCE::GROUP_SCOPE_INDEX).getImm();
+      TII->getNamedModifierOperand(*II, HSAIL::OpName::groupscope);
     memfence.imageSegmentMemoryScope() =
-        II->getOperand(HSAIL_MEMFENCE::IMAGE_SCOPE_INDEX).getImm();
+      TII->getNamedModifierOperand(*II, HSAIL::OpName::imagescope);
+
     return memfence;
   }
   case HSAIL::ftz_f32: {
@@ -1944,10 +1916,14 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitLoadOrStore(const MachineInstr *MI,
 }
 
 void BRIGAsmPrinter::BrigEmitVecArgDeclaration(const MachineInstr *MI) {
-  MachineOperand symb      = MI->getOperand(0);
-  MachineOperand brig_type = MI->getOperand(1);
-  MachineOperand size      = MI->getOperand(2);
-  MachineOperand align     = MI->getOperand(3);
+  const MachineOperand &symb
+    = *TII->getNamedOperand(*MI, HSAIL::OpName::symbol);
+  const MachineOperand &brig_type
+    = *TII->getNamedOperand(*MI, HSAIL::OpName::TypeLength);
+  const MachineOperand &size
+    = *TII->getNamedOperand(*MI, HSAIL::OpName::size);
+  const MachineOperand &align
+    = *TII->getNamedOperand(*MI, HSAIL::OpName::alignment);
 
   assert( symb.getType()      == MachineOperand::MO_ExternalSymbol );
   assert( brig_type.getType() == MachineOperand::MO_Immediate );
