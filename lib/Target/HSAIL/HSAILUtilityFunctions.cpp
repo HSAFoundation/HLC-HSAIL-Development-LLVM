@@ -188,48 +188,30 @@ bool HSAILcommaPrint(int i, raw_ostream &O) {
   return false;
 }
 
-// FIXME: Remove this
-bool hasAddress(const llvm::MachineInstr *MI)
-{
-  return HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address) != -1;
+llvm::MachineOperand &getBase(llvm::MachineInstr *MI) {
+  int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address);
+  return MI->getOperand(Idx + HSAILADDRESS::BASE);
 }
 
-// FIXME: Remove this wrapper.
-int addressOpNum(const llvm::MachineInstr *MI)
-{
-  return HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address);
-}
-
-llvm::MachineOperand &getBase(llvm::MachineInstr *MI)
-{
-  assert(hasAddress(MI));
-  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::BASE);
-}
-
-const llvm::MachineOperand &getBase(const llvm::MachineInstr *MI)
-{
+const llvm::MachineOperand &getBase(const llvm::MachineInstr *MI) {
   return getBase(const_cast<llvm::MachineInstr*>(MI));
 }
 
-llvm::MachineOperand &getIndex(llvm::MachineInstr *MI)
-{
-  assert(hasAddress(MI));
-  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::REG);
+llvm::MachineOperand &getIndex(llvm::MachineInstr *MI) {
+  int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address);
+  return MI->getOperand(Idx + HSAILADDRESS::REG);
 }
 
-const llvm::MachineOperand &getIndex(const llvm::MachineInstr *MI)
-{
+const llvm::MachineOperand &getIndex(const llvm::MachineInstr *MI) {
   return getIndex(const_cast<llvm::MachineInstr*>(MI));
 }
 
-llvm::MachineOperand &getOffset(llvm::MachineInstr *MI)
-{
-  assert(hasAddress(MI) && MI->getNumOperands() >= HSAILADDRESS::ADDRESS_NUM_OPS);
-  return MI->getOperand(addressOpNum(MI) + HSAILADDRESS::OFFSET);
+llvm::MachineOperand &getOffset(llvm::MachineInstr *MI) {
+  int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address);
+  return MI->getOperand(Idx + HSAILADDRESS::OFFSET);
 }
 
-const llvm::MachineOperand &getOffset(const llvm::MachineInstr *MI)
-{
+const llvm::MachineOperand &getOffset(const llvm::MachineInstr *MI) {
   return getOffset(const_cast<MachineInstr*>(MI));
 }
 
