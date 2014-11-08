@@ -602,20 +602,6 @@ EVT HSAILTargetLowering::getTypeForExtArgOrReturn(LLVMContext &Context,
   return TargetLowering::getTypeForExtArgOrReturn(Context, VT, ExtendKind);
 }
 
-EVT HSAILTargetLowering::getValueType(Type *Ty, bool AllowUnknown ) const
-{
-    EVT VT = EVT::getEVT(Ty, AllowUnknown);
-
-    if (VT != MVT::iPTR)
-      return TargetLowering::getValueType(Ty, AllowUnknown);
-
-    OpaqueType OT = GetOpaqueType(Ty);
-    if (IsImage(OT) || OT == Sampler)
-      return MVT::i64;
-    
-    return getPointerTy();
-}
-
 /// Create kernel or function parameter scalar load and return its value.
 /// If isLoad = false create an argument value store.
 /// AddressSpace used to determine if that is a kernel or function argument.
