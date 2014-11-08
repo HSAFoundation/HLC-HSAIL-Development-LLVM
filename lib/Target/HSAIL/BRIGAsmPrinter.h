@@ -245,6 +245,12 @@ private:
   Brig::BrigSegment8_t getHSAILSegment(unsigned AddressSpace) const;
   Brig::BrigSegment8_t getHSAILSegment(const GlobalVariable* gv) const;
 
+  Brig::BrigAtomicOperation getAtomicOpcode(const MachineInstr *MI) const;
+  Brig::BrigSegment getAtomicSegment(const MachineInstr *MI) const;
+  Brig::BrigMemoryOrder getAtomicOrder(const MachineInstr *MI) const;
+  Brig::BrigMemoryScope getAtomicScope(const MachineInstr *MI) const;
+  Brig::BrigTypeX getAtomicType(const MachineInstr *MI) const;
+
   bool canInitHSAILAddressSpace(const GlobalVariable* gv) const;
   void EmitBasicBlockStart(const MachineBasicBlock &MBB);
   // returns an offset of corresponding DirectiveVariable
