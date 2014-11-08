@@ -1183,13 +1183,12 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
 /// LowerGlobalAddress - Lowers a global address ref to a target global address lda.
 SDValue
 HSAILTargetLowering::LowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const {
-  SDLoc dl = SDLoc(Op);
   const GlobalAddressSDNode *GSDN = cast<GlobalAddressSDNode>(Op);
   const GlobalValue *GV = GSDN->getGlobal();
-  const Type *ptrType = GV->getType();
+
   unsigned addrSpace = GSDN->getAddressSpace();
   EVT PtrVT = getPointerTy(addrSpace);
-
+  SDLoc dl = SDLoc(Op);
   unsigned opcode;
 
   if (addrSpace == HSAILAS::FLAT_ADDRESS) {
@@ -1333,6 +1332,7 @@ HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
     ops[i] = Op.getOperand(i);
   }
 
+  // FIXME: Get correct address space pointer type.
         SDValue Ops[] = {
           DAG.getTargetConstant(samplerHandleIndex, MVT::i32),
           DAG.getRegister(0, getPointerTy()), DAG.getTargetConstant(0, MVT::i32),
