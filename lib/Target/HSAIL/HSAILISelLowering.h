@@ -249,11 +249,6 @@ public:
                            const CCValAssign &VA,  MachineFrameInfo *MFI,
                            unsigned i) const;
 
-  // This method of the llvm::TargetLowering has been made virtual
-  // under the AMD_HSAIL define to handle image/sampler object pointers
-  // in a specific way.
-  virtual EVT getValueType(Type *Ty, bool AllowUnknown = false) const;
-
   /// LowerFormalArguments - This hook must be implemented to lower the
   /// incoming (formal) arguments, described by the Ins array, into the
   /// specified DAG. The implementation should fill in the InVals array
