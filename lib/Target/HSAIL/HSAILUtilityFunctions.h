@@ -101,8 +101,6 @@ HSAILgetTypeName(llvm::Type *ptr,
 bool HSAILcommaPrint(int i, raw_ostream &O);
 
 // Helper functions that check the opcode for status information
-bool hasAddress(const llvm::MachineInstr *MI);
-int addressOpNum(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getBase(llvm::MachineInstr *MI);
 const llvm::MachineOperand &getBase(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getIndex(llvm::MachineInstr *MI);
