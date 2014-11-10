@@ -932,16 +932,18 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   // TargetExternalSymbol
   // node so that legalize doesn't hack it.
   if (GlobalAddressSDNode *G = dyn_cast<GlobalAddressSDNode>(Callee))  {
-    Callee = DAG.getTargetGlobalAddress(G->getGlobal(), dl, getPointerTy());
+    unsigned AS = G->getAddressSpace();
+    Callee = DAG.getTargetGlobalAddress(G->getGlobal(), dl, getPointerTy(AS));
 
     const GlobalValue *GV = G->getGlobal();
     calleeFunc = static_cast<const Function*>(GV);
     funcType = calleeFunc->getFunctionType();
     FuncName = GV->getName().data();
-  } 
+  }
   else if (ExternalSymbolSDNode *S = dyn_cast<ExternalSymbolSDNode>(Callee)) {
+    unsigned AS = G->getAddressSpace();
     FuncName = S->getSymbol();
-    Callee = DAG.getTargetExternalSymbol(FuncName, getPointerTy());
+    Callee = DAG.getTargetExternalSymbol(FuncName, getPointerTy(AS));
 
     // HSA_TODO: Use `Outs` and `Ins` instead of funcType in the rest of this function
     assert(!"Not implemented");
