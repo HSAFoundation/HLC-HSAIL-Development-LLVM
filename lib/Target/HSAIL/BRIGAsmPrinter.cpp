@@ -1603,12 +1603,11 @@ int BRIGAsmPrinter::getHSAILParameterSize(Type* type, HSAIL_ARG_TYPE arg_type) {
       assert(!"Found a case we don't handle!");
     }
     break;
-  case Type::PointerTyID:
-    if (Subtarget->is64Bit())
-      type_size = 8;
-    else
-      type_size = 4;
+  case Type::PointerTyID: {
+    unsigned AS = cast<PointerType>(type)->getAddressSpace();
+    type_size = getDataLayout().getPointerSize(AS);
     break;
+  }
   case Type::VectorTyID:
     type_size = getHSAILParameterSize(type->getScalarType(), arg_type);
     break;
