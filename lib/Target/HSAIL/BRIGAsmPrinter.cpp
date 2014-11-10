@@ -1619,40 +1619,19 @@ int BRIGAsmPrinter::getHSAILParameterSize(Type* type, HSAIL_ARG_TYPE arg_type) {
 std::string BRIGAsmPrinter::getHSAILReg(Type* type) {
   std::stringstream stream;
 
-  switch (type->getTypeID()) {
-  case Type::VoidTyID:
-    break;
-  case Type::FloatTyID:
+  switch (getDataLayout().getTypeSizeInBits(type)) {
+  case 32:
     stream << "$s" << reg32Counter++;
     break;
-  case Type::DoubleTyID:
+  case 64:
     stream << "$d" << reg64Counter++;
     break;
-  case Type::IntegerTyID:
-    if (type->isIntegerTy(1)) {
-      stream << "$c" << reg1Counter++;
-    } else if (type->isIntegerTy()
-        && type->getScalarSizeInBits() <= 32) {
-      stream << "$s" << reg32Counter++;
-    } else if (type->isIntegerTy()
-        && type->getScalarSizeInBits() <= 64) {
-      stream << "$d" << reg64Counter++;
-    } else {
-      type->dump();
-      assert(!"Found a case we don't handle!");
-    }
-    break;
-  case Type::PointerTyID:
-    if (Subtarget->is64Bit())
-      stream << "$d" << reg64Counter++;
-    else
-      stream << "$s" << reg32Counter++;
+  case 1:
+    stream << "$c" << reg1Counter++;
     break;
   default:
-    type->dump();
-    assert(!"Found a case we don't handle!");
-    break;
-  };
+    llvm_unreachable("Unhandled type size for register");
+  }
 
   return stream.str();
 }
