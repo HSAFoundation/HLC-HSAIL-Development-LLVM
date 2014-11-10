@@ -115,7 +115,7 @@ bool HSAILrequiresArray(Type* type) {
   }
 }
 
-Brig::BrigType16_t HSAILgetBrigType(Type* type, bool is64Bit, bool Signed) {
+Brig::BrigType16_t getBrigType(Type* type, const DataLayout &DL, bool Signed) {
   switch (type->getTypeID()) {
   case Type::VoidTyID:
     return Brig::BRIG_TYPE_NONE; // TODO_HSA: FIXME: void
@@ -139,20 +139,21 @@ Brig::BrigType16_t HSAILgetBrigType(Type* type, bool is64Bit, bool Signed) {
       assert(!"Found a case we don't handle!");
     }
     break;
-  case Type::PointerTyID:
+  case Type::PointerTyID: {
     if (OpaqueType OT = GetOpaqueType(type)) {
       if (IsImage(OT)) return Brig::BRIG_TYPE_RWIMG;
       if (OT == Sampler) return Brig::BRIG_TYPE_SAMP;
     }
-    return is64Bit ? Brig::BRIG_TYPE_U64 : Brig::BRIG_TYPE_U32;
+    unsigned AS = cast<PointerType>(type)->getAddressSpace();
+    return DL.getPointerSize(AS) == 8 ? Brig::BRIG_TYPE_U64 : Brig::BRIG_TYPE_U32;
+  }
   case Type::StructTyID:
     // Treat struct as array of bytes.
     return Brig::BRIG_TYPE_U8;
   case Type::VectorTyID:
-    return HSAILgetBrigType(type->getScalarType(), is64Bit, Signed);
+    return getBrigType(type->getScalarType(), DL, Signed);
   case Type::ArrayTyID:
-    return HSAILgetBrigType(dyn_cast<ArrayType>(type)->getElementType(),
-                            is64Bit, Signed);
+    return getBrigType(cast<ArrayType>(type)->getElementType(), DL, Signed);
   default:
     type->dump();
     assert(!"Found a case we don't handle!");
