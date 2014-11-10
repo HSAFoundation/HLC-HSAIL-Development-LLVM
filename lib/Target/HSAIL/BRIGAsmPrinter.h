@@ -72,6 +72,11 @@ class LLVM_LIBRARY_VISIBILITY BRIGAsmPrinter : public AsmPrinter {
   unsigned reg1Counter;
   unsigned reg32Counter;
   unsigned reg64Counter;
+
+  const DataLayout &getDataLayout() const {
+    return *Subtarget->getDataLayout();
+  }
+
 public:
   explicit BRIGAsmPrinter(TargetMachine& TM, MCStreamer &Streamer);
 

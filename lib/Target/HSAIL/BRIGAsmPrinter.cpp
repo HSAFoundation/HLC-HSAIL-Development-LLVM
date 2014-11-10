@@ -471,7 +471,7 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   // TODO_HSA: pending BRIG_LINKAGE_STATIC implementation in the Finalizer
   HSAIL_ASM::DirectiveVariable globalVar =
     brigantine.addVariable(nameString, getHSAILSegment(GV),
-    HSAIL::HSAILgetBrigType(ty, Subtarget->is64Bit()));
+                           HSAIL::getBrigType(ty, getDataLayout()));
 
   globalVar.linkage() = GV->isExternalLinkage(GV->getLinkage()) ?
       Brig::BRIG_LINKAGE_PROGRAM : ( GV->isInternalLinkage(GV->getLinkage()) ?
@@ -1210,14 +1210,15 @@ HSAIL_ASM::DirectiveVariable BRIGAsmPrinter::EmitLocalVariable(
   HSAIL_ASM::DirectiveVariable var;
   if (num_elem > 1) {
      var = brigantine.addArrayVariable(("%" + GV->getName()).str(),num_elem,
-           segment, HSAIL::HSAILgetBrigType(type, Subtarget->is64Bit()));
+                 segment, HSAIL::getBrigType(type, getDataLayout()));
     // Align arrays at least by 4 bytes
     var.align() = getBrigAlignment(std::max((var.dim() > 1) ? 4U : 0U,
                                             std::max(GV->getAlignment(),
                                                      HSAIL::HSAILgetAlignTypeQualifier(type, getDataLayout(), true))));
   } else {
     var = brigantine.addVariable(("%" + GV->getName()).str(),
-      segment, HSAIL::HSAILgetBrigType(type, Subtarget->is64Bit()));
+                                 segment,
+                                 HSAIL::getBrigType(type, getDataLayout()));
     var.align() = getBrigAlignment(HSAIL::HSAILgetAlignTypeQualifier(type,
                                      getDataLayout(), true));
   }
@@ -1409,13 +1410,16 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
   // construct return symbol
   HSAIL_ASM::DirectiveVariable retParam;
   if (HSAIL::HSAILrequiresArray(type)) {
-    retParam = brigantine.addArrayVariable(ret,
-        HSAIL::getNumElementsInHSAILType(type, getDataLayout()),
-        Brig::BRIG_SEGMENT_ARG,
-        HSAIL::HSAILgetBrigType(memType, Subtarget->is64Bit(), isSExt));
+    retParam = brigantine.addArrayVariable(
+      ret,
+      HSAIL::getNumElementsInHSAILType(type, getDataLayout()),
+      Brig::BRIG_SEGMENT_ARG,
+      HSAIL::getBrigType(memType, getDataLayout(), isSExt));
   } else {
-    retParam = brigantine.addVariable(ret, Brig::BRIG_SEGMENT_ARG,
-                      HSAIL::HSAILgetBrigType(memType, Subtarget->is64Bit(), isSExt));
+    retParam = brigantine.addVariable(
+      ret,
+      Brig::BRIG_SEGMENT_ARG,
+      HSAIL::getBrigType(memType, getDataLayout(), isSExt));
   }
   retParam.align() = getBrigAlignment(std::max(
     HSAIL::HSAILgetAlignTypeQualifier(memType, getDataLayout(), false),
@@ -1465,8 +1469,9 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
       if (isKernel && type->isVectorTy())
         num_elem = type->getVectorNumElements();
 
-      sym = brigantine.addArrayVariable(name, num_elem, symSegment,
-                HSAIL::HSAILgetBrigType(memType, Subtarget->is64Bit(), isSExt));
+      sym = brigantine.addArrayVariable(
+        name, num_elem, symSegment,
+        HSAIL::getBrigType(memType, getDataLayout(), isSExt));
       // TODO_HSA: workaround for RT bug.
       // RT does not read argument alignment from BRIG, so if we align vectors
       // on a full vector size that will cause mismatch between kernarg offsets
@@ -1476,7 +1481,7 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
         type = type->getVectorElementType();
     } else {
       sym = brigantine.addVariable(name, symSegment,
-                      HSAIL::HSAILgetBrigType(memType, Subtarget->is64Bit(), isSExt));
+                          HSAIL::getBrigType(memType, getDataLayout(), isSExt));
     }
     sym.align() = getBrigAlignment(
       std::max(HSAIL::HSAILgetAlignTypeQualifier(type, getDataLayout(), false),

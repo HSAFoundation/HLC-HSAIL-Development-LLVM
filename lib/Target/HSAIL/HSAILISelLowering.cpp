@@ -651,7 +651,7 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
       alignment = DL->getABITypeAlignment(EltTy);
 
     unsigned op = 0;
-    unsigned BrigType = HSAIL::HSAILgetBrigType(EltTy, Subtarget->is64Bit(), isSExt);
+    unsigned BrigType = HSAIL::getBrigType(EltTy, *DL, isSExt);
     if (AddressSpace == HSAILAS::ARG_ADDRESS) {
       if (ArgVT.getSizeInBits() <= 32)
         op = isLoad ? HSAIL::ld_32_ptr32_v1 : HSAIL::st_32_ptr32_v1;
@@ -963,8 +963,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
       PM.addCallRetParam(retType, PM.mangleArg(&Mang, FuncName))),
       getPointerTy(HSAILAS::ARG_ADDRESS));
 
-    unsigned BrigType = (unsigned) HSAIL::HSAILgetBrigType(retType,
-                                     Subtarget->is64Bit(), CLI.RetSExt);
+    unsigned BrigType = (unsigned) HSAIL::getBrigType(retType, *DL, CLI.RetSExt);
     if (BrigType == Brig::BRIG_TYPE_B1)
       BrigType = Brig::BRIG_TYPE_U32; // Store bit as DWORD
     SDValue SDBrigType =  DAG.getTargetConstant(BrigType, MVT::i32);
@@ -1016,8 +1015,8 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
       getPointerTy(HSAILAS::ARG_ADDRESS));
 
     // START array parameter declaration
-    unsigned BrigType = (unsigned) HSAIL::HSAILgetBrigType(type, Subtarget->is64Bit(),
-                                                    Outs[j].Flags.isSExt());
+    unsigned BrigType
+      = (unsigned) HSAIL::getBrigType(type, *DL, Outs[j].Flags.isSExt());
     if (BrigType == Brig::BRIG_TYPE_B1)
       BrigType = Brig::BRIG_TYPE_U32; // Store bit as DWORD
     SDValue SDBrigType =  DAG.getTargetConstant(BrigType, MVT::i32);
