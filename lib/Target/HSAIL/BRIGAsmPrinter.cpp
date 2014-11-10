@@ -332,8 +332,10 @@ void StoreInitializer::append(const Constant *CV, const std::string Var) {
   case Value::GlobalVariableVal: {
     const Value* V = CV->stripPointerCasts();
     assert(V->hasName());
-    initVarWithAddress(V, Var,
-      APInt(m_asmPrinter.getSubtarget().is64Bit() ? 64 : 32, 0));
+
+    unsigned AS = cast<PointerType>(V->getType())->getAddressSpace();
+    unsigned PtrSize = m_asmPrinter.getDataLayout().getPointerSizeInBits(AS);
+    initVarWithAddress(V, Var, APInt(PtrSize, 0));
     break;
   }
 
