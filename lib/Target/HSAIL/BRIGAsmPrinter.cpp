@@ -312,7 +312,9 @@ void StoreInitializer::append(const Constant *CV, const std::string Var) {
       if (GO) {
         const Value* Ptr = GO->getPointerOperand()->stripPointerCasts();
         assert(Ptr != NULL && Ptr->hasName());
-        APInt Offset(m_asmPrinter.getSubtarget().is64Bit() ? 64 : 32, 0);
+        unsigned AS = GO->getPointerAddressSpace();
+        unsigned PtrSize = m_asmPrinter.getDataLayout().getPointerSizeInBits(AS);
+        APInt Offset(PtrSize, 0);
         if (!GO->accumulateConstantOffset(m_asmPrinter.getDataLayout(), Offset))
           llvm_unreachable("Cannot calculate initializer offset");
         initVarWithAddress(Ptr, Var, Offset);
