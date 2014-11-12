@@ -217,31 +217,31 @@ class LoadIsPtrNN<PatFrag pf> : PatFrag<(ops node:$address), (pf node:$address),
 defm ld_32 : HSAIL_LD<GPR32, MEMOP>;
 defm ld_64 : HSAIL_LD<GPR64, MEMOP>;
 
-def : Pat<(i32 (LoadIsPtrNN<load>        ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.U32)>;
-def : Pat<(f32 (LoadIsPtrNN<load>        ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.F32)>;
-def : Pat<(i32 (LoadIsPtrNN<extloadi8>   ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.B8)>;
-def : Pat<(i32 (LoadIsPtrNN<sextloadi8>  ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.S8)>;
-def : Pat<(i32 (LoadIsPtrNN<zextloadi8>  ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.U8)>;
-def : Pat<(i32 (LoadIsPtrNN<extloadi16>  ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.B16)>;
-def : Pat<(i32 (LoadIsPtrNN<sextloadi16> ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.S16)>;
-def : Pat<(i32 (LoadIsPtrNN<zextloadi16> ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.U16)>;
-def : Pat<(i64 (LoadIsPtrNN<load>        ADDR:$address)), (ld_64_v1 ADDR:$address, BrigTypeX.U64)>;
-def : Pat<(f64 (LoadIsPtrNN<load>        ADDR:$address)), (ld_64_v1 ADDR:$address, BrigTypeX.F64)>;
+def : Pat<(i32 (LoadIsPtrNN<load>        ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.U32, BrigWidth._1, 0)>;
+def : Pat<(f32 (LoadIsPtrNN<load>        ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.F32, BrigWidth._1, 0)>;
+def : Pat<(i32 (LoadIsPtrNN<extloadi8>   ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.B8, BrigWidth._1, 0)>;
+def : Pat<(i32 (LoadIsPtrNN<sextloadi8>  ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.S8, BrigWidth._1, 0)>;
+def : Pat<(i32 (LoadIsPtrNN<zextloadi8>  ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.U8, BrigWidth._1, 0)>;
+def : Pat<(i32 (LoadIsPtrNN<extloadi16>  ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.B16, BrigWidth._1, 0)>;
+def : Pat<(i32 (LoadIsPtrNN<sextloadi16> ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.S16, BrigWidth._1, 0)>;
+def : Pat<(i32 (LoadIsPtrNN<zextloadi16> ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.U16, BrigWidth._1, 0)>;
+def : Pat<(i64 (LoadIsPtrNN<load>        ADDR:$address)), (ld_64_v1 ADDR:$address, BrigTypeX.U64, BrigWidth._1, 0)>;
+def : Pat<(f64 (LoadIsPtrNN<load>        ADDR:$address)), (ld_64_v1 ADDR:$address, BrigTypeX.F64, BrigWidth._1, 0)>;
 
 // For segments where the address is 32-bit in both models.
 defm ld_32_ptr32 : HSAIL_LD<GPR32, MEMOP32>;
 defm ld_64_ptr32 : HSAIL_LD<GPR64, MEMOP32>;
 
-def : Pat<(i32 (LoadIsPtr32<load>        ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U32)>;
-def : Pat<(f32 (LoadIsPtr32<load>        ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.F32)>;
-def : Pat<(i32 (LoadIsPtr32<extloadi8>   ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.B8)>;
-def : Pat<(i32 (LoadIsPtr32<sextloadi8>  ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.S8)>;
-def : Pat<(i32 (LoadIsPtr32<zextloadi8>  ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U8)>;
-def : Pat<(i32 (LoadIsPtr32<extloadi16>  ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.B16)>;
-def : Pat<(i32 (LoadIsPtr32<sextloadi16> ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.S16)>;
-def : Pat<(i32 (LoadIsPtr32<zextloadi16> ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U16)>;
-def : Pat<(i64 (LoadIsPtr32<load>        ADDR:$address)), (ld_64_ptr32_v1 ADDR:$address, BrigTypeX.U64)>;
-def : Pat<(f64 (LoadIsPtr32<load>        ADDR:$address)), (ld_64_ptr32_v1 ADDR:$address, BrigTypeX.F64)>;
+def : Pat<(i32 (LoadIsPtr32<load>        ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U32, BrigWidth._1, 0)>;
+def : Pat<(f32 (LoadIsPtr32<load>        ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.F32, BrigWidth._1, 0)>;
+def : Pat<(i32 (LoadIsPtr32<extloadi8>   ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.B8, BrigWidth._1, 0)>;
+def : Pat<(i32 (LoadIsPtr32<sextloadi8>  ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.S8, BrigWidth._1, 0)>;
+def : Pat<(i32 (LoadIsPtr32<zextloadi8>  ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U8, BrigWidth._1, 0)>;
+def : Pat<(i32 (LoadIsPtr32<extloadi16>  ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.B16, BrigWidth._1, 0)>;
+def : Pat<(i32 (LoadIsPtr32<sextloadi16> ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.S16, BrigWidth._1, 0)>;
+def : Pat<(i32 (LoadIsPtr32<zextloadi16> ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U16, BrigWidth._1, 0)>;
+def : Pat<(i64 (LoadIsPtr32<load>        ADDR:$address)), (ld_64_ptr32_v1 ADDR:$address, BrigTypeX.U64, BrigWidth._1, 0)>;
+def : Pat<(f64 (LoadIsPtr32<load>        ADDR:$address)), (ld_64_ptr32_v1 ADDR:$address, BrigTypeX.F64, BrigWidth._1, 0)>;
 
 let hasSideEffects = 1, hasCtrlDep = 1 in {
   // It is not safe to move ld_arg as it can be in an argscope

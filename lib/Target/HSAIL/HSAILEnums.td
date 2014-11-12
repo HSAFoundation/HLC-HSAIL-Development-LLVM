@@ -293,7 +293,7 @@ def BrigMemoryFenceSegments : Operand<i32> {
   int LAST = 3;
 }
 
-def BrigMemoryModifierMask : OperandWithDefaultOps<i32, (ops (i32 0))> {
+def BrigMemoryModifierMask : Operand<i32> {
   let PrintMethod = "printBrigMemoryModifierMask";
   int CONST = 1;
 }
@@ -697,7 +697,7 @@ def BrigVersion : Operand<i32> {
   int BRIG_MINOR = 20140528;
 }
 
-def BrigWidth : OperandWithDefaultOps<i32, (ops (i32 1))> {
+def BrigWidth : Operand<i32> {
   let PrintMethod = "printBrigWidth";
   int _NONE = 0;
   int _1 = 1;
