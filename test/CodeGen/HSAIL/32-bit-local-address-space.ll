@@ -1,4 +1,5 @@
 ; RUN: llc -march=hsail -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
+; RUN: llc -march=hsail64 -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
 
 ; HSAIL-LABEL: {{^}}prog function &local_address_load
 ; HSAIL: ld_group_align(4)_u32 {{\$s[0-9]}}, {{\[\$s[0-9]+\]}}

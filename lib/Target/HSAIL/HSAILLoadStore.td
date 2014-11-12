@@ -338,18 +338,14 @@ class LdaAddr<RegisterClass RC, DAGOperand MPtr>
 def lda_32 : LdaAddr<GPR32, MEMOP32>;
 def lda_64 : LdaAddr<GPR64, MEMOP>;
 
-def : Pat<(i32 (IL_lda_group    ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.GROUP)>, Requires<[In32BitMode]>;
-def : Pat<(i32 (IL_lda_private  ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.PRIVATE)>, Requires<[In32BitMode]>;
-
-// Patterns for 64 bit mode with conversion of loaded 32 bit address.
-// TODO_HSA: The cvt operations are necessary until LLVM supports
-//           different pointer widths in address spaces.
-def : Pat<(i64 (IL_lda_group    ADDR:$address)), (cvt_u32_u64 (lda_32 ADDR:$address, BrigSegment.GROUP))>, Requires<[In64BitMode]>;
-def : Pat<(i64 (IL_lda_private  ADDR:$address)), (cvt_u32_u64 (lda_32 ADDR:$address, BrigSegment.PRIVATE))>, Requires<[In64BitMode]>;
+def : Pat<(i32 (IL_lda_group    ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.GROUP)>;
+def : Pat<(i32 (IL_lda_private  ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.PRIVATE)>;
 
 def : Pat<(i32 (IL_lda_flat     ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.FLAT)>, Requires<[In32BitMode]>;
 def : Pat<(i64 (IL_lda_flat     ADDR:$address)), (lda_64 ADDR:$address, BrigSegment.FLAT)>, Requires<[In64BitMode]>;
+
 def : Pat<(i32 (IL_lda_global   ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.GLOBAL)>, Requires<[In32BitMode]>;
 def : Pat<(i64 (IL_lda_global   ADDR:$address)), (lda_64 ADDR:$address, BrigSegment.GLOBAL)>, Requires<[In64BitMode]>;
+
 def : Pat<(i32 (IL_lda_readonly ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.READONLY)>, Requires<[In32BitMode]>;
 def : Pat<(i64 (IL_lda_readonly ADDR:$address)), (lda_64 ADDR:$address, BrigSegment.READONLY)>, Requires<[In64BitMode]>;
