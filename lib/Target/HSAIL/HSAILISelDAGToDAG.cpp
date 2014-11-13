@@ -119,6 +119,15 @@ private:
                       SDValue &Width,
                       SDValue &ModifierMask) const;
 
+  bool SelectStoreAddr(SDNode *ParentStore,
+                       SDValue Addr,
+                       SDValue &Base,
+                       SDValue &Reg,
+                       SDValue &Offset,
+                       SDValue &Segment,
+                       SDValue &Equiv,
+                       SDValue &Type) const;
+
   bool SelectGPROrImm(SDValue In, SDValue &Src) const;
   bool MemOpHasPtr32(SDNode *N) const;
 
@@ -932,6 +941,25 @@ static unsigned getBrigTypeFromLoadType(MVT::SimpleValueType VT,
   }
 }
 
+static unsigned getBrigTypeFromStoreType(MVT::SimpleValueType VT) {
+  switch (VT) {
+  case MVT::i32:
+    return Brig::BRIG_TYPE_U32;
+  case MVT::f32:
+    return Brig::BRIG_TYPE_F32;
+  case MVT::i8:
+    return Brig::BRIG_TYPE_B8;
+  case MVT::i16:
+    return Brig::BRIG_TYPE_B16;
+  case MVT::i64:
+    return Brig::BRIG_TYPE_B64;
+  case MVT::f64:
+    return Brig::BRIG_TYPE_F64;
+  default:
+    llvm_unreachable("Unhandled type for MVT -> BRIG");
+  }
+}
+
 bool HSAILDAGToDAGISel::SelectLoadAddr(SDNode *ParentLoad,
                                        SDValue Addr,
                                        SDValue &Base,
@@ -957,6 +985,31 @@ bool HSAILDAGToDAGISel::SelectLoadAddr(SDNode *ParentLoad,
   Type = CurDAG->getTargetConstant(BrigType, MVT::i32);
   Width = CurDAG->getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32);
   ModifierMask = CurDAG->getTargetConstant(0, MVT::i32); // TODO: Set if invariant
+  return true;
+}
+
+bool HSAILDAGToDAGISel::SelectStoreAddr(SDNode *ParentStore,
+                                        SDValue Addr,
+                                        SDValue &Base,
+                                        SDValue &Reg,
+                                        SDValue &Offset,
+                                        SDValue &Segment,
+                                        SDValue &Equiv,
+                                        SDValue &Type) const {
+  const StoreSDNode *Store = cast<StoreSDNode>(ParentStore);
+  assert(!Store->isIndexed());
+
+  if (!SelectAddr(Addr, Base, Reg, Offset))
+    return false;
+
+  unsigned AS = Store->getAddressSpace();
+
+  MVT MemVT = Store->getMemoryVT().getSimpleVT();
+  unsigned BrigType = getBrigTypeFromStoreType(MemVT.SimpleTy);
+
+  Segment = CurDAG->getTargetConstant(AS, MVT::i32);
+  Equiv = CurDAG->getTargetConstant(0, MVT::i32);
+  Type = CurDAG->getTargetConstant(BrigType, MVT::i32);
   return true;
 }
 
