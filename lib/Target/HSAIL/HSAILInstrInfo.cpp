@@ -851,29 +851,31 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
   if (MI != MBB.end()) {
     DL = MI->getDebugLoc();
   }
-  MachineMemOperand *MMO;
-  MachineInstr *nMI;
+
   switch (RC->getID()) {
-    default:
-      llvm_unreachable("unrecognized TargetRegisterClass");
-      break;
-    case HSAIL::GPR32RegClassID:
-    case HSAIL::GPR64RegClassID:
-    case HSAIL::CRRegClassID:
-      MMO = MF.getMachineMemOperand(MachinePointerInfo::getFixedStack(FrameIndex),
-        MachineMemOperand::MOLoad,
-        MFI.getObjectSize(FrameIndex),
-        MFI.getObjectAlignment(FrameIndex));
-      nMI = BuildMI(MBB, MI, DL, get(Opc))
-          .addReg(DestReg, RegState::Define)
-          .addFrameIndex(FrameIndex)
-          .addReg(0)
-          .addImm(0)
-          .addImm(BT)
-          .addImm(Brig::BRIG_WIDTH_1)
-          .addImm(0)
-          .addMemOperand(MMO);
-      break;
+  default:
+    llvm_unreachable("unrecognized TargetRegisterClass");
+    break;
+  case HSAIL::GPR32RegClassID:
+  case HSAIL::GPR64RegClassID:
+  case HSAIL::CRRegClassID: {
+    MachineMemOperand *MMO
+      = MF.getMachineMemOperand(MachinePointerInfo::getFixedStack(FrameIndex),
+                                MachineMemOperand::MOLoad,
+                                MFI.getObjectSize(FrameIndex),
+                                MFI.getObjectAlignment(FrameIndex));
+    BuildMI(MBB, MI, DL, get(Opc))
+      .addReg(DestReg, RegState::Define) // dest
+      .addFrameIndex(FrameIndex)         // address_base
+      .addReg(HSAIL::NoRegister)         // address_reg
+      .addImm(0)                         // address_offset
+      .addImm(BT)                        // TypeLength
+      .addImm(HSAILAS::SPILL_ADDRESS)    // segment
+      .addImm(Brig::BRIG_WIDTH_1)        // width
+      .addImm(0)                         // mask
+      .addMemOperand(MMO);
+    break;
+  }
   }
 }
 

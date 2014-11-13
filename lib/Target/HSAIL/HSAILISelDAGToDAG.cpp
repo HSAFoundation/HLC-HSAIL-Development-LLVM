@@ -109,6 +109,16 @@ private:
              SDValue &Reg,
              SDValue &Offset) const;
 
+  bool SelectLoadAddr(SDNode *ParentLoad,
+                      SDValue Addr,
+                      SDValue &Base,
+                      SDValue &Reg,
+                      SDValue &Offset,
+                      SDValue &Segment,
+                      SDValue &Type,
+                      SDValue &Width,
+                      SDValue &ModifierMask) const;
+
   bool SelectGPROrImm(SDValue In, SDValue &Src) const;
   bool MemOpHasPtr32(SDNode *N) const;
 
@@ -883,6 +893,70 @@ HSAILDAGToDAGISel::SelectAddr(SDValue Addr,
     Base = CurDAG->getRegister(0, VT);
   if (Reg.getNode() == 0)
     Reg = CurDAG->getRegister(0, VT);
+  return true;
+}
+
+static unsigned getBrigTypeFromLoadType(MVT::SimpleValueType VT,
+                                        ISD::LoadExtType Ext) {
+  switch (VT) {
+  case MVT::i32:
+    return Brig::BRIG_TYPE_U32; // XXX - B32
+  case MVT::f32:
+    return Brig::BRIG_TYPE_F32;
+  case MVT::i8: {
+    switch (Ext) {
+    case ISD::SEXTLOAD:
+      return Brig::BRIG_TYPE_S8;
+    case ISD::ZEXTLOAD:
+      return Brig::BRIG_TYPE_U8;
+    default:
+      return Brig::BRIG_TYPE_B8;
+    }
+  }
+  case MVT::i16: {
+    switch (Ext) {
+    case ISD::SEXTLOAD:
+      return Brig::BRIG_TYPE_S16;
+    case ISD::ZEXTLOAD:
+      return Brig::BRIG_TYPE_U16;
+    default:
+      return Brig::BRIG_TYPE_B16;
+    }
+  }
+  case MVT::i64:
+    return Brig::BRIG_TYPE_U64; // XXX - B64
+  case MVT::f64:
+    return Brig::BRIG_TYPE_F64;
+  default:
+    llvm_unreachable("Unhandled type for MVT -> BRIG");
+  }
+}
+
+bool HSAILDAGToDAGISel::SelectLoadAddr(SDNode *ParentLoad,
+                                       SDValue Addr,
+                                       SDValue &Base,
+                                       SDValue &Reg,
+                                       SDValue &Offset,
+                                       SDValue &Segment,
+                                       SDValue &Type,
+                                       SDValue &Width,
+                                       SDValue &ModifierMask) const {
+  const LoadSDNode *Load = cast<LoadSDNode>(ParentLoad);
+  assert(!Load->isIndexed());
+
+  if (!SelectAddr(Addr, Base, Reg, Offset))
+    return false;
+
+  unsigned AS = Load->getAddressSpace();
+
+  MVT MemVT = Load->getMemoryVT().getSimpleVT();
+  ISD::LoadExtType ExtTy = Load->getExtensionType();
+  unsigned BrigType = getBrigTypeFromLoadType(MemVT.SimpleTy, ExtTy);
+
+  Segment = CurDAG->getTargetConstant(AS, MVT::i32);
+  Type = CurDAG->getTargetConstant(BrigType, MVT::i32);
+  Width = CurDAG->getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32);
+  ModifierMask = CurDAG->getTargetConstant(0, MVT::i32); // TODO: Set if invariant
   return true;
 }
 

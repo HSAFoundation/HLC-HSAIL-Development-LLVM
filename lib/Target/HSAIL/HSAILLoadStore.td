@@ -172,81 +172,69 @@ def getLdStVectorOpcode : InstrMapping {
   let ValueCols   = [["1"], ["2"], ["3"], ["4"]];
 }
 
+class LD<string opName, RegisterClass RC, dag outs,
+         string deststr, int vecSize> : HSAILInst<outs,
+  (ins MEMOP:$address,
+       BrigTypeX:$TypeLength,
+       BrigSegment:$segment,
+       BrigWidth:$width,
+       BrigMemoryModifierMask:$mask),
+    opName#"$segment$width$mask$TypeLength\t"#deststr#", $address",
+    []>,
+    LdStVectorMap<NAME, vecSize> {
+  let isLoad = 1;
+  let mayLoad = 1;
+  let isStore = 0;
+  let mayStore = 0;
+  let hasSideEffects = 0;
+}
+
+// FIXME: If the MEMOP isn't explicitly typed in output, counts as
+// wrong number of operands.
+class LDPat<Instruction inst, ValueType vt> : Pat <
+  (vt (unindexedload (LoadAddr MEMOP:$address,
+                               BrigSegment:$segment,
+                               BrigTypeX:$TypeLength,
+                               BrigWidth:$width,
+                               BrigMemoryModifierMask:$mask))),
+  (inst MEMOP:$address, $TypeLength, $segment, $width, $mask)
+>;
+
 ////////////////////////////////////////////////////////////////////////////////
 // ld (integer, signed and unsigned, 32-bit and 64-bit;
 //     float, 32-bit and 64-bit; addr, 32bit and 64-bit)
-multiclass HSAIL_LD<RegisterClass RC, DAGOperand MPtr>
-{
-  let isLoad = 1, mayLoad = 1, hasSideEffects = 0 in {
-    def _v1: HSAILInst<(outs RC:$dest),
-                       (ins MPtr:$address, BrigTypeX:$TypeLength, BrigWidth:$width,
-                            BrigMemoryModifierMask:$mask),
-                      "ld$width$mask$TypeLength\t$dest, $address", []>,
-             LdStVectorMap<NAME, 1>;
+multiclass HSAIL_LD<RegisterClass RC> {
+  def _v1 : LD<"ld", RC, (outs RC:$dest), "$dest", 1>;
 
-    def _v2 : HSAILInst<(outs RC:$dest0, RC:$dest1),
-                        (ins MPtr:$address, BrigTypeX:$TypeLength, BrigWidth:$width,
-                             BrigMemoryModifierMask:$mask),
-                         "ld_v2$width$mask$TypeLength\t($dest0, $dest1 ), $address", []>,
-             LdStVectorMap<NAME, 2>;
+  def _v2 : LD<"ld_v2", RC, (outs RC:$dest0, RC:$dest1),
+    "($dest0, $dest1)", 2>;
 
+  def _v3 : LD<"ld_v3", RC,
+    (outs RC:$dest0, RC:$dest1, RC:$dest2),
+    "($dest0, $dest1, $dest2)", 3>;
 
-    def _v3 : HSAILInst<(outs RC:$dest0, RC:$dest1, RC:$dest2),
-                        (ins MPtr:$address, BrigTypeX:$TypeLength, BrigWidth:$width,
-                             BrigMemoryModifierMask:$mask),
-                         "ld_v3$width$mask$TypeLength\t($dest0, $dest1, $dest2 ), $address", []>,
-              LdStVectorMap<NAME, 3>;
-
-
-    def _v4 : HSAILInst<(outs RC:$dest0, RC:$dest1, RC:$dest2, RC:$dest3),
-                        (ins MPtr:$address, BrigTypeX:$TypeLength, BrigWidth:$width,
-                             BrigMemoryModifierMask:$mask),
-                         "ld_v4$width$mask$TypeLength\t($dest0, $dest1, $dest2, $dest3 ), $address", []>,
-              LdStVectorMap<NAME, 4>;
-
-  }
+  def _v4 : LD<"ld_v4", RC,
+    (outs RC:$dest0, RC:$dest1, RC:$dest2, RC:$dest3),
+    "($dest0, $dest1, $dest2, $dest3)", 4>;
 }
 
-class LoadIsPtr32<PatFrag pf> : PatFrag<(ops node:$address), (pf node:$address),
-                            [{ return MemOpHasPtr32(N); }]>;
+defm ld_32 : HSAIL_LD<GPR32>;
+defm ld_64 : HSAIL_LD<GPR64>;
 
-class LoadIsPtrNN<PatFrag pf> : PatFrag<(ops node:$address), (pf node:$address),
-                            [{ return !MemOpHasPtr32(N); }]>;
-
-// For segments where the address is 32/64-bit depending on machine model.
-defm ld_32 : HSAIL_LD<GPR32, MEMOP>;
-defm ld_64 : HSAIL_LD<GPR64, MEMOP>;
-
-def : Pat<(i32 (LoadIsPtrNN<load>        ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.U32, BrigWidth._1, 0)>;
-def : Pat<(f32 (LoadIsPtrNN<load>        ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.F32, BrigWidth._1, 0)>;
-def : Pat<(i32 (LoadIsPtrNN<extloadi8>   ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.B8, BrigWidth._1, 0)>;
-def : Pat<(i32 (LoadIsPtrNN<sextloadi8>  ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.S8, BrigWidth._1, 0)>;
-def : Pat<(i32 (LoadIsPtrNN<zextloadi8>  ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.U8, BrigWidth._1, 0)>;
-def : Pat<(i32 (LoadIsPtrNN<extloadi16>  ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.B16, BrigWidth._1, 0)>;
-def : Pat<(i32 (LoadIsPtrNN<sextloadi16> ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.S16, BrigWidth._1, 0)>;
-def : Pat<(i32 (LoadIsPtrNN<zextloadi16> ADDR:$address)), (ld_32_v1 ADDR:$address, BrigTypeX.U16, BrigWidth._1, 0)>;
-def : Pat<(i64 (LoadIsPtrNN<load>        ADDR:$address)), (ld_64_v1 ADDR:$address, BrigTypeX.U64, BrigWidth._1, 0)>;
-def : Pat<(f64 (LoadIsPtrNN<load>        ADDR:$address)), (ld_64_v1 ADDR:$address, BrigTypeX.F64, BrigWidth._1, 0)>;
+// TODO: Promote float loads to integers.
+def : LDPat<ld_32_v1, i32>;
+def : LDPat<ld_32_v1, f32>;
+def : LDPat<ld_64_v1, i64>;
+def : LDPat<ld_64_v1, f64>;
 
 // For segments where the address is 32-bit in both models.
-defm ld_32_ptr32 : HSAIL_LD<GPR32, MEMOP>;
-defm ld_64_ptr32 : HSAIL_LD<GPR64, MEMOP>;
-
-def : Pat<(i32 (LoadIsPtr32<load>        ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U32, BrigWidth._1, 0)>;
-def : Pat<(f32 (LoadIsPtr32<load>        ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.F32, BrigWidth._1, 0)>;
-def : Pat<(i32 (LoadIsPtr32<extloadi8>   ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.B8, BrigWidth._1, 0)>;
-def : Pat<(i32 (LoadIsPtr32<sextloadi8>  ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.S8, BrigWidth._1, 0)>;
-def : Pat<(i32 (LoadIsPtr32<zextloadi8>  ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U8, BrigWidth._1, 0)>;
-def : Pat<(i32 (LoadIsPtr32<extloadi16>  ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.B16, BrigWidth._1, 0)>;
-def : Pat<(i32 (LoadIsPtr32<sextloadi16> ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.S16, BrigWidth._1, 0)>;
-def : Pat<(i32 (LoadIsPtr32<zextloadi16> ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U16, BrigWidth._1, 0)>;
-def : Pat<(i64 (LoadIsPtr32<load>        ADDR:$address)), (ld_64_ptr32_v1 ADDR:$address, BrigTypeX.U64, BrigWidth._1, 0)>;
-def : Pat<(f64 (LoadIsPtr32<load>        ADDR:$address)), (ld_64_ptr32_v1 ADDR:$address, BrigTypeX.F64, BrigWidth._1, 0)>;
+defm ld_32_ptr32 : HSAIL_LD<GPR32>;
+defm ld_64_ptr32 : HSAIL_LD<GPR64>;
 
 let hasSideEffects = 1, hasCtrlDep = 1 in {
   // It is not safe to move ld_arg as it can be in an argscope
-  defm rarg_ld_32_ptr32 : HSAIL_LD<GPR32, MEMOP>;
-  defm rarg_ld_64_ptr32 : HSAIL_LD<GPR64, MEMOP>;
+  defm rarg_ld_32_ptr32 : HSAIL_LD<GPR32>;
+  defm rarg_ld_64_ptr32 : HSAIL_LD<GPR64>;
 }
 
 let mayLoad = 1, isPseudo = 1, hasSideEffects = 0 in {

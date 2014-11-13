@@ -708,12 +708,20 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     }
     if (!Ptr.getNode())
       Ptr = DAG.getRegister(0, PtrTy);
-    SDValue Ops[] = { ParamValue,
-        /* Address */ Ptr, Reg, DAG.getTargetConstant(offset, MVT::i32),
-        /* Ops[4]  */ DAG.getTargetConstant(BrigType, MVT::i32),
-        /* Ops[5]  */ Zero, Zero, Zero, Zero };
+    SDValue Ops[] = {
+      ParamValue,
+      /* Address */ Ptr, Reg, DAG.getTargetConstant(offset, MVT::i32),
+      DAG.getTargetConstant(BrigType, MVT::i32),
+      Zero,
+      Zero,
+      Zero,
+      Zero,
+      Zero
+    };
 
     if (isLoad) {
+      Ops[opNo++] = DAG.getTargetConstant(AddressSpace, MVT::i32); // segment
+
       // Width qualifier.
         Ops[opNo++] = DAG.getTargetConstant((AddressSpace ==
           HSAILAS::KERNARG_ADDRESS) ? Brig::BRIG_WIDTH_ALL
