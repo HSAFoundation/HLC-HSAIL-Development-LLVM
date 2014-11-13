@@ -9,6 +9,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "HSAILInstPrinter.h"
+#include "HSAIL.h"
 #include "MCTargetDesc/HSAILMCTargetDesc.h"
 #include "llvm/MC/MCExpr.h"
 #include "llvm/MC/MCInst.h"
@@ -1337,6 +1338,39 @@ void HSAILInstPrinter::printBrigSegCvtModifierMask(const MCInst *MI,
 void HSAILInstPrinter::printBrigSegment(const MCInst *MI, unsigned OpNo,
                                         raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
+  case HSAILAS::FLAT_ADDRESS:
+    // Assumed default.
+    break;
+  case HSAILAS::GLOBAL_ADDRESS:
+    O << "_global";
+    break;
+  case HSAILAS::CONSTANT_ADDRESS:
+    O << "_readonly";
+    break;
+  case HSAILAS::KERNARG_ADDRESS:
+    O << "_kernarg";
+    break;
+  case HSAILAS::GROUP_ADDRESS:
+    O << "_group";
+    break;
+  case HSAILAS::PRIVATE_ADDRESS:
+    O << "_private";
+    break;
+  case HSAILAS::SPILL_ADDRESS:
+    O << "_spill";
+    break;
+  case HSAILAS::ARG_ADDRESS:
+    O << "_arg";
+    break;
+  case HSAILAS::REGION_ADDRESS:
+    O << "_region";
+    break;
+  default:
+    llvm_unreachable("bad segment value");
+  }
+
+#if 0
+  switch (MI->getOperand(OpNo).getImm()) {
   case BRIG_SEGMENT_GLOBAL:
     O << "_global";
     break;
@@ -1361,7 +1395,10 @@ void HSAILInstPrinter::printBrigSegment(const MCInst *MI, unsigned OpNo,
   case BRIG_SEGMENT_EXTSPACE0:
     O << "_region";
     break;
+  default:
+    llvm_unreachable("bad segment value");
   }
+#endif
 }
 
 void HSAILInstPrinter::printBrigTypeX(const MCInst *MI, unsigned OpNo,
