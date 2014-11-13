@@ -94,20 +94,20 @@ private:
   SDNode* SelectCrossLaneIntrinsic(SDNode *Node);
   // Helper for SelectAddrCommon
   // Checks that OR operation is semantically equivalent to ADD
-  bool IsOREquivalentToADD(SDValue Op);
+  bool IsOREquivalentToADD(SDValue Op) const;
 
   bool SelectAddrCommon(SDValue Addr, 
                         SDValue& Base, 
                         SDValue& Reg, 
                         int64_t& Offset, 
                         MVT ValueType,
-                        int Depth);
+                        int Depth) const;
 
   bool
   SelectAddr(SDValue N,
              SDValue &Base,
              SDValue &Reg,
-             SDValue &Offset);
+             SDValue &Offset) const;
 
   bool SelectGPROrImm(SDValue In, SDValue &Src) const;
   bool MemOpHasPtr32(SDNode *N) const;
@@ -686,7 +686,7 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
   return ResNode;
 }
 
-bool HSAILDAGToDAGISel::IsOREquivalentToADD(SDValue Op)
+bool HSAILDAGToDAGISel::IsOREquivalentToADD(SDValue Op) const
 {
   assert(Op.getOpcode() == ISD::OR);
 
@@ -739,7 +739,7 @@ bool HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr,
   SDValue &Reg,
   int64_t &Offset,
   MVT ValueType,
-  int Depth)
+  int Depth) const
 {
   if (Depth > 5)
     return false;
@@ -869,7 +869,7 @@ bool
 HSAILDAGToDAGISel::SelectAddr(SDValue Addr,
   SDValue& Base,
   SDValue& Reg,
-  SDValue& Offset)
+  SDValue& Offset) const
 {
   MVT VT = Addr.getValueType().getSimpleVT();
   assert(VT == MVT::i32 || VT == MVT::i64);
