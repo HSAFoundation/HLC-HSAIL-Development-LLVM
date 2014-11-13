@@ -240,29 +240,46 @@ let mayLoad = 1, isPseudo = 1, hasSideEffects = 0 in {
                               "ld_b1$width$mask$TypeLength\t$dest, $address", []>;
 }
 
+
+class ST<string opName, RegisterClass RC, dag ins,
+         string srcstr, int vecSize> :
+  HSAILInst<(outs),
+    (ins MEMOP:$address,
+         BrigTypeX:$TypeLength,
+         BrigSegment:$segment,
+         /*EquivClass:$equiv,*/
+         BrigWidth:$width),
+    opName#"$segment$TypeLength\t"#srcstr#", $address",
+    []>,
+    LdStVectorMap<NAME, vecSize> {
+  let isLoad = 0;
+  let mayLoad = 0;
+  let isStore = 1;
+  let mayStore = 1;
+  let hasSideEffects = 0;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // st (integer, singed and unsigned, 32-bit and 64-bit;
 //     float, 32-bit and 64-bit; addr, 32bit and 64-bit)
-multiclass HSAIL_ST<RegisterClass RC, DAGOperand MPtr>
-{
+multiclass HSAIL_ST<RegisterClass RC> {
   let isStore = 1, mayStore = 1, hasSideEffects = 0 in {
-    def _v1 : HSAILInst<(outs), (ins RC:$src,
-                                     MPtr:$address, BrigTypeX:$TypeLength),
+    def _v1 : HSAILInst<(outs), (ins RC:$src, MEMOP:$address, BrigTypeX:$TypeLength),
                         "st$TypeLength\t$src, $address", []>,
               LdStVectorMap<NAME, 1>;
 
     def _v2 : HSAILInst<(outs), (ins RC:$src0, RC:$src1,
-                                     MPtr:$address, BrigTypeX:$TypeLength),
-                        "st_v2$TypeLength\t($src0, $src1 ), $address", []>,
+                                     MEMOP:$address, BrigTypeX:$TypeLength),
+                        "st_v2$TypeLength\t($src0, $src1), $address", []>,
               LdStVectorMap<NAME, 2>;
 
     def _v3 : HSAILInst<(outs), (ins RC:$src0, RC:$src1, RC:$src2,
-                                     MPtr:$address, BrigTypeX:$TypeLength),
+                                     MEMOP:$address, BrigTypeX:$TypeLength),
                         "st_v3$TypeLength\t($src0, $src1, $src2 ), $address", []>,
               LdStVectorMap<NAME, 3>;
 
     def _v4 : HSAILInst<(outs), (ins RC:$src0, RC:$src1, RC:$src2, RC:$src3,
-                                     MPtr:$address, BrigTypeX:$TypeLength),
+                                     MEMOP:$address, BrigTypeX:$TypeLength),
                         "st_v4$TypeLength\t($src0, $src1, $src2, $src3 ), $address", []>,
               LdStVectorMap<NAME, 4>;
   }
@@ -275,8 +292,8 @@ class StoreIsPtrNN<PatFrag pf> : PatFrag<(ops node:$src0, node:$address), (pf no
                             [{ return !MemOpHasPtr32(N); }]>;
 
 // For segments where the address is 32/64-bit depending on machine model.
-defm st_32 : HSAIL_ST<GPR32, MEMOP>;
-defm st_64 : HSAIL_ST<GPR64, MEMOP>;
+defm st_32 : HSAIL_ST<GPR32>;
+defm st_64 : HSAIL_ST<GPR64>;
 
 def : Pat<(StoreIsPtrNN<store>         (i32 GPR32:$src0), ADDR:$address), (st_32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.U32)>;
 def : Pat<(StoreIsPtrNN<store>         (f32 GPR32:$src0), ADDR:$address), (st_32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.F32)>;
@@ -291,8 +308,8 @@ def : Pat<(StoreIsPtrNN<truncstorei16> (i32 imm:$src0),   ADDR:$address), (st_32
 def : Pat<(StoreIsPtrNN<store>         (i64 imm:$src0),   ADDR:$address), (st_64_v1 imm:$src0,   ADDR:$address, BrigTypeX.U64)>;
 
 // For segments where the address is 32-bit in both models.
-defm st_32_ptr32 : HSAIL_ST<GPR32, MEMOP>;
-defm st_64_ptr32 : HSAIL_ST<GPR64, MEMOP>;
+defm st_32_ptr32 : HSAIL_ST<GPR32>;
+defm st_64_ptr32 : HSAIL_ST<GPR64>;
 
 def : Pat<(StoreIsPtr32<store>         (i32 GPR32:$src0), ADDR:$address), (st_32_ptr32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.U32)>;
 def : Pat<(StoreIsPtr32<store>         (f32 GPR32:$src0), ADDR:$address), (st_32_ptr32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.F32)>;
