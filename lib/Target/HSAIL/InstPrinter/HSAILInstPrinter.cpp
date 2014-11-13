@@ -81,6 +81,42 @@ void HSAILInstPrinter::printAddrMode3Op(const MCInst *MI,
     O << '[' << formatDec(Offset) << ']';
 }
 
+void HSAILInstPrinter::printVec2Op(const MCInst *MI,
+                                   unsigned OpNo,
+                                   raw_ostream &O) {
+  O << '(';
+  printOperand(MI, OpNo + 0, O);
+  O << ", ";
+  printOperand(MI, OpNo + 1, O);
+  O << ')';
+}
+
+void HSAILInstPrinter::printVec3Op(const MCInst *MI,
+                                   unsigned OpNo,
+                                   raw_ostream &O) {
+  O << '(';
+  printOperand(MI, OpNo + 0, O);
+  O << ", ";
+  printOperand(MI, OpNo + 1, O);
+  O << ", ";
+  printOperand(MI, OpNo + 2, O);
+  O << ')';
+}
+
+void HSAILInstPrinter::printVec4Op(const MCInst *MI,
+                                   unsigned OpNo,
+                                   raw_ostream &O) {
+  O << '(';
+  printOperand(MI, OpNo + 0, O);
+  O << ", ";
+  printOperand(MI, OpNo + 1, O);
+  O << ", ";
+  printOperand(MI, OpNo + 2, O);
+  O << ", ";
+  printOperand(MI, OpNo + 3, O);
+  O << ')';
+}
+
 void HSAILInstPrinter::printBrigAlignment(const MCInst *MI, unsigned OpNo,
                                           raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
