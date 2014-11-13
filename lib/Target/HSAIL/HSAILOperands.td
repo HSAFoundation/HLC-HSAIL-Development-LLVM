@@ -16,6 +16,21 @@ def MEMOP  : Operand<iPTR> {
   let PrintMethod = "printAddrMode3Op";
 }
 
+def Vec2Op : Operand<untyped> {
+  let MIOperandInfo = (ops untyped, untyped);
+  let PrintMethod = "printVec2Op";
+}
+
+def Vec3Op : Operand<untyped> {
+  let MIOperandInfo = (ops untyped, untyped, untyped);
+  let PrintMethod = "printVec3Op";
+}
+
+def Vec4Op : Operand<untyped> {
+  let MIOperandInfo = (ops untyped, untyped, untyped, untyped);
+  let PrintMethod = "printVec4Op";
+}
+
 def calltarget : Operand<i32>;
 
 def GPROrImm : ComplexPattern<untyped, 1, "SelectGPROrImm">;
