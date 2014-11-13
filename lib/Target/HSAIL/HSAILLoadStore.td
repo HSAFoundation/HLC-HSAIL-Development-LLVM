@@ -227,19 +227,16 @@ def : LDPat<ld_32_v1, f32>;
 def : LDPat<ld_64_v1, i64>;
 def : LDPat<ld_64_v1, f64>;
 
-// For segments where the address is 32-bit in both models.
-defm ld_32_ptr32 : HSAIL_LD<GPR32>;
-defm ld_64_ptr32 : HSAIL_LD<GPR64>;
 
 let hasSideEffects = 1, hasCtrlDep = 1 in {
   // It is not safe to move ld_arg as it can be in an argscope
-  defm rarg_ld_32_ptr32 : HSAIL_LD<GPR32>;
-  defm rarg_ld_64_ptr32 : HSAIL_LD<GPR64>;
+  defm rarg_ld_32 : HSAIL_LD<GPR32>;
+  defm rarg_ld_64 : HSAIL_LD<GPR64>;
 }
 
 let mayLoad = 1, isPseudo = 1, hasSideEffects = 0 in {
-  def ld_b1_ptr32 : HSAILInst<(outs CR:$dest), (ins MEMOP:$address, BrigTypeX:$TypeLength,
-                               BrigWidth:$width, BrigMemoryModifierMask:$mask),
+  def ld_b1 : HSAILInst<(outs CR:$dest), (ins MEMOP:$address, BrigTypeX:$TypeLength,
+                                              BrigWidth:$width, BrigMemoryModifierMask:$mask),
                               "ld_b1$width$mask$TypeLength\t$dest, $address", []>;
 }
 
