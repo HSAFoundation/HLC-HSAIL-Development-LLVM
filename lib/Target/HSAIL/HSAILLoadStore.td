@@ -229,8 +229,8 @@ def : Pat<(i64 (LoadIsPtrNN<load>        ADDR:$address)), (ld_64_v1 ADDR:$addres
 def : Pat<(f64 (LoadIsPtrNN<load>        ADDR:$address)), (ld_64_v1 ADDR:$address, BrigTypeX.F64, BrigWidth._1, 0)>;
 
 // For segments where the address is 32-bit in both models.
-defm ld_32_ptr32 : HSAIL_LD<GPR32, MEMOP32>;
-defm ld_64_ptr32 : HSAIL_LD<GPR64, MEMOP32>;
+defm ld_32_ptr32 : HSAIL_LD<GPR32, MEMOP>;
+defm ld_64_ptr32 : HSAIL_LD<GPR64, MEMOP>;
 
 def : Pat<(i32 (LoadIsPtr32<load>        ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.U32, BrigWidth._1, 0)>;
 def : Pat<(f32 (LoadIsPtr32<load>        ADDR:$address)), (ld_32_ptr32_v1 ADDR:$address, BrigTypeX.F32, BrigWidth._1, 0)>;
@@ -245,12 +245,12 @@ def : Pat<(f64 (LoadIsPtr32<load>        ADDR:$address)), (ld_64_ptr32_v1 ADDR:$
 
 let hasSideEffects = 1, hasCtrlDep = 1 in {
   // It is not safe to move ld_arg as it can be in an argscope
-  defm rarg_ld_32_ptr32 : HSAIL_LD<GPR32, MEMOP32>;
-  defm rarg_ld_64_ptr32 : HSAIL_LD<GPR64, MEMOP32>;
+  defm rarg_ld_32_ptr32 : HSAIL_LD<GPR32, MEMOP>;
+  defm rarg_ld_64_ptr32 : HSAIL_LD<GPR64, MEMOP>;
 }
 
 let mayLoad = 1, isPseudo = 1, hasSideEffects = 0 in {
-  def ld_b1_ptr32 : HSAILInst<(outs CR:$dest), (ins MEMOP32:$address, BrigTypeX:$TypeLength,
+  def ld_b1_ptr32 : HSAILInst<(outs CR:$dest), (ins MEMOP:$address, BrigTypeX:$TypeLength,
                                BrigWidth:$width, BrigMemoryModifierMask:$mask),
                               "ld_b1$width$mask$TypeLength\t$dest, $address", []>;
 }
@@ -306,8 +306,8 @@ def : Pat<(StoreIsPtrNN<truncstorei16> (i32 imm:$src0),   ADDR:$address), (st_32
 def : Pat<(StoreIsPtrNN<store>         (i64 imm:$src0),   ADDR:$address), (st_64_v1 imm:$src0,   ADDR:$address, BrigTypeX.U64)>;
 
 // For segments where the address is 32-bit in both models.
-defm st_32_ptr32 : HSAIL_ST<GPR32, MEMOP32>;
-defm st_64_ptr32 : HSAIL_ST<GPR64, MEMOP32>;
+defm st_32_ptr32 : HSAIL_ST<GPR32, MEMOP>;
+defm st_64_ptr32 : HSAIL_ST<GPR64, MEMOP>;
 
 def : Pat<(StoreIsPtr32<store>         (i32 GPR32:$src0), ADDR:$address), (st_32_ptr32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.U32)>;
 def : Pat<(StoreIsPtr32<store>         (f32 GPR32:$src0), ADDR:$address), (st_32_ptr32_v1 GPR32:$src0, ADDR:$address, BrigTypeX.F32)>;
@@ -322,7 +322,7 @@ def : Pat<(StoreIsPtr32<truncstorei16> (i32 imm:$src0),   ADDR:$address), (st_32
 def : Pat<(StoreIsPtr32<store>         (i64 imm:$src0),   ADDR:$address), (st_64_ptr32_v1 imm:$src0,   ADDR:$address, BrigTypeX.U64)>;
 
 let mayStore = 1, isPseudo = 1, hasSideEffects = 0 in {
-  def st_b1_ptr32 : HSAILInst<(outs), (ins CR:$src0, MEMOP32:$address, BrigTypeX:$TypeLength),
+  def st_b1_ptr32 : HSAILInst<(outs), (ins CR:$src0, MEMOP:$address, BrigTypeX:$TypeLength),
                               "st_b1$TypeLength\t$src0, $address", []>;
 }
 
@@ -335,7 +335,7 @@ class LdaAddr<RegisterClass RC, DAGOperand MPtr>
   let neverHasSideEffects = 1;
 }
 
-def lda_32 : LdaAddr<GPR32, MEMOP32>;
+def lda_32 : LdaAddr<GPR32, MEMOP>;
 def lda_64 : LdaAddr<GPR64, MEMOP>;
 
 def : Pat<(i32 (IL_lda_group    ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.GROUP)>;
