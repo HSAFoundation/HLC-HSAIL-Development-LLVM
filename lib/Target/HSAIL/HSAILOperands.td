@@ -8,13 +8,11 @@ def PtrRC: Operand<iPTR>, PointerLikeRegClass<0>;
 def PtrRC32: Operand<i32>, PointerLikeRegClass<32>;
 
 // Memory operand: base, register and offset.
+//
+// FIXME: iPTR is fundamentally broken for address spaces, should use
+// something else.
 def MEMOP  : Operand<iPTR> {
-  let MIOperandInfo = (ops PtrRC:$base, PtrRC:$reg, PtrRC:$offset);
-  let PrintMethod = "printAddrMode3Op";
-}
-
-def MEMOP32  : Operand<i32> {
-  let MIOperandInfo = (ops PtrRC32:$base, PtrRC32:$reg, PtrRC32:$offset);
+  let MIOperandInfo = (ops iAny:$base, iAny:$reg, iAny:$offset);
   let PrintMethod = "printAddrMode3Op";
 }
 
