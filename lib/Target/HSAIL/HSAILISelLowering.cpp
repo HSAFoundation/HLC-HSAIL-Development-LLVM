@@ -654,9 +654,9 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     unsigned BrigType = HSAIL::getBrigType(EltTy, *DL, isSExt);
     if (AddressSpace == HSAILAS::ARG_ADDRESS) {
       if (ArgVT.getSizeInBits() <= 32)
-        op = isLoad ? HSAIL::ld_32_ptr32_v1 : HSAIL::st_32_ptr32_v1;
+        op = isLoad ? HSAIL::ld_32_v1 : HSAIL::st_32_ptr32_v1;
       else
-        op = isLoad ? HSAIL::ld_64_ptr32_v1 : HSAIL::st_64_ptr32_v1;
+        op = isLoad ? HSAIL::ld_64_v1 : HSAIL::st_64_ptr32_v1;
     } else {
       assert(AddressSpace == HSAILAS::KERNARG_ADDRESS);
     if (ArgVT.getSizeInBits() <= 32)
@@ -672,11 +672,11 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
         if (MDS->getString().equals("retarg")) {
           assert(op != HSAIL::ld_32_v1 && op != HSAIL::ld_64_v1);
           switch (op) {
-          case HSAIL::ld_32_ptr32_v1:
-            op = HSAIL::rarg_ld_32_ptr32_v1;
+          case HSAIL::ld_32_v1:
+            op = HSAIL::rarg_ld_32_v1;
             break;
-          case HSAIL::ld_64_ptr32_v1:
-            op = HSAIL::rarg_ld_64_ptr32_v1;
+          case HSAIL::ld_64_v1:
+            op = HSAIL::rarg_ld_64_v1;
             break;
           }
         }
