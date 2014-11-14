@@ -172,7 +172,7 @@ def getLdStVectorOpcode : InstrMapping {
   let ValueCols   = [["1"], ["2"], ["3"], ["4"]];
 }
 
-class LD<string opName, RegisterClass RC, dag outs,
+class LD<string opName, dag outs,
          string deststr, int vecSize> : HSAILInst<outs,
   (ins MEMOP:$address,
        BrigTypeX:$TypeLength,
@@ -204,16 +204,16 @@ class LDPat<Instruction inst, ValueType vt> : Pat <
 // ld (integer, signed and unsigned, 32-bit and 64-bit;
 //     float, 32-bit and 64-bit; addr, 32bit and 64-bit)
 multiclass HSAIL_LD<RegisterClass RC> {
-  def _v1 : LD<"ld", RC, (outs RC:$dest), "$dest", 1>;
+  def _v1 : LD<"ld", (outs RC:$dest), "$dest", 1>;
 
-  def _v2 : LD<"ld_v2", RC, (outs RC:$dest0, RC:$dest1),
+  def _v2 : LD<"ld_v2", (outs RC:$dest0, RC:$dest1),
     "($dest0, $dest1)", 2>;
 
-  def _v3 : LD<"ld_v3", RC,
+  def _v3 : LD<"ld_v3",
     (outs RC:$dest0, RC:$dest1, RC:$dest2),
     "($dest0, $dest1, $dest2)", 3>;
 
-  def _v4 : LD<"ld_v4", RC,
+  def _v4 : LD<"ld_v4",
     (outs RC:$dest0, RC:$dest1, RC:$dest2, RC:$dest3),
     "($dest0, $dest1, $dest2, $dest3)", 4>;
 }
