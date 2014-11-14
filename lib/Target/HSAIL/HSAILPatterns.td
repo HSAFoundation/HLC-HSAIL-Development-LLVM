@@ -11,3 +11,4 @@ def ADDR : ComplexPattern<iPTR, 3, "SelectAddr", [], []>;
 // but there seem to be problems trying to use a ComplexPattern with a
 // chain in a Pat.
 def LoadAddr : ComplexPattern<iPTR, 7, "SelectLoadAddr", [], [SDNPWantParent]>;
+def StoreAddr : ComplexPattern<iPTR, 5, "SelectStoreAddr", [], [SDNPWantParent]>;

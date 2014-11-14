@@ -785,35 +785,38 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
     DL = MI->getDebugLoc();
   }
 
-  MachineMemOperand *MMO;
-  MachineInstr *nMI;
   switch (RC->getID()) {
-    default:
-      llvm_unreachable("unrecognized TargetRegisterClass");
-      break;
-    case HSAIL::CRRegClassID:
-      // We may need a stack slot for spilling a temp GPR32 after expansion
-      // of pseudo insns spill_st_b1/spill_ld_b1. After frame finalization
-      // it will be too late to create it, so create it now.
-      // Note, there is no need to do it in loadRegFromStackSlot() because
-      // there is no spill load w/o a spill store.
-      (void) getEmergencyStackSlot(&MF);
-      // Fall through
-    case HSAIL::GPR32RegClassID:
-    case HSAIL::GPR64RegClassID:
-      MMO = MF.getMachineMemOperand(
-          MachinePointerInfo::getFixedStack(FrameIndex),
-          MachineMemOperand::MOStore,
-          MFI.getObjectSize(FrameIndex),
-          MFI.getObjectAlignment(FrameIndex));
-      nMI = BuildMI(MBB, MI, DL, get(Opc))
-          .addReg(SrcReg, getKillRegState(isKill))
-          .addFrameIndex(FrameIndex)
-          .addReg(0)
-          .addImm(0)
-          .addImm(BT)
-          .addMemOperand(MMO);            
-      break;
+  default:
+    llvm_unreachable("unrecognized TargetRegisterClass");
+    break;
+  case HSAIL::CRRegClassID:
+    // We may need a stack slot for spilling a temp GPR32 after expansion
+    // of pseudo insns spill_st_b1/spill_ld_b1. After frame finalization
+    // it will be too late to create it, so create it now.
+    // Note, there is no need to do it in loadRegFromStackSlot() because
+    // there is no spill load w/o a spill store.
+    (void) getEmergencyStackSlot(&MF);
+    // Fall through
+  case HSAIL::GPR32RegClassID:
+  case HSAIL::GPR64RegClassID: {
+    MachineMemOperand *MMO
+      = MF.getMachineMemOperand(
+        MachinePointerInfo::getFixedStack(FrameIndex),
+        MachineMemOperand::MOStore,
+        MFI.getObjectSize(FrameIndex),
+        MFI.getObjectAlignment(FrameIndex));
+
+    // FIXME: Why is this setting kill?
+    BuildMI(MBB, MI, DL, get(Opc))
+      .addReg(SrcReg, getKillRegState(isKill)) // src
+      .addFrameIndex(FrameIndex)               // address_base
+      .addReg(HSAIL::NoRegister)               // address_reg
+      .addImm(0)                               // address_offset
+      .addImm(BT)                              // TypeLength
+      .addImm(HSAILAS::SPILL_ADDRESS)          // segment
+      .addMemOperand(MMO);
+    break;
+  }
   }
 }
 
