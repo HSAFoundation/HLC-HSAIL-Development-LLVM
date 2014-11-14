@@ -907,28 +907,20 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     return lda;
   }
 
-  case HSAIL::ld_32_v1:
-  case HSAIL::ld_64_v1:
-  case HSAIL::rarg_ld_32_v1:
-  case HSAIL::rarg_ld_64_v1:
+  case HSAIL::ld_v1:
+  case HSAIL::rarg_ld_v1:
     return EmitLoadOrStore(II, true, 1);
 
-  case HSAIL::ld_32_v2:
-  case HSAIL::ld_64_v2:
-  case HSAIL::rarg_ld_32_v2:
-  case HSAIL::rarg_ld_64_v2:
+  case HSAIL::ld_v2:
+  case HSAIL::rarg_ld_v2:
     return EmitLoadOrStore(II, true, 2);
 
-  case HSAIL::ld_32_v3:
-  case HSAIL::ld_64_v3:
-  case HSAIL::rarg_ld_32_v3:
-  case HSAIL::rarg_ld_64_v3:
+  case HSAIL::ld_v3:
+  case HSAIL::rarg_ld_v3:
     return EmitLoadOrStore(II, true, 3);
 
-  case HSAIL::ld_32_v4:
-  case HSAIL::ld_64_v4:
-  case HSAIL::rarg_ld_32_v4:
-  case HSAIL::rarg_ld_64_v4:
+  case HSAIL::ld_v4:
+  case HSAIL::rarg_ld_v4:
     return EmitLoadOrStore(II, true, 4);
 
   case HSAIL::st_32_v1:
@@ -1818,7 +1810,7 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned
     int64_t addr = base.getImm();
     assert(isInt<32>(addr));
 
-    if ((MI->getOpcode() == HSAIL::ld_64_v1) &&
+    if ((MI->getOpcode() == HSAIL::ld_v1) &&
         HSAIL::getBrigType(MI).getImm() == Brig::BRIG_TYPE_SAMP) {
       BrigEmitOperandImage(MI, opNum); // Constant sampler.
       return;

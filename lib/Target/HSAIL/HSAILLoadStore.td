@@ -200,38 +200,41 @@ class LDPat<Instruction inst, ValueType vt> : Pat <
   (inst MEMOP:$address, $TypeLength, $segment, $width, $mask)
 >;
 
-////////////////////////////////////////////////////////////////////////////////
-// ld (integer, signed and unsigned, 32-bit and 64-bit;
-//     float, 32-bit and 64-bit; addr, 32bit and 64-bit)
-multiclass HSAIL_LD<RegisterClass RC> {
-  def _v1 : LD<"ld", (outs RC:$dest), "$dest", 1>;
 
-  def _v2 : LD<"ld_v2", (outs RC:$dest0, RC:$dest1),
+// XXX - Dummy argument since something is required for a multiclass.
+multiclass HSAIL_LD<int Dummy> {
+  // TODO: We should define a single ld opcode with all 4 output
+  // registers. We will then just set the ones that are actually used.
+
+  // We define the output registers to be unknown. The used register
+  // class will be selected based on the used type.
+  def _v1 : LD<"ld", (outs unknown:$dest), "$dest", 1>;
+
+  def _v2 : LD<"ld_v2", (outs unknown:$dest0, unknown:$dest1),
     "($dest0, $dest1)", 2>;
 
   def _v3 : LD<"ld_v3",
-    (outs RC:$dest0, RC:$dest1, RC:$dest2),
+    (outs unknown:$dest0, unknown:$dest1, unknown:$dest2),
     "($dest0, $dest1, $dest2)", 3>;
 
   def _v4 : LD<"ld_v4",
-    (outs RC:$dest0, RC:$dest1, RC:$dest2, RC:$dest3),
+    (outs unknown:$dest0, unknown:$dest1, unknown:$dest2, unknown:$dest3),
     "($dest0, $dest1, $dest2, $dest3)", 4>;
 }
 
-defm ld_32 : HSAIL_LD<GPR32>;
-defm ld_64 : HSAIL_LD<GPR64>;
+defm ld : HSAIL_LD<0>;
 
 // TODO: Promote float loads to integers.
-def : LDPat<ld_32_v1, i32>;
-def : LDPat<ld_32_v1, f32>;
-def : LDPat<ld_64_v1, i64>;
-def : LDPat<ld_64_v1, f64>;
+def : LDPat<ld_v1, i32>;
+def : LDPat<ld_v1, f32>;
+def : LDPat<ld_v1, i64>;
+def : LDPat<ld_v1, f64>;
+
 
 
 let hasSideEffects = 1, hasCtrlDep = 1 in {
   // It is not safe to move ld_arg as it can be in an argscope
-  defm rarg_ld_32 : HSAIL_LD<GPR32>;
-  defm rarg_ld_64 : HSAIL_LD<GPR64>;
+  defm rarg_ld : HSAIL_LD<0>;
 }
 
 let mayLoad = 1, isPseudo = 1, hasSideEffects = 0 in {
