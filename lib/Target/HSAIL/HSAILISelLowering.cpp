@@ -677,7 +677,7 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     }
 
     unsigned opShift = isLoad ? 1 : 0;
-    unsigned opNo = 5; // Value and pointer operands
+    unsigned opNo = 6; // Value and pointer operands
     SDValue Zero = DAG.getTargetConstant(0, MVT::i32);
     SDValue Reg = DAG.getRegister(0, PtrTy); // %noreg
     if (!Ptr.getNode()) {
@@ -705,7 +705,7 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
       ParamValue,
       /* Address */ Ptr, Reg, DAG.getTargetConstant(offset, MVT::i32),
       DAG.getTargetConstant(BrigType, MVT::i32),
-      Zero,
+      DAG.getTargetConstant(AddressSpace, MVT::i32), // segment
       Zero,
       Zero,
       Zero,
@@ -713,8 +713,6 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     };
 
     if (isLoad) {
-      Ops[opNo++] = DAG.getTargetConstant(AddressSpace, MVT::i32); // segment
-
       // Width qualifier.
         Ops[opNo++] = DAG.getTargetConstant((AddressSpace ==
           HSAILAS::KERNARG_ADDRESS) ? Brig::BRIG_WIDTH_ALL

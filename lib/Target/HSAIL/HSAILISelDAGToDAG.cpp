@@ -125,7 +125,7 @@ private:
                        SDValue &Reg,
                        SDValue &Offset,
                        SDValue &Segment,
-                       SDValue &Equiv,
+                       /*SDValue &Equiv,*/
                        SDValue &Type) const;
 
   bool SelectGPROrImm(SDValue In, SDValue &Src) const;
@@ -994,7 +994,7 @@ bool HSAILDAGToDAGISel::SelectStoreAddr(SDNode *ParentStore,
                                         SDValue &Reg,
                                         SDValue &Offset,
                                         SDValue &Segment,
-                                        SDValue &Equiv,
+                                        /*SDValue &Equiv,*/
                                         SDValue &Type) const {
   const StoreSDNode *Store = cast<StoreSDNode>(ParentStore);
   assert(!Store->isIndexed());
@@ -1008,7 +1008,7 @@ bool HSAILDAGToDAGISel::SelectStoreAddr(SDNode *ParentStore,
   unsigned BrigType = getBrigTypeFromStoreType(MemVT.SimpleTy);
 
   Segment = CurDAG->getTargetConstant(AS, MVT::i32);
-  Equiv = CurDAG->getTargetConstant(0, MVT::i32);
+  //Equiv = CurDAG->getTargetConstant(0, MVT::i32);
   Type = CurDAG->getTargetConstant(BrigType, MVT::i32);
   return true;
 }
