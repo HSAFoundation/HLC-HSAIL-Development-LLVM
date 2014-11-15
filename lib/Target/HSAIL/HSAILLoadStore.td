@@ -172,14 +172,14 @@ def getLdStVectorOpcode : InstrMapping {
   let ValueCols   = [["1"], ["2"], ["3"], ["4"]];
 }
 
-class LD<string opName, dag outs, int vecSize> : HSAILInst<outs,
+class LD<string opName, dag outs> : HSAILInst<outs,
   (ins MEMOP:$address,
        BrigTypeX:$TypeLength,
        BrigSegment:$segment,
        BrigWidth:$width,
        BrigMemoryModifierMask:$mask),
-    opName#"$segment$width$mask$TypeLength\t$dest, $address", []>,
-    LdStVectorMap<NAME, vecSize> {
+    opName#"$segment$width$mask$TypeLength\t$dest, $address", []>
+     {
   let isLoad = 1;
   let mayLoad = 1;
   let isStore = 0;
@@ -206,10 +206,10 @@ multiclass HSAIL_LD<int Dummy> {
 
   // We define the output registers to be unknown. The used register
   // class will be selected based on the used type.
-  def _v1 : LD<"ld", (outs unknown:$dest), 1>;
-  def _v2 : LD<"ld_v2", (outs Vec2Op:$dest), 2>;
-  def _v3 : LD<"ld_v3", (outs Vec3Op:$dest), 3>;
-  def _v4 : LD<"ld_v4", (outs Vec4Op:$dest), 4>;
+  def _v1 : LD<"ld", (outs unknown:$dest)>, LdStVectorMap<NAME, 1>;
+  def _v2 : LD<"ld_v2", (outs Vec2Op:$dest)>, LdStVectorMap<NAME, 2>;
+  def _v3 : LD<"ld_v3", (outs Vec3Op:$dest)>, LdStVectorMap<NAME, 3>;
+  def _v4 : LD<"ld_v4", (outs Vec4Op:$dest)>, LdStVectorMap<NAME, 4>;
 }
 
 defm ld : HSAIL_LD<0>;
@@ -227,12 +227,11 @@ let hasSideEffects = 1, hasCtrlDep = 1 in {
   defm rarg_ld : HSAIL_LD<0>;
 }
 
-class ST<string opName, dag ins, int vecSize> :
+class ST<string opName, dag ins> :
   HSAILInst<(outs),
     ins,
     opName#"$segment$TypeLength\t$src, $address",
-    []>,
-    LdStVectorMap<NAME, vecSize> {
+    []> {
   let isLoad = 0;
   let mayLoad = 0;
   let isStore = 1;
@@ -249,10 +248,18 @@ class STPat<Instruction inst, ValueType vt> : Pat <
 >;
 
 multiclass HSAIL_ST<int dummy> {
-  def _v1 : ST<"st", (ins unknown:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment), 1>;
-  def _v2 : ST<"st_v2", (ins Vec2Op:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment), 2>;
-  def _v3 : ST<"st_v3", (ins Vec3Op:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment), 3>;
-  def _v4 : ST<"st_v4", (ins Vec4Op:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment), 4>;
+  def _v1 : ST<"st",
+    (ins unknown:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment)>,
+    LdStVectorMap<NAME, 1>;
+  def _v2 : ST<"st_v2",
+    (ins Vec2Op:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment)>,
+    LdStVectorMap<NAME, 2>;
+  def _v3 : ST<"st_v3",
+    (ins Vec3Op:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment)>,
+    LdStVectorMap<NAME, 3>;
+  def _v4 : ST<"st_v4",
+    (ins Vec4Op:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment)>,
+    LdStVectorMap<NAME, 4>;
 }
 
 defm st : HSAIL_ST<0>;
@@ -264,25 +271,15 @@ def : STPat<st_v1, i64>;
 def : STPat<st_v1, f64>;
 
 
-let isPseudo = 1, hasSideEffects = 0 in {
-let mayStore = 1 in {
-  // We need pseudos to implement condition register spilling due to a
-  // limitation storeRegToStackSlot currently has where it assumes only
- // 1 instruction is created for spilling.
-  def spill_b1 : HSAILInst<(outs),
-    (ins CR:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment),
-    "st$segment$TypeLength\t$src, $address", []>;
-}
+// We need pseudos to implement condition register spilling due to a
+// limitation storeRegToStackSlot currently has where it assumes only
+// 1 instruction is created for spilling.
+let isPseudo = 1 in {
+  def spill_b1 : ST<"spill_b1",
+    (ins CR:$src, MEMOP:$address,
+         BrigTypeX:$TypeLength, BrigSegment:$segment)>;
 
-let mayLoad = 1 in {
-  def restore_b1 : HSAILInst<(outs CR:$dest),
-    (ins MEMOP:$address,
-         BrigTypeX:$TypeLength,
-         BrigSegment:$segment,
-         BrigWidth:$width,
-         BrigMemoryModifierMask:$mask),
-     "ld$segment$width$mask$TypeLength\t$dest, $address", []>;
-}
+def restore_b1 : LD<"restore_b1", (outs CR:$dest)>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
