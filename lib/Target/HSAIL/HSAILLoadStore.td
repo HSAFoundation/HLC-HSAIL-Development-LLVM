@@ -227,13 +227,6 @@ let hasSideEffects = 1, hasCtrlDep = 1 in {
   defm rarg_ld : HSAIL_LD<0>;
 }
 
-let mayLoad = 1, isPseudo = 1, hasSideEffects = 0 in {
-  def ld_b1 : HSAILInst<(outs CR:$dest), (ins MEMOP:$address, BrigTypeX:$TypeLength,
-                                              BrigWidth:$width, BrigMemoryModifierMask:$mask),
-                              "ld_b1$width$mask$TypeLength\t$dest, $address", []>;
-}
-
-
 class ST<string opName, dag ins, int vecSize> :
   HSAILInst<(outs),
     ins,
@@ -270,9 +263,26 @@ def : STPat<st_v1, f32>;
 def : STPat<st_v1, i64>;
 def : STPat<st_v1, f64>;
 
-let mayStore = 1, isPseudo = 1, hasSideEffects = 0 in {
-  def st_b1 : HSAILInst<(outs), (ins CR:$src0, MEMOP:$address, BrigTypeX:$TypeLength),
-                              "st_b1$TypeLength\t$src0, $address", []>;
+
+let isPseudo = 1, hasSideEffects = 0 in {
+let mayStore = 1 in {
+  // We need pseudos to implement condition register spilling due to a
+  // limitation storeRegToStackSlot currently has where it assumes only
+ // 1 instruction is created for spilling.
+  def spill_b1 : HSAILInst<(outs),
+    (ins CR:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment),
+    "st$segment$TypeLength\t$src, $address", []>;
+}
+
+let mayLoad = 1 in {
+  def restore_b1 : HSAILInst<(outs CR:$dest),
+    (ins MEMOP:$address,
+         BrigTypeX:$TypeLength,
+         BrigSegment:$segment,
+         BrigWidth:$width,
+         BrigMemoryModifierMask:$mask),
+     "ld$segment$width$mask$TypeLength\t$dest, $address", []>;
+}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
