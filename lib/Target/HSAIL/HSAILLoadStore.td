@@ -172,15 +172,13 @@ def getLdStVectorOpcode : InstrMapping {
   let ValueCols   = [["1"], ["2"], ["3"], ["4"]];
 }
 
-class LD<string opName, dag outs,
-         string deststr, int vecSize> : HSAILInst<outs,
+class LD<string opName, dag outs, int vecSize> : HSAILInst<outs,
   (ins MEMOP:$address,
        BrigTypeX:$TypeLength,
        BrigSegment:$segment,
        BrigWidth:$width,
        BrigMemoryModifierMask:$mask),
-    opName#"$segment$width$mask$TypeLength\t"#deststr#", $address",
-    []>,
+    opName#"$segment$width$mask$TypeLength\t$dest, $address", []>,
     LdStVectorMap<NAME, vecSize> {
   let isLoad = 1;
   let mayLoad = 1;
@@ -208,18 +206,10 @@ multiclass HSAIL_LD<int Dummy> {
 
   // We define the output registers to be unknown. The used register
   // class will be selected based on the used type.
-  def _v1 : LD<"ld", (outs unknown:$dest), "$dest", 1>;
-
-  def _v2 : LD<"ld_v2", (outs unknown:$dest0, unknown:$dest1),
-    "($dest0, $dest1)", 2>;
-
-  def _v3 : LD<"ld_v3",
-    (outs unknown:$dest0, unknown:$dest1, unknown:$dest2),
-    "($dest0, $dest1, $dest2)", 3>;
-
-  def _v4 : LD<"ld_v4",
-    (outs unknown:$dest0, unknown:$dest1, unknown:$dest2, unknown:$dest3),
-    "($dest0, $dest1, $dest2, $dest3)", 4>;
+  def _v1 : LD<"ld", (outs unknown:$dest), 1>;
+  def _v2 : LD<"ld_v2", (outs Vec2Op:$dest), 2>;
+  def _v3 : LD<"ld_v3", (outs Vec3Op:$dest), 3>;
+  def _v4 : LD<"ld_v4", (outs Vec4Op:$dest), 4>;
 }
 
 defm ld : HSAIL_LD<0>;
