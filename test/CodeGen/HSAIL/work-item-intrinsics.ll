@@ -194,9 +194,9 @@ define void @get_maxdynwave_id(i32 addrspace(1)* %out) #1 {
 
 ; FUNC-LABEL: {{^}}prog function &get_clock
 ; HSAIL: clock_u64 {{\$d[0-9]+}};
-define void @get_clock(i32 addrspace(1)* %out) #1 {
-  %tmp0 = call i32 @llvm.HSAIL.get.clock() #1
-  store i32 %tmp0, i32 addrspace(1)* %out
+define void @get_clock(i64 addrspace(1)* %out) #1 {
+  %tmp0 = call i64 @llvm.HSAIL.get.clock() #1
+  store i64 %tmp0, i64 addrspace(1)* %out
   ret void
 }
 
@@ -221,7 +221,7 @@ declare i32 @llvm.HSAIL.workitemid.flatabs() #0
 declare i32 @llvm.HSAIL.get.lane.id() #0
 declare i32 @llvm.HSAIL.get.dynwave.id() #0
 declare i32 @llvm.HSAIL.get.maxdynwave.id() #0
-declare i32 @llvm.HSAIL.get.clock() #1
+declare i64 @llvm.HSAIL.get.clock() #1
 declare i32 @llvm.HSAIL.get.cu() #1
 
 attributes #0 = { nounwind readnone }
