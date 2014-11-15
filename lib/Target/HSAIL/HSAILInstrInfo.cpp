@@ -769,11 +769,11 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
       llvm_unreachable("unrecognized TargetRegisterClass");
       break;
     case HSAIL::GPR32RegClassID:
-      Opc = HSAIL::st_32_v1;
+      Opc = HSAIL::st_v1;
       BT = Brig::BRIG_TYPE_U32;
       break;
     case HSAIL::GPR64RegClassID:
-      Opc = HSAIL::st_64_v1;
+      Opc = HSAIL::st_v1;
       BT = Brig::BRIG_TYPE_U64;
       break;
     case HSAIL::CRRegClassID:
@@ -1255,7 +1255,7 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
          get(HSAIL::cvt_b1_u32))
         .addReg(tempU32, RegState::Define)
         .addOperand(MI.getOperand(0));
-      MI.setDesc(get(HSAIL::st_32_v1));
+      MI.setDesc(get(HSAIL::st_v1));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsKill();
       HSAIL::getBrigType(&MI).setImm(Brig::BRIG_TYPE_U32);
@@ -1296,6 +1296,21 @@ const TargetRegisterClass *HSAILInstrInfo::getOpRegClass(
   return RI.getPhysRegClass(Reg);
 }
 
+static unsigned numStComponents(unsigned Opc) {
+  switch (Opc) {
+  case HSAIL::st_v1:
+    return 1;
+  case HSAIL::st_v2:
+    return 2;
+  case HSAIL::st_v3:
+    return 3;
+  case HSAIL::st_v4:
+    return 4;
+  }
+
+  llvm_unreachable("Not a store");
+}
+
 bool HSAILInstrInfo::verifyInstruction(const MachineInstr *MI,
                                        StringRef &ErrInfo) const {
   unsigned Opc = MI->getOpcode();
@@ -1318,6 +1333,28 @@ bool HSAILInstrInfo::verifyInstruction(const MachineInstr *MI,
       const TargetRegisterClass *RC = getOpRegClass(MRI, *MI, I);
       if (RC != DestRC) {
         ErrInfo = "Inconsistent dest register operand";
+        return false;
+      }
+    }
+  }
+
+  // Verify that all store sources are registers with the same size.
+  if (Opc == HSAIL::st_v1 ||
+      Opc == HSAIL::st_v2 ||
+      Opc == HSAIL::st_v3 ||
+      Opc == HSAIL::st_v4) {
+    int NSrc = numStComponents(Opc);
+    int BaseSrcIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src);
+
+    // FIXME: Verify bounds of immediate src operands.
+    const TargetRegisterClass *SrcRC = nullptr;
+    for (int SrcIdx = BaseSrcIdx; SrcIdx < BaseSrcIdx + NSrc; ++SrcIdx) {
+      const TargetRegisterClass *RC = getOpRegClass(MRI, *MI, SrcIdx);
+      if (!SrcRC)
+        SrcRC = RC;
+
+      if (RC && RC != SrcRC) {
+        ErrInfo = "Inconsistent src register operand";
         return false;
       }
     }

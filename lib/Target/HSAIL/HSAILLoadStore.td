@@ -255,25 +255,20 @@ class STPat<Instruction inst, ValueType vt> : Pat <
   (inst $src, MEMOP:$address, $TypeLength, $segment)
 >;
 
-////////////////////////////////////////////////////////////////////////////////
-// st (integer, singed and unsigned, 32-bit and 64-bit;
-//     float, 32-bit and 64-bit; addr, 32bit and 64-bit)
-multiclass HSAIL_ST<RegisterClass RC> {
-  def _v1 : ST<"st", (ins RC:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment), 1>;
+multiclass HSAIL_ST<int dummy> {
+  def _v1 : ST<"st", (ins unknown:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment), 1>;
   def _v2 : ST<"st_v2", (ins Vec2Op:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment), 2>;
   def _v3 : ST<"st_v3", (ins Vec3Op:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment), 3>;
   def _v4 : ST<"st_v4", (ins Vec4Op:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment), 4>;
 }
 
-// For segments where the address is 32/64-bit depending on machine model.
-defm st_32 : HSAIL_ST<GPR32>;
-defm st_64 : HSAIL_ST<GPR64>;
+defm st : HSAIL_ST<0>;
 
 // TODO: Promote float stores to integers.
-def : STPat<st_32_v1, i32>;
-def : STPat<st_32_v1, f32>;
-def : STPat<st_64_v1, i64>;
-def : STPat<st_64_v1, f64>;
+def : STPat<st_v1, i32>;
+def : STPat<st_v1, f32>;
+def : STPat<st_v1, i64>;
+def : STPat<st_v1, f64>;
 
 let mayStore = 1, isPseudo = 1, hasSideEffects = 0 in {
   def st_b1 : HSAILInst<(outs), (ins CR:$src0, MEMOP:$address, BrigTypeX:$TypeLength),
