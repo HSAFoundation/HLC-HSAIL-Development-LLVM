@@ -777,7 +777,7 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
       BT = Brig::BRIG_TYPE_U64;
       break;
     case HSAIL::CRRegClassID:
-      Opc = HSAIL::st_b1;
+      Opc = HSAIL::spill_b1;
       BT = Brig::BRIG_TYPE_B1;
       break;
   }
@@ -847,7 +847,7 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
       BT = Brig::BRIG_TYPE_U64;
       break;
     case HSAIL::CRRegClassID:
-      Opc = HSAIL::ld_b1;
+      Opc = HSAIL::restore_b1;
       BT = Brig::BRIG_TYPE_B1;
       break;
   }
@@ -1248,7 +1248,7 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
   unsigned opcode = MI.getOpcode();
 
   switch (opcode) {
-  case HSAIL::st_b1:
+  case HSAIL::spill_b1:
     {
       unsigned tempU32 = getTempGPR32PostRA(MBBI);
       BuildMI(*MBB, MBBI, MI.getDebugLoc(),
@@ -1262,7 +1262,7 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
       RS->setRegUsed(tempU32);
     }
     return true;
-  case HSAIL::ld_b1:
+  case HSAIL::restore_b1:
     {
       unsigned tempU32 = getTempGPR32PostRA(MBBI);
       BuildMI(*MBB, ++MBBI, MI.getDebugLoc(),
