@@ -650,20 +650,8 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     if (AddressSpace == HSAILAS::KERNARG_ADDRESS)
       alignment = DL->getABITypeAlignment(EltTy);
 
-    unsigned op = 0;
+    unsigned op = isLoad ? HSAIL::ld_v1 : HSAIL::st_v1;
     unsigned BrigType = HSAIL::getBrigType(EltTy, *DL, isSExt);
-    if (AddressSpace == HSAILAS::ARG_ADDRESS) {
-      if (ArgVT.getSizeInBits() <= 32)
-        op = isLoad ? HSAIL::ld_v1 : HSAIL::st_32_v1;
-      else
-        op = isLoad ? HSAIL::ld_v1 : HSAIL::st_64_v1;
-    } else {
-      assert(AddressSpace == HSAILAS::KERNARG_ADDRESS);
-    if (ArgVT.getSizeInBits() <= 32)
-      op = isLoad ? HSAIL::ld_v1 : HSAIL::st_32_v1;
-    else
-      op = isLoad ? HSAIL::ld_v1 : HSAIL::st_64_v1;
-    }
 
     // Change opcode for load of return value
     if (isLoad && AddressSpace == HSAILAS::ARG_ADDRESS &&
