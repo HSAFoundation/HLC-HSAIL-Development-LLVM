@@ -1277,6 +1277,52 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
   return HSAILGenInstrInfo::expandPostRAPseudo(MI);
 }
 
+const TargetRegisterClass *HSAILInstrInfo::getOpRegClass(
+  const MachineRegisterInfo &MRI,
+  const MachineInstr &MI,
+  unsigned OpNo) const {
+
+  const MachineOperand &MO = MI.getOperand(OpNo);
+  if (!MO.isReg())
+    return nullptr;
+
+  unsigned Reg = MO.getReg();
+  if (TargetRegisterInfo::isVirtualRegister(Reg))
+    return MRI.getRegClass(Reg);
+
+  return RI.getPhysRegClass(Reg);
+}
+
+bool HSAILInstrInfo::verifyInstruction(const MachineInstr *MI,
+                                       StringRef &ErrInfo) const {
+  unsigned Opc = MI->getOpcode();
+  const MCInstrDesc &Desc = get(Opc);
+
+  const MachineRegisterInfo &MRI = MI->getParent()->getParent()->getRegInfo();
+
+  // Verify that all the load destinations are registers with the same size.
+  if (Opc == HSAIL::ld_v1 ||
+      Opc == HSAIL::ld_v2 ||
+      Opc == HSAIL::ld_v3 ||
+      Opc == HSAIL::ld_v4) {
+    const TargetRegisterClass *DestRC = getOpRegClass(MRI, *MI, 0);
+    if (!DestRC) {
+      ErrInfo = "Load into non-register";
+      return false;
+    }
+
+    for (unsigned I = 0, E = Desc.getNumDefs(); I != E; ++I) {
+      const TargetRegisterClass *RC = getOpRegClass(MRI, *MI, I);
+      if (RC != DestRC) {
+        ErrInfo = "Inconsistent dest register operand";
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 MachineOperand *HSAILInstrInfo::getNamedOperand(MachineInstr &MI,
                                                 unsigned OperandName) const {
   int Idx = HSAIL::getNamedOperandIdx(MI.getOpcode(), OperandName);
