@@ -371,5 +371,21 @@ HSAILRegisterInfo::getRegPressureLimit(const TargetRegisterClass *RC,
   return 0;
 }
 
+const TargetRegisterClass *HSAILRegisterInfo::getPhysRegClass(unsigned Reg) const {
+  assert(!TargetRegisterInfo::isVirtualRegister(Reg));
+
+  static const TargetRegisterClass *BaseClasses[] = {
+    &HSAIL::GPR32RegClass,
+    &HSAIL::GPR64RegClass,
+    &HSAIL::CRRegClass
+  };
+
+  for (const TargetRegisterClass *BaseClass : BaseClasses) {
+    if (BaseClass->contains(Reg))
+      return BaseClass;
+  }
+  return nullptr;
+}
+
 #define GET_REGINFO_TARGET_DESC
 #include "HSAILGenRegisterInfo.inc"

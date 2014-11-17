@@ -824,6 +824,13 @@ public:
   bool
   expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const;
 
+  const TargetRegisterClass *getOpRegClass(const MachineRegisterInfo &MRI,
+                                           const MachineInstr &MI,
+                                           unsigned OpNo) const;
+
+  bool verifyInstruction(const MachineInstr *MI,
+                         StringRef &ErrInfo) const override;
+
   /// \brief Returns the operand named \p Op.  If \p MI does not have an
   /// operand named \c Op, this function returns nullptr.
   MachineOperand *getNamedOperand(MachineInstr &MI, unsigned OperandName) const;

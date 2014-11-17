@@ -140,6 +140,8 @@ public:
   virtual unsigned
   getRegPressureLimit(const TargetRegisterClass *RC,
                       MachineFunction &MF) const;
+
+  const TargetRegisterClass *getPhysRegClass(unsigned Reg) const;
 };
 
 } // End llvm namespace
