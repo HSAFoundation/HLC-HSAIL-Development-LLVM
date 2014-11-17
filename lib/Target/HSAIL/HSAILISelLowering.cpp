@@ -665,7 +665,7 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     }
 
     unsigned opShift = isLoad ? 1 : 0;
-    unsigned opNo = 6; // Value and pointer operands
+    unsigned opNo = 7; // Value and pointer operands
     SDValue Zero = DAG.getTargetConstant(0, MVT::i32);
     SDValue Reg = DAG.getRegister(0, PtrTy); // %noreg
     if (!Ptr.getNode()) {
@@ -694,6 +694,7 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
       /* Address */ Ptr, Reg, DAG.getTargetConstant(offset, MVT::i32),
       DAG.getTargetConstant(BrigType, MVT::i32),
       DAG.getTargetConstant(AddressSpace, MVT::i32), // segment
+      DAG.getTargetConstant(alignment, MVT::i32),    // alignment
       Zero,
       Zero,
       Zero,

@@ -814,6 +814,7 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
       .addImm(0)                               // address_offset
       .addImm(BT)                              // TypeLength
       .addImm(HSAILAS::SPILL_ADDRESS)          // segment
+      .addImm(MMO->getAlignment())
       .addMemOperand(MMO);
     break;
   }
@@ -874,6 +875,7 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
       .addImm(0)                         // address_offset
       .addImm(BT)                        // TypeLength
       .addImm(HSAILAS::SPILL_ADDRESS)    // segment
+      .addImm(MMO->getAlignment())       // align
       .addImm(Brig::BRIG_WIDTH_1)        // width
       .addImm(0)                         // mask
       .addMemOperand(MMO);
