@@ -176,9 +176,10 @@ class LD<string opName, dag outs> : HSAILInst<outs,
   (ins MEMOP:$address,
        BrigTypeX:$TypeLength,
        BrigSegment:$segment,
+       BrigAlignment:$align,
        BrigWidth:$width,
        BrigMemoryModifierMask:$mask),
-    opName#"$segment$width$mask$TypeLength\t$dest, $address", []>
+    opName#"$segment$align$width$mask$TypeLength\t$dest, $address", []>
      {
   let isLoad = 1;
   let mayLoad = 1;
@@ -192,10 +193,11 @@ class LD<string opName, dag outs> : HSAILInst<outs,
 class LDPat<Instruction inst, ValueType vt> : Pat <
   (vt (unindexedload (LoadAddr MEMOP:$address,
                                BrigSegment:$segment,
+                               BrigAlignment:$align,
                                BrigTypeX:$TypeLength,
                                BrigWidth:$width,
                                BrigMemoryModifierMask:$mask))),
-  (inst MEMOP:$address, $TypeLength, $segment, $width, $mask)
+  (inst MEMOP:$address, $TypeLength, $segment, $align, $width, $mask)
 >;
 
 
@@ -230,7 +232,7 @@ let hasSideEffects = 1, hasCtrlDep = 1 in {
 class ST<string opName, dag ins> :
   HSAILInst<(outs),
     ins,
-    opName#"$segment$TypeLength\t$src, $address",
+    opName#"$segment$align$TypeLength\t$src, $address",
     []> {
   let isLoad = 0;
   let mayLoad = 0;
@@ -242,23 +244,28 @@ class ST<string opName, dag ins> :
 class STPat<Instruction inst, ValueType vt> : Pat <
   (st (vt (GPROrImm vt:$src)),
       (StoreAddr MEMOP:$address,
-                BrigSegment:$segment,
-                BrigTypeX:$TypeLength)),
-  (inst $src, MEMOP:$address, $TypeLength, $segment)
+                 BrigSegment:$segment,
+                 BrigAlignment:$alignment,
+                 BrigTypeX:$TypeLength)),
+  (inst $src, MEMOP:$address, $TypeLength, $segment, $alignment)
 >;
 
 multiclass HSAIL_ST<int dummy> {
   def _v1 : ST<"st",
-    (ins unknown:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment)>,
+    (ins unknown:$src, MEMOP:$address, BrigTypeX:$TypeLength,
+         BrigSegment:$segment, BrigAlignment:$align)>,
     LdStVectorMap<NAME, 1>;
   def _v2 : ST<"st_v2",
-    (ins Vec2Op:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment)>,
+    (ins Vec2Op:$src, MEMOP:$address, BrigTypeX:$TypeLength,
+         BrigSegment:$segment, BrigAlignment:$align)>,
     LdStVectorMap<NAME, 2>;
   def _v3 : ST<"st_v3",
-    (ins Vec3Op:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment)>,
+    (ins Vec3Op:$src, MEMOP:$address, BrigTypeX:$TypeLength,
+         BrigSegment:$segment, BrigAlignment:$align)>,
     LdStVectorMap<NAME, 3>;
   def _v4 : ST<"st_v4",
-    (ins Vec4Op:$src, MEMOP:$address, BrigTypeX:$TypeLength, BrigSegment:$segment)>,
+    (ins Vec4Op:$src, MEMOP:$address, BrigTypeX:$TypeLength,
+      BrigSegment:$segment, BrigAlignment:$align)>,
     LdStVectorMap<NAME, 4>;
 }
 
@@ -277,7 +284,8 @@ def : STPat<st_v1, f64>;
 let isPseudo = 1 in {
   def spill_b1 : ST<"spill_b1",
     (ins CR:$src, MEMOP:$address,
-         BrigTypeX:$TypeLength, BrigSegment:$segment)>;
+         BrigTypeX:$TypeLength, BrigSegment:$segment,
+         BrigAlignment:$align)>;
 
 def restore_b1 : LD<"restore_b1", (outs CR:$dest)>;
 }

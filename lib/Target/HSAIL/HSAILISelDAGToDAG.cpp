@@ -115,6 +115,7 @@ private:
                       SDValue &Reg,
                       SDValue &Offset,
                       SDValue &Segment,
+                      SDValue &Align,
                       SDValue &Type,
                       SDValue &Width,
                       SDValue &ModifierMask) const;
@@ -125,6 +126,7 @@ private:
                        SDValue &Reg,
                        SDValue &Offset,
                        SDValue &Segment,
+                       SDValue &Align,
                        /*SDValue &Equiv,*/
                        SDValue &Type) const;
 
@@ -966,6 +968,7 @@ bool HSAILDAGToDAGISel::SelectLoadAddr(SDNode *ParentLoad,
                                        SDValue &Reg,
                                        SDValue &Offset,
                                        SDValue &Segment,
+                                       SDValue &Align,
                                        SDValue &Type,
                                        SDValue &Width,
                                        SDValue &ModifierMask) const {
@@ -982,6 +985,7 @@ bool HSAILDAGToDAGISel::SelectLoadAddr(SDNode *ParentLoad,
   unsigned BrigType = getBrigTypeFromLoadType(MemVT.SimpleTy, ExtTy);
 
   Segment = CurDAG->getTargetConstant(AS, MVT::i32);
+  Align = CurDAG->getTargetConstant(Load->getAlignment(), MVT::i32);
   Type = CurDAG->getTargetConstant(BrigType, MVT::i32);
   Width = CurDAG->getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32);
   ModifierMask = CurDAG->getTargetConstant(0, MVT::i32); // TODO: Set if invariant
@@ -994,6 +998,7 @@ bool HSAILDAGToDAGISel::SelectStoreAddr(SDNode *ParentStore,
                                         SDValue &Reg,
                                         SDValue &Offset,
                                         SDValue &Segment,
+                                        SDValue &Align,
                                         /*SDValue &Equiv,*/
                                         SDValue &Type) const {
   const StoreSDNode *Store = cast<StoreSDNode>(ParentStore);
@@ -1008,6 +1013,7 @@ bool HSAILDAGToDAGISel::SelectStoreAddr(SDNode *ParentStore,
   unsigned BrigType = getBrigTypeFromStoreType(MemVT.SimpleTy);
 
   Segment = CurDAG->getTargetConstant(AS, MVT::i32);
+  Align = CurDAG->getTargetConstant(Store->getAlignment(), MVT::i32);
   //Equiv = CurDAG->getTargetConstant(0, MVT::i32);
   Type = CurDAG->getTargetConstant(BrigType, MVT::i32);
   return true;

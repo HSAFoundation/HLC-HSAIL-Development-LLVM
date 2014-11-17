@@ -119,32 +119,7 @@ void HSAILInstPrinter::printVec4Op(const MCInst *MI,
 
 void HSAILInstPrinter::printBrigAlignment(const MCInst *MI, unsigned OpNo,
                                           raw_ostream &O) {
-  switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_ALIGNMENT_2:
-    O << "_align(2)";
-    break;
-  case BRIG_ALIGNMENT_4:
-    O << "_align(4)";
-    break;
-  case BRIG_ALIGNMENT_8:
-    O << "_align(8)";
-    break;
-  case BRIG_ALIGNMENT_16:
-    O << "_align(16)";
-    break;
-  case BRIG_ALIGNMENT_32:
-    O << "_align(32)";
-    break;
-  case BRIG_ALIGNMENT_64:
-    O << "_align(64)";
-    break;
-  case BRIG_ALIGNMENT_128:
-    O << "_align(128)";
-    break;
-  case BRIG_ALIGNMENT_256:
-    O << "_align(256)";
-    break;
-  }
+  O << "_align(" << formatDec(MI->getOperand(OpNo).getImm()) << ')';
 }
 
 void HSAILInstPrinter::printBrigAllocation(const MCInst *MI, unsigned OpNo,
