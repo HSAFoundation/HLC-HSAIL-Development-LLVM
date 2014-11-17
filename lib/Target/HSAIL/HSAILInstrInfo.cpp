@@ -769,15 +769,15 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
       llvm_unreachable("unrecognized TargetRegisterClass");
       break;
     case HSAIL::GPR32RegClassID:
-      Opc = HSAIL::st_32_ptr32_v1;
+      Opc = HSAIL::st_32_v1;
       BT = Brig::BRIG_TYPE_U32;
       break;
     case HSAIL::GPR64RegClassID:
-      Opc = HSAIL::st_64_ptr32_v1;
+      Opc = HSAIL::st_64_v1;
       BT = Brig::BRIG_TYPE_U64;
       break;
     case HSAIL::CRRegClassID:
-      Opc = HSAIL::st_b1_ptr32;
+      Opc = HSAIL::st_b1;
       BT = Brig::BRIG_TYPE_B1;
       break;
   }
@@ -1248,14 +1248,14 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
   unsigned opcode = MI.getOpcode();
 
   switch (opcode) {
-  case HSAIL::st_b1_ptr32:
+  case HSAIL::st_b1:
     {
       unsigned tempU32 = getTempGPR32PostRA(MBBI);
       BuildMI(*MBB, MBBI, MI.getDebugLoc(),
          get(HSAIL::cvt_b1_u32))
         .addReg(tempU32, RegState::Define)
         .addOperand(MI.getOperand(0));
-      MI.setDesc(get(HSAIL::st_32_ptr32_v1));
+      MI.setDesc(get(HSAIL::st_32_v1));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsKill();
       HSAIL::getBrigType(&MI).setImm(Brig::BRIG_TYPE_U32);

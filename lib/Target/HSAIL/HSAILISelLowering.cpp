@@ -654,9 +654,9 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     unsigned BrigType = HSAIL::getBrigType(EltTy, *DL, isSExt);
     if (AddressSpace == HSAILAS::ARG_ADDRESS) {
       if (ArgVT.getSizeInBits() <= 32)
-        op = isLoad ? HSAIL::ld_v1 : HSAIL::st_32_ptr32_v1;
+        op = isLoad ? HSAIL::ld_v1 : HSAIL::st_32_v1;
       else
-        op = isLoad ? HSAIL::ld_v1 : HSAIL::st_64_ptr32_v1;
+        op = isLoad ? HSAIL::ld_v1 : HSAIL::st_64_v1;
     } else {
       assert(AddressSpace == HSAILAS::KERNARG_ADDRESS);
     if (ArgVT.getSizeInBits() <= 32)

@@ -925,26 +925,18 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
   case HSAIL::st_32_v1:
   case HSAIL::st_64_v1:
-  case HSAIL::st_32_ptr32_v1:
-  case HSAIL::st_64_ptr32_v1:
     return EmitLoadOrStore(II, false, 1);
 
   case HSAIL::st_32_v2:
   case HSAIL::st_64_v2:
-  case HSAIL::st_32_ptr32_v2:
-  case HSAIL::st_64_ptr32_v2:
     return EmitLoadOrStore(II, false, 2);
 
   case HSAIL::st_32_v3:
   case HSAIL::st_64_v3:
-  case HSAIL::st_32_ptr32_v3:
-  case HSAIL::st_64_ptr32_v3:
     return EmitLoadOrStore(II, false, 3);
 
   case HSAIL::st_32_v4:
   case HSAIL::st_64_v4:
-  case HSAIL::st_32_ptr32_v4:
-  case HSAIL::st_64_ptr32_v4:
     return EmitLoadOrStore(II, false, 4);
 
   case HSAIL::arg_decl:
