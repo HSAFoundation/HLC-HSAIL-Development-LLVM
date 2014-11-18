@@ -113,15 +113,19 @@ HSAILInstrInfo::isLoadFromStackSlot(const MachineInstr *MI,
 {
   const MCInstrDesc &MCID = get(MI->getOpcode());
   if (!MCID.mayLoad() || !MI->hasOneMemOperand())
-    return 0;
-  if (HSAIL::getAddrSpace(MI) != HSAILAS::SPILL_ADDRESS)
-    return 0;
+    return HSAIL::NoRegister;
+
+  const MachineOperand *Segment = getNamedOperand(*MI, HSAIL::OpName::segment);
+  if (!Segment || Segment->getImm() != HSAILAS::SPILL_ADDRESS)
+    return HSAIL::NoRegister;
+
   const MachineOperand &Base = HSAIL::getBase(MI);
   if (Base.isFI()) {
     FrameIndex = Base.getIndex();
-        return MI->getOperand(0).getReg();
-      }
-  return 0;
+    return MI->getOperand(0).getReg();
+  }
+
+  return HSAIL::NoRegister;
 }
 
 unsigned
@@ -138,14 +142,18 @@ HSAILInstrInfo::isStoreToStackSlot(const MachineInstr *MI,
   const MCInstrDesc &MCID = get(MI->getOpcode());
   if (!MCID.mayStore() || !MI->hasOneMemOperand())
     return 0;
-  if (HSAIL::getAddrSpace(MI) != HSAILAS::SPILL_ADDRESS)
-    return 0;
+
+  const MachineOperand *Segment = getNamedOperand(*MI, HSAIL::OpName::segment);
+  if (!Segment || Segment->getImm() != HSAILAS::SPILL_ADDRESS)
+    return HSAIL::NoRegister;
+
   const MachineOperand &Base = HSAIL::getBase(MI);
   if (Base.isFI()) {
     FrameIndex = Base.getIndex();
-        return MI->getOperand(0).getReg();
-      }
-  return 0;
+    return MI->getOperand(0).getReg();
+  }
+
+  return HSAIL::NoRegister;
 }
 
 unsigned
