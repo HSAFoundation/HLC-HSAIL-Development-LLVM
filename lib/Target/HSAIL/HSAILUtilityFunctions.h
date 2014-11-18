@@ -135,7 +135,6 @@ inline bool isCrosslaneInst(const llvm::MachineInstr *MI) {
   return MI->getDesc().TSFlags & (1ULL << llvm::HSAILTSFLAGS::IS_CROSSLANE);
 }
 
-unsigned getAddrSpace(const llvm::MachineInstr *MI);
 bool HSAILisArgInst(const llvm::TargetMachine &TM, const llvm::MachineInstr *MI);
 
 bool isKernelFunc(const llvm::Function *F);

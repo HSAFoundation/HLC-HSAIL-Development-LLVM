@@ -252,37 +252,6 @@ const llvm::MachineOperand &getLoadModifierMask(const llvm::MachineInstr *MI)
   return getLoadModifierMask(const_cast<llvm::MachineInstr*>(MI));
 }
 
-unsigned getAddrSpace(const llvm::MachineInstr *MI)
-{
-  assert(MI->hasOneMemOperand());\
-  const MachineMemOperand &MMO = **MI->memoperands_begin();
-  const MachinePointerInfo &MPI = MMO.getPointerInfo();
-  unsigned as = MPI.getAddrSpace();
-  if (as != HSAILAS::PRIVATE_ADDRESS)
-    return as;
-
-  const MachineOperand &Base = getBase(MI);
-  bool isFI = false;
-  int FrameIndex;
-  if (Base.isFI()) {
-    FrameIndex = Base.getIndex();
-    isFI = true;
-  } else if (Base.isImm() && MPI.V) {
-    if (const FixedStackPseudoSourceValue* FSV =
-          dyn_cast<FixedStackPseudoSourceValue>(MMO.getPseudoValue())) {
-      FrameIndex = FSV->getFrameIndex();
-      isFI = true;
-    }
-  }
-
-  if (isFI) {
-    const MachineFrameInfo *MFI = MI->getParent()->getParent()->getFrameInfo();
-    if (MFI->isSpillSlotObjectIndex(FrameIndex))
-      return HSAILAS::SPILL_ADDRESS;
-  }
-  return as;
-}
-
 bool HSAILisArgInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
 {
   unsigned op = MI->getOpcode();

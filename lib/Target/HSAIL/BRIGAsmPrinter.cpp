@@ -1834,7 +1834,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitLoadOrStore(const MachineInstr *MI,
                                                 bool isLoad,
                                                 unsigned vec_size) {
   const MachineMemOperand *MMO = *MI->memoperands_begin();
-  unsigned as = HSAIL::getAddrSpace(MI);
+  unsigned Segment = TII->getNamedOperand(*MI, HSAIL::OpName::segment)->getImm();
 
   HSAIL_ASM::InstMem inst = brigantine.addInst<HSAIL_ASM::InstMem>
     (isLoad ? Brig::BRIG_OPCODE_LD : Brig::BRIG_OPCODE_ST);
@@ -1843,7 +1843,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitLoadOrStore(const MachineInstr *MI,
   if (HSAIL_ASM::isBitType(BT))
     BT = HSAIL_ASM::getUnsignedType(HSAIL_ASM::getBrigTypeNumBits(BT));
 
-  inst.segment()    = getHSAILSegment(as);
+  inst.segment()    = getHSAILSegment(Segment);
   inst.type()       = BT;
   inst.align()      = getBrigAlignment(MMO->getAlignment());
   inst.width()      = isLoad ? Brig::BRIG_WIDTH_1 : Brig::BRIG_WIDTH_NONE;
@@ -1867,7 +1867,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitLoadOrStore(const MachineInstr *MI,
     inst.width() = width;
 
     // Emit const
-    if(HSAILAS::GLOBAL_ADDRESS == as) {
+    if (Segment == HSAILAS::GLOBAL_ADDRESS) {
       const MachineOperand &Modifier = HSAIL::getLoadModifierMask(MI);
       assert(Modifier.isImm());
       inst.modifier().isConst() = Modifier.getImm() & Brig::BRIG_MEMORY_CONST;
