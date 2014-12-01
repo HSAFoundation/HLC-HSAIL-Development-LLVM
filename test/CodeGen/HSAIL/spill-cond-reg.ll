@@ -28,9 +28,9 @@
 ; HSAIL-DAG: st_spill_align(4)_u32 [[CVT_C6]]
 ; HSAIL-DAG: st_spill_align(4)_u32 [[CVT_C7]]
 
-; HSAIL: br BB0_1;
+; HSAIL: br @BB0_1;
 
-; HSAIL: BB0_1:
+; HSAIL: @BB0_1:
 ; HSAIL-DAG: ld_spill_align(4)_u32 [[RELOAD_C0:\$s[0-9]+]], [%__spillStack];
 ; HSAIL-DAG: cvt_b1_u32 {{\$c[0-9]+}}, [[RELOAD_C0]]
 

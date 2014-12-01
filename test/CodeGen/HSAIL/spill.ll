@@ -11,9 +11,9 @@
 ; HSAIL-DAG: st_spill_align(4)_u32 [[A]], [%__spillStack];
 ; HSAIL-DAG: st_spill_align(4)_u32 [[B]], [%__spillStack][8];
 ; HSAIL-DAG: st_spill_align(4)_u32 [[OUT]], [%__spillStack][4];
-; HSAIL: br BB0_1;
+; HSAIL: br @BB0_1;
 
-; HSAIL: BB0_1:
+; HSAIL: @BB0_1:
 ; HSAIL-DAG: ld_spill_align(4)_u32 [[A_RELOAD:\$s[0-9]+]], [%__spillStack];
 ; HSAIL-DAG: ld_spill_align(4)_u32 [[B_RELOAD:\$s[0-9]+]], [%__spillStack][8];
 ; HSAIL-DAG: ld_spill_align(4)_u32 [[OUT_RELOAD:\$s[0-9]+]], [%__spillStack][4];
