@@ -21,6 +21,24 @@
 namespace llvm {
 
 class HSAILAsmPrinter : public AsmPrinter {
+private:
+  std::string getArgTypeName(Type *Ty) const;
+
+  void EmitFunctionArgument(unsigned ParamIndex,
+                            Type *Ty,
+                            bool IsKernel,
+                            raw_ostream &O) const;
+  void EmitFunctionReturn(Type *Ty,
+                          bool IsKernel,
+                          raw_ostream &O) const;
+  void EmitFunctionLabel(const Function &F) const;
+
+  void printGVInitialValue(const GlobalValue &GV,
+                           const Constant *CV,
+                           const DataLayout &DL,
+                           raw_ostream &O,
+                           bool EmitBraces = true);
+
 public:
   explicit HSAILAsmPrinter(TargetMachine &TM, MCStreamer &Streamer);
 
@@ -32,6 +50,10 @@ public:
 
   /// Implemented in HSAILMCInstLower.cpp
   void EmitInstruction(const MachineInstr *MI) override;
+
+  void EmitGlobalVariable(const GlobalVariable *GV) override;
+  void EmitStartOfAsmFile(Module &) override;
+  void EmitFunctionBodyStart() override;
 };
 
 } // End anonymous llvm

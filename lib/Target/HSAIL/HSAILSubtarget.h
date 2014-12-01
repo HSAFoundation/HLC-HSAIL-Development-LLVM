@@ -137,8 +137,20 @@ public:
 
   void ParseSubtargetFeatures(StringRef CPU, StringRef FS);
 
+  bool isFull() const {
+    return true;
+  }
+
   bool is64Bit() const {
     return Is64Bit;
+  }
+
+  bool hasImages() const {
+    return false;
+  }
+
+  bool isGCN() const {
+    return false;
   }
 
   // FIXME: Remove this
