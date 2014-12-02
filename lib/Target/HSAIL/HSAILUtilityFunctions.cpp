@@ -449,32 +449,34 @@ bool sanitizeGlobalValueName(GlobalValue *GV)
   return false;
 }
 
-bool isIgnoredGV(const GlobalVariable *GV)
-{
-  StringRef GVname = GV->getName();
-  if (GVname.startswith("sgv")
-      || GVname.startswith("fgv")
-      || GVname.startswith("lvgv")
-      || GVname.startswith("pvgv")
-      // TODO_HSA: suppress emitting annotations as global declarations for
-      // now. These are labelled as "llvm.metadata". How should we handle these?
-      || GVname.startswith("llvm.argtypeconst.annotations")
-      || GVname.startswith("llvm.argtypename.annotations")
-      || GVname.startswith("llvm.constpointer.annotations")
-      || GVname.startswith("llvm.global.annotations")
-      || GVname.startswith("llvm.image.annotations")
-      || GVname.startswith("llvm.readonlypointer.annotations")
-      || GVname.startswith("llvm.restrictpointer.annotations")
-      || GVname.startswith("llvm.signedOrSignedpointee.annotations")
-      || GVname.startswith("llvm.volatilepointer.annotations")
-      || GVname.startswith("llvm.sampler.annotations")
-      || (GV->hasLocalLinkage() && notUsedInKernel(GV))
-      ||  (GV->getType()->getAddressSpace() == HSAILAS::PRIVATE_ADDRESS)
-      ||  (GV->getType()->getAddressSpace() == HSAILAS::GROUP_ADDRESS)
-      ) {
+bool isIgnoredGV(const GlobalVariable *GV) {
+  unsigned AS = GV->getType()->getAddressSpace();
+
+  if (AS == HSAILAS::PRIVATE_ADDRESS || AS == HSAILAS::GROUP_ADDRESS)
     return true;
-  }
-  return false;
+
+  if (GV->hasLocalLinkage() && notUsedInKernel(GV))
+    return true;
+
+  StringRef GVname = GV->getName();
+
+  // FIXME: Should be removed
+  return GVname.startswith("sgv") ||
+    GVname.startswith("fgv") ||
+    GVname.startswith("lvgv") ||
+    GVname.startswith("pvgv") ||
+    // TODO_HSA: suppress emitting annotations as global declarations for
+    // now. These are labelled as "llvm.metadata". How should we handle these?
+    GVname.startswith("llvm.argtypeconst.annotations") ||
+    GVname.startswith("llvm.argtypename.annotations") ||
+    GVname.startswith("llvm.constpointer.annotations") ||
+    GVname.startswith("llvm.global.annotations") ||
+    GVname.startswith("llvm.image.annotations") ||
+    GVname.startswith("llvm.readonlypointer.annotations") ||
+    GVname.startswith("llvm.restrictpointer.annotations") ||
+    GVname.startswith("llvm.signedOrSignedpointee.annotations") ||
+    GVname.startswith("llvm.volatilepointer.annotations") ||
+    GVname.startswith("llvm.sampler.annotations");
 }
 
 /// \brief Check whether the module contains SPIR
