@@ -1,6 +1,7 @@
 ; RUN: llc -march=hsail -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL -check-prefix=FUNC %s
 
 ; HSAIL-DAG: readonly_f32 &float_gv[5] = {0F00000000, 0F3f800000, 0F40000000, 0F40400000, 0F40800000};
+; HSAIL-DAG: readonly_f64 &double_gv[5] = {0D0000000000000000, 0D3ff0000000000000, 0D4000000000000000, 0D4008000000000000, 0D4010000000000000};
 ; HSAIL-DAG: readonly_u32 &i32_gv[5] = {0, 1, 2, 3, 4};
 ; HSAIL-DAG: align(8) readonly_u8 &struct_foo_gv[24] = {0, 0, 128, 65, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0};
 ; HSAIL-DAG: readonly_u32 &array_v1_gv[4] = {1, 2, 3, 4};
@@ -8,6 +9,7 @@
 @b = internal addrspace(2) constant [1 x i16] [ i16 7 ], align 2
 
 @float_gv = internal unnamed_addr addrspace(2) constant [5 x float] [float 0.0, float 1.0, float 2.0, float 3.0, float 4.0], align 4
+@double_gv = internal unnamed_addr addrspace(2) constant [5 x double] [double 0.0, double 1.0, double 2.0, double 3.0, double 4.0], align 4
 
 %struct.foo = type { float, [5 x i32] }
 
@@ -27,6 +29,19 @@ define void @float(float addrspace(1)* %out, i32 %index) {
   %tmp0 = getelementptr inbounds [5 x float] addrspace(2)* @float_gv, i32 0, i32 %index
   %tmp1 = load float addrspace(2)* %tmp0
   store float %tmp1, float addrspace(1)* %out
+  ret void
+}
+
+
+; FUNC-LABEL: @double
+; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 3;
+; HSAIL: ld_readonly_align(8)_f64 [[LD:\$d[0-9]+]], [&double_gv]{{\[}}[[ADDR]]{{\]}};
+; HSAIL: st_global_align(8)_f64 [[LD]]
+; HSAIL: ret;
+define void @double(double addrspace(1)* %out, i32 %index) {
+  %tmp0 = getelementptr inbounds [5 x double] addrspace(2)* @double_gv, i32 0, i32 %index
+  %tmp1 = load double addrspace(2)* %tmp0
+  store double %tmp1, double addrspace(1)* %out
   ret void
 }
 
