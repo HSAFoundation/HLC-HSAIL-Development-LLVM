@@ -543,7 +543,7 @@ multiclass GcnFldexp<Intrinsic intr, string asm, ValueType Ty, Operand OpTy,
 defm gcn_fldexp_f32 : GcnFldexp<int_HSAIL_gcn_fldexp_f32, "gcn_fldexp_f32", f32, f32imm, fpimm, GPR32>;
 defm gcn_fldexp_f64 : GcnFldexp<int_HSAIL_gcn_fldexp_f64, "gcn_fldexp_f64", f64, f64imm, fpimm, GPR64>;
 
-let neverHasSideEffects = 1 in {
+let hasSideEffects = 0 in {
 def pack_u32x2_u32_iri: HSAILInst<(outs GPR64:$dest), (ins i32imm:$src0, GPR32:$src1, i32imm:$src2),
                                   "pack_u32x2_u32\t $dest, $src0, $src1, $src2", []>;
 }

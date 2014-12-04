@@ -296,7 +296,7 @@ def restore_b1 : LD<"restore_b1", (outs CR:$dest)>;
 class LdaAddr<RegisterClass RC, DAGOperand MPtr>
       : HSAILInst<(outs RC:$dest), (ins MPtr:$address, BrigSegment:$segment),
       "lda_$segment\t$dest, $address", []> {
-  let neverHasSideEffects = 1;
+  let hasSideEffects = 0;
 }
 
 def lda_32 : LdaAddr<GPR32, MEMOP>;
