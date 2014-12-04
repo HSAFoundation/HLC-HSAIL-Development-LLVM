@@ -25,9 +25,12 @@
 namespace llvm {
 
 class HSAILTargetMachine : public LLVMTargetMachine {
-public:
+private:
   HSAILSubtarget      Subtarget;
   HSAILIntrinsicInfo IntrinsicInfo;
+  TargetLoweringObjectFile *TLOF;
+
+public:
 
   class HSAILSelectionDAGInfo : public TargetSelectionDAGInfo {
     /// Subtarget - Keep a pointer to the HSAILSubtarget around so that we can
@@ -60,6 +63,10 @@ public:
 
   const HSAILSubtarget *getSubtargetImpl() const override {
     return &Subtarget;
+  }
+
+  TargetLoweringObjectFile *getObjFileLowering() const override {
+    return TLOF;
   }
 
   TargetPassConfig *createPassConfig(PassManagerBase &PM) override;

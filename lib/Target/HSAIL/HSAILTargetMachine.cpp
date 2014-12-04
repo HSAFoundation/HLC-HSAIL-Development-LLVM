@@ -13,6 +13,8 @@
 
 #include "HSAILTargetMachine.h"
 #include "HSAIL.h"
+#include "HSAILELFTargetObjectFile.h"
+
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/MC/MCCodeGenInfo.h"
 #include "llvm/MC/MCCodeEmitter.h"
@@ -86,6 +88,11 @@ extern "C" void LLVMInitializeHSAILTarget() {
 
 extern "C" void LLVMInitializeBRIGAsmPrinter();
 
+static TargetLoweringObjectFile *createTLOF(const Triple &TT) {
+  if (TT.getArch() == Triple::hsail64)
+    return new HSAIL64_DwarfTargetObjectFile();
+  return new HSAIL32_DwarfTargetObjectFile();
+}
 
 /// HSAILTargetMachine ctor -
 ///
@@ -99,7 +106,8 @@ HSAILTargetMachine::HSAILTargetMachine(const Target &T,
                                        CodeGenOpt::Level OL) :
   LLVMTargetMachine(T, TT, CPU, FS,Options, RM, CM,OL),
   Subtarget(TT, CPU, FS, *this),
-  IntrinsicInfo(this) {
+  IntrinsicInfo(this),
+  TLOF(createTLOF(Triple(getTargetTriple()))) {
   initAsmInfo();
   setAsmVerbosityDefault(true);
 

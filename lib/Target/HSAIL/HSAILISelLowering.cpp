@@ -16,7 +16,6 @@
 #include "HSAIL.h"
 #include "HSAILBrig.h"
 #include "HSAILInstrInfo.h"
-#include "HSAILELFTargetObjectFile.h"
 #include "HSAILISelLowering.h"
 #include "HSAILMachineFunctionInfo.h"
 #include "HSAILSubtarget.h"
@@ -71,19 +70,8 @@ Flag_ampPtrFtos("mamp_ptr_ftos",
             cl::desc("Convert AMP incoming pointers to segment address"),
             cl::init(false));
 
-static TargetLoweringObjectFile *createTLOF(HSAILTargetMachine &TM) {
-  const HSAILSubtarget *Subtarget = &TM.getSubtarget<HSAILSubtarget>();
-  bool is64Bit = Subtarget->is64Bit();
-
-  if (is64Bit)
-    return new HSAIL64_DwarfTargetObjectFile(TM);
-  return new HSAIL32_DwarfTargetObjectFile(TM);
-}
-
-
-HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM)
-  : TargetLowering(TM, createTLOF(TM))
-{
+HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
+  TargetLowering(TM) {
   // HSAIL uses a -1 to store a Boolean value as an int. For example,
   // see the return values of the cmp instructions. This also requires
   // that we never use a cvt instruction for converting a Boolean to a
