@@ -62,11 +62,11 @@ void MnemonicMapperEmitter::EmitGetInstMnemonic(raw_ostream &O) {
 }
 
 static void emitRegisterNameString(raw_ostream &O, StringRef AltName,
-              const std::vector<CodeGenRegister*> &Registers) {
+              const std::deque<CodeGenRegister> &Registers) {
   StringToOffsetTable StringTable;
   O << "  static const unsigned RegAsmOffset" << AltName << "[] = {\n    ";
   for (unsigned i = 0, e = Registers.size(); i != e; ++i) {
-    const CodeGenRegister &Reg = *Registers[i];
+    const CodeGenRegister &Reg = Registers[i];
 
     std::string AsmName;
     // "NoRegAltName" is special. We don't need to do a lookup for that,
@@ -115,7 +115,7 @@ static void emitRegisterNameString(raw_ostream &O, StringRef AltName,
 
 void MnemonicMapperEmitter::EmitGetRegisterName(raw_ostream &O) {
   CodeGenTarget Target(Records);
-  const std::vector<CodeGenRegister*> &Registers =
+  const std::deque<CodeGenRegister> &Registers =
     Target.getRegBank().getRegisters();
   std::vector<Record*> AltNameIndices = Target.getRegAltNameIndices();
   bool hasAltNames = AltNameIndices.size() > 1;
