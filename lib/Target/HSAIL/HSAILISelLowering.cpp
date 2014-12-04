@@ -1038,10 +1038,11 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     Type *type = *pb;
     if (type->isIntegerTy(1)) // Handle bit as DWORD
       type = Type::getInt32Ty(type->getContext());
+
+    AAMDNodes AA(MDB.createAnonymousTBAARoot());
     Chain = LowerArgument(Chain, InFlag, true, NULL, &Outs, dl, DAG, NULL, j,
                           type, HSAILAS::ARG_ADDRESS, NULL,
-                          VarOps[FirstArg + k], &OutVals,
-                          MDB.createAnonymousTBAARoot());
+                          VarOps[FirstArg + k], &OutVals, AA);
       InFlag = Chain.getValue(1);
   }
 
@@ -1066,10 +1067,10 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   // Read return value.
   if(Ins.size() > 0) {
     j = 0;
-    MDNode *TBAA = MDB.createTBAANode("retarg", MDB.createAnonymousTBAARoot());
+    AAMDNodes AA(MDB.createTBAANode("retarg", MDB.createAnonymousTBAARoot()));
     Chain = LowerArgument(Chain, InFlag, true, &Ins, NULL, dl, DAG, &InVals, j,
                           retType, HSAILAS::ARG_ADDRESS, NULL, RetValue, NULL,
-                          TBAA);
+                          AA);
     InFlag = Chain.getValue(2);
     Chain  = Chain.getValue(1);
   }
