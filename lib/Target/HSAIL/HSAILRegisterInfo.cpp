@@ -347,21 +347,7 @@ HSAILRegisterInfo::getFrameRegister(const MachineFunction &MF) const
 /// mode (for the specific register class) if it goes over the limit.
 unsigned
 HSAILRegisterInfo::getRegPressureLimit(const TargetRegisterClass *RC,
-                                         MachineFunction &MF) const
-{
-#ifdef _DEBUG
-  std::string env("AMD_DEBUG_HSAIL_REGPRESSURELIMIT_");
-  env.append(RC->getName());
-  const char* pLimit = std::getenv(env.c_str());
-  static unsigned reported = 0;
-  reported++;
-  if (pLimit) {
-    unsigned limit = (unsigned)std::atoi(pLimit);
-    if (reported <= getNumRegClasses())
-      printf("Register pressure limit override for %s is %u\n", RC->getName(), limit);
-    return limit;
-  }
-#endif
+                                       MachineFunction &MF) const {
   if (RC == &HSAIL::GPR32RegClass) {
     return HSAILReg32PressureLimit;
   }
