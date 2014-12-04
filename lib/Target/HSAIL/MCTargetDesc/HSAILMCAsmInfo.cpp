@@ -43,7 +43,7 @@ HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(StringRef &T) {
   // failed.
   SupportsDebugInformation = false;
 
-  PointerSize = Triple(T).getArch() == Triple::hsail_64 ? 8 : 4;
+  PointerSize = Triple(T).getArch() == Triple::hsail64 ? 8 : 4;
 
   ExceptionsType = ExceptionHandling::None;
   //  DwarfRequiresFrameSection = false;
