@@ -359,7 +359,7 @@ SDNode* HSAILDAGToDAGISel::SelectLdKernargIntrinsic(SDNode *Node) {
   SDValue Addr = Node->getOperand(1 + opShift);
   int64_t offset = 0;
   MVT PtrTy = TL->getPointerTy(HSAILAS::KERNARG_ADDRESS);
-  MDNode *ArgMD = nullptr;
+  AAMDNodes ArgMD; // FIXME: What is this for?
   if (isa<ConstantSDNode>(Addr)) {
     offset = Node->getConstantOperandVal(1 + opShift);
     // Match a constant address argument to the parameter through functions's
@@ -372,8 +372,8 @@ SDNode* HSAILDAGToDAGISel::SelectLdKernargIntrinsic(SDNode *Node) {
       param = PM.getParamByOffset(offset);
     if (param != UINT_MAX) {
       Addr = CurDAG->getTargetExternalSymbol(PM.getParamName(param), PtrTy);
-      Value *mdops[] = { const_cast<Argument*>(PM.getParamArg(param)) };
-      ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
+      //Value *mdops[] = { const_cast<Argument*>(PM.getParamArg(param)) };
+      //ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
     } else {
       Addr = SDValue();
     }

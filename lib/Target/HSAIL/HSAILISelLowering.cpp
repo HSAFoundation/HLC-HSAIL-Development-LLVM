@@ -567,8 +567,10 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
     SDValue RetVariable =  DAG.getTargetExternalSymbol(PM.getParamName(
       PM.addReturnParam(type, PM.mangleArg(&Mang, F->getName()))),
       getPointerTy(HSAILAS::ARG_ADDRESS));
-    Value *mdops[] = { const_cast<Function*>(F) };
-    MDNode *MD = MDNode::get(F->getContext(), mdops);
+
+    AAMDNodes MD; // FIXME: What is this for?
+    //Value *mdops[] = { const_cast<Function*>(F) };
+    //MDNode *MD = MDNode::get(F->getContext(), mdops);
 
     unsigned ArgNo = 0;
     LowerArgument(Chain, SDValue(), false, NULL, &Outs, dl, DAG, &RetOps, ArgNo,
@@ -848,11 +850,13 @@ HSAILTargetLowering::LowerFormalArguments(SDValue Chain,
     std::string md = (AI->getName() + ":" + ParamName + " ").str();
     FuncInfo->addMetadata("argmap:"+ md, true);
     SDValue ParamPtr = DAG.getTargetExternalSymbol(ParamName, PtrTy);
-    Value *mdops[] = { const_cast<Argument*>(&(*AI)) };
-    MDNode *ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
+
+    // FIXME: What is this for?
+    //Value *mdops[] = { const_cast<Argument*>(&(*AI)) };
+    //MDNode *ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
 
     LowerArgument(Chain, SDValue(), false, &Ins, NULL, dl, DAG, &InVals, ArgNo,
-                  AI->getType(), AS, ParamName, ParamPtr, NULL, ArgMD);
+                  AI->getType(), AS, ParamName, ParamPtr, NULL);
   }
 
   return Chain;
