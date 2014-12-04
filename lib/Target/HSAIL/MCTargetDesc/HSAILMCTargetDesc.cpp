@@ -49,8 +49,7 @@ static MCCodeGenInfo *createHSAILMCCodeGenInfo(StringRef TT, Reloc::Model RM,
 static MCStreamer *createBRIGStreamer(const Target &T, StringRef TT,
                                       MCContext &Ctx, MCAsmBackend &TAB,
                                       raw_ostream &_OS, MCCodeEmitter *_Emitter,
-                                      const MCSubtargetInfo &MSI, bool RelaxAll,
-                                      bool NoExecStack) {
+                                      const MCSubtargetInfo &MSI, bool RelaxAll) {
   Triple TheTriple(TT);
 
   // pass 0 instead of &_OS, if you do not want DWARF data to be forwarded to
@@ -58,8 +57,7 @@ static MCStreamer *createBRIGStreamer(const Target &T, StringRef TT,
   // this stream will be deleted in the destructor of BRIGAsmPrinter
   RawVectorOstream *rvos = new RawVectorOstream(&_OS);
 
-  return createBRIGDwarfStreamer(Ctx, TAB, *rvos, _Emitter, RelaxAll,
-                                 NoExecStack);
+  return createBRIGDwarfStreamer(Ctx, TAB, *rvos, _Emitter, RelaxAll);
 }
 
 static MCInstPrinter *createHSAILMCInstPrinter(const Target &T,
@@ -74,8 +72,7 @@ static MCInstPrinter *createHSAILMCInstPrinter(const Target &T,
 static MCStreamer *createMCStreamer(const Target &T, StringRef TT,
                                     MCContext &Ctx, MCAsmBackend &TAB,
                                     raw_ostream &_OS, MCCodeEmitter *_Emitter,
-                                    const MCSubtargetInfo &MSI, bool RelaxAll,
-                                    bool NoExecStack) {
+                                    const MCSubtargetInfo &MSI, bool RelaxAll) {
   // FIXME: Create a stream for assembly printing.
   llvm_unreachable("Non-BRIG streamer not implemented");
 }

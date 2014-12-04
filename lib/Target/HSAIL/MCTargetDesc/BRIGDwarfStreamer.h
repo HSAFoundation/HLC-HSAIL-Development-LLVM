@@ -26,8 +26,8 @@ public:
                 RawVectorOstream &RVOS, MCCodeEmitter *Emitter,
                 MCAssembler *Assembler);
 
-  virtual void InitSections();
-  virtual void Finish();
+  void InitSections(bool NoExecStack) override;
+  void Finish();
 
   RawVectorOstream* getDwarfStream();
 
@@ -39,7 +39,7 @@ public:
 
   MCStreamer* createBRIGDwarfStreamer(MCContext &Context, MCAsmBackend &MAB,
                                       RawVectorOstream &RVOS, MCCodeEmitter *CE,
-                                      bool RelaxAll, bool NoExecStack);
+                                      bool RelaxAll);
 
 } // namespace llvm
 

@@ -23,7 +23,6 @@ using namespace llvm;
 HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(StringRef &T) {
   PrivateGlobalPrefix = "@";
   GlobalDirective = "global";
-  HasSetDirective = false;
   HasDotTypeDotSizeDirective = false;
   HasSingleParameterDotFile = false;
 

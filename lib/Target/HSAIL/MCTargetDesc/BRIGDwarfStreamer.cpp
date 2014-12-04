@@ -18,12 +18,12 @@ RawVectorOstream* BRIGDwarfStreamer::getDwarfStream() {
   return dwarfStream;
 }
 
-void BRIGDwarfStreamer::InitSections() {
-  const MCSectionELF* codeSection = 
-        getContext().getELFSection(".brigcode", ELF::SHT_NOBITS, 
+void BRIGDwarfStreamer::InitSections(bool NoExecStack) {
+  const MCSectionELF* codeSection =
+        getContext().getELFSection(".brigcode", ELF::SHT_NOBITS,
                                     0, SectionKind::getText());
-  const MCSectionELF* directivesSection = 
-        getContext().getELFSection(".brigdirectives", ELF::SHT_NOBITS, 
+  const MCSectionELF* directivesSection =
+        getContext().getELFSection(".brigdirectives", ELF::SHT_NOBITS,
                                     0, SectionKind::getDataRel());
   SwitchSection(codeSection);
   SwitchSection(directivesSection);
@@ -46,11 +46,9 @@ void BRIGDwarfStreamer::Finish() {
 
 MCStreamer* llvm::createBRIGDwarfStreamer(MCContext &Context, MCAsmBackend &MAB,
                                           RawVectorOstream &RVOS, MCCodeEmitter *CE,
-                                          bool RelaxAll, bool NoExecStack) {
+                                          bool RelaxAll) {
   BRIGDwarfStreamer *S = new BRIGDwarfStreamer(Context, MAB, RVOS, CE);
   if (RelaxAll)
     S->getAssembler().setRelaxAll(true);
-  if (NoExecStack)
-    S->getAssembler().setNoExecStack(true);
   return S;
 }
