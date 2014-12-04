@@ -169,7 +169,7 @@ size_t HSAILMachineFunctionInfo::getPrivateSize()
           if (MO.getType() == MachineOperand::MO_GlobalAddress){
             if (const GlobalVariable *GV =  dyn_cast<GlobalVariable>(MO.getGlobal())){
               if  (GV->getType()->getAddressSpace() == HSAILAS::PRIVATE_ADDRESS){
-                if( thisFuncPvtVarsSet.insert(GV) ){
+                if (thisFuncPvtVarsSet.insert(GV).second) {
                   mPrivateMemSize += DL->getTypeAllocSize(GV->getType()->getElementType());
                 }
               }
@@ -198,7 +198,7 @@ size_t HSAILMachineFunctionInfo::getGroupSize()
           if (MO.getType() == MachineOperand::MO_GlobalAddress){
             if (const GlobalVariable *GV =  dyn_cast<GlobalVariable>(MO.getGlobal())){
               if  (GV->getType()->getAddressSpace() == HSAILAS::GROUP_ADDRESS){
-                if( thisFuncGrpVarsSet.insert(GV) ){
+                if (thisFuncGrpVarsSet.insert(GV).second) {
                   mGroupMemSize += DL->getTypeAllocSize(GV->getType()->getElementType());
                 }
               }
