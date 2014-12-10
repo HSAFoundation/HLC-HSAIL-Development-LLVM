@@ -18,3 +18,17 @@ HSAILTargetStreamer::HSAILTargetStreamer(MCStreamer &S)
   : MCTargetStreamer(S) {}
 
 HSAILTargetStreamer::~HSAILTargetStreamer() {}
+
+
+class HSAILTargetAsmStreamer : public HSAILTargetStreamer {
+private:
+  formatted_raw_ostream &OS;
+
+public:
+  HSAILTargetAsmStreamer(MCStreamer &S, formatted_raw_ostream &OS);
+};
+
+HSAILTargetAsmStreamer::HSAILTargetAsmStreamer(MCStreamer &S,
+                                               formatted_raw_ostream &OS)
+  : HSAILTargetStreamer(S),
+    OS(OS) {}
