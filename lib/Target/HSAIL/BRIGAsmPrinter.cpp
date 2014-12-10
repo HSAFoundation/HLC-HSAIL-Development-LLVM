@@ -1818,14 +1818,11 @@ char BRIGAsmPrinter::getSymbolPrefix(const GlobalValue& gv) {
           HSAILAS::GROUP_ADDRESS==AddrSpace) ? '%' : '&';
 }
 
-Brig::BrigAlignment8_t BRIGAsmPrinter::getBrigAlignment(unsigned align_value) {
-  if (align_value & (align_value-1)) {
-    // Round to the next power of 2
-    unsigned int i = 1;
-    while (i < align_value) i <<= 1;
-    align_value = i;
-  }
-  Brig::BrigAlignment8_t ret = HSAIL_ASM::num2align(align_value);
+Brig::BrigAlignment8_t BRIGAsmPrinter::getBrigAlignment(unsigned AlignVal) {
+  // Round to the next power of 2.
+  unsigned Rounded = RoundUpToAlignment(AlignVal, NextPowerOf2(AlignVal - 1));
+
+  Brig::BrigAlignment8_t ret = HSAIL_ASM::num2align(Rounded);
   assert(ret != Brig::BRIG_ALIGNMENT_LAST && "invalid alignment value");
   return ret;
 }
