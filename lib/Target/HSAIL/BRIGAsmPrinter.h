@@ -31,8 +31,6 @@
 #include "libHSAIL/HSAILParser.h"
 #include "libHSAIL/HSAILBrigantine.h"
 
-class StoreInitializer;
-
 namespace llvm {
 
 class Argument;
@@ -51,8 +49,7 @@ class Module;
 class raw_ostream;
 
 class LLVM_LIBRARY_VISIBILITY BRIGAsmPrinter : public AsmPrinter {
-
-  friend class ::StoreInitializer;
+  friend class StoreInitializer;
 
   const HSAILSubtarget *Subtarget;
 
