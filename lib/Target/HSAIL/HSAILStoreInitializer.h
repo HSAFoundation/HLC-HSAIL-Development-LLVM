@@ -18,6 +18,7 @@ namespace llvm {
 class APInt;
 class BRIGAsmPrinter;
 class Constant;
+class StringRef;
 class Value;
 
 class StoreInitializer {
@@ -33,8 +34,7 @@ private:
   template <Brig::BrigTypeX BrigTypeId>
   void pushValueImpl(typename HSAIL_ASM::BrigType<BrigTypeId>::CType value);
 
-  void initVarWithAddress(const Value *V, const std::string Var,
-                          const APInt &Offset);
+  void initVarWithAddress(const Value *V, StringRef Var, const APInt &Offset);
 
 public:
   StoreInitializer(Brig::BrigType16_t type, BRIGAsmPrinter &asmPrinter)
@@ -42,7 +42,7 @@ public:
         m_asmPrinter(asmPrinter),
         m_reqNumZeroes(0) {}
 
-  void append(const Constant *CV, const std::string Var);
+  void append(const Constant *CV, StringRef Var);
 
   HSAIL_ASM::SRef toSRef() const {
     return m_data.toSRef();

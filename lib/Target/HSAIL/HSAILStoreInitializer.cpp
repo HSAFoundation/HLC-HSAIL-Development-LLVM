@@ -58,7 +58,7 @@ void StoreInitializer::pushValueImpl(
   m_data.push_back(value);
 }
 
-void StoreInitializer::initVarWithAddress(const Value *V, const std::string Var,
+void StoreInitializer::initVarWithAddress(const Value *V, StringRef Var,
                                           const APInt &Offset) {
   SmallString<256> InitStr;
   raw_svector_ostream O(InitStr);
@@ -86,7 +86,7 @@ void StoreInitializer::initVarWithAddress(const Value *V, const std::string Var,
     pushValue<Brig::BRIG_TYPE_B32>(0);
 }
 
-void StoreInitializer::append(const Constant *CV, const std::string Var) {
+void StoreInitializer::append(const Constant *CV, StringRef Var) {
   using namespace Brig;
 
   switch (CV->getValueID()) {
