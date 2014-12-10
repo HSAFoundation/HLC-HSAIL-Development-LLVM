@@ -21,7 +21,13 @@
 using namespace llvm;
 using namespace HSAIL_ASM;
 
-
+StoreInitializer::StoreInitializer(Brig::BrigType16_t type,
+                                   BRIGAsmPrinter &asmPrinter)
+  : m_type(type),
+    m_asmPrinter(asmPrinter),
+    DL(m_asmPrinter.getDataLayout()),
+    Subtarget(m_asmPrinter.getSubtarget()),
+    m_reqNumZeroes(0) {}
 
 template <Brig::BrigTypeX BrigTypeId>
 void StoreInitializer::pushValue(
@@ -80,7 +86,7 @@ void StoreInitializer::initVarWithAddress(const Value *V, StringRef Var,
   pgm.operands() = opnds;
 
   unsigned AS = GV->getType()->getAddressSpace();
-  if (m_asmPrinter.getDataLayout().getPointerSizeInBits(AS) == 64)
+  if (DL.getPointerSize(AS) == 8)
     pushValue<Brig::BRIG_TYPE_B64>(0);
   else
     pushValue<Brig::BRIG_TYPE_B32>(0);
@@ -106,8 +112,7 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
   }
   case Value::ConstantStructVal: { // Recursive type.
     const ConstantStruct *s = cast<ConstantStruct>(CV);
-    const StructLayout *layout =
-      m_asmPrinter.getDataLayout().getStructLayout(s->getType());
+    const StructLayout *layout = DL.getStructLayout(s->getType());
     uint64_t const initStartOffset = m_data.numBytes();
     for (unsigned i = 0, e = s->getNumOperands(); i < e; ++i) {
       append(cast<Constant>(s->getOperand(i)), Var);
@@ -172,13 +177,15 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
     break;
   }
   case Value::ConstantPointerNullVal:
-    (m_asmPrinter.getSubtarget().is64Bit()) ? pushValue<BRIG_TYPE_B64>(0)
-                                            : pushValue<BRIG_TYPE_B32>(0);
+    if (Subtarget.is64Bit())
+      pushValue<BRIG_TYPE_B64>(0);
+    else
+      pushValue<BRIG_TYPE_B32>(0);
+
     break;
 
   case Value::ConstantAggregateZeroVal:
-    m_reqNumZeroes += HSAIL::getNumElementsInHSAILType(
-        CV->getType(), m_asmPrinter.getDataLayout());
+    m_reqNumZeroes += HSAIL::getNumElementsInHSAILType(CV->getType(), DL);
     break;
 
   case Value::ConstantExprVal: {
@@ -189,10 +196,9 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
         const Value *Ptr = GO->getPointerOperand()->stripPointerCasts();
         assert(Ptr && Ptr->hasName());
         unsigned AS = GO->getPointerAddressSpace();
-        unsigned PtrSize =
-            m_asmPrinter.getDataLayout().getPointerSizeInBits(AS);
+        unsigned PtrSize = DL.getPointerSizeInBits(AS);
         APInt Offset(PtrSize, 0);
-        if (!GO->accumulateConstantOffset(m_asmPrinter.getDataLayout(), Offset))
+        if (!GO->accumulateConstantOffset(DL, Offset))
           llvm_unreachable("Cannot calculate initializer offset");
         initVarWithAddress(Ptr, Var, Offset);
       } else {
@@ -210,7 +216,7 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
     assert(V->hasName());
 
     unsigned AS = cast<PointerType>(V->getType())->getAddressSpace();
-    unsigned PtrSize = m_asmPrinter.getDataLayout().getPointerSizeInBits(AS);
+    unsigned PtrSize = DL.getPointerSizeInBits(AS);
     initVarWithAddress(V, Var, APInt(PtrSize, 0));
     break;
   }

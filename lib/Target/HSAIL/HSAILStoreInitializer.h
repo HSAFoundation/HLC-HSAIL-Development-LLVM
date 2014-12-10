@@ -18,6 +18,8 @@ namespace llvm {
 class APInt;
 class BRIGAsmPrinter;
 class Constant;
+class DataLayout;
+class HSAILSubtarget;
 class StringRef;
 class Value;
 
@@ -25,6 +27,8 @@ class StoreInitializer {
 private:
   Brig::BrigType16_t m_type;
   BRIGAsmPrinter &m_asmPrinter;
+  const DataLayout &DL;
+  const HSAILSubtarget &Subtarget;
   unsigned m_reqNumZeroes;
   HSAIL_ASM::ArbitraryData m_data;
 
@@ -37,10 +41,7 @@ private:
   void initVarWithAddress(const Value *V, StringRef Var, const APInt &Offset);
 
 public:
-  StoreInitializer(Brig::BrigType16_t type, BRIGAsmPrinter &asmPrinter)
-      : m_type(type),
-        m_asmPrinter(asmPrinter),
-        m_reqNumZeroes(0) {}
+  StoreInitializer(Brig::BrigType16_t type, BRIGAsmPrinter &asmPrinter);
 
   void append(const Constant *CV, StringRef Var);
 
