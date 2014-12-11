@@ -10,8 +10,10 @@
 #ifndef LLVM_LIB_TARGET_HSAIL_HSAILSTOREINITIALIZER_H
 #define LLVM_LIB_TARGET_HSAIL_HSAILSTOREINITIALIZER_H
 
+#include "llvm/ADT/SmallString.h"
+#include "llvm/Support/EndianStream.h"
+
 #include "libHSAIL/HSAILItems.h"
-#include "libHSAIL/HSAILUtilities.h"
 
 namespace llvm {
 
@@ -30,13 +32,10 @@ private:
   const DataLayout &DL;
   const HSAILSubtarget &Subtarget;
   unsigned m_reqNumZeroes;
-  HSAIL_ASM::ArbitraryData m_data;
 
-  template <Brig::BrigTypeX BrigTypeId>
-  void pushValue(typename HSAIL_ASM::BrigType<BrigTypeId>::CType value);
-
-  template <Brig::BrigTypeX BrigTypeId>
-  void pushValueImpl(typename HSAIL_ASM::BrigType<BrigTypeId>::CType value);
+  SmallString<1024> m_data;
+  raw_svector_ostream OS;
+  support::endian::Writer<support::little> LE;
 
   void initVarWithAddress(const GlobalValue *GV, StringRef Var,
                           const APInt &Offset);
@@ -46,16 +45,17 @@ public:
 
   void append(const Constant *CV, StringRef Var);
 
-  HSAIL_ASM::SRef toSRef() const {
-    return m_data.toSRef();
+  StringRef str() const {
+    return StringRef(m_data);
   }
 
-  size_t elementCount() const {
-    return m_data.numBytes() / HSAIL_ASM::getBrigTypeNumBytes(m_type);
+  size_t elementCount() {
+    return dataSizeInBytes() / HSAIL_ASM::getBrigTypeNumBytes(m_type);
   }
 
-  size_t dataSizeInBytes() const {
-    return m_data.numBytes();
+  size_t dataSizeInBytes() {
+    // Be sure to flush the stream before computing the size.
+    return OS.str().size();
   }
 };
 

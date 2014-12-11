@@ -27,41 +27,12 @@ StoreInitializer::StoreInitializer(Brig::BrigType16_t type,
     m_asmPrinter(asmPrinter),
     DL(m_asmPrinter.getDataLayout()),
     Subtarget(m_asmPrinter.getSubtarget()),
-    m_reqNumZeroes(0) {}
+    m_reqNumZeroes(0),
+    m_data(),
+    OS(m_data),
+    LE(OS) {
 
-template <Brig::BrigTypeX BrigTypeId>
-void StoreInitializer::pushValue(
-    typename HSAIL_ASM::BrigType<BrigTypeId>::CType value) {
-  using namespace Brig;
-
-  // Need to check whether BrigTypeId matches initializer type.
-  if (m_type == HSAIL_ASM::BrigType<BrigTypeId>::asBitType::value) {
-    pushValueImpl<BrigTypeId>(value);
-    return;
-  }
-
-  assert(m_type == BRIG_TYPE_B8); // struct case
-  const uint8_t(&src)[sizeof(value)] =
-    *reinterpret_cast<const uint8_t(*)[sizeof(value)]>(&value);
-
-  for (unsigned int i = 0; i < sizeof(value); ++i)
-    pushValueImpl<BRIG_TYPE_U8>(src[i]);
-}
-
-template <Brig::BrigTypeX BrigTypeId>
-void StoreInitializer::pushValueImpl(
-    typename HSAIL_ASM::BrigType<BrigTypeId>::CType value) {
-
-  assert(m_type == HSAIL_ASM::BrigType<BrigTypeId>::asBitType::value);
-  typedef typename HSAIL_ASM::BrigType<BrigTypeId>::CType CType;
-  if (m_reqNumZeroes > 0) {
-    for (unsigned i = m_reqNumZeroes; i > 0; --i)
-      m_data.push_back(CType());
-
-    m_reqNumZeroes = 0;
-  }
-
-  m_data.push_back(value);
+//  assert(m_type == Brig::BRIG_TYPE_U8);
 }
 
 void StoreInitializer::initVarWithAddress(const GlobalValue *GV, StringRef Var,
@@ -86,14 +57,12 @@ void StoreInitializer::initVarWithAddress(const GlobalValue *GV, StringRef Var,
 
   unsigned AS = GV->getType()->getAddressSpace();
   if (DL.getPointerSize(AS) == 8)
-    pushValue<Brig::BRIG_TYPE_B64>(0);
+    LE.write(static_cast<uint64_t>(0));
   else
-    pushValue<Brig::BRIG_TYPE_B32>(0);
+    LE.write(static_cast<uint32_t>(0));
 }
 
 void StoreInitializer::append(const Constant *CV, StringRef Var) {
-  using namespace Brig;
-
   switch (CV->getValueID()) {
   case Value::ConstantArrayVal: { // Recursive type.
     const ConstantArray *CA = cast<ConstantArray>(CV);
@@ -110,21 +79,30 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
     break;
   }
   case Value::ConstantStructVal: { // Recursive type.
-    const ConstantStruct *s = cast<ConstantStruct>(CV);
-    const StructLayout *layout = DL.getStructLayout(s->getType());
-    uint64_t const initStartOffset = m_data.numBytes();
-    for (unsigned i = 0, e = s->getNumOperands(); i < e; ++i) {
-      append(cast<Constant>(s->getOperand(i)), Var);
-      // Match structure layout by padding with zeroes
-      uint64_t const nextElemOffset = (i + 1) < e
-                                          ? layout->getElementOffset(i + 1)
-                                          : layout->getSizeInBytes();
-      uint64_t const structInitSize = m_data.numBytes() - initStartOffset;
-      assert(nextElemOffset >= structInitSize);
-      m_reqNumZeroes = nextElemOffset - structInitSize;
-      if (m_reqNumZeroes) {
-        m_reqNumZeroes--;
-        pushValue<BRIG_TYPE_U8>(0);
+    const ConstantStruct *S = cast<ConstantStruct>(CV);
+    StructType *ST = S->getType();
+    const StructLayout *SL = DL.getStructLayout(ST);
+
+    uint64_t StructSize = DL.getTypeAllocSize(ST);
+    uint64_t BaseOffset = SL->getElementOffset(0);
+
+    for (unsigned I = 0, E = S->getNumOperands(); I < E; ++I) {
+      Constant *Elt = cast<Constant>(S->getOperand(I));
+      append(Elt, Var);
+
+      uint64_t EltSize = DL.getTypeAllocSize(Elt->getType());
+      uint64_t EltOffset = SL->getElementOffset(I);
+
+      uint64_t PaddedEltSize;
+      if (I == E - 1)
+        PaddedEltSize = BaseOffset + StructSize - EltOffset;
+      else
+        PaddedEltSize = SL->getElementOffset(I + 1) - EltOffset;
+
+      // Match structure layout by padding with zeroes.
+      while (EltSize < PaddedEltSize) {
+        LE.write(static_cast<uint8_t>(0));
+        ++EltSize;
       }
     }
     break;
@@ -145,20 +123,22 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
   case Value::ConstantIntVal: {
     const ConstantInt *CI = cast<ConstantInt>(CV);
     if (CI->getType()->isIntegerTy(1)) {
-      pushValue<BRIG_TYPE_B1>(CI->getZExtValue() ? 1 : 0);
+      //pushValue<BRIG_TYPE_B1>(CI->getZExtValue() ? 1 : 0);
+      //XXX
+      LE.write(static_cast<uint8_t>(CI->getZExtValue() ? 1 : 0));
     } else {
       switch (CI->getBitWidth()) {
       case 8:
-        pushValue<BRIG_TYPE_U8>(*CI->getValue().getRawData());
+        LE.write(static_cast<uint8_t>(CI->getZExtValue()));
         break;
       case 16:
-        pushValue<BRIG_TYPE_U16>(*CI->getValue().getRawData());
+        LE.write(static_cast<uint16_t>(CI->getZExtValue()));
         break;
       case 32:
-        pushValue<BRIG_TYPE_U32>(*CI->getValue().getRawData());
+        LE.write(static_cast<uint32_t>(CI->getZExtValue()));
         break;
       case 64:
-        pushValue<BRIG_TYPE_U64>(*CI->getValue().getRawData());
+        LE.write(static_cast<uint64_t>(CI->getZExtValue()));
         break;
       }
     }
@@ -166,25 +146,24 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
   }
   case Value::ConstantFPVal: {
     const ConstantFP *CFP = cast<ConstantFP>(CV);
-    if (CFP->getType()->isFloatTy()) {
-      pushValue<BRIG_TYPE_F32>(HSAIL_ASM::f32_t::fromRawBits(
-          *CFP->getValueAPF().bitcastToAPInt().getRawData()));
-    } else if (CFP->getType()->isDoubleTy()) {
-      pushValue<BRIG_TYPE_F64>(HSAIL_ASM::f64_t::fromRawBits(
-          *CFP->getValueAPF().bitcastToAPInt().getRawData()));
-    }
+    if (CFP->getType()->isFloatTy())
+      LE.write(CFP->getValueAPF().convertToFloat());
+    else if (CFP->getType()->isDoubleTy())
+      LE.write(CFP->getValueAPF().convertToDouble());
+    else
+      llvm_unreachable("unhandled ConstantFP type");
     break;
   }
   case Value::ConstantPointerNullVal:
+    // FIXME: Should get address space size.
     if (Subtarget.is64Bit())
-      pushValue<BRIG_TYPE_B64>(0);
+      LE.write(static_cast<uint64_t>(0));
     else
-      pushValue<BRIG_TYPE_B32>(0);
-
+      LE.write(static_cast<uint32_t>(0));
     break;
-
   case Value::ConstantAggregateZeroVal:
     m_reqNumZeroes += HSAIL::getNumElementsInHSAILType(CV->getType(), DL);
+    llvm_unreachable("FIXME");
     break;
 
   case Value::ConstantExprVal: {

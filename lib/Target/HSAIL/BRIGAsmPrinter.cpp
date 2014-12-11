@@ -141,7 +141,8 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
   HSAIL_ASM::SRef init;
   char zeroes[32];
   if (store.elementCount() > 0) {
-    init = store.toSRef();
+    StringRef S = store.str();
+    init = HSAIL_ASM::SRef(S.begin(), S.end());
   } else {
     assert(typeBytes <= sizeof zeroes);
     memset(zeroes, 0, typeBytes);
