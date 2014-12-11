@@ -64,18 +64,17 @@ void StoreInitializer::pushValueImpl(
   m_data.push_back(value);
 }
 
-void StoreInitializer::initVarWithAddress(const Value *V, StringRef Var,
+void StoreInitializer::initVarWithAddress(const GlobalValue *GV, StringRef Var,
                                           const APInt &Offset) {
   SmallString<256> InitStr;
   raw_svector_ostream O(InitStr);
 
-  const GlobalVariable *GV = cast<GlobalVariable>(V);
-  assert(V->hasName()); // FIXME: Anonymous global are allowed.
+  assert(GV->hasName()); // FIXME: Anonymous global are allowed.
 
   O << "initvarwithaddress:" << Var << ':' << dataSizeInBytes() << ':'
     << HSAIL_ASM::getBrigTypeNumBytes(m_type) << ':'
     << BRIGAsmPrinter::getSymbolPrefix(*GV)
-    << V->getName() << ':' << Offset.toString(10, false);
+    << GV->getName() << ':' << Offset.toString(10, false);
 
   HSAIL_ASM::DirectivePragma pgm =
       m_asmPrinter.brigantine.append<HSAIL_ASM::DirectivePragma>();
@@ -200,7 +199,7 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
         APInt Offset(PtrSize, 0);
         if (!GO->accumulateConstantOffset(DL, Offset))
           llvm_unreachable("Cannot calculate initializer offset");
-        initVarWithAddress(Ptr, Var, Offset);
+        initVarWithAddress(cast<GlobalValue>(Ptr), Var, Offset);
       } else {
         llvm_unreachable("Unhandled ConstantExpr initializer instruction");
       }
@@ -213,12 +212,11 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
   }
   case Value::GlobalVariableVal: {
     const Value *V = CV->stripPointerCasts();
-    assert(V->hasName());
 
     // FIXME: It is incorrect to stripPointerCasts through an addrspacecast.
     unsigned AS = cast<PointerType>(V->getType())->getAddressSpace();
     unsigned PtrSize = DL.getPointerSizeInBits(AS);
-    initVarWithAddress(V, Var, APInt(PtrSize, 0));
+    initVarWithAddress(cast<GlobalValue>(V), Var, APInt(PtrSize, 0));
     break;
   }
   default:

@@ -19,9 +19,9 @@ class APInt;
 class BRIGAsmPrinter;
 class Constant;
 class DataLayout;
+class GlobalValue;
 class HSAILSubtarget;
 class StringRef;
-class Value;
 
 class StoreInitializer {
 private:
@@ -38,7 +38,8 @@ private:
   template <Brig::BrigTypeX BrigTypeId>
   void pushValueImpl(typename HSAIL_ASM::BrigType<BrigTypeId>::CType value);
 
-  void initVarWithAddress(const Value *V, StringRef Var, const APInt &Offset);
+  void initVarWithAddress(const GlobalValue *GV, StringRef Var,
+                          const APInt &Offset);
 
 public:
   StoreInitializer(Brig::BrigType16_t type, BRIGAsmPrinter &asmPrinter);
