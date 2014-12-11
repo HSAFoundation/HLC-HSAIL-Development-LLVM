@@ -20,18 +20,15 @@
 using namespace llvm;
 using namespace HSAIL_ASM;
 
-StoreInitializer::StoreInitializer(Brig::BrigType16_t type,
+StoreInitializer::StoreInitializer(uint32_t EltSize,
                                    BRIGAsmPrinter &asmPrinter)
-  : m_type(type),
+  : InitEltSize(EltSize),
     m_asmPrinter(asmPrinter),
     DL(m_asmPrinter.getDataLayout()),
     Subtarget(m_asmPrinter.getSubtarget()),
     m_data(),
     OS(m_data),
-    LE(OS) {
-
-//  assert(m_type == Brig::BRIG_TYPE_U8);
-}
+    LE(OS) {}
 
 void StoreInitializer::initVarWithAddress(const GlobalValue *GV, StringRef Var,
                                           const APInt &Offset) {
@@ -41,7 +38,7 @@ void StoreInitializer::initVarWithAddress(const GlobalValue *GV, StringRef Var,
   assert(GV->hasName()); // FIXME: Anonymous global are allowed.
 
   O << "initvarwithaddress:" << Var << ':' << dataSizeInBytes() << ':'
-    << HSAIL_ASM::getBrigTypeNumBytes(m_type) << ':'
+    << InitEltSize << ':'
     << BRIGAsmPrinter::getSymbolPrefix(*GV)
     << GV->getName() << ':' << Offset.toString(10, false);
 
@@ -161,7 +158,6 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
     break;
   }
   case Value::ConstantAggregateZeroVal: {
-    unsigned InitEltSize = HSAIL_ASM::getBrigTypeNumBytes(m_type);
     uint64_t Size = DL.getTypeAllocSize(CV->getType());
     for (uint64_t I = 0; I < Size / InitEltSize; ++I) {
       switch (InitEltSize) {

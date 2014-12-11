@@ -134,8 +134,10 @@ Brig::BrigTypeX BRIGAsmPrinter::getAtomicType(const MachineInstr *MI) const {
 
 void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
                                         Constant *CV) {
-  StoreInitializer store(HSAIL_ASM::convType2BitType(globalVar.type()), *this);
+  unsigned EltBytes = HSAIL_ASM::convType2BitType(globalVar.type());
+  StoreInitializer store(HSAIL_ASM::getBrigTypeNumBytes(EltBytes), *this);
   store.append(CV, globalVar.name().str());
+
   size_t typeBytes = HSAIL_ASM::getBrigTypeNumBytes(globalVar.type());
 
   HSAIL_ASM::SRef init;

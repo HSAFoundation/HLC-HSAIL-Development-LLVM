@@ -13,8 +13,6 @@
 #include "llvm/ADT/SmallString.h"
 #include "llvm/Support/EndianStream.h"
 
-#include "libHSAIL/HSAILItems.h"
-
 namespace llvm {
 
 class APInt;
@@ -27,7 +25,7 @@ class StringRef;
 
 class StoreInitializer {
 private:
-  Brig::BrigType16_t m_type;
+  uint32_t InitEltSize;
   BRIGAsmPrinter &m_asmPrinter;
   const DataLayout &DL;
   const HSAILSubtarget &Subtarget;
@@ -40,7 +38,7 @@ private:
                           const APInt &Offset);
 
 public:
-  StoreInitializer(Brig::BrigType16_t type, BRIGAsmPrinter &asmPrinter);
+  StoreInitializer(uint32_t InitEltSize, BRIGAsmPrinter &asmPrinter);
 
   void append(const Constant *CV, StringRef Var);
 
@@ -49,7 +47,7 @@ public:
   }
 
   size_t elementCount() {
-    return dataSizeInBytes() / HSAIL_ASM::getBrigTypeNumBytes(m_type);
+    return dataSizeInBytes() / InitEltSize;
   }
 
   size_t dataSizeInBytes() {
