@@ -6,8 +6,12 @@
 ; HSAIL-DAG: align(8) readonly_u8 &struct_foo_gv[24] = {0, 0, 128, 65, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 4, 0, 0, 0};
 ; HSAIL-DAG: readonly_u32 &array_v1_gv[4] = {1, 2, 3, 4};
 ; HSAIL-DAG: align(8) readonly_u8 &struct_foo_zeroinit[240] = {0};
+; HSAIL-DAG: align(8) readonly_u8 &bare_struct_foo_zeroinit[24] = {0};
 
 ;HSAIL-DAG: align(8) readonly_u8 &struct_foo_partial_zeroinit[48] = {0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+; HSAIL-DAG: readonly_u32 &zeroinit_scalar_array[1025] = {0};
+; HSAIL-DAG: align(16) readonly_u32 &zeroinit_vector_array[16] = {0};
 
 @b = internal addrspace(2) constant [1 x i16] [ i16 7 ], align 2
 
@@ -15,16 +19,20 @@
 @double_gv = internal unnamed_addr addrspace(2) constant [5 x double] [double 0.0, double 1.0, double 2.0, double 3.0, double 4.0], align 4
 
 %struct.foo = type { float, [5 x i32] }
-%struct.bar = type { float, [5 x i32] }
 
 @struct_foo_gv = internal unnamed_addr addrspace(2) constant [1 x %struct.foo] [ %struct.foo { float 16.0, [5 x i32] [i32 0, i32 1, i32 2, i32 3, i32 4] } ]
 
 @struct_foo_zeroinit = internal unnamed_addr addrspace(2) constant [10 x %struct.foo] zeroinitializer
 
+@bare_struct_foo_zeroinit = internal unnamed_addr addrspace(2) constant %struct.foo zeroinitializer
+
 @struct_foo_partial_zeroinit = internal unnamed_addr addrspace(2) constant [2 x %struct.foo] [
   %struct.foo { float 1.0, [5 x i32] zeroinitializer },
   %struct.foo { float 2.0, [5 x i32] zeroinitializer }
 ]
+
+@zeroinit_scalar_array = internal unnamed_addr addrspace(2) constant [1025 x i32] zeroinitializer
+@zeroinit_vector_array = internal addrspace(2) constant [4 x <4 x i32>] zeroinitializer
 
 @array_v1_gv = internal addrspace(2) constant [4 x <1 x i32>] [ <1 x i32> <i32 1>,
                                                                 <1 x i32> <i32 2>,
@@ -94,6 +102,18 @@ define void @struct_foo_gv_zeroinit_load(i32 addrspace(1)* %out, i32 %index) {
   ret void
 }
 
+; FUNC-LABEL: @bare_struct_foo_gv_zeroinit_load
+; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
+; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&bare_struct_foo_zeroinit]{{\[}}[[ADDR]]+4{{\]}};
+; HSAIL: st_global_align(4)_u32 [[LD]]
+; HSAIL: ret;
+define void @bare_struct_foo_gv_zeroinit_load(i32 addrspace(1)* %out, i32 %index) {
+  %gep = getelementptr inbounds %struct.foo addrspace(2)* @bare_struct_foo_zeroinit, i32 0, i32 1, i32 %index
+  %load = load volatile i32 addrspace(2)* %gep, align 4
+  store i32 %load, i32 addrspace(1)* %out, align 4
+  ret void
+}
+
 ; FUNC-LABEL: @struct_foo_gv_partial_zeroinit_load
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
 ; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&struct_foo_partial_zeroinit]{{\[}}[[ADDR]]+4{{\]}};
@@ -115,6 +135,27 @@ define void @array_v1_gv_load(<1 x i32> addrspace(1)* %out, i32 %index) {
   %gep = getelementptr inbounds [4 x <1 x i32>] addrspace(2)* @array_v1_gv, i32 0, i32 %index
   %load = load <1 x i32> addrspace(2)* %gep, align 4
   store <1 x i32> %load, <1 x i32> addrspace(1)* %out, align 4
+  ret void
+}
+
+
+; FUNC-LABEL: @zeroinit_scalar_array_load
+; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
+; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&zeroinit_scalar_array]{{\[}}[[ADDR]]{{\]}};
+; HSAIL: st_global_align(4)_u32 [[LD]]
+; HSAIL: ret;
+define void @zeroinit_scalar_array_load(i32 addrspace(1)* %out, i32 %index) {
+  %gep = getelementptr inbounds [1025 x i32] addrspace(2)* @zeroinit_scalar_array, i32 0, i32 %index
+  %load = load i32 addrspace(2)* %gep, align 4
+  store i32 %load, i32 addrspace(1)* %out, align 4
+  ret void
+}
+
+; FUNC-LABEL: @zeroinit_vector_array_load
+define void @zeroinit_vector_array_load(<4 x i32> addrspace(1)* %out, i32 %index) {
+  %gep = getelementptr inbounds [4 x <4 x i32>] addrspace(2)* @zeroinit_vector_array, i32 0, i32 %index
+  %load = load <4 x i32> addrspace(2)* %gep, align 16
+  store <4 x i32> %load, <4 x i32> addrspace(1)* %out, align 16
   ret void
 }
 
