@@ -1,5 +1,10 @@
 ; RUN: llc -march=hsail -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL -check-prefix=FUNC %s
 
+; HSAIL-DAG: prog align(16) readonly_u32 &vector_v4i32[4] = {47, 256, 99, 1299};
+; HSAIL-DAG: prog align(16) readonly_u32 &vector_v3i32[4] = {47, 256, 12};
+; HSAIL-DAG: prog align(16) readonly_u32 &zero_vector_v4i32[4] = {0};
+; HSAIL-DAG: prog align(16) readonly_u32 &zero_vector_v3i32[4] = {0};
+
 ; HSAIL-DAG: readonly_f32 &float_gv[5] = {0F00000000, 0F3f800000, 0F40000000, 0F40400000, 0F40800000};
 ; HSAIL-DAG: readonly_f64 &double_gv[5] = {0D0000000000000000, 0D3ff0000000000000, 0D4000000000000000, 0D4008000000000000, 0D4010000000000000};
 ; HSAIL-DAG: readonly_u32 &i32_gv[5] = {0, 1, 2, 3, 4};
@@ -12,6 +17,20 @@
 
 ; HSAIL-DAG: readonly_u32 &zeroinit_scalar_array[1025] = {0};
 ; HSAIL-DAG: align(16) readonly_u32 &zeroinit_vector_array[16] = {0};
+
+@scalar_i32 = addrspace(2) constant i32 99
+@vector_v4i32 = addrspace(2) constant <4 x i32> <i32 47, i32 256, i32 99, i32 1299>
+@vector_v3i32 = addrspace(2) constant <3 x i32> <i32 47, i32 256, i32 12>
+
+@zero_vector_v4i32 = addrspace(2) constant <4 x i32> zeroinitializer
+@zero_vector_v3i32 = addrspace(2) constant <3 x i32> zeroinitializer
+
+@array_array = addrspace(2) constant [4 x [4 x i32]] [
+  [4 x i32] [i32 1, i32 2, i32 3, i32 4 ],
+  [4 x i32] [i32 1, i32 2, i32 3, i32 4 ],
+  [4 x i32] [i32 1, i32 2, i32 3, i32 4 ],
+  [4 x i32] [i32 1, i32 2, i32 3, i32 4 ]
+]
 
 @b = internal addrspace(2) constant [1 x i16] [ i16 7 ], align 2
 
