@@ -199,16 +199,19 @@ template <Brig::BrigTypeX BrigTypeId> void StoreInitializer::pushValueImpl(
 void StoreInitializer::initVarWithAddress(const Value *V, const std::string Var,
                                           const APInt& Offset) {
   assert(V->hasName());
+  const GlobalVariable *GV = cast<GlobalVariable>(V);
   std::stringstream initstr;
   initstr << "initvarwithaddress:" << Var << ":" << dataSizeInBytes() <<
     ":" << HSAIL_ASM::getBrigTypeNumBytes(m_type) << ":" <<
-    BRIGAsmPrinter::getSymbolPrefix(*dyn_cast<GlobalVariable>(V)) <<
+    BRIGAsmPrinter::getSymbolPrefix(*GV) <<
     V->getName() << ':' << Offset.toString(10, false);
   HSAIL_ASM::DirectivePragma pgm = m_asmPrinter.brigantine.append<HSAIL_ASM::DirectivePragma>();
   HSAIL_ASM::ItemList opnds;
   opnds.push_back(m_asmPrinter.brigantine.createOperandString(initstr.str()));
   pgm.operands() = opnds;
-  if (m_asmPrinter.getSubtarget().is64Bit())
+
+  unsigned AS = GV->getType()->getAddressSpace();
+  if (m_asmPrinter.getDataLayout().getPointerSizeInBits(AS) == 64)
     pushValue<Brig::BRIG_TYPE_B64>(0);
   else
     pushValue<Brig::BRIG_TYPE_B32>(0);
