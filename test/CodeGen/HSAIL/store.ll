@@ -418,6 +418,26 @@ define void @store_flat_i64_i16(i16 addrspace(4)* %out, i64 %in) {
   ret void
 }
 
+; FUNC-LABEL: {{^}}prog function &store_flat_f32
+; HSAIL-DAG: ld_arg_align(4)_f32 [[IN:\$s[0-9]+]], [%in];
+; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
+; HSAIL: st_align(4)_f32 [[IN]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: ret;
+define void @store_flat_f32(float addrspace(4)* %out, float %in) {
+  store float %in, float addrspace(4)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &store_flat_f64
+; HSAIL-DAG: ld_arg_align(8)_f64 [[IN:\$d[0-9]+]], [%in];
+; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
+; HSAIL: st_align(8)_f64 [[IN]], {{\[}}[[OUT]]{{\]}}
+; HSAIL: ret;
+define void @store_flat_f64(double addrspace(4)* %out, double %in) {
+  store double %in, double addrspace(4)* %out
+  ret void
+}
+
 ; The stores in this function are combined by the optimizer to create a
 ; 64-bit store with 32-bit alignment.  This is legal for SI and the legalizer
 ; should not try to split the 64-bit store back into 2 32-bit stores.
