@@ -134,21 +134,29 @@ Brig::BrigTypeX BRIGAsmPrinter::getAtomicType(const MachineInstr *MI) const {
 
 void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
                                         Constant *CV) {
-  unsigned EltBytes = HSAIL_ASM::convType2BitType(globalVar.type());
-  StoreInitializer store(HSAIL_ASM::getBrigTypeNumBytes(EltBytes), *this);
-  store.append(CV, globalVar.name().str());
-
-  size_t typeBytes = HSAIL_ASM::getBrigTypeNumBytes(globalVar.type());
-
   HSAIL_ASM::SRef init;
   char zeroes[32];
-  if (store.elementCount() > 0) {
-    StringRef S = store.str();
-    init = HSAIL_ASM::SRef(S.begin(), S.end());
-  } else {
-    assert(typeBytes <= sizeof zeroes);
+
+  unsigned EltType = HSAIL_ASM::convType2BitType(globalVar.type());
+  size_t typeBytes = HSAIL_ASM::getBrigTypeNumBytes(globalVar.type());
+
+  assert(typeBytes <= sizeof(zeroes));
+
+  // If this is a trivially null constant, we only need to emit one zero.
+  if (CV->isNullValue()) {
     memset(zeroes, 0, typeBytes);
     init = HSAIL_ASM::SRef(zeroes, zeroes + typeBytes);
+  } else {
+    StoreInitializer store(HSAIL_ASM::getBrigTypeNumBytes(EltType), *this);
+    store.append(CV, globalVar.name().str());
+
+    if (store.elementCount() > 0) {
+      StringRef S = store.str();
+      init = HSAIL_ASM::SRef(S.begin(), S.end());
+    } else {
+      memset(zeroes, 0, typeBytes);
+      init = HSAIL_ASM::SRef(zeroes, zeroes + typeBytes);
+    }
   }
 
   if (globalVar.modifier().isArray()) {
