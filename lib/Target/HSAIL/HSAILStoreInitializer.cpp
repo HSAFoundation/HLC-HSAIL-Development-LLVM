@@ -154,13 +154,14 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
       llvm_unreachable("unhandled ConstantFP type");
     break;
   }
-  case Value::ConstantPointerNullVal:
-    // FIXME: Should get address space size.
-    if (Subtarget.is64Bit())
+  case Value::ConstantPointerNullVal: {
+    unsigned AS = CV->getType()->getPointerAddressSpace();
+    if (DL.getPointerSize(AS) == 8)
       LE.write(static_cast<uint64_t>(0));
     else
       LE.write(static_cast<uint32_t>(0));
     break;
+  }
   case Value::ConstantAggregateZeroVal:
     m_reqNumZeroes += HSAIL::getNumElementsInHSAILType(CV->getType(), DL);
     llvm_unreachable("FIXME");
