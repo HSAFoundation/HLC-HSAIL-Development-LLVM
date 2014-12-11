@@ -8,7 +8,6 @@
 //===----------------------------------------------------------------------===//
 
 #include "HSAILStoreInitializer.h"
-#include "HSAILUtilityFunctions.h"
 
 #include "BRIGAsmPrinter.h"
 
@@ -27,7 +26,6 @@ StoreInitializer::StoreInitializer(Brig::BrigType16_t type,
     m_asmPrinter(asmPrinter),
     DL(m_asmPrinter.getDataLayout()),
     Subtarget(m_asmPrinter.getSubtarget()),
-    m_reqNumZeroes(0),
     m_data(),
     OS(m_data),
     LE(OS) {
@@ -162,11 +160,30 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
       LE.write(static_cast<uint32_t>(0));
     break;
   }
-  case Value::ConstantAggregateZeroVal:
-    m_reqNumZeroes += HSAIL::getNumElementsInHSAILType(CV->getType(), DL);
-    llvm_unreachable("FIXME");
-    break;
+  case Value::ConstantAggregateZeroVal: {
+    unsigned InitEltSize = HSAIL_ASM::getBrigTypeNumBytes(m_type);
+    uint64_t Size = DL.getTypeAllocSize(CV->getType());
+    for (uint64_t I = 0; I < Size / InitEltSize; ++I) {
+      switch (InitEltSize) {
+      case 1:
+        LE.write(static_cast<uint8_t>(0));
+        break;
+      case 2:
+        LE.write(static_cast<uint16_t>(0));
+        break;
+      case 4:
+        LE.write(static_cast<uint32_t>(0));
+        break;
+      case 8:
+        LE.write(static_cast<uint64_t>(0));
+        break;
+      default:
+        llvm_unreachable("unhandled size");
+      }
+    }
 
+    break;
+  }
   case Value::ConstantExprVal: {
     const ConstantExpr *CE = cast<ConstantExpr>(CV);
     if (CE->isGEPWithNoNotionalOverIndexing()) {

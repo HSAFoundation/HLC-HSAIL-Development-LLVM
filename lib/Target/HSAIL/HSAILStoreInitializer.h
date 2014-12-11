@@ -31,7 +31,6 @@ private:
   BRIGAsmPrinter &m_asmPrinter;
   const DataLayout &DL;
   const HSAILSubtarget &Subtarget;
-  unsigned m_reqNumZeroes;
 
   SmallString<1024> m_data;
   raw_svector_ostream OS;
