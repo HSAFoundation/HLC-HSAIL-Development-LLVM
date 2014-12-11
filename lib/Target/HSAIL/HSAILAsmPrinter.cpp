@@ -612,12 +612,6 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
         O << getSegmentName(AS)
           << getArgTypeName(printGVType(Ty->getElementType(), DL, str))
           << " %" << GV.getName() << str;
-        if (GV.hasInitializer() && canInitAddressSpace(AS)) {
-          O << " = ";
-          printGVInitialValue(GV, cast<Constant>(GV.getInitializer()), DL, O);
-        }
-
-        O << ";\n";
       }
     }
   }
