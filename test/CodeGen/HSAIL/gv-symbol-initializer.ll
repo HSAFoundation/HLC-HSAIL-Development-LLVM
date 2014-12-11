@@ -50,6 +50,65 @@
 ; HSAIL32: pragma  "initvarwithaddress:&lds_symbol_array:16:4:%lds.int4:0";
 
 
+
+; HSAIL32: prog readonly_u32 &scalar_p2i32 = 0;
+; HSAIL32: pragma  "initvarwithaddress:&scalar_p2i32:0:4:&int0:0";
+
+; HSAIL32: prog readonly_u32 &scalar_p3i32 = 0;
+; HSAIL32: pragma  "initvarwithaddress:&scalar_p3i32:0:4:%lds.int0:0";
+
+; HSAIL32: prog align(16) readonly_u32 &zero_vector_v4p2i32[4] = {0};
+; HSAIL32: prog align(16) readonly_u32 &zero_vector_v3p2i32[4] = {0};
+
+; HSAIL32: prog readonly_u32 &p2i32_array[4] = {0, 0, 0, 0};
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array:0:4:&int0:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array:4:4:&int1:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array:8:4:&int2:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array:12:4:&int3:0";
+
+; HSAIL32: prog readonly_u32 &p3i32_array[4] = {0, 0, 0, 0};
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array:0:4:%lds.int0:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array:4:4:%lds.int1:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array:8:4:%lds.int2:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array:12:4:%lds.int3:0";
+
+; HSAIL32: prog readonly_u32 &p2i32_array_array[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:0:4:&int0:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:4:4:&int1:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:8:4:&int2:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:12:4:&int3:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:16:4:&int0:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:20:4:&int1:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:24:4:&int2:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:28:4:&int3:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:32:4:&int0:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:36:4:&int1:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:40:4:&int2:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:44:4:&int3:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:48:4:&int0:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:52:4:&int1:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:56:4:&int2:0";
+; HSAIL32: pragma  "initvarwithaddress:&p2i32_array_array:60:4:&int3:0";
+
+; HSAIL32: prog readonly_u32 &p3i32_array_array[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:0:4:%lds.int0:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:4:4:%lds.int1:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:8:4:%lds.int2:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:12:4:%lds.int3:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:16:4:%lds.int0:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:20:4:%lds.int1:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:24:4:%lds.int2:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:28:4:%lds.int3:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:32:4:%lds.int0:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:36:4:%lds.int1:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:40:4:%lds.int2:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:44:4:%lds.int3:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:48:4:%lds.int0:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:52:4:%lds.int1:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:56:4:%lds.int2:0";
+; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:60:4:%lds.int3:0";
+
+
 ; HSAIL64: readonly_u64 &symbol_array[5] = {0, 0, 0, 0, 0};
 ; HSAIL64: pragma  "initvarwithaddress:&symbol_array:0:8:&int0:0";
 ; HSAIL64: pragma  "initvarwithaddress:&symbol_array:8:8:&int1:0";
@@ -89,6 +148,64 @@
 ; HSAIL64: pragma  "initvarwithaddress:&lds_symbol_array:8:4:%lds.int2:0";
 ; HSAIL64: pragma  "initvarwithaddress:&lds_symbol_array:12:4:%lds.int3:0";
 ; HSAIL64: pragma  "initvarwithaddress:&lds_symbol_array:16:4:%lds.int4:0";
+
+
+; HSAIL64: prog readonly_u64 &scalar_p2i32 = 0;
+; HSAIL64: pragma  "initvarwithaddress:&scalar_p2i32:0:8:&int0:0";
+
+; HSAIL64: prog readonly_u32 &scalar_p3i32 = 0;
+; HSAIL64: pragma  "initvarwithaddress:&scalar_p3i32:0:4:%lds.int0:0";
+
+; HSAIL64: prog align(32) readonly_u64 &zero_vector_v4p2i32[4] = {0};
+; HSAIL64: prog align(16) readonly_u32 &zero_vector_v3p2i32[4] = {0};
+
+; HSAIL64: prog readonly_u64 &p2i32_array[4] = {0, 0, 0, 0};
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array:0:8:&int0:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array:8:8:&int1:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array:16:8:&int2:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array:24:8:&int3:0";
+
+; HSAIL64: prog readonly_u32 &p3i32_array[4] = {0, 0, 0, 0};
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array:0:4:%lds.int0:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array:4:4:%lds.int1:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array:8:4:%lds.int2:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array:12:4:%lds.int3:0";
+
+; HSAIL64: prog readonly_u64 &p2i32_array_array[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:0:8:&int0:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:8:8:&int1:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:16:8:&int2:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:24:8:&int3:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:32:8:&int0:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:40:8:&int1:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:48:8:&int2:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:56:8:&int3:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:64:8:&int0:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:72:8:&int1:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:80:8:&int2:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:88:8:&int3:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:96:8:&int0:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:104:8:&int1:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:112:8:&int2:0";
+; HSAIL64: pragma  "initvarwithaddress:&p2i32_array_array:120:8:&int3:0";
+
+; HSAIL64: prog readonly_u32 &p3i32_array_array[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:0:4:%lds.int0:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:4:4:%lds.int1:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:8:4:%lds.int2:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:12:4:%lds.int3:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:16:4:%lds.int0:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:20:4:%lds.int1:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:24:4:%lds.int2:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:28:4:%lds.int3:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:32:4:%lds.int0:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:36:4:%lds.int1:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:40:4:%lds.int2:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:44:4:%lds.int3:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:48:4:%lds.int0:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:52:4:%lds.int1:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:56:4:%lds.int2:0";
+; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:60:4:%lds.int3:0";
 
 
 @int0 = internal unnamed_addr addrspace(2) constant i32 9
@@ -147,6 +264,32 @@
 ]
 
 @lds_symbol_array = internal addrspace(2) constant [5 x i32 addrspace(3)*] [ i32 addrspace(3)* @lds.int0, i32 addrspace(3)* @lds.int1, i32 addrspace(3)* @lds.int2, i32 addrspace(3)* @lds.int3, i32 addrspace(3)* @lds.int4 ]
+
+
+
+@scalar_p2i32 = addrspace(2) constant i32 addrspace(2)* @int0
+@scalar_p3i32 = addrspace(2) constant i32 addrspace(3)* @lds.int0
+
+@zero_vector_v4p2i32 = addrspace(2) constant <4 x i32 addrspace(2)*> zeroinitializer
+@zero_vector_v3p2i32 = addrspace(2) constant <3 x i32 addrspace(3)*> zeroinitializer
+
+@p2i32_array = addrspace(2) constant [4 x i32 addrspace(2)*] [ i32 addrspace(2)* @int0, i32 addrspace(2)* @int1, i32 addrspace(2)* @int2, i32 addrspace(2)* @int3]
+
+@p3i32_array = addrspace(2) constant [4 x i32 addrspace(3)*] [ i32 addrspace(3)* @lds.int0, i32 addrspace(3)* @lds.int1, i32 addrspace(3)* @lds.int2, i32 addrspace(3)* @lds.int3]
+
+@p2i32_array_array = addrspace(2) constant [4 x [4 x i32 addrspace(2)*]] [
+  [4 x i32 addrspace(2)*] [ i32 addrspace(2)* @int0, i32 addrspace(2)* @int1, i32 addrspace(2)* @int2, i32 addrspace(2)* @int3],
+  [4 x i32 addrspace(2)*] [ i32 addrspace(2)* @int0, i32 addrspace(2)* @int1, i32 addrspace(2)* @int2, i32 addrspace(2)* @int3],
+  [4 x i32 addrspace(2)*] [ i32 addrspace(2)* @int0, i32 addrspace(2)* @int1, i32 addrspace(2)* @int2, i32 addrspace(2)* @int3],
+  [4 x i32 addrspace(2)*] [ i32 addrspace(2)* @int0, i32 addrspace(2)* @int1, i32 addrspace(2)* @int2, i32 addrspace(2)* @int3]
+]
+
+@p3i32_array_array = addrspace(2) constant [4 x [4 x i32 addrspace(3)*]] [
+  [4 x i32 addrspace(3)*] [ i32 addrspace(3)* @lds.int0, i32 addrspace(3)* @lds.int1, i32 addrspace(3)* @lds.int2, i32 addrspace(3)* @lds.int3],
+  [4 x i32 addrspace(3)*] [ i32 addrspace(3)* @lds.int0, i32 addrspace(3)* @lds.int1, i32 addrspace(3)* @lds.int2, i32 addrspace(3)* @lds.int3],
+  [4 x i32 addrspace(3)*] [ i32 addrspace(3)* @lds.int0, i32 addrspace(3)* @lds.int1, i32 addrspace(3)* @lds.int2, i32 addrspace(3)* @lds.int3],
+  [4 x i32 addrspace(3)*] [ i32 addrspace(3)* @lds.int0, i32 addrspace(3)* @lds.int1, i32 addrspace(3)* @lds.int2, i32 addrspace(3)* @lds.int3]
+]
 
 
 ; HSAIL-LABEL: {{^}}prog function &test_symbol_array(
