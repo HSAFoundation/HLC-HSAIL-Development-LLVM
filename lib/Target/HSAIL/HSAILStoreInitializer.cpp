@@ -215,6 +215,7 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
     const Value *V = CV->stripPointerCasts();
     assert(V->hasName());
 
+    // FIXME: It is incorrect to stripPointerCasts through an addrspacecast.
     unsigned AS = cast<PointerType>(V->getType())->getAddressSpace();
     unsigned PtrSize = DL.getPointerSizeInBits(AS);
     initVarWithAddress(V, Var, APInt(PtrSize, 0));
