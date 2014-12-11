@@ -37,6 +37,11 @@
 ; HSAIL32: pragma  "initvarwithaddress:&struct_packed_bar_gv:1:1:&constantexpr_address_array:0";
 ; HSAIL32: pragma  "initvarwithaddress:&struct_packed_bar_gv:7:1:&symbol_array:0";
 
+; HSAIL32: align(8) readonly_u8 &struct_mixed_nullptr_sizes_0[16] = {0};
+; HSAIL32: align(8) readonly_u8 &struct_mixed_nullptr_sizes_1[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+; HSAIL32: pragma  "initvarwithaddress:&struct_mixed_nullptr_sizes_1:4:1:&int1:0";
+; HSAIL32: pragma  "initvarwithaddress:&struct_mixed_nullptr_sizes_1:8:1:%lds.int0:0";
+
 
 ; HSAIL64: readonly_u64 &symbol_array[5] = {0, 0, 0, 0, 0};
 ; HSAIL64: pragma  "initvarwithaddress:&symbol_array:0:8:&int0:0";
@@ -66,6 +71,10 @@
 ; HSAIL64: pragma  "initvarwithaddress:&struct_packed_bar_gv:1:1:&constantexpr_address_array:0";
 ; HSAIL64: pragma  "initvarwithaddress:&struct_packed_bar_gv:11:1:&symbol_array:0";
 
+; HSAIL64: align(8) readonly_u8 &struct_mixed_nullptr_sizes_0[32] = {0};
+; HSAIL64: align(8) readonly_u8 &struct_mixed_nullptr_sizes_1[32] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+; HSAIL64: pragma  "initvarwithaddress:&struct_mixed_nullptr_sizes_1:8:1:&int1:0";
+; HSAIL64: pragma  "initvarwithaddress:&struct_mixed_nullptr_sizes_1:16:1:%lds.int0:0";
 
 @int0 = internal unnamed_addr addrspace(2) constant i32 9
 @int1 = internal unnamed_addr addrspace(2) constant i32 34
@@ -85,11 +94,13 @@
   i32 addrspace(2)* getelementptr ([10 x i32] addrspace(2)* @i32_array, i32 0, i32 3)
 ]
 
-
 %struct.foo = type { float, [5 x i32 addrspace(2)*] addrspace(2)* }
 
 %struct.bar = type { i8, [5 x i32 addrspace(2)*] addrspace(2)*, i8 }
 %struct.packed.bar = type <{ i8, [5 x i32 addrspace(2)*] addrspace(2)*, i8 }>
+
+%struct.mixed.nullptr.sizes = type { i32 addrspace(3)*, i32 addrspace(2)* }
+
 
 @struct_foo_gv = internal unnamed_addr addrspace(2) constant [2 x %struct.foo] [
   %struct.foo { float 16.0, [5 x i32 addrspace(2)*] addrspace(2)* @constantexpr_address_array },
@@ -104,6 +115,16 @@
 @struct_packed_bar_gv = internal unnamed_addr addrspace(2) constant [2 x %struct.packed.bar] [
   %struct.packed.bar <{ i8 7, [5 x i32 addrspace(2)*] addrspace(2)* @constantexpr_address_array, i8 23 }>,
   %struct.packed.bar <{ i8 45, [5 x i32 addrspace(2)*] addrspace(2)* @symbol_array, i8 212 }>
+]
+
+
+@lds.int0 = internal unnamed_addr addrspace(3) global i32 undef
+
+
+@struct_mixed_nullptr_sizes_0 = internal unnamed_addr addrspace(2) constant [2 x %struct.mixed.nullptr.sizes] zeroinitializer
+@struct_mixed_nullptr_sizes_1 = internal unnamed_addr addrspace(2) constant [2 x %struct.mixed.nullptr.sizes] [
+  %struct.mixed.nullptr.sizes { i32 addrspace(3)* null, i32 addrspace(2)* @int1 },
+  %struct.mixed.nullptr.sizes { i32 addrspace(3)* @lds.int0, i32 addrspace(2)* null }
 ]
 
 
@@ -162,5 +183,20 @@ define void @test_packed_struct_bar_gv(i32 addrspace(1)* %out, i32 %index) {
   %tmp3 = load i32 addrspace(2)* addrspace(2)* %tmp2
   %load = load i32 addrspace(2)* %tmp3
   store i32 %load, i32 addrspace(1)* %out
+  ret void
+}
+
+
+; HSAIL-LABEL: {{^}}prog function &test_mixed_nullptr_sizes_0(
+define void @test_mixed_nullptr_sizes_0(i32 addrspace(2)* %arg) {
+  %gep = getelementptr [2 x %struct.mixed.nullptr.sizes] addrspace(2)* @struct_mixed_nullptr_sizes_0, i32 0, i32 1, i32 1
+  %load = load volatile i32 addrspace(2)* addrspace(2)* %gep
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &test_mixed_nullptr_sizes_1(
+define void @test_mixed_nullptr_sizes_1(i32 addrspace(2)* %arg) {
+  %gep = getelementptr [2 x %struct.mixed.nullptr.sizes] addrspace(2)* @struct_mixed_nullptr_sizes_1, i32 0, i32 1, i32 0
+  %load = load volatile i32 addrspace(3)* addrspace(2)* %gep
   ret void
 }
