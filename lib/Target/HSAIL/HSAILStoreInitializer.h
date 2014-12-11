@@ -60,8 +60,8 @@ public:
     return makeArrayRef(VarInitAddresses);
   }
 
-  StringRef str() const {
-    return StringRef(m_data);
+  StringRef str() {
+    return OS.str();
   }
 
   size_t elementCount() {
