@@ -1,4 +1,6 @@
-; RUN: llc -march=hsail -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL -check-prefix=FUNC %s
+; RUN: llc -march=hsail -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL32 -check-prefix=HSAIL %s
+; RUN: llc -march=hsail64 -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL64 -check-prefix=HSAIL %s
+
 
 ; HSAIL: readonly_u32 &int0 = 9;
 ; HSAIL: readonly_u32 &int1 = 34;
@@ -6,33 +8,63 @@
 ; HSAIL: readonly_u32 &int3 = 222;
 ; HSAIL: readonly_u32 &int4 = 2424;
 
-; HSAIL: readonly_u32 &symbol_array[5] = {0, 0, 0, 0, 0};
-; HSAIL: pragma  "initvarwithaddress:&symbol_array:0:4:&int0:0";
-; HSAIL: pragma  "initvarwithaddress:&symbol_array:4:4:&int1:0";
-; HSAIL: pragma  "initvarwithaddress:&symbol_array:8:4:&int2:0";
-; HSAIL: pragma  "initvarwithaddress:&symbol_array:12:4:&int3:0";
-; HSAIL: pragma  "initvarwithaddress:&symbol_array:16:4:&int4:0";
 
-; HSAIL: readonly_u32 &i32_array[10] = {234, 456, 789, 235, 495, 1, 4, 9, 10, 453};
+; HSAIL32: readonly_u32 &symbol_array[5] = {0, 0, 0, 0, 0};
+; HSAIL32: pragma  "initvarwithaddress:&symbol_array:0:4:&int0:0";
+; HSAIL32: pragma  "initvarwithaddress:&symbol_array:4:4:&int1:0";
+; HSAIL32: pragma  "initvarwithaddress:&symbol_array:8:4:&int2:0";
+; HSAIL32: pragma  "initvarwithaddress:&symbol_array:12:4:&int3:0";
+; HSAIL32: pragma  "initvarwithaddress:&symbol_array:16:4:&int4:0";
 
-; HSAIL: readonly_u32 &constantexpr_address_array[5] = {0, 0, 0, 0, 0};
-; HSAIL: pragma  "initvarwithaddress:&constantexpr_address_array:0:4:&i32_array:0";
-; HSAIL: pragma  "initvarwithaddress:&constantexpr_address_array:4:4:&i32_array:16";
-; HSAIL: pragma  "initvarwithaddress:&constantexpr_address_array:8:4:&i32_array:32";
-; HSAIL: pragma  "initvarwithaddress:&constantexpr_address_array:12:4:&i32_array:36";
-; HSAIL: pragma  "initvarwithaddress:&constantexpr_address_array:16:4:&i32_array:12";
+; HSAIL32: readonly_u32 &i32_array[10] = {234, 456, 789, 235, 495, 1, 4, 9, 10, 453};
 
-; HSAIL: align(8) readonly_u8 &struct_foo_gv[16] = {0, 0, 128, 65, 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 0, 0};
-; HSAIL: pragma  "initvarwithaddress:&struct_foo_gv:4:1:&constantexpr_address_array:0";
-; HSAIL: pragma  "initvarwithaddress:&struct_foo_gv:12:1:&symbol_array:0";
+; HSAIL32: readonly_u32 &constantexpr_address_array[5] = {0, 0, 0, 0, 0};
+; HSAIL32: pragma  "initvarwithaddress:&constantexpr_address_array:0:4:&i32_array:0";
+; HSAIL32: pragma  "initvarwithaddress:&constantexpr_address_array:4:4:&i32_array:16";
+; HSAIL32: pragma  "initvarwithaddress:&constantexpr_address_array:8:4:&i32_array:32";
+; HSAIL32: pragma  "initvarwithaddress:&constantexpr_address_array:12:4:&i32_array:36";
+; HSAIL32: pragma  "initvarwithaddress:&constantexpr_address_array:16:4:&i32_array:12";
 
-; HSAIL: align(8) readonly_u8 &struct_bar_gv[24] = {7, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 212, 0, 0, 0};
-; HSAIL: pragma  "initvarwithaddress:&struct_bar_gv:4:1:&constantexpr_address_array:0";
-; HSAIL: pragma  "initvarwithaddress:&struct_bar_gv:16:1:&symbol_array:0";
+; HSAIL32: align(8) readonly_u8 &struct_foo_gv[16] = {0, 0, 128, 65, 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 0, 0};
+; HSAIL32: pragma  "initvarwithaddress:&struct_foo_gv:4:1:&constantexpr_address_array:0";
+; HSAIL32: pragma  "initvarwithaddress:&struct_foo_gv:12:1:&symbol_array:0";
 
-; HSAIL: align(8) readonly_u8 &struct_packed_bar_gv[12] = {7, 0, 0, 0, 0, 23, 45, 0, 0, 0, 0, 212};
-; HSAIL: pragma  "initvarwithaddress:&struct_packed_bar_gv:1:1:&constantexpr_address_array:0";
-; HSAIL: pragma  "initvarwithaddress:&struct_packed_bar_gv:7:1:&symbol_array:0";
+; HSAIL32: align(8) readonly_u8 &struct_bar_gv[24] = {7, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 212, 0, 0, 0};
+; HSAIL32: pragma  "initvarwithaddress:&struct_bar_gv:4:1:&constantexpr_address_array:0";
+; HSAIL32: pragma  "initvarwithaddress:&struct_bar_gv:16:1:&symbol_array:0";
+
+; HSAIL32: align(8) readonly_u8 &struct_packed_bar_gv[12] = {7, 0, 0, 0, 0, 23, 45, 0, 0, 0, 0, 212};
+; HSAIL32: pragma  "initvarwithaddress:&struct_packed_bar_gv:1:1:&constantexpr_address_array:0";
+; HSAIL32: pragma  "initvarwithaddress:&struct_packed_bar_gv:7:1:&symbol_array:0";
+
+
+; HSAIL64: readonly_u64 &symbol_array[5] = {0, 0, 0, 0, 0};
+; HSAIL64: pragma  "initvarwithaddress:&symbol_array:0:8:&int0:0";
+; HSAIL64: pragma  "initvarwithaddress:&symbol_array:8:8:&int1:0";
+; HSAIL64: pragma  "initvarwithaddress:&symbol_array:16:8:&int2:0";
+; HSAIL64: pragma  "initvarwithaddress:&symbol_array:24:8:&int3:0";
+; HSAIL64: pragma  "initvarwithaddress:&symbol_array:32:8:&int4:0";
+
+; HSAIL64: readonly_u32 &i32_array[10] = {234, 456, 789, 235, 495, 1, 4, 9, 10, 453};
+; HSAIL64: readonly_u64 &constantexpr_address_array[5] = {0, 0, 0, 0, 0};
+
+; HSAIL64: pragma  "initvarwithaddress:&constantexpr_address_array:0:8:&i32_array:0";
+; HSAIL64: pragma  "initvarwithaddress:&constantexpr_address_array:8:8:&i32_array:16";
+; HSAIL64: pragma  "initvarwithaddress:&constantexpr_address_array:16:8:&i32_array:32";
+; HSAIL64: pragma  "initvarwithaddress:&constantexpr_address_array:24:8:&i32_array:36";
+; HSAIL64: pragma  "initvarwithaddress:&constantexpr_address_array:32:8:&i32_array:12";
+
+; HSAIL64: align(8) readonly_u8 &struct_foo_gv[32] = {0, 0, 128, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+; HSAIL64: pragma  "initvarwithaddress:&struct_foo_gv:8:1:&constantexpr_address_array:0";
+; HSAIL64: pragma  "initvarwithaddress:&struct_foo_gv:24:1:&symbol_array:0";
+
+; HSAIL64: align(8) readonly_u8 &struct_bar_gv[48] = {7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 212, 0, 0, 0, 0, 0, 0, 0};
+; HSAIL64: pragma  "initvarwithaddress:&struct_bar_gv:8:1:&constantexpr_address_array:0";
+; HSAIL64: pragma  "initvarwithaddress:&struct_bar_gv:32:1:&symbol_array:0";
+
+; HSAIL64: align(8) readonly_u8 &struct_packed_bar_gv[20] = {7, 0, 0, 0, 0, 0, 0, 0, 0, 23, 45, 0, 0, 0, 0, 0, 0, 0, 0, 212};
+; HSAIL64: pragma  "initvarwithaddress:&struct_packed_bar_gv:1:1:&constantexpr_address_array:0";
+; HSAIL64: pragma  "initvarwithaddress:&struct_packed_bar_gv:11:1:&symbol_array:0";
 
 
 @int0 = internal unnamed_addr addrspace(2) constant i32 9
@@ -75,7 +107,7 @@
 ]
 
 
-; FUNC-LABEL: {{^}}prog function &test_symbol_array(
+; HSAIL-LABEL: {{^}}prog function &test_symbol_array(
 define void @test_symbol_array(i32 addrspace(1)* %out, i32 %index) {
   %tmp0 = getelementptr inbounds [5 x i32 addrspace(2)*] addrspace(2)* @symbol_array, i32 0, i32 %index
   %ptr = load i32 addrspace(2)* addrspace(2)* %tmp0
@@ -84,7 +116,7 @@ define void @test_symbol_array(i32 addrspace(1)* %out, i32 %index) {
   ret void
 }
 
-; FUNC-LABEL: {{^}}prog function &test_constantexpr_address_array(
+; HSAIL-LABEL: {{^}}prog function &test_constantexpr_address_array(
 define void @test_constantexpr_address_array(i32 addrspace(1)* %out, i32 %index) {
   %tmp0 = getelementptr inbounds [5 x i32 addrspace(2)*] addrspace(2)* @constantexpr_address_array, i32 0, i32 %index
   %ptr = load i32 addrspace(2)* addrspace(2)* %tmp0
@@ -93,7 +125,7 @@ define void @test_constantexpr_address_array(i32 addrspace(1)* %out, i32 %index)
   ret void
 }
 
-; FUNC-LABEL: {{^}}prog function &test_struct_foo_gv(
+; HSAIL-LABEL: {{^}}prog function &test_struct_foo_gv(
 define void @test_struct_foo_gv(i32 addrspace(1)* %out, i32 %index) {
   %tmp0 = getelementptr inbounds [2 x %struct.foo] addrspace(2)* @struct_foo_gv, i32 0, i32 %index, i32 1
   %tmp1 = load [5 x i32 addrspace(2)*] addrspace(2)* addrspace(2)* %tmp0
@@ -104,7 +136,7 @@ define void @test_struct_foo_gv(i32 addrspace(1)* %out, i32 %index) {
   ret void
 }
 
-; FUNC-LABEL: {{^}}prog function &test_struct_bar_gv(
+; HSAIL-LABEL: {{^}}prog function &test_struct_bar_gv(
 define void @test_struct_bar_gv(i32 addrspace(1)* %out, i32 %index) {
   %tmp0 = getelementptr inbounds [2 x %struct.bar] addrspace(2)* @struct_bar_gv, i32 0, i32 %index, i32 1
   %tmp1 = load [5 x i32 addrspace(2)*] addrspace(2)* addrspace(2)* %tmp0
@@ -117,12 +149,12 @@ define void @test_struct_bar_gv(i32 addrspace(1)* %out, i32 %index) {
 
 ; FIXME: First load using wrong alignment?
 
-; FUNC-LABEL: {{^}}prog function &test_packed_struct_bar_gv(
-; HSAIL: mul_u32 [[PTR0:\$s[0-9]+]], $s{{[0-9]+}}, 6;
-; HSAIL: ld_readonly_align(4)_u32 [[PTR1:\$s[0-9]+]], [&struct_packed_bar_gv]{{\[}}[[PTR0]]+1];
-; HSAIL-NEXT: ld_readonly_align(4)_u32 [[PTR2:\$s[0-9]+]], {{\[}}[[PTR1]]+8];
-; HSAIL-NEXT: ld_readonly_align(4)_u32 [[VAL:\$s[0-9]+]], {{\[}}[[PTR2]]{{\]}};
-; HSAIL: st_global_align(4)_u32 [[VAL]]
+; HSAIL-LABEL: {{^}}prog function &test_packed_struct_bar_gv(
+; HSAIL32: mul_u32 [[PTR0:\$s[0-9]+]], $s{{[0-9]+}}, 6;
+; HSAIL32: ld_readonly_align(4)_u32 [[PTR1:\$s[0-9]+]], [&struct_packed_bar_gv]{{\[}}[[PTR0]]+1];
+; HSAIL32-NEXT: ld_readonly_align(4)_u32 [[PTR2:\$s[0-9]+]], {{\[}}[[PTR1]]+8];
+; HSAIL32-NEXT: ld_readonly_align(4)_u32 [[VAL:\$s[0-9]+]], {{\[}}[[PTR2]]{{\]}};
+; HSAIL32: st_global_align(4)_u32 [[VAL]]
 define void @test_packed_struct_bar_gv(i32 addrspace(1)* %out, i32 %index) {
   %tmp0 = getelementptr inbounds [2 x %struct.packed.bar] addrspace(2)* @struct_packed_bar_gv, i32 0, i32 %index, i32 1
   %tmp1 = load [5 x i32 addrspace(2)*] addrspace(2)* addrspace(2)* %tmp0
