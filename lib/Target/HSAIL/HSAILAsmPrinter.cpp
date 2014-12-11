@@ -288,30 +288,15 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
   }
 }
 
-static void printAlignTypeQualifier(Type *ty,
+static void printAlignTypeQualifier(const GlobalValue &GV,
                                     const DataLayout& DL,
                                     raw_ostream &O) {
-  if (ArrayType *ATy = dyn_cast<ArrayType>(ty)) {
-    // Print align-type qualifier for structs and arrays of structs.
-    if (ATy->getElementType()->isStructTy()) {
-      StructType *STy = cast<StructType>(ATy->getElementType());
-      unsigned Align = 1;
 
-      // Scan members to find type with strictest alignment requirement.
-      for (Type *ElemTy : STy->elements()) {
-        if (ElemTy->getScalarSizeInBits() / 8 > Align)
-          Align = ElemTy->getScalarSizeInBits() / 8;
+  unsigned Align = GV.getAlignment();
+  if (Align == 0)
+    Align = DL.getABITypeAlignment(GV.getType());
 
-        if (Align == 8)
-          break;
-      }
-      assert ((Align == 1 || Align == 2 || Align == 4 || Align == 8) &&
-              "invalid align-type qualifier");
-      O << "align " << Align << ' ';
-    }
-
-    // TODO_HSA: Print align-type qualifiers for other types here (if required).
-  }
+  O << "align(" << Align << ") ";
 }
 
 static Type* printGVType(Type *ty, const DataLayout& DL, std::string &str) {
@@ -373,7 +358,7 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   unsigned AS = Ty->getAddressSpace();
 
 
-  printAlignTypeQualifier(Ty->getElementType(), DL, O);
+  printAlignTypeQualifier(*GV, DL, O);
   std::string str;
   O << getSegmentName(AS)
     << getArgTypeName(printGVType(Ty->getElementType(), DL, str))
@@ -556,7 +541,7 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
       if (FuncGrpVarsSet.count(&GV)){
         std::string str;
         O << '\t';
-        printAlignTypeQualifier(Ty->getElementType(), DL, O);
+        printAlignTypeQualifier(GV, DL, O);
         O << getSegmentName(AS)
           << getArgTypeName(printGVType(Ty->getElementType(), DL, str))
           << " %" << GV.getName() << str;
@@ -607,7 +592,7 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
         }
 
         O << '\t';
-        printAlignTypeQualifier(Ty->getElementType(), DL, O);
+        printAlignTypeQualifier(GV, DL, O);
         str = "";
         O << getSegmentName(AS)
           << getArgTypeName(printGVType(Ty->getElementType(), DL, str))
