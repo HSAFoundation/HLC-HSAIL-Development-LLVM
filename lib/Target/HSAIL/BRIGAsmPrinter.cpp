@@ -130,7 +130,30 @@ Brig::BrigTypeX BRIGAsmPrinter::getAtomicType(const MachineInstr *MI) const {
   }
 }
 
+void BRIGAsmPrinter::BrigEmitInitVarWithAddressPragma(StringRef VarName,
+                                                      uint64_t BaseOffset,
+                                                      uint64_t EltSize,
+                                                      const GlobalValue &GV,
+                                                      uint64_t VarOffset) {
+  SmallString<256> InitStr;
+  raw_svector_ostream O(InitStr);
 
+  O << "initvarwithaddress:" << VarName
+    << ':' << BaseOffset // Offset into the destination.
+    << ':' << EltSize
+    << ':' << getSymbolPrefix(GV) << GV.getName()
+    << ':' << VarOffset; // Offset of the symbol being written.
+
+  HSAIL_ASM::DirectivePragma pgm
+    = brigantine.append<HSAIL_ASM::DirectivePragma>();
+
+  StringRef Str(O.str());
+  HSAIL_ASM::SRef BrigStr(Str.begin(), Str.end());
+  HSAIL_ASM::ItemList opnds;
+
+  opnds.push_back(brigantine.createOperandString(BrigStr));
+  pgm.operands() = opnds;
+}
 
 void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
                                         Constant *CV) {
@@ -147,8 +170,11 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
     memset(zeroes, 0, typeBytes);
     init = HSAIL_ASM::SRef(zeroes, zeroes + typeBytes);
   } else {
-    StoreInitializer store(HSAIL_ASM::getBrigTypeNumBytes(EltType), *this);
-    store.append(CV, globalVar.name().str());
+    unsigned EltSize = HSAIL_ASM::getBrigTypeNumBytes(EltType);
+
+    auto Name = globalVar.name().str();
+    StoreInitializer store(EltSize, getDataLayout());
+    store.append(CV, Name);
 
     if (store.elementCount() > 0) {
       StringRef S = store.str();
@@ -156,6 +182,14 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
     } else {
       memset(zeroes, 0, typeBytes);
       init = HSAIL_ASM::SRef(zeroes, zeroes + typeBytes);
+    }
+
+    for (const auto &VarInit : store.varInitAddresses()) {
+      BrigEmitInitVarWithAddressPragma(Name,
+                                       VarInit.BaseOffset,
+                                       EltSize,
+                                       *VarInit.GV,
+                                       VarInit.VarOffset);
     }
   }
 

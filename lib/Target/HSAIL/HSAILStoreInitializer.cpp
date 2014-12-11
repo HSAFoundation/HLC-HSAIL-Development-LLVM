@@ -9,52 +9,38 @@
 
 #include "HSAILStoreInitializer.h"
 
-#include "BRIGAsmPrinter.h"
-
 #include "llvm/ADT/SmallString.h"
 #include "llvm/IR/Constants.h"
+#include "llvm/IR/DataLayout.h"
+#include "llvm/IR/GlobalValue.h"
+#include "llvm/IR/Operator.h"
 #include "llvm/Support/raw_ostream.h"
 
-#include "libHSAIL/Brig.h"
-
 using namespace llvm;
-using namespace HSAIL_ASM;
 
 StoreInitializer::StoreInitializer(uint32_t EltSize,
-                                   BRIGAsmPrinter &asmPrinter)
+                                   const DataLayout &DL)
   : InitEltSize(EltSize),
-    m_asmPrinter(asmPrinter),
-    DL(m_asmPrinter.getDataLayout()),
-    Subtarget(m_asmPrinter.getSubtarget()),
+    DL(DL),
     m_data(),
     OS(m_data),
     LE(OS) {}
 
 void StoreInitializer::initVarWithAddress(const GlobalValue *GV, StringRef Var,
                                           const APInt &Offset) {
-  SmallString<256> InitStr;
-  raw_svector_ostream O(InitStr);
+  // Offset that address needs to be written at is the current size of the
+  // buffer.
+  uint64_t CurrOffset = dataSizeInBytes();
 
-  assert(GV->hasName()); // FIXME: Anonymous global are allowed.
-
-  O << "initvarwithaddress:" << Var << ':' << dataSizeInBytes() << ':'
-    << InitEltSize << ':'
-    << BRIGAsmPrinter::getSymbolPrefix(*GV)
-    << GV->getName() << ':' << Offset.toString(10, false);
-
-  HSAIL_ASM::DirectivePragma pgm =
-      m_asmPrinter.brigantine.append<HSAIL_ASM::DirectivePragma>();
-  HSAIL_ASM::ItemList opnds;
-
-  StringRef Str(O.str());
-  opnds.push_back(m_asmPrinter.brigantine.createOperandString(HSAIL_ASM::SRef(Str.begin(), Str.end())));
-  pgm.operands() = opnds;
-
+  // Emit as zeros. We track the offsets that addresses need to be written to
+  // later.
   unsigned AS = GV->getType()->getAddressSpace();
   if (DL.getPointerSize(AS) == 8)
     LE.write(static_cast<uint64_t>(0));
   else
     LE.write(static_cast<uint32_t>(0));
+
+  VarInitAddresses.emplace_back(CurrOffset, GV, Offset.getZExtValue());
 }
 
 void StoreInitializer::append(const Constant *CV, StringRef Var) {

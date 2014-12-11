@@ -172,6 +172,11 @@ protected:
   HSAIL_ASM::BrigContainer bc;
   HSAIL_ASM::Brigantine brigantine;
 
+  void BrigEmitInitVarWithAddressPragma(StringRef VarName,
+                                        uint64_t BaseOffset,
+                                        uint64_t EltSize,
+                                        const GlobalValue &GV,
+                                        uint64_t VarOffset);
   void BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable, Constant *);
   void BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSAIL_ASM::Inst inst);
   void BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned opNum);
