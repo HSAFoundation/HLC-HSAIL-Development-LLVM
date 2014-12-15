@@ -150,6 +150,8 @@ void initializeIntervalPartitionPass(PassRegistry&);
 void initializeJumpInstrTableInfoPass(PassRegistry&);
 void initializeJumpInstrTablesPass(PassRegistry&);
 void initializeJumpThreadingPass(PassRegistry&);
+void initializeKernelSymbolsAnalysisGroup(PassRegistry&);
+void initializeAMDKernelSymbolsPass(PassRegistry&);
 void initializeLCSSAPass(PassRegistry&);
 void initializeLICMPass(PassRegistry&);
 void initializeLazyValueInfoPass(PassRegistry&);
@@ -281,6 +283,10 @@ void initializeMachineFunctionPrinterPassPass(PassRegistry&);
 void initializeStackMapLivenessPass(PassRegistry&);
 void initializeMachineCombinerPass(PassRegistry &);
 void initializeLoadCombinePass(PassRegistry&);
+
+void initializeHSAILDAGToDAGISelPass(PassRegistry&);
+void initializeAMDSymbolLinkagePass(PassRegistry&);
+
 }
 
 #endif

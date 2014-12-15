@@ -403,6 +403,8 @@ namespace {
     // Set of items not to link in from source.
     SmallPtrSet<const Value*, 16> DoNotLinkFromSource;
 
+    std::map<const Value*, bool> *pReferenceMap;
+
     // Vector of functions to lazily link in.
     std::vector<Function*> LazilyLinkFunctions;
 
@@ -414,8 +416,15 @@ namespace {
     ModuleLinker(Module *dstM, TypeSet &Set, Module *srcM, unsigned mode,
                  bool SuppressWarnings=false)
         : DstM(dstM), SrcM(srcM), TypeMap(Set),
-          ValMaterializer(TypeMap, DstM, LazilyLinkFunctions), Mode(mode),
+          ValMaterializer(TypeMap, DstM, LazilyLinkFunctions), Mode(mode), pReferenceMap(0),
           SuppressWarnings(SuppressWarnings) {}
+
+    ModuleLinker(Module *dstM, TypeSet &Set, Module *srcM, unsigned mode,
+                 std::map<const Value*, bool> *pRefMap
+                 )
+      : DstM(dstM), SrcM(srcM), Mode(mode), pReferenceMap(pRefMap), SuppressWarnings(false), 
+	TypeMap(Set), ValMaterializer(TypeMap, DstM, LazilyLinkFunctions)
+    { }
 
     bool run();
 
@@ -818,6 +827,14 @@ void ModuleLinker::computeTypeMapping() {
   }
 
   // Don't bother incorporating aliases, they aren't generally typed well.
+
+  // Assume aliaser and aliasee's types are exactly the same
+  for (Module::alias_iterator I = SrcM->alias_begin(), E = SrcM->alias_end();
+       I != E; ++I) {
+    if (GlobalValue *DGV = getLinkedToGlobal(I))
+      TypeMap.addTypeMapping(DGV->getType(), I->getType());
+  }
+
 
   // Now that we have discovered all of the type equivalences, get a body for
   // any 'opaque' types in the dest module that are now resolved.
@@ -1298,6 +1315,8 @@ void ModuleLinker::linkFunctionBody(Function *Dst, Function *Src) {
 void ModuleLinker::linkAliasBodies() {
   for (Module::alias_iterator I = SrcM->alias_begin(), E = SrcM->alias_end();
        I != E; ++I) {
+    if (pReferenceMap && !(*pReferenceMap)[I])
+      continue;
     if (DoNotLinkFromSource.count(I))
       continue;
     if (Constant *Aliasee = I->getAliasee()) {
@@ -1555,14 +1574,21 @@ bool ModuleLinker::run() {
   // all of the global values that may be referenced are available in our
   // ValueMap.
   for (Module::iterator I = SrcM->begin(), E = SrcM->end(); I != E; ++I)
+  {
+    if (pReferenceMap && !(*pReferenceMap)[I])
+      continue;
     if (linkFunctionProto(I))
       return true;
+  }
 
   // If there were any aliases, link them now.
   for (Module::alias_iterator I = SrcM->alias_begin(),
-       E = SrcM->alias_end(); I != E; ++I)
+       E = SrcM->alias_end(); I != E; ++I) {
+    if (pReferenceMap && !(*pReferenceMap)[I])
+      continue;
     if (linkAliasProto(I))
       return true;
+  }
 
   for (unsigned i = 0, e = AppendingVars.size(); i != e; ++i)
     linkAppendingVarInit(AppendingVars[i]);
@@ -1570,6 +1596,8 @@ bool ModuleLinker::run() {
   // Link in the function bodies that are defined in the source module into
   // DstM.
   for (Module::iterator SF = SrcM->begin(), E = SrcM->end(); SF != E; ++SF) {
+    if (pReferenceMap && !(*pReferenceMap)[SF])
+      continue;
     // Skip if not linking from source.
     if (DoNotLinkFromSource.count(SF)) continue;
 
@@ -1698,6 +1726,19 @@ bool Linker::LinkModules(Module *Dest, Module *Src, unsigned Mode,
                          std::string *ErrorMsg) {
   Linker L(Dest);
   return L.linkInModule(Src, Mode, ErrorMsg);
+}
+
+bool Linker::LinkModules(Module *Dest, Module *Src, unsigned Mode,
+                         std::map<const Value*, bool> *ReferenceMap,
+                         std::string *ErrorMsg) {
+  TypeSet Set;
+  ModuleLinker TheLinker(Dest, Set, Src, Mode, ReferenceMap);
+  if (TheLinker.run()) {
+    if (ErrorMsg) *ErrorMsg = TheLinker.ErrorMsg;
+    return true;
+  }
+
+  return false;
 }
 
 //===----------------------------------------------------------------------===//

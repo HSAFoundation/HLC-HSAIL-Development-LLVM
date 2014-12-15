@@ -11,7 +11,9 @@
 #define LLVM_LINKER_LINKER_H
 
 #include "llvm/ADT/SmallPtrSet.h"
+#include "llvm/IR/ValueSymbolTable.h"
 #include <string>
+#include <map>
 
 namespace llvm {
 
@@ -50,6 +52,11 @@ class Linker {
 
     static bool LinkModules(Module *Dest, Module *Src, unsigned Mode,
                             std::string *ErrorMsg);
+
+    static bool LinkModules(Module* Dest, Module* Src, unsigned Mode,
+                            std::map<const Value*, bool>* ReferenceMap,
+                            std::string* ErrorMsg);
+
 
   private:
     Module *Composite;
