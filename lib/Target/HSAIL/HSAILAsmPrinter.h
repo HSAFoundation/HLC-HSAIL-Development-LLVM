@@ -20,6 +20,8 @@
 
 namespace llvm {
 
+class ConstantFP;
+
 class HSAILAsmPrinter : public AsmPrinter {
 private:
   std::string getArgTypeName(Type *Ty) const;
@@ -33,11 +35,21 @@ private:
                           raw_ostream &O) const;
   void EmitFunctionLabel(const Function &F) const;
 
+  static char getSymbolPrefixForAddressSpace(unsigned AS);
+  char getSymbolPrefix(const MCSymbol &S) const;
+
+  void printInitVarWithAddressPragma(StringRef VarName,
+                                     uint64_t Offset,
+                                     const MCExpr *Expr,
+                                     unsigned EltSize,
+                                     raw_ostream &O);
+
+  void printConstantFP(const ConstantFP *CV, raw_ostream &O);
+  void printScalarConstant(const Constant *CV, raw_ostream &O);
   void printGVInitialValue(const GlobalValue &GV,
                            const Constant *CV,
                            const DataLayout &DL,
-                           raw_ostream &O,
-                           bool EmitBraces = true);
+                           raw_ostream &O);
 
 public:
   explicit HSAILAsmPrinter(TargetMachine &TM, MCStreamer &Streamer);

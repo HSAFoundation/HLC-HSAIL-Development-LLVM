@@ -10,6 +10,7 @@
 #include "HSAILStoreInitializer.h"
 
 #include "llvm/ADT/SmallString.h"
+#include "llvm/CodeGen/AsmPrinter.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/IR/GlobalValue.h"
@@ -19,29 +20,13 @@
 using namespace llvm;
 
 StoreInitializer::StoreInitializer(uint32_t EltSize,
-                                   const DataLayout &DL)
+                                   AsmPrinter &AP)
   : InitEltSize(EltSize),
-    DL(DL),
+    DL(AP.getDataLayout()),
+    AP(AP),
     m_data(),
     OS(m_data),
     LE(OS) {}
-
-void StoreInitializer::initVarWithAddress(const GlobalValue *GV, StringRef Var,
-                                          const APInt &Offset) {
-  // Offset that address needs to be written at is the current size of the
-  // buffer.
-  uint64_t CurrOffset = dataSizeInBytes();
-
-  // Emit as zeros. We track the offsets that addresses need to be written to
-  // later.
-  unsigned AS = GV->getType()->getAddressSpace();
-  if (DL.getPointerSize(AS) == 8)
-    LE.write(static_cast<uint64_t>(0));
-  else
-    LE.write(static_cast<uint32_t>(0));
-
-  VarInitAddresses.emplace_back(CurrOffset, GV, Offset.getZExtValue());
-}
 
 void StoreInitializer::append(const Constant *CV, StringRef Var) {
   switch (CV->getValueID()) {
@@ -166,36 +151,27 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
 
     break;
   }
+  case Value::GlobalVariableVal:
   case Value::ConstantExprVal: {
-    const ConstantExpr *CE = cast<ConstantExpr>(CV);
-    if (CE->isGEPWithNoNotionalOverIndexing()) {
-      const GEPOperator *GO = dyn_cast<GEPOperator>(CE);
-      if (GO) {
-        const Value *Ptr = GO->getPointerOperand()->stripPointerCasts();
-        assert(Ptr && Ptr->hasName());
-        unsigned AS = GO->getPointerAddressSpace();
-        unsigned PtrSize = DL.getPointerSizeInBits(AS);
-        APInt Offset(PtrSize, 0);
-        if (!GO->accumulateConstantOffset(DL, Offset))
-          llvm_unreachable("Cannot calculate initializer offset");
-        initVarWithAddress(cast<GlobalValue>(Ptr), Var, Offset);
-      } else {
-        llvm_unreachable("Unhandled ConstantExpr initializer instruction");
-      }
-    } else if (CE->getOpcode() == Instruction::BitCast) {
-      append(cast<Constant>(CE->getOperand(0)), Var);
-    } else {
-      llvm_unreachable("Unhandled ConstantExpr initializer type");
-    }
-    break;
-  }
-  case Value::GlobalVariableVal: {
-    const Value *V = CV->stripPointerCasts();
+    const MCExpr *Expr = AP.lowerConstant(CV);
 
-    // FIXME: It is incorrect to stripPointerCasts through an addrspacecast.
-    unsigned AS = cast<PointerType>(V->getType())->getAddressSpace();
-    unsigned PtrSize = DL.getPointerSizeInBits(AS);
-    initVarWithAddress(cast<GlobalValue>(V), Var, APInt(PtrSize, 0));
+    // Offset that address needs to be written at is the current size of the
+    // buffer.
+    uint64_t CurrOffset = dataSizeInBytes();
+
+    unsigned Size = DL.getTypeAllocSize(CV->getType());
+    switch (Size) {
+    case 4:
+      LE.write(static_cast<uint32_t>(0));
+      break;
+    case 8:
+      LE.write(static_cast<uint64_t>(0));
+      break;
+    default:
+      llvm_unreachable("unhandled size");
+    }
+
+    VarInitAddresses.emplace_back(CurrOffset, Expr);
     break;
   }
   default:

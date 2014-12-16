@@ -108,6 +108,10 @@
 ; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:56:4:%lds.int2:0";
 ; HSAIL32: pragma  "initvarwithaddress:&p3i32_array_array:60:4:%lds.int3:0";
 
+; HSAIL32: prog readonly_u32 &ptr_to_int_gv_p3i32 = 0;
+; HSAIL32: pragma  "initvarwithaddress:&ptr_to_int_gv_p3i32:0:4:%lds.int0:0";
+
+
 
 ; HSAIL64: readonly_u64 &symbol_array[5] = {0, 0, 0, 0, 0};
 ; HSAIL64: pragma  "initvarwithaddress:&symbol_array:0:8:&int0:0";
@@ -208,6 +212,9 @@
 ; HSAIL64: pragma  "initvarwithaddress:&p3i32_array_array:60:4:%lds.int3:0";
 
 
+; HSAIL64: prog readonly_u32 &ptr_to_int_gv_p3i32 = 0;
+; HSAIL64: pragma  "initvarwithaddress:&ptr_to_int_gv_p3i32:0:4:%lds.int0:0";
+
 @int0 = internal unnamed_addr addrspace(2) constant i32 9
 @int1 = internal unnamed_addr addrspace(2) constant i32 34
 @int2 = internal unnamed_addr addrspace(2) constant i32 123
@@ -290,6 +297,8 @@
   [4 x i32 addrspace(3)*] [ i32 addrspace(3)* @lds.int0, i32 addrspace(3)* @lds.int1, i32 addrspace(3)* @lds.int2, i32 addrspace(3)* @lds.int3],
   [4 x i32 addrspace(3)*] [ i32 addrspace(3)* @lds.int0, i32 addrspace(3)* @lds.int1, i32 addrspace(3)* @lds.int2, i32 addrspace(3)* @lds.int3]
 ]
+
+@ptr_to_int_gv_p3i32 = addrspace(2) constant i32 ptrtoint (i32 addrspace(3)* @lds.int0 to i32)
 
 
 ; HSAIL-LABEL: {{^}}prog function &test_symbol_array(

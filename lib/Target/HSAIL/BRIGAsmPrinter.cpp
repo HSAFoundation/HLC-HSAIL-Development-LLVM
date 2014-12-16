@@ -28,11 +28,12 @@
 #include "llvm/CodeGen/MachineModuleInfo.h"
 #include "llvm/CodeGen/MachineRegisterInfo.h"
 #include "llvm/MC/MCAsmInfo.h"
+#include "llvm/MC/MCAssembler.h"
 #include "llvm/MC/MCInst.h"
 #include "llvm/MC/MCStreamer.h"
 #include "llvm/MC/MCSymbol.h"
 #include "llvm/MC/MCObjectStreamer.h"
-#include "llvm/MC/MCAssembler.h"
+#include "llvm/MC/MCValue.h"
 #include "llvm/MC/MCObjectWriter.h"
 #include "llvm/IR/Operator.h"
 #include "llvm/Support/FormattedStream.h"
@@ -130,19 +131,40 @@ Brig::BrigTypeX BRIGAsmPrinter::getAtomicType(const MachineInstr *MI) const {
   }
 }
 
+// FIXME: Doesn't make sense to rely on address space for this.
+char BRIGAsmPrinter::getSymbolPrefixForAddressSpace(unsigned AS) {
+  return (AS == HSAILAS::GROUP_ADDRESS ||
+          AS == HSAILAS::PRIVATE_ADDRESS) ? '%' : '&';
+}
+
+char BRIGAsmPrinter::getSymbolPrefix(const MCSymbol &Sym) const {
+  const GlobalVariable *GV = MMI->getModule()->getNamedGlobal(Sym.getName());
+  assert(GV && "Need prefix for undefined GlobalVariable");
+
+  unsigned AS = GV->getType()->getAddressSpace();
+  return getSymbolPrefixForAddressSpace(AS);
+}
+
 void BRIGAsmPrinter::BrigEmitInitVarWithAddressPragma(StringRef VarName,
                                                       uint64_t BaseOffset,
-                                                      uint64_t EltSize,
-                                                      const GlobalValue &GV,
-                                                      uint64_t VarOffset) {
+                                                      const MCExpr *Expr,
+                                                      unsigned EltSize) {
   SmallString<256> InitStr;
   raw_svector_ostream O(InitStr);
+
+  MCValue Val;
+  bool Res = Expr->EvaluateAsValue(Val, nullptr, nullptr);
+  (void) Res;
+  assert(Res && "Could not evaluate MCExpr");
+  assert(!Val.getSymB() && "Multi-symbol expressions not handled");
+
+  const MCSymbol &Sym = Val.getSymA()->getSymbol();
 
   O << "initvarwithaddress:" << VarName
     << ':' << BaseOffset // Offset into the destination.
     << ':' << EltSize
-    << ':' << getSymbolPrefix(GV) << GV.getName()
-    << ':' << VarOffset; // Offset of the symbol being written.
+    << ':' << getSymbolPrefix(Sym) << Sym.getName()
+    << ':' << Val.getConstant(); // Offset of the symbol being written.
 
   HSAIL_ASM::DirectivePragma pgm
     = brigantine.append<HSAIL_ASM::DirectivePragma>();
@@ -173,7 +195,7 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
     unsigned EltSize = HSAIL_ASM::getBrigTypeNumBytes(EltType);
 
     auto Name = globalVar.name().str();
-    StoreInitializer store(EltSize, getDataLayout());
+    StoreInitializer store(EltSize, *this);
     store.append(CV, Name);
 
     if (store.elementCount() > 0) {
@@ -187,9 +209,8 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
     for (const auto &VarInit : store.varInitAddresses()) {
       BrigEmitInitVarWithAddressPragma(Name,
                                        VarInit.BaseOffset,
-                                       EltSize,
-                                       *VarInit.GV,
-                                       VarInit.VarOffset);
+                                       VarInit.Expr,
+                                       EltSize);
     }
   }
 
@@ -289,7 +310,9 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
     return;
 
   std::stringstream ss;
-  ss << getSymbolPrefix(*GV) << GV->getName();
+
+  unsigned AS = GV->getType()->getAddressSpace();
+  ss << getSymbolPrefixForAddressSpace(AS) << GV->getName();
 
   string nameString = ss.str();
 
@@ -1557,7 +1580,8 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned
     const GlobalValue *gv = base.getGlobal();
     std::stringstream ss;
 
-    ss << getSymbolPrefix(*gv) << gv->getName().str();
+    unsigned AS = gv->getType()->getAddressSpace();
+    ss << getSymbolPrefixForAddressSpace(AS) << gv->getName().str();
     // Do not add offset since it will already be in offset field
     // see 'HSAILDAGToDAGISel::SelectAddrCommon'
 
@@ -1791,12 +1815,6 @@ bool BRIGAsmPrinter::usesGCNAtomicCounter(void) {
     }
   }
   return false;
-}
-
-char BRIGAsmPrinter::getSymbolPrefix(const GlobalValue& gv) {
-  const unsigned AddrSpace = gv.getType()->getAddressSpace();
-  return (HSAILAS::PRIVATE_ADDRESS==AddrSpace||
-          HSAILAS::GROUP_ADDRESS==AddrSpace) ? '%' : '&';
 }
 
 Brig::BrigAlignment8_t BRIGAsmPrinter::getBrigAlignment(unsigned AlignVal) {

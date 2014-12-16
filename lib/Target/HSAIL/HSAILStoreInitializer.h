@@ -18,10 +18,12 @@
 
 namespace llvm {
 
+class AsmPrinter;
 class APInt;
 class Constant;
 class DataLayout;
 class GlobalValue;
+class MCExpr;
 class StringRef;
 
 class StoreInitializer {
@@ -29,18 +31,17 @@ public:
   // Track offset wher the the address of a global needs to be inserted.
   struct VarInitOffset {
     uint64_t BaseOffset;
-    uint64_t VarOffset;
-    const GlobalValue *GV;
+    const MCExpr *Expr;
 
-    VarInitOffset(uint64_t Base, const GlobalValue *G, uint64_t Var)
-      : BaseOffset(Base),
-        VarOffset(Var),
-        GV(G) {}
+    VarInitOffset(uint64_t Offset, const MCExpr *E)
+      : BaseOffset(Offset),
+        Expr(E) {}
   };
 
 private:
   uint32_t InitEltSize;
   const DataLayout &DL;
+  AsmPrinter &AP;
 
   SmallString<1024> m_data;
   raw_svector_ostream OS;
@@ -52,7 +53,7 @@ private:
                           const APInt &Offset);
 
 public:
-  StoreInitializer(uint32_t InitEltSize, const DataLayout &DL);
+  StoreInitializer(uint32_t InitEltSize, AsmPrinter &AP);
 
   void append(const Constant *CV, StringRef Var);
 

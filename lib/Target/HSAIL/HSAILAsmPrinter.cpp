@@ -20,11 +20,13 @@
 #include "HSAIL.h"
 #include "HSAILUtilityFunctions.h"
 #include "HSAILSubtarget.h"
+#include "HSAILStoreInitializer.h"
 #include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/CodeGen/MachineModuleInfo.h"
 #include "llvm/MC/MCContext.h"
 #include "llvm/MC/MCSectionELF.h"
 #include "llvm/MC/MCStreamer.h"
+#include "llvm/MC/MCValue.h"
 #include "llvm/Support/Format.h"
 #include "llvm/Support/TargetRegistry.h"
 #include "llvm/Target/TargetLoweringObjectFile.h"
@@ -167,129 +169,178 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F) const {
   OutStreamer.EmitRawText(O.str());
 }
 
+// FIXME: Doesn't make sense to rely on address space for this.
+char HSAILAsmPrinter::getSymbolPrefixForAddressSpace(unsigned AS) {
+  return (AS == HSAILAS::GROUP_ADDRESS ||
+          AS == HSAILAS::PRIVATE_ADDRESS) ? '%' : '&';
+}
+
+// FIXME: Duplicated in BRIGAsmPrinter
+char HSAILAsmPrinter::getSymbolPrefix(const MCSymbol &Sym) const {
+  const GlobalVariable *GV = MMI->getModule()->getNamedGlobal(Sym.getName());
+  assert(GV && "Need prefix for undefined GlobalVariable");
+
+  unsigned AS = GV->getType()->getAddressSpace();
+  return getSymbolPrefixForAddressSpace(AS);
+}
+
+void HSAILAsmPrinter::printInitVarWithAddressPragma(StringRef VarName,
+                                                    uint64_t BaseOffset,
+                                                    const MCExpr *Expr,
+                                                    unsigned EltSize,
+                                                    raw_ostream &O) {
+  MCValue Val;
+  bool Res = Expr->EvaluateAsValue(Val, nullptr, nullptr);
+  (void) Res;
+  assert(Res && "Could not evaluate MCExpr");
+  assert(!Val.getSymB() && "Multi-symbol expressions not handled");
+
+  const MCSymbol &Sym = Val.getSymA()->getSymbol();
+
+  O << "initvarwithaddress:" << VarName
+    << ':' << BaseOffset // Offset into the destination.
+    << ':' << EltSize
+    << ':' << getSymbolPrefix(Sym) << Sym.getName()
+    << ':' << Val.getConstant() // Offset of the symbol being written.
+    << '\n';
+}
+
+void HSAILAsmPrinter::printConstantFP(const ConstantFP *CFP, raw_ostream &O) {
+  uint64_t Val = CFP->getValueAPF().bitcastToAPInt().getZExtValue();
+  if (CFP->getType()->isFloatTy())
+    O << format("0F%" PRIx32, static_cast<uint32_t>(Val));
+  else if (CFP->getType()->isDoubleTy())
+    O << format("0D%" PRIx64, Val);
+  else
+    llvm_unreachable("unhandled ConstantFP");
+}
+
+void HSAILAsmPrinter::printScalarConstant(const Constant *CPV, raw_ostream &O) {
+  if (const ConstantInt *CI = dyn_cast<ConstantInt>(CPV)) {
+    O << CI->getValue();
+    return;
+  }
+
+  if (const ConstantFP *CFP = dyn_cast<ConstantFP>(CPV)) {
+    printConstantFP(CFP, O);
+    return;
+  }
+
+  if (const ConstantDataSequential *CDS = dyn_cast<ConstantDataSequential>(CPV)) {
+    for (unsigned I = 0, E = CDS->getNumElements(); I != E; ++I) {
+      if (I > 0)
+        O << ", ";
+
+      const Constant *Elt = CDS->getElementAsConstant(I);
+      printScalarConstant(Elt, O);
+    }
+
+    return;
+  }
+
+  if (isa<ConstantPointerNull>(CPV)) {
+    O << '0';
+    return;
+  }
+
+  if (const GlobalValue *GV = dyn_cast<GlobalValue>(CPV)) {
+    O << *getSymbol(GV);
+    return;
+  }
+
+  if (const ConstantExpr *CExpr = dyn_cast<ConstantExpr>(CPV)) {
+    const Value *V = CExpr->stripPointerCasts();
+    if (const GlobalValue *GV = dyn_cast<GlobalValue>(V))
+      O << *getSymbol(GV);
+    else {
+      const MCExpr *ME = lowerConstant(CPV);
+
+      MCValue Val;
+
+      bool Res = ME->EvaluateAsValue(Val, nullptr, nullptr);
+      (void) Res;
+      assert(Res && "Could not evaluate MCExpr");
+      assert(!Val.getSymB() && "Multi-symbol expressions not handled");
+      O << '0';
+      // FIXME
+      //O << *Val.getSymA() << " : " << Val.getConstant() << '\n';
+    }
+
+    return;
+  }
+
+  llvm_unreachable("unhandled scalar constant type");
+}
+
 void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
                                           const Constant *CV,
                                           const DataLayout &DL,
-                                          raw_ostream &O,
-                                          bool EmitBraces) {
-  if (const ConstantArray *CA = dyn_cast<ConstantArray>(CV)) {
-    if (EmitBraces)
-      O << '{';
+                                          raw_ostream &O) {
+  if (const ConstantInt *CI = dyn_cast<ConstantInt>(CV)) {
+    O << CI->getValue();
+    return;
+  }
 
-    for (unsigned I = 0, E = CA->getNumOperands(); I != E; ++I) {
-      if (I > 0)
-        O << ", ";
-      printGVInitialValue(GV, cast<Constant>(CV->getOperand(I)), DL, O, false);
-    }
+  if (const ConstantFP *CFP = dyn_cast<ConstantFP>(CV)) {
+    printConstantFP(CFP, O);
+    return;
+  }
 
-    if (EmitBraces)
-      O << '}';
-  } else  if (const ConstantDataSequential *CDS = dyn_cast<ConstantDataSequential>(CV)) {
-    if (EmitBraces)
-      O << '{';
+  if (const ConstantDataSequential *CDS = dyn_cast<ConstantDataSequential>(CV)) {
+    assert(!CDS->getElementType()->isAggregateType());
+    O << '{';
 
     for (unsigned I = 0, E = CDS->getNumElements(); I != E; ++I) {
       if (I > 0)
         O << ", ";
 
       Constant *Elt = CDS->getElementAsConstant(I);
-      printGVInitialValue(GV, cast<Constant>(Elt), DL, O, false);
+      printScalarConstant(Elt, O);
     }
 
-    if (EmitBraces)
-      O << '}';
-  } else if (const ConstantVector *CVE = dyn_cast<ConstantVector>(CV)) {
-    for (unsigned I = 0, E = CVE->getType()->getNumElements(); I != E; ++I) {
-      if (I > 0)
-        O << ", ";
-      printGVInitialValue(GV, cast<Constant>(CVE->getOperand(I)), DL, O, false);
-    }
-  } else if (const ConstantInt *CI = dyn_cast<ConstantInt>(CV)) {
-    if (CI->getType()->isIntegerTy(1))
-      O << (CI->getZExtValue() ? "true" : "false");
-    else
-      O << CI->getValue();
-  } else if (const ConstantFP *CFP = dyn_cast<ConstantFP>(CV)) {
-    uint64_t Val = CFP->getValueAPF().bitcastToAPInt().getZExtValue();
-    if (CFP->getType()->isFloatTy())
-      O << format("0F%" PRIx32, static_cast<uint32_t>(Val));
-    else if (CFP->getType()->isDoubleTy())
-      O << format("0D%" PRIx64, Val);
-    else
-      llvm_unreachable("unhandled ConstantFP");
-  } else if (isa<ConstantAggregateZero>(CV)) {
-    const Type *Ty = CV->getType();
-    unsigned NumElems = 1;
+    O << "};\n";
+    return;
+  }
 
-    // If this is a zero initializer for a vector type, get the # elements and
-    // element type.
-    if (const VectorType *VTy = dyn_cast<VectorType>(Ty)) {
-      Ty = VTy->getElementType();
-      NumElems = VTy->getNumElements();
-    }
+  if (const ConstantArray *CA = dyn_cast<ConstantArray>(CV)) {
+    Type *EltTy = CA->getType()->getElementType();
+    if (!EltTy->isAggregateType()) {
+      O << '{';
 
-    // NumElems == 1 for scalar and array types, > 1 for vector types.
-    for (unsigned I = 0; I < NumElems; ++I) {
-      if (I > 0)
-        O << ", ";
-      switch (Ty->getTypeID()) {
-      case Type::IntegerTyID:
-      case Type::PointerTyID:
-        O << '0';
-        break;
-      case Type::FloatTyID:
-        O << "0F00000000";
-        break;
-      case Type::DoubleTyID:
-        O << "0D0000000000000000";
-        break;
-      case Type::ArrayTyID:
-        // Array type with a single zero initializer.
-        assert(NumElems == 1 && "Unexpected zero initializer");
-        O << (EmitBraces ? "{0}" : "0");
-        break;
-      default:
-        llvm_unreachable("unhandled zero initializer");
-        break;
+      for (unsigned I = 0, E = CA->getNumOperands(); I != E; ++I) {
+        if (I > 0)
+          O << ", ";
+
+        Constant *Elt = CA->getOperand(I);
+        printScalarConstant(Elt, O);
       }
-    }
-  } else if (isa<ConstantPointerNull>(CV))
-    O << '0';
-  else if (const ConstantStruct *CS = dyn_cast<ConstantStruct>(CV)) {
-    EmitGlobalConstant(CS);
-#if 0
-    uint64_t DumpSize = 0;
 
-    const StructLayout* Layout = DL.getStructLayout(CS->getType());
-    int y = CS->getNumOperands();
-    for (unsigned x = 0; x < y; ++x) {
-      const Constant* elem = CS->getOperand(x);
-      //dumpSize += printConstantValue(elem, O, AsBytes);
-
-      // Add padding.
-      uint64_t NextOffset
-        = (x + 1 < y) ? Layout->getElementOffset(x + 1) : Layout->getSizeInBytes();
-
-      if (DumpSize < NextOffset) {
-        ArrayType* ArrayTy
-          = ArrayType::get(Type::getInt32Ty(CS->getContext()),
-                           NextOffset - DumpSize);
-//        dumpSize += dumpZeroElements(ArrayTy, O, false/*not AsBytes*/);
-      }
+      O << "};\n";
+      return;
     }
 
-    llvm_unreachable("struct initializer");
-#endif
-    /*
-    unsigned AS = GV.getType()->getAddressSpace();
-    LLVMContext &Ctx = GV.getParent()->getContext();
-    Type *CastTy = Type::getInt8Ty(Ctx)->getPointerTo(AS);
-    const Constant *Casted = ConstantExpr::getBitCast(CS, CastTy);
-    printGVInitialValue(GV, Casted, O);
-    */
-  } else {
-    EmitGlobalConstant(CV);
-    //llvm_unreachable("unhandled initializer");
+    // struct arrays fallthrough to be treated as byte array.
+  }
+
+  // Write other cases as byte array.
+  StoreInitializer store(1, *this);
+
+  store.append(CV, GV.getName());
+
+  O << '{';
+  StringRef Str = store.str();
+  for (size_t I = 0, E = Str.size(); I != E; ++I) {
+    O << (static_cast<int>(Str[I]) & 0xff);
+
+    if (I + 1 != E)
+      O << ", ";
+  }
+
+  O << "};\n";
+
+  for (const auto &VarInit : store.varInitAddresses()) {
+    printInitVarWithAddressPragma(GV.getName(), VarInit.BaseOffset,
+                                  VarInit.Expr, 1, O);
   }
 }
 
@@ -373,7 +424,17 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   // initialize dynamically.
   if (GV->hasInitializer() && canInitAddressSpace(AS)) {
     O << " = ";
-    printGVInitialValue(*GV, cast<Constant>(GV->getInitializer()), DL, O);
+    const Constant *Init = cast<Constant>(GV->getInitializer());
+
+    // Emit trivial zero initializers as a single 0.
+    if (Init->isNullValue()) {
+      if (Init->getType()->isAggregateType())
+        O << "{0}";
+      else
+        O << '0';
+    } else {
+      printGVInitialValue(*GV, Init, DL, O);
+    }
   }
 
   O << ";\n\n";
@@ -557,12 +618,6 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
         O << getSegmentName(AS)
           << getArgTypeName(printGVType(Ty->getElementType(), DL, str))
           << " %" << GV.getName() << str;
-        if (GV.hasInitializer() && canInitAddressSpace(AS)) {
-          O << " = ";
-          printGVInitialValue(GV, cast<Constant>(GV.getInitializer()), DL, O);
-        }
-
-        O << ";\n";
       }
     }
   }
@@ -609,6 +664,10 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
         O << getSegmentName(AS)
           << getArgTypeName(printGVType(Ty->getElementType(), DL, str))
           << " %" << GV.getName() << str;
+        if (GV.hasInitializer() && canInitAddressSpace(AS)) {
+          O << " = ";
+          printGVInitialValue(GV, cast<Constant>(GV.getInitializer()), DL, O);
+        }
       }
     }
   }

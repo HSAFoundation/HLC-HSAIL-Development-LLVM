@@ -172,11 +172,13 @@ protected:
   HSAIL_ASM::BrigContainer bc;
   HSAIL_ASM::Brigantine brigantine;
 
+  static char getSymbolPrefixForAddressSpace(unsigned AS);
+  char getSymbolPrefix(const MCSymbol &S) const;
+
   void BrigEmitInitVarWithAddressPragma(StringRef VarName,
                                         uint64_t BaseOffset,
-                                        uint64_t EltSize,
-                                        const GlobalValue &GV,
-                                        uint64_t VarOffset);
+                                        const MCExpr *E,
+                                        unsigned EltSize);
   void BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable, Constant *);
   void BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSAIL_ASM::Inst inst);
   void BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned opNum);
@@ -227,8 +229,6 @@ protected:
 
   typedef DenseMap<const Function *, std::vector<llvm::StringRef> > FuncAliasMap;
   FuncAliasMap funcAliases;
-
-  static char getSymbolPrefix(const GlobalValue& gv);
 
 private:
 
