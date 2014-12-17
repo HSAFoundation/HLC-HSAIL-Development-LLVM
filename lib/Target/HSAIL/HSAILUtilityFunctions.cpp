@@ -269,7 +269,7 @@ unsigned getAddrSpace(const llvm::MachineInstr *MI)
     isFI = true;
   } else if (Base.isImm() && MPI.V) {
     if (const FixedStackPseudoSourceValue* FSV =
-          dyn_cast<FixedStackPseudoSourceValue>(MMO.getPseudoValue())) {
+          dyn_cast_or_null<FixedStackPseudoSourceValue>(MMO.getPseudoValue())) {
       FrameIndex = FSV->getFrameIndex();
       isFI = true;
     }
