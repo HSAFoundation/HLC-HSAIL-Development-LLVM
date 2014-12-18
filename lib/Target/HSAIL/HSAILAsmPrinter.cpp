@@ -154,19 +154,28 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F, raw_ostream &O) const
     O << ")(";
   }
 
-  O << "\n\t";
+  // Avoid ugly line breaks with small argument lists.
+  unsigned NArgs = F.arg_size();
+  if (NArgs == 0) {
+    O << ')';
+  } else if (NArgs == 1) {
+    EmitFunctionArgument(0, *F.arg_begin(), IsKernel, O);
+    O << ')';
+  } else {
+    O << "\n\t";
 
-  // Loop through all of the parameters and emit the types and corresponding
-  // names.
-  unsigned Index = 0;
-  for (Function::const_arg_iterator I = F.arg_begin(), E = F.arg_end();
-       I != E; ++Index) {
-    EmitFunctionArgument(Index, *I++, IsKernel, O);
-    if (I != E)
-      O << ",\n\t";
+    // Loop through all of the parameters and emit the types and corresponding
+    // names.
+    unsigned Index = 0;
+    for (Function::const_arg_iterator I = F.arg_begin(), E = F.arg_end();
+         I != E; ++Index) {
+      EmitFunctionArgument(Index, *I++, IsKernel, O);
+      if (I != E)
+        O << ",\n\t";
+    }
+
+    O << ')';
   }
-
-  O << ')';
 }
 
 // FIXME: Doesn't make sense to rely on address space for this.
