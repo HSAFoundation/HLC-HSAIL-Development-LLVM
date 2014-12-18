@@ -29,13 +29,13 @@ private:
   std::string getArgTypeName(Type *Ty) const;
 
   void EmitFunctionArgument(unsigned ParamIndex,
-                            Type *Ty,
+                            const Argument &Arg,
                             bool IsKernel,
                             raw_ostream &O) const;
   void EmitFunctionReturn(Type *Ty,
                           bool IsKernel,
                           raw_ostream &O) const;
-  void EmitFunctionLabel(const Function &F) const;
+  void EmitFunctionLabel(const Function &F, raw_ostream &O) const;
 
   static char getSymbolPrefixForAddressSpace(unsigned AS);
   char getSymbolPrefix(const MCSymbol &S) const;
@@ -72,7 +72,9 @@ public:
 
   void EmitGlobalVariable(const GlobalVariable *GV) override;
   void EmitStartOfAsmFile(Module &) override;
+  void EmitFunctionEntryLabel() override;
   void EmitFunctionBodyStart() override;
+  void EmitFunctionBodyEnd() override;
 };
 
 } // End anonymous llvm

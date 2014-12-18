@@ -84,36 +84,38 @@ static StringRef getSegmentName(unsigned AS) {
 }
 
 void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
-                                           Type *Ty,
+                                           const Argument &A,
                                            bool IsKernel,
                                            raw_ostream &O) const {
   bool IsVector = false;
+  Type *Ty = A.getType();
+  unsigned NElts = 0;
+
   if (const VectorType *VT = dyn_cast<VectorType>(Ty)) {
     Ty = VT->getElementType();
     if (IsKernel) {
       for (unsigned I = 0, E = VT->getNumElements(); I < E; ++I) {
-        EmitFunctionArgument(ParamIndex, Ty, IsKernel, O);
+        EmitFunctionArgument(ParamIndex, A, IsKernel, O);
         if (I != (E - 1)) {
           O << ", ";
         }
       }
     } else
       IsVector = true;
+
+    NElts = VT->getNumElements();
   }
 
   // TODO_HSA: Need to emit alignment information.
   O << (IsKernel ? "kernarg" : "arg")
     << getArgTypeName(Ty)
-    << ' ';
+    << ' '
+    << '%' << A.getName();
 
-  if (IsKernel || !IsVector)
-    O << "%arg_p" << ParamIndex;
-  else
-    O << "%argV_p" << ParamIndex;
 
   // For vector args, we ll use an HSAIL array.
   if (!IsKernel && IsVector)
-    O << "[]";
+    O << '[' << NElts << ']';
 }
 
 void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
@@ -132,12 +134,8 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
     O << '[' << NElts << ']';
 }
 
-void HSAILAsmPrinter::EmitFunctionLabel(const Function &F) const {
-  std::string FunStr;
-  raw_string_ostream O(FunStr);
-
+void HSAILAsmPrinter::EmitFunctionLabel(const Function &F, raw_ostream &O) const {
   Type *RetTy = F.getReturnType();
-  const FunctionType *FuncTy = F.getFunctionType();
 
   // FIXME: Should define HSA calling conventions.
   bool IsKernel = HSAIL::isKernelFunc(&F);
@@ -153,20 +151,22 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F) const {
     if (!RetTy->isVoidTy())
       EmitFunctionReturn(RetTy, IsKernel, O);
 
-    O << ") (";
+    O << ")(";
   }
+
+  O << "\n\t";
 
   // Loop through all of the parameters and emit the types and corresponding
   // names.
-  for (unsigned I = 0, N = FuncTy->getNumParams(); I != N; ++I) {
-    EmitFunctionArgument(I, FuncTy->getParamType(I), IsKernel, O);
-
-    if (I + 1 != N)
-      O << ", ";
+  unsigned Index = 0;
+  for (Function::const_arg_iterator I = F.arg_begin(), E = F.arg_end();
+       I != E; ++Index) {
+    EmitFunctionArgument(Index, *I++, IsKernel, O);
+    if (I != E)
+      O << ",\n\t";
   }
 
-  O << ");\n\n";
-  OutStreamer.EmitRawText(O.str());
+  O << ')';
 }
 
 // FIXME: Doesn't make sense to rely on address space for this.
@@ -502,8 +502,15 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
     if (F.isIntrinsic())
       continue;
 
-    if (!F.isDeclaration() || F.getLinkage() == GlobalValue::ExternalLinkage)
-      EmitFunctionLabel(F);
+    if (!F.isDeclaration() || F.getLinkage() == GlobalValue::ExternalLinkage) {
+      Str.clear();
+      O.resync();
+
+      O << "decl prog ";
+      EmitFunctionLabel(F, O);
+      O << ";\n\n";
+      OutStreamer.EmitRawText(O.str());
+    }
   }
 }
 
@@ -586,13 +593,24 @@ std::string HSAILAsmPrinter::getArgTypeName(Type *Ty) const {
   return Str;
 }
 
+void HSAILAsmPrinter::EmitFunctionEntryLabel() {
+  std::string FunStr;
+  raw_string_ostream O(FunStr);
+
+  O << "prog ";
+  EmitFunctionLabel(*MF->getFunction(), O);
+  O << "\n{";
+
+  OutStreamer.EmitRawText(O.str());
+}
+
 void HSAILAsmPrinter::EmitFunctionBodyStart() {
   std::string FunStr;
   raw_string_ostream O(FunStr);
-  O << "{\n";
 
   const DataLayout &DL = getDataLayout();
   const Function *F = MF->getFunction();
+
 
 #if 0
   if (isKernelFunc(*F)) { // Emitting block data inside of kernel.
@@ -611,22 +629,22 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
 
   SmallPtrSet<const GlobalVariable *,16> FuncPvtVarsSet;
   SmallPtrSet<const GlobalVariable *,16> FuncGrpVarsSet;
-  for (MachineFunction::const_iterator I = MF->begin(), E = MF->end();
-       I != E; ++I){
-    for (MachineBasicBlock::const_iterator II = I->begin(), IE = I->end();
-         II != IE; ++II) {
-      const MachineInstr *LastMI = II;
-      for (unsigned int opNum = 0; opNum < LastMI->getNumOperands(); ++opNum) {
-        const MachineOperand &MO = LastMI->getOperand(opNum);
-        if (MO.isGlobal()) {
-          if (const GlobalVariable *GV = dyn_cast<GlobalVariable>(MO.getGlobal())){
-            if (GV->getType()->getAddressSpace() == HSAILAS::PRIVATE_ADDRESS)
-              FuncPvtVarsSet.insert(GV);
+  for (const MachineBasicBlock &MBB : *MF) {
+    for (const MachineInstr &MI : MBB) {
+      for (const MachineOperand &MO : MI.operands()) {
+        if (!MO.isGlobal())
+          continue;
 
-            if (GV->getType()->getAddressSpace() == HSAILAS::GROUP_ADDRESS)
-              FuncGrpVarsSet.insert(GV);
-          }
-        }
+        const GlobalVariable *GV = dyn_cast<GlobalVariable>(MO.getGlobal());
+        if (!GV)
+          continue;
+
+        unsigned AS = GV->getType()->getAddressSpace();
+        if (AS == HSAILAS::PRIVATE_ADDRESS)
+          FuncPvtVarsSet.insert(GV);
+
+        if (AS == HSAILAS::GROUP_ADDRESS)
+          FuncGrpVarsSet.insert(GV);
       }
     }
   }
@@ -643,10 +661,12 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
         printAlignTypeQualifier(GV, DL, O);
         O << getSegmentName(AS)
           << getArgTypeName(printGVType(Ty->getElementType(), DL, str))
-          << " %" << GV.getName() << str;
+          << " %" << GV.getName() << str << ';' << '\n';
       }
     }
   }
+
+  O << '\n';
 
   // Emit private variable declarations.
   for (const GlobalVariable &GV : M->globals()) {
@@ -714,4 +734,8 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
 #endif
 
   OutStreamer.EmitRawText(O.str());
+}
+
+void HSAILAsmPrinter::EmitFunctionBodyEnd() {
+  OutStreamer.EmitRawText("};");
 }
