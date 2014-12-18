@@ -24,6 +24,8 @@ class ConstantFP;
 
 class HSAILAsmPrinter : public AsmPrinter {
 private:
+  typedef std::pair<uint64_t, const MCExpr *> AddrInit;
+
   std::string getArgTypeName(Type *Ty) const;
 
   void EmitFunctionArgument(unsigned ParamIndex,
@@ -45,7 +47,11 @@ private:
                                      raw_ostream &O);
 
   void printConstantFP(const ConstantFP *CV, raw_ostream &O);
-  void printScalarConstant(const Constant *CV, raw_ostream &O);
+  void printScalarConstant(const Constant *CV,
+                           SmallVectorImpl<AddrInit> &Addrs,
+                           uint64_t &TotalSizeEmitted,
+                           const DataLayout &DL,
+                           raw_ostream &O);
   void printGVInitialValue(const GlobalValue &GV,
                            const Constant *CV,
                            const DataLayout &DL,

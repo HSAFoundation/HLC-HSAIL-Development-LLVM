@@ -202,6 +202,7 @@ void HSAILAsmPrinter::printInitVarWithAddressPragma(StringRef VarName,
     << ':' << EltSize
     << ':' << getSymbolPrefix(Sym) << Sym.getName()
     << ':' << Val.getConstant() // Offset of the symbol being written.
+    << ';'
     << '\n';
 }
 
@@ -215,13 +216,19 @@ void HSAILAsmPrinter::printConstantFP(const ConstantFP *CFP, raw_ostream &O) {
     llvm_unreachable("unhandled ConstantFP");
 }
 
-void HSAILAsmPrinter::printScalarConstant(const Constant *CPV, raw_ostream &O) {
+void HSAILAsmPrinter::printScalarConstant(const Constant *CPV,
+                                          SmallVectorImpl<AddrInit> &Addrs,
+                                          uint64_t &TotalSizeEmitted,
+                                          const DataLayout &DL,
+                                          raw_ostream &O) {
   if (const ConstantInt *CI = dyn_cast<ConstantInt>(CPV)) {
+    TotalSizeEmitted += DL.getTypeAllocSize(CI->getType());
     O << CI->getValue();
     return;
   }
 
   if (const ConstantFP *CFP = dyn_cast<ConstantFP>(CPV)) {
+    TotalSizeEmitted += DL.getTypeAllocSize(CFP->getType());
     printConstantFP(CFP, O);
     return;
   }
@@ -232,40 +239,33 @@ void HSAILAsmPrinter::printScalarConstant(const Constant *CPV, raw_ostream &O) {
         O << ", ";
 
       const Constant *Elt = CDS->getElementAsConstant(I);
-      printScalarConstant(Elt, O);
+      printScalarConstant(Elt, Addrs, TotalSizeEmitted, DL, O);
     }
 
     return;
   }
 
   if (isa<ConstantPointerNull>(CPV)) {
+    TotalSizeEmitted += DL.getTypeAllocSize(CPV->getType());
     O << '0';
     return;
   }
 
   if (const GlobalValue *GV = dyn_cast<GlobalValue>(CPV)) {
-    O << *getSymbol(GV);
+    O << '0';
+
+    auto ME = MCSymbolRefExpr::Create(getSymbol(GV), OutContext);
+    Addrs.push_back(std::make_pair(TotalSizeEmitted, ME));
+    TotalSizeEmitted += DL.getTypeAllocSize(GV->getType());
     return;
   }
 
   if (const ConstantExpr *CExpr = dyn_cast<ConstantExpr>(CPV)) {
-    const Value *V = CExpr->stripPointerCasts();
-    if (const GlobalValue *GV = dyn_cast<GlobalValue>(V))
-      O << *getSymbol(GV);
-    else {
-      const MCExpr *ME = lowerConstant(CPV);
+    const MCExpr *ME = lowerConstant(CPV);
+    O << '0';
 
-      MCValue Val;
-
-      bool Res = ME->EvaluateAsValue(Val, nullptr, nullptr);
-      (void) Res;
-      assert(Res && "Could not evaluate MCExpr");
-      assert(!Val.getSymB() && "Multi-symbol expressions not handled");
-      O << '0';
-      // FIXME
-      //O << *Val.getSymA() << " : " << Val.getConstant() << '\n';
-    }
-
+    Addrs.push_back(std::make_pair(TotalSizeEmitted, ME));
+    TotalSizeEmitted += DL.getTypeAllocSize(CExpr->getType());
     return;
   }
 
@@ -277,16 +277,23 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
                                           const DataLayout &DL,
                                           raw_ostream &O) {
   if (const ConstantInt *CI = dyn_cast<ConstantInt>(CV)) {
-    O << CI->getValue();
+    O << CI->getValue() << ';';
     return;
   }
 
   if (const ConstantFP *CFP = dyn_cast<ConstantFP>(CV)) {
     printConstantFP(CFP, O);
+    O << ';';
     return;
   }
 
+  uint64_t TotalSizeEmitted = 0;
+  SmallVector<AddrInit, 16> AddrInits;
+
+
   if (const ConstantDataSequential *CDS = dyn_cast<ConstantDataSequential>(CV)) {
+    unsigned EltSize = DL.getTypeAllocSize(CDS->getElementType());
+
     assert(!CDS->getElementType()->isAggregateType());
     O << '{';
 
@@ -295,16 +302,26 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
         O << ", ";
 
       Constant *Elt = CDS->getElementAsConstant(I);
-      printScalarConstant(Elt, O);
+      printScalarConstant(Elt, AddrInits, TotalSizeEmitted, DL, O);
     }
 
     O << "};\n";
+
+    for (auto Init : AddrInits) {
+      printInitVarWithAddressPragma(GV.getName(), Init.first,
+                                    Init.second, EltSize, O);
+    }
+
+    O << '\n';
     return;
   }
 
+  // XXX - Need to flatten multidimensional.
   if (const ConstantArray *CA = dyn_cast<ConstantArray>(CV)) {
     Type *EltTy = CA->getType()->getElementType();
     if (!EltTy->isAggregateType()) {
+      unsigned EltSize = DL.getTypeAllocSize(EltTy);
+
       O << '{';
 
       for (unsigned I = 0, E = CA->getNumOperands(); I != E; ++I) {
@@ -312,10 +329,17 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
           O << ", ";
 
         Constant *Elt = CA->getOperand(I);
-        printScalarConstant(Elt, O);
+        printScalarConstant(Elt, AddrInits, TotalSizeEmitted, DL, O);
       }
 
       O << "};\n";
+
+      for (auto Init : AddrInits) {
+        printInitVarWithAddressPragma(GV.getName(), Init.first,
+                                      Init.second, EltSize, O);
+      }
+
+      O << '\n';
       return;
     }
 
@@ -342,6 +366,8 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
     printInitVarWithAddressPragma(GV.getName(), VarInit.BaseOffset,
                                   VarInit.Expr, 1, O);
   }
+
+  O << '\n';
 }
 
 static void printAlignTypeQualifier(const GlobalValue &GV,
@@ -432,12 +458,12 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
         O << "{0}";
       else
         O << '0';
+      O << ';';
     } else {
       printGVInitialValue(*GV, Init, DL, O);
     }
   }
 
-  O << ";\n\n";
   OutStreamer.EmitRawText(O.str());
 }
 
