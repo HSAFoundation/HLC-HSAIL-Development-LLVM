@@ -42,6 +42,7 @@ private:
 public:
   explicit HSAILAsmPrinter(TargetMachine &TM, MCStreamer &Streamer);
 
+  bool doFinalization(Module &M) override;
   bool runOnMachineFunction(MachineFunction &MF) override;
 
   const char *getPassName() const override {

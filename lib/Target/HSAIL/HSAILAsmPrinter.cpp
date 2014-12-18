@@ -47,6 +47,11 @@ HSAILAsmPrinter::HSAILAsmPrinter(TargetMachine &TM, MCStreamer &Streamer)
     : AsmPrinter(TM, Streamer) {
 }
 
+bool HSAILAsmPrinter::doFinalization(Module &M) {
+  EmitEndOfAsmFile(M);
+  return false;
+}
+
 bool HSAILAsmPrinter::runOnMachineFunction(MachineFunction &MF) {
   SetupMachineFunction(MF);
 
