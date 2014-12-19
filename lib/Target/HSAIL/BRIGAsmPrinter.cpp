@@ -1336,50 +1336,6 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
   // in EmitFunctionBodyEnd().
 }
 
-int BRIGAsmPrinter::getHSAILParameterSize(Type* type, HSAIL_ARG_TYPE arg_type) {
-  int type_size = 0;
-
-  switch (type->getTypeID()) {
-  case Type::VoidTyID:
-    break;
-  case Type::FloatTyID:
-    type_size = 4;
-    break;
-  case Type::DoubleTyID:
-    type_size = 8;
-    break;
-  case Type::IntegerTyID:
-    if (type->isIntegerTy(8)) {
-      type_size = 1;
-    } else if (type->isIntegerTy(16)) {
-      type_size = 2;
-    } else if (type->isIntegerTy(32)) {
-      type_size = 4;
-    } else if (type->isIntegerTy(64)) {
-      type_size = 8;
-    } else if (type->isIntegerTy(1)) {
-      type_size = 1;
-    } else {
-      type->dump();
-      assert(!"Found a case we don't handle!");
-    }
-    break;
-  case Type::PointerTyID: {
-    unsigned AS = cast<PointerType>(type)->getAddressSpace();
-    type_size = getDataLayout().getPointerSize(AS);
-    break;
-  }
-  case Type::VectorTyID:
-    type_size = getHSAILParameterSize(type->getScalarType(), arg_type);
-    break;
-  default:
-    type->dump();
-    assert(!"Found a case we don't handle!");
-    break;
-  }
-  return type_size;
-}
-
 std::string BRIGAsmPrinter::getHSAILReg(Type* type) {
   std::stringstream stream;
 

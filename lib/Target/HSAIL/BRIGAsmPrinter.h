@@ -239,7 +239,6 @@ private:
     ARG_TYPE_VALUE = 4
   } HSAIL_ARG_TYPE;
 
-  int getHSAILParameterSize(Type* type, HSAIL_ARG_TYPE arg_type);
   std::string getHSAILArgType( Type* type,
                               HSAIL_ARG_TYPE arg_type = ARG_TYPE_NONE);
   std::string getHSAILReg(Type* type);
