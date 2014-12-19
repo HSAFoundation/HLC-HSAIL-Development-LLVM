@@ -1288,7 +1288,7 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
 
   // Functions with kernel linkage cannot have output args
   if (!isKernel) {
-    if (retType && (retType->getTypeID() != Type::VoidTyID)) {
+    if (!retType->isVoidTy()) {
       EmitFunctionReturn(retType, isKernel, PM.getParamName(*(PM.ret_begin())),
         F->getAttributes().getRetAttributes().hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt));
     }
