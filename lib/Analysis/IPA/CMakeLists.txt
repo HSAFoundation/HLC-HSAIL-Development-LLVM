@@ -5,6 +5,7 @@ add_llvm_library(LLVMipa
   GlobalsModRef.cpp
   IPA.cpp
   InlineCost.cpp
+  AMDKernelSymbols.cpp
   )
 
 add_dependencies(LLVMipa intrinsics_gen)

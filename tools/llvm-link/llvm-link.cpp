@@ -29,6 +29,7 @@
 #include "llvm/Support/SourceMgr.h"
 #include "llvm/Support/SystemUtils.h"
 #include "llvm/Support/ToolOutputFile.h"
+#include "llvm/AMDResolveLinker.h"
 #include <memory>
 using namespace llvm;
 
@@ -52,6 +53,17 @@ Verbose("v", cl::desc("Print information about actions taken"));
 
 static cl::opt<bool>
 DumpAsm("d", cl::desc("Print assembly as linked"), cl::Hidden);
+
+static cl::opt<bool>
+PreLinkOpt("prelink-opt", cl::desc("Enable pre-link optimizations"));
+
+static cl::opt<bool>
+EnableWholeProgram("whole", cl::desc("Enable whole program mode"));
+
+static cl::list<std::string> Libraries("l", cl::Prefix,
+                                       cl::desc("Specify libraries to link to"),
+                                       cl::value_desc("library prefix"));
+
 
 static cl::opt<bool>
 SuppressWarnings("suppress-warnings", cl::desc("Suppress all linking warnings"),
@@ -116,6 +128,35 @@ int main(int argc, char **argv) {
     if (L.linkInModule(M.get()))
       return 1;
   }
+
+  // TODO: Iterate over the -l list and link in any modules containing
+  // global symbols that have not been resolved so far.
+
+
+  // Link unresolved symbols from libraries
+  std::vector<Module*> Libs;
+  for (std::vector<std::string>::iterator i = Libraries.begin(),
+       e = Libraries.end(); i != e; ++i) {
+    std::unique_ptr<Module> M(loadFile(argv[0], *i, Context));
+    if (M.get() == 0) {
+      SMDiagnostic Err(*i, SourceMgr::DK_Error, "error loading file");
+      Err.print(argv[0], errs());
+      return 1;
+    }
+    if (Verbose) errs() << "Linking in '" << *i << "'\n";
+    Libs.push_back(M.get());
+    M.release();
+  }
+
+  if (Libs.size() > 0) {
+    std::string ErrorMsg;
+    if (resolveLink(Composite.get(), Libs, &ErrorMsg)) {
+      SMDiagnostic Err(InputFilenames[0], SourceMgr::DK_Error, ErrorMsg);
+      Err.print(argv[0], errs());
+      return 1;
+    }
+  }
+
 
   if (DumpAsm) errs() << "Here's the assembly:\n" << *Composite;
 

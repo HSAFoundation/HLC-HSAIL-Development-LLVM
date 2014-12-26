@@ -16,6 +16,8 @@
 #define LLVM_TRANSFORMS_IPO_H
 
 #include "llvm/ADT/ArrayRef.h"
+#include <set>
+#include <string>
 
 namespace llvm {
 
@@ -198,6 +200,10 @@ ModulePass *createMetaRenamerPass();
 /// createBarrierNoopPass - This pass is purely a module pass barrier in a pass
 /// manager.
 ModulePass *createBarrierNoopPass();
+
+ModulePass *createAMDSymbolLinkagePass(bool isWhole=false,
+                                       std::set<std::string> *reqFuns = NULL);
+
 
 } // End llvm namespace
 

@@ -13,6 +13,8 @@
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/DenseSet.h"
+#include "llvm/IR/ValueSymbolTable.h"
+#include <map>
 
 #include <functional>
 
@@ -74,11 +76,15 @@ public:
   /// \brief Link \p Src into the composite. The source is destroyed.
   /// Returns true on error.
   bool linkInModule(Module *Src);
+  bool linkInModule(Module *Src, std::map<const Value*, bool>* ReferenceMap);
 
   static bool LinkModules(Module *Dest, Module *Src,
                           DiagnosticHandlerFunction DiagnosticHandler);
 
   static bool LinkModules(Module *Dest, Module *Src);
+
+  static bool LinkModules(Module* Dest, Module* Src, 
+			  std::map<const Value*, bool>* ReferenceMap);
 
 private:
   void init(Module *M, DiagnosticHandlerFunction DiagnosticHandler);

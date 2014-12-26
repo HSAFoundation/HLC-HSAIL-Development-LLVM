@@ -177,7 +177,11 @@ DefaultDataLayout("default-data-layout",
           cl::desc("data layout string to use if not specified by module"),
           cl::value_desc("layout-string"), cl::init(""));
 
+static cl::opt<bool>
+EnableWholeProgram("whole", cl::desc("Enable whole program mode"));
 
+static cl::opt<bool>
+EnableGPUOpt("gpu", cl::desc("Enable optimization for GPU"));
 
 static inline void addPass(PassManagerBase &PM, Pass *P) {
   // Add the pass to the pass manager...
@@ -210,6 +214,12 @@ static void AddOptimizationPasses(PassManagerBase &MPM,FunctionPassManager &FPM,
   } else {
     Builder.Inliner = createAlwaysInlinerPass();
   }
+
+  MPM.add(createAMDSymbolLinkagePass(EnableWholeProgram));
+  MPM.add(createAlwaysInlinerPass());
+  MPM.add(createGlobalOptimizerPass());     // Optimize out global vars
+  MPM.add(createGlobalDCEPass());         // Remove dead fns and globals.
+
   Builder.DisableUnitAtATime = !UnitAtATime;
   Builder.DisableUnrollLoops = (DisableLoopUnrolling.getNumOccurrences() > 0) ?
                                DisableLoopUnrolling : OptLevel == 0;
@@ -466,6 +476,12 @@ int main(int argc, char **argv) {
       AddStandardLinkPasses(Passes);
       StandardLinkOpts = false;
     }
+
+    Passes.add(createAMDSymbolLinkagePass(EnableWholeProgram));
+    Passes.add(createAlwaysInlinerPass());
+    Passes.add(createGlobalOptimizerPass());     // Optimize out global vars
+    Passes.add(createGlobalDCEPass());         // Remove dead fns and globals.
+
 
     if (OptLevelO1 && OptLevelO1.getPosition() < PassList.getPosition(i)) {
       AddOptimizationPasses(Passes, *FPasses, 1, 0);

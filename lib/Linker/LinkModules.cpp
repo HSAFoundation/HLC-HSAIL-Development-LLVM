@@ -413,6 +413,8 @@ class ModuleLinker {
   // Set of items not to link in from source.
   SmallPtrSet<const Value *, 16> DoNotLinkFromSource;
 
+  std::map<const Value*, bool> *pReferenceMap;
+
   // Vector of functions to lazily link in.
   std::vector<Function *> LazilyLinkFunctions;
 
@@ -423,7 +425,17 @@ public:
                Linker::DiagnosticHandlerFunction DiagnosticHandler)
       : DstM(dstM), SrcM(srcM), TypeMap(Set),
         ValMaterializer(TypeMap, DstM, LazilyLinkFunctions),
-        DiagnosticHandler(DiagnosticHandler) {}
+        DiagnosticHandler(DiagnosticHandler),
+ 	pReferenceMap(0) {}
+
+  ModuleLinker(Module *dstM, Linker::IdentifiedStructTypeSet &Set, Module *srcM,
+               Linker::DiagnosticHandlerFunction DiagnosticHandler, 
+	       std::map<const Value*, bool> *pRefMap)
+      : DstM(dstM), SrcM(srcM), TypeMap(Set),
+        ValMaterializer(TypeMap, DstM, LazilyLinkFunctions),
+        DiagnosticHandler(DiagnosticHandler),
+ 	pReferenceMap(pRefMap) {}
+
 
   bool run();
 
@@ -836,6 +848,13 @@ void ModuleLinker::computeTypeMapping() {
       TypeMap.addTypeMapping(DST, ST);
   }
 
+  // Assume aliaser and aliasee's types are exactly the same
+  for (Module::alias_iterator I = SrcM->alias_begin(), E = SrcM->alias_end();
+       I != E; ++I) {
+    if (GlobalValue *DGV = getLinkedToGlobal(I))
+      TypeMap.addTypeMapping(DGV->getType(), I->getType());
+  }
+
   // Now that we have discovered all of the type equivalences, get a body for
   // any 'opaque' types in the dest module that are now resolved.
   TypeMap.linkDefinedTypeBodies();
@@ -1191,6 +1210,8 @@ void ModuleLinker::linkGlobalInits() {
   // Loop over all of the globals in the src module, mapping them over as we go
   for (Module::const_global_iterator I = SrcM->global_begin(),
        E = SrcM->global_end(); I != E; ++I) {
+    if (pReferenceMap && !(*pReferenceMap)[I])
+      continue;
 
     // Only process initialized GV's or ones not already in dest.
     if (!I->hasInitializer() || DoNotLinkFromSource.count(I)) continue;
@@ -1242,6 +1263,8 @@ void ModuleLinker::linkFunctionBody(Function *Dst, Function *Src) {
 void ModuleLinker::linkAliasBodies() {
   for (Module::alias_iterator I = SrcM->alias_begin(), E = SrcM->alias_end();
        I != E; ++I) {
+    if (pReferenceMap && !(*pReferenceMap)[I])
+      continue;
     if (DoNotLinkFromSource.count(I))
       continue;
     if (Constant *Aliasee = I->getAliasee()) {
@@ -1481,24 +1504,33 @@ bool ModuleLinker::run() {
   // Insert all of the globals in src into the DstM module... without linking
   // initializers (which could refer to functions not yet mapped over).
   for (Module::global_iterator I = SrcM->global_begin(),
-       E = SrcM->global_end(); I != E; ++I)
+       E = SrcM->global_end(); I != E; ++I) {
+    if (pReferenceMap && !(*pReferenceMap)[I])
+      continue;
     if (linkGlobalValueProto(I))
       return true;
+  }
 
   // Link the functions together between the two modules, without doing function
   // bodies... this just adds external function prototypes to the DstM
   // function...  We do this so that when we begin processing function bodies,
   // all of the global values that may be referenced are available in our
   // ValueMap.
-  for (Module::iterator I = SrcM->begin(), E = SrcM->end(); I != E; ++I)
+  for (Module::iterator I = SrcM->begin(), E = SrcM->end(); I != E; ++I) {
+    if (pReferenceMap && !(*pReferenceMap)[I])
+      continue;
     if (linkGlobalValueProto(I))
       return true;
+  }
 
   // If there were any aliases, link them now.
   for (Module::alias_iterator I = SrcM->alias_begin(),
-       E = SrcM->alias_end(); I != E; ++I)
+       E = SrcM->alias_end(); I != E; ++I) {
+    if (pReferenceMap && !(*pReferenceMap)[I])
+      continue;
     if (linkGlobalValueProto(I))
       return true;
+  }
 
   for (unsigned i = 0, e = AppendingVars.size(); i != e; ++i)
     linkAppendingVarInit(AppendingVars[i]);
@@ -1506,6 +1538,8 @@ bool ModuleLinker::run() {
   // Link in the function bodies that are defined in the source module into
   // DstM.
   for (Module::iterator SF = SrcM->begin(), E = SrcM->end(); SF != E; ++SF) {
+    if (pReferenceMap && !(*pReferenceMap)[SF])
+      continue;
     // Skip if not linking from source.
     if (DoNotLinkFromSource.count(SF)) continue;
 
@@ -1717,6 +1751,12 @@ bool Linker::linkInModule(Module *Src) {
   return TheLinker.run();
 }
 
+bool Linker::linkInModule(Module *Src, std::map<const Value*, bool> *ReferenceMap) {
+  ModuleLinker TheLinker(Composite, IdentifiedStructTypes, Src,
+                         DiagnosticHandler, ReferenceMap);
+  return TheLinker.run();
+}
+
 //===----------------------------------------------------------------------===//
 // LinkModules entrypoint.
 //===----------------------------------------------------------------------===//
@@ -1735,6 +1775,11 @@ bool Linker::LinkModules(Module *Dest, Module *Src,
 bool Linker::LinkModules(Module *Dest, Module *Src) {
   Linker L(Dest);
   return L.linkInModule(Src);
+}
+
+bool Linker::LinkModules(Module *Dest, Module *Src, std::map<const Value*, bool> *ReferenceMap) {
+  Linker L(Dest);
+  return L.linkInModule(Src, ReferenceMap);
 }
 
 //===----------------------------------------------------------------------===//

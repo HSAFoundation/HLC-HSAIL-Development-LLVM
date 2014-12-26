@@ -109,70 +109,75 @@ def int_HSAIL_get_num_groups : GCCBuiltin<"__hsail_get_num_groups">,
                               Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrNoMem]>;
 
 // Intrinsics for OpenCL math built-ins (OCL 1.2 6.12.2)
-def int_HSAIL_copysign_f32 : GCCBuiltin<"__hsail_copysign_f32">, BinaryFloatIntrNoMem;
-def int_HSAIL_copysign_f64 : GCCBuiltin<"__hsail_copysign_f64">, BinaryFloatIntrNoMem;
-def int_HSAIL_ncos_f32 : GCCBuiltin<"__hsail_ncos_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_nexp2_f32 : GCCBuiltin<"__hsail_nexp2_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_abs_f32 : GCCBuiltin<"__hsail_abs_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_abs_f64 : GCCBuiltin<"__hsail_abs_f64">, UnaryFloatIntrNoMem;
-def int_HSAIL_fma_f32 : GCCBuiltin<"__hsail_fma_f32">, TernaryFloatIntrNoMem;
-def int_HSAIL_fma_f64 : GCCBuiltin<"__hsail_fma_f64">, TernaryFloatIntrNoMem;
-def int_HSAIL_nfma_f32 : GCCBuiltin<"__hsail_nfma_f32">, TernaryFloatIntrNoMem;
-def int_HSAIL_nfma_f64 : GCCBuiltin<"__hsail_nfma_f64">, TernaryFloatIntrNoMem;
-def int_HSAIL_nlog2_f32 : GCCBuiltin<"__hsail_nlog2_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_nsin_f32 : GCCBuiltin<"__hsail_nsin_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_nsqrt_f32 : GCCBuiltin<"__hsail_nsqrt_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_nsqrt_f64 : GCCBuiltin<"__hsail_nsqrt_f64">, UnaryFloatIntrNoMem;
-def int_HSAIL_sqrt_ftz_f32 : GCCBuiltin<"__hsail_sqrt_ftz_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_sqrt_f64 : GCCBuiltin<"__hsail_sqrt_f64">, UnaryFloatIntrNoMem;
-def int_HSAIL_nrsqrt_f32 : GCCBuiltin<"__hsail_nrsqrt_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_nrsqrt_f64 : GCCBuiltin<"__hsail_nrsqrt_f64">, UnaryFloatIntrNoMem;
-def int_HSAIL_nrcp_f32 : GCCBuiltin<"__hsail_nrcp_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_nrcp_f64 : GCCBuiltin<"__hsail_nrcp_f64">, UnaryFloatIntrNoMem;
+def int_HSAIL_copysign_f32 : GCCBuiltin<"__hsail_copysign_f32">, BinaryFloatIntr;
+def int_HSAIL_copysign_f64 : GCCBuiltin<"__hsail_copysign_f64">, BinaryFloatIntr;
+def int_HSAIL_ncos_f32 : GCCBuiltin<"__hsail_ncos_f32">, UnaryFloatIntr;
+def int_HSAIL_ncos_f64 : GCCBuiltin<"__hsail_ncos_f64">, UnaryFloatIntr;
+def int_HSAIL_nexp2_f32 : GCCBuiltin<"__hsail_nexp2_f32">, UnaryFloatIntr;
+def int_HSAIL_nexp2_f64 : GCCBuiltin<"__hsail_nexp2_f64">, UnaryFloatIntr;
+def int_HSAIL_abs_f32 : GCCBuiltin<"__hsail_abs_f32">, UnaryFloatIntr;
+def int_HSAIL_abs_f64 : GCCBuiltin<"__hsail_abs_f64">, UnaryFloatIntr;
+def int_HSAIL_fma_f32 : GCCBuiltin<"__hsail_fma_f32">, TernaryFloatIntr;
+def int_HSAIL_fma_f64 : GCCBuiltin<"__hsail_fma_f64">, TernaryFloatIntr;
+def int_HSAIL_nfma_f32 : GCCBuiltin<"__hsail_nfma_f32">, TernaryFloatIntr;
+def int_HSAIL_nfma_f64 : GCCBuiltin<"__hsail_nfma_f64">, TernaryFloatIntr;
+def int_HSAIL_nlog2_f32 : GCCBuiltin<"__hsail_nlog2_f32">, UnaryFloatIntr;
+def int_HSAIL_nlog2_f64 : GCCBuiltin<"__hsail_nlog2_f64">, UnaryFloatIntr;
+def int_HSAIL_nsin_f32 : GCCBuiltin<"__hsail_nsin_f32">, UnaryFloatIntr;
+def int_HSAIL_nsin_f64 : GCCBuiltin<"__hsail_nsin_f64">, UnaryFloatIntr;
+def int_HSAIL_nsqrt_f32 : GCCBuiltin<"__hsail_nsqrt_f32">, UnaryFloatIntr;
+def int_HSAIL_nsqrt_f64 : GCCBuiltin<"__hsail_nsqrt_f64">, UnaryFloatIntr;
+def int_HSAIL_sqrt_ftz_f32 : GCCBuiltin<"__hsail_sqrt_ftz_f32">, UnaryFloatIntr;
+def int_HSAIL_sqrt_f64 : GCCBuiltin<"__hsail_sqrt_f64">, UnaryFloatIntr;
+def int_HSAIL_nrsqrt_f32 : GCCBuiltin<"__hsail_nrsqrt_f32">, UnaryFloatIntr;
+def int_HSAIL_nrsqrt_f64 : GCCBuiltin<"__hsail_nrsqrt_f64">, UnaryFloatIntr;
+def int_HSAIL_nrcp_f32 : GCCBuiltin<"__hsail_nrcp_f32">, UnaryFloatIntr;
+def int_HSAIL_nrcp_f64 : GCCBuiltin<"__hsail_nrcp_f64">, UnaryFloatIntr;
 
 def int_HSAIL_ceil_f32 : GCCBuiltin<"__hsail_ceil_f32">,
-          Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]>;
+          Intrinsic<[llvm_float_ty], [llvm_float_ty], []>;
 def int_HSAIL_ceil_f64 : GCCBuiltin<"__hsail_ceil_f64">,
-          Intrinsic<[llvm_double_ty], [llvm_double_ty], [IntrNoMem]>;
+          Intrinsic<[llvm_double_ty], [llvm_double_ty], []>;
 def int_HSAIL_floor_f32 : GCCBuiltin<"__hsail_floor_f32">,
-          Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]>;
+          Intrinsic<[llvm_float_ty], [llvm_float_ty], []>;
 def int_HSAIL_floor_f64 : GCCBuiltin<"__hsail_floor_f64">,
-          Intrinsic<[llvm_double_ty], [llvm_double_ty], [IntrNoMem]>;
+          Intrinsic<[llvm_double_ty], [llvm_double_ty], []>;
 def int_HSAIL_rnd_f32 : GCCBuiltin<"__hsail_round_f32">,
-          Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]>;
+          Intrinsic<[llvm_float_ty], [llvm_float_ty], []>;
 def int_HSAIL_rnd_f64 : GCCBuiltin<"__hsail_round_f64">,
-          Intrinsic<[llvm_double_ty], [llvm_double_ty], [IntrNoMem]>;
+          Intrinsic<[llvm_double_ty], [llvm_double_ty], []>;
 def int_HSAIL_trunc_f32 : GCCBuiltin<"__hsail_trunc_f32">,
-          Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]>;
+          Intrinsic<[llvm_float_ty], [llvm_float_ty], []>;
 def int_HSAIL_trunc_f64 : GCCBuiltin<"__hsail_trunc_f64">,
-          Intrinsic<[llvm_double_ty], [llvm_double_ty], [IntrNoMem]>;
+          Intrinsic<[llvm_double_ty], [llvm_double_ty], []>;
 
 // Intrinsics for OpenCL integer built-ins (OCL 1.2 6.12.3)
-def int_HSAIL_abs_u32 : GCCBuiltin<"__hsail_abs_u32">, UnaryIntIntrNoMem; // unused?
-def int_HSAIL_abs_s32 : GCCBuiltin<"__hsail_abs_s32">, UnaryIntIntrNoMem; // unused?
-def int_HSAIL_abs_u64 : GCCBuiltin<"__hsail_abs_u64">, UnaryIntIntrNoMem; // unused?
-def int_HSAIL_abs_s64 : GCCBuiltin<"__hsail_abs_s64">, UnaryIntIntrNoMem; // unused?
-def int_HSAIL_max_u32 : GCCBuiltin<"__hsail_max_u32">, BinaryIntIntrNoMem;
-def int_HSAIL_max_s32 : GCCBuiltin<"__hsail_max_s32">, BinaryIntIntrNoMem;
-def int_HSAIL_max_u64 : GCCBuiltin<"__hsail_max_u64">, BinaryIntIntrNoMem;
-def int_HSAIL_max_s64 : GCCBuiltin<"__hsail_max_s64">, BinaryIntIntrNoMem;
-def int_HSAIL_max_f32 : GCCBuiltin<"__hsail_max_f32">, BinaryFloatIntrNoMem;
-def int_HSAIL_max_f64 : GCCBuiltin<"__hsail_max_f64">, BinaryFloatIntrNoMem;
-def int_HSAIL_gcn_max_f32 : GCCBuiltin<"__gcn_max_f32">, BinaryFloatIntrNoMem;
-def int_HSAIL_gcn_max_f64 : GCCBuiltin<"__gcn_max_f64">, BinaryFloatIntrNoMem;
-def int_HSAIL_min_u32 : GCCBuiltin<"__hsail_min_u32">, BinaryIntIntrNoMem;
-def int_HSAIL_min_s32 : GCCBuiltin<"__hsail_min_s32">, BinaryIntIntrNoMem;
-def int_HSAIL_min_u64 : GCCBuiltin<"__hsail_min_u64">, BinaryIntIntrNoMem;
-def int_HSAIL_min_s64 : GCCBuiltin<"__hsail_min_s64">, BinaryIntIntrNoMem;
-def int_HSAIL_min_f32 : GCCBuiltin<"__hsail_min_f32">, BinaryFloatIntrNoMem;
-def int_HSAIL_min_f64 : GCCBuiltin<"__hsail_min_f64">, BinaryFloatIntrNoMem;
-def int_HSAIL_gcn_min_f32 : GCCBuiltin<"__gcn_min_f32">, BinaryFloatIntrNoMem;
-def int_HSAIL_gcn_min_f64 : GCCBuiltin<"__gcn_min_f64">, BinaryFloatIntrNoMem;
-def int_HSAIL_div_f32 : GCCBuiltin<"__hsail_div_f32">, BinaryFloatIntrNoMem;
+def int_HSAIL_abs_u32 : GCCBuiltin<"__hsail_abs_u32">, UnaryIntIntr;
+def int_HSAIL_abs_s32 : GCCBuiltin<"__hsail_abs_s32">, UnaryIntIntr;
+
+def int_HSAIL_abs_u64 : GCCBuiltin<"__hsail_abs_u64">, UnaryIntIntr;
+def int_HSAIL_abs_s64 : GCCBuiltin<"__hsail_abs_s64">, UnaryIntIntr;
+def int_HSAIL_max_u32 : GCCBuiltin<"__hsail_max_u32">, BinaryIntIntr;
+def int_HSAIL_max_s32 : GCCBuiltin<"__hsail_max_s32">, BinaryIntIntr;
+def int_HSAIL_max_u64 : GCCBuiltin<"__hsail_max_u64">, BinaryIntIntr;
+def int_HSAIL_max_s64 : GCCBuiltin<"__hsail_max_s64">, BinaryIntIntr;
+def int_HSAIL_max_f32 : GCCBuiltin<"__hsail_max_f32">, BinaryFloatIntr;
+def int_HSAIL_max_f64 : GCCBuiltin<"__hsail_max_f64">, BinaryFloatIntr;
+def int_HSAIL_gcn_max_f32 : GCCBuiltin<"__gcn_max_f32">, BinaryFloatIntr;
+def int_HSAIL_gcn_max_f64 : GCCBuiltin<"__gcn_max_f64">, BinaryFloatIntr;
+def int_HSAIL_min_u32 : GCCBuiltin<"__hsail_min_u32">, BinaryIntIntr;
+def int_HSAIL_min_s32 : GCCBuiltin<"__hsail_min_s32">, BinaryIntIntr;
+def int_HSAIL_min_u64 : GCCBuiltin<"__hsail_min_u64">, BinaryIntIntr;
+def int_HSAIL_min_s64 : GCCBuiltin<"__hsail_min_s64">, BinaryIntIntr;
+def int_HSAIL_min_f32 : GCCBuiltin<"__hsail_min_f32">, BinaryFloatIntr;
+def int_HSAIL_min_f64 : GCCBuiltin<"__hsail_min_f64">, BinaryFloatIntr;
+def int_HSAIL_gcn_min_f32 : GCCBuiltin<"__gcn_min_f32">, BinaryFloatIntr;
+def int_HSAIL_gcn_min_f64 : GCCBuiltin<"__gcn_min_f64">, BinaryFloatIntr;
+def int_HSAIL_div_f32 : GCCBuiltin<"__hsail_div_f32">, BinaryFloatIntr;
 
 // Intrinsics for OpenCL relational built-ins (OCL 1.2 6.12.6)
-def int_HSAIL_class_f32 : GCCBuiltin<"__hsail_class_f32">, ClassIntrNoMem;
-def int_HSAIL_class_f64 : GCCBuiltin<"__hsail_class_f64">, ClassIntrNoMem;
+def int_HSAIL_class_f32 : GCCBuiltin<"__hsail_class_f32">, ClassIntr;
+def int_HSAIL_class_f64 : GCCBuiltin<"__hsail_class_f64">, ClassIntr;
 
 // Intrinsics for OpenCL synchronization built-ins (OCL 1.2 6.12.8)
 def int_HSAIL_barrier         : GCCBuiltin<"__hsail_barrier">, Intrinsic<[], [], []>;
@@ -359,36 +364,35 @@ def int_HSAIL_ibfe: GCCBuiltin<"__hsail_ibfe">,
 def int_HSAIL_bfm: GCCBuiltin<"__hsail_bfm">,
           Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>; 
 
-		  
-def int_HSAIL_ftz_f32 : GCCBuiltin<"__hsail_ftz_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_mul_ftz_f32 : GCCBuiltin<"__hsail_mul_ftz_f32">, BinaryFloatIntrNoMem;
-def int_HSAIL_mul_f64 : GCCBuiltin<"__hsail_mul_f64">, BinaryFloatIntrNoMem;
+
+def int_HSAIL_ftz_f32 : GCCBuiltin<"__hsail_ftz_f32">, UnaryFloatIntr;
+def int_HSAIL_mul_ftz_f32 : GCCBuiltin<"__hsail_mul_ftz_f32">, BinaryFloatIntr;
+def int_HSAIL_mul_f64 : GCCBuiltin<"__hsail_mul_f64">, BinaryFloatIntr;
 
 // HSAIL_SPEC_CURRENT <
-def int_HSAIL_firstbit_u32 : GCCBuiltin<"__hsail_firstbit_u32">, UnaryIntIntrNoMem;
-def int_HSAIL_lastbit_u32 : GCCBuiltin<"__hsail_lastbit_u32">, UnaryIntIntrNoMem;
-def int_HSAIL_fract_f32 : GCCBuiltin<"__hsail_fraction_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_fract_f64 : GCCBuiltin<"__hsail_fraction_f64">, UnaryFloatIntrNoMem;
+def int_HSAIL_firstbit_u32 : GCCBuiltin<"__hsail_firstbit_u32">, UnaryIntIntr;
+def int_HSAIL_lastbit_u32 : GCCBuiltin<"__hsail_lastbit_u32">, UnaryIntIntr;
+def int_HSAIL_fract_f32 : GCCBuiltin<"__hsail_fraction_f32">, UnaryFloatIntr;
+def int_HSAIL_fract_f64 : GCCBuiltin<"__hsail_fraction_f64">, UnaryFloatIntr;
 // > HSAIL_SPEC_CURRENT
 
-def int_HSAIL_mad_u32 : GCCBuiltin<"__hsail_mad_u32">, TernaryIntIntrNoMem;
+def int_HSAIL_mad_u32 : GCCBuiltin<"__hsail_mad_u32">, TernaryIntIntr;
 def int_HSAIL_mad_u64 : GCCBuiltin<"__hsail_mad_u64">, TernaryIntIntrNoMem;
 
-def int_HSAIL_mulhi_s32 : GCCBuiltin<"__hsail_mulhi_s32">, BinaryIntIntrNoMem;
-def int_HSAIL_mulhi_u32 : GCCBuiltin<"__hsail_mulhi_u32">, BinaryIntIntrNoMem;
+def int_HSAIL_mulhi_s32 : GCCBuiltin<"__hsail_mulhi_s32">, BinaryIntIntr;
+def int_HSAIL_mulhi_u32 : GCCBuiltin<"__hsail_mulhi_u32">, BinaryIntIntr;
 
-def int_HSAIL_mulhi_s64 : GCCBuiltin<"__hsail_mulhi_s64">, BinaryIntIntrNoMem;
-def int_HSAIL_mulhi_u64 : GCCBuiltin<"__hsail_mulhi_u64">, BinaryIntIntrNoMem;
+def int_HSAIL_mulhi_s64 : GCCBuiltin<"__hsail_mulhi_s64">, BinaryIntIntr;
+def int_HSAIL_mulhi_u64 : GCCBuiltin<"__hsail_mulhi_u64">, BinaryIntIntr;
 
-def int_HSAIL_mad24_s32 : GCCBuiltin<"__hsail_mad24_s32">, TernaryIntIntrNoMem;
-def int_HSAIL_mad24_u32 : GCCBuiltin<"__hsail_mad24_u32">, TernaryIntIntrNoMem;
+def int_HSAIL_mad24_s32 : GCCBuiltin<"__hsail_mad24_s32">, TernaryIntIntr;
+def int_HSAIL_mad24_u32 : GCCBuiltin<"__hsail_mad24_u32">, TernaryIntIntr;
 
-def int_HSAIL_mul24_s32 : GCCBuiltin<"__hsail_mul24_s32">, BinaryIntIntrNoMem;
-def int_HSAIL_mul24_u32 : GCCBuiltin<"__hsail_mul24_u32">, BinaryIntIntrNoMem;
+def int_HSAIL_mul24_s32 : GCCBuiltin<"__hsail_mul24_s32">, BinaryIntIntr;
+def int_HSAIL_mul24_u32 : GCCBuiltin<"__hsail_mul24_u32">, BinaryIntIntr;
 
-def int_HSAIL_popcount_u32_b32 : GCCBuiltin<"__hsail_popcount_u32_b32">, UnaryIntIntrNoMem;
-
-
+def int_HSAIL_popcount_u32_b32 : GCCBuiltin<"__hsail_popcount_u32_b32">, UnaryIntIntr;
+		  
 def int_HSAIL_gcn_fldexp_f32  : GCCBuiltin<"__gcn_fldexp_f32">, 
           Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_anyint_ty], [IntrNoMem]>;
 def int_HSAIL_gcn_fldexp_f64  : GCCBuiltin<"__gcn_fldexp_f64">, 
