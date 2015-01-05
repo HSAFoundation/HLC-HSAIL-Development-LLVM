@@ -112,17 +112,17 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
 void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
                                          bool IsKernel,
                                          raw_ostream &O) const {
-  bool IsVector = false;
+  unsigned NElts = 0;
   if (const VectorType *VT = dyn_cast<VectorType>(Ty)) {
     Ty = VT->getElementType();
-    IsVector = true;
+    NElts = VT->getNumElements();
   }
 
   O << (IsKernel ? "kernarg" : "arg")
     << getArgTypeName(Ty)
     << " %ret_r0";
-  if (IsVector)
-    O << "[]";
+  if (NElts != 0)
+    O << '[' << NElts << ']';
 }
 
 void HSAILAsmPrinter::EmitFunctionLabel(const Function &F) const {
@@ -478,6 +478,13 @@ std::string HSAILAsmPrinter::getArgTypeName(Type *Ty) const {
     Str += "_u8";
     break;
   case Type::VectorTyID: {
+    // Treat as array of elements.
+    const VectorType *VT = cast<VectorType>(Ty);
+
+    Str += getArgTypeName(VT->getElementType());
+    break;
+  }
+  case Type::ArrayTyID: {
     llvm_unreachable("FIXME");
   }
   default:

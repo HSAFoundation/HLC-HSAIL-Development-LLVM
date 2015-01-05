@@ -1,6 +1,7 @@
 ; RUN: llc -march=hsail < %s | FileCheck -check-prefix=HSAIL %s
 
 ; HSAIL: decl prog function &return_i32(arg_u32 %ret)();
+; HSAIL: decl prog function &return_v4i32(align(16) arg_u32 %ret[4])();
 ; HSAIL: decl prog function &return_arg_i32(arg_u32 %ret)(arg_u32 %x);
 
 ; HSAIL: decl prog function &return_vector_arg_v4i32(align(16) arg_u32 %ret[4])(align(16) arg_u32 %x[4]);
@@ -23,6 +24,15 @@
 ; HSAIL: st_arg_align(4)_u32 {{\$s[0-9]+}}, [%return_i32];
 define i32 @return_i32() {
   ret i32 123
+}
+
+; HSAIL: prog function &return_v4i32(align(16) arg_u32 %return_v4i32[4])()
+; HSAIL-DAG: st_arg_align(16)_u32 {{\$s[0-9]+}}, [%return_v4i32];
+; HSAIL-DAG: st_arg_align(4)_u32 {{\$s[0-9]+}}, [%return_v4i32][4];
+; HSAIL-DAG: st_arg_align(8)_u32 {{\$s[0-9]+}}, [%return_v4i32][8];
+; HSAIL-DAG: st_arg_align(4)_u32 {{\$s[0-9]+}}, [%return_v4i32][12];
+define <4 x i32> @return_v4i32() {
+  ret <4 x i32> <i32 9, i32 34, i32 91, i32 462>
 }
 
 ; HSAIL: prog function &return_arg_i32(arg_u32 %return_arg_i32)(arg_u32 %x)
