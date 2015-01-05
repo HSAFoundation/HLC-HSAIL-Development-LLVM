@@ -108,6 +108,7 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
 
   // TODO_HSA: Need to emit alignment information.
   O << (IsKernel ? "kernarg" : "arg")
+    << '_'
     << getArgTypeName(Ty)
     << ' '
     << '%' << A.getName();
@@ -215,12 +216,20 @@ void HSAILAsmPrinter::printInitVarWithAddressPragma(StringRef VarName,
     << '\n';
 }
 
+void HSAILAsmPrinter::printFloat(uint32_t Val, raw_ostream &O) {
+  O << format("0F%" PRIx32, Val);
+}
+
+void HSAILAsmPrinter::printDouble(uint64_t Val, raw_ostream &O) {
+  O << format("0F%" PRIx64, Val);
+}
+
 void HSAILAsmPrinter::printConstantFP(const ConstantFP *CFP, raw_ostream &O) {
   uint64_t Val = CFP->getValueAPF().bitcastToAPInt().getZExtValue();
   if (CFP->getType()->isFloatTy())
-    O << format("0F%" PRIx32, static_cast<uint32_t>(Val));
+    printFloat(static_cast<uint32_t>(Val), O);
   else if (CFP->getType()->isDoubleTy())
-    O << format("0D%" PRIx64, Val);
+    printDouble(Val, O);
   else
     llvm_unreachable("unhandled ConstantFP");
 }
@@ -296,87 +305,76 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
     return;
   }
 
-  uint64_t TotalSizeEmitted = 0;
+  unsigned NElts = 1;
+  Type *EltTy = analyzeType(CV->getType(), NElts, DL, GV.getContext());
+
+  unsigned EltSize = DL.getTypeAllocSize(EltTy);
   SmallVector<AddrInit, 16> AddrInits;
 
-
-  if (const ConstantDataSequential *CDS = dyn_cast<ConstantDataSequential>(CV)) {
-    unsigned EltSize = DL.getTypeAllocSize(CDS->getElementType());
-
-    assert(!CDS->getElementType()->isAggregateType());
-    O << '{';
-
-    for (unsigned I = 0, E = CDS->getNumElements(); I != E; ++I) {
-      if (I > 0)
-        O << ", ";
-
-      Constant *Elt = CDS->getElementAsConstant(I);
-      printScalarConstant(Elt, AddrInits, TotalSizeEmitted, DL, O);
-    }
-
-    O << "};\n";
-
-    for (auto Init : AddrInits) {
-      printInitVarWithAddressPragma(GV.getName(), Init.first,
-                                    Init.second, EltSize, O);
-    }
-
-    O << '\n';
-    return;
-  }
-
-  // XXX - Need to flatten multidimensional.
-  if (const ConstantArray *CA = dyn_cast<ConstantArray>(CV)) {
-    Type *EltTy = CA->getType()->getElementType();
-    if (!EltTy->isAggregateType()) {
-      unsigned EltSize = DL.getTypeAllocSize(EltTy);
-
-      O << '{';
-
-      for (unsigned I = 0, E = CA->getNumOperands(); I != E; ++I) {
-        if (I > 0)
-          O << ", ";
-
-        Constant *Elt = CA->getOperand(I);
-        printScalarConstant(Elt, AddrInits, TotalSizeEmitted, DL, O);
-      }
-
-      O << "};\n";
-
-      for (auto Init : AddrInits) {
-        printInitVarWithAddressPragma(GV.getName(), Init.first,
-                                      Init.second, EltSize, O);
-      }
-
-      O << '\n';
-      return;
-    }
-
-    // struct arrays fallthrough to be treated as byte array.
-  }
-
   // Write other cases as byte array.
-  StoreInitializer store(1, *this);
+  StoreInitializer store(EltTy, *this);
 
   store.append(CV, GV.getName());
 
   O << '{';
-  StringRef Str = store.str();
-  for (size_t I = 0, E = Str.size(); I != E; ++I) {
-    O << (static_cast<int>(Str[I]) & 0xff);
-
-    if (I + 1 != E)
-      O << ", ";
-  }
-
+  store.print(O);
   O << "};\n";
 
   for (const auto &VarInit : store.varInitAddresses()) {
     printInitVarWithAddressPragma(GV.getName(), VarInit.BaseOffset,
-                                  VarInit.Expr, 1, O);
+                                  VarInit.Expr, EltSize, O);
   }
 
   O << '\n';
+}
+
+Type *HSAILAsmPrinter::analyzeType(Type *Ty,
+                                   unsigned &NElts,
+                                   const DataLayout &DL,
+                                   LLVMContext &Ctx) {
+  // Scan through levels of nested arrays until we get to something that can't
+  // be expressed as a simple array element.
+  if (ArrayType *AT = dyn_cast<ArrayType>(Ty)) {
+    Type *EltTy;
+    NElts = 1;
+
+    while (AT) {
+      NElts *= AT->getNumElements();
+      EltTy = AT->getElementType();
+      AT = dyn_cast<ArrayType>(EltTy);
+    }
+
+    unsigned EltElts = ~0u;
+
+    // We could have arrays of vectors or structs.
+    Type *Tmp = analyzeType(EltTy, EltElts, DL, Ctx);
+
+    // We only need to multiply if this was a nested vector type.
+    if (EltElts != 0)
+      NElts *= EltElts;
+
+    return Tmp;
+  }
+
+  if (VectorType *VT = dyn_cast<VectorType>(Ty)) {
+    Type *EltTy = VT->getElementType();
+
+    // We need to correct the number of elements in the case of 3x vectors since
+    // in memory they occupy 4 elements.
+    NElts = DL.getTypeAllocSize(Ty) / DL.getTypeAllocSize(EltTy);
+    assert(NElts >= VT->getNumElements());
+    return EltTy;
+  }
+
+  if (isa<StructType>(Ty)) {
+    NElts = DL.getTypeAllocSize(Ty);
+    return Type::getInt8Ty(Ctx);
+  }
+
+  assert(!Ty->isAggregateType());
+
+  NElts = 0;
+  return Ty;
 }
 
 static void printAlignTypeQualifier(const GlobalValue &GV,
@@ -388,52 +386,6 @@ static void printAlignTypeQualifier(const GlobalValue &GV,
     Align = DL.getABITypeAlignment(GV.getType());
 
   O << "align(" << Align << ") ";
-}
-
-static Type* printGVType(Type *ty, const DataLayout& DL, std::string &str) {
-  if (const ArrayType *ATy = dyn_cast<ArrayType>(ty)) {
-    std::string buf;
-    raw_string_ostream ss(buf);
-    ss << '[';
-    uint64_t numElems = ATy->getNumElements();
-
-    // Flatten multi-dimensional array declaration
-    while (ATy->getElementType()->isArrayTy()) {
-      ATy = dyn_cast<ArrayType>(ATy->getElementType());
-      numElems *= ATy->getNumElements();
-    }
-
-    // There are no vector types in HSAIL, so global declarations for
-    // arrays of composite types (vector, struct) are emitted as a single
-    // array of a scalar type.
-
-    // Flatten array of vector declaration
-    if (ATy->getElementType()->isVectorTy()) {
-      const VectorType *VTy = cast<VectorType>(ATy->getElementType());
-      numElems *= VTy->getNumElements();
-      ss << numElems << ']';
-      str += ss.str();
-      return printGVType(VTy->getElementType(), DL, str);
-    }
-    // Flatten array of struct declaration
-    if (ATy->getElementType()->isStructTy()) {
-      StructType *ST = cast<StructType>(ATy->getElementType());
-      const StructLayout *layout = DL.getStructLayout(ST);
-      numElems *= layout->getSizeInBytes();
-    }
-    ss << numElems << ']';
-    str += ss.str();
-    return printGVType(ATy->getElementType(), DL, str);
-  } else if (const VectorType *VTy = dyn_cast<VectorType>(ty)) {
-    std::string buf;
-    raw_string_ostream ss(buf);
-
-    uint64_t numElems = VTy->getNumElements();
-    ss << '[' << numElems << ']';
-    str += ss.str();
-    return VTy->getElementType();
-  } else
-    return ty;
 }
 
 void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
@@ -450,10 +402,13 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
 
 
   printAlignTypeQualifier(*GV, DL, O);
-  std::string str;
-  O << getSegmentName(AS)
-    << getArgTypeName(printGVType(Ty->getElementType(), DL, str))
-    << " &" << GVname << str;
+
+  unsigned NElts = ~0u;
+  Type *EmitTy = analyzeType(Ty->getElementType(), NElts, DL, GV->getContext());
+
+  O << getSegmentName(AS) << '_' << getArgTypeName(EmitTy) << " &" << GVname;
+  if (NElts != 0)
+    O << '[' << NElts << ']';
 
   // TODO_HSA: if group memory has initializer, then emit instructions to
   // initialize dynamically.
@@ -523,33 +478,28 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
   }
 }
 
-std::string HSAILAsmPrinter::getArgTypeName(Type *Ty) const {
-  std::string Str;
-
+StringRef HSAILAsmPrinter::getArgTypeName(Type *Ty) const {
   switch (Ty->getTypeID()) {
   case Type::VoidTyID:
     break;
   case Type::FloatTyID:
-    Str += "_f32";
-    break;
+    return "f32";
   case Type::DoubleTyID:
-    Str += "_f64";
-    break;
+    return "f64";
   case Type::IntegerTyID: {
-    unsigned BitWidth = cast<IntegerType>(Ty)->getBitWidth();
+    unsigned BitWidth = Ty->getIntegerBitWidth();
     if (BitWidth == 8)
-      Str += "_u8";
+      return "u8";
     else if (BitWidth == 16)
-      Str += "_u16";
+      return "u16";
     else if (BitWidth == 32)
-      Str += "_u32";
+      return "u32";
     else if (BitWidth == 64)
-      Str += "_u64";
+      return "u64";
     else if (BitWidth == 1)
-      Str += "_b1";
+      return "b1";
     else
       llvm_unreachable("unhandled integer width argument");
-    break;
   }
   case Type::PointerTyID: {
     const PointerType *PT = cast<PointerType>(Ty);
@@ -563,34 +513,26 @@ std::string HSAILAsmPrinter::getArgTypeName(Type *Ty) const {
           Name.startswith("struct._image2d_t") ||
           Name.startswith("struct._image2d_array_t") ||
           Name.startswith("struct._image3d_t")) {
-        Str += "_RWImg";
+        return "_RWImg";
       } else if (Name.startswith("struct._sampler_t")) {
-        Str += "_Samp";
+        return "_Samp";
       } else if (Name == "struct._counter32_t" || Name == "struct._event_t") {
-        if (Subtarget->is64Bit())
-          Str += "_u64";
-        else
-          Str += "_u32";
+        return Subtarget->is64Bit() ? "u64" : "u32";
       } else {
         llvm_unreachable("unhandled struct type argument");
       }
     } else {
-      if (Subtarget->is64Bit())
-        Str += "_u64";
-      else
-        Str += "_u32";
+      return Subtarget->is64Bit() ? "u64" : "u32";
     }
-    break;
   }
   case Type::StructTyID: // Treat struct as array of bytes.
-    Str += "_u8";
-    break;
+    return "u8";
+
   case Type::VectorTyID: {
     // Treat as array of elements.
     const VectorType *VT = cast<VectorType>(Ty);
 
-    Str += getArgTypeName(VT->getElementType());
-    break;
+    return getArgTypeName(VT->getElementType());
   }
   case Type::ArrayTyID: {
     llvm_unreachable("FIXME");
@@ -599,7 +541,7 @@ std::string HSAILAsmPrinter::getArgTypeName(Type *Ty) const {
     llvm_unreachable("unhandled argument type id");
   }
 
-  return Str;
+  return "";
 }
 
 void HSAILAsmPrinter::EmitFunctionEntryLabel() {
@@ -619,7 +561,6 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
 
   const DataLayout &DL = getDataLayout();
   const Function *F = MF->getFunction();
-
 
 #if 0
   if (isKernelFunc(*F)) { // Emitting block data inside of kernel.
@@ -668,9 +609,18 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
         std::string str;
         O << '\t';
         printAlignTypeQualifier(GV, DL, O);
-        O << getSegmentName(AS)
-          << getArgTypeName(printGVType(Ty->getElementType(), DL, str))
-          << " %" << GV.getName() << str << ';' << '\n';
+
+        unsigned NElts = 1;
+        Type *EmitTy = analyzeType(Ty->getElementType(), NElts,
+                                   DL, M->getContext());
+
+        O << getSegmentName(AS) << '_' << getArgTypeName(EmitTy)
+          << " %" << GV.getName();
+
+        if (NElts != 0)
+          O << '[' << NElts << ']';
+
+        O << ";\n";
       }
     }
   }
@@ -716,9 +666,14 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
         O << '\t';
         printAlignTypeQualifier(GV, DL, O);
         str = "";
-        O << getSegmentName(AS)
-          << getArgTypeName(printGVType(Ty->getElementType(), DL, str))
-          << " %" << GV.getName() << str;
+
+        unsigned NElts = ~0u;
+        Type *EmitTy = analyzeType(Ty->getElementType(), NElts,
+                                   DL, M->getContext());
+        O << '_' << getArgTypeName(EmitTy) << " %" << GV.getName();
+        if (NElts != 0)
+          O << '[' << NElts << ']';
+
         if (GV.hasInitializer() && canInitAddressSpace(AS)) {
           O << " = ";
           printGVInitialValue(GV, cast<Constant>(GV.getInitializer()), DL, O);

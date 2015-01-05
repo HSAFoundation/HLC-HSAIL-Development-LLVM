@@ -9,21 +9,25 @@
 
 #include "HSAILStoreInitializer.h"
 
+#include "HSAILAsmPrinter.h"
+
 #include "llvm/ADT/SmallString.h"
 #include "llvm/CodeGen/AsmPrinter.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/IR/GlobalValue.h"
 #include "llvm/IR/Operator.h"
+#include "llvm/Support/Format.h"
 #include "llvm/Support/raw_ostream.h"
 
 using namespace llvm;
 
-StoreInitializer::StoreInitializer(uint32_t EltSize,
+StoreInitializer::StoreInitializer(Type *EltTy,
                                    AsmPrinter &AP)
-  : InitEltSize(EltSize),
-    DL(AP.getDataLayout()),
+  : DL(AP.getDataLayout()),
     AP(AP),
+    InitEltSize(DL.getTypeAllocSize(EltTy)),
+    IsFPElt(EltTy->isFloatingPointTy()),
     m_data(),
     OS(m_data),
     LE(OS) {}
@@ -177,4 +181,69 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
   default:
     llvm_unreachable("unhandled initializer");
   }
+}
+
+// FIXME: Duplicated in HSAILAsmPrinter
+void StoreInitializer::printFloat(uint32_t Val, raw_ostream &O) {
+  O << format("0F%" PRIx32, Val);
+}
+
+void StoreInitializer::printDouble(uint64_t Val, raw_ostream &O) {
+  O << format("0F%" PRIx64, Val);
+}
+
+void StoreInitializer::print(raw_ostream &O) {
+  StringRef Str = str();
+  assert(Str.size() % InitEltSize == 0);
+
+  if (InitEltSize == 1) {
+    for (size_t I = 0, E = Str.size(); I != E; ++I) {
+      if (I != 0)
+        O << ", ";
+
+      O << (static_cast<int>(Str[I]) & 0xff);
+    }
+
+    return;
+  }
+
+  for (unsigned I = 0, E = Str.size(); I != E; I += InitEltSize) {
+    if (I != 0)
+      O << ", ";
+
+    const char *Ptr = &Str.data()[I];
+    switch (InitEltSize) {
+    case 4: {
+      uint32_t Tmp;
+      std::memcpy(&Tmp, Ptr, 4);
+
+      if (IsFPElt)
+        printFloat(Tmp, O);
+      else
+        O << Tmp;
+      break;
+    }
+    case 8: {
+      uint64_t Tmp;
+      std::memcpy(&Tmp, Ptr, 8);
+
+      if (IsFPElt)
+        printDouble(Tmp, O);
+      else
+        O << Tmp;
+      break;
+    }
+    case 2: {
+      uint16_t Tmp;
+      std::memcpy(&Tmp, Ptr, 2);
+
+      assert(!IsFPElt && "half not implemented");
+      O << Tmp;
+      break;
+    }
+    default:
+      llvm_unreachable("Unhandled element size");
+    }
+  }
+
 }

@@ -1,9 +1,18 @@
 ; RUN: llc -march=hsail -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL -check-prefix=FUNC %s
 
+%struct.foo = type { float, [5 x i32] }
+
+
 ; HSAIL-DAG: prog align(16) readonly_u32 &vector_v4i32[4] = {47, 256, 99, 1299};
 ; HSAIL-DAG: prog align(16) readonly_u32 &vector_v3i32[4] = {47, 256, 12};
 ; HSAIL-DAG: prog align(16) readonly_u32 &zero_vector_v4i32[4] = {0};
 ; HSAIL-DAG: prog align(16) readonly_u32 &zero_vector_v3i32[4] = {0};
+
+; HSAIL-DAG: prog readonly_u32 &array_array[16] = {1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4};
+; HSAIL-DAG: prog readonly_u32 &array_array_array[32] = {1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4};
+; HSAIL-DAG: prog align(8) readonly_u32 &array_array_vector[16] = {1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8};
+; HSAIL-DAG: prog align(8) readonly_u8 &array_array_struct[192] = {0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
 
 ; HSAIL-DAG: readonly_f32 &float_gv[5] = {0F00000000, 0F3f800000, 0F40000000, 0F40400000, 0F40800000};
 ; HSAIL-DAG: readonly_f64 &double_gv[5] = {0D0000000000000000, 0D3ff0000000000000, 0D4000000000000000, 0D4008000000000000, 0D4010000000000000};
@@ -32,12 +41,55 @@
   [4 x i32] [i32 1, i32 2, i32 3, i32 4 ]
 ]
 
+@array_array_array = addrspace(2) constant [2 x [4 x [4 x i32]]] [
+  [4 x [4 x i32]] [
+    [4 x i32] [i32 1, i32 2, i32 3, i32 4 ],
+    [4 x i32] [i32 1, i32 2, i32 3, i32 4 ],
+    [4 x i32] [i32 1, i32 2, i32 3, i32 4 ],
+    [4 x i32] [i32 1, i32 2, i32 3, i32 4 ]
+  ],
+  [4 x [4 x i32]] [
+    [4 x i32] [i32 1, i32 2, i32 3, i32 4 ],
+    [4 x i32] [i32 1, i32 2, i32 3, i32 4 ],
+    [4 x i32] [i32 1, i32 2, i32 3, i32 4 ],
+    [4 x i32] [i32 1, i32 2, i32 3, i32 4 ]
+  ]
+]
+
+@array_array_vector = addrspace(2) constant [2 x [4 x <2 x i32>]] [
+  [4 x <2 x i32>] [
+    <2 x i32> <i32 1, i32 2>,
+    <2 x i32> <i32 3, i32 4>,
+    <2 x i32> <i32 5, i32 6>,
+    <2 x i32> <i32 7, i32 8>
+  ],
+  [4 x <2 x i32>] [
+    <2 x i32> <i32 1, i32 2>,
+    <2 x i32> <i32 3, i32 4>,
+    <2 x i32> <i32 5, i32 6>,
+    <2 x i32> <i32 7, i32 8>
+  ]
+]
+
+@array_array_struct = addrspace(2) constant [2 x [4 x %struct.foo]] [
+  [4 x %struct.foo] [
+    %struct.foo { float 0.5, [5 x i32] zeroinitializer },
+    %struct.foo { float 1.0, [5 x i32] zeroinitializer },
+    %struct.foo { float 2.0, [5 x i32] zeroinitializer },
+    %struct.foo { float 4.0, [5 x i32] zeroinitializer }
+  ],
+  [4 x %struct.foo] [
+    %struct.foo { float 8.0, [5 x i32] zeroinitializer },
+    %struct.foo { float 16.0, [5 x i32] zeroinitializer },
+    %struct.foo { float 32.0, [5 x i32] zeroinitializer },
+    %struct.foo { float 64.0, [5 x i32] zeroinitializer }
+  ]
+]
+
 @b = internal addrspace(2) constant [1 x i16] [ i16 7 ], align 2
 
 @float_gv = internal unnamed_addr addrspace(2) constant [5 x float] [float 0.0, float 1.0, float 2.0, float 3.0, float 4.0], align 4
 @double_gv = internal unnamed_addr addrspace(2) constant [5 x double] [double 0.0, double 1.0, double 2.0, double 3.0, double 4.0], align 4
-
-%struct.foo = type { float, [5 x i32] }
 
 @struct_foo_gv = internal unnamed_addr addrspace(2) constant [1 x %struct.foo] [ %struct.foo { float 16.0, [5 x i32] [i32 0, i32 1, i32 2, i32 3, i32 4] } ]
 

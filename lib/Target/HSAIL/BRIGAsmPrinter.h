@@ -179,7 +179,7 @@ protected:
                                         uint64_t BaseOffset,
                                         const MCExpr *E,
                                         unsigned EltSize);
-  void BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable, Constant *);
+  void BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable, Type *EltTy, Constant *);
   void BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSAIL_ASM::Inst inst);
   void BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned opNum);
   void BrigEmitVecArgDeclaration(const MachineInstr *MI);

@@ -178,11 +178,12 @@ void BRIGAsmPrinter::BrigEmitInitVarWithAddressPragma(StringRef VarName,
 }
 
 void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
+                                        Type *EltTy,
                                         Constant *CV) {
   HSAIL_ASM::SRef init;
   char zeroes[32];
 
-  unsigned EltType = HSAIL_ASM::convType2BitType(globalVar.type());
+  unsigned EltBrigType = HSAIL_ASM::convType2BitType(globalVar.type());
   size_t typeBytes = HSAIL_ASM::getBrigTypeNumBytes(globalVar.type());
 
   assert(typeBytes <= sizeof(zeroes));
@@ -192,10 +193,11 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
     memset(zeroes, 0, typeBytes);
     init = HSAIL_ASM::SRef(zeroes, zeroes + typeBytes);
   } else {
-    unsigned EltSize = HSAIL_ASM::getBrigTypeNumBytes(EltType);
+    unsigned EltSize = HSAIL_ASM::getBrigTypeNumBytes(EltBrigType);
 
     auto Name = globalVar.name().str();
-    StoreInitializer store(EltSize, *this);
+
+    StoreInitializer store(EltTy, *this);
     store.append(CV, Name);
 
     if (store.elementCount() > 0) {
@@ -309,6 +311,7 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   if (HSAIL::isIgnoredGV(GV))
     return;
 
+  const DataLayout& DL = getDataLayout();
   std::stringstream ss;
 
   unsigned AS = GV->getType()->getAddressSpace();
@@ -316,23 +319,17 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
 
   string nameString = ss.str();
 
-  const DataLayout& DL = getDataLayout();
-  Type *ty = GV->getType()->getElementType();
-  if (ty->isIntegerTy(1)) {
-   // HSAIL do not support boolean load and stores and all boolean variables
-   // should have been promoted to int8. However, due to llvm optimization
-   // such as shrink to boolean optimization we will still get i1 types.
-   // The loads and stores of this global variables are handled in
-   // selection lowering by extending to int8 types.The type of global
-   // variable will be changed to i8 here.
-    ty = Type::getInt8Ty(GV->getContext());
-  }
-  const bool isArray = HSAIL::HSAILrequiresArray(ty);
+
+  // Initializer has pointer element type.
+  Type *InitTy = GV->getType()->getElementType();
+
+  unsigned NElts = 0;
+  Type *EltTy = analyzeType(InitTy, NElts, DL, GV->getContext());
 
   // TODO_HSA: pending BRIG_LINKAGE_STATIC implementation in the Finalizer
   HSAIL_ASM::DirectiveVariable globalVar =
     brigantine.addVariable(nameString, getHSAILSegment(GV),
-                           HSAIL::getBrigType(ty, getDataLayout()));
+                           HSAIL::getBrigType(InitTy, DL));
 
   globalVar.linkage() = GV->isExternalLinkage(GV->getLinkage()) ?
       Brig::BRIG_LINKAGE_PROGRAM : ( GV->isInternalLinkage(GV->getLinkage()) ?
@@ -340,8 +337,9 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   globalVar.allocation() = Brig::BRIG_ALLOCATION_AGENT;
   globalVar.modifier().isDefinition() = 1;
 
-  globalVar.modifier().isArray() = isArray;
-  globalVar.dim() = isArray ? HSAIL::getNumElementsInHSAILType(ty, DL) : 0;
+  globalVar.modifier().isArray() = (NElts != 0);
+  globalVar.dim() = NElts;
+
   // Align arrays at least by 4 bytes
   unsigned align_value = std::max((globalVar.dim() > 1) ? 4U : 0U,
     std::max(GV->getAlignment(),
@@ -357,7 +355,7 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   // TODO_HSA: if group memory has initializer, then emit instructions to
   // initialize dynamically
   if (GV->hasInitializer() && canInitHSAILAddressSpace(GV)) {
-    BrigEmitGlobalInit(globalVar, (Constant *)GV->getInitializer());
+    BrigEmitGlobalInit(globalVar, EltTy, (Constant *)GV->getInitializer());
   }
 }
 

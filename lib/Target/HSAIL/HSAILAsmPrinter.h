@@ -26,7 +26,7 @@ class HSAILAsmPrinter : public AsmPrinter {
 private:
   typedef std::pair<uint64_t, const MCExpr *> AddrInit;
 
-  std::string getArgTypeName(Type *Ty) const;
+  StringRef getArgTypeName(Type *Ty) const;
 
   void EmitFunctionArgument(unsigned ParamIndex,
                             const Argument &Arg,
@@ -46,17 +46,28 @@ private:
                                      unsigned EltSize,
                                      raw_ostream &O);
 
+  void printFloat(uint32_t, raw_ostream &O);
+  void printDouble(uint64_t, raw_ostream &O);
   void printConstantFP(const ConstantFP *CV, raw_ostream &O);
   void printScalarConstant(const Constant *CV,
                            SmallVectorImpl<AddrInit> &Addrs,
                            uint64_t &TotalSizeEmitted,
                            const DataLayout &DL,
                            raw_ostream &O);
+
   void printGVInitialValue(const GlobalValue &GV,
                            const Constant *CV,
                            const DataLayout &DL,
                            raw_ostream &O);
 
+protected:
+  // Returns the type to use when expressing the type in HSAIL. If this will be
+  // expressed as an HSAIL array, set NElts to the number of elements, otherwise
+  // 0.
+  static Type *analyzeType(Type *Ty,
+                           unsigned &NElts,
+                           const DataLayout &DL,
+                           LLVMContext &Ctx);
 public:
   explicit HSAILAsmPrinter(TargetMachine &TM, MCStreamer &Streamer);
 

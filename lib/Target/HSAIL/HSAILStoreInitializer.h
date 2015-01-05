@@ -25,6 +25,7 @@ class DataLayout;
 class GlobalValue;
 class MCExpr;
 class StringRef;
+class Type;
 
 class StoreInitializer {
 public:
@@ -39,9 +40,10 @@ public:
   };
 
 private:
-  uint32_t InitEltSize;
   const DataLayout &DL;
   AsmPrinter &AP;
+  uint32_t InitEltSize;
+  bool IsFPElt;
 
   SmallString<1024> m_data;
   raw_svector_ostream OS;
@@ -52,8 +54,11 @@ private:
   void initVarWithAddress(const GlobalValue *GV, StringRef Var,
                           const APInt &Offset);
 
+  void printFloat(uint32_t, raw_ostream &O);
+  void printDouble(uint64_t, raw_ostream &O);
+
 public:
-  StoreInitializer(uint32_t InitEltSize, AsmPrinter &AP);
+  StoreInitializer(Type *EltTy, AsmPrinter &AP);
 
   void append(const Constant *CV, StringRef Var);
 
@@ -73,6 +78,8 @@ public:
     // Be sure to flush the stream before computing the size.
     return OS.str().size();
   }
+
+  void print(raw_ostream &O);
 };
 
 }
