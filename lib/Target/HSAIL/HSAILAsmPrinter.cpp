@@ -528,14 +528,12 @@ StringRef HSAILAsmPrinter::getArgTypeName(Type *Ty) const {
   case Type::StructTyID: // Treat struct as array of bytes.
     return "u8";
 
-  case Type::VectorTyID: {
-    // Treat as array of elements.
-    const VectorType *VT = cast<VectorType>(Ty);
-
-    return getArgTypeName(VT->getElementType());
-  }
+  case Type::VectorTyID:
   case Type::ArrayTyID: {
-    llvm_unreachable("FIXME");
+    // Treat as array of elements.
+    const SequentialType *ST = cast<SequentialType>(Ty);
+
+    return getArgTypeName(ST->getElementType());
   }
   default:
     llvm_unreachable("unhandled argument type id");
