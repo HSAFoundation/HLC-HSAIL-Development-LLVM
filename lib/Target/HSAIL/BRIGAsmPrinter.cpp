@@ -180,6 +180,9 @@ void BRIGAsmPrinter::BrigEmitInitVarWithAddressPragma(StringRef VarName,
 void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
                                         Type *EltTy,
                                         Constant *CV) {
+  if (isa<UndefValue>(CV)) // Don't emit anything for undefined initializers.
+    return;
+
   HSAIL_ASM::SRef init;
   char zeroes[32];
 

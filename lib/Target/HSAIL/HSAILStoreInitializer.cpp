@@ -132,6 +132,7 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
       LE.write(static_cast<uint32_t>(0));
     break;
   }
+  case Value::UndefValueVal:
   case Value::ConstantAggregateZeroVal: {
     uint64_t Size = DL.getTypeAllocSize(CV->getType());
     for (uint64_t I = 0; I < Size / InitEltSize; ++I) {

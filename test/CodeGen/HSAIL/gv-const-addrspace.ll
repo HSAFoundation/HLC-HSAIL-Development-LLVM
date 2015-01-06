@@ -24,8 +24,15 @@
 
 ;HSAIL-DAG: align(8) readonly_u8 &struct_foo_partial_zeroinit[48] = {0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+; HSAIL-DAG: prog align(8) readonly_u8 &struct_foo_undefinit[240];
+; HSAIL-DAG: prog align(8) readonly_u8 &bare_struct_foo_undefinit[24];
+; HSAIL-DAG: prog align(8) readonly_u8 &struct_foo_partial_undefinit[48] = {0, 0, 128, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
 ; HSAIL-DAG: readonly_u32 &zeroinit_scalar_array[1025] = {0};
 ; HSAIL-DAG: align(16) readonly_u32 &zeroinit_vector_array[16] = {0};
+
+; HSAIL-DAG: prog readonly_u32 &undefinit_scalar_array[1025];
+; HSAIL-DAG: prog align(16) readonly_u32 &undefinit_vector_array[16];
 
 @scalar_i32 = addrspace(2) constant i32 99
 @vector_v4i32 = addrspace(2) constant <4 x i32> <i32 47, i32 256, i32 99, i32 1299>
@@ -93,17 +100,29 @@
 
 @struct_foo_gv = internal unnamed_addr addrspace(2) constant [1 x %struct.foo] [ %struct.foo { float 16.0, [5 x i32] [i32 0, i32 1, i32 2, i32 3, i32 4] } ]
 
-@struct_foo_zeroinit = internal unnamed_addr addrspace(2) constant [10 x %struct.foo] zeroinitializer
+@struct_foo_zeroinit = unnamed_addr addrspace(2) constant [10 x %struct.foo] zeroinitializer
 
-@bare_struct_foo_zeroinit = internal unnamed_addr addrspace(2) constant %struct.foo zeroinitializer
+@bare_struct_foo_zeroinit = unnamed_addr addrspace(2) constant %struct.foo zeroinitializer
 
-@struct_foo_partial_zeroinit = internal unnamed_addr addrspace(2) constant [2 x %struct.foo] [
+@struct_foo_partial_zeroinit = unnamed_addr addrspace(2) constant [2 x %struct.foo] [
   %struct.foo { float 1.0, [5 x i32] zeroinitializer },
   %struct.foo { float 2.0, [5 x i32] zeroinitializer }
 ]
 
+@struct_foo_undefinit = unnamed_addr addrspace(2) constant [10 x %struct.foo] undef
+
+@bare_struct_foo_undefinit = unnamed_addr addrspace(2) constant %struct.foo undef
+
+@struct_foo_partial_undefinit = unnamed_addr addrspace(2) constant [2 x %struct.foo] [
+  %struct.foo { float 1.0, [5 x i32] undef },
+  %struct.foo { float 2.0, [5 x i32] undef }
+]
+
 @zeroinit_scalar_array = internal unnamed_addr addrspace(2) constant [1025 x i32] zeroinitializer
 @zeroinit_vector_array = internal addrspace(2) constant [4 x <4 x i32>] zeroinitializer
+
+@undefinit_scalar_array = unnamed_addr addrspace(2) constant [1025 x i32] undef
+@undefinit_vector_array = addrspace(2) constant [4 x <4 x i32>] undef
 
 @array_v1_gv = internal addrspace(2) constant [4 x <1 x i32>] [ <1 x i32> <i32 1>,
                                                                 <1 x i32> <i32 2>,

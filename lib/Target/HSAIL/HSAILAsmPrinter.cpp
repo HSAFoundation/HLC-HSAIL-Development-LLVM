@@ -413,18 +413,23 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   // TODO_HSA: if group memory has initializer, then emit instructions to
   // initialize dynamically.
   if (GV->hasInitializer() && canInitAddressSpace(AS)) {
-    O << " = ";
     const Constant *Init = cast<Constant>(GV->getInitializer());
 
-    // Emit trivial zero initializers as a single 0.
-    if (Init->isNullValue()) {
-      if (Init->getType()->isAggregateType())
-        O << "{0}";
-      else
-        O << '0';
+    if (isa<UndefValue>(Init))
       O << ';';
-    } else {
-      printGVInitialValue(*GV, Init, DL, O);
+    else {
+      O << " = ";
+
+      // Emit trivial zero initializers as a single 0.
+      if (Init->isNullValue()) {
+        if (Init->getType()->isAggregateType())
+          O << "{0}";
+        else
+          O << '0';
+        O << ';';
+      } else {
+        printGVInitialValue(*GV, Init, DL, O);
+      }
     }
   }
 
