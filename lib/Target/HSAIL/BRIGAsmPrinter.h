@@ -12,6 +12,7 @@
 #include "BRIGAsmPrinter.h"
 
 #include "HSAIL.h"
+#include "HSAILAsmPrinter.h"
 #include "HSAILInstrInfo.h"
 #include "HSAILBrig.h"
 #include "HSAILSubtarget.h"
@@ -48,7 +49,7 @@ class MCSymbol;
 class Module;
 class raw_ostream;
 
-class LLVM_LIBRARY_VISIBILITY BRIGAsmPrinter : public AsmPrinter {
+class LLVM_LIBRARY_VISIBILITY BRIGAsmPrinter : public HSAILAsmPrinter {
   friend class StoreInitializer;
 
   const HSAILSubtarget *Subtarget;

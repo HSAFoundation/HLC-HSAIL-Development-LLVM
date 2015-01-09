@@ -158,7 +158,7 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
 }
 
 BRIGAsmPrinter::BRIGAsmPrinter(TargetMachine& TM, MCStreamer &Streamer)
-  : AsmPrinter(TM, Streamer),
+  : HSAILAsmPrinter(TM, Streamer),
     brigantine(bc) {
 
   Subtarget = &TM.getSubtarget<HSAILSubtarget>();
