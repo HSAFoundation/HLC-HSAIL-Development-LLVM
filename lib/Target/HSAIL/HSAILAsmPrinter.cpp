@@ -591,8 +591,8 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
   }
 #endif
 
-  SmallPtrSet<const GlobalVariable *,16> FuncPvtVarsSet;
-  SmallPtrSet<const GlobalVariable *,16> FuncGrpVarsSet;
+  SmallPtrSet<const GlobalVariable *, 16> FuncPvtVarsSet;
+  SmallPtrSet<const GlobalVariable *, 16> FuncGrpVarsSet;
   for (const MachineBasicBlock &MBB : *MF) {
     for (const MachineInstr &MI : MBB) {
       for (const MachineOperand &MO : MI.operands()) {
