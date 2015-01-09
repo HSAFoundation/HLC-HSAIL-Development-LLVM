@@ -332,7 +332,7 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   // TODO_HSA: pending BRIG_LINKAGE_STATIC implementation in the Finalizer
   HSAIL_ASM::DirectiveVariable globalVar =
     brigantine.addVariable(nameString, getHSAILSegment(GV),
-                           HSAIL::getBrigType(InitTy, DL));
+                           HSAIL::getBrigType(EltTy, DL));
 
   globalVar.linkage() = GV->isExternalLinkage(GV->getLinkage()) ?
       Brig::BRIG_LINKAGE_PROGRAM : ( GV->isInternalLinkage(GV->getLinkage()) ?

@@ -363,6 +363,12 @@ Type *HSAILAsmPrinter::analyzeType(Type *Ty,
     // in memory they occupy 4 elements.
     NElts = DL.getTypeAllocSize(Ty) / DL.getTypeAllocSize(EltTy);
     assert(NElts >= VT->getNumElements());
+
+    // FIXME: It's not clear what the behavior of these is supposed to be and
+    // aren't consistently handled.
+    if (EltTy->isIntegerTy(1))
+      report_fatal_error("i1 vector initializers not handled");
+
     return EltTy;
   }
 
@@ -374,6 +380,12 @@ Type *HSAILAsmPrinter::analyzeType(Type *Ty,
   assert(!Ty->isAggregateType());
 
   NElts = 0;
+
+  // Arrays of i1 are not supported, and must be replaced with byte sized
+  // elements.
+  if (Ty->isIntegerTy(1))
+    return Type::getInt8Ty(Ctx);
+
   return Ty;
 }
 
