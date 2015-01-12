@@ -25,7 +25,7 @@
 
 ; FIXME: Why isn't this declared as i8?
 ; HSAIL-LABEL: {{^}}prog function &load_i1_global
-; HSAIL: group_u32 %gval;
+; HSAIL: group_u8 %gval;
 ; HSAIL: ld_group_u8 {{\$s[0-9]+}}, [%gval];
 define void @load_i1_global(i32 addrspace(1)* %out) {
   %ld = load i1 addrspace(3)* @gval
@@ -36,7 +36,7 @@ define void @load_i1_global(i32 addrspace(1)* %out) {
 
 ; FIXME: Why isn't this declared as b8?
 ; HSAIL-LABEL: {{^}}prog function &load_i1_arr_global
-; HSAIL: align(4) group_b1 %gval_arr[1024];
+; HSAIL: align(4) group_u8 %gval_arr[1024];
 ; HSAIL: ld_group_u8 {{\$s[0-9]+}}, [%gval_arr][7];
 define void @load_i1_arr_global(i32 addrspace(1)* %out) {
  %gep = getelementptr [1024 x i1] addrspace(3)* @gval_arr, i32 0, i32 7
