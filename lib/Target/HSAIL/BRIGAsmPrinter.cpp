@@ -987,31 +987,10 @@ void BRIGAsmPrinter::EmitEndOfAsmFile(Module &M) {
   }
 }
 
-static const Type* GetBasicType(const Type* pType) {
-  do {
-    if(isa<VectorType>(pType)) {
-      pType = cast<VectorType>(pType)->getElementType();
-      continue;
-    }
-    if (isa<ArrayType>(pType)) {
-      pType = cast<ArrayType>(pType)->getElementType();
-      continue;
-    }
-    if (isa<StructType>(pType)) {
-      // 8 bits since getBrigType treats struct as array of bytes
-      return llvm::IntegerType::get(pType->getContext(),8);
-    }
-    break;
-  } while(1);
-  return pType;
-}
-
 HSAIL_ASM::DirectiveVariable BRIGAsmPrinter::EmitLocalVariable(
   const GlobalVariable *GV, Brig::BrigSegment8_t segment) {
   const DataLayout& DL = getDataLayout();
 
-  const Type *pElType = GetBasicType(GV->getType()->getElementType());
-  OpaqueType OT = GetOpaqueType(pElType);
   Type *InitTy = GV->getType()->getElementType();
 
   unsigned NElts = 0;
