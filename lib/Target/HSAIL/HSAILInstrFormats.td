@@ -21,7 +21,7 @@ class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
   let Namespace = "HSAIL";
   dag OutOperandList = outs;
   dag InOperandList = ins;
-  let AsmString   = !strconcat(asmstr, " ;");
+  let AsmString   = !strconcat(asmstr, ";");
   let Pattern = pattern;
 
   let UseNamedOperandTable = 1;
