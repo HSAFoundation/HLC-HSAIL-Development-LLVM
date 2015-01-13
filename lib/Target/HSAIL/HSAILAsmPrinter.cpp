@@ -95,10 +95,9 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
     Ty = VT->getElementType();
     if (IsKernel) {
       for (unsigned I = 0, E = VT->getNumElements(); I < E; ++I) {
-        EmitFunctionArgument(ParamIndex, A, IsKernel, O);
-        if (I != (E - 1)) {
+        if (I != 0)
           O << ", ";
-        }
+        EmitFunctionArgument(ParamIndex, A, IsKernel, O);
       }
     } else
       IsVector = true;
