@@ -1213,7 +1213,6 @@ void HSAILInstPrinter::printBrigRound(const MCInst *MI, unsigned OpNo,
                                       raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
   case BRIG_ROUND_NONE:
-    O << "_2";
     break;
   case BRIG_ROUND_FLOAT_NEAR_EVEN:
     O << "_near";
