@@ -33,8 +33,8 @@ void HSAILInstPrinter::printInst(const MCInst *MI, raw_ostream &OS,
   printAnnotation(OS, Annot);
 }
 
-void HSAILInstPrinter::printImmediate(uint32_t Imm, raw_ostream &O) {
-  O << formatDec(static_cast<uint64_t>(Imm));
+void HSAILInstPrinter::printImmediate(uint64_t Imm, raw_ostream &O) {
+  O << formatDec(Imm);
 }
 
 void HSAILInstPrinter::printAddrMode3Op(const MCInst *MI,
