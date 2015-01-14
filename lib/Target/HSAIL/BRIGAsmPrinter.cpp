@@ -1610,12 +1610,8 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitLoadOrStore(const MachineInstr *MI,
   HSAIL_ASM::InstMem inst = brigantine.addInst<HSAIL_ASM::InstMem>
     (isLoad ? Brig::BRIG_OPCODE_LD : Brig::BRIG_OPCODE_ST);
 
-  unsigned BT = HSAIL::getBrigType(MI).getImm();
-  if (HSAIL_ASM::isBitType(BT))
-    BT = HSAIL_ASM::getUnsignedType(HSAIL_ASM::getBrigTypeNumBits(BT));
-
   inst.segment()    = getHSAILSegment(Segment);
-  inst.type()       = BT;
+  inst.type() = TII->getNamedOperand(*MI, HSAIL::OpName::TypeLength)->getImm();
   inst.align()      = getBrigAlignment(MMO->getAlignment());
   inst.width()      = isLoad ? Brig::BRIG_WIDTH_1 : Brig::BRIG_WIDTH_NONE;
   inst.equivClass() = 0;

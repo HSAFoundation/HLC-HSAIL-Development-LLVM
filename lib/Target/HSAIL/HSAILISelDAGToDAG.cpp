@@ -919,9 +919,8 @@ static unsigned getBrigTypeFromLoadType(MVT::SimpleValueType VT,
     case ISD::SEXTLOAD:
       return Brig::BRIG_TYPE_S8;
     case ISD::ZEXTLOAD:
-      return Brig::BRIG_TYPE_U8;
     default:
-      return Brig::BRIG_TYPE_B8;
+      return Brig::BRIG_TYPE_U8;
     }
   }
   case MVT::i16: {
@@ -929,9 +928,8 @@ static unsigned getBrigTypeFromLoadType(MVT::SimpleValueType VT,
     case ISD::SEXTLOAD:
       return Brig::BRIG_TYPE_S16;
     case ISD::ZEXTLOAD:
-      return Brig::BRIG_TYPE_U16;
     default:
-      return Brig::BRIG_TYPE_B16;
+      return Brig::BRIG_TYPE_U16;
     }
   }
   case MVT::i64:
@@ -950,11 +948,11 @@ static unsigned getBrigTypeFromStoreType(MVT::SimpleValueType VT) {
   case MVT::f32:
     return Brig::BRIG_TYPE_F32;
   case MVT::i8:
-    return Brig::BRIG_TYPE_B8;
+    return Brig::BRIG_TYPE_U8;
   case MVT::i16:
-    return Brig::BRIG_TYPE_B16;
+    return Brig::BRIG_TYPE_U16;
   case MVT::i64:
-    return Brig::BRIG_TYPE_B64;
+    return Brig::BRIG_TYPE_U64;
   case MVT::f64:
     return Brig::BRIG_TYPE_F64;
   default:
