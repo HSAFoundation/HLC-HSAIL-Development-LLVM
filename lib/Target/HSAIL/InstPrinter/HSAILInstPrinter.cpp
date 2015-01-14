@@ -54,6 +54,8 @@ void HSAILInstPrinter::printAddrMode3Op(const MCInst *MI,
     assert(BaseOp.getReg() == HSAIL::NoRegister);
   } else if (BaseOp.isExpr())
     O << '[' << '%' << *BaseOp.getExpr() << ']';
+  else if (BaseOp.isImm())
+    O << BaseOp.getImm();
   else
     llvm_unreachable("Unexpected type for base address operand");
 
