@@ -121,7 +121,9 @@ void HSAILInstPrinter::printVec4Op(const MCInst *MI,
 
 void HSAILInstPrinter::printBrigAlignment(const MCInst *MI, unsigned OpNo,
                                           raw_ostream &O) {
-  O << "_align(" << formatDec(MI->getOperand(OpNo).getImm()) << ')';
+  unsigned Align = MI->getOperand(OpNo).getImm();
+  if (Align != 1)
+    O << "_align(" << formatDec(Align) << ')';
 }
 
 void HSAILInstPrinter::printBrigAllocation(const MCInst *MI, unsigned OpNo,
