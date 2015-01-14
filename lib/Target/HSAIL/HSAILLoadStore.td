@@ -293,23 +293,50 @@ def restore_b1 : LD<"restore_b1", (outs CR:$dest)>;
 ////////////////////////////////////////////////////////////////////////////////
 // load memory address
 
-class LdaAddr<RegisterClass RC, DAGOperand MPtr>
-      : HSAILInst<(outs RC:$dest), (ins MPtr:$address, BrigSegment:$segment),
-      "lda$segment\t$dest, $address", []> {
+class LdaAddr<RegisterClass RC, DAGOperand MPtr> :
+  HSAILInst<(outs RC:$dest),
+            (ins MPtr:$address, BrigSegment:$segment),
+  "lda$segment\t$dest, $address", []> {
   let hasSideEffects = 0;
 }
 
 def lda_32 : LdaAddr<GPR32, MEMOP>;
 def lda_64 : LdaAddr<GPR64, MEMOP>;
 
-def : Pat<(i32 (IL_lda_group    ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.GROUP)>;
-def : Pat<(i32 (IL_lda_private  ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.PRIVATE)>;
+def : Pat<(i32 (IL_lda_group ADDR:$address)),
+  (lda_32 ADDR:$address, BrigSegment.GROUP)
+>;
 
-def : Pat<(i32 (IL_lda_flat     ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.FLAT)>, Requires<[In32BitMode]>;
-def : Pat<(i64 (IL_lda_flat     ADDR:$address)), (lda_64 ADDR:$address, BrigSegment.FLAT)>, Requires<[In64BitMode]>;
+def : Pat<(i32 (IL_lda_private  ADDR:$address)),
+  (lda_32 ADDR:$address, BrigSegment.PRIVATE)
+>;
 
-def : Pat<(i32 (IL_lda_global   ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.GLOBAL)>, Requires<[In32BitMode]>;
-def : Pat<(i64 (IL_lda_global   ADDR:$address)), (lda_64 ADDR:$address, BrigSegment.GLOBAL)>, Requires<[In64BitMode]>;
+def : Pat<(i32 (IL_lda_flat ADDR:$address)),
+  (lda_32 ADDR:$address, BrigSegment.FLAT)>,
+  Requires<[In32BitMode]
+>;
 
-def : Pat<(i32 (IL_lda_readonly ADDR:$address)), (lda_32 ADDR:$address, BrigSegment.READONLY)>, Requires<[In32BitMode]>;
-def : Pat<(i64 (IL_lda_readonly ADDR:$address)), (lda_64 ADDR:$address, BrigSegment.READONLY)>, Requires<[In64BitMode]>;
+def : Pat<(i64 (IL_lda_flat ADDR:$address)),
+  (lda_64 ADDR:$address, BrigSegment.FLAT)>,
+  Requires<[In64BitMode]
+>;
+
+def : Pat<(i32 (IL_lda_global   ADDR:$address)),
+  (lda_32 ADDR:$address, BrigSegment.GLOBAL)>,
+  Requires<[In32BitMode]
+>;
+
+def : Pat<(i64 (IL_lda_global ADDR:$address)),
+  (lda_64 ADDR:$address, BrigSegment.GLOBAL)>,
+  Requires<[In64BitMode]
+>;
+
+def : Pat<(i32 (IL_lda_readonly ADDR:$address)),
+  (lda_32 ADDR:$address, BrigSegment.READONLY)>,
+  Requires<[In32BitMode]
+>;
+
+def : Pat<(i64 (IL_lda_readonly ADDR:$address)),
+  (lda_64 ADDR:$address, BrigSegment.READONLY)>,
+  Requires<[In64BitMode]
+>;
