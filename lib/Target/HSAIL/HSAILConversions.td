@@ -73,14 +73,6 @@ def : CvtPat<i32, i64, BrigTypeX.U32, BrigTypeX.U64, trunc>;
 def : CvtPat<f64, f32, BrigTypeX.F64, BrigTypeX.F32, fextend, BrigRound.NONE, 1>;
 def : CvtPat<f32, f64, BrigTypeX.F32, BrigTypeX.F64, fround, BrigRound.FLOAT_NEAR_EVEN, 1>;
 
-
-// FIXME: Remove this
-let AddedComplexity = 10 in {
-def : Pat<(i32 (sext (i1 CR:$src))), (cmov_b32_i_ii CR:$src, -1, 0)>;
-def : Pat<(i64 (sext (i1 CR:$src))), (cmov_b64_i_ii CR:$src, -1, 0)>;
-}
-
-
 // 1bit => 32bit
 let isConv = 1 in {
 

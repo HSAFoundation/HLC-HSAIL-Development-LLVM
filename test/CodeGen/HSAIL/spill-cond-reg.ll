@@ -59,7 +59,7 @@
 ; HSAIL-DAG: and_b1
 ; HSAIL-DAG: and_b1
 
-; HSAIL: cmov_b32
+; HSAIL: cvt_s32_b1
 ; HSAIL: st_global_u8
 ; HSAIL: ret;
 define void @test_spill_cond_reg(i1 addrspace(1)* %out, i32 addrspace(1)* %in) {

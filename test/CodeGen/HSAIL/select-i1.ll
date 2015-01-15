@@ -10,7 +10,8 @@
 ; HSAIL-DAG: cmp_gt_b1_u32 [[CMP:\$c[0-9]+]], [[COND]], 5;
 
 ; HSAIL: cmov_b1 [[RESULT:\$c[0-9]+]], [[CMP]], [[CVTA]], [[CVTB]];
-; HSAIL: cmov_b32 {{\$s[0-9]+}}, [[RESULT]], 4294967295, 0;
+; HSAIL: cvt_s32_b1 [[CVTRESULT:\$s[0-9]+]], [[RESULT]];
+; HSAIL: st_global_align(4)_u8 [[CVTRESULT]]
 define void @select_i1(i1 addrspace(1)* %out, i32 %cond, i1 %a, i1 %b) nounwind {
   %cmp = icmp ugt i32 %cond, 5
   %sel = select i1 %cmp, i1 %a, i1 %b
