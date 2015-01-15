@@ -1013,45 +1013,63 @@ HSAILInstrInfo::isSafeToMoveRegClassDefs(const TargetRegisterClass *RC) const
   return true;
 }
 
-void
-HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
-                            MachineBasicBlock::iterator MI,
-                            DebugLoc DL,
-                            unsigned DestReg,
-                            unsigned SrcReg,
-                            bool KillSrc) const
-{
-  unsigned Opc = 0;
-
+void HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
+                                 MachineBasicBlock::iterator MI,
+                                 DebugLoc DL,
+                                 unsigned DestReg,
+                                 unsigned SrcReg,
+                                 bool KillSrc) const {
   if (HSAIL::GPR64RegClass.contains(DestReg, SrcReg)) {
-    Opc = HSAIL::mov_r_b64;
-  } else if (HSAIL::GPR32RegClass.contains(DestReg, SrcReg)) {
-    Opc = HSAIL::mov_r_b32;
-  } else if (HSAIL::CRRegClass.contains(DestReg, SrcReg)) {
-    Opc = HSAIL::mov_r_b1;
-  } else if (HSAIL::GPR32RegClass.contains(DestReg) && 
-             HSAIL::CRRegClass.contains(SrcReg)) {
-    Opc = HSAIL::cvt_b1_u32;
-  } else if (HSAIL::CRRegClass.contains(DestReg) && 
+    BuildMI(MBB, MI, DL, get(HSAIL::mov_r_b64), DestReg)
+      .addReg(SrcReg, getKillRegState(KillSrc));
+      return;
+  }
+
+  if (HSAIL::GPR32RegClass.contains(DestReg, SrcReg)) {
+    BuildMI(MBB, MI, DL, get(HSAIL::mov_r_b32), DestReg)
+      .addReg(SrcReg, getKillRegState(KillSrc));
+      return;
+  }
+
+
+  if (HSAIL::CRRegClass.contains(DestReg, SrcReg)) {
+    BuildMI(MBB, MI, DL, get(HSAIL::mov_r_b1), DestReg)
+      .addReg(SrcReg, getKillRegState(KillSrc));
+      return;
+  }
+
+  unsigned SrcBT = -1;
+  unsigned DestBT = -1;
+
+  if (HSAIL::GPR32RegClass.contains(DestReg) &&
+      HSAIL::CRRegClass.contains(SrcReg)) {
+    DestBT = Brig::BRIG_TYPE_B1;
+    SrcBT = Brig::BRIG_TYPE_U32;
+  } else if (HSAIL::CRRegClass.contains(DestReg) &&
              HSAIL::GPR32RegClass.contains(SrcReg)) {
-    Opc = HSAIL::cvt_u32_b1;
-  } else if (HSAIL::GPR64RegClass.contains(DestReg) && 
+    SrcBT = Brig::BRIG_TYPE_B1;
+    DestBT = Brig::BRIG_TYPE_U32;
+  } else if (HSAIL::GPR64RegClass.contains(DestReg) &&
              HSAIL::GPR32RegClass.contains(SrcReg)) {
-    Opc = HSAIL::cvt_u32_u64;
+    SrcBT = Brig::BRIG_TYPE_U64;
+    DestBT = Brig::BRIG_TYPE_U32;
   } else if (HSAIL::GPR32RegClass.contains(DestReg) &&
              HSAIL::GPR64RegClass.contains(SrcReg)) {
     // Truncation can occur if a function was defined with different return
     // types in different places.
-    Opc = HSAIL::cvt_u64_u32;
+    SrcBT = Brig::BRIG_TYPE_U32;
+    DestBT = Brig::BRIG_TYPE_U64;
   } else {
     assert(!"When do we hit this?");
-    return TargetInstrInfo::copyPhysReg(MBB, MI, DL, DestReg, SrcReg, 
-        KillSrc);
+    return TargetInstrInfo::copyPhysReg(MBB, MI, DL, DestReg, SrcReg, KillSrc);
   }
 
-  BuildMI(MBB, MI, DL, get(Opc), DestReg)
+  BuildMI(MBB, MI, DL, get(HSAIL::cvt), DestReg)
+    .addImm(0)      // ftz
+    .addImm(0)      // round
+    .addImm(DestBT) // destTypedestLength
+    .addImm(SrcBT)  // srcTypesrcLength
     .addReg(SrcReg, getKillRegState(KillSrc));
-
 }
 
 bool
@@ -1261,10 +1279,14 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
   case HSAIL::spill_b1:
     {
       unsigned tempU32 = getTempGPR32PostRA(MBBI);
-      BuildMI(*MBB, MBBI, MI.getDebugLoc(),
-         get(HSAIL::cvt_b1_u32))
-        .addReg(tempU32, RegState::Define)
+      DebugLoc DL = MI.getDebugLoc();
+      BuildMI(*MBB, MBBI, DL, get(HSAIL::cvt), tempU32)
+        .addImm(0)                   // ftz
+        .addImm(0)                   // round
+        .addImm(Brig::BRIG_TYPE_U32) // destTypedestLength
+        .addImm(Brig::BRIG_TYPE_B1)  // srcTypesrcLength
         .addOperand(MI.getOperand(0));
+
       MI.setDesc(get(HSAIL::st_v1));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsKill();
@@ -1272,13 +1294,17 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
       RS->setRegUsed(tempU32);
     }
     return true;
-  case HSAIL::restore_b1:
-    {
+  case HSAIL::restore_b1: {
       unsigned tempU32 = getTempGPR32PostRA(MBBI);
-      BuildMI(*MBB, ++MBBI, MI.getDebugLoc(),
-         get(HSAIL::cvt_u32_b1))
-        .addOperand(MI.getOperand(0))
+      DebugLoc DL = MI.getDebugLoc();
+
+      BuildMI(*MBB, ++MBBI, DL, get(HSAIL::cvt), MI.getOperand(0).getReg())
+        .addImm(0)                   // ftz
+        .addImm(0)                   // round
+        .addImm(Brig::BRIG_TYPE_B1)  // destTypedestLength
+        .addImm(Brig::BRIG_TYPE_U32) // srcTypesrcLength
         .addReg(tempU32, RegState::Kill);
+
       MI.setDesc(get(HSAIL::ld_v1));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsDef();

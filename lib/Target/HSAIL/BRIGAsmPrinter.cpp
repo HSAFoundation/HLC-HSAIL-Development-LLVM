@@ -671,6 +671,32 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     return inst;
   }
 
+  case HSAIL::cvt: {
+    HSAIL_ASM::InstCvt cvt
+      = brigantine.addInst<HSAIL_ASM::InstCvt>(Brig::BRIG_OPCODE_CVT);
+
+    cvt.type()
+      = TII->getNamedOperand(*II, HSAIL::OpName::destTypedestLength)->getImm();
+    cvt.sourceType()
+      = TII->getNamedOperand(*II, HSAIL::OpName::srcTypesrcLength)->getImm();
+
+    // XXX - srcTypesrcLength, destTypedestLength - These names are awful
+    cvt.modifier().ftz()
+      = TII->getNamedOperand(*II, HSAIL::OpName::ftz)->getImm();
+    cvt.modifier().round()
+      = TII->getNamedOperand(*II, HSAIL::OpName::round)->getImm();
+
+    assert(HSAIL::getNamedOperandIdx(II->getOpcode(), HSAIL::OpName::dest) == 0);
+    BrigEmitOperand(II,
+                    HSAIL::getNamedOperandIdx(II->getOpcode(), HSAIL::OpName::dest),
+                    cvt);
+
+    BrigEmitOperand(II,
+                    HSAIL::getNamedOperandIdx(II->getOpcode(), HSAIL::OpName::src),
+                    cvt);
+    return cvt;
+  }
+
   case HSAIL::ret:
     return brigantine.addInst<HSAIL_ASM::InstBasic>(Brig::BRIG_OPCODE_RET,Brig::BRIG_TYPE_NONE);
 

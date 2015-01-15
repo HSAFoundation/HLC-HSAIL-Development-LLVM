@@ -35,6 +35,7 @@ private:
   void printVec2Op(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printVec3Op(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printVec4Op(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printFTZ(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
   void printOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 

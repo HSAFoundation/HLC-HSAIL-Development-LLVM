@@ -34,3 +34,7 @@ def Vec4Op : Operand<untyped> {
 def calltarget : Operand<i32>;
 
 def GPROrImm : ComplexPattern<untyped, 1, "SelectGPROrImm">;
+
+def ftz : Operand <i1> {
+  let PrintMethod = "printFTZ";
+}

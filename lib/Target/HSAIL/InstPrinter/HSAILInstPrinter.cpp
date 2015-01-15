@@ -119,6 +119,12 @@ void HSAILInstPrinter::printVec4Op(const MCInst *MI,
   O << ')';
 }
 
+void HSAILInstPrinter::printFTZ(const MCInst *MI,
+                                unsigned OpNo,
+                                raw_ostream &O) {
+  if (MI->getOperand(OpNo).getImm())
+    O << "_ftz";
+}
 void HSAILInstPrinter::printBrigAlignment(const MCInst *MI, unsigned OpNo,
                                           raw_ostream &O) {
   unsigned Align = MI->getOperand(OpNo).getImm();

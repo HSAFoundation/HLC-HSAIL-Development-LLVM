@@ -1,165 +1,88 @@
 ////////////////////////////////////////////////////////////////////////////////
 // conversion routines
-// 1bit => 32bit
-let isConv = 1 in {
-def cvt_b1_u32 : HSAILInst<(outs GPR32:$dest), (ins CR:$src),
-                 "cvt_u32_b1\t$dest, $src",
-                 [(set (i32 GPR32:$dest),
-                       (zext (i1 CR:$src)))]>;
 
-def cvt_b1_u32_a : HSAILInst<(outs GPR32:$dest), (ins CR:$src),
-                 "cvt_u32_b1\t$dest, $src",
-                 [(set (i32 GPR32:$dest),
-                       (anyext (i1 CR:$src)))]>;
+//class HSAIL_Cvt<string opName, dag ins, dag outs, list<dag> pattern> :
+//class HSAIL_Cvt<string opName, SDPatternOperator node> :
+def cvt : HSAILInst<
+    (outs unknown:$dest),
+    (ins ftz:$ftz,
+         BrigRound:$round,
+         BrigTypeX:$destTypedestLength,
+         BrigTypeX:$srcTypesrcLength,
+         unknown:$src),
+    "cvt$ftz$round$destTypedestLength$srcTypesrcLength\t$dest, $src",
+   []
+> {
+  let isConv = 1;
+}
 
-// 1bit => 64bit
-def cvt_b1_u64 : HSAILInst<(outs GPR64:$dest), (ins CR:$src),
-                 "cvt_u64_b1\t$dest, $src",
-                 [(set (i64 GPR64:$dest),
-                       (zext (i1 CR:$src)))]>;
+class CvtPat<ValueType destvt,
+             ValueType srcvt,
+             int destbt,
+             int srcbt,
+             SDPatternOperator node,
+             int roundmode = BrigRound.NONE,
+             int ftz = 0> : Pat<
+  (destvt (node srcvt:$src)),
+  (cvt ftz, roundmode, destbt, srcbt, $src)
+>;
 
-// 32bit => 64bit
-def cvt_u32_u64 : HSAILInst<(outs GPR64:$dest), (ins GPR32:$src),
-                  "cvt_u64_u32\t$dest, $src",
-                  [(set (i64 GPR64:$dest),
-                      (zext (i32 GPR32:$src)))]>;
+def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.S64, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
+def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.U64, uint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
+def : CvtPat<f64, i32, BrigTypeX.F64, BrigTypeX.S32, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
+def : CvtPat<f64, i32, BrigTypeX.F64, BrigTypeX.U32, uint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
+def : CvtPat<f64, i1, BrigTypeX.F64, BrigTypeX.B1, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
+def : CvtPat<f64, i1, BrigTypeX.F64, BrigTypeX.B1, uint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
 
-def cvt_u32_u64_a : HSAILInst<(outs GPR64:$dest), (ins GPR32:$src),
-                  "cvt_u64_u32\t$dest, $src",
-                  [(set (i64 GPR64:$dest),
-                      (anyext (i32 GPR32:$src)))]>;
+def : CvtPat<f32, i64, BrigTypeX.F32, BrigTypeX.S64, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
+def : CvtPat<f32, i64, BrigTypeX.F32, BrigTypeX.U64, uint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
+def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.S32, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
+def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.U32, uint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
+def : CvtPat<f32, i1, BrigTypeX.F32, BrigTypeX.B1, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
+def : CvtPat<f32, i1, BrigTypeX.F32, BrigTypeX.B1, uint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
 
-def cvt_s32_s64 : HSAILInst<(outs GPR64:$dest), (ins GPR32:$src),
-                  "cvt_s64_s32\t$dest, $src",
-                  [(set (i64 GPR64:$dest),
-                      (sext (i32 GPR32:$src)))]>;
-// 32bit => 1bit
-def cvt_u32_b1  : HSAILInst<(outs CR:$dest), (ins GPR32:$src),
-                  "cvt_b1_u32\t$dest, $src",
-                  [(set (i1 CR:$dest),
-                      (trunc (i32 GPR32:$src)))]>;
+def : CvtPat<i32, f64, BrigTypeX.S32, BrigTypeX.F64, fp_to_sint, BrigRound.INTEGER_ZERO>;
+def : CvtPat<i32, f64, BrigTypeX.U32, BrigTypeX.F64, fp_to_uint, BrigRound.INTEGER_ZERO>;
+def : CvtPat<i64, f64, BrigTypeX.S64, BrigTypeX.F64, fp_to_sint, BrigRound.INTEGER_ZERO>;
+def : CvtPat<i64, f64, BrigTypeX.U64, BrigTypeX.F64, fp_to_uint, BrigRound.INTEGER_ZERO>;
 
-// 64bit => 32bit
-def cvt_u64_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
-                  "cvt_u32_u64\t$dest, $src",
-                  [(set (i32 GPR32:$dest),
-                      (trunc (i64 GPR64:$src)))]>;
+def : CvtPat<i32, f32, BrigTypeX.S32, BrigTypeX.F32, fp_to_sint, BrigRound.INTEGER_ZERO, 1>;
+def : CvtPat<i32, f32, BrigTypeX.U32, BrigTypeX.F32, fp_to_uint, BrigRound.INTEGER_ZERO, 1>;
+def : CvtPat<i64, f32, BrigTypeX.S64, BrigTypeX.F32, fp_to_sint, BrigRound.INTEGER_ZERO, 1>;
+def : CvtPat<i64, f32, BrigTypeX.U64, BrigTypeX.F32, fp_to_uint, BrigRound.INTEGER_ZERO, 1>;
 
-// 64bit => 1bit
-def cvt_u64_b1  : HSAILInst<(outs CR:$dest), (ins GPR64:$src),
-                  "cvt_b1_u64\t$dest, $src",
-                  [(set (i1 CR:$dest),
-                      (trunc (i64 GPR64:$src)))]>;
+def : CvtPat<i64, i32, BrigTypeX.S64, BrigTypeX.S32, sext>;
+def : CvtPat<i64, i32, BrigTypeX.U64, BrigTypeX.U32, zext>;
+def : CvtPat<i64, i32, BrigTypeX.U64, BrigTypeX.U32, anyext>;
 
-// f32 => [s|u]32
-def cvt_f32_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
-                 "cvt_ftz_zeroi_u32_f32\t$dest, $src",
-                 [(set (i32 GPR32:$dest),
-                     (fp_to_uint (f32 GPR32:$src)))]>;
+def : CvtPat<i64, i1, BrigTypeX.S64, BrigTypeX.B1, sext>;
+def : CvtPat<i64, i1, BrigTypeX.U64, BrigTypeX.B1, zext>;
+def : CvtPat<i64, i1, BrigTypeX.U64, BrigTypeX.B1, anyext>;
 
-def cvt_f32_s32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
-                 "cvt_ftz_zeroi_s32_f32\t$dest, $src",
-                 [(set (i32 GPR32:$dest),
-                     (fp_to_sint (f32 GPR32:$src)))]>;
+def : CvtPat<i32, i1, BrigTypeX.S32, BrigTypeX.B1, sext>;
+def : CvtPat<i32, i1, BrigTypeX.U32, BrigTypeX.B1, zext>;
+def : CvtPat<i32, i1, BrigTypeX.U32, BrigTypeX.B1, anyext>;
 
-// f64 => [s|u]32
-def cvt_f64_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
-                 "cvt_zeroi_u32_f64\t$dest, $src",
-                 [(set (i32 GPR32:$dest),
-                     (fp_to_uint (f64 GPR64:$src)))]>;
+def : CvtPat<i1, i64, BrigTypeX.B1, BrigTypeX.U64, trunc>;
+def : CvtPat<i1, i32, BrigTypeX.B1, BrigTypeX.U32, trunc>;
+def : CvtPat<i32, i64, BrigTypeX.U32, BrigTypeX.U64, trunc>;
 
-def cvt_f64_s32 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
-                 "cvt_zeroi_s32_f64\t$dest, $src",
-                 [(set (i32 GPR32:$dest),
-                     (fp_to_sint (f64 GPR64:$src)))]>;
-
-// [s|u]32 => f32
-
-def cvt_b1_f32 : HSAILInst<(outs GPR32:$dest), (ins CR:$src),
-                 "cvt_f32_b1\t$dest, $src",
-                 [(set (f32 GPR32:$dest),
-                     (uint_to_fp (i1 CR:$src)))]>;
-
-def cvt_u32_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
-                 "cvt_near_f32_u32\t$dest, $src",
-                 [(set (f32 GPR32:$dest),
-                     (uint_to_fp (i32 GPR32:$src)))]>;
-
-def cvt_s32_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
-                 "cvt_near_f32_s32\t$dest, $src",
-                 [(set (f32 GPR32:$dest),
-                     (sint_to_fp (i32 GPR32:$src)))]>;
-
-// [s|u]32 => f64
-def cvt_u32_f64 : HSAILInst<(outs GPR64:$dest), (ins GPR32:$src),
-                 "cvt_near_f64_u32\t$dest, $src",
-                 [(set (f64 GPR64:$dest),
-                     (uint_to_fp (i32 GPR32:$src)))]>;
-
-def cvt_s32_f64 : HSAILInst<(outs GPR64:$dest), (ins GPR32:$src),
-                 "cvt_near_f64_s32\t$dest, $src",
-                 [(set (f64 GPR64:$dest),
-                     (sint_to_fp (i32 GPR32:$src)))]>;
-
-// f32 => f64
 // ftz conversion complies our OpenCL contract wrt f64 denorms,
 // because f32->f64 would not yield f64 denorms, so whether f64 is
 // flushed or not does not really matter.
-def cvt_f32_f64 : HSAILInst<(outs GPR64:$dest), (ins GPR32:$src),
-                 "cvt_ftz_f64_f32\t$dest, $src",
-                 [(set (f64 GPR64:$dest),
-                     (fextend (f32 GPR32:$src)))]>;
+def : CvtPat<f64, f32, BrigTypeX.F64, BrigTypeX.F32, fextend, BrigRound.NONE, 1>;
+def : CvtPat<f32, f64, BrigTypeX.F32, BrigTypeX.F64, fround, BrigRound.FLOAT_NEAR_EVEN, 1>;
 
 
-// f64 => [s|u]64
-def cvt_f64_u64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
-                 "cvt_zeroi_u64_f64\t$dest, $src",
-                 [(set (i64 GPR64:$dest),
-                     (fp_to_uint (f64 GPR64:$src)))]>;
+// FIXME: Remove this
+let AddedComplexity = 10 in {
+def : Pat<(i32 (sext (i1 CR:$src))), (cmov_b32_i_ii CR:$src, -1, 0)>;
+def : Pat<(i64 (sext (i1 CR:$src))), (cmov_b64_i_ii CR:$src, -1, 0)>;
+}
 
-def cvt_f64_s64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
-                 "cvt_zeroi_s64_f64\t$dest, $src",
-                 [(set (i64 GPR64:$dest),
-                     (fp_to_sint (f64 GPR64:$src)))]>;
 
-// [s|u]64 => f64
-def cvt_u64_f64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
-                 "cvt_near_f64_u64\t$dest, $src",
-                 [(set (f64 GPR64:$dest),
-                     (uint_to_fp (i64 GPR64:$src)))]>;
-
-def cvt_s64_f64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
-                 "cvt_near_f64_s64\t$dest, $src",
-                 [(set (f64 GPR64:$dest),
-                     (sint_to_fp (i64 GPR64:$src)))]>;
-
-// f32 => [s|u]64
-def cvt_f32_u64 : HSAILInst<(outs GPR64:$dest), (ins GPR32:$src),
-                 "cvt_ftz_zeroi_u64_f32\t$dest, $src",
-                 [(set (i64 GPR64:$dest),
-                     (fp_to_uint (f32 GPR32:$src)))]>;
-
-def cvt_f32_s64 : HSAILInst<(outs GPR64:$dest), (ins GPR32:$src),
-                 "cvt_ftz_zeroi_s64_f32\t$dest, $src",
-                 [(set (i64 GPR64:$dest),
-                     (fp_to_sint (f32 GPR32:$src)))]>;
-
-// [s|u]64 => f32
-def cvt_u64_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
-                 "cvt_near_f32_u64\t$dest, $src",
-                 [(set (f32 GPR32:$dest),
-                     (uint_to_fp (i64 GPR64:$src)))]>;
-
-def cvt_s64_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
-                 "cvt_near_f32_s64\t$dest, $src",
-                 [(set (f32 GPR32:$dest),
-                     (sint_to_fp (i64 GPR64:$src)))]>;
-
-// f64 => f32
-def cvt_f64_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
-                 "cvt_ftz_near_f32_f64\t$dest, $src",
-                 [(set (f32 GPR32:$dest),
-                     (fround (f64 GPR64:$src)))]>;
+// 1bit => 32bit
+let isConv = 1 in {
 
 // truncate u32/u64 to 1 bit
 def trunc_b1_u32  : HSAILInst<(outs CR:$dest), (ins GPR32:$src),
@@ -412,6 +335,3 @@ def bitcvt_u64_f64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
                      "mov_b64\t$dest, $src",
                      [(set (f64 GPR64:$dest), (bitconvert (i64 GPR64:$src)))]>;
 }
-
-def : Pat<(i32 (sext (i1 CR:$src))), (cmov_b32_i_ii CR:$src, -1, 0)>;
-def : Pat<(i64 (sext (i1 CR:$src))), (cmov_b64_i_ii CR:$src, -1, 0)>;
