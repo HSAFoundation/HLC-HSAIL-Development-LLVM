@@ -16,7 +16,6 @@ namespace llvm {
       LDA_GROUP,
       LDA_PRIVATE,
       LDA_READONLY,
-      TRUNC_B1,
       INTRINSIC
     };
   }

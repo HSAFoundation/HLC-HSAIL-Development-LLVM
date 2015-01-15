@@ -113,8 +113,6 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::i32, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::i64, Expand);
 
-  setOperationAction(ISD::TRUNCATE, MVT::i1, Custom);
-
   setOperationAction(ISD::BR_CC, MVT::i32, Expand);
   setOperationAction(ISD::BR_CC, MVT::i64, Expand);
   setOperationAction(ISD::BR_CC, MVT::f32, Expand);
@@ -1090,7 +1088,6 @@ HSAILTargetLowering::LowerOperation(SDValue Op,
 {
   switch (Op.getOpcode()) {
     LOWER(GlobalAddress);
-    LOWER(TRUNCATE);
     LOWER(INTRINSIC_W_CHAIN);
     LOWER(ROTL);
     LOWER(ROTR);
@@ -1152,8 +1149,6 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::LDA_PRIVATE";
   case HSAILISD::LDA_READONLY:
     return "HSAILISD::LDA_READONLY";
-  case HSAILISD::TRUNC_B1:
-    return "HSAILISD::TRUNC_B1";
   }
 }
 
@@ -1190,23 +1185,7 @@ HSAILTargetLowering::LowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const {
   return DAG.getNode(opcode, dl, PtrVT.getSimpleVT(), targetGlobal);
 }
 
-SDValue 
-HSAILTargetLowering::LowerTRUNCATE(SDValue Op, SelectionDAG &DAG) const {
-  SDLoc dl = SDLoc(Op);
-  EVT VT = Op.getValueType();
-
-  if (VT != MVT::i1) {
-    return Op;
-  }
-  // Generate a custom truncate operation that clears all but the
-  // least-significant bit in the source operand before truncating to i1.
-  const SDValue src = Op.getOperand(0);
-  EVT srcVT = src.getValueType();
-  const SDValue trunc =  DAG.getNode(ISD::AND, dl, srcVT, src, 
-                          DAG.getConstant(1, srcVT));
-  return DAG.getNode(HSAILISD::TRUNC_B1, dl, VT, trunc);
-}
-SDValue 
+SDValue
 HSAILTargetLowering::LowerADD(SDValue Op, SelectionDAG &DAG) const {
   SDLoc dl = SDLoc(Op);
   EVT VT = Op.getValueType();
@@ -1221,7 +1200,7 @@ HSAILTargetLowering::LowerADD(SDValue Op, SelectionDAG &DAG) const {
   SDValue Zext = DAG.getNode(ISD::ZERO_EXTEND, dl, MVT::i32,Op.getOperand(1));
   SDValue Zext1 = DAG.getNode(ISD::ZERO_EXTEND, dl, srcVT,Op.getOperand(0)); 
   SDValue add_p = DAG.getNode(ISD::ADD, dl, srcVT,Zext1,Zext);
-  SDValue Zext2 = DAG.getNode(HSAILISD::TRUNC_B1, dl, VT,add_p);
+  SDValue Zext2 = DAG.getNode(ISD::TRUNCATE, dl, VT, add_p);
   return Zext2;
   
 }

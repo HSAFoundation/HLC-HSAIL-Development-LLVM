@@ -323,9 +323,6 @@ public:
   SDValue 
   LowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const;
 
-  SDValue 
-  LowerTRUNCATE(SDValue Op, SelectionDAG &DAG) const;
-
  SDValue
   LowerADD(SDValue Op, SelectionDAG &DAG) const;
 

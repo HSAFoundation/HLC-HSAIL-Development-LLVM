@@ -84,17 +84,6 @@ def : Pat<(i64 (sext (i1 CR:$src))), (cmov_b64_i_ii CR:$src, -1, 0)>;
 // 1bit => 32bit
 let isConv = 1 in {
 
-// truncate u32/u64 to 1 bit
-def trunc_b1_u32  : HSAILInst<(outs CR:$dest), (ins GPR32:$src),
-                    "cvt_b1_u32\t$dest, $src",
-                    [(set (i1 CR:$dest),
-                      (IL_trunc_b1 (i32 GPR32:$src)))]>;
-
-def trunc_b1_u64  : HSAILInst<(outs CR:$dest), (ins GPR64:$src),
-                    "cvt_b1_u64\t$dest, $src",
-                    [(set (i1 CR:$dest),
-                      (IL_trunc_b1 (i64 GPR64:$src)))]>;
-
 // hsail conversion functions
 def hsail_cvt_s32_neari_f64 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
                         "cvt_neari_s32_f64\t$dest,$src",
