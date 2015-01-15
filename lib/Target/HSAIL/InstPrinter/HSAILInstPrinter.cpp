@@ -13,6 +13,8 @@
 #include "MCTargetDesc/HSAILMCTargetDesc.h"
 #include "llvm/MC/MCExpr.h"
 #include "llvm/MC/MCInst.h"
+#include "llvm/MC/MCInstrDesc.h"
+#include "llvm/MC/MCInstrInfo.h"
 #include "llvm/MC/MCRegisterInfo.h"
 #include "llvm/Support/MathExtras.h"
 #include "llvm/Support/raw_ostream.h"
@@ -1708,7 +1710,28 @@ void HSAILInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
   } else if (Op.isImm()) {
     printImmediate(Op.getImm(), O);
   } else if (Op.isFPImm()) {
+    const MCInstrDesc &Desc = MII.get(MI->getOpcode());
+    const MCOperandInfo &OpInfo = Desc.OpInfo[OpNo];
+
     O << Op.getFPImm();
+#if 0
+    double Imm = Op.getFPImm();
+    const MCRegisterClass &ImmRC = MRI.getRegClass(OpInfo.RegClass);
+    unsigned Size = ImmRC.getSize();
+
+    if (Size == 4) {
+      float FImm = static_cast<float>(Imm);
+      O << "0F" << formatHex(static_cast<uint64_t>(FloatToBits(FImm)));
+    } else if (Size == 8) {
+      O << "0D" << formatHex(DoubleToBits(Imm));
+    } else
+      llvm_unreachable("unhandled fpimm size");
+#endif
+
+
+
+
+
   } else if (Op.isExpr()) {
     const MCExpr *Exp = Op.getExpr();
     Exp->print(O);
