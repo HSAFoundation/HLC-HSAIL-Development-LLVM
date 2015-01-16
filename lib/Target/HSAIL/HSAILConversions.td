@@ -27,6 +27,15 @@ class CvtPat<ValueType destvt,
   (cvt ftz, roundmode, destbt, srcbt, $src)
 >;
 
+class CvtSInt32RoundPat<ValueType srcvt,
+                        int srcbt,
+                        SDPatternOperator roundop,
+                        int roundmode,
+                        int ftz = 0> : Pat<
+  (i32 (fp_to_sint (roundop srcvt:$src))),
+  (cvt ftz, roundmode, BrigTypeX.S32, srcbt, $src)
+>;
+
 class UnaryFTZInst<string opName> : HSAILInst<
     (outs unknown:$dest),
     (ins ftz:$ftz, BrigTypeX:$TypeLength, unknown:$src),
@@ -108,41 +117,18 @@ def : CvtPat<i32, i64, BrigTypeX.U32, BrigTypeX.U64, trunc>;
 def : CvtPat<f64, f32, BrigTypeX.F64, BrigTypeX.F32, fextend, BrigRound.NONE, 1>;
 def : CvtPat<f32, f64, BrigTypeX.F32, BrigTypeX.F64, fround, BrigRound.FLOAT_NEAR_EVEN, 1>;
 
+def : CvtSInt32RoundPat<f64, BrigTypeX.F64, frint, BrigRound.INTEGER_NEAR_EVEN>;
+def : CvtSInt32RoundPat<f64, BrigTypeX.F64, ffloor, BrigRound.INTEGER_MINUS_INFINITY>;
+def : CvtSInt32RoundPat<f64, BrigTypeX.F64, fceil, BrigRound.INTEGER_PLUS_INFINITY>;
+def : CvtSInt32RoundPat<f64, BrigTypeX.F64, ftrunc, BrigRound.INTEGER_ZERO>;
+
+def : CvtSInt32RoundPat<f32, BrigTypeX.F32, frint, BrigRound.INTEGER_NEAR_EVEN, 1>;
+def : CvtSInt32RoundPat<f32, BrigTypeX.F32, ffloor, BrigRound.INTEGER_MINUS_INFINITY, 1>;
+def : CvtSInt32RoundPat<f32, BrigTypeX.F32, fceil, BrigRound.INTEGER_PLUS_INFINITY, 1>;
+def : CvtSInt32RoundPat<f32, BrigTypeX.F32, ftrunc, BrigRound.INTEGER_ZERO, 1>;
+
 // 1bit => 32bit
 let isConv = 1 in {
-
-// hsail conversion functions
-def hsail_cvt_s32_neari_f64 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
-                        "cvt_neari_s32_f64\t$dest,$src",
-                        [(set (i32 GPR32:$dest), (fp_to_sint (frint GPR64:$src)))]>;
-
-def hsail_cvt_s32_downi_f64 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
-                        "cvt_downi_s32_f64\t$dest,$src",
-                        [(set (i32 GPR32:$dest), (fp_to_sint (ffloor f64:$src)))]>;
-
-def hsail_cvt_s32_upi_f64 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
-                        "cvt_upi_s32_f64\t$dest,$src",
-                        [(set (i32 GPR32:$dest), (fp_to_sint (fceil GPR64:$src)))]>;
-
-def hsail_cvt_s32_zeroi_f64 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
-                        "cvt_zeroi_s32_f64\t$dest,$src",
-                        [(set (i32 GPR32:$dest), (fp_to_sint (ftrunc GPR64:$src)))]>;
-
-def hsail_cvt_s32_neari_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
-                        "cvt_ftz_neari_s32_f32\t$dest,$src",
-                        [(set (i32 GPR32:$dest), (fp_to_sint (frint f32:$src)))]>;
-
-def hsail_cvt_s32_downi_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
-                        "cvt_ftz_downi_s32_f32\t$dest,$src",
-                        [(set (i32 GPR32:$dest), (fp_to_sint (ffloor f32:$src)))]>;
-
-def hsail_cvt_s32_upi_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
-                        "cvt_ftz_upi_s32_f32\t$dest,$src",
-                        [(set (i32 GPR32:$dest), (fp_to_sint (fceil GPR32:$src)))]>;
-
-def hsail_cvt_s32_zeroi_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
-                        "cvt_ftz_zeroi_s32_f32\t$dest,$src",
-                        [(set (i32 GPR32:$dest), (fp_to_sint (ftrunc GPR32:$src)))]>;
 
 
 ////////////////////////////////////////////////////////////////////////////////
