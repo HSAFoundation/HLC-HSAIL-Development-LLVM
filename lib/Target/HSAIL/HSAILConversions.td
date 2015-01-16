@@ -46,6 +46,12 @@ def ceil : UnaryFTZInst<"ceil"> {
   let isConv = 1;
 }
 
+// Need to call something different because trunc is already a
+// standard SDNode name.
+def trunc_hsail : UnaryFTZInst<"trunc"> {
+  let isConv = 1;
+}
+
 class UnaryFTZPat<Instruction inst,
                   ValueType vt,
                   int bt,
@@ -120,7 +126,7 @@ def hsail_cvt_s32_upi_f64 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
 
 def hsail_cvt_s32_zeroi_f64 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
                         "cvt_zeroi_s32_f64\t$dest,$src",
-                        [(set (i32 GPR32:$dest), (fp_to_sint (int_HSAIL_trunc_f64 GPR64:$src)))]>;
+                        [(set (i32 GPR32:$dest), (fp_to_sint (ftrunc GPR64:$src)))]>;
 
 def hsail_cvt_s32_neari_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
                         "cvt_ftz_neari_s32_f32\t$dest,$src",
@@ -136,7 +142,7 @@ def hsail_cvt_s32_upi_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
 
 def hsail_cvt_s32_zeroi_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
                         "cvt_ftz_zeroi_s32_f32\t$dest,$src",
-                        [(set (i32 GPR32:$dest), (fp_to_sint  (int_HSAIL_trunc_f32 GPR32:$src)))]>;
+                        [(set (i32 GPR32:$dest), (fp_to_sint (ftrunc GPR32:$src)))]>;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -309,13 +315,6 @@ def cvt_zero_f32_f64  : ConvertIntr<int_HSAIL_cvt_f32_zero_f64,
                         "cvt_ftz_zero_f32_f64", GPR64, f64, GPR32, f32>;
 
 ////////////////////////////////////////////////////////////////////////////////
-// rounding operations
-
-// truncate
-defm trunc  : UnaryIntrF32<int_HSAIL_trunc_f32, "trunc_ftz_f32">;
-defm trunc  : UnaryIntrF64<int_HSAIL_trunc_f64, "trunc_f64">;
-
-////////////////////////////////////////////////////////////////////////////////
 // bitconvert
 
 def bitcvt_f32_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
@@ -344,3 +343,6 @@ def : UnaryFTZPat<floor, f64, BrigTypeX.F64, ffloor>;
 
 def : UnaryFTZPat<ceil, f32, BrigTypeX.F32, fceil, 1>;
 def : UnaryFTZPat<ceil, f64, BrigTypeX.F64, fceil>;
+
+def : UnaryFTZPat<trunc_hsail, f32, BrigTypeX.F32, ftrunc, 1>;
+def : UnaryFTZPat<trunc_hsail, f64, BrigTypeX.F64, ftrunc>;

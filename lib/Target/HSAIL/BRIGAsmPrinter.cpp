@@ -702,6 +702,8 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     return BrigEmitModInst(*II, Brig::BRIG_OPCODE_FLOOR);
   case HSAIL::ceil:
     return BrigEmitModInst(*II, Brig::BRIG_OPCODE_CEIL);
+  case HSAIL::trunc_hsail:
+    return BrigEmitModInst(*II, Brig::BRIG_OPCODE_TRUNC);
   case HSAIL::ret:
     return brigantine.addInst<HSAIL_ASM::InstBasic>(Brig::BRIG_OPCODE_RET,Brig::BRIG_TYPE_NONE);
 
