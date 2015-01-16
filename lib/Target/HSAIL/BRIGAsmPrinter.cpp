@@ -697,25 +697,11 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     return cvt;
   }
   case HSAIL::rint:
-  case HSAIL::floor: {
-    unsigned BrigOp = (II->getOpcode() == HSAIL::rint) ?
-      Brig::BRIG_OPCODE_RINT :
-      Brig::BRIG_OPCODE_FLOOR;
-
-    HSAIL_ASM::InstMod inst = brigantine.addInst<HSAIL_ASM::InstMod>(BrigOp);
-    inst.type() = TII->getNamedOperand(*II, HSAIL::OpName::TypeLength)->getImm();
-    inst.modifier().ftz()
-      = TII->getNamedOperand(*II, HSAIL::OpName::ftz)->getImm();
-
-    BrigEmitOperand(II,
-                    HSAIL::getNamedOperandIdx(II->getOpcode(), HSAIL::OpName::dest),
-                    inst);
-
-    BrigEmitOperand(II,
-                    HSAIL::getNamedOperandIdx(II->getOpcode(), HSAIL::OpName::src),
-                    inst);
-    return inst;
-  }
+    return BrigEmitModInst(*II, Brig::BRIG_OPCODE_RINT);
+  case HSAIL::floor:
+    return BrigEmitModInst(*II, Brig::BRIG_OPCODE_FLOOR);
+  case HSAIL::ceil:
+    return BrigEmitModInst(*II, Brig::BRIG_OPCODE_CEIL);
   case HSAIL::ret:
     return brigantine.addInst<HSAIL_ASM::InstBasic>(Brig::BRIG_OPCODE_RET,Brig::BRIG_TYPE_NONE);
 
@@ -1814,6 +1800,22 @@ void BRIGAsmPrinter::BrigEmitImageInst(const MachineInstr *MI,
     BrigEmitVecOperand(MI, opCnt, 3, inst); opCnt += 3;
     break;
   }
+}
+
+HSAIL_ASM::InstMod BRIGAsmPrinter::BrigEmitModInst(const MachineInstr &MI,
+                                                   unsigned BrigOpc) {
+  HSAIL_ASM::InstMod inst = brigantine.addInst<HSAIL_ASM::InstMod>(BrigOpc);
+  unsigned Opc = MI.getOpcode();
+
+  inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
+  inst.modifier().ftz()
+    = TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
+
+  BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
+                  inst);
+  BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src),
+                  inst);
+  return inst;
 }
 
 bool BRIGAsmPrinter::usesGCNAtomicCounter(void) {
