@@ -696,7 +696,23 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
                     cvt);
     return cvt;
   }
+  case HSAIL::rint: {
+    HSAIL_ASM::InstMod rint
+      = brigantine.addInst<HSAIL_ASM::InstMod>(Brig::BRIG_OPCODE_RINT);
+    rint.type() = TII->getNamedOperand(*II, HSAIL::OpName::TypeLength)->getImm();
+    rint.modifier().ftz()
+      = TII->getNamedOperand(*II, HSAIL::OpName::ftz)->getImm();
 
+    BrigEmitOperand(II,
+                    HSAIL::getNamedOperandIdx(II->getOpcode(), HSAIL::OpName::dest),
+                    rint);
+
+    BrigEmitOperand(II,
+                    HSAIL::getNamedOperandIdx(II->getOpcode(), HSAIL::OpName::src),
+                    rint);
+
+    return rint;
+  }
   case HSAIL::ret:
     return brigantine.addInst<HSAIL_ASM::InstBasic>(Brig::BRIG_OPCODE_RET,Brig::BRIG_TYPE_NONE);
 

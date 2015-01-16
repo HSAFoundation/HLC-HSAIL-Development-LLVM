@@ -92,6 +92,9 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   addRegisterClass(MVT::f64, &HSAIL::GPR64RegClass);
   addRegisterClass(MVT::i1,  &HSAIL::CRRegClass);
 
+  setOperationAction(ISD::FRINT, MVT::f32, Legal);
+  setOperationAction(ISD::FRINT, MVT::f64, Legal);
+
   setOperationAction(ISD::BSWAP, MVT::i16, Expand);
   setOperationAction(ISD::BSWAP, MVT::i32, Custom);
   setOperationAction(ISD::BSWAP, MVT::i64, Expand);
@@ -133,6 +136,7 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   setOperationAction(ISD::Constant, MVT::i32, Legal);
   setOperationAction(ISD::Constant, MVT::i64, Legal);
 
+  setOperationAction(ISD::INTRINSIC_WO_CHAIN, MVT::Other, Custom);
   setOperationAction(ISD::INTRINSIC_W_CHAIN, MVT::Other, Custom);
 
   setLoadExtAction(ISD::EXTLOAD, MVT::f32, Expand);
@@ -1088,6 +1092,7 @@ HSAILTargetLowering::LowerOperation(SDValue Op,
 {
   switch (Op.getOpcode()) {
     LOWER(GlobalAddress);
+    LOWER(INTRINSIC_WO_CHAIN);
     LOWER(INTRINSIC_W_CHAIN);
     LOWER(ROTL);
     LOWER(ROTR);
@@ -1251,6 +1256,45 @@ static bool isRdimage(unsigned IntNo) {
   }
 
   return false;
+}
+
+SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
+                                                     SelectionDAG &DAG) const {
+  unsigned IntrID = cast<ConstantSDNode>(Op->getOperand(0))->getZExtValue();
+  SDLoc SL(Op);
+
+  // FIXME: This is for compatability with old, custom HSAIL intrinsics. These
+  // should be removed once users are updated to use the LLVM intrinsics.
+  switch (IntrID) {
+  case HSAILIntrinsic::HSAIL_rnd_f32:
+    return DAG.getNode(ISD::FRINT, SL, MVT::f32, Op.getOperand(1));
+
+  case HSAILIntrinsic::HSAIL_rnd_f64:
+    return DAG.getNode(ISD::FRINT, SL, MVT::f64, Op.getOperand(1));
+
+#if 0
+  case HSAILIntrinsic::HSAIL_floor_f32:
+    return DAG.getNode(ISD::FFLOOR, SL, MVT::f32, Op.getOperand(1));
+
+  case HSAILIntrinsic::HSAIL_floor_f64:
+    return DAG.getNode(ISD::FFLOOR, SL, MVT::f64, Op.getOperand(1));
+
+  case HSAILIntrinsic::HSAIL_ceil_f32:
+    return DAG.getNode(ISD::FCEIL, SL, MVT::f32, Op.getOperand(1));
+
+  case HSAILIntrinsic::HSAIL_ceil_f64:
+    return DAG.getNode(ISD::FCEIL, SL, MVT::f64, Op.getOperand(1));
+
+  case HSAILIntrinsic::HSAIL_trunc_f32:
+    return DAG.getNode(ISD::FTRUNC, SL, MVT::f32, Op.getOperand(1));
+
+  case HSAILIntrinsic::HSAIL_trunc_f64:
+    return DAG.getNode(ISD::FTRUNC, SL, MVT::f64, Op.getOperand(1));
+#endif
+
+  default:
+    return Op;
+  }
 }
 
 SDValue
