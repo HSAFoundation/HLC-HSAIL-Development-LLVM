@@ -94,6 +94,8 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
 
   setOperationAction(ISD::FRINT, MVT::f32, Legal);
   setOperationAction(ISD::FRINT, MVT::f64, Legal);
+  setOperationAction(ISD::FFLOOR, MVT::f32, Legal);
+  setOperationAction(ISD::FFLOOR, MVT::f64, Legal);
 
   setOperationAction(ISD::BSWAP, MVT::i16, Expand);
   setOperationAction(ISD::BSWAP, MVT::i32, Custom);
@@ -1272,13 +1274,13 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
   case HSAILIntrinsic::HSAIL_rnd_f64:
     return DAG.getNode(ISD::FRINT, SL, MVT::f64, Op.getOperand(1));
 
-#if 0
   case HSAILIntrinsic::HSAIL_floor_f32:
     return DAG.getNode(ISD::FFLOOR, SL, MVT::f32, Op.getOperand(1));
 
   case HSAILIntrinsic::HSAIL_floor_f64:
     return DAG.getNode(ISD::FFLOOR, SL, MVT::f64, Op.getOperand(1));
 
+#if 0
   case HSAILIntrinsic::HSAIL_ceil_f32:
     return DAG.getNode(ISD::FCEIL, SL, MVT::f32, Op.getOperand(1));
 

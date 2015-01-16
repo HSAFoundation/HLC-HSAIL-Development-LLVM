@@ -27,13 +27,18 @@ class CvtPat<ValueType destvt,
   (cvt ftz, roundmode, destbt, srcbt, $src)
 >;
 
-
-def rint : HSAILInst<
+class UnaryFTZInst<string opName> : HSAILInst<
     (outs unknown:$dest),
     (ins ftz:$ftz, BrigTypeX:$TypeLength, unknown:$src),
-    "rint$ftz$TypeLength\t$dest, $src",
+    opName#"$ftz$TypeLength\t$dest, $src",
    []
-> {
+>;
+
+def rint : UnaryFTZInst<"rint"> {
+  let isConv = 1;
+}
+
+def floor : UnaryFTZInst<"floor"> {
   let isConv = 1;
 }
 
@@ -103,7 +108,7 @@ def hsail_cvt_s32_neari_f64 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
 
 def hsail_cvt_s32_downi_f64 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
                         "cvt_downi_s32_f64\t$dest,$src",
-                        [(set (i32 GPR32:$dest), (fp_to_sint  (int_HSAIL_floor_f64 GPR64:$src)))]>;
+                        [(set (i32 GPR32:$dest), (fp_to_sint (ffloor f64:$src)))]>;
 
 def hsail_cvt_s32_upi_f64 : HSAILInst<(outs GPR32:$dest), (ins GPR64:$src),
                         "cvt_upi_s32_f64\t$dest,$src",
@@ -119,7 +124,7 @@ def hsail_cvt_s32_neari_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
 
 def hsail_cvt_s32_downi_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
                         "cvt_ftz_downi_s32_f32\t$dest,$src",
-                        [(set (i32 GPR32:$dest), (fp_to_sint  (int_HSAIL_floor_f32 GPR32:$src)))]>;
+                        [(set (i32 GPR32:$dest), (fp_to_sint (ffloor f32:$src)))]>;
 
 def hsail_cvt_s32_upi_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
                         "cvt_ftz_upi_s32_f32\t$dest,$src",
@@ -305,10 +310,6 @@ def cvt_zero_f32_f64  : ConvertIntr<int_HSAIL_cvt_f32_zero_f64,
 defm ceil   : UnaryIntrF32<int_HSAIL_ceil_f32, "ceil_ftz_f32">;
 defm ceil   : UnaryIntrF64<int_HSAIL_ceil_f64, "ceil_f64">;
 
-// floor
-defm floor  : UnaryIntrF32<int_HSAIL_floor_f32, "floor_ftz_f32">;
-defm floor  : UnaryIntrF64<int_HSAIL_floor_f64, "floor_f64">;
-
 // truncate
 defm trunc  : UnaryIntrF32<int_HSAIL_trunc_f32, "trunc_ftz_f32">;
 defm trunc  : UnaryIntrF64<int_HSAIL_trunc_f64, "trunc_f64">;
@@ -336,3 +337,7 @@ def bitcvt_u64_f64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
 
 def : UnaryFTZPat<rint, f32, BrigTypeX.F32, frint, 1>;
 def : UnaryFTZPat<rint, f64, BrigTypeX.F64, frint>;
+
+
+def : UnaryFTZPat<floor, f32, BrigTypeX.F32, ffloor, 1>;
+def : UnaryFTZPat<floor, f64, BrigTypeX.F64, ffloor>;
