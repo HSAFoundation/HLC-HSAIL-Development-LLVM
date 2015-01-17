@@ -184,102 +184,164 @@ def int_HSAIL_memfence : GCCBuiltin<"__hsail_memfence">,
 
 // Instrinsics for explicit conversions
 // float to int
-def int_HSAIL_cvt_s32_neari_f32 : GCCBuiltin<"__cvt_s32_rte_f32">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_s32_downi_f32 : GCCBuiltin<"__cvt_s32_rtn_f32">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_s32_upi_f32   : GCCBuiltin<"__cvt_s32_rtp_f32">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_s32_zeroi_f32 : GCCBuiltin<"__cvt_s32_rtz_f32">, UnaryIntFloatIntrNoMem;
+def int_HSAIL_cvt_s32_neari_f32 : GCCBuiltin<"__cvt_s32_rte_f32">,
+  Intrinsic<[llvm_i32_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_s32_downi_f32 : GCCBuiltin<"__cvt_s32_rtn_f32">,
+  Intrinsic<[llvm_i32_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_s32_upi_f32   : GCCBuiltin<"__cvt_s32_rtp_f32">,
+  Intrinsic<[llvm_i32_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_s32_zeroi_f32 : GCCBuiltin<"__cvt_s32_rtz_f32">,
+  Intrinsic<[llvm_i32_ty], [llvm_float_ty], [IntrNoMem]>;
 
 // float to unsigned int
-def int_HSAIL_cvt_u32_neari_f32 : GCCBuiltin<"__cvt_u32_rte_f32">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_u32_downi_f32 : GCCBuiltin<"__cvt_u32_rtn_f32">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_u32_upi_f32   : GCCBuiltin<"__cvt_u32_rtp_f32">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_u32_zeroi_f32 : GCCBuiltin<"__cvt_u32_rtz_f32">, UnaryIntFloatIntrNoMem;
+def int_HSAIL_cvt_u32_neari_f32 : GCCBuiltin<"__cvt_u32_rte_f32">,
+  Intrinsic<[llvm_i32_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_u32_downi_f32 : GCCBuiltin<"__cvt_u32_rtn_f32">,
+  Intrinsic<[llvm_i32_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_u32_upi_f32   : GCCBuiltin<"__cvt_u32_rtp_f32">,
+  Intrinsic<[llvm_i32_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_u32_zeroi_f32 : GCCBuiltin<"__cvt_u32_rtz_f32">,
+  Intrinsic<[llvm_i32_ty], [llvm_float_ty], [IntrNoMem]>;
 
 // float to long
-def int_HSAIL_cvt_s64_neari_f32 : GCCBuiltin<"__cvt_s64_rte_f32">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_s64_downi_f32 : GCCBuiltin<"__cvt_s64_rtn_f32">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_s64_upi_f32   : GCCBuiltin<"__cvt_s64_rtp_f32">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_s64_zeroi_f32 : GCCBuiltin<"__cvt_s64_rtz_f32">, UnaryIntFloatIntrNoMem;
+def int_HSAIL_cvt_s64_neari_f32 : GCCBuiltin<"__cvt_s64_rte_f32">,
+  Intrinsic<[llvm_i64_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_s64_downi_f32 : GCCBuiltin<"__cvt_s64_rtn_f32">,
+  Intrinsic<[llvm_i64_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_s64_upi_f32   : GCCBuiltin<"__cvt_s64_rtp_f32">,
+  Intrinsic<[llvm_i64_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_s64_zeroi_f32 : GCCBuiltin<"__cvt_s64_rtz_f32">,
+  Intrinsic<[llvm_i64_ty], [llvm_float_ty], [IntrNoMem]>;
 
 // float to unsigned long
-def int_HSAIL_cvt_u64_neari_f32 : GCCBuiltin<"__cvt_u64_rte_f32">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_u64_downi_f32 : GCCBuiltin<"__cvt_u64_rtn_f32">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_u64_upi_f32   : GCCBuiltin<"__cvt_u64_rtp_f32">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_u64_zeroi_f32 : GCCBuiltin<"__cvt_u64_rtz_f32">, UnaryIntFloatIntrNoMem;
+def int_HSAIL_cvt_u64_neari_f32 : GCCBuiltin<"__cvt_u64_rte_f32">,
+  Intrinsic<[llvm_i64_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_u64_downi_f32 : GCCBuiltin<"__cvt_u64_rtn_f32">,
+  Intrinsic<[llvm_i64_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_u64_upi_f32   : GCCBuiltin<"__cvt_u64_rtp_f32">,
+  Intrinsic<[llvm_i64_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_u64_zeroi_f32 : GCCBuiltin<"__cvt_u64_rtz_f32">,
+  Intrinsic<[llvm_i64_ty], [llvm_float_ty], [IntrNoMem]>;
 
 // double to int
-def int_HSAIL_cvt_s32_neari_f64 : GCCBuiltin<"__cvt_s32_rte_f64">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_s32_downi_f64 : GCCBuiltin<"__cvt_s32_rtn_f64">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_s32_upi_f64   : GCCBuiltin<"__cvt_s32_rtp_f64">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_s32_zeroi_f64 : GCCBuiltin<"__cvt_s32_rtz_f64">, UnaryIntFloatIntrNoMem;
+def int_HSAIL_cvt_s32_neari_f64 : GCCBuiltin<"__cvt_s32_rte_f64">,
+  Intrinsic<[llvm_i32_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_s32_downi_f64 : GCCBuiltin<"__cvt_s32_rtn_f64">,
+  Intrinsic<[llvm_i32_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_s32_upi_f64   : GCCBuiltin<"__cvt_s32_rtp_f64">,
+  Intrinsic<[llvm_i32_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_s32_zeroi_f64 : GCCBuiltin<"__cvt_s32_rtz_f64">,
+  Intrinsic<[llvm_i32_ty], [llvm_double_ty], [IntrNoMem]>;
 
 // double to unsigned int
-def int_HSAIL_cvt_u32_neari_f64 : GCCBuiltin<"__cvt_u32_rte_f64">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_u32_downi_f64 : GCCBuiltin<"__cvt_u32_rtn_f64">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_u32_upi_f64   : GCCBuiltin<"__cvt_u32_rtp_f64">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_u32_zeroi_f64 : GCCBuiltin<"__cvt_u32_rtz_f64">, UnaryIntFloatIntrNoMem;
+def int_HSAIL_cvt_u32_neari_f64 : GCCBuiltin<"__cvt_u32_rte_f64">,
+  Intrinsic<[llvm_i32_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_u32_downi_f64 : GCCBuiltin<"__cvt_u32_rtn_f64">,
+  Intrinsic<[llvm_i32_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_u32_upi_f64   : GCCBuiltin<"__cvt_u32_rtp_f64">,
+  Intrinsic<[llvm_i32_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_u32_zeroi_f64 : GCCBuiltin<"__cvt_u32_rtz_f64">,
+  Intrinsic<[llvm_i32_ty], [llvm_double_ty], [IntrNoMem]>;
 
 // double to long
-def int_HSAIL_cvt_s64_neari_f64 : GCCBuiltin<"__cvt_s64_rte_f64">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_s64_downi_f64 : GCCBuiltin<"__cvt_s64_rtn_f64">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_s64_upi_f64   : GCCBuiltin<"__cvt_s64_rtp_f64">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_s64_zeroi_f64 : GCCBuiltin<"__cvt_s64_rtz_f64">, UnaryIntFloatIntrNoMem;
+def int_HSAIL_cvt_s64_neari_f64 : GCCBuiltin<"__cvt_s64_rte_f64">,
+  Intrinsic<[llvm_i64_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_s64_downi_f64 : GCCBuiltin<"__cvt_s64_rtn_f64">,
+  Intrinsic<[llvm_i64_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_s64_upi_f64   : GCCBuiltin<"__cvt_s64_rtp_f64">,
+  Intrinsic<[llvm_i64_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_s64_zeroi_f64 : GCCBuiltin<"__cvt_s64_rtz_f64">,
+  Intrinsic<[llvm_i64_ty], [llvm_double_ty], [IntrNoMem]>;
 
 // double to unsigned long
-def int_HSAIL_cvt_u64_neari_f64 : GCCBuiltin<"__cvt_u64_rte_f64">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_u64_downi_f64 : GCCBuiltin<"__cvt_u64_rtn_f64">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_u64_upi_f64   : GCCBuiltin<"__cvt_u64_rtp_f64">, UnaryIntFloatIntrNoMem;
-def int_HSAIL_cvt_u64_zeroi_f64 : GCCBuiltin<"__cvt_u64_rtz_f64">, UnaryIntFloatIntrNoMem;
+def int_HSAIL_cvt_u64_neari_f64 : GCCBuiltin<"__cvt_u64_rte_f64">,
+  Intrinsic<[llvm_i64_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_u64_downi_f64 : GCCBuiltin<"__cvt_u64_rtn_f64">,
+  Intrinsic<[llvm_i64_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_u64_upi_f64   : GCCBuiltin<"__cvt_u64_rtp_f64">,
+  Intrinsic<[llvm_i64_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_u64_zeroi_f64 : GCCBuiltin<"__cvt_u64_rtz_f64">,
+  Intrinsic<[llvm_i64_ty], [llvm_double_ty], [IntrNoMem]>;
 
 // int to float
-def int_HSAIL_cvt_f32_down_i32  : GCCBuiltin<"__cvt_f32_rtn_i32">, UnaryFloatIntIntrNoMem;
-def int_HSAIL_cvt_f32_up_i32    : GCCBuiltin<"__cvt_f32_rtp_i32">, UnaryFloatIntIntrNoMem;
-def int_HSAIL_cvt_f32_zero_i32  : GCCBuiltin<"__cvt_f32_rtz_i32">, UnaryFloatIntIntrNoMem;
+def int_HSAIL_cvt_f32_down_i32  : GCCBuiltin<"__cvt_f32_rtn_i32">,
+  Intrinsic<[llvm_float_ty], [llvm_i32_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f32_up_i32    : GCCBuiltin<"__cvt_f32_rtp_i32">,
+  Intrinsic<[llvm_float_ty], [llvm_i32_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f32_zero_i32  : GCCBuiltin<"__cvt_f32_rtz_i32">,
+  Intrinsic<[llvm_float_ty], [llvm_i32_ty], [IntrNoMem]>;
 
 // unsigned int to float
-def int_HSAIL_cvt_f32_down_u32  : GCCBuiltin<"__cvt_f32_rtn_u32">, UnaryFloatIntIntrNoMem;
-def int_HSAIL_cvt_f32_up_u32    : GCCBuiltin<"__cvt_f32_rtp_u32">, UnaryFloatIntIntrNoMem;
-def int_HSAIL_cvt_f32_zero_u32  : GCCBuiltin<"__cvt_f32_rtz_u32">, UnaryFloatIntIntrNoMem;
+def int_HSAIL_cvt_f32_down_u32  : GCCBuiltin<"__cvt_f32_rtn_u32">,
+  Intrinsic<[llvm_float_ty], [llvm_i32_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f32_up_u32    : GCCBuiltin<"__cvt_f32_rtp_u32">,
+  Intrinsic<[llvm_float_ty], [llvm_i32_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f32_zero_u32  : GCCBuiltin<"__cvt_f32_rtz_u32">,
+  Intrinsic<[llvm_float_ty], [llvm_i32_ty], [IntrNoMem]>;
 
 // long to float
-def int_HSAIL_cvt_f32_down_i64 : GCCBuiltin<"__cvt_f32_rtn_i64">, UnaryFloatIntIntrNoMem;
-def int_HSAIL_cvt_f32_up_i64   : GCCBuiltin<"__cvt_f32_rtp_i64">, UnaryFloatIntIntrNoMem;
-def int_HSAIL_cvt_f32_zero_i64 : GCCBuiltin<"__cvt_f32_rtz_i64">, UnaryFloatIntIntrNoMem;
+def int_HSAIL_cvt_f32_down_i64 : GCCBuiltin<"__cvt_f32_rtn_i64">,
+  Intrinsic<[llvm_float_ty], [llvm_i64_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f32_up_i64   : GCCBuiltin<"__cvt_f32_rtp_i64">,
+  Intrinsic<[llvm_float_ty], [llvm_i64_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f32_zero_i64 : GCCBuiltin<"__cvt_f32_rtz_i64">,
+  Intrinsic<[llvm_float_ty], [llvm_i64_ty], [IntrNoMem]>;
 
 // unsigned long to float
-def int_HSAIL_cvt_f32_down_u64 : GCCBuiltin<"__cvt_f32_rtn_u64">, UnaryFloatIntIntrNoMem;
-def int_HSAIL_cvt_f32_up_u64   : GCCBuiltin<"__cvt_f32_rtp_u64">, UnaryFloatIntIntrNoMem;
-def int_HSAIL_cvt_f32_zero_u64 : GCCBuiltin<"__cvt_f32_rtz_u64">, UnaryFloatIntIntrNoMem;
+def int_HSAIL_cvt_f32_down_u64 : GCCBuiltin<"__cvt_f32_rtn_u64">,
+  Intrinsic<[llvm_float_ty], [llvm_i64_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f32_up_u64   : GCCBuiltin<"__cvt_f32_rtp_u64">,
+  Intrinsic<[llvm_float_ty], [llvm_i64_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f32_zero_u64 : GCCBuiltin<"__cvt_f32_rtz_u64">,
+  Intrinsic<[llvm_float_ty], [llvm_i64_ty], [IntrNoMem]>;
 
 // long to double
-def int_HSAIL_cvt_f64_down_i64 : GCCBuiltin<"__cvt_f64_rtn_i64">, UnaryFloatIntIntrNoMem;
-def int_HSAIL_cvt_f64_up_i64   : GCCBuiltin<"__cvt_f64_rtp_i64">, UnaryFloatIntIntrNoMem;
-def int_HSAIL_cvt_f64_zero_i64 : GCCBuiltin<"__cvt_f64_rtz_i64">, UnaryFloatIntIntrNoMem;
+def int_HSAIL_cvt_f64_down_i64 : GCCBuiltin<"__cvt_f64_rtn_i64">,
+  Intrinsic<[llvm_double_ty], [llvm_i64_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f64_up_i64 : GCCBuiltin<"__cvt_f64_rtp_i64">,
+  Intrinsic<[llvm_double_ty], [llvm_i64_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f64_zero_i64 : GCCBuiltin<"__cvt_f64_rtz_i64">,
+  Intrinsic<[llvm_double_ty], [llvm_i64_ty], [IntrNoMem]>;
 
 // unsigned long to double
-def int_HSAIL_cvt_f64_down_u64 : GCCBuiltin<"__cvt_f64_rtn_u64">, UnaryFloatIntIntrNoMem;
-def int_HSAIL_cvt_f64_up_u64   : GCCBuiltin<"__cvt_f64_rtp_u64">, UnaryFloatIntIntrNoMem;
-def int_HSAIL_cvt_f64_zero_u64 : GCCBuiltin<"__cvt_f64_rtz_u64">, UnaryFloatIntIntrNoMem;
+def int_HSAIL_cvt_f64_down_u64 : GCCBuiltin<"__cvt_f64_rtn_u64">,
+  Intrinsic<[llvm_double_ty], [llvm_i64_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f64_up_u64 : GCCBuiltin<"__cvt_f64_rtp_u64">,
+  Intrinsic<[llvm_double_ty], [llvm_i64_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f64_zero_u64 : GCCBuiltin<"__cvt_f64_rtz_u64">,
+  Intrinsic<[llvm_double_ty], [llvm_i64_ty], [IntrNoMem]>;
 
 // double to float
-def int_HSAIL_cvt_f32_down_f64 : GCCBuiltin<"__cvt_f32_rtn_f64">, UnaryFloatIntrNoMem;
-def int_HSAIL_cvt_f32_up_f64   : GCCBuiltin<"__cvt_f32_rtp_f64">, UnaryFloatIntrNoMem;
-def int_HSAIL_cvt_f32_zero_f64 : GCCBuiltin<"__cvt_f32_rtz_f64">, UnaryFloatIntrNoMem;
+def int_HSAIL_cvt_f32_down_f64 : GCCBuiltin<"__cvt_f32_rtn_f64">,
+  Intrinsic<[llvm_float_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f32_up_f64   : GCCBuiltin<"__cvt_f32_rtp_f64">,
+  Intrinsic<[llvm_float_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_f32_zero_f64 : GCCBuiltin<"__cvt_f32_rtz_f64">,
+  Intrinsic<[llvm_float_ty], [llvm_double_ty], [IntrNoMem]>;
 
 // half to float
-def int_HSAIL_cvt_f32_f16 : GCCBuiltin<"__cvt_f32_f16">, UnaryFloatIntIntrNoMem;
+def int_HSAIL_cvt_f32_f16 : GCCBuiltin<"__cvt_f32_f16">,
+  Intrinsic<[llvm_float_ty], [llvm_i32_ty], [IntrNoMem]>;
 
 // float to half
-def int_HSAIL_cvt_zero_f16_f32  : GCCBuiltin<"__cvt_f16_rtz_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_cvt_near_f16_f32  : GCCBuiltin<"__cvt_f16_rte_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_cvt_down_f16_f32  : GCCBuiltin<"__cvt_f16_rtn_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_cvt_up_f16_f32    : GCCBuiltin<"__cvt_f16_rtp_f32">, UnaryFloatIntrNoMem;
+def int_HSAIL_cvt_zero_f16_f32 : GCCBuiltin<"__cvt_f16_rtz_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_near_f16_f32  : GCCBuiltin<"__cvt_f16_rte_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_down_f16_f32 : GCCBuiltin<"__cvt_f16_rtn_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_up_f16_f32 : GCCBuiltin<"__cvt_f16_rtp_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]>;
 
-//double to half
-def int_HSAIL_cvt_zero_f16_f64  : GCCBuiltin<"__cvt_f16_rtz_f64">, UnaryFloatIntrNoMem;
-def int_HSAIL_cvt_near_f16_f64  : GCCBuiltin<"__cvt_f16_rte_f64">, UnaryFloatIntrNoMem;
-def int_HSAIL_cvt_down_f16_f64  : GCCBuiltin<"__cvt_f16_rtn_f64">, UnaryFloatIntrNoMem;
-def int_HSAIL_cvt_up_f16_f64    : GCCBuiltin<"__cvt_f16_rtp_f64">, UnaryFloatIntrNoMem;
+// double to half
+def int_HSAIL_cvt_zero_f16_f64 : GCCBuiltin<"__cvt_f16_rtz_f64">,
+  Intrinsic<[llvm_float_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_near_f16_f64 : GCCBuiltin<"__cvt_f16_rte_f64">,
+  Intrinsic<[llvm_float_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_down_f16_f64 : GCCBuiltin<"__cvt_f16_rtn_f64">,
+  Intrinsic<[llvm_float_ty], [llvm_double_ty], [IntrNoMem]>;
+def int_HSAIL_cvt_up_f16_f64 : GCCBuiltin<"__cvt_f16_rtp_f64">,
+  Intrinsic<[llvm_float_ty], [llvm_double_ty], [IntrNoMem]>;
 
 // Misc intrinsics used by OpenCL built-ins
 def int_HSAIL_bitsel_u32 : GCCBuiltin<"__hsail_bitselect_u32">,
