@@ -127,179 +127,238 @@ def : CvtSInt32RoundPat<f32, BrigTypeX.F32, ffloor, BrigRound.INTEGER_MINUS_INFI
 def : CvtSInt32RoundPat<f32, BrigTypeX.F32, fceil, BrigRound.INTEGER_PLUS_INFINITY, 1>;
 def : CvtSInt32RoundPat<f32, BrigTypeX.F32, ftrunc, BrigRound.INTEGER_ZERO, 1>;
 
-// 1bit => 32bit
-let isConv = 1 in {
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // support for explicit conversions
-class ConvertIntr<Intrinsic intr, string asm,
-                  RegisterClass FromRc, ValueType FromTy,
-                  RegisterClass ToRc, ValueType ToTy> : HSAILInst<
-  (outs ToRc:$dest), (ins FromRc:$src),
-  !strconcat(asm, "\t $dest, $src"),
-  [(set (ToTy ToRc:$dest), (intr (FromTy FromRc:$src)))]>;
 
 // float to int
-def cvt_s32_neari_f32 : ConvertIntr<int_HSAIL_cvt_s32_neari_f32,
-                        "cvt_ftz_neari_s32_f32", GPR32, f32, GPR32, i32>;
-def cvt_s32_downi_f32 : ConvertIntr<int_HSAIL_cvt_s32_downi_f32,
-                        "cvt_ftz_downi_s32_f32", GPR32, f32, GPR32, i32>;
-def cvt_s32_upi_f32   : ConvertIntr<int_HSAIL_cvt_s32_upi_f32,
-                        "cvt_ftz_upi_s32_f32", GPR32, f32, GPR32, i32>;
-def cvt_s32_zeroi_f32 : ConvertIntr<int_HSAIL_cvt_s32_zeroi_f32,
-                        "cvt_ftz_zeroi_s32_f32", GPR32, f32, GPR32, i32>;
+def : CvtPat<i32, f32, BrigTypeX.S32, BrigTypeX.F32,
+             int_HSAIL_cvt_s32_neari_f32,
+             BrigRound.INTEGER_NEAR_EVEN, 1>;
+def : CvtPat<i32, f32, BrigTypeX.S32, BrigTypeX.F32,
+             int_HSAIL_cvt_s32_downi_f32,
+             BrigRound.INTEGER_MINUS_INFINITY, 1>;
+def : CvtPat<i32, f32, BrigTypeX.S32, BrigTypeX.F32,
+             int_HSAIL_cvt_s32_upi_f32,
+             BrigRound.INTEGER_PLUS_INFINITY, 1>;
+def : CvtPat<i32, f32, BrigTypeX.S32, BrigTypeX.F32,
+             int_HSAIL_cvt_s32_zeroi_f32,
+             BrigRound.INTEGER_ZERO, 1>;
 
-// float to unsigned int
-def cvt_u32_neari_f32 : ConvertIntr<int_HSAIL_cvt_u32_neari_f32,
-                        "cvt_ftz_neari_u32_f32", GPR32, f32, GPR32, i32>;
-def cvt_u32_downi_f32 : ConvertIntr<int_HSAIL_cvt_u32_downi_f32,
-                        "cvt_ftz_downi_u32_f32", GPR32, f32, GPR32, i32>;
-def cvt_u32_upi_f32   : ConvertIntr<int_HSAIL_cvt_u32_upi_f32,
-                        "cvt_ftz_upi_u32_f32", GPR32, f32, GPR32, i32>;
-def cvt_u32_zeroi_f32 : ConvertIntr<int_HSAIL_cvt_u32_zeroi_f32,
-                        "cvt_ftz_zeroi_u32_f32", GPR32, f32, GPR32, i32>;
+// float to uint
+def : CvtPat<i32, f32, BrigTypeX.U32, BrigTypeX.F32,
+             int_HSAIL_cvt_u32_neari_f32,
+             BrigRound.INTEGER_NEAR_EVEN, 1>;
+def : CvtPat<i32, f32, BrigTypeX.U32, BrigTypeX.F32,
+             int_HSAIL_cvt_u32_downi_f32,
+             BrigRound.INTEGER_MINUS_INFINITY, 1>;
+def : CvtPat<i32, f32, BrigTypeX.U32, BrigTypeX.F32,
+             int_HSAIL_cvt_u32_upi_f32,
+             BrigRound.INTEGER_PLUS_INFINITY, 1>;
+def : CvtPat<i32, f32, BrigTypeX.U32, BrigTypeX.F32,
+             int_HSAIL_cvt_u32_zeroi_f32,
+             BrigRound.INTEGER_ZERO, 1>;
 
- // float to long
-def cvt_s64_neari_f32 : ConvertIntr<int_HSAIL_cvt_s64_neari_f32,
-                        "cvt_ftz_neari_s64_f32", GPR32, f32, GPR64, i64>;
-def cvt_s64_downi_f32 : ConvertIntr<int_HSAIL_cvt_s64_downi_f32,
-                        "cvt_ftz_downi_s64_f32", GPR32, f32, GPR64, i64>;
-def cvt_s64_upi_f32   : ConvertIntr<int_HSAIL_cvt_s64_upi_f32,
-                        "cvt_ftz_upi_s64_f32", GPR32, f32, GPR64, i64>;
-def cvt_s64_zeroi_f32 : ConvertIntr<int_HSAIL_cvt_s64_zeroi_f32,
-                        "cvt_ftz_zeroi_s64_f32", GPR32, f32, GPR64, i64>;
 
-// float to unsigned long
-def cvt_u64_neari_f32 : ConvertIntr<int_HSAIL_cvt_u64_neari_f32,
-                        "cvt_ftz_neari_u64_f32", GPR32, f32, GPR64, i64>;
-def cvt_u64_downi_f32 : ConvertIntr<int_HSAIL_cvt_u64_downi_f32,
-                        "cvt_ftz_downi_u64_f32", GPR32, f32, GPR64, i64>;
-def cvt_u64_upi_f32   : ConvertIntr<int_HSAIL_cvt_u64_upi_f32,
-                        "cvt_ftz_upi_u64_f32", GPR32, f32, GPR64, i64>;
-def cvt_u64_zeroi_f32 : ConvertIntr<int_HSAIL_cvt_u64_zeroi_f32,
-                        "cvt_ftz_zeroi_u64_f32", GPR32, f32, GPR64, i64>;
+// float to long
+def : CvtPat<i64, f32, BrigTypeX.S64, BrigTypeX.F32,
+             int_HSAIL_cvt_s64_neari_f32,
+             BrigRound.INTEGER_NEAR_EVEN, 1>;
+def : CvtPat<i64, f32, BrigTypeX.S64, BrigTypeX.F32,
+             int_HSAIL_cvt_s64_downi_f32,
+             BrigRound.INTEGER_MINUS_INFINITY, 1>;
+def : CvtPat<i64, f32, BrigTypeX.S64, BrigTypeX.F32,
+             int_HSAIL_cvt_s64_upi_f32,
+             BrigRound.INTEGER_PLUS_INFINITY, 1>;
+def : CvtPat<i64, f32, BrigTypeX.S64, BrigTypeX.F32,
+             int_HSAIL_cvt_s64_zeroi_f32,
+             BrigRound.INTEGER_ZERO, 1>;
+
+// float to ulong
+def : CvtPat<i64, f32, BrigTypeX.U64, BrigTypeX.F32,
+             int_HSAIL_cvt_u64_neari_f32,
+             BrigRound.INTEGER_NEAR_EVEN, 1>;
+def : CvtPat<i64, f32, BrigTypeX.U64, BrigTypeX.F32,
+             int_HSAIL_cvt_u64_downi_f32,
+             BrigRound.INTEGER_MINUS_INFINITY, 1>;
+def : CvtPat<i64, f32, BrigTypeX.U64, BrigTypeX.F32,
+             int_HSAIL_cvt_u64_upi_f32,
+             BrigRound.INTEGER_PLUS_INFINITY, 1>;
+def : CvtPat<i64, f32, BrigTypeX.U64, BrigTypeX.F32,
+             int_HSAIL_cvt_u64_zeroi_f32,
+             BrigRound.INTEGER_ZERO, 1>;
+
+
 
 // double to int
-def cvt_s32_neari_f64 : ConvertIntr<int_HSAIL_cvt_s32_neari_f64,
-                        "cvt_neari_s32_f64", GPR64, f64, GPR32, i32>;
-def cvt_s32_downi_f64 : ConvertIntr<int_HSAIL_cvt_s32_downi_f64,
-                        "cvt_downi_s32_f64", GPR64, f64, GPR32, i32>;
-def cvt_s32_upi_f64   : ConvertIntr<int_HSAIL_cvt_s32_upi_f64,
-                        "cvt_upi_s32_f64", GPR64, f64, GPR32, i32>;
-def cvt_s32_zeroi_f64 : ConvertIntr<int_HSAIL_cvt_s32_zeroi_f64,
-                        "cvt_zeroi_s32_f64", GPR64, f64, GPR32, i32>;
+def : CvtPat<i32, f64, BrigTypeX.S32, BrigTypeX.F64,
+             int_HSAIL_cvt_s32_neari_f64,
+             BrigRound.INTEGER_NEAR_EVEN>;
+def : CvtPat<i32, f64, BrigTypeX.S32, BrigTypeX.F64,
+             int_HSAIL_cvt_s32_downi_f64,
+             BrigRound.INTEGER_MINUS_INFINITY>;
+def : CvtPat<i32, f64, BrigTypeX.S32, BrigTypeX.F64,
+             int_HSAIL_cvt_s32_upi_f64,
+             BrigRound.INTEGER_PLUS_INFINITY>;
+def : CvtPat<i32, f64, BrigTypeX.S32, BrigTypeX.F64,
+             int_HSAIL_cvt_s32_zeroi_f64,
+             BrigRound.INTEGER_ZERO>;
 
-// double to unsigned int
-def cvt_u32_neari_f64 : ConvertIntr<int_HSAIL_cvt_u32_neari_f64,
-                        "cvt_neari_u32_f64", GPR64, f64, GPR32, i32>;
-def cvt_u32_downi_f64 : ConvertIntr<int_HSAIL_cvt_u32_downi_f64,
-                        "cvt_downi_u32_f64", GPR64, f64, GPR32, i32>;
-def cvt_u32_upi_f64   : ConvertIntr<int_HSAIL_cvt_u32_upi_f64,
-                        "cvt_upi_u32_f64", GPR64, f64, GPR32, i32>;
-def cvt_u32_zeroi_f64 : ConvertIntr<int_HSAIL_cvt_u32_zeroi_f64,
-                        "cvt_zeroi_u32_f64", GPR64, f64, GPR32, i32>;
+// double to uint
+def : CvtPat<i32, f64, BrigTypeX.U32, BrigTypeX.F64,
+             int_HSAIL_cvt_u32_neari_f64,
+             BrigRound.INTEGER_NEAR_EVEN>;
+def : CvtPat<i32, f64, BrigTypeX.U32, BrigTypeX.F64,
+             int_HSAIL_cvt_u32_downi_f64,
+             BrigRound.INTEGER_MINUS_INFINITY>;
+def : CvtPat<i32, f64, BrigTypeX.U32, BrigTypeX.F64,
+             int_HSAIL_cvt_u32_upi_f64,
+             BrigRound.INTEGER_PLUS_INFINITY>;
+def : CvtPat<i32, f64, BrigTypeX.U32, BrigTypeX.F64,
+             int_HSAIL_cvt_u32_zeroi_f64,
+             BrigRound.INTEGER_ZERO>;
+
 
 // double to long
-def cvt_s64_neari_f64 : ConvertIntr<int_HSAIL_cvt_s64_neari_f64,
-                        "cvt_neari_s64_f64", GPR64, f64, GPR64, i64>;
-def cvt_s64_downi_f64 : ConvertIntr<int_HSAIL_cvt_s64_downi_f64,
-                        "cvt_downi_s64_f64", GPR64, f64, GPR64, i64>;
-def cvt_s64_upi_f64   : ConvertIntr<int_HSAIL_cvt_s64_upi_f64,
-                        "cvt_upi_s64_f64", GPR64, f64, GPR64, i64>;
-def cvt_s64_zeroi_f64 : ConvertIntr<int_HSAIL_cvt_s64_zeroi_f64,
-                        "cvt_zeroi_s64_f64", GPR64, f64, GPR64, i64>;
+def : CvtPat<i64, f64, BrigTypeX.S64, BrigTypeX.F64,
+             int_HSAIL_cvt_s64_neari_f64,
+             BrigRound.INTEGER_NEAR_EVEN>;
+def : CvtPat<i64, f64, BrigTypeX.S64, BrigTypeX.F64,
+             int_HSAIL_cvt_s64_downi_f64,
+             BrigRound.INTEGER_MINUS_INFINITY>;
+def : CvtPat<i64, f64, BrigTypeX.S64, BrigTypeX.F64,
+             int_HSAIL_cvt_s64_upi_f64,
+             BrigRound.INTEGER_PLUS_INFINITY>;
+def : CvtPat<i64, f64, BrigTypeX.S64, BrigTypeX.F64,
+             int_HSAIL_cvt_s64_zeroi_f64,
+             BrigRound.INTEGER_ZERO>;
 
-// double to unsigned long
-def cvt_u64_neari_f64 : ConvertIntr<int_HSAIL_cvt_u64_neari_f64,
-                        "cvt_neari_u64_f64", GPR64, f64, GPR64, i64>;
-def cvt_u64_downi_f64 : ConvertIntr<int_HSAIL_cvt_u64_downi_f64,
-                        "cvt_downi_u64_f64", GPR64, f64, GPR64, i64>;
-def cvt_u64_upi_f64   : ConvertIntr<int_HSAIL_cvt_u64_upi_f64,
-                        "cvt_upi_u64_f64", GPR64, f64, GPR64, i64>;
-def cvt_u64_zeroi_f64 : ConvertIntr<int_HSAIL_cvt_u64_zeroi_f64,
-                        "cvt_zeroi_u64_f64", GPR64, f64, GPR64, i64>;
+// double to ulong
+def : CvtPat<i64, f64, BrigTypeX.U64, BrigTypeX.F64,
+             int_HSAIL_cvt_u64_neari_f64,
+             BrigRound.INTEGER_NEAR_EVEN>;
+def : CvtPat<i64, f64, BrigTypeX.U64, BrigTypeX.F64,
+             int_HSAIL_cvt_u64_downi_f64,
+             BrigRound.INTEGER_MINUS_INFINITY>;
+def : CvtPat<i64, f64, BrigTypeX.U64, BrigTypeX.F64,
+             int_HSAIL_cvt_u64_upi_f64,
+             BrigRound.INTEGER_PLUS_INFINITY>;
+def : CvtPat<i64, f64, BrigTypeX.U64, BrigTypeX.F64,
+             int_HSAIL_cvt_u64_zeroi_f64,
+             BrigRound.INTEGER_ZERO>;
 
 // half to float
-def cvt_f32_f16       : ConvertIntr<int_HSAIL_cvt_f32_f16,
-                        "cvt_f32_f16", GPR32, i32, GPR32, f32>;
+def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.F16,
+             int_HSAIL_cvt_f32_f16
+>;
 
 // float to half
-def cvt_zero_f16_f32  : ConvertIntr<int_HSAIL_cvt_zero_f16_f32,
-                        "cvt_zero_f16_f32", GPR32, f32, GPR32, f32>;
-def cvt_near_f16_f32  : ConvertIntr<int_HSAIL_cvt_near_f16_f32,
-                        "cvt_near_f16_f32", GPR32, f32, GPR32, f32>;
-def cvt_down_f16_f32  : ConvertIntr<int_HSAIL_cvt_down_f16_f32,
-                        "cvt_down_f16_f32", GPR32, f32, GPR32, f32>;
-def cvt_up_f16_f32    : ConvertIntr<int_HSAIL_cvt_up_f16_f32,
-                        "cvt_up_f16_f32", GPR32, f32, GPR32, f32>;
+def : CvtPat<f32, f32, BrigTypeX.F16, BrigTypeX.F32,
+  int_HSAIL_cvt_zero_f16_f32, BrigRound.FLOAT_ZERO
+>;
+def : CvtPat<f32, f32, BrigTypeX.F16, BrigTypeX.F32,
+  int_HSAIL_cvt_near_f16_f32, BrigRound.FLOAT_NEAR_EVEN
+>;
+def : CvtPat<f32, f32, BrigTypeX.F16, BrigTypeX.F32,
+  int_HSAIL_cvt_down_f16_f32, BrigRound.FLOAT_MINUS_INFINITY
+>;
+def : CvtPat<f32, f32, BrigTypeX.F16, BrigTypeX.F32,
+  int_HSAIL_cvt_up_f16_f32, BrigRound.FLOAT_PLUS_INFINITY
+>;
 
 // double to half
-def cvt_zero_f16_f64  : ConvertIntr<int_HSAIL_cvt_zero_f16_f64,
-                        "cvt_zero_f16_f64", GPR64, f64, GPR32, f32>;
-def cvt_near_f16_f64  : ConvertIntr<int_HSAIL_cvt_near_f16_f64,
-                        "cvt_near_f16_f64", GPR64, f64, GPR32, f32>;
-def cvt_down_f16_f64  : ConvertIntr<int_HSAIL_cvt_down_f16_f64,
-                        "cvt_down_f16_f64", GPR64, f64, GPR32, f32>;
-def cvt_up_f16_f64    : ConvertIntr<int_HSAIL_cvt_up_f16_f64,
-                        "cvt_up_f16_f64", GPR64, f64, GPR32, f32>;
+def : CvtPat<f32, f64, BrigTypeX.F16, BrigTypeX.F64,
+  int_HSAIL_cvt_zero_f16_f64, BrigRound.FLOAT_ZERO
+>;
+def : CvtPat<f32, f64, BrigTypeX.F16, BrigTypeX.F64,
+  int_HSAIL_cvt_near_f16_f64, BrigRound.FLOAT_NEAR_EVEN
+>;
+def : CvtPat<f32, f64, BrigTypeX.F16, BrigTypeX.F64,
+  int_HSAIL_cvt_down_f16_f64, BrigRound.FLOAT_MINUS_INFINITY
+>;
+def : CvtPat<f32, f64, BrigTypeX.F16, BrigTypeX.F64,
+  int_HSAIL_cvt_up_f16_f64, BrigRound.FLOAT_PLUS_INFINITY
+>;
 
 // int to float
-def cvt_down_f32_s32  : ConvertIntr<int_HSAIL_cvt_f32_down_i32,
-                        "cvt_down_f32_s32", GPR32, i32, GPR32, f32>;
-def cvt_up_f32_s32    : ConvertIntr<int_HSAIL_cvt_f32_up_i32,
-                        "cvt_up_f32_s32", GPR32, i32, GPR32, f32>;
-def cvt_zero_f32_s32  : ConvertIntr<int_HSAIL_cvt_f32_zero_i32,
-                        "cvt_zero_f32_s32", GPR32, i32, GPR32, f32>;
+def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.S32,
+  int_HSAIL_cvt_f32_down_i32, BrigRound.FLOAT_MINUS_INFINITY
+>;
+def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.S32,
+  int_HSAIL_cvt_f32_up_i32, BrigRound.FLOAT_PLUS_INFINITY
+>;
+def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.S32,
+  int_HSAIL_cvt_f32_zero_i32, BrigRound.FLOAT_ZERO
+>;
 
-// unsigned int to float
-def cvt_down_f32_u32  : ConvertIntr<int_HSAIL_cvt_f32_down_u32,
-                        "cvt_down_f32_u32", GPR32, i32, GPR32, f32>;
-def cvt_up_f32_u32    : ConvertIntr<int_HSAIL_cvt_f32_up_u32,
-                        "cvt_up_f32_u32", GPR32, i32, GPR32, f32>;
-def cvt_zero_f32_u32  : ConvertIntr<int_HSAIL_cvt_f32_zero_u32,
-                        "cvt_zero_f32_u32", GPR32, i32, GPR32, f32>;
+// uint to float
+def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.U32,
+  int_HSAIL_cvt_f32_down_u32, BrigRound.FLOAT_MINUS_INFINITY
+>;
+def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.U32,
+  int_HSAIL_cvt_f32_up_u32, BrigRound.FLOAT_PLUS_INFINITY
+>;
+def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.U32,
+  int_HSAIL_cvt_f32_zero_u32, BrigRound.FLOAT_ZERO
+>;
 
 // long to float
-def cvt_down_f32_s64  : ConvertIntr<int_HSAIL_cvt_f32_down_i64,
-                        "cvt_down_f32_s64", GPR64, i64, GPR32, f32>;
-def cvt_up_f32_s64    : ConvertIntr<int_HSAIL_cvt_f32_up_i64,
-                        "cvt_up_f32_s64", GPR64, i64, GPR32, f32>;
-def cvt_zero_f32_s64  : ConvertIntr<int_HSAIL_cvt_f32_zero_i64,
-                        "cvt_zero_f32_s64", GPR64, i64, GPR32, f32>;
+def : CvtPat<f32, i64, BrigTypeX.F32, BrigTypeX.S64,
+  int_HSAIL_cvt_f32_down_i64, BrigRound.FLOAT_MINUS_INFINITY
+>;
+def : CvtPat<f32, i64, BrigTypeX.F32, BrigTypeX.S64,
+  int_HSAIL_cvt_f32_up_i64, BrigRound.FLOAT_PLUS_INFINITY
+>;
+def : CvtPat<f32, i64, BrigTypeX.F32, BrigTypeX.S64,
+  int_HSAIL_cvt_f32_zero_i64, BrigRound.FLOAT_ZERO
+>;
 
-// unsigned long to float
-def cvt_down_f32_u64  : ConvertIntr<int_HSAIL_cvt_f32_down_u64,
-                        "cvt_down_f32_u64", GPR64, i64, GPR32, f32>;
-def cvt_up_f32_u64    : ConvertIntr<int_HSAIL_cvt_f32_up_u64,
-                        "cvt_up_f32_u64", GPR64, i64, GPR32, f32>;
-def cvt_zero_f32_u64  : ConvertIntr<int_HSAIL_cvt_f32_zero_u64,
-                        "cvt_zero_f32_u64", GPR64, i64, GPR32, f32>;
+// ulong to float
+def : CvtPat<f32, i64, BrigTypeX.F32, BrigTypeX.U64,
+  int_HSAIL_cvt_f32_down_u64, BrigRound.FLOAT_MINUS_INFINITY
+>;
+def : CvtPat<f32, i64, BrigTypeX.F32, BrigTypeX.U64,
+  int_HSAIL_cvt_f32_up_u64, BrigRound.FLOAT_PLUS_INFINITY
+>;
+def : CvtPat<f32, i64, BrigTypeX.F32, BrigTypeX.U64,
+  int_HSAIL_cvt_f32_zero_u64, BrigRound.FLOAT_ZERO
+>;
 
 // long to double
-def cvt_down_f64_s64  : ConvertIntr<int_HSAIL_cvt_f64_down_i64,
-                        "cvt_down_f64_s64", GPR64, i64, GPR64, f64>;
-def cvt_up_f64_s64    : ConvertIntr<int_HSAIL_cvt_f64_up_i64,
-                        "cvt_up_f64_s64", GPR64, i64, GPR64, f64>;
-def cvt_zero_f64_s64  : ConvertIntr<int_HSAIL_cvt_f64_zero_i64,
-                        "cvt_zero_f64_s64", GPR64, i64, GPR64, f64>;
+def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.S64,
+  int_HSAIL_cvt_f64_down_i64, BrigRound.FLOAT_MINUS_INFINITY
+>;
+def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.S64,
+  int_HSAIL_cvt_f64_up_i64, BrigRound.FLOAT_PLUS_INFINITY
+>;
+def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.S64,
+  int_HSAIL_cvt_f64_zero_i64, BrigRound.FLOAT_ZERO
+>;
 
-// unsigned long to double
-def cvt_down_f64_u64  : ConvertIntr<int_HSAIL_cvt_f64_down_u64,
-                        "cvt_down_f64_u64", GPR64, i64, GPR64, f64>;
-def cvt_up_f64_u64    : ConvertIntr<int_HSAIL_cvt_f64_up_u64,
-                        "cvt_up_f64_u64", GPR64, i64, GPR64, f64>;
-def cvt_zero_f64_u64  : ConvertIntr<int_HSAIL_cvt_f64_zero_u64,
-                        "cvt_zero_f64_u64", GPR64, i64, GPR64, f64>;
+// ulong to double
+def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.U64,
+  int_HSAIL_cvt_f64_down_u64, BrigRound.FLOAT_MINUS_INFINITY
+>;
+def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.U64,
+  int_HSAIL_cvt_f64_up_u64, BrigRound.FLOAT_PLUS_INFINITY
+>;
+def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.U64,
+  int_HSAIL_cvt_f64_zero_u64, BrigRound.FLOAT_ZERO
+>;
 
 // double to float
-def cvt_down_f32_f64  : ConvertIntr<int_HSAIL_cvt_f32_down_f64,
-                        "cvt_ftz_down_f32_f64", GPR64, f64, GPR32, f32>;
-def cvt_up_f32_f64    : ConvertIntr<int_HSAIL_cvt_f32_up_f64,
-                        "cvt_ftz_up_f32_f64", GPR64, f64, GPR32, f32>;
-def cvt_zero_f32_f64  : ConvertIntr<int_HSAIL_cvt_f32_zero_f64,
-                        "cvt_ftz_zero_f32_f64", GPR64, f64, GPR32, f32>;
+def : CvtPat<f32, f64, BrigTypeX.F32, BrigTypeX.F64,
+  int_HSAIL_cvt_f32_down_f64, BrigRound.FLOAT_MINUS_INFINITY, 1
+>;
+def : CvtPat<f32, f64, BrigTypeX.F32, BrigTypeX.F64,
+  int_HSAIL_cvt_f32_up_f64, BrigRound.FLOAT_PLUS_INFINITY, 1
+>;
+def : CvtPat<f32, f64, BrigTypeX.F32, BrigTypeX.F64,
+  int_HSAIL_cvt_f32_zero_f64, BrigRound.FLOAT_ZERO, 1
+>;
 
+// 1bit => 32bit
+let isConv = 1 in {
 ////////////////////////////////////////////////////////////////////////////////
 // bitconvert
 
