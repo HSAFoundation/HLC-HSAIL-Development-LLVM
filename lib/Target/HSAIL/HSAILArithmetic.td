@@ -230,7 +230,11 @@ defm cmov_b64_f : cmov<"cmov_b64", f64, f64imm, fpimm, GPR64>;
 def mov : HSAILInst<(outs unknown:$dest),
   (ins unknown:$src0, BrigTypeX:$TypeLength),
   "mov$TypeLength\t$dest, $src0", []
->;
+> {
+  let isAsCheapAsAMove = 1;
+  let isReMaterializable = 1;
+  let hasSideEffects = 0; // FIXME: This should be set on base class.
+}
 
 
 // FIXME: Omitting 'node' in the output pattern results in invalid

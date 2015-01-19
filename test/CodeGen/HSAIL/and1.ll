@@ -97,15 +97,15 @@ define void @v_and_i64(i64 addrspace(1)* %out, i64 addrspace(1)* %aptr, i64 addr
 }
 
 ; FUNC-LABEL: {{^}}prog function &v_and_i64_br
-; HSAIL: cmp_eq_b1_s32  {{\$c[0-9]+}}, {{\$s[0-9]+}}, 0;
-; HSAIL-NEXT: cbr_b1 {{\$c[0-9]+}}, @BB10_2;
-; HSAIL: mov_b64 {{\$d[0-9]+}}, 0;
-; HSAIL: br @BB10_3;
-; HSAIL: {{^}}@BB10_2:
+; HSAIL-DAG: mov_b64 {{\$d[0-9]+}}, 0;
+; HSAIL-DAG: cmp_ne_b1_s32  {{\$c[0-9]+}}, {{\$s[0-9]+}}, 0;
+; HSAIL: cbr_b1 {{\$c[0-9]+}}, @BB10_2;
+
 ; HSAIL: ld_global_align(8)_u64 {{\$d[0-9]+}}, [{{\$s[0-9]+}}];
 ; HSAIL: ld_global_align(8)_u64 {{\$d[0-9]+}}, [{{\$s[0-9]+}}];
 ; HSAIL: and_b64 {{\$d[0-9]+}}, {{\$d[0-9]+}}, {{\$d[0-9]+}};
-; HSAIL: {{^}}@BB10_3:
+
+; HSAIL: {{^}}@BB10_2:
 ; HSAIL: st_global_align(8)_u64 {{\$d[0-9]+}}, [{{\$s[0-9]+}}];
 ; HSAIL: ret;
 define void @v_and_i64_br(i64 addrspace(1)* %out, i64 addrspace(1)* %aptr, i64 addrspace(1)* %bptr, i32 %cond) {
