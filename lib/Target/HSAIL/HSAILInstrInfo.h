@@ -799,15 +799,6 @@ public:
                        int Value,
                        const MachineRegisterInfo *MRI) const;
 
-  /// Return true if the instruction is a register to register move and leave the
-  /// source and dest operands in the passed parameters.
-  bool
-  isMoveInstr(const MachineInstr &MI,
-                              unsigned int &SrcReg,
-                              unsigned int &DstReg,
-                              unsigned int &SrcSubIdx,
-                              unsigned int &DstSubIdx) const;
-
   bool
   copyRegToReg(MachineBasicBlock &MBB,
                MachineBasicBlock::iterator I,

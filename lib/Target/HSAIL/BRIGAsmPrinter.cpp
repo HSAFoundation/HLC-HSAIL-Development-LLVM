@@ -670,7 +670,17 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     }
     return inst;
   }
+  case HSAIL::mov: {
+    HSAIL_ASM::InstBasic inst
+      = brigantine.addInst<HSAIL_ASM::InstBasic>(Brig::BRIG_OPCODE_MOV);
 
+    inst.type()
+      = TII->getNamedOperand(*II, HSAIL::OpName::TypeLength)->getImm();
+
+    BrigEmitOperand(II, 0, inst);
+    BrigEmitOperand(II, 1, inst);
+    return inst;
+  }
   case HSAIL::cvt: {
     HSAIL_ASM::InstCvt cvt
       = brigantine.addInst<HSAIL_ASM::InstCvt>(Brig::BRIG_OPCODE_CVT);

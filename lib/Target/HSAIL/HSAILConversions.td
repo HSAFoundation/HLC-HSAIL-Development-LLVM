@@ -357,29 +357,6 @@ def : CvtPat<f32, f64, BrigTypeX.F32, BrigTypeX.F64,
   int_HSAIL_cvt_f32_zero_f64, BrigRound.FLOAT_ZERO, 1
 >;
 
-// 1bit => 32bit
-let isConv = 1 in {
-////////////////////////////////////////////////////////////////////////////////
-// bitconvert
-
-def bitcvt_f32_u32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
-                     "mov_b32\t$dest, $src",
-                     [(set (i32 GPR32:$dest), (bitconvert (f32 GPR32:$src)))]>;
-
-def bitcvt_f64_u64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
-                     "mov_b64\t$dest, $src",
-                     [(set (i64 GPR64:$dest), (bitconvert (f64 GPR64:$src)))]>;
-
-def bitcvt_u32_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
-                     "mov_b32\t$dest, $src",
-                     [(set (f32 GPR32:$dest), (bitconvert (i32 GPR32:$src)))]>;
-
-def bitcvt_u64_f64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
-                     "mov_b64\t$dest, $src",
-                     [(set (f64 GPR64:$dest), (bitconvert (i64 GPR64:$src)))]>;
-}
-
-
 def : UnaryFTZPat<rint, f32, BrigTypeX.F32, frint, 1>;
 def : UnaryFTZPat<rint, f64, BrigTypeX.F64, frint>;
 

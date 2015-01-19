@@ -225,39 +225,38 @@ defm cmov_b64_f : cmov<"cmov_b64", f64, f64imm, fpimm, GPR64>;
 ////////////////////////////////////////////////////////////////////////////////
 // mov
 
-let isMoveImm = 1 in {
-def mov_i_b1 : HSAILInst<(outs CR:$dest), (ins i1imm:$src),
-               "mov_b1\t$dest, $src",
-               [(set (i1 CR:$dest), (i1 imm:$src))]>;
+// FIXME: Spec calls TypeLength moveType for some reason, but that
+// would be painful to deal with.
+def mov : HSAILInst<(outs unknown:$dest),
+  (ins unknown:$src0, BrigTypeX:$TypeLength),
+  "mov$TypeLength\t$dest, $src0", []
+>;
 
-def mov_i_f32 : HSAILInst<(outs GPR32:$dest), (ins f32imm:$src),
-                "mov_b32\t$dest, $src",
-                [(set GPR32:$dest, (f32 fpimm:$src))]>;
 
-def mov_i_f64 : HSAILInst<(outs GPR64:$dest), (ins f64imm:$src),
-                "mov_b64\t$dest, $src",
-                [(set GPR64:$dest, (f64 fpimm:$src))]>;
+// FIXME: Omitting 'node' in the output pattern results in invalid
+// output with a mov using and defining the same register.
+class MovImmPat<SDPatternOperator node, ValueType vt, int bt> : Pat <
+  (vt node:$src0),
+  (mov node:$src0, bt)
+>;
 
-def mov_i_u32 : HSAILInst<(outs GPR32:$dest), (ins i32imm:$src),
-                "mov_b32\t$dest, $src",
-                [(set GPR32:$dest, (i32 imm:$src))]>;
+class BitconvertMovPat<ValueType destvt, ValueType srcvt, int bt> : Pat <
+  (destvt (bitconvert srcvt:$src0)),
+  (mov $src0, bt)
+>;
 
-def mov_i_u64 : HSAILInst<(outs GPR64:$dest), (ins i64imm:$src),
-                "mov_b64\t$dest, $src",
-                [(set GPR64:$dest, (i64 imm:$src))]>;
-}
 
-def mov_r_b1 : HSAILInst<(outs CR:$dest), (ins CR:$src),
-            "mov_b1\t$dest, $src",
-            []>;
+def : MovImmPat<imm, i1, BrigTypeX.B1>;
+def : MovImmPat<imm, i32, BrigTypeX.B32>;
+def : MovImmPat<imm, i64, BrigTypeX.B64>;
+def : MovImmPat<fpimm, f32, BrigTypeX.F32>;
+def : MovImmPat<fpimm, f64, BrigTypeX.F64>;
 
-def mov_r_b32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
-              "mov_b32\t$dest, $src",
-              []>;
+def : BitconvertMovPat<f64, i64, BrigTypeX.B64>;
+def : BitconvertMovPat<i64, f64, BrigTypeX.B64>;
+def : BitconvertMovPat<f32, i32, BrigTypeX.B32>;
+def : BitconvertMovPat<i32, f32, BrigTypeX.B32>;
 
-def mov_r_b64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src),
-              "mov_b64\t$dest, $src",
-              []>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // misc operations

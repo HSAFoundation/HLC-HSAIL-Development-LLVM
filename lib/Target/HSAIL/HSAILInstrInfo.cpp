@@ -44,24 +44,22 @@ enum CondReverseFlag {
   COND_IRREVERSIBLE,      // For branches that can not be reversed
   COND_REVERSE_POSITIVE,  // Don't need invertion
   COND_REVERSE_NEGATIVE,  // Need invertion
-  COND_REVERSE_DEPENDANT  // Indicates that this condition has exactly 
+  COND_REVERSE_DEPENDANT  // Indicates that this condition has exactly
                           // one depency which should be reverted with it
 };
 
-static unsigned int getMoveInstFromID(unsigned int ID) {
+static unsigned getBrigTypeFromRCID(unsigned ID) {
   switch (ID) {
-  default:
-    assert(0 && "Passed in ID does not match any move instructions.");
   case HSAIL::CRRegClassID:
-    return HSAIL::mov_r_b1;
+    return Brig::BRIG_TYPE_B1;
   case HSAIL::GPR32RegClassID:
-    return HSAIL::mov_r_b32;
+    return Brig::BRIG_TYPE_B32;
   case HSAIL::GPR64RegClassID:
-    return HSAIL::mov_r_b64;
-  };
-  return -1;
+    return Brig::BRIG_TYPE_B64;
+  default:
+    llvm_unreachable("unhandled register class ID");
+  }
 }
-
 HSAILInstrInfo::HSAILInstrInfo(HSAILSubtarget &st)
   : HSAILGenInstrInfo(),
 //  : TargetInstrInfoImpl(HSAILInsts, array_lengthof(HSAILInsts)),
@@ -73,27 +71,6 @@ HSAILInstrInfo::HSAILInstrInfo(HSAILSubtarget &st)
 HSAILInstrInfo::~HSAILInstrInfo()
 {
   delete RS;
-}
-
-/// Return true if the instruction is a register to register move and leave the
-/// source and dest operands in the passed parameters.
-bool
-HSAILInstrInfo::isMoveInstr(const MachineInstr &MI,
-                            unsigned int &SrcReg,
-                            unsigned int &DstReg,
-                            unsigned int &SrcSubIdx,
-                            unsigned int &DstSubIdx) const
-{
-  return (
-         MI.getOpcode() == HSAIL::mov_r_b1
-      || MI.getOpcode() == HSAIL::mov_r_b32
-      || MI.getOpcode() == HSAIL::mov_r_b64
-      || MI.getOpcode() == HSAIL::mov_i_b1
-      || MI.getOpcode() == HSAIL::mov_i_u32
-      || MI.getOpcode() == HSAIL::mov_i_u64
-      || MI.getOpcode() == HSAIL::mov_i_f64
-      || MI.getOpcode() == HSAIL::mov_i_f32
-      );
 }
 
 bool
@@ -724,21 +701,17 @@ HSAILInstrInfo::RemoveBranch(MachineBasicBlock &MBB) const
   return Count;
 }
 
-bool
-HSAILInstrInfo::copyRegToReg(MachineBasicBlock &MBB,
-                             MachineBasicBlock::iterator I,
-                             unsigned DestReg, unsigned SrcReg,
-                             const TargetRegisterClass *DestRC,
-                             const TargetRegisterClass *SrcRC,
-                             DebugLoc DL) const
-{
-  int movInst = getMoveInstFromID(DestRC->getID());
+bool HSAILInstrInfo::copyRegToReg(MachineBasicBlock &MBB,
+                                  MachineBasicBlock::iterator I,
+                                  unsigned DestReg, unsigned SrcReg,
+                                  const TargetRegisterClass *DestRC,
+                                  const TargetRegisterClass *SrcRC,
+                                  DebugLoc DL) const {
+  assert(DestRC == SrcRC);
 
-  if (DestRC != SrcRC) {
-    assert(!"When do we hit this?");
-  } else {
-    BuildMI(MBB, I, DL, get(movInst), DestReg).addReg(SrcReg);
-  }
+  BuildMI(MBB, I, DL, get(HSAIL::mov), DestReg)
+    .addReg(SrcReg)
+    .addImm(getBrigTypeFromRCID(DestRC->getID()));
   return true;
 }
 
@@ -1019,22 +992,24 @@ void HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
                                  unsigned DestReg,
                                  unsigned SrcReg,
                                  bool KillSrc) const {
-  if (HSAIL::GPR64RegClass.contains(DestReg, SrcReg)) {
-    BuildMI(MBB, MI, DL, get(HSAIL::mov_r_b64), DestReg)
-      .addReg(SrcReg, getKillRegState(KillSrc));
-      return;
-  }
-
   if (HSAIL::GPR32RegClass.contains(DestReg, SrcReg)) {
-    BuildMI(MBB, MI, DL, get(HSAIL::mov_r_b32), DestReg)
-      .addReg(SrcReg, getKillRegState(KillSrc));
+    BuildMI(MBB, MI, DL, get(HSAIL::mov), DestReg)
+      .addReg(SrcReg, getKillRegState(KillSrc))
+      .addImm(Brig::BRIG_TYPE_B32);
       return;
   }
 
+  if (HSAIL::GPR64RegClass.contains(DestReg, SrcReg)) {
+    BuildMI(MBB, MI, DL, get(HSAIL::mov), DestReg)
+      .addReg(SrcReg, getKillRegState(KillSrc))
+      .addImm(Brig::BRIG_TYPE_B64);
+      return;
+  }
 
   if (HSAIL::CRRegClass.contains(DestReg, SrcReg)) {
-    BuildMI(MBB, MI, DL, get(HSAIL::mov_r_b1), DestReg)
-      .addReg(SrcReg, getKillRegState(KillSrc));
+    BuildMI(MBB, MI, DL, get(HSAIL::mov), DestReg)
+      .addReg(SrcReg, getKillRegState(KillSrc))
+      .addImm(Brig::BRIG_TYPE_B1);
       return;
   }
 
