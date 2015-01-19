@@ -130,7 +130,6 @@ public:
 
   bool runOnMachineFunction(MachineFunction &F);
   bool isMacroFunc(const MachineInstr *MI);
-  bool isIdentityCopy(const MachineInstr *MI) const;
   void EmitSamplerDefs();
 
   // Vector that keeps offsets and sizes (in bits) of all the BRIG variables

@@ -450,22 +450,6 @@ bool BRIGAsmPrinter::isMacroFunc(const MachineInstr *MI) {
   return false;
 }
 
-bool BRIGAsmPrinter::isIdentityCopy(const MachineInstr *MI) const {
-  if (MI->getNumOperands() != 2) {
-    return false;
-  }
-  switch(MI->getOpcode()) {
-    // Bitconvert is a copy instruction
-  case HSAIL::bitcvt_f32_u32:
-  case HSAIL::bitcvt_u32_f32:
-  case HSAIL::bitcvt_f64_u64:
-  case HSAIL::bitcvt_u64_f64:
-    return MI->getOperand(0).getReg() == MI->getOperand(1).getReg();
-  default:
-    return false;
-  }
-}
-
 void BRIGAsmPrinter::emitMacroFunc(const MachineInstr *MI, raw_ostream &O) {
   llvm::StringRef nameRef;
   nameRef = MI->getOperand(0).getGlobal()->getName();
@@ -561,10 +545,6 @@ void BRIGAsmPrinter::EmitInstruction(const MachineInstr *II) {
 HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   // autoCodeEmitter will emit required amount of bytes in corresponding MCSection
   autoCodeEmitter ace(&OutStreamer, &brigantine);
-
-  if (isIdentityCopy(II)) {
-    return HSAIL_ASM::Inst();
-  }
 
   if (HSAIL::isAtomicOp(II)) {
     bool hasRet = HSAIL::isRetAtomicOp(II);
