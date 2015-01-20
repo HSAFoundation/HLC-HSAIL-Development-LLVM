@@ -12,7 +12,7 @@ multiclass UnaryIntrF32<Intrinsic intr, string asm> {
       [(set (f32 GPR32:$dest), (intr (f32 fpimm:$src)))]>;
 }
 
-multiclass BinaryIntrF32<Intrinsic intr, string asm> {
+multiclass BinaryIntrF32<SDPatternOperator intr, string asm> {
   def _f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src0, GPR32:$src1),
       !strconcat(asm, "\t $dest, $src0, $src1"),
       [(set (f32 GPR32:$dest), (intr (f32 GPR32:$src0), (f32 GPR32:$src1)))]>;
@@ -68,7 +68,7 @@ multiclass UnaryIntrF64<Intrinsic intr, string asm> {
       [(set (f64 GPR64:$dest), (intr (f64 fpimm:$src)))]>;
 }
 
-multiclass BinaryIntrF64<Intrinsic intr, string asm> {
+multiclass BinaryIntrF64<SDPatternOperator intr, string asm> {
   def _f64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src0, GPR64:$src1),
       !strconcat(asm, "\t $dest, $src0, $src1"),
       [(set (f64 GPR64:$dest), (intr (f64 GPR64:$src0), (f64 GPR64:$src1)))]>;

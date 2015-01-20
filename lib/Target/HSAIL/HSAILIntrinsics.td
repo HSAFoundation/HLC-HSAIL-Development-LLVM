@@ -109,8 +109,11 @@ def int_HSAIL_get_num_groups : GCCBuiltin<"__hsail_get_num_groups">,
                               Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrNoMem]>;
 
 // Intrinsics for OpenCL math built-ins (OCL 1.2 6.12.2)
-def int_HSAIL_copysign_f32 : GCCBuiltin<"__hsail_copysign_f32">, BinaryFloatIntrNoMem;
-def int_HSAIL_copysign_f64 : GCCBuiltin<"__hsail_copysign_f64">, BinaryFloatIntrNoMem;
+def int_HSAIL_copysign_f32 : GCCBuiltin<"__hsail_copysign_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_copysign_f64 : GCCBuiltin<"__hsail_copysign_f64">,
+  Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_double_ty], [IntrNoMem]>;
+
 def int_HSAIL_ncos_f32 : GCCBuiltin<"__hsail_ncos_f32">, UnaryFloatIntrNoMem;
 def int_HSAIL_nexp2_f32 : GCCBuiltin<"__hsail_nexp2_f32">, UnaryFloatIntrNoMem;
 def int_HSAIL_abs_f32 : GCCBuiltin<"__hsail_abs_f32">, UnaryFloatIntrNoMem;

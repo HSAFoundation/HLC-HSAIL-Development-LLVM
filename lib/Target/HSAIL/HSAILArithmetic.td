@@ -54,8 +54,8 @@ defm abs : UnaryIntrS64<int_HSAIL_abs_s64, "abs_s64">;
 defm fabs : UnaryIntrF32<int_HSAIL_abs_f32, "abs_f32">;
 defm fabs : UnaryIntrF64<int_HSAIL_abs_f64, "abs_f64">;
 
-defm copysign : BinaryIntrF32<int_HSAIL_copysign_f32, "copysign_f32">;
-defm copysign : BinaryIntrF64<int_HSAIL_copysign_f64, "copysign_f64">;
+defm copysign : BinaryIntrF32<fcopysign, "copysign_f32">;
+defm copysign : BinaryIntrF64<fcopysign, "copysign_f64">;
 
 defm fma : TernaryIntrF32<int_HSAIL_fma_f32, "fma_ftz_f32">;
 defm fma : TernaryIntrF64<int_HSAIL_fma_f64, "fma_f64">;
