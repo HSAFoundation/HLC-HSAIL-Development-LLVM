@@ -230,35 +230,39 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
 
 BRIGAsmPrinter::BRIGAsmPrinter(TargetMachine& TM, MCStreamer &Streamer)
   : HSAILAsmPrinter(TM, Streamer),
-    brigantine(bc) {
+    Subtarget(&TM.getSubtarget<HSAILSubtarget>()),
+    FuncArgsStr(),
+    FuncRetValStr(),
+    retValCounter(0),
+    paramCounter(0),
+    reg1Counter(0),
+    reg32Counter(0),
+    reg64Counter(0),
+    mTM(reinterpret_cast<HSAILTargetMachine*>(&TM)),
+    TII(Subtarget->getInstrInfo()),
+    mMeta(new HSAILKernelManager(mTM)),
+    mMFI(nullptr),
+    m_bIsKernel(false),
+    brigantine(bc),
+    mDwarfStream(nullptr),
+    mBrigStream(nullptr),
+    mDwarfFileStream(nullptr),
+    privateStackBRIGOffset(0),
+    spillStackBRIGOffset(0),
+    mBuffer(0) {
 
-  Subtarget = &TM.getSubtarget<HSAILSubtarget>();
-  FuncArgsStr = "";
-  FuncRetValStr = "";
-  retValCounter = 0;
-  paramCounter = 0;
-  reg1Counter = 0;
-  reg32Counter = 0;
-  reg64Counter = 0;
-  mTM = reinterpret_cast<HSAILTargetMachine*>(&TM);
-  TII = mTM->getSubtarget<HSAILSubtarget>().getInstrInfo();
-  mMeta = new HSAILKernelManager(mTM);
-  mMFI = NULL;
-  mBuffer = 0;
-  m_bIsKernel = false;
-  privateStackBRIGOffset = 0;
-  spillStackBRIGOffset = 0;
+  // Obtain DWARF stream.
+  BRIGDwarfStreamer *DwarfStreamer = dyn_cast<BRIGDwarfStreamer>(&OutStreamer);
+  assert(DwarfStreamer &&
+         "BRIG lowering doesn't work with this kind of streamer");
+  mDwarfStream = DwarfStreamer->getDwarfStream();
 
-  mDwarfFileStream = 0;
-
-  // Obtain DWARF stream
-  BRIGDwarfStreamer* dwarfstreamer = dyn_cast<BRIGDwarfStreamer>(&OutStreamer);
-  assert(dwarfstreamer && "BRIG lowering doesn't work with this kind of streamer");
-  mDwarfStream = dwarfstreamer->getDwarfStream();
-  // Obtain stream for streaming BRIG that came from LLC
+  // Obtain stream for streaming BRIG that came from llc.
   mBrigStream = mDwarfStream->getOtherStream();
-  // Disconnect DWARF stream from BRIG stream
+
+  // Disconnect DWARF stream from BRIG stream.
   mDwarfStream->releaseStream();
+
   if (DebugInfoFilename.size() > 0) {
     std::error_code err;
     mDwarfFileStream = new raw_fd_ostream(DebugInfoFilename.c_str(), err,
