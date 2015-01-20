@@ -28,18 +28,61 @@ class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
 
   // Target specific flags
   // Important! Keep in sync with HSAIL.h::HSAILTSFLAG
+
+  // Instruction classes. See BrigKind.
+  bit InstAddr = 0;
+  bit InstAtomic = 0;
+  bit InstBasic = 0;
+  bit InstBr = 0;
+  bit InstCmp = 0;
+  bit InstCvt = 0;
+  bit InstImage = 0;
+  bit InstLane = 0;
+  bit InstMem = 0;
+  bit InstMemFence = 0;
+  bit InstMod = 0;
+  bit InstQueryImage = 0;
+  bit InstQuerySampler = 0;
+  bit InstQueue = 0;
+  bit InstSeg = 0;
+  bit InstSegCvt = 0;
+  bit InstSignal = 0;
+  bit InstSourceType = 0;
+
+  // FIXME: Remove these
   bit isLoad = 0;
-  let TSFlags{4} = isLoad;
   bit isStore = 0;
-  let TSFlags{5} = isStore;
   bit isConv = 0;
-  let TSFlags{6} = isConv;
   bit isAtomic = 0;
-  let TSFlags{7} = isAtomic;
   bit isImageInst = 0;
-  let TSFlags{8} = isImageInst;
   bit isCrossLaneInst = 0;
-  let TSFlags{9} = isCrossLaneInst;
+
+
+  let TSFlags{3} = InstAddr;
+  let TSFlags{4} = InstAtomic;
+  let TSFlags{5} = InstBasic;
+  let TSFlags{6} = InstBr;
+  let TSFlags{7} = InstCmp;
+  let TSFlags{8} = InstCvt;
+  let TSFlags{9} = InstImage;
+  let TSFlags{10} = InstLane;
+  let TSFlags{11} = InstMem;
+  let TSFlags{12} = InstMemFence;
+  let TSFlags{13} = InstMod;
+  let TSFlags{14} = InstQueryImage;
+  let TSFlags{15} = InstQuerySampler;
+  let TSFlags{16} = InstQueue;
+  let TSFlags{17} = InstSeg;
+  let TSFlags{18} = InstSegCvt;
+  let TSFlags{19} = InstSignal;
+  let TSFlags{20} = InstSourceType;
+
+  let TSFlags{21} = isLoad;
+  let TSFlags{22} = isStore;
+  let TSFlags{23} = isConv;
+  let TSFlags{24} = isAtomic;
+  let TSFlags{25} = isImageInst;
+  let TSFlags{26} = isCrossLaneInst;
 }
 
 let TargetPrefix = "HSAIL", isTarget = 1 in {

@@ -210,12 +210,33 @@ namespace llvm {
   // See HSAILInstFormats.td
   namespace HSAILTSFLAGS {
     enum {
-      IS_LOAD         = 4,
-      IS_STORE        = 5,
-      IS_CONV         = 6,
-      IS_ATOMIC       = 7,
-      IS_IMAGEINST    = 8,
-      IS_CROSSLANE    = 9
+      // Instruction kind.
+      InstAddr = 1 << 3,
+      InstAtomic = 1 << 4,
+      InstBasic = 1 << 5,
+      InstBr = 1 << 6,
+      InstCmp = 1 << 7,
+      InstCvt = 1 << 8,
+      InstImage = 1 << 9,
+      InstLane = 1 << 10,
+      InstMem = 1 << 11,
+      InstMemFence = 1 << 12,
+      InstMod = 1 << 13,
+      InstQueryImage = 1 << 14,
+      InstQuerySampler = 1 << 15,
+      InstQueue = 1 << 16,
+      InstSeg = 1 << 17,
+      InstSegCvt = 1 << 18,
+      InstSignal = 1 << 19,
+      InstSourceType = 1 << 20,
+
+      // Others.
+      IS_LOAD         = 1 << 21,
+      IS_STORE        = 1 << 22,
+      IS_CONV         = 1 << 23,
+      IS_ATOMIC       = 1 << 24,
+      IS_IMAGEINST    = 1 << 25,
+      IS_CROSSLANE    = 1 << 26
     };
   }
 
