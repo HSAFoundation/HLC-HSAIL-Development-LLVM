@@ -14,7 +14,10 @@
 // TODO HSA : fix so that a space is not emitted prior to end of
 // statement semi-colon
 
-class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
+class HSAILInst<dag outs, dag ins,
+                string asmstr,
+                list<dag> pattern,
+                bits<16> BrigVal = 0>
   : Instruction {
   field bits<32> Inst;
   bit hasWidthOperand = 0;
@@ -25,6 +28,7 @@ class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
   let Pattern = pattern;
 
   let UseNamedOperandTable = 1;
+  let Inst{15-0} = BrigVal;
 
   // Target specific flags
   // Important! Keep in sync with HSAIL.h::HSAILTSFLAG
@@ -84,6 +88,142 @@ class HSAILInst<dag outs, dag ins, string asmstr, list<dag> pattern>
   let TSFlags{25} = isImageInst;
   let TSFlags{26} = isCrossLaneInst;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Basic instruction formats
+////////////////////////////////////////////////////////////////////////////////
+
+class HSAILInstBasic_1Op<string opName, bits<16> BrigVal> :
+  HSAILInst<(outs unknown:$dest),
+            (ins unknown:$src0, BrigTypeX:$TypeLength),
+  opName#"$TypeLength\t$dest, $src0", [], BrigVal
+> {
+  let hasSideEffects = 0;
+  let InstBasic = 1;
+}
+
+class HSAILInstBasic_2Op<string opName, bits<16> BrigVal> :
+  HSAILInst<(outs unknown:$dest),
+            (ins unknown:$src0, unknown:$src1, BrigTypeX:$TypeLength),
+  opName#"$TypeLength\t$dest, $src0, $src1", [], BrigVal
+> {
+  let hasSideEffects = 0;
+  let InstBasic = 1;
+}
+
+class HSAILInstBasic_3Op<string opName, bits<16> BrigVal> :
+  HSAILInst<(outs unknown:$dest),
+            (ins unknown:$src0, unknown:$src1, unknown:$src2,
+             BrigTypeX:$TypeLength),
+  opName#"$TypeLength\t$dest, $src0, $src1, $src2", [], BrigVal
+> {
+  let hasSideEffects = 0;
+  let InstBasic = 1;
+}
+
+class InstCvt<string opName> : HSAILInst<
+    (outs unknown:$dest),
+    (ins ftz:$ftz,
+         BrigRound:$round,
+         BrigTypeX:$destTypedestLength,
+         BrigTypeX:$srcTypesrcLength,
+         unknown:$src),
+    opName#"$ftz$round$destTypedestLength$srcTypesrcLength\t$dest, $src",
+   []
+> {
+  let isConv = 1;
+  let InstCvt = 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Basic instruction patterns
+////////////////////////////////////////////////////////////////////////////////
+
+class InstBasic_1Op_Pat<HSAILInst inst,
+                        SDPatternOperator node,
+                        ValueType vt,
+                        int bt> : Pat <
+  (vt (node (GPROrImm vt:$src0))),
+  (inst $src0, bt)
+>;
+
+multiclass InstBasic_1Op_IntTypes<HSAILInst inst,
+                                  SDPatternOperator node,
+                                  bit signed = 0> {
+  def : InstBasic_1Op_Pat<inst, node, i32,
+    !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+  >;
+
+  def : InstBasic_1Op_Pat<inst, node, i64,
+    !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+  >;
+}
+
+multiclass InstBasic_1Op_BitIntTypes<HSAILInst inst,
+                                     SDPatternOperator node,
+                                     bit signed = 0> {
+  def : InstBasic_1Op_Pat<inst, node, i32,
+    BrigTypeX.B32
+  >;
+
+  def : InstBasic_1Op_Pat<inst, node, i64,
+    BrigTypeX.B64
+  >;
+
+  def : InstBasic_1Op_Pat<inst, node, i1,
+    BrigTypeX.B1
+  >;
+}
+
+multiclass InstBasic_1Op_FPTypes<HSAILInst inst,
+                                SDPatternOperator node> {
+  def : InstBasic_1Op_Pat<inst, node, f32, BrigTypeX.F32>;
+  def : InstBasic_1Op_Pat<inst, node, f64, BrigTypeX.F64>;
+}
+
+class InstBasic_2Op_Pat<HSAILInst inst,
+                        SDPatternOperator node,
+                        ValueType vt,
+                        int bt> : Pat <
+  (vt (node (GPROrImm vt:$src0), (GPROrImm vt:$src1))),
+  (inst $src0, $src1, bt)
+>;
+
+multiclass InstBasic_2Op_IntTypes<HSAILInst inst,
+                                  SDPatternOperator node,
+                                  bit signed = 0> {
+  def : InstBasic_2Op_Pat<inst, node, i32,
+    !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+  >;
+
+  def : InstBasic_2Op_Pat<inst, node, i64,
+    !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+  >;
+}
+
+multiclass InstBasic_2Op_BitIntTypes<HSAILInst inst,
+                                     SDPatternOperator node> {
+  def : InstBasic_2Op_Pat<inst, node, i32,
+    BrigTypeX.B32
+  >;
+
+  def : InstBasic_2Op_Pat<inst, node, i64,
+    BrigTypeX.B64
+  >;
+
+  def : InstBasic_2Op_Pat<inst, node, i1,
+    BrigTypeX.B1
+  >;
+}
+
+multiclass InstBasic_2Op_FPTypes<HSAILInst inst,
+                                SDPatternOperator node> {
+  def : InstBasic_2Op_Pat<inst, node, f32, BrigTypeX.F32>;
+  def : InstBasic_2Op_Pat<inst, node, f64, BrigTypeX.F64>;
+}
+
+
+
 
 let TargetPrefix = "HSAIL", isTarget = 1 in {
 

@@ -182,9 +182,11 @@ IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg,
           {
             // Always abort on circular dependencies
             // Which will require to insert or remove not
-            if (instr->getParent() == &MBB && 
+            if (instr->getParent() == &MBB &&
                 (instr->isBranch() ||
-                 instr->getOpcode() == HSAIL::not_b1))
+                 (instr->getOpcode() == HSAIL::not_inst
+                  // XXX - & b1?
+                   )))
             {
               CanReverse = false;
             }
@@ -579,7 +581,7 @@ static unsigned GenerateBranchCondReversion(
       need_insert_not = true;
   }
   // If condition is logical not - just remove it
-  else if (cond_expr && cond_expr->getOpcode() == HSAIL::not_b1)
+  else if (cond_expr && cond_expr->getOpcode() == HSAIL::not_inst)
   {
     cond_reg = cond_expr->getOperand(1).getReg();
     cond_expr->eraseFromParent();
@@ -594,9 +596,10 @@ static unsigned GenerateBranchCondReversion(
     if (TargetRegisterInfo::isVirtualRegister(CondOp.getReg()))
       cond_reg = MRI.createVirtualRegister(MRI.getRegClass(CondOp.getReg()));
 
-    BuildMI(&MBB, DL, TII->get(HSAIL::not_b1))
+    BuildMI(&MBB, DL, TII->get(HSAIL::not_inst))
       .addReg(cond_reg, RegState::Define)
-      .addReg(CondOp.getReg());
+      .addReg(CondOp.getReg())
+      .addImm(Brig::BRIG_TYPE_B1);
   }
 
   return cond_reg;
@@ -643,11 +646,12 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
       else
         cond_reg = Cond[2].getImm();
 
-      BuildMI(&MBB, DL, get(HSAIL::not_b1))
+      BuildMI(&MBB, DL, get(HSAIL::not_inst))
         .addReg(cond_reg, RegState::Define)
-        .addReg(Cond[0].getReg());
-    }    
-    
+        .addReg(Cond[0].getReg())
+        .addImm(Brig::BRIG_TYPE_B1);
+    }
+
     break;
   case COND_REVERSE_NEGATIVE:
     cond_reg = GenerateBranchCondReversion(MBB, Cond[0], this, DL);

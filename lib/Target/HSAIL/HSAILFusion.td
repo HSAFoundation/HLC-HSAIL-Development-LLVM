@@ -136,25 +136,25 @@ def imm63 : PatLeaf<(imm), [{
     return N->getZExtValue() == 63;
 }]>;
 
-// Shifts do not need "and {31|63}, shift-bits".
-multiclass ShrOp<string asm, string t, SDNode op, RegisterClass RC,
-                 ValueType Ty, PatLeaf ShImm> {
+// // Shifts do not need "and {31|63}, shift-bits".
+// multiclass ShrOp<string asm, string t, SDNode op, RegisterClass RC,
+//                  ValueType Ty, PatLeaf ShImm> {
 
-    def _rr : Pat<(op RC:$src0, (and GPR32:$src1, (i32 ShImm))),
-                  (!cast<HSAILInst>(asm##t) RC:$src0, GPR32:$src1)>;
+//     def _rr : Pat<(op RC:$src0, (and GPR32:$src1, (i32 ShImm))),
+//                   (!cast<HSAILInst>(asm##t) RC:$src0, GPR32:$src1)>;
 
-    def _ir : Pat<(op (Ty imm:$src0), (and GPR32:$src1, (i32 ShImm))),
-                  (!cast<HSAILInst>(asm#"_ir"#t) imm:$src0, GPR32:$src1)>;
-}
+//     def _ir : Pat<(op (Ty imm:$src0), (and GPR32:$src1, (i32 ShImm))),
+//                   (!cast<HSAILInst>(asm#"_ir"#t) imm:$src0, GPR32:$src1)>;
+// }
 
-let Predicates = [EnableOpt] in {
-defm shr_u32 : ShrOp<"shr", "_u32", srl, GPR32, i32, imm31>;
-defm shr_s32 : ShrOp<"shr", "_s32", sra, GPR32, i32, imm31>;
-defm shl_u32 : ShrOp<"shl", "_u32", shl, GPR32, i32, imm31>;
-defm shr_u64 : ShrOp<"shr", "_u64", srl, GPR64, i64, imm63>;
-defm shr_s64 : ShrOp<"shr", "_s64", sra, GPR64, i64, imm63>;
-defm shl_u64 : ShrOp<"shl", "_u64", shl, GPR64, i64, imm63>;
-}
+// let Predicates = [EnableOpt] in {
+// defm shr_u32 : ShrOp<"shr", "_u32", srl, GPR32, i32, imm31>;
+// defm shr_s32 : ShrOp<"shr", "_s32", sra, GPR32, i32, imm31>;
+// defm shl_u32 : ShrOp<"shl", "_u32", shl, GPR32, i32, imm31>;
+// defm shr_u64 : ShrOp<"shr", "_u64", srl, GPR64, i64, imm63>;
+// defm shr_s64 : ShrOp<"shr", "_s64", sra, GPR64, i64, imm63>;
+// defm shl_u64 : ShrOp<"shl", "_u64", shl, GPR64, i64, imm63>;
+// }
 
 def popCnt : SDNodeXForm<imm, [{
     return CurDAG->getTargetConstant(CountPopulation_64(N->getZExtValue()),
@@ -424,9 +424,9 @@ let Predicates = [UnsafeFPMath] in {
     // -1.0 / x
     let AddedComplexity = 4 in {
      def : Pat<(fdiv fp32imm_minus1, (f32 GPR32:$src)),
-               (neg_f32 (nrcp_f32 (f32 GPR32:$src)))>;
+               (neg (nrcp_f32 (f32 GPR32:$src)), BrigTypeX.F32)>;
      def : Pat<(fdiv fp64imm_minus1, (f64 GPR64:$src)),
-               (neg_f64 (nrcp_f64 (f64 GPR64:$src)))>;
+               (neg (nrcp_f64 (f64 GPR64:$src)), BrigTypeX.F64)>;
     }
 
     let AddedComplexity = 5 in {
@@ -581,6 +581,6 @@ let Predicates = [EnableOpt] in {
   def : Pat<
     (or (shl i32:$src0, i32:$src1),
         (srl i32:$src0, (sub imm32, (and i32:$src1, imm31)))),
-    (media_bitalign_rrr $src0, $src0, (neg_s32 $src1))
+    (media_bitalign_rrr $src0, $src0, (neg GPR32:$src1, BrigTypeX.S32))
   >;
 }

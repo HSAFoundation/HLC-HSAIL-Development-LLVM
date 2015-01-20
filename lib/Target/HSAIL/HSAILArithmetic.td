@@ -43,10 +43,9 @@ defm umad  : TernaryIntrU32<int_HSAIL_mad_u32, "mad_u32">;
 defm umad  : TernaryIntrU64<int_HSAIL_mad_u64, "mad_u64">;
 
 // u[32,64] forms illegal in HSAIL
-defm neg : UnaryPatS32<ineg, "neg_s32">;
-defm neg : UnaryPatS64<ineg, "neg_s64">;
-defm neg : UnaryOpF32<fneg, "neg_f32">;
-defm neg : UnaryOpF64<fneg, "neg_f64">;
+def neg : HSAILInstBasic_1Op<"neg", BrigOpcode.NEG>;
+defm : InstBasic_1Op_IntTypes<neg, ineg, 1>;
+defm : InstBasic_1Op_FPTypes<neg, fneg>;
 
 defm abs : UnaryIntrU32<int_HSAIL_abs_u32, "abs_u32">;
 defm abs : UnaryIntrS32<int_HSAIL_abs_s32, "abs_s32">;
@@ -111,28 +110,20 @@ defm nrsqrt : UnaryIntrF64<int_HSAIL_nrsqrt_f64, "nrsqrt_f64">;
 defm nsin : UnaryIntrF32<int_HSAIL_nsin_f32, "nsin_f32">;
 
 ////////////////////////////////////////////////////////////////////////////////
-// and (integer, 1-bit, 32-bit, and 64-bit)
-defm and : BinaryOpB1<and, "and_b1">;
-defm and : BinaryOpU32<and, "and_b32">;
-defm and : BinaryOpU64<and, "and_b64">;
+// Logical bit ops.
 
-////////////////////////////////////////////////////////////////////////////////
-// or (integer, 1-bit, 32-bit, and 64-bit)
-defm or : BinaryOpB1<or, "or_b1">;
-defm or : BinaryOpU32<or, "or_b32">;
-defm or : BinaryOpU64<or, "or_b64">;
+def and_inst : HSAILInstBasic_2Op<"and", BrigOpcode.AND>;
+def or_inst : HSAILInstBasic_2Op<"or", BrigOpcode.OR>;
+def xor_inst : HSAILInstBasic_2Op<"xor", BrigOpcode.XOR>;
 
-////////////////////////////////////////////////////////////////////////////////
-// xor (integer, 1-bit, 32-bit, and 64-bit)
-defm xor : BinaryOpB1<xor, "xor_b1">;
-defm xor : BinaryOpU32<xor, "xor_b32">;
-defm xor : BinaryOpU64<xor, "xor_b64">;
+defm : InstBasic_2Op_BitIntTypes<and_inst, and>;
+defm : InstBasic_2Op_BitIntTypes<or_inst, or>;
+defm : InstBasic_2Op_BitIntTypes<xor_inst, xor>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // not (integer, 1-bit, 32-bit, and 64-bit)
-defm not : UnaryPatB1<not, "not_b1">;
-defm not : UnaryPatU32<not, "not_b32">;
-defm not : UnaryPatU64<not, "not_b64">;
+def not_inst : HSAILInstBasic_1Op<"not", BrigOpcode.NOT>;
+defm : InstBasic_1Op_BitIntTypes<not_inst, not>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // popcount (integer, 1-bit, 32-bit, and 64-bit)
@@ -227,13 +218,9 @@ defm cmov_b64_f : cmov<"cmov_b64", f64, f64imm, fpimm, GPR64>;
 
 // FIXME: Spec calls TypeLength moveType for some reason, but that
 // would be painful to deal with.
-def mov : HSAILInst<(outs unknown:$dest),
-  (ins unknown:$src0, BrigTypeX:$TypeLength),
-  "mov$TypeLength\t$dest, $src0", []
-> {
+def mov : HSAILInstBasic_1Op<"mov", BrigOpcode.MOV> {
   let isAsCheapAsAMove = 1;
   let isReMaterializable = 1;
-  let hasSideEffects = 0; // FIXME: This should be set on base class.
 }
 
 

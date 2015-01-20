@@ -611,9 +611,57 @@ void BRIGAsmPrinter::EmitInstruction(const MachineInstr *II) {
   }
 }
 
+// FIXME: Should get encoding from getBinaryCodeForInstr
+static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
+  switch (Opc) {
+  case HSAIL::mov:
+    return Brig::BRIG_OPCODE_MOV;
+  case HSAIL::and_inst:
+    return Brig::BRIG_OPCODE_AND;
+  case HSAIL::or_inst:
+    return Brig::BRIG_OPCODE_OR;
+  case HSAIL::xor_inst:
+    return Brig::BRIG_OPCODE_XOR;
+  case HSAIL::not_inst:
+    return Brig::BRIG_OPCODE_NOT;
+  case HSAIL::neg:
+    return Brig::BRIG_OPCODE_NEG;
+  default:
+    llvm_unreachable("unhandled opcode");
+  }
+}
+
 HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   // autoCodeEmitter will emit required amount of bytes in corresponding MCSection
   autoCodeEmitter ace(&OutStreamer, &brigantine);
+
+  unsigned Opc = II->getOpcode();
+
+  if (TII->isInstBasic(Opc)) {
+    // FIXME: We should be able to get the encoding / Brig value from MC.
+    Brig::BrigOpcode Encoding = getInstBasicBrigOpcode(Opc);
+
+    HSAIL_ASM::InstBasic inst
+      = brigantine.addInst<HSAIL_ASM::InstBasic>(Encoding);
+
+    inst.type() = TII->getNamedOperand(*II, HSAIL::OpName::TypeLength)->getImm();
+
+    // All have dest as first operand.
+    BrigEmitOperand(II, 0, inst);
+
+    int Src0Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0);
+    BrigEmitOperand(II, Src0Idx, inst);
+
+    int Src1Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src1);
+    if (Src1Idx != -1)
+      BrigEmitOperand(II, Src1Idx, inst);
+
+    int Src2Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src2);
+    if (Src2Idx != -1)
+      BrigEmitOperand(II, Src2Idx, inst);
+
+    return inst;
+  }
 
   if (HSAIL::isAtomicOp(II)) {
     bool hasRet = HSAIL::isRetAtomicOp(II);
@@ -668,17 +716,6 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     for (unsigned OpNum=0; OpNum != NumOperands; ++OpNum) {
       BrigEmitOperand(II, OpNum, inst);
     }
-    return inst;
-  }
-  case HSAIL::mov: {
-    HSAIL_ASM::InstBasic inst
-      = brigantine.addInst<HSAIL_ASM::InstBasic>(Brig::BRIG_OPCODE_MOV);
-
-    inst.type()
-      = TII->getNamedOperand(*II, HSAIL::OpName::TypeLength)->getImm();
-
-    BrigEmitOperand(II, 0, inst);
-    BrigEmitOperand(II, 1, inst);
     return inst;
   }
   case HSAIL::cvt: {

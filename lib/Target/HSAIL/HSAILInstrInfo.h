@@ -14,6 +14,7 @@
 #ifndef _HSAIL_INSTRUCTION_INFO_H_
 #define _HSAIL_INSTRUCTION_INFO_H_
 
+#include "HSAIL.h"
 #include "HSAILRegisterInfo.h"
 #include "llvm/Target/TargetInstrInfo.h"
 #include "llvm/ADT/DenseMap.h"
@@ -838,6 +839,11 @@ public:
 
   int64_t getNamedModifierOperand(MachineInstr &MI, unsigned OpName) const {
     return getNamedOperand(MI, OpName)->getImm();
+  }
+
+
+  bool isInstBasic(uint16_t Opcode) const {
+    return get(Opcode).TSFlags & HSAILInstrFlags::InstBasic;
   }
 
 private:

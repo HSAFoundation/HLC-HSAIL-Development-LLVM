@@ -1,20 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // conversion routines
 
-//class HSAIL_Cvt<string opName, dag ins, dag outs, list<dag> pattern> :
-//class HSAIL_Cvt<string opName, SDPatternOperator node> :
-def cvt : HSAILInst<
-    (outs unknown:$dest),
-    (ins ftz:$ftz,
-         BrigRound:$round,
-         BrigTypeX:$destTypedestLength,
-         BrigTypeX:$srcTypesrcLength,
-         unknown:$src),
-    "cvt$ftz$round$destTypedestLength$srcTypesrcLength\t$dest, $src",
-   []
-> {
-  let isConv = 1;
-}
+def cvt : InstCvt<"cvt">;
+
 
 class CvtPat<ValueType destvt,
              ValueType srcvt,
