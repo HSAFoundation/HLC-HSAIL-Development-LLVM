@@ -116,23 +116,23 @@ llvm::MachineOperand &getLoadModifierMask(llvm::MachineInstr *MI);
 const llvm::MachineOperand &getLoadModifierMask(const llvm::MachineInstr *MI);
 
 static inline bool isLoad(const llvm::MachineInstr *MI) {
-  return MI->getDesc().TSFlags & llvm::HSAILTSFLAGS::IS_LOAD;
+  return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_LOAD;
 }
 
 static inline bool isStore(const llvm::MachineInstr *MI) {
-  return MI->getDesc().TSFlags & llvm::HSAILTSFLAGS::IS_STORE;
+  return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_STORE;
 }
 
 static inline bool isConv(const llvm::MachineInstr *MI) {
-  return MI->getDesc().TSFlags & llvm::HSAILTSFLAGS::IS_CONV;
+  return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_CONV;
 }
 
 static inline bool isImageInst(const llvm::MachineInstr *MI) {
-  return MI->getDesc().TSFlags & llvm::HSAILTSFLAGS::IS_IMAGEINST;
+  return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_IMAGEINST;
 }
 
 inline bool isCrosslaneInst(const llvm::MachineInstr *MI) {
-  return MI->getDesc().TSFlags & llvm::HSAILTSFLAGS::IS_CROSSLANE;
+  return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_CROSSLANE;
 }
 
 bool HSAILisArgInst(const llvm::TargetMachine &TM, const llvm::MachineInstr *MI);
@@ -145,7 +145,7 @@ bool isIgnoredGV(const llvm::GlobalVariable *GV);
 bool sanitizeGlobalValueName(llvm::GlobalValue *GV);
 
 static inline bool isAtomicOp(const llvm::MachineInstr *MI) {
-  return MI->getDesc().TSFlags & HSAILTSFLAGS::IS_ATOMIC;
+  return MI->getDesc().TSFlags & HSAILInstrFlags::IS_ATOMIC;
 }
 
 bool isRetAtomicOp(const llvm::MachineInstr *MI);

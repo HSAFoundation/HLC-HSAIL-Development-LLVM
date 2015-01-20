@@ -208,7 +208,7 @@ namespace llvm {
 
   // Target flags from tablegen
   // See HSAILInstFormats.td
-  namespace HSAILTSFLAGS {
+  namespace HSAILInstrFlags {
     enum {
       // Instruction kind.
       InstAddr = 1 << 3,
