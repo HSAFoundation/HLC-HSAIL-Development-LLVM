@@ -66,8 +66,8 @@ defm max : BinaryIntrU32<int_HSAIL_max_u32, "max_u32">;
 defm max : BinaryIntrS32<int_HSAIL_max_s32, "max_s32">;
 defm max : BinaryIntrU64<int_HSAIL_max_u64, "max_u64">;
 defm max : BinaryIntrS64<int_HSAIL_max_s64, "max_s64">;
-defm max : BinaryIntrF32<int_HSAIL_max_f32, "max_ftz_f32">;
-defm max : BinaryIntrF64<int_HSAIL_max_f64, "max_f64">;
+defm max : BinaryIntrF32<fmaxnum, "max_ftz_f32">;
+defm max : BinaryIntrF64<fmaxnum, "max_f64">;
 defm gcn_max : BinaryIntrF32<int_HSAIL_gcn_max_f32, "gcn_max_f32">;
 defm gcn_max : BinaryIntrF64<int_HSAIL_gcn_max_f64, "gcn_max_f64">;
 
@@ -75,8 +75,8 @@ defm min : BinaryIntrU32<int_HSAIL_min_u32, "min_u32">;
 defm min : BinaryIntrS32<int_HSAIL_min_s32, "min_s32">;
 defm min : BinaryIntrU64<int_HSAIL_min_u64, "min_u64">;
 defm min : BinaryIntrS64<int_HSAIL_min_s64, "min_s64">;
-defm min : BinaryIntrF32<int_HSAIL_min_f32, "min_ftz_f32">;
-defm min : BinaryIntrF64<int_HSAIL_min_f64, "min_f64">;
+defm min : BinaryIntrF32<fminnum, "min_ftz_f32">;
+defm min : BinaryIntrF64<fminnum, "min_f64">;
 defm gcn_min : BinaryIntrF32<int_HSAIL_gcn_min_f32, "gcn_min_f32">;
 defm gcn_min : BinaryIntrF64<int_HSAIL_gcn_min_f64, "gcn_min_f64">;
 

@@ -100,6 +100,10 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   setOperationAction(ISD::FCEIL, MVT::f64, Legal);
   setOperationAction(ISD::FTRUNC, MVT::f32, Legal);
   setOperationAction(ISD::FTRUNC, MVT::f64, Legal);
+  setOperationAction(ISD::FMINNUM, MVT::f32, Legal);
+  setOperationAction(ISD::FMINNUM, MVT::f64, Legal);
+  setOperationAction(ISD::FMAXNUM, MVT::f32, Legal);
+  setOperationAction(ISD::FMAXNUM, MVT::f64, Legal);
 
   setOperationAction(ISD::BSWAP, MVT::i16, Expand);
   setOperationAction(ISD::BSWAP, MVT::i32, Custom);
@@ -1302,6 +1306,22 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
 
   case HSAILIntrinsic::HSAIL_copysign_f64:
     return DAG.getNode(ISD::FCOPYSIGN, SL, MVT::f64,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_min_f32:
+    return DAG.getNode(ISD::FMINNUM, SL, MVT::f32,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_min_f64:
+    return DAG.getNode(ISD::FMINNUM, SL, MVT::f64,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_max_f32:
+    return DAG.getNode(ISD::FMAXNUM, SL, MVT::f32,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_max_f64:
+    return DAG.getNode(ISD::FMAXNUM, SL, MVT::f64,
                        Op.getOperand(1), Op.getOperand(2));
 
   default:
