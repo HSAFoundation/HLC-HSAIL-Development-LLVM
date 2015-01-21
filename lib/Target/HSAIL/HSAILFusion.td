@@ -451,13 +451,14 @@ let Predicates = [UnsafeFPMath] in {
 
     let AddedComplexity = 10 in {
         def : Pat<(f32 (fdiv GPR32:$src0, (int_HSAIL_nsqrt_f32 GPR32:$src1))),
-                  (f32 (mul_f32 GPR32:$src0, (nrsqrt_f32 (f32 GPR32:$src1))))>;
+                  (f32 (mul_inst 1, 0, GPR32:$src0, (nrsqrt_f32 (f32 GPR32:$src1)), BrigTypeX.F32))>;
         def : Pat<(f32 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f32 GPR32:$src1))),
-                  (f32 (mul_f32 fpimm:$src0, (nrsqrt_f32 (f32 GPR32:$src1))))>;
+                  (f32 (mul_inst 1, 0, fpimm:$src0, (nrsqrt_f32 (f32 GPR32:$src1)), BrigTypeX.F32))>;
+
         def : Pat<(f64 (fdiv GPR64:$src0, (int_HSAIL_nsqrt_f64 GPR64:$src1))),
-                  (f64 (mul_f64 GPR64:$src0, (nrsqrt_f64 (f64 GPR64:$src1))))>;
+                  (f64 (mul_inst 0, 0, GPR64:$src0, (nrsqrt_f64 (f64 GPR64:$src1)), BrigTypeX.F64))>;
         def : Pat<(f64 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f64 GPR64:$src1))),
-                  (f64 (mul_f64 fpimm:$src0, (nrsqrt_f64 (f64 GPR64:$src1))))>;
+                  (f64 (mul_inst 0, 0, fpimm:$src0, (nrsqrt_f64 (f64 GPR64:$src1)), BrigTypeX.F64))>;
     }
 }
 
@@ -526,19 +527,21 @@ def : Pat<(xor (add (sra (i64 GPR64:$src), (i32 63)), (i64 GPR64:$src)),
 
 ////////////////////////////////////////////////////////////////////////////////
 // fadd y (fmul x, 1)
-multiclass FusedAddMul1<HSAILInst op, ValueType Ty, RegisterClass RC,
-                        PatLeaf one> {
+multiclass FusedAddMul1<HSAILInst op, ValueType Ty, int bt, RegisterClass RC,
+                        PatLeaf one, int round, int ftz = 0> {
 
     def _rri : Pat<(fadd RC:$src0, (fmul RC:$src1, one)),
-                   (op RC:$src0, RC:$src1)>;
+                   (op ftz, round, RC:$src0, RC:$src1, bt)>;
 
     def _iri : Pat<(fadd (fmul RC:$src0, one), (Ty fpimm:$src1)),
-                   (op RC:$src0, (Ty fpimm:$src1))>;
+                   (op ftz, round, RC:$src0, (Ty fpimm:$src1), bt)>;
 }
 
 let Predicates = [EnableOpt] in {
-defm addmul1_f32 : FusedAddMul1<add_f32, f32, GPR32, fp32imm1>;
-defm addmul1_f64 : FusedAddMul1<add_f64, f64, GPR64, fp64imm1>;
+defm addmul1_f32 : FusedAddMul1<add_inst, f32, BrigTypeX.F32, GPR32, fp32imm1,
+                                BrigRound.FLOAT_NEAR_EVEN, 1>;
+defm addmul1_f64 : FusedAddMul1<add_inst, f64, BrigTypeX.F64, GPR64, fp64imm1,
+                                BrigRound.FLOAT_NEAR_EVEN, 0>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

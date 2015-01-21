@@ -846,6 +846,10 @@ public:
     return get(Opcode).TSFlags & HSAILInstrFlags::InstBasic;
   }
 
+  bool isInstMod(uint16_t Opcode) const {
+    return get(Opcode).TSFlags & HSAILInstrFlags::InstMod;
+  }
+
 private:
   RegScavenger *RS;
 

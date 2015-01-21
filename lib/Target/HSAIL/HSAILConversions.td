@@ -26,8 +26,8 @@ class CvtSInt32RoundPat<ValueType srcvt,
 
 class UnaryFTZInst<string opName> : HSAILInst<
     (outs unknown:$dest),
-    (ins ftz:$ftz, BrigTypeX:$TypeLength, unknown:$src),
-    opName#"$ftz$TypeLength\t$dest, $src",
+    (ins ftz:$ftz, BrigRound:$round, BrigTypeX:$TypeLength, unknown:$src0),
+    opName#"$ftz$round$TypeLength\t$dest, $src0",
    []
 >;
 
@@ -55,7 +55,7 @@ class UnaryFTZPat<Instruction inst,
                   SDPatternOperator node,
                   int ftz = 0> : Pat <
   (vt (node vt:$src)),
-  (inst ftz, bt, $src)
+  (inst ftz, BrigRound.NONE, bt, $src)
 >;
 
 

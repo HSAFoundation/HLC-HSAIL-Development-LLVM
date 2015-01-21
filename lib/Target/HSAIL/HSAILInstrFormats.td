@@ -93,6 +93,7 @@ class HSAILInst<dag outs, dag ins,
 // Basic instruction formats
 ////////////////////////////////////////////////////////////////////////////////
 
+// InstBasic
 class HSAILInstBasic_1Op<string opName, bits<16> BrigVal> :
   HSAILInst<(outs unknown:$dest),
             (ins unknown:$src0, BrigTypeX:$TypeLength),
@@ -121,6 +122,29 @@ class HSAILInstBasic_3Op<string opName, bits<16> BrigVal> :
   let InstBasic = 1;
 }
 
+
+// InstMod
+// TODO: Needs pack operand?
+class HSAILInstMod_1Op<string opName, bits<16> BrigVal> :
+  HSAILInst<(outs unknown:$dest),
+            (ins ftz:$ftz, BrigRound:$round, unknown:$src0, BrigTypeX:$TypeLength),
+  opName#"$ftz$round$TypeLength\t$dest, $src0", [], BrigVal
+> {
+  let hasSideEffects = 0;
+  let InstMod = 1;
+}
+
+class HSAILInstMod_2Op<string opName, bits<16> BrigVal> :
+  HSAILInst<(outs unknown:$dest),
+            (ins ftz:$ftz, BrigRound:$round, unknown:$src0, unknown:$src1, BrigTypeX:$TypeLength),
+  opName#"$ftz$round$TypeLength\t$dest, $src0, $src1", [], BrigVal
+> {
+  let hasSideEffects = 0;
+  let InstMod = 1;
+}
+
+
+// InstCvt
 class InstCvt<string opName> : HSAILInst<
     (outs unknown:$dest),
     (ins ftz:$ftz,
@@ -222,7 +246,37 @@ multiclass InstBasic_2Op_FPTypes<HSAILInst inst,
   def : InstBasic_2Op_Pat<inst, node, f64, BrigTypeX.F64>;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Mod instruction patterns
+////////////////////////////////////////////////////////////////////////////////
 
+class InstMod_2Op_Pat<HSAILInst inst,
+                      SDPatternOperator node,
+                      ValueType vt,
+                      int bt,
+                      int round = BrigRound.NONE,
+                      int ftz = 0> : Pat <
+  (vt (node (GPROrImm vt:$src0), (GPROrImm vt:$src1))),
+  (inst ftz, round, $src0, $src1, bt)
+>;
+
+multiclass InstMod_2Op_IntTypes<HSAILInst inst,
+                                SDPatternOperator node,
+                                bit signed = 0> {
+  def : InstMod_2Op_Pat<inst, node, i32,
+    !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+  >;
+
+  def : InstMod_2Op_Pat<inst, node, i64,
+    !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+  >;
+}
+
+multiclass InstMod_2Op_FPTypes<HSAILInst inst,
+                               SDPatternOperator node> {
+  def : InstMod_2Op_Pat<inst, node, f32, BrigTypeX.F32, BrigRound.FLOAT_NEAR_EVEN, 1>;
+  def : InstMod_2Op_Pat<inst, node, f64, BrigTypeX.F64, BrigRound.FLOAT_NEAR_EVEN, 0>;
+}
 
 
 let TargetPrefix = "HSAIL", isTarget = 1 in {

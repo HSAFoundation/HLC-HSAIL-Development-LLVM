@@ -635,6 +635,21 @@ static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
   }
 }
 
+static Brig::BrigOpcode getInstModBrigOpcode(unsigned Opc) {
+  switch (Opc) {
+  case HSAIL::add_inst:
+    return Brig::BRIG_OPCODE_ADD;
+  case HSAIL::sub_inst:
+    return Brig::BRIG_OPCODE_SUB;
+  case HSAIL::mul_inst:
+    return Brig::BRIG_OPCODE_MUL;
+  case HSAIL::div_inst:
+    return Brig::BRIG_OPCODE_DIV;
+  default:
+    llvm_unreachable("unhandled opcode");
+  }
+}
+
 HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   // autoCodeEmitter will emit required amount of bytes in corresponding MCSection
   autoCodeEmitter ace(&OutStreamer, &brigantine);
@@ -665,6 +680,13 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
       BrigEmitOperand(II, Src2Idx, inst);
 
     return inst;
+  }
+
+  if (TII->isInstMod(Opc)) {
+    // FIXME: We should be able to get the encoding / Brig value from MC.
+    // FIXME: Some instructions are available as InstBasic if they don't use
+    // modifiers.
+    return BrigEmitModInst(*II, getInstModBrigOpcode(Opc));
   }
 
   if (HSAIL::isAtomicOp(II)) {
@@ -1863,11 +1885,22 @@ HSAIL_ASM::InstMod BRIGAsmPrinter::BrigEmitModInst(const MachineInstr &MI,
   inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
   inst.modifier().ftz()
     = TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
+  inst.modifier().round()
+    = TII->getNamedOperand(MI, HSAIL::OpName::round)->getImm();
 
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
                   inst);
-  BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src),
+  BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0),
                   inst);
+
+  int Src1Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src1);
+  if (Src1Idx != -1)
+    BrigEmitOperand(&MI, Src1Idx, inst);
+
+  int Src2Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src2);
+  if (Src2Idx != -1)
+    BrigEmitOperand(&MI, Src2Idx, inst);
+
   return inst;
 }
 

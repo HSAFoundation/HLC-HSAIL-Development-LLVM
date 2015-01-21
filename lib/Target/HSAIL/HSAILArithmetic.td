@@ -1,17 +1,21 @@
-defm add : BinaryOpU32<add, "add_u32">;
-defm add : BinaryOpU64<add, "add_u64">;
-defm add : BinaryOpF32<fadd, "add_ftz_f32">;
-defm add : BinaryOpF64<fadd, "add_f64">;
 
-defm sub : BinaryNCOpU32<sub, "sub_u32">;
-defm sub : BinaryNCOpU64<sub, "sub_u64">;
-defm sub : BinaryNCOpF32<fsub, "sub_ftz_f32">;
-defm sub : BinaryNCOpF64<fsub, "sub_f64">;
+def add_inst : HSAILInstMod_2Op<"add", BrigOpcode.ADD>;
+def sub_inst : HSAILInstMod_2Op<"sub", BrigOpcode.SUB>;
+def mul_inst : HSAILInstMod_2Op<"mul", BrigOpcode.MUL>;
+def div_inst : HSAILInstMod_2Op<"div", BrigOpcode.DIV>;
 
-defm mul : BinaryOpU32< mul, "mul_u32">;
-defm mul : BinaryOpU64< mul, "mul_u64">;
-defm mul : BinaryOpF32<fmul, "mul_ftz_f32">;
-defm mul : BinaryOpF64<fmul, "mul_f64">;
+defm : InstMod_2Op_IntTypes<add_inst, add>;
+defm : InstMod_2Op_FPTypes<add_inst, fadd>;
+defm : InstMod_2Op_IntTypes<sub_inst, sub, 0>;
+defm : InstMod_2Op_FPTypes<sub_inst, fsub>;
+defm : InstMod_2Op_IntTypes<mul_inst, mul, 0>;
+defm : InstMod_2Op_FPTypes<mul_inst, fmul>;
+
+defm : InstMod_2Op_IntTypes<div_inst, udiv, 0>;
+defm : InstMod_2Op_IntTypes<div_inst, sdiv, 1>;
+defm : InstMod_2Op_FPTypes<div_inst, fdiv>;
+
+
 defm mul_intrn : BinaryIntrF32<int_HSAIL_mul_ftz_f32, "mul_ftz_f32">;
 defm mul_intrn : BinaryIntrF64<int_HSAIL_mul_f64, "mul_f64">;
 
@@ -19,13 +23,6 @@ defm mulhi : BinaryOpU32<mulhu, "mulhi_u32">;
 defm mulhi : BinaryOpS32<mulhs, "mulhi_s32">;
 defm mulhi : BinaryOpU64<mulhu, "mulhi_u64">;
 defm mulhi : BinaryOpS64<mulhs, "mulhi_s64">;
-
-defm div : BinaryNCOpU32<udiv, "div_u32">;
-defm div : BinaryNCOpU64<udiv, "div_u64">;
-defm div : BinaryNCOpS32<sdiv, "div_s32">;
-defm div : BinaryNCOpS64<sdiv, "div_s64">;
-defm div : BinaryNCOpF32<fdiv, "div_ftz_f32">;
-defm div : BinaryNCOpF64<fdiv, "div_f64">;
 
 defm rem : BinaryNCOpU32<urem, "rem_u32">;
 defm rem : BinaryNCOpU64<urem, "rem_u64">;
@@ -44,7 +41,12 @@ defm umad  : TernaryIntrU64<int_HSAIL_mad_u64, "mad_u64">;
 
 // u[32,64] forms illegal in HSAIL
 def neg : HSAILInstBasic_1Op<"neg", BrigOpcode.NEG>;
+
+let AddedComplexity = 2 in {
+// Needs to match before sub pattern.
 defm : InstBasic_1Op_IntTypes<neg, ineg, 1>;
+}
+
 defm : InstBasic_1Op_FPTypes<neg, fneg>;
 
 defm abs : UnaryIntrU32<int_HSAIL_abs_u32, "abs_u32">;
