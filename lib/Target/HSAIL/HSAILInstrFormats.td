@@ -92,65 +92,73 @@ class HSAILInst<dag outs, dag ins,
 ////////////////////////////////////////////////////////////////////////////////
 // Basic instruction formats
 ////////////////////////////////////////////////////////////////////////////////
-
 // InstBasic
-class HSAILInstBasic_1Op<string opName, bits<16> BrigVal> :
-  HSAILInst<(outs unknown:$dest),
-            (ins unknown:$src0, BrigTypeX:$TypeLength),
-  opName#"$TypeLength\t$dest, $src0", [], BrigVal
-> {
+class HSAILInstBasic<bits<16> BrigVal,
+                     dag outs, dag ins, string asmstr> :
+  HSAILInst<outs, ins, asmstr, [], BrigVal> {
   let hasSideEffects = 0;
   let InstBasic = 1;
 }
+
+class HSAILInstBasic_1Op<string opName, bits<16> BrigVal> :
+  HSAILInstBasic<BrigVal,
+                 (outs unknown:$dest),
+                 (ins unknown:$src0, BrigTypeX:$TypeLength),
+  opName#"$TypeLength\t$dest, $src0"
+>;
 
 class HSAILInstBasic_2Op<string opName, bits<16> BrigVal> :
-  HSAILInst<(outs unknown:$dest),
-            (ins unknown:$src0, unknown:$src1, BrigTypeX:$TypeLength),
-  opName#"$TypeLength\t$dest, $src0, $src1", [], BrigVal
-> {
-  let hasSideEffects = 0;
-  let InstBasic = 1;
-}
+  HSAILInstBasic<BrigVal,
+                 (outs unknown:$dest),
+                 (ins unknown:$src0, unknown:$src1,
+                      BrigTypeX:$TypeLength),
+  opName#"$TypeLength\t$dest, $src0, $src1"
+>;
 
 class HSAILInstBasic_3Op<string opName, bits<16> BrigVal> :
-  HSAILInst<(outs unknown:$dest),
-            (ins unknown:$src0, unknown:$src1, unknown:$src2,
-             BrigTypeX:$TypeLength),
-  opName#"$TypeLength\t$dest, $src0, $src1, $src2", [], BrigVal
-> {
-  let hasSideEffects = 0;
-  let InstBasic = 1;
-}
+  HSAILInstBasic<BrigVal,
+                 (outs unknown:$dest),
+                 (ins unknown:$src0, unknown:$src1, unknown:$src2,
+                      BrigTypeX:$TypeLength),
+  opName#"$TypeLength\t$dest, $src0, $src1, $src2"
+>;
 
 
 // InstMod
+class HSAILInstMod<bits<16> BrigVal,
+                   dag outs, dag ins, string asmstr> :
+  HSAILInst<outs, ins, asmstr, [], BrigVal> {
+  let hasSideEffects = 0;
+  let InstMod = 1;
+}
+
 // TODO: Needs pack operand?
 class HSAILInstMod_1Op<string opName, bits<16> BrigVal> :
-  HSAILInst<(outs unknown:$dest),
-            (ins ftz:$ftz, BrigRound:$round, unknown:$src0, BrigTypeX:$TypeLength),
-  opName#"$ftz$round$TypeLength\t$dest, $src0", [], BrigVal
-> {
-  let hasSideEffects = 0;
-  let InstMod = 1;
-}
+  HSAILInstMod<BrigVal,
+               (outs unknown:$dest),
+               (ins ftz:$ftz, BrigRound:$round,
+                    unknown:$src0,
+                    BrigTypeX:$TypeLength),
+  opName#"$ftz$round$TypeLength\t$dest, $src0"
+>;
 
 class HSAILInstMod_2Op<string opName, bits<16> BrigVal> :
-  HSAILInst<(outs unknown:$dest),
-            (ins ftz:$ftz, BrigRound:$round, unknown:$src0, unknown:$src1, BrigTypeX:$TypeLength),
-  opName#"$ftz$round$TypeLength\t$dest, $src0, $src1", [], BrigVal
-> {
-  let hasSideEffects = 0;
-  let InstMod = 1;
-}
+  HSAILInstMod<BrigVal,
+               (outs unknown:$dest),
+               (ins ftz:$ftz, BrigRound:$round,
+                    unknown:$src0, unknown:$src1,
+                    BrigTypeX:$TypeLength),
+  opName#"$ftz$round$TypeLength\t$dest, $src0, $src1"
+>;
 
 class HSAILInstMod_3Op<string opName, bits<16> BrigVal> :
-  HSAILInst<(outs unknown:$dest),
-            (ins ftz:$ftz, BrigRound:$round, unknown:$src0, unknown:$src1, unknown:$src2, BrigTypeX:$TypeLength),
-  opName#"$ftz$round$TypeLength\t$dest, $src0, $src1, $src2", [], BrigVal
-> {
-  let hasSideEffects = 0;
-  let InstMod = 1;
-}
+  HSAILInstMod<BrigVal,
+               (outs unknown:$dest),
+               (ins ftz:$ftz, BrigRound:$round,
+                    unknown:$src0, unknown:$src1, unknown:$src2,
+                    BrigTypeX:$TypeLength),
+  opName#"$ftz$round$TypeLength\t$dest, $src0, $src1, $src2"
+>;
 
 
 // InstCvt
