@@ -90,8 +90,8 @@ defm nsqrt : UnaryIntrF32<int_HSAIL_nsqrt_f32, "nsqrt_f32">;
 defm nsqrt : UnaryIntrF64<int_HSAIL_nsqrt_f64, "nsqrt_f64">;
 
 // HSAIL_SPEC_CURRENT <
-defm fract : UnaryIntrF32<int_HSAIL_fract_f32, "fract_ftz_f32">;
-defm fract : UnaryIntrF64<int_HSAIL_fract_f64, "fract_f64">;
+def fract_inst : HSAILInstMod_1Op<"fract", BrigOpcode.FRACT>;
+defm : InstMod_1Op_FPTypes<fract_inst, HSAILfract, BrigRound.NONE>;
 // > HSAIL_SPEC_CURRENT
 
 // Floating-Point Special Functions Operations

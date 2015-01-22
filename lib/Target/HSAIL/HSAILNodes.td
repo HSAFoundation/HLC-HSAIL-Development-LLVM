@@ -20,3 +20,6 @@ def IL_lda_global : SDNode<"HSAILISD::LDA_GLOBAL", SDTypeProfile<1, 1, []>, []>;
 def IL_lda_group  : SDNode<"HSAILISD::LDA_GROUP", SDTypeProfile<1, 1, []>, []>;
 def IL_lda_private : SDNode<"HSAILISD::LDA_PRIVATE", SDTypeProfile<1, 1, []>, []>;
 def IL_lda_readonly : SDNode<"HSAILISD::LDA_READONLY", SDTypeProfile<1, 1, []>, []>;
+
+// out = a - floor(a)
+def HSAILfract : SDNode<"HSAILISD::FRACT", SDTFPUnaryOp>;

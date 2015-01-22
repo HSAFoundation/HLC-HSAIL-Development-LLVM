@@ -1154,6 +1154,8 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::CALL";
   case HSAILISD::RET_FLAG:
     return "HSAILISD::RET_FLAG";
+  case HSAILISD::FRACT:
+    return "HSAILISD::FRACT";
   case HSAILISD::LDA_FLAT:
     return "HSAILISD::LDA_FLAT";
   case HSAILISD::LDA_GLOBAL:
@@ -1305,6 +1307,12 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
 
   case HSAILIntrinsic::HSAIL_trunc_f64:
     return DAG.getNode(ISD::FTRUNC, SL, MVT::f64, Op.getOperand(1));
+
+  case HSAILIntrinsic::HSAIL_fract_f32:
+    return DAG.getNode(HSAILISD::FRACT, SL, MVT::f32, Op.getOperand(1));
+
+  case HSAILIntrinsic::HSAIL_fract_f64:
+    return DAG.getNode(HSAILISD::FRACT, SL, MVT::f64, Op.getOperand(1));
 
   case HSAILIntrinsic::HSAIL_copysign_f32:
     return DAG.getNode(ISD::FCOPYSIGN, SL, MVT::f32,

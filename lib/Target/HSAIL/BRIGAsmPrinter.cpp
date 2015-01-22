@@ -653,6 +653,8 @@ static Brig::BrigOpcode getInstModBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_FMA;
   case HSAIL::abs_inst:
     return Brig::BRIG_OPCODE_ABS;
+  case HSAIL::fract_inst:
+    return Brig::BRIG_OPCODE_FRACT;
   default:
     llvm_unreachable("unhandled opcode");
   }

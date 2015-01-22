@@ -290,9 +290,10 @@ class InstMod_3Op_Pat<HSAILInst inst,
 >;
 
 multiclass InstMod_1Op_FPTypes<HSAILInst inst,
-                              SDPatternOperator node> {
-  def : InstMod_1Op_Pat<inst, node, f32, BrigTypeX.F32, BrigRound.FLOAT_NEAR_EVEN, 1>;
-  def : InstMod_1Op_Pat<inst, node, f64, BrigTypeX.F64, BrigRound.FLOAT_NEAR_EVEN, 0>;
+                              SDPatternOperator node,
+                              int round = BrigRound.FLOAT_NEAR_EVEN> {
+  def : InstMod_1Op_Pat<inst, node, f32, BrigTypeX.F32, round, 1>;
+  def : InstMod_1Op_Pat<inst, node, f64, BrigTypeX.F64, round, 0>;
 }
 
 multiclass InstMod_2Op_IntTypes<HSAILInst inst,
