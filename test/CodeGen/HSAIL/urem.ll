@@ -11,6 +11,18 @@ define void @test_urem_i32(i32 addrspace(1)* %out, i32 addrspace(1)* %in) {
   ret void
 }
 
+; HSAIL-LABEL: {{^}}prog function &test_urem_i32_7(
+; HSAIL-NOT: rem_u32
+; HSAIL: mul_u64 {{\$d[0-9]+}}, {{\$d[0-9]+}}, 613566757;
+; HSAIL: ret;
+define void @test_urem_i32_7(i32 addrspace(1)* %out, i32 addrspace(1)* %in) {
+  %num = load i32 addrspace(1) * %in
+  %result = urem i32 %num, 7
+  store i32 %result, i32 addrspace(1)* %out
+  ret void
+}
+
+
 ; FUNC-LABEL: {{^}}prog function &test_urem_v2i32
 ; HSAIL: rem_u32  {{\$s[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}};
 ; HSAIL: rem_u32  {{\$s[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}};
