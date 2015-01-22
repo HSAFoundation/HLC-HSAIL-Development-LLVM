@@ -23,10 +23,6 @@ defm : InstBasic_2Op_IntTypes<rem_inst, srem, 1>;
 defm : InstBasic_2Op_IntTypes<mulhi_inst, mulhu, 0>;
 defm : InstBasic_2Op_IntTypes<mulhi_inst, mulhs, 1>;
 
-defm mul_intrn : BinaryIntrF32<int_HSAIL_mul_ftz_f32, "mul_ftz_f32">;
-defm mul_intrn : BinaryIntrF64<int_HSAIL_mul_f64, "mul_f64">;
-
-
 
 defm umad  : TernaryIntrU32<int_HSAIL_mad_u32, "mad_u32">;
 defm umad  : TernaryIntrU64<int_HSAIL_mad_u64, "mad_u64">;
