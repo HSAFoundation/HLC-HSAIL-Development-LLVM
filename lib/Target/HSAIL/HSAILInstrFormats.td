@@ -143,6 +143,15 @@ class HSAILInstMod_2Op<string opName, bits<16> BrigVal> :
   let InstMod = 1;
 }
 
+class HSAILInstMod_3Op<string opName, bits<16> BrigVal> :
+  HSAILInst<(outs unknown:$dest),
+            (ins ftz:$ftz, BrigRound:$round, unknown:$src0, unknown:$src1, unknown:$src2, BrigTypeX:$TypeLength),
+  opName#"$ftz$round$TypeLength\t$dest, $src0, $src1, $src2", [], BrigVal
+> {
+  let hasSideEffects = 0;
+  let InstMod = 1;
+}
+
 
 // InstCvt
 class InstCvt<string opName> : HSAILInst<
@@ -260,6 +269,16 @@ class InstMod_2Op_Pat<HSAILInst inst,
   (inst ftz, round, $src0, $src1, bt)
 >;
 
+class InstMod_3Op_Pat<HSAILInst inst,
+                      SDPatternOperator node,
+                      ValueType vt,
+                      int bt,
+                      int round = BrigRound.NONE,
+                      int ftz = 0> : Pat <
+  (vt (node (GPROrImm vt:$src0), (GPROrImm vt:$src1), (GPROrImm vt:$src2))),
+  (inst ftz, round, $src0, $src1, $src2, bt)
+>;
+
 multiclass InstMod_2Op_IntTypes<HSAILInst inst,
                                 SDPatternOperator node,
                                 bit signed = 0> {
@@ -276,6 +295,12 @@ multiclass InstMod_2Op_FPTypes<HSAILInst inst,
                                SDPatternOperator node> {
   def : InstMod_2Op_Pat<inst, node, f32, BrigTypeX.F32, BrigRound.FLOAT_NEAR_EVEN, 1>;
   def : InstMod_2Op_Pat<inst, node, f64, BrigTypeX.F64, BrigRound.FLOAT_NEAR_EVEN, 0>;
+}
+
+multiclass InstMod_3Op_FPTypes<HSAILInst inst,
+                               SDPatternOperator node> {
+  def : InstMod_3Op_Pat<inst, node, f32, BrigTypeX.F32, BrigRound.FLOAT_NEAR_EVEN, 1>;
+  def : InstMod_3Op_Pat<inst, node, f64, BrigTypeX.F64, BrigRound.FLOAT_NEAR_EVEN, 0>;
 }
 
 

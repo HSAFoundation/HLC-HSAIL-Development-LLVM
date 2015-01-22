@@ -59,8 +59,9 @@ defm fabs : UnaryIntrF64<int_HSAIL_abs_f64, "abs_f64">;
 defm copysign : BinaryIntrF32<fcopysign, "copysign_f32">;
 defm copysign : BinaryIntrF64<fcopysign, "copysign_f64">;
 
-defm fma : TernaryIntrF32<int_HSAIL_fma_f32, "fma_ftz_f32">;
-defm fma : TernaryIntrF64<int_HSAIL_fma_f64, "fma_f64">;
+def fma_inst : HSAILInstMod_3Op<"fma", BrigOpcode.FMA>;
+defm : InstMod_3Op_FPTypes<fma_inst, fma>;
+
 defm nfma : TernaryIntrF32<int_HSAIL_nfma_f32, "nfma_f32">;
 defm nfma : TernaryIntrF64<int_HSAIL_nfma_f64, "nfma_f64">;
 

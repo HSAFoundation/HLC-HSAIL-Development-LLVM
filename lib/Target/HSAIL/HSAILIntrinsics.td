@@ -118,8 +118,10 @@ def int_HSAIL_ncos_f32 : GCCBuiltin<"__hsail_ncos_f32">, UnaryFloatIntrNoMem;
 def int_HSAIL_nexp2_f32 : GCCBuiltin<"__hsail_nexp2_f32">, UnaryFloatIntrNoMem;
 def int_HSAIL_abs_f32 : GCCBuiltin<"__hsail_abs_f32">, UnaryFloatIntrNoMem;
 def int_HSAIL_abs_f64 : GCCBuiltin<"__hsail_abs_f64">, UnaryFloatIntrNoMem;
-def int_HSAIL_fma_f32 : GCCBuiltin<"__hsail_fma_f32">, TernaryFloatIntrNoMem;
-def int_HSAIL_fma_f64 : GCCBuiltin<"__hsail_fma_f64">, TernaryFloatIntrNoMem;
+def int_HSAIL_fma_f32 : GCCBuiltin<"__hsail_fma_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty, llvm_float_ty], [IntrNoMem]>;
+def int_HSAIL_fma_f64 : GCCBuiltin<"__hsail_fma_f64">,
+  Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_double_ty, llvm_double_ty], [IntrNoMem]>;
 def int_HSAIL_nfma_f32 : GCCBuiltin<"__hsail_nfma_f32">, TernaryFloatIntrNoMem;
 def int_HSAIL_nfma_f64 : GCCBuiltin<"__hsail_nfma_f64">, TernaryFloatIntrNoMem;
 def int_HSAIL_nlog2_f32 : GCCBuiltin<"__hsail_nlog2_f32">, UnaryFloatIntrNoMem;
