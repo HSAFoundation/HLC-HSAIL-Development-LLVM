@@ -4,6 +4,7 @@ def sub_inst : HSAILInstMod_2Op<"sub", BrigOpcode.SUB>;
 def mul_inst : HSAILInstMod_2Op<"mul", BrigOpcode.MUL>;
 def div_inst : HSAILInstMod_2Op<"div", BrigOpcode.DIV>;
 def rem_inst : HSAILInstBasic_2Op<"rem", BrigOpcode.REM>;
+def mulhi_inst : HSAILInstBasic_2Op<"mulhi", BrigOpcode.MULHI>;
 
 defm : InstMod_2Op_IntTypes<add_inst, add>;
 defm : InstMod_2Op_FPTypes<add_inst, fadd>;
@@ -19,21 +20,13 @@ defm : InstMod_2Op_FPTypes<div_inst, fdiv>;
 defm : InstBasic_2Op_IntTypes<rem_inst, urem, 0>;
 defm : InstBasic_2Op_IntTypes<rem_inst, srem, 1>;
 
+defm : InstBasic_2Op_IntTypes<mulhi_inst, mulhu, 0>;
+defm : InstBasic_2Op_IntTypes<mulhi_inst, mulhs, 1>;
+
 defm mul_intrn : BinaryIntrF32<int_HSAIL_mul_ftz_f32, "mul_ftz_f32">;
 defm mul_intrn : BinaryIntrF64<int_HSAIL_mul_f64, "mul_f64">;
 
-defm mulhi : BinaryOpU32<mulhu, "mulhi_u32">;
-defm mulhi : BinaryOpS32<mulhs, "mulhi_s32">;
-defm mulhi : BinaryOpU64<mulhu, "mulhi_u64">;
-defm mulhi : BinaryOpS64<mulhs, "mulhi_s64">;
 
-
-// mulhi intrinsic
-defm mulhi_intrn : BinaryIntrS32<int_HSAIL_mulhi_s32, "mulhi_s32">;
-defm mulhi_intrn : BinaryIntrU32<int_HSAIL_mulhi_u32, "mulhi_u32">;
-
-defm mulhi_intrn : BinaryIntrS64<int_HSAIL_mulhi_s64, "mulhi_s64">;
-defm mulhi_intrn : BinaryIntrU64<int_HSAIL_mulhi_u64, "mulhi_u64">;
 
 defm umad  : TernaryIntrU32<int_HSAIL_mad_u32, "mad_u32">;
 defm umad  : TernaryIntrU64<int_HSAIL_mad_u64, "mad_u64">;

@@ -1331,6 +1331,24 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
   case HSAILIntrinsic::HSAIL_fma_f64:
     return DAG.getNode(ISD::FMA, SL, MVT::f64,
                        Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+
+    // FIXME: There should be LLVM intrinsics for mulhs / mulhu.
+  case HSAILIntrinsic::HSAIL_mulhi_s32:
+    return DAG.getNode(ISD::MULHS, SL, MVT::i32,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_mulhi_s64:
+    return DAG.getNode(ISD::MULHS, SL, MVT::i64,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_mulhi_u32:
+    return DAG.getNode(ISD::MULHU, SL, MVT::i32,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_mulhi_u64:
+    return DAG.getNode(ISD::MULHU, SL, MVT::i64,
+                       Op.getOperand(1), Op.getOperand(2));
+
   default:
     return Op;
   }
