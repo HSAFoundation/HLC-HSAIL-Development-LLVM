@@ -1636,6 +1636,14 @@ HSAILTargetLowering::isZExtFree(EVT VT1, EVT VT2) const
   return false;
 }
 
+bool HSAILTargetLowering::isFAbsFree(EVT VT) const {
+  return true;
+}
+
+bool HSAILTargetLowering::isFNegFree(EVT VT) const {
+  return true;
+}
+
 /// isNarrowingProfitable - Return true if it's profitable to narrow
 /// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
 /// from i32 to i8 but not from i32 to i16.
