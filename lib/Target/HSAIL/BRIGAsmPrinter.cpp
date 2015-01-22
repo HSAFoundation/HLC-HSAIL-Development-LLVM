@@ -620,6 +620,10 @@ static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
   switch (Opc) {
   case HSAIL::mov:
     return Brig::BRIG_OPCODE_MOV;
+  case HSAIL::shl_inst:
+    return Brig::BRIG_OPCODE_SHL;
+  case HSAIL::shr_inst:
+    return Brig::BRIG_OPCODE_SHR;
   case HSAIL::and_inst:
     return Brig::BRIG_OPCODE_AND;
   case HSAIL::or_inst:

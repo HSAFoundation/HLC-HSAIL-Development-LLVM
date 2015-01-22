@@ -144,15 +144,18 @@ defm cttz : UnaryOpU64<cttz, "lastbit_u32_u64">;
 
 ////////////////////////////////////////////////////////////////////////////////
 // shl (integer, signed and unsigned, 32-bit and 64-bit)
-defm shl : BinaryNCOpU32<shl, "shl_u32">;
-defm shl : ShiftOpU64<shl, "shl_u64">;
-
-////////////////////////////////////////////////////////////////////////////////
 // shr (integer, signed and unsigned, 32-bit and 64-bit)
-defm shr : BinaryNCOpU32<srl, "shr_u32">;
-defm shr : BinaryNCOpS32<sra, "shr_s32">;
-defm shr : ShiftOpU64<srl, "shr_u64">;
-defm shr : ShiftOpS64<sra, "shr_s64">;
+def shl_inst : HSAILInstBasic_2Op<"shl", BrigOpcode.SHL>;
+def shr_inst : HSAILInstBasic_2Op<"shr", BrigOpcode.SHR>;
+
+def : InstBasic_2Op_Pat<shl_inst, shl, i32, i32, BrigTypeX.U32>;
+def : InstBasic_2Op_Pat<shl_inst, shl, i64, i32, BrigTypeX.U64>;
+
+def : InstBasic_2Op_Pat<shr_inst, srl, i32, i32, BrigTypeX.U32>;
+def : InstBasic_2Op_Pat<shr_inst, srl, i64, i32, BrigTypeX.U64>;
+
+def : InstBasic_2Op_Pat<shr_inst, sra, i32, i32, BrigTypeX.S32>;
+def : InstBasic_2Op_Pat<shr_inst, sra, i64, i32, BrigTypeX.S64>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // cmov (1-bit, 32-bit, and 64-bit; integer and float)

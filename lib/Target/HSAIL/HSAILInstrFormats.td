@@ -216,43 +216,44 @@ multiclass InstBasic_1Op_FPTypes<HSAILInst inst,
 
 class InstBasic_2Op_Pat<HSAILInst inst,
                         SDPatternOperator node,
-                        ValueType vt,
+                        ValueType vt0,
+                        ValueType vt1,
                         int bt> : Pat <
-  (vt (node (GPROrImm vt:$src0), (GPROrImm vt:$src1))),
+  (vt0 (node (GPROrImm vt0:$src0), (vt1 (GPROrImm vt1:$src1)))),
   (inst $src0, $src1, bt)
 >;
 
 multiclass InstBasic_2Op_IntTypes<HSAILInst inst,
                                   SDPatternOperator node,
                                   bit signed = 0> {
-  def : InstBasic_2Op_Pat<inst, node, i32,
+  def : InstBasic_2Op_Pat<inst, node, i32, i32,
     !if(signed, BrigTypeX.S32, BrigTypeX.U32)
   >;
 
-  def : InstBasic_2Op_Pat<inst, node, i64,
+  def : InstBasic_2Op_Pat<inst, node, i64, i64,
     !if(signed, BrigTypeX.S64, BrigTypeX.U64)
   >;
 }
 
 multiclass InstBasic_2Op_BitIntTypes<HSAILInst inst,
                                      SDPatternOperator node> {
-  def : InstBasic_2Op_Pat<inst, node, i32,
+  def : InstBasic_2Op_Pat<inst, node, i32, i32,
     BrigTypeX.B32
   >;
 
-  def : InstBasic_2Op_Pat<inst, node, i64,
+  def : InstBasic_2Op_Pat<inst, node, i64, i64,
     BrigTypeX.B64
   >;
 
-  def : InstBasic_2Op_Pat<inst, node, i1,
+  def : InstBasic_2Op_Pat<inst, node, i1, i1,
     BrigTypeX.B1
   >;
 }
 
 multiclass InstBasic_2Op_FPTypes<HSAILInst inst,
                                 SDPatternOperator node> {
-  def : InstBasic_2Op_Pat<inst, node, f32, BrigTypeX.F32>;
-  def : InstBasic_2Op_Pat<inst, node, f64, BrigTypeX.F64>;
+  def : InstBasic_2Op_Pat<inst, node, f32, f32, BrigTypeX.F32>;
+  def : InstBasic_2Op_Pat<inst, node, f64, f64, BrigTypeX.F64>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
