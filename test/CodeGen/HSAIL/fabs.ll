@@ -10,6 +10,9 @@ declare double @llvm.fabs.f64(double) readnone
 declare <2 x double> @llvm.fabs.v2f64(<2 x double>) readnone
 declare <4 x double> @llvm.fabs.v4f64(<4 x double>) readnone
 
+declare float @llvm.HSAIL.abs.f32(float) readnone
+declare double @llvm.HSAIL.abs.f64(double) readnone
+
 
 ; DAGCombiner will transform:
 ; (fabs (f32 bitcast (i32 a))) => (f32 bitcast (and (i32 a), 0x7FFFFFFF))
@@ -143,6 +146,22 @@ define void @fabs_free_f64(double addrspace(1)* %out, i64 %in) {
 define void @fabs_fn_free_f64(double addrspace(1)* %out, i64 %in) {
   %bc= bitcast i64 %in to double
   %fabs = call double @fabs(double %bc)
+  store double %fabs, double addrspace(1)* %out
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &legacy_hsail_abs_f32(
+; HSAIL: abs_f32 {{\$s[0-9]+}}, {{\$s[0-9]+}};
+define void @legacy_hsail_abs_f32(float addrspace(1)* %out, float %in) {
+  %fabs = call float @llvm.HSAIL.abs.f32(float %in)
+  store float %fabs, float addrspace(1)* %out
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &legacy_hsail_abs_f64(
+; HSAIL: abs_f64 {{\$d[0-9]+}}, {{\$d[0-9]+}};
+define void @legacy_hsail_abs_f64(double addrspace(1)* %out, double %in) {
+  %fabs = call double @llvm.HSAIL.abs.f64(double %in)
   store double %fabs, double addrspace(1)* %out
   ret void
 }

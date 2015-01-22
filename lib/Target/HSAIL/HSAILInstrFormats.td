@@ -259,6 +259,16 @@ multiclass InstBasic_2Op_FPTypes<HSAILInst inst,
 // Mod instruction patterns
 ////////////////////////////////////////////////////////////////////////////////
 
+class InstMod_1Op_Pat<HSAILInst inst,
+                      SDPatternOperator node,
+                      ValueType vt,
+                      int bt,
+                      int round = BrigRound.NONE,
+                      int ftz = 0> : Pat <
+  (vt (node (GPROrImm vt:$src0))),
+  (inst ftz, round, $src0, bt)
+>;
+
 class InstMod_2Op_Pat<HSAILInst inst,
                       SDPatternOperator node,
                       ValueType vt,
@@ -278,6 +288,12 @@ class InstMod_3Op_Pat<HSAILInst inst,
   (vt (node (GPROrImm vt:$src0), (GPROrImm vt:$src1), (GPROrImm vt:$src2))),
   (inst ftz, round, $src0, $src1, $src2, bt)
 >;
+
+multiclass InstMod_1Op_FPTypes<HSAILInst inst,
+                              SDPatternOperator node> {
+  def : InstMod_1Op_Pat<inst, node, f32, BrigTypeX.F32, BrigRound.FLOAT_NEAR_EVEN, 1>;
+  def : InstMod_1Op_Pat<inst, node, f64, BrigTypeX.F64, BrigRound.FLOAT_NEAR_EVEN, 0>;
+}
 
 multiclass InstMod_2Op_IntTypes<HSAILInst inst,
                                 SDPatternOperator node,

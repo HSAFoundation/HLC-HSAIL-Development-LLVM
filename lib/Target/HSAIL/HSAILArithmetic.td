@@ -5,6 +5,7 @@ def mul_inst : HSAILInstMod_2Op<"mul", BrigOpcode.MUL>;
 def div_inst : HSAILInstMod_2Op<"div", BrigOpcode.DIV>;
 def rem_inst : HSAILInstBasic_2Op<"rem", BrigOpcode.REM>;
 def mulhi_inst : HSAILInstBasic_2Op<"mulhi", BrigOpcode.MULHI>;
+def abs_inst : HSAILInstMod_1Op<"abs", BrigOpcode.ABS>;
 
 defm : InstMod_2Op_IntTypes<add_inst, add>;
 defm : InstMod_2Op_FPTypes<add_inst, fadd>;
@@ -24,6 +25,11 @@ defm : InstBasic_2Op_IntTypes<mulhi_inst, mulhu, 0>;
 defm : InstBasic_2Op_IntTypes<mulhi_inst, mulhs, 1>;
 
 
+def : InstMod_1Op_Pat<abs_inst, fabs, f32, BrigTypeX.F32>;
+def : InstMod_1Op_Pat<abs_inst, fabs, f64, BrigTypeX.F64>;
+
+
+
 defm umad  : TernaryIntrU32<int_HSAIL_mad_u32, "mad_u32">;
 defm umad  : TernaryIntrU64<int_HSAIL_mad_u64, "mad_u64">;
 
@@ -41,8 +47,6 @@ defm abs : UnaryIntrU32<int_HSAIL_abs_u32, "abs_u32">;
 defm abs : UnaryIntrS32<int_HSAIL_abs_s32, "abs_s32">;
 defm abs : UnaryIntrU64<int_HSAIL_abs_u64, "abs_u64">;
 defm abs : UnaryIntrS64<int_HSAIL_abs_s64, "abs_s64">;
-defm fabs : UnaryIntrF32<int_HSAIL_abs_f32, "abs_f32">;
-defm fabs : UnaryIntrF64<int_HSAIL_abs_f64, "abs_f64">;
 
 defm copysign : BinaryIntrF32<fcopysign, "copysign_f32">;
 defm copysign : BinaryIntrF64<fcopysign, "copysign_f64">;
@@ -528,7 +532,3 @@ let hasSideEffects = 0 in {
 def pack_u32x2_u32_iri: HSAILInst<(outs GPR64:$dest), (ins i32imm:$src0, GPR32:$src1, i32imm:$src2),
                                   "pack_u32x2_u32\t $dest, $src0, $src1, $src2", []>;
 }
-
-// Map llvm fabs intrinsics to hsail fabs intrinsics
-def : Pat<(fabs GPR32:$dest), (fabs_f32 GPR32:$dest)>;
-def : Pat<(fabs GPR64:$dest), (fabs_f64 GPR64:$dest)>;
