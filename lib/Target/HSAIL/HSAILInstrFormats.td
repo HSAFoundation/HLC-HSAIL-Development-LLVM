@@ -264,6 +264,14 @@ multiclass InstBasic_2Op_FPTypes<HSAILInst inst,
   def : InstBasic_2Op_Pat<inst, node, f64, f64, BrigTypeX.F64>;
 }
 
+class InstBasic_CMov_Pat<HSAILInst inst,
+                         ValueType vt,
+                         int bt> : Pat <
+  (select i1:$src0, (GPROrImm vt:$src1), (GPROrImm vt:$src2)),
+  (vt (inst $src0, $src1, $src2, bt))
+>;
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Mod instruction patterns
 ////////////////////////////////////////////////////////////////////////////////

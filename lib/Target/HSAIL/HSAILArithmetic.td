@@ -160,47 +160,17 @@ def : InstBasic_2Op_Pat<shr_inst, sra, i64, i32, BrigTypeX.S64>;
 ////////////////////////////////////////////////////////////////////////////////
 // cmov (1-bit, 32-bit, and 64-bit; integer and float)
 
-def cmov_b1 : HSAILInst<(outs CR:$dest), (ins CR:$src0, CR:$src1, CR:$src2),
-               "cmov_b1\t$dest, $src0, $src1, $src2",
-               [(set (i1 CR:$dest),
-                     (select (i1 CR:$src0), (i1 CR:$src1), (i1 CR:$src2)))]>;
+def cmov_inst : HSAILInstBasic_3Op<"cmov", BrigOpcode.CMOV>;
 
-multiclass cmov<string asm, ValueType Ty, Operand OpTy, SDNode ImmTy,
-                RegisterClass RC> {
-
-    def _rr : HSAILInst<(outs RC:$dest), (ins CR:$src0, RC:$src1, RC:$src2),
-                        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-                        [(set (Ty RC:$dest),
-                              (select (i1 CR:$src0),
-                                      (Ty RC:$src1),
-                                      (Ty RC:$src2)))]>;
-
-    def _ri : HSAILInst<(outs RC:$dest), (ins CR:$src0, RC:$src1, OpTy:$src2),
-                        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-                        [(set (Ty RC:$dest),
-                              (select (i1 CR:$src0),
-                                      (Ty RC:$src1),
-                                      (Ty ImmTy:$src2)))]>;
-
-    def _ir : HSAILInst<(outs RC:$dest), (ins CR:$src0, OpTy:$src1, RC:$src2),
-                        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-                        [(set (Ty RC:$dest),
-                              (select (i1 CR:$src0),
-                                      (Ty ImmTy:$src1),
-                                      (Ty RC:$src2)))]>;
-
-    def _ii : HSAILInst<(outs RC:$dest), (ins CR:$src0, OpTy:$src1, OpTy:$src2),
-                        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-                        [(set (Ty RC:$dest),
-                              (select (i1 CR:$src0),
-                                      (Ty ImmTy:$src1),
-                                      (Ty ImmTy:$src2)))]>;
+// Reduce complexity to prefer selecting various min / max patterns on
+// select.
+let AddedComplexity = -10 in {
+  def : InstBasic_CMov_Pat<cmov_inst, i1, BrigTypeX.B1>;
+  def : InstBasic_CMov_Pat<cmov_inst, i32, BrigTypeX.B32>;
+  def : InstBasic_CMov_Pat<cmov_inst, f32, BrigTypeX.B32>;
+  def : InstBasic_CMov_Pat<cmov_inst, i64, BrigTypeX.B64>;
+  def : InstBasic_CMov_Pat<cmov_inst, f64, BrigTypeX.B64>;
 }
-
-defm cmov_b32_i : cmov<"cmov_b32", i32, i32imm, imm,   GPR32>;
-defm cmov_b32_f : cmov<"cmov_b32", f32, f32imm, fpimm, GPR32>;
-defm cmov_b64_i : cmov<"cmov_b64", i64, i64imm, imm,   GPR64>;
-defm cmov_b64_f : cmov<"cmov_b64", f64, f64imm, fpimm, GPR64>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // bitrev (integer, 32-bit, and 64-bit)

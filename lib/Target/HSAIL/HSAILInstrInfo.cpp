@@ -1093,8 +1093,7 @@ HSAILInstrInfo::OptimizeCompareInstr(MachineInstr *CmpInstr,
     return false;
 
   MachineInstr &cmov = *MRI->use_instr_begin(SrcReg);
-  if (cmov.getOpcode() != HSAIL::cmov_b32_i_ii &&
-      cmov.getOpcode() != HSAIL::cmov_b64_i_ii)
+  if (cmov.getOpcode() != HSAIL::cmov_inst)
     return false;
 
   if ((!cmov.getOperand(2).isImm() || !cmov.getOperand(3).isImm()) &&
