@@ -111,12 +111,17 @@ def fract_inst : HSAILInstMod_1Op<"fract", BrigOpcode.FRACT>;
 defm : InstMod_1Op_FPTypes<fract_inst, HSAILfract, BrigRound.NONE>;
 // > HSAIL_SPEC_CURRENT
 
-// Floating-Point Special Functions Operations
-defm ncos : UnaryIntrF32<int_HSAIL_ncos_f32, "ncos_f32">;
-defm nexp2 : UnaryIntrF32<int_HSAIL_nexp2_f32, "nexp2_f32">;
-defm nlog2 : UnaryIntrF32<int_HSAIL_nlog2_f32, "nlog2_f32">;
+// Native Floating-Point Special Functions Operations
+def nsin_inst : HSAILInstBasic_1Op<"nsin", BrigOpcode.NSIN>;
+def ncos_inst : HSAILInstBasic_1Op<"ncos", BrigOpcode.NCOS>;
+def nexp2_inst : HSAILInstBasic_1Op<"nexp2", BrigOpcode.NEXP2>;
+def nlog2_inst : HSAILInstBasic_1Op<"nlog2", BrigOpcode.NLOG2>;
 
-defm nsin : UnaryIntrF32<int_HSAIL_nsin_f32, "nsin_f32">;
+def : InstBasic_1Op_Pat<nsin_inst, int_HSAIL_nsin_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<ncos_inst, int_HSAIL_ncos_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<nexp2_inst, int_HSAIL_nexp2_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<nlog2_inst, int_HSAIL_nlog2_f32, f32, BrigTypeX.F32>;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Logical bit ops.
