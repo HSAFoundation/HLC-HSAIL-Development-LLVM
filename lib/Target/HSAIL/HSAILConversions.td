@@ -1,8 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // conversion routines
 
-def cvt : InstCvt<"cvt">;
-
 
 class CvtPat<ValueType destvt,
              ValueType srcvt,

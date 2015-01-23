@@ -187,6 +187,8 @@ protected:
   void BrigEmitImageInst(const MachineInstr *MI, HSAIL_ASM::InstImage inst);
 
   HSAIL_ASM::InstMod BrigEmitModInst(const MachineInstr &MI, unsigned BrigOpc);
+  HSAIL_ASM::InstSourceType BrigEmitSourceTypeInst(const MachineInstr &MI,
+                                                   unsigned BrigOpc);
 
   void BrigEmitVecOperand(const MachineInstr *MI, unsigned opStart,
                           unsigned numRegs, HSAIL_ASM::Inst inst);

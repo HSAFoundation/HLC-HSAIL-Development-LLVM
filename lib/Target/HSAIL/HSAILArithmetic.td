@@ -140,9 +140,31 @@ def not_inst : HSAILInstBasic_1Op<"not", BrigOpcode.NOT>;
 defm : InstBasic_1Op_BitIntTypes<not_inst, not>;
 
 ////////////////////////////////////////////////////////////////////////////////
+// cvt
+
+def cvt : InstCvt<"cvt">;
+
+////////////////////////////////////////////////////////////////////////////////
 // popcount (integer, 1-bit, 32-bit, and 64-bit)
-defm ctpop : UnaryOpU32<ctpop, "popcount_u32_b32">;
-defm ctpop : UnaryOpU64<ctpop, "popcount_u32_b64">;
+
+
+def popcount_inst : HSAILInstSourceType_1Op<"popcount", BrigOpcode.POPCOUNT>;
+
+def : Pat<
+  (i64 (ctpop i64:$src0)),
+  (cvt 0, 0, BrigTypeX.U64, BrigTypeX.U32, (i32 (popcount_inst i64:$src0, BrigTypeX.U32, BrigTypeX.B64)))
+>;
+
+def : Pat<
+  (i32 (trunc (ctpop i64:$src0))),
+  (i32 (popcount_inst i64:$src0, BrigTypeX.U32, BrigTypeX.B64))
+>;
+
+def : Pat<
+  (i32 (ctpop i32:$src0)),
+  (popcount_inst i32:$src0, BrigTypeX.U32, BrigTypeX.B32)
+>;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // firstbit (integer, 1-bit, 32-bit, and 64-bit)

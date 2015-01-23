@@ -850,6 +850,10 @@ public:
     return get(Opcode).TSFlags & HSAILInstrFlags::InstMod;
   }
 
+  bool isInstSourceType(uint16_t Opcode) const {
+    return get(Opcode).TSFlags & HSAILInstrFlags::InstSourceType;
+  }
+
 private:
   RegScavenger *RS;
 

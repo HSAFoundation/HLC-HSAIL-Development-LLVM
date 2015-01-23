@@ -684,6 +684,15 @@ static Brig::BrigOpcode getInstModBrigOpcode(unsigned Opc) {
   }
 }
 
+static Brig::BrigOpcode getInstSourceTypeBrigOpcode(unsigned Opc) {
+  switch (Opc) {
+  case HSAIL::popcount_inst:
+    return Brig::BRIG_OPCODE_POPCOUNT;
+  default:
+    llvm_unreachable("unhandled opcode");
+  }
+}
+
 HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   // autoCodeEmitter will emit required amount of bytes in corresponding MCSection
   autoCodeEmitter ace(&OutStreamer, &brigantine);
@@ -722,6 +731,9 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     // modifiers.
     return BrigEmitModInst(*II, getInstModBrigOpcode(Opc));
   }
+
+  if (TII->isInstSourceType(Opc))
+    return BrigEmitSourceTypeInst(*II, getInstSourceTypeBrigOpcode(Opc));
 
   if (HSAIL::isAtomicOp(II)) {
     bool hasRet = HSAIL::isRetAtomicOp(II);
@@ -1921,6 +1933,37 @@ HSAIL_ASM::InstMod BRIGAsmPrinter::BrigEmitModInst(const MachineInstr &MI,
     = TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
   inst.modifier().round()
     = TII->getNamedOperand(MI, HSAIL::OpName::round)->getImm();
+
+  BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
+                  inst);
+  BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0),
+                  inst);
+
+  int Src1Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src1);
+  if (Src1Idx != -1)
+    BrigEmitOperand(&MI, Src1Idx, inst);
+
+  int Src2Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src2);
+  if (Src2Idx != -1)
+    BrigEmitOperand(&MI, Src2Idx, inst);
+
+  return inst;
+}
+
+HSAIL_ASM::InstSourceType
+BRIGAsmPrinter::BrigEmitSourceTypeInst(const MachineInstr &MI,
+                                       unsigned BrigOpc) {
+  HSAIL_ASM::InstSourceType inst
+    = brigantine.addInst<HSAIL_ASM::InstSourceType>(BrigOpc);
+
+  unsigned Opc = MI.getOpcode();
+
+  inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
+  inst.sourceType()
+    = TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
+
+  assert(HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest) == 0);
+  assert(HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0) == 1);
 
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
                   inst);

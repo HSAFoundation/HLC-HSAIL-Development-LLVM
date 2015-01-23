@@ -176,6 +176,21 @@ class InstCvt<string opName> : HSAILInst<
   let InstCvt = 1;
 }
 
+// InstSourceType
+class HSAILInstSourceType<bits<16> BrigVal,
+                          dag outs, dag ins, string asmstr> :
+  HSAILInst<outs, ins, asmstr, [], BrigVal> {
+  let hasSideEffects = 0;
+  let InstSourceType = 1;
+}
+
+class HSAILInstSourceType_1Op<string opName, bits<16> BrigVal> :
+  HSAILInstSourceType<BrigVal,
+                 (outs unknown:$dest),
+                 (ins unknown:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+  opName#"$TypeLength$sourceType\t$dest, $src0"
+>;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Basic instruction patterns
 ////////////////////////////////////////////////////////////////////////////////
@@ -356,6 +371,20 @@ multiclass InstMod_3Op_FPTypes<HSAILInst inst,
   def : InstMod_3Op_Pat<inst, node, f32, BrigTypeX.F32, BrigRound.FLOAT_NEAR_EVEN, 1>;
   def : InstMod_3Op_Pat<inst, node, f64, BrigTypeX.F64, BrigRound.FLOAT_NEAR_EVEN, 0>;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// SourceType instruction patterns
+////////////////////////////////////////////////////////////////////////////////
+
+class InstSourceType_1Op_Pat<HSAILInst inst,
+                             SDPatternOperator node,
+                             ValueType vt,
+                             int destbt,
+                             int srcbt> : Pat <
+  (vt (node (GPROrImm vt:$src0))),
+  (inst $src0, destbt, srcbt)
+>;
+
 
 
 let TargetPrefix = "HSAIL", isTarget = 1 in {
