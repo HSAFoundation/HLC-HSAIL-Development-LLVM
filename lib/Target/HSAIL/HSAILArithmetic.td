@@ -81,11 +81,30 @@ defm mul24 : BinaryIntrU32<int_HSAIL_mul24_u32, "mul24_u32">;
 
 defm pdiv : BinaryIntrF32<int_HSAIL_div_f32, "div_f32">;
 
-defm sqrt : UnaryIntrF32<int_HSAIL_sqrt_ftz_f32, "sqrt_ftz_f32">;
-defm sqrt : UnaryIntrF64<int_HSAIL_sqrt_f64, "sqrt_f64">;
 
-defm nsqrt : UnaryIntrF32<int_HSAIL_nsqrt_f32, "nsqrt_f32">;
-defm nsqrt : UnaryIntrF64<int_HSAIL_nsqrt_f64, "nsqrt_f64">;
+def sqrt_inst : HSAILInstMod_1Op<"sqrt", BrigOpcode.SQRT>;
+def nsqrt_inst : HSAILInstBasic_1Op<"nsqrt", BrigOpcode.NSQRT>;
+def nrsqrt_inst : HSAILInstBasic_1Op<"nrsqrt", BrigOpcode.NRSQRT>;
+def nrcp_inst : HSAILInstBasic_1Op<"rcp", BrigOpcode.NRCP>;
+
+// FIXME: Having the ftz explicitly in this one is totally inconsistent
+def : InstMod_1Op_Pat<sqrt_inst, int_HSAIL_sqrt_ftz_f32, f32, BrigTypeX.F32,
+                      BrigRound.FLOAT_NEAR_EVEN, 1
+>;
+
+def : InstMod_1Op_Pat<sqrt_inst, int_HSAIL_sqrt_f64, f64, BrigTypeX.F64,
+                      BrigRound.FLOAT_NEAR_EVEN, 0
+>;
+
+def : InstBasic_1Op_Pat<nsqrt_inst, int_HSAIL_nsqrt_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<nsqrt_inst, int_HSAIL_nsqrt_f64, f64, BrigTypeX.F64>;
+
+def : InstBasic_1Op_Pat<nrsqrt_inst, int_HSAIL_nrsqrt_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<nrsqrt_inst, int_HSAIL_nrsqrt_f64, f64, BrigTypeX.F64>;
+
+def : InstBasic_1Op_Pat<nrcp_inst, int_HSAIL_nrcp_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<nrcp_inst, int_HSAIL_nrcp_f64, f64, BrigTypeX.F64>;
+
 
 // HSAIL_SPEC_CURRENT <
 def fract_inst : HSAILInstMod_1Op<"fract", BrigOpcode.FRACT>;
@@ -96,10 +115,7 @@ defm : InstMod_1Op_FPTypes<fract_inst, HSAILfract, BrigRound.NONE>;
 defm ncos : UnaryIntrF32<int_HSAIL_ncos_f32, "ncos_f32">;
 defm nexp2 : UnaryIntrF32<int_HSAIL_nexp2_f32, "nexp2_f32">;
 defm nlog2 : UnaryIntrF32<int_HSAIL_nlog2_f32, "nlog2_f32">;
-defm nrcp : UnaryIntrF32<int_HSAIL_nrcp_f32, "nrcp_f32">;
-defm nrcp : UnaryIntrF64<int_HSAIL_nrcp_f64, "nrcp_f64">;
-defm nrsqrt : UnaryIntrF32<int_HSAIL_nrsqrt_f32, "nrsqrt_f32">;
-defm nrsqrt : UnaryIntrF64<int_HSAIL_nrsqrt_f64, "nrsqrt_f64">;
+
 defm nsin : UnaryIntrF32<int_HSAIL_nsin_f32, "nsin_f32">;
 
 ////////////////////////////////////////////////////////////////////////////////

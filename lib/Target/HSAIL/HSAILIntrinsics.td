@@ -130,16 +130,38 @@ def int_HSAIL_nfma_f32 : GCCBuiltin<"__hsail_nfma_f32">, TernaryFloatIntrNoMem;
 def int_HSAIL_nfma_f64 : GCCBuiltin<"__hsail_nfma_f64">, TernaryFloatIntrNoMem;
 def int_HSAIL_nlog2_f32 : GCCBuiltin<"__hsail_nlog2_f32">, UnaryFloatIntrNoMem;
 def int_HSAIL_nsin_f32 : GCCBuiltin<"__hsail_nsin_f32">, UnaryFloatIntrNoMem;
+
 def int_HSAIL_nsqrt_f32 : GCCBuiltin<"__hsail_nsqrt_f32">,
-  Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]>;
+  Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]
+>;
+
 def int_HSAIL_nsqrt_f64 : GCCBuiltin<"__hsail_nsqrt_f64">,
-  Intrinsic<[llvm_double_ty], [llvm_double_ty], [IntrNoMem]>;
-def int_HSAIL_sqrt_ftz_f32 : GCCBuiltin<"__hsail_sqrt_ftz_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_sqrt_f64 : GCCBuiltin<"__hsail_sqrt_f64">, UnaryFloatIntrNoMem;
-def int_HSAIL_nrsqrt_f32 : GCCBuiltin<"__hsail_nrsqrt_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_nrsqrt_f64 : GCCBuiltin<"__hsail_nrsqrt_f64">, UnaryFloatIntrNoMem;
-def int_HSAIL_nrcp_f32 : GCCBuiltin<"__hsail_nrcp_f32">, UnaryFloatIntrNoMem;
-def int_HSAIL_nrcp_f64 : GCCBuiltin<"__hsail_nrcp_f64">, UnaryFloatIntrNoMem;
+  Intrinsic<[llvm_double_ty], [llvm_double_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_sqrt_ftz_f32 : GCCBuiltin<"__hsail_sqrt_ftz_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_sqrt_f64 : GCCBuiltin<"__hsail_sqrt_f64">,
+  Intrinsic<[llvm_double_ty], [llvm_double_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_nrsqrt_f32 : GCCBuiltin<"__hsail_nrsqrt_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_nrsqrt_f64 : GCCBuiltin<"__hsail_nrsqrt_f64">,
+  Intrinsic<[llvm_double_ty], [llvm_double_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_nrcp_f32 : GCCBuiltin<"__hsail_nrcp_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_nrcp_f64 : GCCBuiltin<"__hsail_nrcp_f64">,
+  Intrinsic<[llvm_double_ty], [llvm_double_ty], [IntrNoMem]
+>;
 
 def int_HSAIL_ceil_f32 : GCCBuiltin<"__hsail_ceil_f32">,
           Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]>;

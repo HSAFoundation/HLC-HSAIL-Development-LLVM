@@ -395,24 +395,24 @@ let Predicates = [UnsafeFPMath] in {
     // Pure 1.0 / x
     let AddedComplexity = 5 in {
      def : Pat<(fdiv (fp32imm1), (f32 GPR32:$src)),
-               (nrcp_f32 GPR32:$src)>;
+               (nrcp_inst GPR32:$src, BrigTypeX.F32)>;
      def : Pat<(fdiv (fp64imm1), (f64 GPR64:$src)),
-               (nrcp_f64 GPR64:$src)>;
+               (nrcp_inst GPR64:$src, BrigTypeX.F64)>;
     }
 
     // -1.0 / x
     let AddedComplexity = 4 in {
      def : Pat<(fdiv fp32imm_minus1, (f32 GPR32:$src)),
-               (neg (nrcp_f32 (f32 GPR32:$src)), BrigTypeX.F32)>;
+               (neg (f32 (nrcp_inst (f32 GPR32:$src), BrigTypeX.F32)), BrigTypeX.F32)>;
      def : Pat<(fdiv fp64imm_minus1, (f64 GPR64:$src)),
-               (neg (nrcp_f64 (f64 GPR64:$src)), BrigTypeX.F64)>;
+               (neg (f64 (nrcp_inst (f64 GPR64:$src), BrigTypeX.F64)), BrigTypeX.F64)>;
     }
 
     let AddedComplexity = 5 in {
      def : Pat<(fdiv fp32imm_minus1, (fneg (f32 GPR32:$src))),
-               (nrcp_f32 (f32 GPR32:$src))>;
+               (nrcp_inst (f32 GPR32:$src), BrigTypeX.F32)>;
      def : Pat<(fdiv fp64imm_minus1, (fneg (f64 GPR64:$src))),
-               (nrcp_f64 (f64 GPR64:$src))>;
+               (nrcp_inst (f64 GPR64:$src), BrigTypeX.F64)>;
     }
 }
 
@@ -423,21 +423,21 @@ let Predicates = [UnsafeFPMath] in {
     // Pure 1.0 / sqrt(x)
     let AddedComplexity = 15 in {
         def : Pat<(fdiv (fp32imm1), (int_HSAIL_nsqrt_f32 (f32 GPR32:$src))),
-                  (nrsqrt_f32 GPR32:$src)>;
+                  (nrsqrt_inst GPR32:$src, BrigTypeX.F32)>;
         def : Pat<(fdiv (fp64imm1), (int_HSAIL_nsqrt_f64 (f64 GPR64:$src))),
-                  (nrsqrt_f64 GPR64:$src)>;
+                  (nrsqrt_inst GPR64:$src, BrigTypeX.F64)>;
     }
 
     let AddedComplexity = 10 in {
         def : Pat<(f32 (fdiv GPR32:$src0, (int_HSAIL_nsqrt_f32 GPR32:$src1))),
-                  (f32 (mul_inst 1, 0, GPR32:$src0, (nrsqrt_f32 (f32 GPR32:$src1)), BrigTypeX.F32))>;
+                  (f32 (mul_inst 1, 0, GPR32:$src0, (f32 (nrsqrt_inst (f32 GPR32:$src1), BrigTypeX.F32)), BrigTypeX.F32))>;
         def : Pat<(f32 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f32 GPR32:$src1))),
-                  (f32 (mul_inst 1, 0, fpimm:$src0, (nrsqrt_f32 (f32 GPR32:$src1)), BrigTypeX.F32))>;
+                  (f32 (mul_inst 1, 0, fpimm:$src0, (f32 (nrsqrt_inst (f32 GPR32:$src1), BrigTypeX.F32)), BrigTypeX.F32))>;
 
         def : Pat<(f64 (fdiv GPR64:$src0, (int_HSAIL_nsqrt_f64 GPR64:$src1))),
-                  (f64 (mul_inst 0, 0, GPR64:$src0, (nrsqrt_f64 (f64 GPR64:$src1)), BrigTypeX.F64))>;
+                  (f64 (mul_inst 0, 0, GPR64:$src0, (f64 (nrsqrt_inst (f64 GPR64:$src1), BrigTypeX.F64)), BrigTypeX.F64))>;
         def : Pat<(f64 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f64 GPR64:$src1))),
-                  (f64 (mul_inst 0, 0, fpimm:$src0, (nrsqrt_f64 (f64 GPR64:$src1)), BrigTypeX.F64))>;
+                  (f64 (mul_inst 0, 0, fpimm:$src0, (f64 (nrsqrt_inst (f64 GPR64:$src1), BrigTypeX.F64)), BrigTypeX.F64))>;
     }
 }
 

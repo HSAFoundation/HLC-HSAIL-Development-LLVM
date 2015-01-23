@@ -642,6 +642,12 @@ static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_MAD;
   case HSAIL::mulhi_inst:
     return Brig::BRIG_OPCODE_MULHI;
+  case HSAIL::nsqrt_inst:
+    return Brig::BRIG_OPCODE_NSQRT;
+  case HSAIL::nrsqrt_inst:
+    return Brig::BRIG_OPCODE_NRSQRT;
+  case HSAIL::nrcp_inst:
+    return Brig::BRIG_OPCODE_NRCP;
   default:
     llvm_unreachable("unhandled opcode");
   }
@@ -661,6 +667,8 @@ static Brig::BrigOpcode getInstModBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_FMA;
   case HSAIL::abs_inst:
     return Brig::BRIG_OPCODE_ABS;
+  case HSAIL::sqrt_inst:
+    return Brig::BRIG_OPCODE_SQRT;
   case HSAIL::fract_inst:
     return Brig::BRIG_OPCODE_FRACT;
   default:
