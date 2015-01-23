@@ -1,5 +1,10 @@
 //===--------------------- HSAILILNodes.td - HSAIL nodes ------------------===//
 
+def HSAILDTIntTernaryOp : SDTypeProfile<1, 3, [
+  SDTCisSameAs<0, 1>, SDTCisSameAs<0, 2>, SDTCisInt<0>, SDTCisInt<3>
+]>;
+
+
 //===----------------------------------------------------------------------===//
 // Call/Return DAG Nodes
 //===----------------------------------------------------------------------===//
@@ -23,3 +28,6 @@ def IL_lda_readonly : SDNode<"HSAILISD::LDA_READONLY", SDTypeProfile<1, 1, []>, 
 
 // out = a - floor(a)
 def HSAILfract : SDNode<"HSAILISD::FRACT", SDTFPUnaryOp>;
+
+def HSAILumad : SDNode<"HSAILISD::UMAD", HSAILDTIntTernaryOp>;
+def HSAILsmad : SDNode<"HSAILISD::SMAD", HSAILDTIntTernaryOp>;

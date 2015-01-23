@@ -638,6 +638,8 @@ static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_CMOV;
   case HSAIL::rem_inst:
     return Brig::BRIG_OPCODE_REM;
+  case HSAIL::mad_inst:
+    return Brig::BRIG_OPCODE_MAD;
   case HSAIL::mulhi_inst:
     return Brig::BRIG_OPCODE_MULHI;
   default:

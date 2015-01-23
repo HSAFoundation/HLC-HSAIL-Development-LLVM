@@ -28,10 +28,8 @@ defm : InstBasic_2Op_IntTypes<mulhi_inst, mulhs, 1>;
 def : InstMod_1Op_Pat<abs_inst, fabs, f32, BrigTypeX.F32>;
 def : InstMod_1Op_Pat<abs_inst, fabs, f64, BrigTypeX.F64>;
 
-
-
-defm umad  : TernaryIntrU32<int_HSAIL_mad_u32, "mad_u32">;
-defm umad  : TernaryIntrU64<int_HSAIL_mad_u64, "mad_u64">;
+def mad_inst : HSAILInstBasic_3Op<"mad", BrigOpcode.MAD>;
+defm : InstBasic_3Op_IntTypes<mad_inst, HSAILumad, 0>;
 
 // u[32,64] forms illegal in HSAIL
 def neg : HSAILInstBasic_1Op<"neg", BrigOpcode.NEG>;

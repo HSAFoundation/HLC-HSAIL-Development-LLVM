@@ -264,6 +264,26 @@ multiclass InstBasic_2Op_FPTypes<HSAILInst inst,
   def : InstBasic_2Op_Pat<inst, node, f64, f64, BrigTypeX.F64>;
 }
 
+class InstBasic_3Op_Pat<HSAILInst inst,
+                        SDPatternOperator node,
+                        ValueType vt,
+                        int bt> : Pat <
+  (node (vt (GPROrImm vt:$src0)), (vt (GPROrImm vt:$src1)), (vt (GPROrImm vt:$src2))),
+  (inst $src0, $src1, $src2, bt)
+>;
+
+multiclass InstBasic_3Op_IntTypes<HSAILInst inst,
+                                  SDPatternOperator node,
+                                  bit signed = 0> {
+  def : InstBasic_3Op_Pat<inst, node, i32,
+    !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+  >;
+
+  def : InstBasic_3Op_Pat<inst, node, i64,
+    !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+  >;
+}
+
 class InstBasic_CMov_Pat<HSAILInst inst,
                          ValueType vt,
                          int bt> : Pat <

@@ -56,22 +56,6 @@ def shl64imm : PatLeaf<(imm), [{
     return N->getZExtValue() < 64;
 }], getShiftMult64>;
 
-// shift + add -> mad
-multiclass TernaryFusedShlAdd<string asm, ValueType Ty, Operand OpTy,
-                              PatLeaf ImmTy, RegisterClass RC> {
-
-    def _rir : HSAILInst<(outs RC:$dest), (ins RC:$src0, OpTy:$src1, RC:$src2),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-        [(set (Ty RC:$dest), (add
-            (shl (Ty RC:$src0), (i32 ImmTy:$src1)),
-            (Ty RC:$src2)))]>;
-
-    def _rii : HSAILInst<(outs RC:$dest), (ins RC:$src0, OpTy:$src1, OpTy:$src2),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-        [(set (Ty RC:$dest), (add
-            (shl (Ty RC:$src0), (i32 ImmTy:$src1)),
-            (Ty imm:$src2)))]>;
-}
 
 // Pre-optimized (const1 + (x << const2)) -> const1 | (x << const2).
 // This requires mutual check of const1 and const2 to ensure last bit# set in
@@ -85,11 +69,6 @@ def orShlAsMad : PatFrag<(ops node:$reg, node:$shift, node:$mask),
     }
     return false;
 }]>;
-
-let Predicates = [EnableOpt] in {
-defm mad_u32 : TernaryFusedPairOp<"umad", "u32", i32, imm, GPR32, add, mul>;
-defm mad_u64 : TernaryFusedPairOp<"umad", "u64", i64, imm, GPR64, add, mul>;
-}
 
 // 32 bit integer multiplication is expensive operation on current HW,
 // The cost of 32 bit mul is 4 times higher than a cost of add. Therefor
