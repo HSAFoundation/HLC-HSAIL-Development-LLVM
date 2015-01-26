@@ -688,6 +688,10 @@ static Brig::BrigOpcode getInstSourceTypeBrigOpcode(unsigned Opc) {
   switch (Opc) {
   case HSAIL::popcount_inst:
     return Brig::BRIG_OPCODE_POPCOUNT;
+  case HSAIL::firstbit_inst:
+    return Brig::BRIG_OPCODE_FIRSTBIT;
+  case HSAIL::lastbit_inst:
+    return Brig::BRIG_OPCODE_LASTBIT;
   default:
     llvm_unreachable("unhandled opcode");
   }

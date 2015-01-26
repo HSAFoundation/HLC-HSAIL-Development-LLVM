@@ -147,37 +147,50 @@ def cvt : InstCvt<"cvt">;
 ////////////////////////////////////////////////////////////////////////////////
 // popcount (integer, 1-bit, 32-bit, and 64-bit)
 
+// Patterns for integer intrinsics that match to InstSourceType. The
+// LLVM intrinsics return an integer with equivalent width as the
+// source, but the HSAIL instructions truncate to a 32-bit result.
+multiclass InstSourceType_1Op_Pats<Instruction inst,
+                                   SDPatternOperator node,
+                                   bit bit_src = 0> {
+  def : Pat<
+    (i64 (node i64:$src0)),
+    (cvt 0, 0, BrigTypeX.U64, BrigTypeX.U32,
+      (i32 (inst i64:$src0, BrigTypeX.U32, !if(bit_src, BrigTypeX.B64, BrigTypeX.U64))))
+  >;
+
+  def : Pat<
+    (i32 (trunc (node i64:$src0))),
+    (i32 (inst i64:$src0, BrigTypeX.U32, !if(bit_src, BrigTypeX.B64, BrigTypeX.U64)))
+  >;
+
+  def : Pat<
+    (i32 (node i32:$src0)),
+    (inst i32:$src0, BrigTypeX.U32, !if(bit_src, BrigTypeX.B32, BrigTypeX.U32))
+  >;
+}
 
 def popcount_inst : HSAILInstSourceType_1Op<"popcount", BrigOpcode.POPCOUNT>;
 
-def : Pat<
-  (i64 (ctpop i64:$src0)),
-  (cvt 0, 0, BrigTypeX.U64, BrigTypeX.U32, (i32 (popcount_inst i64:$src0, BrigTypeX.U32, BrigTypeX.B64)))
->;
-
-def : Pat<
-  (i32 (trunc (ctpop i64:$src0))),
-  (i32 (popcount_inst i64:$src0, BrigTypeX.U32, BrigTypeX.B64))
->;
-
-def : Pat<
-  (i32 (ctpop i32:$src0)),
-  (popcount_inst i32:$src0, BrigTypeX.U32, BrigTypeX.B32)
->;
+defm : InstSourceType_1Op_Pats<popcount_inst, ctpop, 1>;
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // firstbit (integer, 1-bit, 32-bit, and 64-bit)
 // HSAIL_SPEC_CURRENT <
-defm ctlz : UnaryOpU32<ctlz, "firstbit_u32_u32">;
-defm ctlz : UnaryOpU64<ctlz, "firstbit_u32_u64">;
+
+def firstbit_inst : HSAILInstSourceType_1Op<"firstbit", BrigOpcode.FIRSTBIT>;
+defm : InstSourceType_1Op_Pats<firstbit_inst, ctlz>;
+
 // > HSAIL_SPEC_CURRENT
 
 ////////////////////////////////////////////////////////////////////////////////
 // lastbit (integer, 1-bit, 32-bit, and 64-bit)
 // HSAIL_SPEC_CURRENT <
-defm cttz : UnaryOpU32<cttz, "lastbit_u32_u32">;
-defm cttz : UnaryOpU64<cttz, "lastbit_u32_u64">;
+
+def lastbit_inst : HSAILInstSourceType_1Op<"lastbit", BrigOpcode.LASTBIT>;
+
+defm : InstSourceType_1Op_Pats<lastbit_inst, cttz>;
 // > HSAIL_SPEC_CURRENT
 
 ////////////////////////////////////////////////////////////////////////////////
