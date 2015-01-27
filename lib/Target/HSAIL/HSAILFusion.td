@@ -480,10 +480,6 @@ defm min_s64  : minmax<"min", "s64", i64, imm,   GPR64, SETLT,  SETGT>;
 defm min_u64  : minmax<"min", "u64", i64, imm,   GPR64, SETULT, SETUGT>;
 defm max_s64  : minmax<"max", "s64", i64, imm,   GPR64, SETGT,  SETLT>;
 defm max_u64  : minmax<"max", "u64", i64, imm,   GPR64, SETUGT, SETULT>;
-defm minu_f64 : minmax<"min", "f64", f64, fpimm, GPR64, SETULT, SETUGT>;
-defm maxu_f64 : minmax<"max", "f64", f64, fpimm, GPR64, SETUGT, SETULT>;
-defm mino_f64 : minmax<"min", "f64", f64, fpimm, GPR64, SETOLT, SETOGT>;
-defm maxo_f64 : minmax<"max", "f64", f64, fpimm, GPR64, SETOGT, SETOLT>;
 }
 
 let Predicates = [EnableOpt, EnableGCNMinMax] in {

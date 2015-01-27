@@ -141,9 +141,9 @@ define void @fcmp_ueq_f32(float addrspace(1)* %out, float addrspace(1)* %in1, fl
   ret void
 }
 
-; FIXME: It is incorrect to emit min for this
 ; FUNC-LABEL: {{^}}prog function &fcmp_olt_f64
-; HSAIL: min_f64 {{\$d[0-9]+}}, {{\$d[0-9]+}}, {{\$d[0-9]+}};
+; HSAIL: cmp_lt_b1_f64 {{\$c[0-9]+}}, {{\$d[0-9]+}}, {{\$d[0-9]+}};
+; HSAIL: cmov_b64
 define void @fcmp_olt_f64(double addrspace(1)* %out, double addrspace(1)* %in1, double addrspace(1)* %in2) {
   %r0 = load double addrspace(1)* %in1
   %r1 = load double addrspace(1)* %in2
@@ -166,7 +166,8 @@ define void @fcmp_ole_f64(double addrspace(1)* %out, double addrspace(1)* %in1, 
 }
 
 ; FUNC-LABEL: {{^}}prog function &fcmp_ogt_f64
-; HSAIL: max_f64 {{\$d[0-9]+}}, {{\$d[0-9]+}}, {{\$d[0-9]+}};
+; HSAIL: cmp_gt_b1_f64 {{\$c[0-9]+}}, {{\$d[0-9]+}}, {{\$d[0-9]+}};
+; HSAIL: cmov_b64
 define void @fcmp_ogt_f64(double addrspace(1)* %out, double addrspace(1)* %in1, double addrspace(1)* %in2) {
   %r0 = load double addrspace(1)* %in1
   %r1 = load double addrspace(1)* %in2
@@ -213,7 +214,8 @@ define void @fcmp_oeq_f64(double addrspace(1)* %out, double addrspace(1)* %in1, 
 }
 
 ; FUNC-LABEL: {{^}}prog function &fcmp_ult_f64
-; HSAIL: min_f64 {{\$d[0-9]+}}, {{\$d[0-9]+}}, {{\$d[0-9]+}};
+; HSAIL: cmp_ltu_b1_f64 {{\$c[0-9]+}}, {{\$d[0-9]+}}, {{\$d[0-9]+}};
+; HSAIL: cmov_b64
 define void @fcmp_ult_f64(double addrspace(1)* %out, double addrspace(1)* %in1, double addrspace(1)* %in2) {
   %r0 = load double addrspace(1)* %in1
   %r1 = load double addrspace(1)* %in2
@@ -236,7 +238,8 @@ define void @fcmp_ule_f64(double addrspace(1)* %out, double addrspace(1)* %in1, 
 }
 
 ; FUNC-LABEL: {{^}}prog function &fcmp_ugt_f64
-; HSAIL: max_f64 {{\$d[0-9]+}}, {{\$d[0-9]+}}, {{\$d[0-9]+}};
+; HSAIL: cmp_gtu_b1_f64 {{\$c[0-9]+}}, {{\$d[0-9]+}}, {{\$d[0-9]+}};
+; HSAIL: cmov_b64
 define void @fcmp_ugt_f64(double addrspace(1)* %out, double addrspace(1)* %in1, double addrspace(1)* %in2) {
   %r0 = load double addrspace(1)* %in1
   %r1 = load double addrspace(1)* %in2
