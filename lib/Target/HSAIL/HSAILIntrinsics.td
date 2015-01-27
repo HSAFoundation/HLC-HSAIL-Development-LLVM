@@ -394,10 +394,13 @@ def int_HSAIL_cvt_up_f16_f64 : GCCBuiltin<"__cvt_f16_rtp_f64">,
   Intrinsic<[llvm_float_ty], [llvm_double_ty], [IntrNoMem]>;
 
 // Misc intrinsics used by OpenCL built-ins
-def int_HSAIL_bitsel_u32 : GCCBuiltin<"__hsail_bitselect_u32">,
-          Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
-def int_HSAIL_bitsel_u64 : GCCBuiltin<"__hsail_bitselect_u64">,
-          Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
+def int_HSAIL_bitselect_u32 : GCCBuiltin<"__hsail_bitselect_u32">,
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_bitselect_u64 : GCCBuiltin<"__hsail_bitselect_u64">,
+  Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]
+>;
 
 //Media-ops intrinsics
 def int_HSAIL_bitalign_b32  : GCCBuiltin<"__hsail_bitalign_b32">,

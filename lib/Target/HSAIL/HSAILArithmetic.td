@@ -282,8 +282,9 @@ defm firstbitu :  UnaryIntrU32<int_HSAIL_firstbit_u32, "firstbit_u32_u32">;
 defm lastbitu :  UnaryIntrU32<int_HSAIL_lastbit_u32, "lastbit_u32_u32">;
 // > HSAIL_SPEC_CURRENT
 
-defm bitsel : TernaryIntrU32<int_HSAIL_bitsel_u32, "bitselect_b32">;
-defm bitsel : TernaryIntrU64<int_HSAIL_bitsel_u64, "bitselect_b64">;
+def bitselect_inst : HSAILInstBasic_3Op<"bitselect", BrigOpcode.BITSELECT>;
+defm : InstBasic_3Op_BitIntTypes<bitselect_inst, HSAILbitselect>;
+
 
 // bytealign and bitalign
 multiclass AlignIntr<Intrinsic intr, string asm> {

@@ -14,6 +14,7 @@ namespace llvm {
       FRACT,
       UMAD,
       SMAD,
+      BITSELECT,
       LDA_FLAT,
       LDA_GLOBAL,
       LDA_GROUP,

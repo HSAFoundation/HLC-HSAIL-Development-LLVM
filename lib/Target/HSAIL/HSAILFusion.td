@@ -250,29 +250,29 @@ def bfiImmIIR3 : PatFrag<(ops node:$src0, node:$src1, node:$src2),
     return false;
 }]>;
 
-multiclass BitSelect<int Bits, ValueType Ty, RegisterClass RC> {
+multiclass BitSelect<ValueType Ty, RegisterClass RC, int bt> {
 
     def _rrr : Pat<(or (and RC:$src0,
                             RC:$src1),
                        (and RC:$src2,
                             (not RC:$src0))),
-                   (!cast<HSAILInst>("bitsel_u"#Bits) RC:$src0, RC:$src1, RC:$src2)>;
+                   (bitselect_inst RC:$src0, RC:$src1, RC:$src2, bt)>;
 
     def _irr : Pat<(bfiImmIRR (Ty imm:$src0), RC:$src1,
                               RC:$src2, (Ty imm)),
-                   (!cast<HSAILInst>("bitsel_irr_u"#Bits) imm:$src0, RC:$src1, RC:$src2)>;
+                   (bitselect_inst imm:$src0, RC:$src1, RC:$src2, bt)>;
 
     def _rir : Pat<(or (and RC:$src0,
                             (Ty imm:$src1)),
                        (and RC:$src2,
                             (not RC:$src0))),
-                   (!cast<HSAILInst>("bitsel_rir_u"#Bits) RC:$src0, imm:$src1, RC:$src2)>;
+                   (bitselect_inst RC:$src0, imm:$src1, RC:$src2, bt)>;
 
     def _rii : Pat<(or (and RC:$src0,
                             (Ty imm:$src1)),
                        (and (not RC:$src0),
                             (Ty imm:$src2))),
-                   (!cast<HSAILInst>("bitsel_rii_u"#Bits) RC:$src0, imm:$src1, imm:$src2)>;
+                   (bitselect_inst RC:$src0, imm:$src1, imm:$src2, bt)>;
 
     // Alternative rii pattern: (src1 & src2) | ((src1 & src3) ^ src3)
     def _rii1 : Pat<(or (and RC:$src0,
@@ -280,13 +280,13 @@ multiclass BitSelect<int Bits, ValueType Ty, RegisterClass RC> {
                         (xor (and RC:$src0,
                                   (Ty imm:$src2)),
                              (Ty imm:$src2))),
-                   (!cast<HSAILInst>("bitsel_rii_u"#Bits) RC:$src0, imm:$src1, imm:$src2)>;
+                   (bitselect_inst RC:$src0, imm:$src1, imm:$src2, bt)>;
 
     def _rri : Pat<(or (and RC:$src0,
                             RC:$src1),
                        (and (not RC:$src0),
                             (Ty imm:$src2))),
-                   (!cast<HSAILInst>("bitsel_rri_u"#Bits) RC:$src0, RC:$src1, imm:$src2)>;
+                   (bitselect_inst RC:$src0, RC:$src1, imm:$src2, bt)>;
 
     // Alternative rri pattern: (src1 & src2) | ((src1 & src3) ^ src3)
     def _rri1 : Pat<(or (and RC:$src0,
@@ -294,38 +294,38 @@ multiclass BitSelect<int Bits, ValueType Ty, RegisterClass RC> {
                         (xor (and RC:$src0,
                                   (Ty imm:$src2)),
                              (Ty imm:$src2))),
-                   (!cast<HSAILInst>("bitsel_rri_u"#Bits) RC:$src0, RC:$src1, imm:$src2)>;
+                   (bitselect_inst RC:$src0, RC:$src1, imm:$src2, bt)>;
 
     // Alternative pattern: (src3 ^ (src1 & (src2 ^ src3)))
     def _rrr2 : Pat<(xor RC:$src2,
                          (and RC:$src0,
                               (xor RC:$src1,
                                    RC:$src2))),
-                    (!cast<HSAILInst>("bitsel_u"#Bits) RC:$src0, RC:$src1, RC:$src2)>;
+                    (bitselect_inst RC:$src0, RC:$src1, RC:$src2, bt)>;
 
     def _irr2 : Pat<(xor RC:$src2,
                          (and (xor RC:$src1,
                                    RC:$src2),
                               (Ty imm:$src0))),
-                    (!cast<HSAILInst>("bitsel_irr_u"#Bits) imm:$src0, RC:$src1, RC:$src2)>;
+                    (bitselect_inst imm:$src0, RC:$src1, RC:$src2, bt)>;
 
     def _iir2 : Pat<(xor RC:$src2,
                          (and (xor RC:$src2,
                                    (Ty imm:$src1)),
                               (Ty imm:$src0))),
-                    (!cast<HSAILInst>("bitsel_iir_u"#Bits) imm:$src0, imm:$src1, RC:$src2)>;
+                    (bitselect_inst imm:$src0, imm:$src1, RC:$src2, bt)>;
 
     def _rir2 : Pat<(xor RC:$src2,
                          (and RC:$src0,
                               (xor RC:$src2,
                                    (Ty imm:$src1)))),
-                    (!cast<HSAILInst>("bitsel_rir_u"#Bits) RC:$src0, imm:$src1, RC:$src2)>;
+                    (bitselect_inst RC:$src0, imm:$src1, RC:$src2, bt)>;
 
     def _rri2 : Pat<(xor (and RC:$src0,
                               (xor RC:$src1,
                                    (Ty imm:$src2))),
                          (Ty imm:$src2)),
-                    (!cast<HSAILInst>("bitsel_rri_u"#Bits) RC:$src0, RC:$src1, imm:$src2)>;
+                    (bitselect_inst RC:$src0, RC:$src1, imm:$src2, bt)>;
 
     // Alternative pattern: ((src3 & src1) ^ src3) ^ (src2 & src1)
     def _rrr3 : Pat<(xor (xor RC:$src2,
@@ -333,36 +333,36 @@ multiclass BitSelect<int Bits, ValueType Ty, RegisterClass RC> {
                                    RC:$src2)),
                          (and RC:$src0,
                               RC:$src1)),
-                    (!cast<HSAILInst>("bitsel_u"#Bits) RC:$src0, RC:$src1, RC:$src2)>;
+                    (bitselect_inst RC:$src0, RC:$src1, RC:$src2, bt)>;
 
     def _irr3 : Pat<(xor (xor RC:$src2,
                               (and RC:$src2,
                                    (Ty imm:$src0))),
                          (and RC:$src1,
                               (Ty imm:$src0))),
-                    (!cast<HSAILInst>("bitsel_irr_u"#Bits) imm:$src0, RC:$src1, RC:$src2)>;
+                    (bitselect_inst imm:$src0, RC:$src1, RC:$src2, bt)>;
 
     def _iir3 : Pat<(bfiImmIIR3 (Ty imm:$src0), (Ty imm:$src1), RC:$src2),
-                    (!cast<HSAILInst>("bitsel_iir_u"#Bits) imm:$src0, imm:$src1, RC:$src2)>;
+                    (bitselect_inst imm:$src0, imm:$src1, RC:$src2, bt)>;
 
     def _rri3 : Pat<(xor (xor (and RC:$src0,
                                    (Ty imm:$src2)),
                               (Ty imm:$src2)),
                          (and RC:$src0,
                               RC:$src1)),
-                   (!cast<HSAILInst>("bitsel_rri_u"#Bits) RC:$src0, RC:$src1, imm:$src2)>;
+                   (bitselect_inst RC:$src0, RC:$src1, imm:$src2, bt)>;
 
     def _rii3 : Pat<(xor (xor (and RC:$src0,
                                    (Ty imm:$src2)),
                               (Ty imm:$src2)),
                          (and RC:$src0,
                               (Ty imm:$src1))),
-                    (!cast<HSAILInst>("bitsel_rii_u"#Bits) RC:$src0, imm:$src1, imm:$src2)>;
+                    (bitselect_inst RC:$src0, imm:$src1, imm:$src2, bt)>;
 }
 
 let Predicates = [EnableOpt] in {
-defm bitselect_b32 : BitSelect<32, i32, GPR32>;
-defm bitselect_b64 : BitSelect<64, i64, GPR64>;
+defm : BitSelect<i32, GPR32, BrigTypeX.B32>;
+defm : BitSelect<i64, GPR64, BrigTypeX.B64>;
 }
 
 // pack

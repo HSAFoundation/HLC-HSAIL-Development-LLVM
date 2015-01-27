@@ -299,6 +299,13 @@ multiclass InstBasic_3Op_IntTypes<HSAILInst inst,
   >;
 }
 
+// XXX - b1 missing intentionally with current set of instructions.
+multiclass InstBasic_3Op_BitIntTypes<HSAILInst inst,
+                                    SDPatternOperator node> {
+  def : InstBasic_3Op_Pat<inst, node, i32, BrigTypeX.B32>;
+  def : InstBasic_3Op_Pat<inst, node, i64, BrigTypeX.B64>;
+}
+
 class InstBasic_CMov_Pat<HSAILInst inst,
                          ValueType vt,
                          int bt> : Pat <

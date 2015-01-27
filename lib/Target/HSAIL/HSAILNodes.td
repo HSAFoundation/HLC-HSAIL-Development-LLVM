@@ -31,3 +31,4 @@ def HSAILfract : SDNode<"HSAILISD::FRACT", SDTFPUnaryOp>;
 
 def HSAILumad : SDNode<"HSAILISD::UMAD", HSAILDTIntTernaryOp>;
 def HSAILsmad : SDNode<"HSAILISD::SMAD", HSAILDTIntTernaryOp>;
+def HSAILbitselect : SDNode<"HSAILISD::BITSELECT", HSAILDTIntTernaryOp>;

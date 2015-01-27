@@ -1166,6 +1166,8 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::UMAD";
   case HSAILISD::SMAD:
     return "HSAILISD::SMAD";
+  case HSAILISD::BITSELECT:
+    return "HSAILISD::BITSELECT";
   case HSAILISD::LDA_FLAT:
     return "HSAILISD::LDA_FLAT";
   case HSAILISD::LDA_GLOBAL:
@@ -1356,6 +1358,14 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
     return DAG.getNode(ISD::FMA, SL, MVT::f64,
                        Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
 
+  case HSAILIntrinsic::HSAIL_bitselect_u32:
+    return DAG.getNode(HSAILISD::BITSELECT, SL, MVT::i32,
+                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+
+  case HSAILIntrinsic::HSAIL_bitselect_u64:
+    return DAG.getNode(HSAILISD::BITSELECT, SL, MVT::i64,
+                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+
     // FIXME: There should be LLVM intrinsics for mulhs / mulhu.
   case HSAILIntrinsic::HSAIL_mulhi_s32:
     return DAG.getNode(ISD::MULHS, SL, MVT::i32,
@@ -1508,7 +1518,7 @@ HSAILTargetLowering::LowerBSWAP(SDValue Op, SelectionDAG &DAG) const {
            DAG.getConstant(HSAILIntrinsic::HSAIL_bytealign_b32, MVT::i32),
            src, src, DAG.getConstant(1, MVT::i32));
   return DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
-           DAG.getConstant(HSAILIntrinsic::HSAIL_bitsel_u32, MVT::i32),
+           DAG.getConstant(HSAILIntrinsic::HSAIL_bitselect_u32, MVT::i32),
            DAG.getConstant(0x00ff00ff, VT), opr0, opr1);
 }
 
