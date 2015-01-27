@@ -29,6 +29,7 @@ def IL_lda_readonly : SDNode<"HSAILISD::LDA_READONLY", SDTypeProfile<1, 1, []>, 
 // out = a - floor(a)
 def HSAILfract : SDNode<"HSAILISD::FRACT", SDTFPUnaryOp>;
 
+def HSAILnfma : SDNode<"HSAILISD::NFMA", SDTFPTernaryOp>;
 def HSAILumad : SDNode<"HSAILISD::UMAD", HSAILDTIntTernaryOp>;
 def HSAILsmad : SDNode<"HSAILISD::SMAD", HSAILDTIntTernaryOp>;
 def HSAILbitselect : SDNode<"HSAILISD::BITSELECT", HSAILDTIntTernaryOp>;

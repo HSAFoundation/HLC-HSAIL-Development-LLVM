@@ -12,6 +12,7 @@ namespace llvm {
       /// 1 is the number of bytes of stack to pop.
       RET_FLAG,
       FRACT,
+      NFMA,
       UMAD,
       SMAD,
       BITSELECT,

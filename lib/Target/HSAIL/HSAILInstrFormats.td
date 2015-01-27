@@ -313,6 +313,11 @@ class InstBasic_CMov_Pat<HSAILInst inst,
   (vt (inst $src0, $src1, $src2, bt))
 >;
 
+multiclass InstBasic_3Op_FPTypes<HSAILInst inst,
+                                SDPatternOperator node> {
+  def : InstBasic_3Op_Pat<inst, node, f32, BrigTypeX.F32>;
+  def : InstBasic_3Op_Pat<inst, node, f64, BrigTypeX.F64>;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Mod instruction patterns
