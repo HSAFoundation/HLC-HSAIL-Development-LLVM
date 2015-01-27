@@ -480,8 +480,14 @@ def int_HSAIL_bfm: GCCBuiltin<"__hsail_bfm">,
 def int_HSAIL_ftz_f32 : GCCBuiltin<"__hsail_ftz_f32">, UnaryFloatIntrNoMem;
 
 // HSAIL_SPEC_CURRENT <
-def int_HSAIL_firstbit_u32 : GCCBuiltin<"__hsail_firstbit_u32">, UnaryIntIntrNoMem;
-def int_HSAIL_lastbit_u32 : GCCBuiltin<"__hsail_lastbit_u32">, UnaryIntIntrNoMem;
+def int_HSAIL_firstbit_u32 : GCCBuiltin<"__hsail_firstbit_u32">,
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_lastbit_u32 : GCCBuiltin<"__hsail_lastbit_u32">,
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrNoMem]
+>;
+
 def int_HSAIL_fract_f32 : GCCBuiltin<"__hsail_fraction_f32">,
   Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]>;
 def int_HSAIL_fract_f64 : GCCBuiltin<"__hsail_fraction_f64">,

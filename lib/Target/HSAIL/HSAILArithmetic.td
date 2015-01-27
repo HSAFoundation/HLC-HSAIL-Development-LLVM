@@ -174,13 +174,13 @@ def popcount_inst : HSAILInstSourceType_1Op<"popcount", BrigOpcode.POPCOUNT>;
 
 defm : InstSourceType_1Op_Pats<popcount_inst, ctpop, 1>;
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // firstbit (integer, 1-bit, 32-bit, and 64-bit)
 // HSAIL_SPEC_CURRENT <
 
 def firstbit_inst : HSAILInstSourceType_1Op<"firstbit", BrigOpcode.FIRSTBIT>;
 defm : InstSourceType_1Op_Pats<firstbit_inst, ctlz>;
+def : InstSourceType_1Op_Pat<firstbit_inst, int_HSAIL_firstbit_u32, i32, BrigTypeX.U32, BrigTypeX.U32>;
 
 // > HSAIL_SPEC_CURRENT
 
@@ -191,6 +191,8 @@ defm : InstSourceType_1Op_Pats<firstbit_inst, ctlz>;
 def lastbit_inst : HSAILInstSourceType_1Op<"lastbit", BrigOpcode.LASTBIT>;
 
 defm : InstSourceType_1Op_Pats<lastbit_inst, cttz>;
+def : InstSourceType_1Op_Pat<lastbit_inst, int_HSAIL_lastbit_u32, i32, BrigTypeX.U32, BrigTypeX.U32>;
+
 // > HSAIL_SPEC_CURRENT
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -276,11 +278,6 @@ def : BitconvertMovPat<i32, f32, BrigTypeX.B32>;
 def ftz_f32 : HSAILInst<(outs GPR32:$dest), (ins GPR32:$src),
       "add_ftz_f32\t$dest, $src, 0F00000000",
       [(set (f32 GPR32:$dest), (int_HSAIL_ftz_f32 (f32 GPR32:$src)))]>;
-
-// HSAIL_SPEC_CURRENT <
-defm firstbitu :  UnaryIntrU32<int_HSAIL_firstbit_u32, "firstbit_u32_u32">;
-defm lastbitu :  UnaryIntrU32<int_HSAIL_lastbit_u32, "lastbit_u32_u32">;
-// > HSAIL_SPEC_CURRENT
 
 def bitselect_inst : HSAILInstBasic_3Op<"bitselect", BrigOpcode.BITSELECT>;
 defm : InstBasic_3Op_BitIntTypes<bitselect_inst, HSAILbitselect>;
