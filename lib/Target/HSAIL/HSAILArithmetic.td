@@ -289,33 +289,6 @@ def bitselect_inst : HSAILInstBasic_3Op<"bitselect", BrigOpcode.BITSELECT>;
 defm : InstBasic_3Op_BitIntTypes<bitselect_inst, HSAILbitselect>;
 
 
-// bytealign and bitalign
-multiclass AlignIntr<Intrinsic intr, string asm> {
-  def _rrr : HSAILInst<
-    (outs GPR32:$dest), (ins GPR32:$src0, GPR32:$src1, GPR32:$src2),
-    !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-    [(set (i32 GPR32:$dest),
-      (intr (i32 GPR32:$src1), (i32 GPR32:$src0), (i32 GPR32:$src2)))]>;
-
-  def _rri : HSAILInst<
-    (outs GPR32:$dest), (ins GPR32:$src0, GPR32:$src1, i32imm:$src2),
-    !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-    [(set (i32 GPR32:$dest),
-      (intr (i32 GPR32:$src1), (i32 GPR32:$src0), (i32 imm:$src2)))]>;
-
-  def _rir : HSAILInst<
-    (outs GPR32:$dest), (ins GPR32:$src0, i32imm:$src1, GPR32:$src2),
-    !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-    [(set (i32 GPR32:$dest),
-      (intr (i32 imm:$src1), (i32 GPR32:$src0), (i32 GPR32:$src2)))]>;
-
-  def _rii : HSAILInst<
-    (outs GPR32:$dest), (ins GPR32:$src0, i32imm:$src1, i32imm:$src2),
-    !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-    [(set (i32 GPR32:$dest),
-      (intr (i32 imm:$src1), (i32 GPR32:$src0), (i32 imm:$src2)))]>;
-}
-
 //Media - packcvt
 multiclass PackIntr<Intrinsic intr, string asm> {
 
@@ -496,8 +469,13 @@ multiclass UnpackIntr<Intrinsic intr, string asm> {
                                           (i32 imm:$src1)))]>;
 }
 
-defm media_bitalign  : AlignIntr<int_HSAIL_bitalign_b32, "bitalign_b32">;
-defm media_bytealign : AlignIntr<int_HSAIL_bytealign_b32, "bytealign_b32">;
+def bitalign_inst : HSAILInstBasic_3Op<"bitalign", BrigOpcode.BITALIGN>;
+def bytealign_inst : HSAILInstBasic_3Op<"bytealign", BrigOpcode.BYTEALIGN>;
+
+def : InstBasic_3Op_Pat<bitalign_inst, int_HSAIL_bitalign_b32, i32, BrigTypeX.B32>;
+def : InstBasic_3Op_Pat<bytealign_inst, int_HSAIL_bytealign_b32, i32, BrigTypeX.B32>;
+
+
 defm media_packcvt : PackIntr<int_HSAIL_packcvt_u8x4_f32, "packcvt_u8x4_f32">;
 defm media_lerp : TernaryIntrU32<int_HSAIL_lerp_u8x4, "lerp_u8x4">;
 defm media_sad :     TernaryIntrU32<int_HSAIL_sad_u32_u8x4, "sad_u32_u8x4">;

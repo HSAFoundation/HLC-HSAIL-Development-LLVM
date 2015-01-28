@@ -664,6 +664,10 @@ static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_MUL24;
   case HSAIL::mad24_inst:
     return Brig::BRIG_OPCODE_MAD24;
+  case HSAIL::bitalign_inst:
+    return Brig::BRIG_OPCODE_BITALIGN;
+  case HSAIL::bytealign_inst:
+    return Brig::BRIG_OPCODE_BYTEALIGN;
   default:
     llvm_unreachable("unhandled opcode");
   }

@@ -540,15 +540,14 @@ def RotateByte32const : PatFrag<(ops node:$reg, node:$shl, node:$shr),
 }]>;
 
 let AddedComplexity = 1, Predicates = [EnableOpt] in {
-def : Pat<(RotateByte32const GPR32:$src0, (i32 isByteSzShiftNoXform),
-                             (i32 isByteSzShift:$src2)),
-          (media_bytealign_rri GPR32:$src0, GPR32:$src0, isByteSzShift:$src2)>;
+def : Pat<(RotateByte32const GPR32:$src0, (i32 isByteSzShiftNoXform), (i32 isByteSzShift:$src2)),
+  (bytealign_inst GPR32:$src0, GPR32:$src0, isByteSzShift:$src2, BrigTypeX.B32)>;
 }
 
 let Predicates = [EnableOpt] in {
   def : Pat<
     (or (shl i32:$src0, i32:$src1),
         (srl i32:$src0, (sub imm32, (and i32:$src1, imm31)))),
-    (media_bitalign_rrr $src0, $src0, (neg GPR32:$src1, BrigTypeX.S32))
+    (bitalign_inst $src0, $src0, (i32 (neg $src1, BrigTypeX.S32)), BrigTypeX.B32)
   >;
 }

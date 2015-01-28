@@ -437,13 +437,16 @@ def int_HSAIL_bitselect_u64 : GCCBuiltin<"__hsail_bitselect_u64">,
   Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]
 >;
 
-//Media-ops intrinsics
+// Media-ops intrinsics
 def int_HSAIL_bitalign_b32  : GCCBuiltin<"__hsail_bitalign_b32">,
-          Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
-		  
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
+
 def int_HSAIL_bytealign_b32 : GCCBuiltin<"__hsail_bytealign_b32">,
-          Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
-		  
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
+
+
 def int_HSAIL_packcvt_u8x4_f32 : GCCBuiltin<"__hsail_packcvt_u8x4_f32">,
           Intrinsic<[llvm_i32_ty], [llvm_float_ty,
                                     llvm_float_ty,
