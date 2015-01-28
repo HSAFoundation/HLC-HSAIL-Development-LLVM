@@ -691,6 +691,8 @@ static Brig::BrigOpcode getInstModBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_MIN;
   case HSAIL::max_inst:
     return Brig::BRIG_OPCODE_MAX;
+  case HSAIL::copysign_inst:
+    return Brig::BRIG_OPCODE_COPYSIGN;
   default:
     llvm_unreachable("unhandled opcode");
   }

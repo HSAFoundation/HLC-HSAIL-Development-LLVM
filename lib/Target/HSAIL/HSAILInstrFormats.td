@@ -339,7 +339,7 @@ class InstMod_2Op_Pat<HSAILInst inst,
                       int bt,
                       int round = BrigRound.NONE,
                       int ftz = 0> : Pat <
-  (vt (node (GPROrImm vt:$src0), (GPROrImm vt:$src1))),
+  (vt (node (vt (GPROrImm vt:$src0)), (vt (GPROrImm vt:$src1)))),
   (inst ftz, round, $src0, $src1, bt)
 >;
 

@@ -46,8 +46,12 @@ defm : InstBasic_1Op_IntTypes<neg, ineg, 1>;
 
 defm : InstBasic_1Op_FPTypes<neg, fneg>;
 
-defm copysign : BinaryIntrF32<fcopysign, "copysign_f32">;
-defm copysign : BinaryIntrF64<fcopysign, "copysign_f64">;
+def copysign_inst : HSAILInstMod_2Op<"copysign", BrigOpcode.COPYSIGN>;
+
+// FIXME: Need to support fcopysign with different second operand type.
+def : InstMod_2Op_Pat<copysign_inst, fcopysign, f32, BrigTypeX.F32, BrigRound.NONE, 0>;
+def : InstMod_2Op_Pat<copysign_inst, fcopysign, f64, BrigTypeX.F64, BrigRound.NONE, 0>;
+
 
 def fma_inst : HSAILInstMod_3Op<"fma", BrigOpcode.FMA>;
 defm : InstMod_3Op_FPTypes<fma_inst, fma>;
