@@ -18,6 +18,11 @@ defm : InstMod_2Op_IntTypes<div_inst, udiv, 0>;
 defm : InstMod_2Op_IntTypes<div_inst, sdiv, 1>;
 defm : InstMod_2Op_FPTypes<div_inst, fdiv>;
 
+// Division without implicit ftz.
+def : InstMod_2Op_Pat<div_inst, int_HSAIL_div_f32, f32,
+  BrigTypeX.F32, BrigRound.FLOAT_NEAR_EVEN, 0
+>;
+
 defm : InstBasic_2Op_IntTypes<rem_inst, urem, 0>;
 defm : InstBasic_2Op_IntTypes<rem_inst, srem, 1>;
 
@@ -85,10 +90,6 @@ def : InstBasic_2Op_Pat<mul24_inst, HSAILumul24, i32, i32, BrigTypeX.U32>;
 def mad24_inst : HSAILInstBasic_3Op<"mad24", BrigOpcode.MAD24>;
 def : InstBasic_3Op_Pat<mad24_inst, HSAILsmad24, i32, BrigTypeX.S32>;
 def : InstBasic_3Op_Pat<mad24_inst, HSAILumad24, i32, BrigTypeX.U32>;
-
-
-defm pdiv : BinaryIntrF32<int_HSAIL_div_f32, "div_f32">;
-
 
 def sqrt_inst : HSAILInstMod_1Op<"sqrt", BrigOpcode.SQRT>;
 def nsqrt_inst : HSAILInstBasic_1Op<"nsqrt", BrigOpcode.NSQRT>;

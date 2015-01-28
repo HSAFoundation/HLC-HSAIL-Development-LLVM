@@ -257,7 +257,10 @@ def int_HSAIL_min_f64 : GCCBuiltin<"__hsail_min_f64">,
 
 def int_HSAIL_gcn_min_f32 : GCCBuiltin<"__gcn_min_f32">, BinaryFloatIntrNoMem;
 def int_HSAIL_gcn_min_f64 : GCCBuiltin<"__gcn_min_f64">, BinaryFloatIntrNoMem;
-def int_HSAIL_div_f32 : GCCBuiltin<"__hsail_div_f32">, BinaryFloatIntrNoMem;
+
+def int_HSAIL_div_f32 : GCCBuiltin<"__hsail_div_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty], [IntrNoMem]
+>;
 
 // Intrinsics for OpenCL relational built-ins (OCL 1.2 6.12.6)
 def int_HSAIL_class_f32 : GCCBuiltin<"__hsail_class_f32">, ClassIntrNoMem;
