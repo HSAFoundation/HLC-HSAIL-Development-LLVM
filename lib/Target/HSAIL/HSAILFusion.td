@@ -16,25 +16,21 @@ def EnableGCNMinMax    : Predicate<"llvm::EnableGCNMinMax">;
 
 ////////////////////////////////////////////////////////////////////////////////
 // fused operation multiclasses
-multiclass TernaryFusedPairOp<string prefix, string suffix,
+multiclass TernaryFusedPairOp<Instruction inst,
                               ValueType Ty, SDNode ImmTy,
-                              RegisterClass RC, SDNode op1, SDNode op2> {
+                              RegisterClass RC, SDNode op1, SDNode op2, int bt> {
 
     def _rrr : Pat<(op1 (op2 RC:$src0, RC:$src1), RC:$src2),
-                   (!cast<HSAILInst>(prefix#"_"#suffix)
-                     RC:$src0, RC:$src1, RC:$src2)>;
+                   (inst RC:$src0, RC:$src1, RC:$src2, bt)>;
 
     def _rri : Pat<(op1 (op2 RC:$src0, RC:$src1), (Ty ImmTy:$src2)),
-                   (!cast<HSAILInst>(prefix#"_rri_"#suffix)
-                     RC:$src0, RC:$src1, ImmTy:$src2)>;
+                   (inst RC:$src0, RC:$src1, ImmTy:$src2, bt)>;
 
     def _rir : Pat<(op1 (op2 RC:$src0, (Ty ImmTy:$src1)), RC:$src2),
-                   (!cast<HSAILInst>(prefix#"_rir_"#suffix)
-                     RC:$src0, ImmTy:$src1, RC:$src2)>;
+                   (inst RC:$src0, ImmTy:$src1, RC:$src2, bt)>;
 
     def _rii : Pat<(op1 (op2 RC:$src0, (Ty ImmTy:$src1)), (Ty ImmTy:$src2)),
-                   (!cast<HSAILInst>(prefix#"_rii_"#suffix)
-                     RC:$src0, ImmTy:$src1, ImmTy:$src2)>;
+                   (inst RC:$src0, ImmTy:$src1, ImmTy:$src2, bt)>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,10 +91,8 @@ def orShlAsMad : PatFrag<(ops node:$reg, node:$shift, node:$mask),
 // }
 
 let Predicates = [EnableFPMAD] in {
-    defm nfma_f32 : TernaryFusedPairOp<"nfma", "f32", f32, fpimm, GPR32,
-                                       fadd, fmul>;
-    defm nfma_f64 : TernaryFusedPairOp<"nfma", "f64", f64, fpimm, GPR64,
-                                       fadd, fmul>;
+  defm : TernaryFusedPairOp<nfma_inst, f32, fpimm, GPR32, fadd, fmul, BrigTypeX.F32>;
+  defm : TernaryFusedPairOp<nfma_inst, f64, fpimm, GPR64, fadd, fmul, BrigTypeX.F64>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

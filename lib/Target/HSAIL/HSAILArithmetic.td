@@ -59,9 +59,6 @@ defm : InstMod_3Op_FPTypes<fma_inst, fma>;
 def nfma_inst : HSAILInstBasic_3Op<"nfma", BrigOpcode.NFMA>;
 defm : InstBasic_3Op_FPTypes<nfma_inst, HSAILnfma>;
 
-defm nfma : TernaryIntrF32<int_HSAIL_nfma_f32, "nfma_f32">;
-defm nfma : TernaryIntrF64<int_HSAIL_nfma_f64, "nfma_f64">;
-
 def max_inst : HSAILInstMod_2Op<"max", BrigOpcode.MAX>;
 def min_inst : HSAILInstMod_2Op<"min", BrigOpcode.MIN>;
 
