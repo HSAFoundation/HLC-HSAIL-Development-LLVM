@@ -203,27 +203,57 @@ def int_HSAIL_abs_u32 : GCCBuiltin<"__hsail_abs_u32">, UnaryIntIntrNoMem; // unu
 def int_HSAIL_abs_s32 : GCCBuiltin<"__hsail_abs_s32">, UnaryIntIntrNoMem; // unused?
 def int_HSAIL_abs_u64 : GCCBuiltin<"__hsail_abs_u64">, UnaryIntIntrNoMem; // unused?
 def int_HSAIL_abs_s64 : GCCBuiltin<"__hsail_abs_s64">, UnaryIntIntrNoMem; // unused?
-def int_HSAIL_max_u32 : GCCBuiltin<"__hsail_max_u32">, BinaryIntIntrNoMem;
-def int_HSAIL_max_s32 : GCCBuiltin<"__hsail_max_s32">, BinaryIntIntrNoMem;
-def int_HSAIL_max_u64 : GCCBuiltin<"__hsail_max_u64">, BinaryIntIntrNoMem;
-def int_HSAIL_max_s64 : GCCBuiltin<"__hsail_max_s64">, BinaryIntIntrNoMem;
+
+def int_HSAIL_max_u32 : GCCBuiltin<"__hsail_max_u32">,
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_max_s32 : GCCBuiltin<"__hsail_max_s32">,
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_max_u64 : GCCBuiltin<"__hsail_max_u64">,
+  Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_max_s64 : GCCBuiltin<"__hsail_max_s64">,
+  Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]
+>;
 
 def int_HSAIL_max_f32 : GCCBuiltin<"__hsail_max_f32">,
-  Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty], [IntrNoMem]>;
+  Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty], [IntrNoMem]
+>;
 def int_HSAIL_max_f64 : GCCBuiltin<"__hsail_max_f64">,
-  Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_double_ty], [IntrNoMem]>;
+  Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_double_ty], [IntrNoMem]
+>;
 
 def int_HSAIL_gcn_max_f32 : GCCBuiltin<"__gcn_max_f32">, BinaryFloatIntrNoMem;
 def int_HSAIL_gcn_max_f64 : GCCBuiltin<"__gcn_max_f64">, BinaryFloatIntrNoMem;
-def int_HSAIL_min_u32 : GCCBuiltin<"__hsail_min_u32">, BinaryIntIntrNoMem;
-def int_HSAIL_min_s32 : GCCBuiltin<"__hsail_min_s32">, BinaryIntIntrNoMem;
-def int_HSAIL_min_u64 : GCCBuiltin<"__hsail_min_u64">, BinaryIntIntrNoMem;
-def int_HSAIL_min_s64 : GCCBuiltin<"__hsail_min_s64">, BinaryIntIntrNoMem;
+
+// FIXME: min / max intrinsics should be removed.
+def int_HSAIL_min_u32 : GCCBuiltin<"__hsail_min_u32">,
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_min_s32 : GCCBuiltin<"__hsail_min_s32">,
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_min_u64 : GCCBuiltin<"__hsail_min_u64">,
+  Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_min_s64 : GCCBuiltin<"__hsail_min_s64">,
+  Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]
+>;
 
 def int_HSAIL_min_f32 : GCCBuiltin<"__hsail_min_f32">,
-  Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty], [IntrNoMem]>;
+  Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty], [IntrNoMem]
+>;
+
 def int_HSAIL_min_f64 : GCCBuiltin<"__hsail_min_f64">,
-  Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_double_ty], [IntrNoMem]>;
+  Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_double_ty], [IntrNoMem]
+>;
 
 def int_HSAIL_gcn_min_f32 : GCCBuiltin<"__gcn_min_f32">, BinaryFloatIntrNoMem;
 def int_HSAIL_gcn_min_f64 : GCCBuiltin<"__gcn_min_f64">, BinaryFloatIntrNoMem;

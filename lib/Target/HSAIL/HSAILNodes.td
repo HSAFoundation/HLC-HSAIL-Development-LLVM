@@ -33,3 +33,23 @@ def HSAILnfma : SDNode<"HSAILISD::NFMA", SDTFPTernaryOp>;
 def HSAILumad : SDNode<"HSAILISD::UMAD", HSAILDTIntTernaryOp>;
 def HSAILsmad : SDNode<"HSAILISD::SMAD", HSAILDTIntTernaryOp>;
 def HSAILbitselect : SDNode<"HSAILISD::BITSELECT", HSAILDTIntTernaryOp>;
+
+// out = max(a, b) a and b are signed ints
+def HSAILsmax : SDNode<"HSAILISD::SMAX", SDTIntBinOp,
+  [SDNPCommutative, SDNPAssociative]
+>;
+
+// out = max(a, b) a and b are unsigned ints
+def HSAILumax : SDNode<"HSAILISD::UMAX", SDTIntBinOp,
+  [SDNPCommutative, SDNPAssociative]
+>;
+
+// out = min(a, b) a and b are signed ints
+def HSAILsmin : SDNode<"HSAILISD::SMIN", SDTIntBinOp,
+  [SDNPCommutative, SDNPAssociative]
+>;
+
+// out = min(a, b) a and b are unsigned ints
+def HSAILumin : SDNode<"HSAILISD::UMIN", SDTIntBinOp,
+  [SDNPCommutative, SDNPAssociative]
+>;

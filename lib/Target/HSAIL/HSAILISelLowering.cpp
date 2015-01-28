@@ -1160,6 +1160,14 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::CALL";
   case HSAILISD::RET_FLAG:
     return "HSAILISD::RET_FLAG";
+  case HSAILISD::SMAX:
+    return "HSAILISD::SMAX";
+  case HSAILISD::UMAX:
+    return "HSAILISD::UMAX";
+  case HSAILISD::SMIN:
+    return "HSAILISD::SMIN";
+  case HSAILISD::UMIN:
+    return "HSAILISD::UMIN";
   case HSAILISD::FRACT:
     return "HSAILISD::FRACT";
   case HSAILISD::NFMA:
@@ -1400,6 +1408,38 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
   case HSAILIntrinsic::HSAIL_mad_u32:
     return DAG.getNode(HSAILISD::UMAD, SL, MVT::i32,
                        Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+
+  case HSAILIntrinsic::HSAIL_max_s32:
+    return DAG.getNode(HSAILISD::SMAX, SL, MVT::i32,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_max_u32:
+    return DAG.getNode(HSAILISD::UMAX, SL, MVT::i32,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_min_s32:
+    return DAG.getNode(HSAILISD::SMIN, SL, MVT::i32,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_min_u32:
+    return DAG.getNode(HSAILISD::UMIN, SL, MVT::i32,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_max_s64:
+    return DAG.getNode(HSAILISD::SMAX, SL, MVT::i64,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_max_u64:
+    return DAG.getNode(HSAILISD::UMAX, SL, MVT::i64,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_min_s64:
+    return DAG.getNode(HSAILISD::SMIN, SL, MVT::i64,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_min_u64:
+    return DAG.getNode(HSAILISD::UMIN, SL, MVT::i64,
+                       Op.getOperand(1), Op.getOperand(2));
   default:
     return Op;
   }

@@ -443,43 +443,47 @@ let Predicates = [UnsafeFPMath] in {
 
 ////////////////////////////////////////////////////////////////////////////////
 // Min/Max
-multiclass minmax<string prefix, string suffix, ValueType Ty, SDNode ImmTy,
-                  RegisterClass RC, CondCode cc12, CondCode cc21> {
+multiclass minmax<Instruction inst, ValueType Ty, SDNode ImmTy,
+                  RegisterClass RC, CondCode cc12, CondCode cc21,
+                  int bt,
+                  int ftz = 0,
+                  int round = BrigRound.FLOAT_NEAR_EVEN
+                  > {
 
     def _rr12 : Pat<(select (i1 (setcc (Ty RC:$src0), (Ty RC:$src1), cc12)),
                             (Ty RC:$src0), (Ty RC:$src1)),
-                (!cast<HSAILInst>(prefix#"_"#suffix) RC:$src0, RC:$src1)>;
+                (inst ftz, round, RC:$src0, RC:$src1, bt)>;
 
     def _ri12 : Pat<(select (i1 (setcc RC:$src0, ImmTy:$src1, cc12)),
                             RC:$src0, ImmTy:$src1),
-                (!cast<HSAILInst>(prefix#"_ri_"#suffix) RC:$src0, ImmTy:$src1)>;
+                (inst ftz, round, RC:$src0, ImmTy:$src1, bt)>;
 
     def _ir12 : Pat<(select (i1 (setcc ImmTy:$src0, RC:$src1, cc12)),
                             ImmTy:$src0, RC:$src1),
-                (!cast<HSAILInst>(prefix#"_ir_"#suffix) ImmTy:$src0, RC:$src1)>;
+                (inst ftz, round, ImmTy:$src0, RC:$src1, bt)>;
 
     def _rr21 : Pat<(select (i1 (setcc (Ty RC:$src0), (Ty RC:$src1), cc21)),
                                 (Ty RC:$src1), (Ty RC:$src0)),
-                (!cast<HSAILInst>(prefix#"_"#suffix) RC:$src0, RC:$src1)>;
+                (inst ftz, round, RC:$src0, RC:$src1, bt)>;
 
     def _ri21 : Pat<(select (i1 (setcc RC:$src0, ImmTy:$src1, cc21)),
                             ImmTy:$src1, RC:$src0),
-                (!cast<HSAILInst>(prefix#"_ri_"#suffix) RC:$src0, ImmTy:$src1)>;
+                (inst ftz, round, RC:$src0, ImmTy:$src1, bt)>;
 
     def _ir21 : Pat<(select (i1 (setcc ImmTy:$src0, RC:$src1, cc21)),
                             RC:$src1, ImmTy:$src0),
-                (!cast<HSAILInst>(prefix#"_ir_"#suffix) ImmTy:$src0, RC:$src1)>;
+                (inst ftz, round, ImmTy:$src0, RC:$src1, bt)>;
 }
 
 let Predicates = [EnableOpt] in {
-defm min_s32  : minmax<"min", "s32", i32, imm,   GPR32, SETLT,  SETGT>;
-defm min_u32  : minmax<"min", "u32", i32, imm,   GPR32, SETULT, SETUGT>;
-defm max_s32  : minmax<"max", "s32", i32, imm,   GPR32, SETGT,  SETLT>;
-defm max_u32  : minmax<"max", "u32", i32, imm,   GPR32, SETUGT, SETULT>;
-defm min_s64  : minmax<"min", "s64", i64, imm,   GPR64, SETLT,  SETGT>;
-defm min_u64  : minmax<"min", "u64", i64, imm,   GPR64, SETULT, SETUGT>;
-defm max_s64  : minmax<"max", "s64", i64, imm,   GPR64, SETGT,  SETLT>;
-defm max_u64  : minmax<"max", "u64", i64, imm,   GPR64, SETUGT, SETULT>;
+defm min_s32  : minmax<min_inst, i32, imm,   GPR32, SETLT,  SETGT, BrigTypeX.S32>;
+defm min_u32  : minmax<min_inst, i32, imm,   GPR32, SETULT, SETUGT, BrigTypeX.U32>;
+defm max_s32  : minmax<max_inst, i32, imm,   GPR32, SETGT,  SETLT, BrigTypeX.S32>;
+defm max_u32  : minmax<max_inst, i32, imm,   GPR32, SETUGT, SETULT, BrigTypeX.U32>;
+defm min_s64  : minmax<min_inst, i64, imm,   GPR64, SETLT,  SETGT, BrigTypeX.S64>;
+defm min_u64  : minmax<min_inst, i64, imm,   GPR64, SETULT, SETUGT, BrigTypeX.U64>;
+defm max_s64  : minmax<max_inst, i64, imm,   GPR64, SETGT,  SETLT, BrigTypeX.S64>;
+defm max_u64  : minmax<max_inst, i64, imm,   GPR64, SETUGT, SETULT, BrigTypeX.U64>;
 }
 
 // Abs

@@ -11,6 +11,10 @@ namespace llvm {
       /// Return with a flag operand. Operand 0 is the chain operand, operand
       /// 1 is the number of bytes of stack to pop.
       RET_FLAG,
+      SMAX,
+      UMAX,
+      SMIN,
+      UMIN,
       FRACT,
       NFMA,
       UMAD,
