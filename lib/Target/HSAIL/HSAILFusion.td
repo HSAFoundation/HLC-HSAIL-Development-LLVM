@@ -577,29 +577,10 @@ def : Pat<(RotateByte32const GPR32:$src0, (i32 isByteSzShiftNoXform),
           (media_bytealign_rri GPR32:$src0, GPR32:$src0, isByteSzShift:$src2)>;
 }
 
-def RotateBit32const : PatFrag<(ops node:$reg, node:$shl, node:$shr),
-                               (or (shl node:$reg, node:$shl),
-                                   (srl node:$reg, node:$shr)),
-                               [{
-    ConstantSDNode *CNShl, *CNShr;
-    if ((CNShl = dyn_cast<ConstantSDNode>(N->getOperand(0)->getOperand(1))) &&
-        (CNShr = dyn_cast<ConstantSDNode>(N->getOperand(1)->getOperand(1)))) {
-        uint32_t shl = CNShl->getZExtValue() & 31;
-        uint32_t shr = CNShr->getZExtValue() & 31;
-        return (shl + shr) == 32;
-    }
-    return false;
-}]>;
-
 let Predicates = [EnableOpt] in {
-def : Pat<(RotateBit32const GPR32:$src0, (i32 imm), (i32 imm:$src2)),
-          (media_bitalign_rri GPR32:$src0, GPR32:$src0, imm:$src2)>;
-
-def : Pat<(or (shl (i32 GPR32:$src0), (and (i32 GPR32:$src1), imm31)),
-              (srl (i32 GPR32:$src0), (and (ineg (i32 GPR32:$src1)), imm31))),
-          (media_bitalign_rrr GPR32:$src0, GPR32:$src0, (neg_s32 GPR32:$src1))>;
-
-def : Pat<(or (shl (i32 GPR32:$src0), (i32 GPR32:$src1)),
-              (srl (i32 GPR32:$src0), (sub imm32, (and (i32 GPR32:$src1), imm31)))),
-          (media_bitalign_rrr GPR32:$src0, GPR32:$src0, (neg_s32 GPR32:$src1))>;
+  def : Pat<
+    (or (shl i32:$src0, i32:$src1),
+        (srl i32:$src0, (sub imm32, (and i32:$src1, imm31)))),
+    (media_bitalign_rrr $src0, $src0, (neg_s32 $src1))
+  >;
 }
