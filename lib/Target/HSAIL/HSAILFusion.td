@@ -244,7 +244,7 @@ def bfiImmIRR : PatFrag<
 def bfiImmIIR3 : PatFrag<
   (ops node:$src0, node:$src1, node:$src2),
   (xor (xor node:$src2, (and node:$src2, node:$src0)), node:$src1), [{
-    // Check if src2 & src1 == src2.
+    // Check if src1 & src0 == src1.
     ConstantSDNode *CN1, *CN2;
     if ((CN1 = dyn_cast<ConstantSDNode>(N->getOperand(0)->getOperand(1)->
                                                           getOperand(1))) &&
@@ -278,7 +278,7 @@ multiclass BitSelect<ValueType Ty, int bt> {
     (bitselect_inst $src0, imm:$src1, imm:$src2, bt)
   >;
 
-  // Alternative rii pattern: (src1 & src2) | ((src1 & src3) ^ src3)
+  // Alternative rii pattern: (src0 & src1) | ((src0 & src2) ^ src2)
   def _rii1 : Pat<
     (or (and Ty:$src0, (Ty imm:$src1)),
         (xor (and Ty:$src0, (Ty imm:$src2)), (Ty imm:$src2))),
@@ -291,14 +291,14 @@ multiclass BitSelect<ValueType Ty, int bt> {
     (bitselect_inst $src0, $src1, imm:$src2, bt)
   >;
 
-  // Alternative rri pattern: (src1 & src2) | ((src1 & src3) ^ src3)
+  // Alternative rri pattern: (src0 & src1) | ((src0 & src2) ^ src2)
   def _rri1 : Pat<
     (or (and Ty:$src0, Ty:$src1),
         (xor (and Ty:$src0, (Ty imm:$src2)), (Ty imm:$src2))),
     (bitselect_inst $src0, $src1, imm:$src2, bt)
   >;
 
-  // Alternative pattern: (src3 ^ (src1 & (src2 ^ src3)))
+  // Alternative pattern: (src2 ^ (src0 & (src1 ^ src2)))
   def _rrr2 : Pat<
     (xor Ty:$src2, (and Ty:$src0, (xor Ty:$src1, Ty:$src2))),
     (bitselect_inst $src0, $src1, $src2, bt)
@@ -324,7 +324,7 @@ multiclass BitSelect<ValueType Ty, int bt> {
     (bitselect_inst $src0, $src1, imm:$src2, bt)
   >;
 
-  // Alternative pattern: ((src3 & src1) ^ src3) ^ (src2 & src1)
+  // Alternative pattern: ((src2 & src0) ^ src2) ^ (src1 & src0)
   def _rrr3 : Pat<
     (xor (xor Ty:$src2, (and Ty:$src0, Ty:$src2)), (and Ty:$src0, Ty:$src1)),
     (bitselect_inst $src0, $src1, $src2, bt)
