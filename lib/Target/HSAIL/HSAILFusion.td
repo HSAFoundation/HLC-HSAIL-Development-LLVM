@@ -509,41 +509,6 @@ defm addmul1_f64 : FusedAddMul1<add_inst, f64, BrigTypeX.F64, GPR64, fp64imm1,
                                 BrigRound.FLOAT_NEAR_EVEN, 0>;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// rotate
-
-// rotate (x, const)
-def byteSzImm : SDNodeXForm<imm, [{
-    return CurDAG->getTargetConstant(((N->getZExtValue() & 31) >> 3), MVT::i32);
-}]>;
-
-class byteSzShift<SDNodeXForm xform = NOOP_SDNodeXForm> : PatLeaf<(imm), [{
-    return (N->getZExtValue() & 7) == 0;
-}]>;
-
-def isByteSzShiftNoXform : byteSzShift;
-
-def isByteSzShift : byteSzShift<byteSzImm>;
-
-def RotateByte32const : PatFrag<(ops node:$reg, node:$shl, node:$shr),
-                                (or (shl node:$reg, node:$shl),
-                                    (srl node:$reg, node:$shr)),
-                                [{
-    ConstantSDNode *CNShl, *CNShr;
-    if ((CNShl = dyn_cast<ConstantSDNode>(N->getOperand(0)->getOperand(1))) &&
-        (CNShr = dyn_cast<ConstantSDNode>(N->getOperand(1)->getOperand(1)))) {
-        uint32_t shl = CNShl->getZExtValue() & 31;
-        uint32_t shr = CNShr->getZExtValue() & 31;
-        return ((shl + shr) == 32) && ((shl & 7) == 0);
-    }
-    return false;
-}]>;
-
-let AddedComplexity = 1, Predicates = [EnableOpt] in {
-def : Pat<(RotateByte32const GPR32:$src0, (i32 isByteSzShiftNoXform), (i32 isByteSzShift:$src2)),
-  (bytealign_inst GPR32:$src0, GPR32:$src0, isByteSzShift:$src2, BrigTypeX.B32)>;
-}
-
 let Predicates = [EnableOpt] in {
   def : Pat<
     (or (shl i32:$src0, i32:$src1),
