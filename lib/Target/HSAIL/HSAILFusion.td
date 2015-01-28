@@ -490,10 +490,10 @@ defm max_u64  : minmax<max_inst, i64, imm,   GPR64, SETUGT, SETULT, BrigTypeX.U6
 let Predicates = [EnableOpt] in {
 def : Pat<(xor (add (sra (i32 GPR32:$src), (i32 31)), (i32 GPR32:$src)),
                (sra (i32 GPR32:$src), (i32 31))),
-          (abs_s32 GPR32:$src)>;
+          (abs_inst 0, 0, GPR32:$src, BrigTypeX.S32)>;
 def : Pat<(xor (add (sra (i64 GPR64:$src), (i32 63)), (i64 GPR64:$src)),
                (sra (i64 GPR64:$src), (i32 63))),
-          (abs_s64 GPR64:$src)>;
+          (abs_inst 0, 0, GPR64:$src, BrigTypeX.S64)>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

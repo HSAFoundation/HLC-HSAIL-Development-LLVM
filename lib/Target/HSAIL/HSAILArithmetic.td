@@ -46,11 +46,6 @@ defm : InstBasic_1Op_IntTypes<neg, ineg, 1>;
 
 defm : InstBasic_1Op_FPTypes<neg, fneg>;
 
-defm abs : UnaryIntrU32<int_HSAIL_abs_u32, "abs_u32">;
-defm abs : UnaryIntrS32<int_HSAIL_abs_s32, "abs_s32">;
-defm abs : UnaryIntrU64<int_HSAIL_abs_u64, "abs_u64">;
-defm abs : UnaryIntrS64<int_HSAIL_abs_s64, "abs_s64">;
-
 defm copysign : BinaryIntrF32<fcopysign, "copysign_f32">;
 defm copysign : BinaryIntrF64<fcopysign, "copysign_f64">;
 

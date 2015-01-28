@@ -199,11 +199,6 @@ def int_HSAIL_trunc_f64 : GCCBuiltin<"__hsail_trunc_f64">,
           Intrinsic<[llvm_double_ty], [llvm_double_ty], [IntrNoMem]>;
 
 // Intrinsics for OpenCL integer built-ins (OCL 1.2 6.12.3)
-def int_HSAIL_abs_u32 : GCCBuiltin<"__hsail_abs_u32">, UnaryIntIntrNoMem; // unused?
-def int_HSAIL_abs_s32 : GCCBuiltin<"__hsail_abs_s32">, UnaryIntIntrNoMem; // unused?
-def int_HSAIL_abs_u64 : GCCBuiltin<"__hsail_abs_u64">, UnaryIntIntrNoMem; // unused?
-def int_HSAIL_abs_s64 : GCCBuiltin<"__hsail_abs_s64">, UnaryIntIntrNoMem; // unused?
-
 def int_HSAIL_max_u32 : GCCBuiltin<"__hsail_max_u32">,
   Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
 >;
