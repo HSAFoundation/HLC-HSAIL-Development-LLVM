@@ -962,19 +962,6 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
     return memfence;
   }
-  case HSAIL::ftz_f32: {
-  // add_ftz_f32  $dst, $src, 0F00000000
-    HSAIL_ASM::InstMod ftz = brigantine.addInst<HSAIL_ASM::InstMod>(
-      Brig::BRIG_OPCODE_ADD, Brig::BRIG_TYPE_F32);
-    MachineOperand dest = II->getOperand(0);
-    MachineOperand src = II->getOperand(1);
-    m_opndList.push_back(getBrigReg(dest));
-    m_opndList.push_back(getBrigReg(src));
-    m_opndList.push_back(brigantine.createImmed(0, Brig::BRIG_TYPE_B32));
-    ftz.modifier().round() = Brig::BRIG_ROUND_FLOAT_PLUS_INFINITY;
-    ftz.modifier().ftz() = true;
-    return ftz;
-  }
   }
 }
 

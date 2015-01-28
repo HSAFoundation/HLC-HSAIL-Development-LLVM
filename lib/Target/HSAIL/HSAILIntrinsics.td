@@ -511,8 +511,9 @@ def int_HSAIL_ibfe: GCCBuiltin<"__hsail_ibfe">,
 def int_HSAIL_bfm: GCCBuiltin<"__hsail_bfm">,
           Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 
-
-def int_HSAIL_ftz_f32 : GCCBuiltin<"__hsail_ftz_f32">, UnaryFloatIntrNoMem;
+def int_HSAIL_ftz_f32 : GCCBuiltin<"__hsail_ftz_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty], [IntrNoMem]
+>;
 
 // HSAIL_SPEC_CURRENT <
 def int_HSAIL_firstbit_u32 : GCCBuiltin<"__hsail_firstbit_u32">,
