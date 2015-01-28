@@ -549,11 +549,21 @@ def int_HSAIL_mulhi_s64 : GCCBuiltin<"__hsail_mulhi_s64">,
 def int_HSAIL_mulhi_u64 : GCCBuiltin<"__hsail_mulhi_u64">,
   Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
 
-def int_HSAIL_mad24_s32 : GCCBuiltin<"__hsail_mad24_s32">, TernaryIntIntrNoMem;
-def int_HSAIL_mad24_u32 : GCCBuiltin<"__hsail_mad24_u32">, TernaryIntIntrNoMem;
+def int_HSAIL_mad24_s32 : GCCBuiltin<"__hsail_mad24_s32">,
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
 
-def int_HSAIL_mul24_s32 : GCCBuiltin<"__hsail_mul24_s32">, BinaryIntIntrNoMem;
-def int_HSAIL_mul24_u32 : GCCBuiltin<"__hsail_mul24_u32">, BinaryIntIntrNoMem;
+def int_HSAIL_mad24_u32 : GCCBuiltin<"__hsail_mad24_u32">,
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_mul24_s32 : GCCBuiltin<"__hsail_mul24_s32">,
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_mul24_u32 : GCCBuiltin<"__hsail_mul24_u32">,
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
 
 def int_HSAIL_popcount_u32_b32 : GCCBuiltin<"__hsail_popcount_u32_b32">, UnaryIntIntrNoMem;
 

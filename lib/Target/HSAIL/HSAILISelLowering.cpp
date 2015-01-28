@@ -1176,6 +1176,14 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::UMAD";
   case HSAILISD::SMAD:
     return "HSAILISD::SMAD";
+  case HSAILISD::UMUL24:
+    return "HSAILISD::UMUL24";
+  case HSAILISD::SMUL24:
+    return "HSAILISD::SMUL24";
+  case HSAILISD::UMAD24:
+    return "HSAILISD::UMAD24";
+  case HSAILISD::SMAD24:
+    return "HSAILISD::SMAD24";
   case HSAILISD::BITSELECT:
     return "HSAILISD::BITSELECT";
   case HSAILISD::LDA_FLAT:
@@ -1440,6 +1448,22 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
   case HSAILIntrinsic::HSAIL_min_u64:
     return DAG.getNode(HSAILISD::UMIN, SL, MVT::i64,
                        Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_mul24_s32:
+    return DAG.getNode(HSAILISD::SMUL24, SL, MVT::i32,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_mul24_u32:
+    return DAG.getNode(HSAILISD::UMUL24, SL, MVT::i32,
+                       Op.getOperand(1), Op.getOperand(2));
+
+  case HSAILIntrinsic::HSAIL_mad24_s32:
+    return DAG.getNode(HSAILISD::SMAD24, SL, MVT::i32,
+                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+
+  case HSAILIntrinsic::HSAIL_mad24_u32:
+    return DAG.getNode(HSAILISD::UMAD24, SL, MVT::i32,
+                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
   default:
     return Op;
   }

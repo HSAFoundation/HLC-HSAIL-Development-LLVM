@@ -76,11 +76,16 @@ defm gcn_max : BinaryIntrF64<int_HSAIL_gcn_max_f64, "gcn_max_f64">;
 defm gcn_min : BinaryIntrF32<int_HSAIL_gcn_min_f32, "gcn_min_f32">;
 defm gcn_min : BinaryIntrF64<int_HSAIL_gcn_min_f64, "gcn_min_f64">;
 
-defm mad24 : TernaryIntrS32<int_HSAIL_mad24_s32, "mad24_s32">;
-defm mad24 : TernaryIntrU32<int_HSAIL_mad24_u32, "mad24_u32">;
 
-defm mul24 : BinaryIntrS32<int_HSAIL_mul24_s32, "mul24_s32">;
-defm mul24 : BinaryIntrU32<int_HSAIL_mul24_u32, "mul24_u32">;
+def mul24_inst : HSAILInstBasic_2Op<"mul24", BrigOpcode.MUL24>;
+def : InstBasic_2Op_Pat<mul24_inst, HSAILsmul24, i32, i32, BrigTypeX.S32>;
+def : InstBasic_2Op_Pat<mul24_inst, HSAILumul24, i32, i32, BrigTypeX.U32>;
+
+
+def mad24_inst : HSAILInstBasic_3Op<"mad24", BrigOpcode.MAD24>;
+def : InstBasic_3Op_Pat<mad24_inst, HSAILsmad24, i32, BrigTypeX.S32>;
+def : InstBasic_3Op_Pat<mad24_inst, HSAILumad24, i32, BrigTypeX.U32>;
+
 
 defm pdiv : BinaryIntrF32<int_HSAIL_div_f32, "div_f32">;
 

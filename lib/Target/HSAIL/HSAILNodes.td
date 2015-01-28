@@ -53,3 +53,19 @@ def HSAILsmin : SDNode<"HSAILISD::SMIN", SDTIntBinOp,
 def HSAILumin : SDNode<"HSAILISD::UMIN", SDTIntBinOp,
   [SDNPCommutative, SDNPAssociative]
 >;
+
+// Signed and unsigned 24-bit mulitply.  The highest 8-bits are ignore when
+// performing the mulitply.  The result is a 32-bit value.
+def HSAILumul24 : SDNode<"HSAILISD::UMUL24", SDTIntBinOp,
+  [SDNPCommutative]
+>;
+def HSAILsmul24 : SDNode<"HSAILISD::SMUL24", SDTIntBinOp,
+  [SDNPCommutative]
+>;
+
+def HSAILumad24 : SDNode<"HSAILISD::UMAD24", HSAILDTIntTernaryOp,
+  []
+>;
+def HSAILsmad24 : SDNode<"HSAILISD::SMAD24", HSAILDTIntTernaryOp,
+  []
+>;
