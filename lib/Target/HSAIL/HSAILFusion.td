@@ -482,14 +482,6 @@ defm max_s64  : minmax<"max", "s64", i64, imm,   GPR64, SETGT,  SETLT>;
 defm max_u64  : minmax<"max", "u64", i64, imm,   GPR64, SETUGT, SETULT>;
 }
 
-let Predicates = [EnableOpt, EnableGCNMinMax] in {
-    defm minu_f32 : minmax<"gcn_min", "f32", f32, fpimm, GPR32, SETULT, SETUGT>;
-    defm maxu_f32 : minmax<"gcn_max", "f32", f32, fpimm, GPR32, SETUGT, SETULT>;
-    defm mino_f32 : minmax<"gcn_min", "f32", f32, fpimm, GPR32, SETOLT, SETOGT>;
-    defm maxo_f32 : minmax<"gcn_max", "f32", f32, fpimm, GPR32, SETOGT, SETOLT>;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // Abs
 let Predicates = [EnableOpt] in {
 def : Pat<(xor (add (sra (i32 GPR32:$src), (i32 31)), (i32 GPR32:$src)),

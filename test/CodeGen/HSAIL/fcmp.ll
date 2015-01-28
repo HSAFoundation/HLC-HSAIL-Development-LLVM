@@ -1,8 +1,8 @@
 ; RUN: llc -march=hsail < %s | FileCheck -check-prefix=HSAIL -check-prefix=FUNC %s
 
-; FIXME: It is incorrect to emit min for this
 ; FUNC-LABEL: {{^}}prog function &fcmp_olt_f32
-; HSAIL: min_f32 {{\$s[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}};
+; HSAIL: cmp_lt_ftz_b1_f32 {{\$c[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}};
+; HSAIL: cmov_b32
 define void @fcmp_olt_f32(float addrspace(1)* %out, float addrspace(1)* %in1, float addrspace(1)* %in2) {
   %r0 = load float addrspace(1)* %in1
   %r1 = load float addrspace(1)* %in2
@@ -25,7 +25,8 @@ define void @fcmp_ole_f32(float addrspace(1)* %out, float addrspace(1)* %in1, fl
 }
 
 ; FUNC-LABEL: {{^}}prog function &fcmp_ogt_f32
-; HSAIL: max_f32 {{\$s[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}};
+; HSAIL: cmp_gt_ftz_b1_f32 {{\$c[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}};
+; HSAIL: cmov_b32
 define void @fcmp_ogt_f32(float addrspace(1)* %out, float addrspace(1)* %in1, float addrspace(1)* %in2) {
   %r0 = load float addrspace(1)* %in1
   %r1 = load float addrspace(1)* %in2
@@ -72,7 +73,8 @@ define void @fcmp_oeq_f32(float addrspace(1)* %out, float addrspace(1)* %in1, fl
 }
 
 ; FUNC-LABEL: {{^}}prog function &fcmp_ult_f32
-; HSAIL: min_f32 {{\$s[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}};
+; HSAIL: cmp_ltu_ftz_b1_f32 {{\$c[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}};
+; HSAIL: cmov_b32
 define void @fcmp_ult_f32(float addrspace(1)* %out, float addrspace(1)* %in1, float addrspace(1)* %in2) {
   %r0 = load float addrspace(1)* %in1
   %r1 = load float addrspace(1)* %in2
@@ -95,7 +97,8 @@ define void @fcmp_ule_f32(float addrspace(1)* %out, float addrspace(1)* %in1, fl
 }
 
 ; FUNC-LABEL: {{^}}prog function &fcmp_ugt_f32
-; HSAIL: max_f32 {{\$s[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}};
+; HSAIL: cmp_gtu_ftz_b1_f32 {{\$c[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}};
+; HSAIL: cmov_b32
 define void @fcmp_ugt_f32(float addrspace(1)* %out, float addrspace(1)* %in1, float addrspace(1)* %in2) {
   %r0 = load float addrspace(1)* %in1
   %r1 = load float addrspace(1)* %in2
