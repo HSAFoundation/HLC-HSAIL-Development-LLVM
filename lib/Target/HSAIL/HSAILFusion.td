@@ -19,18 +19,25 @@ def EnableGCNMinMax    : Predicate<"llvm::EnableGCNMinMax">;
 multiclass TernaryFusedPairOp<Instruction inst,
                               ValueType Ty, SDNode ImmTy,
                               RegisterClass RC, SDNode op1, SDNode op2, int bt> {
+  def _rrr : Pat<
+    (op1 (op2 RC:$src0, RC:$src1), RC:$src2),
+    (inst RC:$src0, RC:$src1, RC:$src2, bt)
+  >;
 
-    def _rrr : Pat<(op1 (op2 RC:$src0, RC:$src1), RC:$src2),
-                   (inst RC:$src0, RC:$src1, RC:$src2, bt)>;
+  def _rri : Pat<
+    (op1 (op2 RC:$src0, RC:$src1), (Ty ImmTy:$src2)),
+    (inst RC:$src0, RC:$src1, ImmTy:$src2, bt)
+  >;
 
-    def _rri : Pat<(op1 (op2 RC:$src0, RC:$src1), (Ty ImmTy:$src2)),
-                   (inst RC:$src0, RC:$src1, ImmTy:$src2, bt)>;
+  def _rir : Pat<
+    (op1 (op2 RC:$src0, (Ty ImmTy:$src1)), RC:$src2),
+    (inst RC:$src0, ImmTy:$src1, RC:$src2, bt)
+  >;
 
-    def _rir : Pat<(op1 (op2 RC:$src0, (Ty ImmTy:$src1)), RC:$src2),
-                   (inst RC:$src0, ImmTy:$src1, RC:$src2, bt)>;
-
-    def _rii : Pat<(op1 (op2 RC:$src0, (Ty ImmTy:$src1)), (Ty ImmTy:$src2)),
-                   (inst RC:$src0, ImmTy:$src1, ImmTy:$src2, bt)>;
+  def _rii : Pat<
+    (op1 (op2 RC:$src0, (Ty ImmTy:$src1)), (Ty ImmTy:$src2)),
+    (inst RC:$src0, ImmTy:$src1, ImmTy:$src2, bt)
+  >;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,8 +63,9 @@ def shl64imm : PatLeaf<(imm), [{
 // Pre-optimized (const1 + (x << const2)) -> const1 | (x << const2).
 // This requires mutual check of const1 and const2 to ensure last bit# set in
 // const1 < const2 (i.e. or can be changed to add).
-def orShlAsMad : PatFrag<(ops node:$reg, node:$shift, node:$mask),
-                         (or (shl node:$reg, node:$shift), node:$mask), [{
+def orShlAsMad : PatFrag<
+  (ops node:$reg, node:$shift, node:$mask),
+  (or (shl node:$reg, node:$shift), node:$mask), [{
     ConstantSDNode *CNShift, *CNMask;
     if ((CNShift = dyn_cast<ConstantSDNode>(N->getOperand(0)->getOperand(1))) &&
         (CNMask  = dyn_cast<ConstantSDNode>(N->getOperand(1)))) {
@@ -200,26 +208,30 @@ multiclass SignNeutralExtractOp<string asm, ValueType Ty, RegisterClass RC,
 // No signed extract operations are defined since HSAIL specifies extract as
 // left + right shifts rather than right shift + and
 let Predicates = [EnableOpt] in {
-def : Pat<(and (srl GPR32:$src0, (i32 isMax32bitShift:$src1)), (i32 isMask:$src2)),
-          (media_bfe_rii_u32 GPR32:$src0, isMax32bitShift:$src1, isMask:$src2)>;
+  def : Pat<
+    (and (srl i32:$src0, (i32 isMax32bitShift:$src1)), (i32 isMask:$src2)),
+    (media_bfe_rii_u32 $src0, isMax32bitShift:$src1, isMask:$src2)
+  >;
 
-def : Pat<(and (srl GPR32:$src0, GPR32:$src1), (i32 isMask:$src2)),
-          (media_bfe_rri_u32 GPR32:$src0, GPR32:$src1, isMask:$src2)>;
+  def : Pat<
+    (and (srl GPR32:$src0, GPR32:$src1), (i32 isMask:$src2)),
+    (media_bfe_rri_u32 GPR32:$src0, GPR32:$src1, isMask:$src2)
+  >;
 
-defm extract_u64 : ExtractOp<"bitextract_u64", i64, GPR64, isMax64bitShift, srl>;
+  defm extract_u64 : ExtractOp<"bitextract_u64", i64, GPR64, isMax64bitShift, srl>;
 
-def : Pat<(SignNeutralExtract GPR32:$src0, (i32 isMax32bitShift:$src1),
-                              (i32 isMask:$src2)),
-          (media_bfe_rii_u32 GPR32:$src0, isMax32bitShift:$src1, isMask:$src2)>;
+  def : Pat<
+    (SignNeutralExtract i32:$src0, (i32 isMax32bitShift:$src1), (i32 isMask:$src2)),
+    (media_bfe_rii_u32 GPR32:$src0, isMax32bitShift:$src1, isMask:$src2)
+  >;
 
-defm extract_b64 : SignNeutralExtractOp<"bitextract_u64", i64, GPR64, isMax64bitShift>;
+  defm extract_b64 : SignNeutralExtractOp<"bitextract_u64", i64, GPR64, isMax64bitShift>;
 }
 
 // BFI
-
-def bfiImmIRR : PatFrag<(ops node:$src0, node:$src1, node:$src2, node:$src4),
-                        (or (and node:$src1, node:$src0),
-                            (and node:$src2, node:$src4)), [{
+def bfiImmIRR : PatFrag<
+  (ops node:$src0, node:$src1, node:$src2, node:$src4),
+  (or (and node:$src1, node:$src0), (and node:$src2, node:$src4)), [{
     // check if src1 == ~src4
     ConstantSDNode *CN1, *CN2;
     if ((CN1 = dyn_cast<ConstantSDNode>(N->getOperand(0)->getOperand(1))) &&
@@ -229,11 +241,10 @@ def bfiImmIRR : PatFrag<(ops node:$src0, node:$src1, node:$src2, node:$src4),
     return false;
 }]>;
 
-def bfiImmIIR3 : PatFrag<(ops node:$src0, node:$src1, node:$src2),
-                          (xor
-                               (xor node:$src2, (and node:$src2, node:$src0)),
-                               node:$src1), [{
-    // check if src2 & src1 == src2
+def bfiImmIIR3 : PatFrag<
+  (ops node:$src0, node:$src1, node:$src2),
+  (xor (xor node:$src2, (and node:$src2, node:$src0)), node:$src1), [{
+    // Check if src2 & src1 == src2.
     ConstantSDNode *CN1, *CN2;
     if ((CN1 = dyn_cast<ConstantSDNode>(N->getOperand(0)->getOperand(1)->
                                                           getOperand(1))) &&
@@ -244,126 +255,117 @@ def bfiImmIIR3 : PatFrag<(ops node:$src0, node:$src1, node:$src2),
     return false;
 }]>;
 
-multiclass BitSelect<ValueType Ty, RegisterClass RC, int bt> {
+multiclass BitSelect<ValueType Ty, int bt> {
+  def _rrr : Pat<
+    (or (and Ty:$src0, Ty:$src1),
+        (and Ty:$src2, (not Ty:$src0))),
+    (bitselect_inst $src0, $src1, $src2, bt)
+  >;
 
-    def _rrr : Pat<(or (and RC:$src0,
-                            RC:$src1),
-                       (and RC:$src2,
-                            (not RC:$src0))),
-                   (bitselect_inst RC:$src0, RC:$src1, RC:$src2, bt)>;
+  def _irr : Pat<
+    (bfiImmIRR (Ty imm:$src0), Ty:$src1, Ty:$src2, (Ty imm)),
+    (bitselect_inst imm:$src0, $src1, $src2, bt)
+  >;
 
-    def _irr : Pat<(bfiImmIRR (Ty imm:$src0), RC:$src1,
-                              RC:$src2, (Ty imm)),
-                   (bitselect_inst imm:$src0, RC:$src1, RC:$src2, bt)>;
+  def _rir : Pat<
+    (or (and Ty:$src0, (Ty imm:$src1)), (and Ty:$src2, (not Ty:$src0))),
+    (bitselect_inst $src0, imm:$src1, $src2, bt)
+  >;
 
-    def _rir : Pat<(or (and RC:$src0,
-                            (Ty imm:$src1)),
-                       (and RC:$src2,
-                            (not RC:$src0))),
-                   (bitselect_inst RC:$src0, imm:$src1, RC:$src2, bt)>;
+  def _rii : Pat<
+    (or (and Ty:$src0, (Ty imm:$src1)),
+        (and (not Ty:$src0), (Ty imm:$src2))),
+    (bitselect_inst $src0, imm:$src1, imm:$src2, bt)
+  >;
 
-    def _rii : Pat<(or (and RC:$src0,
-                            (Ty imm:$src1)),
-                       (and (not RC:$src0),
-                            (Ty imm:$src2))),
-                   (bitselect_inst RC:$src0, imm:$src1, imm:$src2, bt)>;
+  // Alternative rii pattern: (src1 & src2) | ((src1 & src3) ^ src3)
+  def _rii1 : Pat<
+    (or (and Ty:$src0, (Ty imm:$src1)),
+        (xor (and Ty:$src0, (Ty imm:$src2)), (Ty imm:$src2))),
+    (bitselect_inst $src0, imm:$src1, imm:$src2, bt)
+  >;
 
-    // Alternative rii pattern: (src1 & src2) | ((src1 & src3) ^ src3)
-    def _rii1 : Pat<(or (and RC:$src0,
-                             (Ty imm:$src1)),
-                        (xor (and RC:$src0,
-                                  (Ty imm:$src2)),
-                             (Ty imm:$src2))),
-                   (bitselect_inst RC:$src0, imm:$src1, imm:$src2, bt)>;
+  def _rri : Pat<
+    (or (and Ty:$src0, Ty:$src1),
+        (and (not Ty:$src0), (Ty imm:$src2))),
+    (bitselect_inst $src0, $src1, imm:$src2, bt)
+  >;
 
-    def _rri : Pat<(or (and RC:$src0,
-                            RC:$src1),
-                       (and (not RC:$src0),
-                            (Ty imm:$src2))),
-                   (bitselect_inst RC:$src0, RC:$src1, imm:$src2, bt)>;
+  // Alternative rri pattern: (src1 & src2) | ((src1 & src3) ^ src3)
+  def _rri1 : Pat<
+    (or (and Ty:$src0, Ty:$src1),
+        (xor (and Ty:$src0, (Ty imm:$src2)), (Ty imm:$src2))),
+    (bitselect_inst $src0, $src1, imm:$src2, bt)
+  >;
 
-    // Alternative rri pattern: (src1 & src2) | ((src1 & src3) ^ src3)
-    def _rri1 : Pat<(or (and RC:$src0,
-                             RC:$src1),
-                        (xor (and RC:$src0,
-                                  (Ty imm:$src2)),
-                             (Ty imm:$src2))),
-                   (bitselect_inst RC:$src0, RC:$src1, imm:$src2, bt)>;
+  // Alternative pattern: (src3 ^ (src1 & (src2 ^ src3)))
+  def _rrr2 : Pat<
+    (xor Ty:$src2, (and Ty:$src0, (xor Ty:$src1, Ty:$src2))),
+    (bitselect_inst $src0, $src1, $src2, bt)
+  >;
 
-    // Alternative pattern: (src3 ^ (src1 & (src2 ^ src3)))
-    def _rrr2 : Pat<(xor RC:$src2,
-                         (and RC:$src0,
-                              (xor RC:$src1,
-                                   RC:$src2))),
-                    (bitselect_inst RC:$src0, RC:$src1, RC:$src2, bt)>;
+  def _irr2 : Pat<
+    (xor Ty:$src2, (and (xor Ty:$src1, Ty:$src2), (Ty imm:$src0))),
+    (bitselect_inst imm:$src0, $src1, $src2, bt)
+  >;
 
-    def _irr2 : Pat<(xor RC:$src2,
-                         (and (xor RC:$src1,
-                                   RC:$src2),
-                              (Ty imm:$src0))),
-                    (bitselect_inst imm:$src0, RC:$src1, RC:$src2, bt)>;
+  def _iir2 : Pat<
+    (xor Ty:$src2, (and (xor Ty:$src2, (Ty imm:$src1)), (Ty imm:$src0))),
+    (bitselect_inst imm:$src0, imm:$src1, $src2, bt)
+  >;
 
-    def _iir2 : Pat<(xor RC:$src2,
-                         (and (xor RC:$src2,
-                                   (Ty imm:$src1)),
-                              (Ty imm:$src0))),
-                    (bitselect_inst imm:$src0, imm:$src1, RC:$src2, bt)>;
+  def _rir2 : Pat<
+    (xor Ty:$src2, (and Ty:$src0, (xor Ty:$src2, (Ty imm:$src1)))),
+    (bitselect_inst $src0, imm:$src1, $src2, bt)
+  >;
 
-    def _rir2 : Pat<(xor RC:$src2,
-                         (and RC:$src0,
-                              (xor RC:$src2,
-                                   (Ty imm:$src1)))),
-                    (bitselect_inst RC:$src0, imm:$src1, RC:$src2, bt)>;
+  def _rri2 : Pat<
+    (xor (and Ty:$src0, (xor Ty:$src1, (Ty imm:$src2))), (Ty imm:$src2)),
+    (bitselect_inst $src0, $src1, imm:$src2, bt)
+  >;
 
-    def _rri2 : Pat<(xor (and RC:$src0,
-                              (xor RC:$src1,
-                                   (Ty imm:$src2))),
-                         (Ty imm:$src2)),
-                    (bitselect_inst RC:$src0, RC:$src1, imm:$src2, bt)>;
+  // Alternative pattern: ((src3 & src1) ^ src3) ^ (src2 & src1)
+  def _rrr3 : Pat<
+    (xor (xor Ty:$src2, (and Ty:$src0, Ty:$src2)), (and Ty:$src0, Ty:$src1)),
+    (bitselect_inst $src0, $src1, $src2, bt)
+  >;
 
-    // Alternative pattern: ((src3 & src1) ^ src3) ^ (src2 & src1)
-    def _rrr3 : Pat<(xor (xor RC:$src2,
-                              (and RC:$src0,
-                                   RC:$src2)),
-                         (and RC:$src0,
-                              RC:$src1)),
-                    (bitselect_inst RC:$src0, RC:$src1, RC:$src2, bt)>;
+  def _irr3 : Pat<
+    (xor (xor Ty:$src2, (and Ty:$src2, (Ty imm:$src0))),
+         (and Ty:$src1, (Ty imm:$src0))),
+    (bitselect_inst imm:$src0, $src1, $src2, bt)
+  >;
 
-    def _irr3 : Pat<(xor (xor RC:$src2,
-                              (and RC:$src2,
-                                   (Ty imm:$src0))),
-                         (and RC:$src1,
-                              (Ty imm:$src0))),
-                    (bitselect_inst imm:$src0, RC:$src1, RC:$src2, bt)>;
+  def _iir3 : Pat<
+    (bfiImmIIR3 (Ty imm:$src0), (Ty imm:$src1), Ty:$src2),
+    (bitselect_inst imm:$src0, imm:$src1, $src2, bt)
+  >;
 
-    def _iir3 : Pat<(bfiImmIIR3 (Ty imm:$src0), (Ty imm:$src1), RC:$src2),
-                    (bitselect_inst imm:$src0, imm:$src1, RC:$src2, bt)>;
+  def _rri3 : Pat<
+    (xor (xor (and Ty:$src0, (Ty imm:$src2)), (Ty imm:$src2)),
+         (and Ty:$src0, Ty:$src1)),
+    (bitselect_inst $src0, $src1, imm:$src2, bt)
+  >;
 
-    def _rri3 : Pat<(xor (xor (and RC:$src0,
-                                   (Ty imm:$src2)),
-                              (Ty imm:$src2)),
-                         (and RC:$src0,
-                              RC:$src1)),
-                   (bitselect_inst RC:$src0, RC:$src1, imm:$src2, bt)>;
-
-    def _rii3 : Pat<(xor (xor (and RC:$src0,
-                                   (Ty imm:$src2)),
-                              (Ty imm:$src2)),
-                         (and RC:$src0,
-                              (Ty imm:$src1))),
-                    (bitselect_inst RC:$src0, imm:$src1, imm:$src2, bt)>;
+  def _rii3 : Pat<
+    (xor (xor (and Ty:$src0, (Ty imm:$src2)), (Ty imm:$src2)),
+         (and Ty:$src0, (Ty imm:$src1))),
+    (bitselect_inst $src0, imm:$src1, imm:$src2, bt)
+  >;
 }
 
 let Predicates = [EnableOpt] in {
-defm : BitSelect<i32, GPR32, BrigTypeX.B32>;
-defm : BitSelect<i64, GPR64, BrigTypeX.B64>;
+defm : BitSelect<i32, BrigTypeX.B32>;
+defm : BitSelect<i64, BrigTypeX.B64>;
 }
 
 // pack
 
 let Predicates = [EnableOpt] in {
-def : Pat<(shl (i64 (anyext GPR32:$src)), (i32 32)),
-          (pack_u32x2_u32_iri 0, GPR32:$src, 1)>;
+  def : Pat<
+    (shl (i64 (anyext i32:$src)), (i32 32)),
+    (pack_u32x2_u32_iri 0, $src, 1)
+  >;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -386,127 +388,169 @@ def fp64imm_minus1 : PatLeaf<(f64 fpimm), [{
 }]>;
 
 let Predicates = [UnsafeFPMath] in {
-    // Pure 1.0 / x
-    let AddedComplexity = 5 in {
-     def : Pat<(fdiv (fp32imm1), (f32 GPR32:$src)),
-               (nrcp_inst GPR32:$src, BrigTypeX.F32)>;
-     def : Pat<(fdiv (fp64imm1), (f64 GPR64:$src)),
-               (nrcp_inst GPR64:$src, BrigTypeX.F64)>;
-    }
+  // Pure 1.0 / x
+  let AddedComplexity = 5 in {
+    def : Pat<
+      (fdiv fp32imm1, f32:$src),
+      (nrcp_inst $src, BrigTypeX.F32)
+    >;
 
-    // -1.0 / x
-    let AddedComplexity = 4 in {
-     def : Pat<(fdiv fp32imm_minus1, (f32 GPR32:$src)),
-               (neg (f32 (nrcp_inst (f32 GPR32:$src), BrigTypeX.F32)), BrigTypeX.F32)>;
-     def : Pat<(fdiv fp64imm_minus1, (f64 GPR64:$src)),
-               (neg (f64 (nrcp_inst (f64 GPR64:$src), BrigTypeX.F64)), BrigTypeX.F64)>;
-    }
+    def : Pat<
+      (fdiv fp64imm1, f64:$src),
+      (nrcp_inst $src, BrigTypeX.F64)
+    >;
+  }
 
-    let AddedComplexity = 5 in {
-     def : Pat<(fdiv fp32imm_minus1, (fneg (f32 GPR32:$src))),
-               (nrcp_inst (f32 GPR32:$src), BrigTypeX.F32)>;
-     def : Pat<(fdiv fp64imm_minus1, (fneg (f64 GPR64:$src))),
-               (nrcp_inst (f64 GPR64:$src), BrigTypeX.F64)>;
-    }
+  // -1.0 / x
+  let AddedComplexity = 4 in {
+     def : Pat<
+       (fdiv fp32imm_minus1, f32:$src),
+       (neg (f32 (nrcp_inst $src, BrigTypeX.F32)), BrigTypeX.F32)
+     >;
+
+     def : Pat<
+       (fdiv fp64imm_minus1, f64:$src),
+       (neg (f64 (nrcp_inst $src, BrigTypeX.F64)), BrigTypeX.F64)
+     >;
+  }
+
+  let AddedComplexity = 5 in {
+    def : Pat<
+      (fdiv fp32imm_minus1, (fneg f32:$src)),
+      (nrcp_inst $src, BrigTypeX.F32)
+    >;
+
+    def : Pat<
+      (fdiv fp64imm_minus1, (fneg f64:$src)),
+      (nrcp_inst $src, BrigTypeX.F64)
+    >;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // rsqrt
 
 let Predicates = [UnsafeFPMath] in {
-    // Pure 1.0 / sqrt(x)
-    let AddedComplexity = 15 in {
-        def : Pat<(fdiv (fp32imm1), (int_HSAIL_nsqrt_f32 (f32 GPR32:$src))),
-                  (nrsqrt_inst GPR32:$src, BrigTypeX.F32)>;
-        def : Pat<(fdiv (fp64imm1), (int_HSAIL_nsqrt_f64 (f64 GPR64:$src))),
-                  (nrsqrt_inst GPR64:$src, BrigTypeX.F64)>;
-    }
+  // Pure 1.0 / sqrt(x)
+  let AddedComplexity = 15 in {
+    def : Pat<
+      (fdiv fp32imm1, (int_HSAIL_nsqrt_f32 f32:$src)),
+      (nrsqrt_inst $src, BrigTypeX.F32)
+    >;
 
-    let AddedComplexity = 10 in {
-        def : Pat<(f32 (fdiv GPR32:$src0, (int_HSAIL_nsqrt_f32 GPR32:$src1))),
-                  (f32 (mul_inst 1, 0, GPR32:$src0, (f32 (nrsqrt_inst (f32 GPR32:$src1), BrigTypeX.F32)), BrigTypeX.F32))>;
-        def : Pat<(f32 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f32 GPR32:$src1))),
-                  (f32 (mul_inst 1, 0, fpimm:$src0, (f32 (nrsqrt_inst (f32 GPR32:$src1), BrigTypeX.F32)), BrigTypeX.F32))>;
+    def : Pat<
+      (fdiv fp64imm1, (int_HSAIL_nsqrt_f64 f64:$src)),
+      (nrsqrt_inst $src, BrigTypeX.F64)
+    >;
+  }
 
-        def : Pat<(f64 (fdiv GPR64:$src0, (int_HSAIL_nsqrt_f64 GPR64:$src1))),
-                  (f64 (mul_inst 0, 0, GPR64:$src0, (f64 (nrsqrt_inst (f64 GPR64:$src1), BrigTypeX.F64)), BrigTypeX.F64))>;
-        def : Pat<(f64 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f64 GPR64:$src1))),
-                  (f64 (mul_inst 0, 0, fpimm:$src0, (f64 (nrsqrt_inst (f64 GPR64:$src1), BrigTypeX.F64)), BrigTypeX.F64))>;
-    }
+  let AddedComplexity = 10 in {
+    def : Pat<
+      (fdiv f32:$src0, (int_HSAIL_nsqrt_f32 f32:$src1)),
+      (f32 (mul_inst 1, 0, $src0, (f32 (nrsqrt_inst $src1, BrigTypeX.F32)), BrigTypeX.F32))
+    >;
+
+    def : Pat<
+      (f32 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f32 f32:$src1))),
+      (f32 (mul_inst 1, 0, fpimm:$src0, (f32 (nrsqrt_inst $src1, BrigTypeX.F32)), BrigTypeX.F32))
+    >;
+
+    def : Pat<
+      (f64 (fdiv GPR64:$src0, (int_HSAIL_nsqrt_f64 f64:$src1))),
+      (f64 (mul_inst 0, 0, $src0, (f64 (nrsqrt_inst $src1, BrigTypeX.F64)), BrigTypeX.F64))
+    >;
+
+    def : Pat<
+      (f64 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f64 f64:$src1))),
+      (f64 (mul_inst 0, 0, fpimm:$src0, (f64 (nrsqrt_inst (f64 GPR64:$src1), BrigTypeX.F64)), BrigTypeX.F64))
+    >;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Min/Max
 multiclass minmax<Instruction inst, ValueType Ty, SDNode ImmTy,
-                  RegisterClass RC, CondCode cc12, CondCode cc21,
+                  CondCode cc12, CondCode cc21,
                   int bt,
                   int ftz = 0,
-                  int round = BrigRound.FLOAT_NEAR_EVEN
-                  > {
+                  int round = BrigRound.FLOAT_NEAR_EVEN> {
+  def _rr12 : Pat<
+    (select (i1 (setcc Ty:$src0, Ty:$src1, cc12)), Ty:$src0, Ty:$src1),
+    (inst ftz, round, $src0, $src1, bt)
+  >;
 
-    def _rr12 : Pat<(select (i1 (setcc (Ty RC:$src0), (Ty RC:$src1), cc12)),
-                            (Ty RC:$src0), (Ty RC:$src1)),
-                (inst ftz, round, RC:$src0, RC:$src1, bt)>;
+  def _ri12 : Pat<
+    (select (i1 (setcc Ty:$src0, ImmTy:$src1, cc12)), Ty:$src0, ImmTy:$src1),
+    (inst ftz, round, $src0, ImmTy:$src1, bt)
+  >;
 
-    def _ri12 : Pat<(select (i1 (setcc RC:$src0, ImmTy:$src1, cc12)),
-                            RC:$src0, ImmTy:$src1),
-                (inst ftz, round, RC:$src0, ImmTy:$src1, bt)>;
+  def _ir12 : Pat<
+    (select (i1 (setcc ImmTy:$src0, Ty:$src1, cc12)), ImmTy:$src0, Ty:$src1),
+    (inst ftz, round, ImmTy:$src0, $src1, bt)
+  >;
 
-    def _ir12 : Pat<(select (i1 (setcc ImmTy:$src0, RC:$src1, cc12)),
-                            ImmTy:$src0, RC:$src1),
-                (inst ftz, round, ImmTy:$src0, RC:$src1, bt)>;
+  def _rr21 : Pat<
+    (select (i1 (setcc Ty:$src0, Ty:$src1, cc21)), Ty:$src1, Ty:$src0),
+    (inst ftz, round, $src0, $src1, bt)
+  >;
 
-    def _rr21 : Pat<(select (i1 (setcc (Ty RC:$src0), (Ty RC:$src1), cc21)),
-                                (Ty RC:$src1), (Ty RC:$src0)),
-                (inst ftz, round, RC:$src0, RC:$src1, bt)>;
+  def _ri21 : Pat<
+    (select (i1 (setcc Ty:$src0, ImmTy:$src1, cc21)), ImmTy:$src1, Ty:$src0),
+    (inst ftz, round, $src0, ImmTy:$src1, bt)
+  >;
 
-    def _ri21 : Pat<(select (i1 (setcc RC:$src0, ImmTy:$src1, cc21)),
-                            ImmTy:$src1, RC:$src0),
-                (inst ftz, round, RC:$src0, ImmTy:$src1, bt)>;
-
-    def _ir21 : Pat<(select (i1 (setcc ImmTy:$src0, RC:$src1, cc21)),
-                            RC:$src1, ImmTy:$src0),
-                (inst ftz, round, ImmTy:$src0, RC:$src1, bt)>;
+  def _ir21 : Pat<
+    (select (i1 (setcc ImmTy:$src0, Ty:$src1, cc21)), Ty:$src1, ImmTy:$src0),
+    (inst ftz, round, ImmTy:$src0, $src1, bt)
+  >;
 }
 
 let Predicates = [EnableOpt] in {
-defm min_s32  : minmax<min_inst, i32, imm,   GPR32, SETLT,  SETGT, BrigTypeX.S32>;
-defm min_u32  : minmax<min_inst, i32, imm,   GPR32, SETULT, SETUGT, BrigTypeX.U32>;
-defm max_s32  : minmax<max_inst, i32, imm,   GPR32, SETGT,  SETLT, BrigTypeX.S32>;
-defm max_u32  : minmax<max_inst, i32, imm,   GPR32, SETUGT, SETULT, BrigTypeX.U32>;
-defm min_s64  : minmax<min_inst, i64, imm,   GPR64, SETLT,  SETGT, BrigTypeX.S64>;
-defm min_u64  : minmax<min_inst, i64, imm,   GPR64, SETULT, SETUGT, BrigTypeX.U64>;
-defm max_s64  : minmax<max_inst, i64, imm,   GPR64, SETGT,  SETLT, BrigTypeX.S64>;
-defm max_u64  : minmax<max_inst, i64, imm,   GPR64, SETUGT, SETULT, BrigTypeX.U64>;
+defm min_s32  : minmax<min_inst, i32, imm, SETLT,  SETGT, BrigTypeX.S32>;
+defm min_u32  : minmax<min_inst, i32, imm, SETULT, SETUGT, BrigTypeX.U32>;
+defm max_s32  : minmax<max_inst, i32, imm, SETGT,  SETLT, BrigTypeX.S32>;
+defm max_u32  : minmax<max_inst, i32, imm, SETUGT, SETULT, BrigTypeX.U32>;
+defm min_s64  : minmax<min_inst, i64, imm, SETLT,  SETGT, BrigTypeX.S64>;
+defm min_u64  : minmax<min_inst, i64, imm, SETULT, SETUGT, BrigTypeX.U64>;
+defm max_s64  : minmax<max_inst, i64, imm, SETGT,  SETLT, BrigTypeX.S64>;
+defm max_u64  : minmax<max_inst, i64, imm, SETUGT, SETULT, BrigTypeX.U64>;
 }
 
 // Abs
 let Predicates = [EnableOpt] in {
-def : Pat<(xor (add (sra (i32 GPR32:$src), (i32 31)), (i32 GPR32:$src)),
-               (sra (i32 GPR32:$src), (i32 31))),
-          (abs_inst 0, 0, GPR32:$src, BrigTypeX.S32)>;
-def : Pat<(xor (add (sra (i64 GPR64:$src), (i32 63)), (i64 GPR64:$src)),
-               (sra (i64 GPR64:$src), (i32 63))),
-          (abs_inst 0, 0, GPR64:$src, BrigTypeX.S64)>;
+  def : Pat<
+    (xor (add (sra i32:$src, (i32 31)), i32:$src),
+         (sra i32:$src, (i32 31))),
+    (abs_inst 0, 0, $src, BrigTypeX.S32)
+  >;
+
+  def : Pat<
+    (xor (add (sra i64:$src, (i32 63)), i64:$src),
+         (sra i64:$src, (i32 63))),
+    (abs_inst 0, 0, $src, BrigTypeX.S64)
+  >;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // fadd y (fmul x, 1)
 multiclass FusedAddMul1<HSAILInst op, ValueType Ty, int bt, RegisterClass RC,
                         PatLeaf one, int round, int ftz = 0> {
+  def _rri : Pat<
+    (fadd Ty:$src0, (fmul Ty:$src1, one)),
+    (op ftz, round, $src0, $src1, bt)
+  >;
 
-    def _rri : Pat<(fadd RC:$src0, (fmul RC:$src1, one)),
-                   (op ftz, round, RC:$src0, RC:$src1, bt)>;
-
-    def _iri : Pat<(fadd (fmul RC:$src0, one), (Ty fpimm:$src1)),
-                   (op ftz, round, RC:$src0, (Ty fpimm:$src1), bt)>;
+  def _iri : Pat<
+    (fadd (fmul Ty:$src0, one), (Ty fpimm:$src1)),
+    (op ftz, round, $src0, (Ty fpimm:$src1), bt)
+  >;
 }
 
 let Predicates = [EnableOpt] in {
-defm addmul1_f32 : FusedAddMul1<add_inst, f32, BrigTypeX.F32, GPR32, fp32imm1,
-                                BrigRound.FLOAT_NEAR_EVEN, 1>;
-defm addmul1_f64 : FusedAddMul1<add_inst, f64, BrigTypeX.F64, GPR64, fp64imm1,
-                                BrigRound.FLOAT_NEAR_EVEN, 0>;
+  defm addmul1_f32 : FusedAddMul1<add_inst, f32, BrigTypeX.F32, GPR32, fp32imm1,
+                                  BrigRound.FLOAT_NEAR_EVEN, 1>;
+  defm addmul1_f64 : FusedAddMul1<add_inst, f64, BrigTypeX.F64, GPR64, fp64imm1,
+                                  BrigRound.FLOAT_NEAR_EVEN, 0>;
 }
 
 let Predicates = [EnableOpt] in {
