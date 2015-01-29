@@ -673,7 +673,7 @@ def int_HSAIL_umin3: GCCBuiltin<"__hsail_umin3">,
   Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
 >;
 
-def int_HSAIL_f32_min3: GCCBuiltin<"__hsail_f32_min3">,
+def int_HSAIL_fmin3: GCCBuiltin<"__hsail_f32_min3">,
   Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty, llvm_float_ty], [IntrNoMem]
 >;
 

@@ -334,11 +334,13 @@ def : InstBasic_3Op_Pat<gcn_sadw_inst, int_HSAIL_sadw, i32, BrigTypeX.B32>;
 def gcn_sadd_inst : HSAILInstBasic_3Op<"gcn_sadd", BrigOpcode.GCNSADD>;
 def : InstBasic_3Op_Pat<gcn_sadd_inst, int_HSAIL_sadd, i32, BrigTypeX.B32>;
 
+def gcn_min3_inst : HSAILInstBasic_3Op<"gcn_min3", BrigOpcode.GCNMIN3>;
+def : InstBasic_3Op_Pat<gcn_min3_inst, int_HSAIL_imin3, i32, BrigTypeX.S32>;
+def : InstBasic_3Op_Pat<gcn_min3_inst, int_HSAIL_umin3, i32, BrigTypeX.U32>;
+def : InstBasic_3Op_Pat<gcn_min3_inst, int_HSAIL_fmin3, f32, BrigTypeX.F32>;
 
 
-defm media_umin3        :  TernaryIntrU32<int_HSAIL_umin3, "gcn_min3_u32">;
-defm media_imin3        :  TernaryIntrS32<int_HSAIL_imin3, "gcn_min3_s32">;
-defm media_f32_min3    :  TernaryIntrF32<int_HSAIL_f32_min3, "gcn_min3_f32">;
+
 defm media_umax3        :  TernaryIntrU32<int_HSAIL_umax3, "gcn_max3_u32">;
 defm media_imax3        :  TernaryIntrS32<int_HSAIL_imax3, "gcn_max3_s32">;
 defm media_f32_max3    :  TernaryIntrF32<int_HSAIL_f32_max3, "gcn_max3_f32">;
