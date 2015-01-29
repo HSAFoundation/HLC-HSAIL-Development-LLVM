@@ -316,7 +316,10 @@ def : InstSourceType_3Op_Pat<sad_inst, int_HSAIL_sad_u32_u8x4,
    i32, BrigTypeX.U32, BrigTypeX.U8X4
 >;
 
-defm media_sadhi : TernaryIntrU32<int_HSAIL_sadhi_u16x2_u8x4, "sadhi_u16x2_u8x4">;
+def sadhi_inst : HSAILInstSourceType_3Op<"sadhi", BrigOpcode.SADHI>;
+def : InstSourceType_3Op_Pat<sadhi_inst, int_HSAIL_sadhi_u16x2_u8x4,
+   i32, BrigTypeX.U16X2, BrigTypeX.U8X4
+>;
 
 defm popcount  : UnaryIntrS32<int_HSAIL_popcount_u32_b32, "popcount_u32_b32">;
 
