@@ -255,6 +255,9 @@ def bfiImmIIR3 : PatFrag<
     return false;
 }]>;
 
+// FIXME: These patterns are pretty fragile and break by commuting
+// operands of sources. Many fo them fail on canonicalized IR for the
+// pattern they match.
 multiclass BitSelect<ValueType Ty, int bt> {
   def _rrr : Pat<
     (or (and Ty:$src0, Ty:$src1),
@@ -299,47 +302,56 @@ multiclass BitSelect<ValueType Ty, int bt> {
   >;
 
   // Alternative pattern: (src2 ^ (src0 & (src1 ^ src2)))
-  def _rrr2 : Pat<
-    (xor Ty:$src2, (and Ty:$src0, (xor Ty:$src1, Ty:$src2))),
-    (bitselect_inst $src0, $src1, $src2, bt)
-  >;
+  let AddedComplexity = 10 in {
+    def _rrr2 : Pat<
+      (xor Ty:$src2, (and Ty:$src0, (xor Ty:$src1, Ty:$src2))),
+      (bitselect_inst $src0, $src1, $src2, bt)
+    >;
+  }
 
-  def _irr2 : Pat<
-    (xor Ty:$src2, (and (xor Ty:$src1, Ty:$src2), (Ty imm:$src0))),
-    (bitselect_inst imm:$src0, $src1, $src2, bt)
-  >;
+  let AddedComplexity = 11 in {
+    // XXX - This is higher priority to fold the immediate.
+    def _irr2 : Pat<
+      (xor Ty:$src2, (and (xor Ty:$src1, Ty:$src2), imm:$src0)),
+      (bitselect_inst imm:$src0, $src1, $src2, bt)
+    >;
 
-  def _iir2 : Pat<
-    (xor Ty:$src2, (and (xor Ty:$src2, (Ty imm:$src1)), (Ty imm:$src0))),
-    (bitselect_inst imm:$src0, imm:$src1, $src2, bt)
-  >;
+    def _iir2 : Pat<
+      (xor Ty:$src2, (and (xor Ty:$src2, (Ty imm:$src1)), (Ty imm:$src0))),
+      (bitselect_inst imm:$src0, imm:$src1, $src2, bt)
+    >;
 
-  def _rir2 : Pat<
-    (xor Ty:$src2, (and Ty:$src0, (xor Ty:$src2, (Ty imm:$src1)))),
-    (bitselect_inst $src0, imm:$src1, $src2, bt)
-  >;
+    def _rir2 : Pat<
+      (xor Ty:$src2, (and Ty:$src0, (xor Ty:$src2, (Ty imm:$src1)))),
+      (bitselect_inst $src0, imm:$src1, $src2, bt)
+    >;
 
-  def _rri2 : Pat<
-    (xor (and Ty:$src0, (xor Ty:$src1, (Ty imm:$src2))), (Ty imm:$src2)),
-    (bitselect_inst $src0, $src1, imm:$src2, bt)
-  >;
+    def _rri2 : Pat<
+      (xor (and Ty:$src0, (xor Ty:$src1, (Ty imm:$src2))), (Ty imm:$src2)),
+      (bitselect_inst $src0, $src1, imm:$src2, bt)
+    >;
+  }
 
-  // Alternative pattern: ((src2 & src0) ^ src2) ^ (src1 & src0)
-  def _rrr3 : Pat<
-    (xor (xor Ty:$src2, (and Ty:$src0, Ty:$src2)), (and Ty:$src0, Ty:$src1)),
-    (bitselect_inst $src0, $src1, $src2, bt)
-  >;
+  // Alternative pattern: ((src0 & src2) ^ src2) ^ (src0 & src1)
+  let AddedComplexity = 4 in {
+    def _rrr3 : Pat<
+      (xor (xor Ty:$src2, (and Ty:$src0, Ty:$src2)), (and Ty:$src0, Ty:$src1)),
+      (bitselect_inst $src0, $src1, $src2, bt)
+    >;
+  }
 
-  def _irr3 : Pat<
-    (xor (xor Ty:$src2, (and Ty:$src2, (Ty imm:$src0))),
-         (and Ty:$src1, (Ty imm:$src0))),
-    (bitselect_inst imm:$src0, $src1, $src2, bt)
-  >;
+  let AddedComplexity = 5 in {
+    def _irr3 : Pat<
+      (xor (xor Ty:$src2, (and Ty:$src2, (Ty imm:$src0))),
+           (and Ty:$src1, (Ty imm:$src0))),
+      (bitselect_inst imm:$src0, $src1, $src2, bt)
+    >;
 
-  def _iir3 : Pat<
-    (bfiImmIIR3 (Ty imm:$src0), (Ty imm:$src1), Ty:$src2),
-    (bitselect_inst imm:$src0, imm:$src1, $src2, bt)
-  >;
+    def _iir3 : Pat<
+      (bfiImmIIR3 (Ty imm:$src0), (Ty imm:$src1), Ty:$src2),
+      (bitselect_inst imm:$src0, imm:$src1, $src2, bt)
+    >;
+  }
 
   def _rri3 : Pat<
     (xor (xor (and Ty:$src0, (Ty imm:$src2)), (Ty imm:$src2)),
