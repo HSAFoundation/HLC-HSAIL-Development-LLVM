@@ -710,6 +710,8 @@ static Brig::BrigOpcode getInstSourceTypeBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_FIRSTBIT;
   case HSAIL::lastbit_inst:
     return Brig::BRIG_OPCODE_LASTBIT;
+  case HSAIL::packcvt_inst:
+    return Brig::BRIG_OPCODE_PACKCVT;
   default:
     llvm_unreachable("unhandled opcode");
   }
@@ -1986,6 +1988,10 @@ BRIGAsmPrinter::BrigEmitSourceTypeInst(const MachineInstr &MI,
   int Src2Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src2);
   if (Src2Idx != -1)
     BrigEmitOperand(&MI, Src2Idx, inst);
+
+  int Src3Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src3);
+  if (Src3Idx != -1)
+    BrigEmitOperand(&MI, Src3Idx, inst);
 
   return inst;
 }

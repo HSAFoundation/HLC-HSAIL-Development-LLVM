@@ -448,10 +448,9 @@ def int_HSAIL_bytealign_b32 : GCCBuiltin<"__hsail_bytealign_b32">,
 
 
 def int_HSAIL_packcvt_u8x4_f32 : GCCBuiltin<"__hsail_packcvt_u8x4_f32">,
-          Intrinsic<[llvm_i32_ty], [llvm_float_ty,
-                                    llvm_float_ty,
-                                    llvm_float_ty,
-                                    llvm_float_ty], [IntrNoMem]>;
+  Intrinsic<[llvm_i32_ty], [llvm_float_ty, llvm_float_ty,
+                            llvm_float_ty, llvm_float_ty], [IntrNoMem]
+>;
 
 def int_HSAIL_lerp_u8x4 : GCCBuiltin<"__hsail_lerp_u8x4">,
           Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;

@@ -288,170 +288,12 @@ def : Pat <
 def bitselect_inst : HSAILInstBasic_3Op<"bitselect", BrigOpcode.BITSELECT>;
 defm : InstBasic_3Op_BitIntTypes<bitselect_inst, HSAILbitselect>;
 
+// Media - packcvt
+def packcvt_inst : HSAILInstSourceType_4Op<"packcvt", BrigOpcode.PACKCVT>;
 
-//Media - packcvt
-multiclass PackIntr<Intrinsic intr, string asm> {
-
-    def _rrrr: HSAILInst<
-        (outs GPR32:$dest), (ins GPR32:$src0,
-                                GPR32:$src1,
-                                GPR32:$src2,
-                                GPR32:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 GPR32:$src0), (f32 GPR32:$src1),
-               (f32 GPR32:$src2),(f32 GPR32:$src3) ))]>;
-
-    def _irrr: HSAILInst<
-        (outs GPR32:$dest), (ins f32imm:$src0,
-                                GPR32:$src1,
-                                GPR32:$src2,
-                                GPR32:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 fpimm:$src0), (f32 GPR32:$src1),
-               (f32 GPR32:$src2),(f32 GPR32:$src3) ))]>;
-
-    def _rirr: HSAILInst<
-        (outs GPR32:$dest), (ins GPR32:$src0,
-                                f32imm:$src1,
-                                GPR32:$src2,
-                                GPR32:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 GPR32:$src0), (f32 fpimm:$src1),
-               (f32 GPR32:$src2),(f32 GPR32:$src3) ))]>;
-
-    def _rrir: HSAILInst<
-        (outs GPR32:$dest), (ins GPR32:$src0,
-                                GPR32:$src1,
-                                f32imm:$src2,
-                                GPR32:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 GPR32:$src0), (f32 GPR32:$src1),
-               (f32 fpimm:$src2),(f32 GPR32:$src3) ))]>;
-
-    def _rrri: HSAILInst<
-        (outs GPR32:$dest), (ins GPR32:$src0,
-                                GPR32:$src1,
-                                GPR32:$src2,
-                                f32imm:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 GPR32:$src0), (f32 GPR32:$src1),
-               (f32 GPR32:$src2),(f32 fpimm:$src3) ))]>;
-
-    def _iirr: HSAILInst<
-        (outs GPR32:$dest), (ins f32imm:$src0,
-                                f32imm:$src1,
-                                GPR32:$src2,
-                                GPR32:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 fpimm:$src0), (f32 fpimm:$src1),
-               (f32 GPR32:$src2),(f32 GPR32:$src3) ))]>;
-
-    def _irir: HSAILInst<
-        (outs GPR32:$dest), (ins f32imm:$src0,
-                                GPR32:$src1,
-                                f32imm:$src2,
-                                GPR32:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 fpimm:$src0), (f32 GPR32:$src1),
-               (f32 fpimm:$src2),(f32 GPR32:$src3) ))]>;
-
-    def _irri: HSAILInst<
-        (outs GPR32:$dest), (ins f32imm:$src0,
-                                GPR32:$src1,
-                                GPR32:$src2,
-                                f32imm:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 fpimm:$src0), (f32 GPR32:$src1),
-               (f32 GPR32:$src2),(f32 fpimm:$src3) ))]>;
-
-    def _riir: HSAILInst<
-        (outs GPR32:$dest), (ins GPR32:$src0,
-                                f32imm:$src1,
-                                f32imm:$src2,
-                                GPR32:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 GPR32:$src0), (f32 fpimm:$src1),
-               (f32 fpimm:$src2),(f32 GPR32:$src3) ))]>;
-
-    def _riri: HSAILInst<
-        (outs GPR32:$dest), (ins GPR32:$src0,
-                                f32imm:$src1,
-                                GPR32:$src2,
-                                f32imm:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 GPR32:$src0), (f32 fpimm:$src1),
-               (f32 GPR32:$src2),(f32 fpimm:$src3) ))]>;
-
-    def _rrii: HSAILInst<
-        (outs GPR32:$dest), (ins GPR32:$src0,
-                                GPR32:$src1,
-                                f32imm:$src2,
-                                f32imm:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 GPR32:$src0), (f32 GPR32:$src1),
-               (f32 fpimm:$src2),(f32 fpimm:$src3) ))]>;
-
-    def _iiir: HSAILInst<
-        (outs GPR32:$dest), (ins f32imm:$src0,
-                                f32imm:$src1,
-                                f32imm:$src2,
-                                GPR32:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 fpimm:$src0), (f32 fpimm:$src1),
-               (f32 fpimm:$src2),(f32 GPR32:$src3) ))]>;
-
-    def _iiri: HSAILInst<
-        (outs GPR32:$dest), (ins f32imm:$src0,
-                                f32imm:$src1,
-                                GPR32:$src2,
-                                f32imm:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 fpimm:$src0), (f32 fpimm:$src1),
-               (f32 GPR32:$src2),(f32 fpimm:$src3) ))]>;
-
-    def _irii: HSAILInst<
-        (outs GPR32:$dest), (ins f32imm:$src0,
-                                GPR32:$src1,
-                                f32imm:$src2,
-                                f32imm:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 fpimm:$src0), (f32 GPR32:$src1),
-               (f32 fpimm:$src2),(f32 fpimm:$src3) ))]>;
-
-    def _riii: HSAILInst<
-        (outs GPR32:$dest), (ins GPR32:$src0,
-                                f32imm:$src1,
-                                f32imm:$src2,
-                                f32imm:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 GPR32:$src0), (f32 fpimm:$src1),
-               (f32 fpimm:$src2),(f32 fpimm:$src3) ))]>;
-
-    def _iiii: HSAILInst<
-        (outs GPR32:$dest), (ins f32imm:$src0,
-                                f32imm:$src1,
-                                f32imm:$src2,
-                                f32imm:$src3),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2,$src3"),
-        [(set (i32 GPR32:$dest),
-         (intr (f32 fpimm:$src0), (f32 fpimm:$src1),
-               (f32 fpimm:$src2),(f32 fpimm:$src3) ))]>;
-}
+def : InstSourceType_4Op_Pat<packcvt_inst, int_HSAIL_packcvt_u8x4_f32,
+   f32, BrigTypeX.U8X4, BrigTypeX.F32
+>;
 
 //Media - unpackcvt
 multiclass UnpackIntr<Intrinsic intr, string asm> {
@@ -476,7 +318,6 @@ def : InstBasic_3Op_Pat<bitalign_inst, int_HSAIL_bitalign_b32, i32, BrigTypeX.B3
 def : InstBasic_3Op_Pat<bytealign_inst, int_HSAIL_bytealign_b32, i32, BrigTypeX.B32>;
 
 
-defm media_packcvt : PackIntr<int_HSAIL_packcvt_u8x4_f32, "packcvt_u8x4_f32">;
 defm media_lerp : TernaryIntrU32<int_HSAIL_lerp_u8x4, "lerp_u8x4">;
 defm media_sad :     TernaryIntrU32<int_HSAIL_sad_u32_u8x4, "sad_u32_u8x4">;
 defm media_sadhi : TernaryIntrU32<int_HSAIL_sadhi_u16x2_u8x4, "sadhi_u16x2_u8x4">;

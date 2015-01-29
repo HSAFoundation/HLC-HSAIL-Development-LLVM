@@ -191,6 +191,14 @@ class HSAILInstSourceType_1Op<string opName, bits<16> BrigVal> :
   opName#"$TypeLength$sourceType\t$dest, $src0"
 >;
 
+class HSAILInstSourceType_4Op<string opName, bits<16> BrigVal> :
+  HSAILInstSourceType<BrigVal,
+                 (outs unknown:$dest),
+                 (ins unknown:$src0, unknown:$src1, unknown:$src2, unknown:$src3,
+                      BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+  opName#"$TypeLength$sourceType\t$dest, $src0, $src1, $src2, $src3"
+>;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Basic instruction patterns
 ////////////////////////////////////////////////////////////////////////////////
@@ -398,6 +406,17 @@ class InstSourceType_1Op_Pat<HSAILInst inst,
   (inst $src0, destbt, srcbt)
 >;
 
+class InstSourceType_4Op_Pat<HSAILInst inst,
+                             SDPatternOperator node,
+                             ValueType vt,
+                             int destbt,
+                             int srcbt> : Pat <
+  (node (GPROrImm vt:$src0),
+        (GPROrImm vt:$src1),
+        (GPROrImm vt:$src2),
+        (GPROrImm vt:$src3)),
+  (inst $src0, $src1, $src2, $src3, destbt, srcbt)
+>;
 
 
 let TargetPrefix = "HSAIL", isTarget = 1 in {
