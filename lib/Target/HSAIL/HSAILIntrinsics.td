@@ -685,7 +685,7 @@ def int_HSAIL_umax3: GCCBuiltin<"__hsail_umax3">,
   Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
 >;
 
-def int_HSAIL_f32_max3: GCCBuiltin<"__hsail_f32_max3">,
+def int_HSAIL_fmax3: GCCBuiltin<"__hsail_f32_max3">,
   Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty, llvm_float_ty], [IntrNoMem]
 >;
 
