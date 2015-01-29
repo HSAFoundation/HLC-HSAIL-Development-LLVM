@@ -350,31 +350,11 @@ defm media_ibfe        :  TernaryIntrS32<int_HSAIL_ibfe,"bitextract_s32">;
 defm media_qsad64     :   TernaryIntrU64<int_HSAIL_qsad, "gcn_qsad_b64">;
 defm media_mqsad64    :   GCNMediaOps64<int_HSAIL_mqsad, "gcn_mqsad_b64">;
 
-multiclass GcnFldexp<Intrinsic intr, string asm, ValueType Ty, Operand OpTy,
-                        SDNode ImmTy, RegisterClass RC> {
-  def _rr  : HSAILInst<
-      (outs RC:$dest), (ins RC:$src0, GPR32:$src1),
-      !strconcat(asm, "\t$dest, $src0, $src1"),
-      [(set (Ty RC:$dest), (intr (Ty RC:$src0), (i32 GPR32:$src1)))]>;
 
-  def _ri  : HSAILInst<
-      (outs RC:$dest), (ins RC:$src0, i32imm:$src1),
-      !strconcat(asm, "\t$dest, $src0, $src1"),
-      [(set (Ty RC:$dest), (intr (Ty RC:$src0), (i32 imm:$src1)))]>;
+def gcn_fldexp_inst : HSAILInstBasic_2Op<"gcn_fldexp", BrigOpcode.GCNFLDEXP>;
+def : InstBasic_2Op_Pat<gcn_fldexp_inst, HSAILfldexp, f32, i32, BrigTypeX.F32>;
+def : InstBasic_2Op_Pat<gcn_fldexp_inst, HSAILfldexp, f64, i32, BrigTypeX.F64>;
 
-  def _ir  : HSAILInst<
-      (outs RC:$dest), (ins OpTy:$src0, GPR32:$src1),
-      !strconcat(asm, "\t$dest, $src0, $src1"),
-      [(set (Ty RC:$dest), (intr (Ty ImmTy:$src0), (i32 GPR32:$src1)))]>;
-
-  def _ii  : HSAILInst<
-      (outs RC:$dest), (ins OpTy:$src0, i32imm:$src1),
-      !strconcat(asm, "\t$dest, $src0, $src1"),
-      [(set (Ty RC:$dest), (intr (Ty ImmTy:$src0), (i32 imm:$src1)))]>;
-}
-
-defm gcn_fldexp_f32 : GcnFldexp<int_HSAIL_gcn_fldexp_f32, "gcn_fldexp_f32", f32, f32imm, fpimm, GPR32>;
-defm gcn_fldexp_f64 : GcnFldexp<int_HSAIL_gcn_fldexp_f64, "gcn_fldexp_f64", f64, f64imm, fpimm, GPR64>;
 
 let hasSideEffects = 0 in {
 def pack_u32x2_u32_iri: HSAILInst<(outs GPR64:$dest), (ins i32imm:$src0, GPR32:$src1, i32imm:$src2),

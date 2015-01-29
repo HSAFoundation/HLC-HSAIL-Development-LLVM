@@ -4,6 +4,9 @@ def HSAILDTIntTernaryOp : SDTypeProfile<1, 3, [
   SDTCisSameAs<0, 1>, SDTCisSameAs<0, 2>, SDTCisInt<0>, SDTCisInt<3>
 ]>;
 
+def HSAILLdExpOp : SDTypeProfile<1, 2,
+  [SDTCisSameAs<0, 1>, SDTCisFP<0>, SDTCisInt<2>]
+>;
 
 //===----------------------------------------------------------------------===//
 // Call/Return DAG Nodes
@@ -69,3 +72,5 @@ def HSAILumad24 : SDNode<"HSAILISD::UMAD24", HSAILDTIntTernaryOp,
 def HSAILsmad24 : SDNode<"HSAILISD::SMAD24", HSAILDTIntTernaryOp,
   []
 >;
+
+def HSAILfldexp : SDNode<"HSAILISD::FLDEXP", HSAILLdExpOp>;
