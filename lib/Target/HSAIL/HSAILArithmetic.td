@@ -359,7 +359,10 @@ def : InstBasic_2Op_Pat<gcn_bfm_inst, int_HSAIL_bfm,
    i32, i32, BrigTypeX.B32
 >;
 
-defm media_qsad64     :   TernaryIntrU64<int_HSAIL_qsad, "gcn_qsad_b64">;
+def gcn_qsad_inst : HSAILInstBasic_3Op<"gcn_qsad", BrigOpcode.GCNQSAD>;
+def : InstBasic_3Op_Pat<gcn_qsad_inst, int_HSAIL_qsad,
+   i64, BrigTypeX.B64
+>;
 
 def gcn_mqsad_inst : HSAILInstBasic_3Op<"gcn_mqsad", BrigOpcode.GCNMQSAD>;
 
