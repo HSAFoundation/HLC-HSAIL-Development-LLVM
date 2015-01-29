@@ -36,6 +36,8 @@ def HSAILnfma : SDNode<"HSAILISD::NFMA", SDTFPTernaryOp>;
 def HSAILumad : SDNode<"HSAILISD::UMAD", HSAILDTIntTernaryOp>;
 def HSAILsmad : SDNode<"HSAILISD::SMAD", HSAILDTIntTernaryOp>;
 def HSAILbitselect : SDNode<"HSAILISD::BITSELECT", HSAILDTIntTernaryOp>;
+def HSAILsbitextract : SDNode<"HSAILISD::SBITEXTRACT", HSAILDTIntTernaryOp>;
+def HSAILubitextract : SDNode<"HSAILISD::UBITEXTRACT", HSAILDTIntTernaryOp>;
 
 // out = max(a, b) a and b are signed ints
 def HSAILsmax : SDNode<"HSAILISD::SMAX", SDTIntBinOp,

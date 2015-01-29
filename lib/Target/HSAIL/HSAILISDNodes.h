@@ -24,6 +24,8 @@ namespace llvm {
       UMAD24,
       SMAD24,
       BITSELECT,
+      SBITEXTRACT,
+      UBITEXTRACT,
       FLDEXP,
       LDA_FLAT,
       LDA_GLOBAL,

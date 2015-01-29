@@ -1186,6 +1186,10 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::SMAD24";
   case HSAILISD::BITSELECT:
     return "HSAILISD::BITSELECT";
+  case HSAILISD::SBITEXTRACT:
+    return "HSAILISD::SBITEXTRACT";
+  case HSAILISD::UBITEXTRACT:
+    return "HSAILISD::UBITEXTRACT";
   case HSAILISD::FLDEXP:
     return "HSAILISD::FLDEXP";
   case HSAILISD::LDA_FLAT:
@@ -1395,6 +1399,14 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
 
   case HSAILIntrinsic::HSAIL_bitselect_u64:
     return DAG.getNode(HSAILISD::BITSELECT, SL, MVT::i64,
+                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+
+  case HSAILIntrinsic::HSAIL_bfe:
+    return DAG.getNode(HSAILISD::UBITEXTRACT, SL, MVT::i32,
+                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+
+  case HSAILIntrinsic::HSAIL_ibfe:
+    return DAG.getNode(HSAILISD::SBITEXTRACT, SL, MVT::i32,
                        Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
 
     // FIXME: There should be LLVM intrinsics for mulhs / mulhu.

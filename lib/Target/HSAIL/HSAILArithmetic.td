@@ -349,10 +349,12 @@ def : InstBasic_3Op_Pat<gcn_med3_inst, int_HSAIL_imed3, i32, BrigTypeX.S32>;
 def : InstBasic_3Op_Pat<gcn_med3_inst, int_HSAIL_umed3, i32, BrigTypeX.U32>;
 def : InstBasic_3Op_Pat<gcn_med3_inst, int_HSAIL_fmed3, f32, BrigTypeX.F32>;
 
+def bitextract_inst : HSAILInstBasic_3Op<"bitextract", BrigOpcode.BITEXTRACT>;
+defm : InstBasic_3Op_IntTypes<bitextract_inst, HSAILubitextract, 0>;
+defm : InstBasic_3Op_IntTypes<bitextract_inst, HSAILsbitextract, 1>;
 
-defm media_bfe         :  TernaryIntrU32<int_HSAIL_bfe, "bitextract_u32">;
+
 defm media_bfm         :  BinaryIntrU32<int_HSAIL_bfm, "gcn_bfm_b32">;
-defm media_ibfe        :  TernaryIntrS32<int_HSAIL_ibfe,"bitextract_s32">;
 defm media_qsad64     :   TernaryIntrU64<int_HSAIL_qsad, "gcn_qsad_b64">;
 
 def gcn_mqsad_inst : HSAILInstBasic_3Op<"gcn_mqsad", BrigOpcode.GCNMQSAD>;

@@ -210,19 +210,19 @@ multiclass SignNeutralExtractOp<string asm, ValueType Ty, RegisterClass RC,
 let Predicates = [EnableOpt] in {
   def : Pat<
     (and (srl i32:$src0, (i32 isMax32bitShift:$src1)), (i32 isMask:$src2)),
-    (media_bfe_rii_u32 $src0, isMax32bitShift:$src1, isMask:$src2)
+    (bitextract_inst $src0, isMax32bitShift:$src1, isMask:$src2, BrigTypeX.U32)
   >;
 
   def : Pat<
     (and (srl GPR32:$src0, GPR32:$src1), (i32 isMask:$src2)),
-    (media_bfe_rri_u32 GPR32:$src0, GPR32:$src1, isMask:$src2)
+    (bitextract_inst GPR32:$src0, GPR32:$src1, isMask:$src2, BrigTypeX.U32)
   >;
 
   defm extract_u64 : ExtractOp<"bitextract_u64", i64, GPR64, isMax64bitShift, srl>;
 
   def : Pat<
     (SignNeutralExtract i32:$src0, (i32 isMax32bitShift:$src1), (i32 isMask:$src2)),
-    (media_bfe_rii_u32 GPR32:$src0, isMax32bitShift:$src1, isMask:$src2)
+    (bitextract_inst GPR32:$src0, isMax32bitShift:$src1, isMask:$src2, BrigTypeX.U32)
   >;
 
   defm extract_b64 : SignNeutralExtractOp<"bitextract_u64", i64, GPR64, isMax64bitShift>;
