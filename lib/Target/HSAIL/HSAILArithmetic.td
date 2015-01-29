@@ -323,8 +323,6 @@ def : InstSourceType_3Op_Pat<sadhi_inst, int_HSAIL_sadhi_u16x2_u8x4,
    i32, BrigTypeX.U16X2, BrigTypeX.U8X4
 >;
 
-defm popcount  : UnaryIntrS32<int_HSAIL_popcount_u32_b32, "popcount_u32_b32">;
-
 //media_ops2
 
 defm media_msad        :  TernaryIntrU32<int_HSAIL_msad, "gcn_msad_b32">;

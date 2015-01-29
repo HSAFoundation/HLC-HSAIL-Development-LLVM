@@ -570,8 +570,9 @@ def int_HSAIL_mul24_u32 : GCCBuiltin<"__hsail_mul24_u32">,
   Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
 >;
 
-def int_HSAIL_popcount_u32_b32 : GCCBuiltin<"__hsail_popcount_u32_b32">, UnaryIntIntrNoMem;
-
+def int_HSAIL_popcount_u32_b32 : GCCBuiltin<"__hsail_popcount_u32_b32">,
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
 
 def int_HSAIL_gcn_fldexp_f32  : GCCBuiltin<"__gcn_fldexp_f32">,
   Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_i32_ty], [IntrNoMem]

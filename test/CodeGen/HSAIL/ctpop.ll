@@ -12,6 +12,8 @@ declare <4 x i64> @llvm.ctpop.v4i64(<4 x i64>) #0
 declare <8 x i64> @llvm.ctpop.v8i64(<8 x i64>) #0
 declare <16 x i64> @llvm.ctpop.v16i64(<16 x i64>) #0
 
+declare i32 @llvm.HSAIL.popcount.u32.b32(i32) #0
+
 ; HSAIL-LABEL: {{^}}prog function &s_ctpop_i32(
 ; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%val];
 ; HSAIL: popcount_u32_b32 {{\$s[0-9]+}}, {{\$s[0-9]+}};
@@ -312,6 +314,16 @@ else:
 endif:
   %tmp5 = phi i64 [%tmp2, %if], [%tmp4, %else]
   store i64 %tmp5, i64 addrspace(1)* %out
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &legacy_hsail_popcount_i32(
+; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%val];
+; HSAIL: popcount_u32_b32 {{\$s[0-9]+}}, {{\$s[0-9]+}};
+; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%out];
+define void @legacy_hsail_popcount_i32(i32 addrspace(1)* noalias %out, i32 %val) #1 {
+  %ctpop = call i32 @llvm.HSAIL.popcount.u32.b32(i32 %val) #0
+  store i32 %ctpop, i32 addrspace(1)* %out, align 4
   ret void
 }
 

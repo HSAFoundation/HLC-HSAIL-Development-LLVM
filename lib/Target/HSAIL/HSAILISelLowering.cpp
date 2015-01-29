@@ -1378,6 +1378,9 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
     return DAG.getNode(ISD::FMA, SL, MVT::f64,
                        Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
 
+  case HSAILIntrinsic::HSAIL_popcount_u32_b32:
+    return DAG.getNode(ISD::CTPOP, SL, MVT::i32, Op.getOperand(1));
+
   case HSAILIntrinsic::HSAIL_nfma_f32:
     return DAG.getNode(HSAILISD::NFMA, SL, MVT::f32,
                        Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
