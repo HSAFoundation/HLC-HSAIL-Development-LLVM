@@ -674,6 +674,8 @@ static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_GCNFLDEXP;
   case HSAIL::gcn_mqsad_inst:
     return Brig::BRIG_OPCODE_GCNMQSAD;
+  case HSAIL::gcn_msad_inst:
+    return Brig::BRIG_OPCODE_GCNMSAD;
   default:
     llvm_unreachable("unhandled opcode");
   }
