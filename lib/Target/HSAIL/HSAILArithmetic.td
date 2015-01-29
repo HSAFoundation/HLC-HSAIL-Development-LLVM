@@ -328,9 +328,14 @@ def : InstSourceType_3Op_Pat<sadhi_inst, int_HSAIL_sadhi_u16x2_u8x4,
 def gcn_msad_inst : HSAILInstBasic_3Op<"gcn_msad", BrigOpcode.GCNMSAD>;
 def : InstBasic_3Op_Pat<gcn_msad_inst, int_HSAIL_msad, i32, BrigTypeX.B32>;
 
+def gcn_sadw_inst : HSAILInstBasic_3Op<"gcn_sadw", BrigOpcode.GCNSADW>;
+def : InstBasic_3Op_Pat<gcn_sadw_inst, int_HSAIL_sadw, i32, BrigTypeX.B32>;
 
-defm media_sadw        :  TernaryIntrU32<int_HSAIL_sadw, "gcn_sadw_b32">;
-defm media_sadd        :  TernaryIntrU32<int_HSAIL_sadd, "gcn_sadd_b32">;
+def gcn_sadd_inst : HSAILInstBasic_3Op<"gcn_sadd", BrigOpcode.GCNSADD>;
+def : InstBasic_3Op_Pat<gcn_sadd_inst, int_HSAIL_sadd, i32, BrigTypeX.B32>;
+
+
+
 defm media_umin3        :  TernaryIntrU32<int_HSAIL_umin3, "gcn_min3_u32">;
 defm media_imin3        :  TernaryIntrS32<int_HSAIL_imin3, "gcn_min3_s32">;
 defm media_f32_min3    :  TernaryIntrF32<int_HSAIL_f32_min3, "gcn_min3_f32">;
