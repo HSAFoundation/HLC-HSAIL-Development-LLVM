@@ -327,13 +327,6 @@ defm popcount  : UnaryIntrS32<int_HSAIL_popcount_u32_b32, "popcount_u32_b32">;
 
 //media_ops2
 
-multiclass GCNMediaOps64<Intrinsic intr, string asm> {
-  def _i64 : HSAILInst<(outs GPR64:$dest), (ins GPR64:$src0,GPR32:$src1,GPR64:$src2),
-      !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-      [(set (i64 GPR64:$dest), (intr (i64 GPR64:$src0),(i32 GPR32:$src1),(i64 GPR64:$src2)))]>;
-
-}
-
 defm media_msad        :  TernaryIntrU32<int_HSAIL_msad, "gcn_msad_b32">;
 defm media_sadw        :  TernaryIntrU32<int_HSAIL_sadw, "gcn_sadw_b32">;
 defm media_sadd        :  TernaryIntrU32<int_HSAIL_sadd, "gcn_sadd_b32">;
@@ -350,7 +343,13 @@ defm media_bfe         :  TernaryIntrU32<int_HSAIL_bfe, "bitextract_u32">;
 defm media_bfm         :  BinaryIntrU32<int_HSAIL_bfm, "gcn_bfm_b32">;
 defm media_ibfe        :  TernaryIntrS32<int_HSAIL_ibfe,"bitextract_s32">;
 defm media_qsad64     :   TernaryIntrU64<int_HSAIL_qsad, "gcn_qsad_b64">;
-defm media_mqsad64    :   GCNMediaOps64<int_HSAIL_mqsad, "gcn_mqsad_b64">;
+
+def gcn_mqsad_inst : HSAILInstBasic_3Op<"gcn_mqsad", BrigOpcode.GCNMQSAD>;
+
+def : Pat<
+  (int_HSAIL_mqsad (i64 (GPROrImm i64:$src0)), i32:$src1, i64:$src2),
+  (gcn_mqsad_inst $src0, $src1, $src2, BrigTypeX.B64)
+>;
 
 
 def gcn_fldexp_inst : HSAILInstBasic_2Op<"gcn_fldexp", BrigOpcode.GCNFLDEXP>;

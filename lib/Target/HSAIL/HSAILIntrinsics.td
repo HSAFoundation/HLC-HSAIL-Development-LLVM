@@ -505,8 +505,9 @@ def int_HSAIL_qsad: GCCBuiltin<"__hsail_qsad">,
           Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i64_ty, llvm_i64_ty], [IntrNoMem]>;
 
 def int_HSAIL_mqsad: GCCBuiltin<"__hsail_mqsad">,
-          Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i32_ty, llvm_i64_ty], [IntrNoMem]>;
-		 
+  Intrinsic<[llvm_i64_ty], [llvm_i64_ty, llvm_i32_ty, llvm_i64_ty], [IntrNoMem]
+>;
+
 def int_HSAIL_bfe: GCCBuiltin<"__hsail_bfe">,
           Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
 
