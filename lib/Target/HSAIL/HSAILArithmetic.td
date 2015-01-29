@@ -288,6 +288,8 @@ def : Pat <
 def bitselect_inst : HSAILInstBasic_3Op<"bitselect", BrigOpcode.BITSELECT>;
 defm : InstBasic_3Op_BitIntTypes<bitselect_inst, HSAILbitselect>;
 
+def pack_inst : HSAILInstSourceType_3Op<"pack", BrigOpcode.PACK>;
+
 // Media - packcvt
 def packcvt_inst : HSAILInstSourceType_4Op<"packcvt", BrigOpcode.PACKCVT>;
 
@@ -354,9 +356,3 @@ defm media_mqsad64    :   GCNMediaOps64<int_HSAIL_mqsad, "gcn_mqsad_b64">;
 def gcn_fldexp_inst : HSAILInstBasic_2Op<"gcn_fldexp", BrigOpcode.GCNFLDEXP>;
 def : InstBasic_2Op_Pat<gcn_fldexp_inst, HSAILfldexp, f32, i32, BrigTypeX.F32>;
 def : InstBasic_2Op_Pat<gcn_fldexp_inst, HSAILfldexp, f64, i32, BrigTypeX.F64>;
-
-
-let hasSideEffects = 0 in {
-def pack_u32x2_u32_iri: HSAILInst<(outs GPR64:$dest), (ins i32imm:$src0, GPR32:$src1, i32imm:$src2),
-                                  "pack_u32x2_u32\t $dest, $src0, $src1, $src2", []>;
-}

@@ -373,10 +373,10 @@ defm : BitSelect<i64, BrigTypeX.B64>;
 
 // pack
 
-let Predicates = [EnableOpt] in {
+let Predicates = [EnableOpt], AddedComplexity = 5 in {
   def : Pat<
     (shl (i64 (anyext i32:$src)), (i32 32)),
-    (pack_u32x2_u32_iri 0, $src, 1)
+    (pack_inst (i32 0), $src, (i32 1), BrigTypeX.U32X2, BrigTypeX.U32)
   >;
 }
 
