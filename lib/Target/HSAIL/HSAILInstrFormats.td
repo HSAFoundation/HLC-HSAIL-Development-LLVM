@@ -199,6 +199,14 @@ class HSAILInstSourceType_2Op<string opName, bits<16> BrigVal> :
   opName#"$TypeLength$sourceType\t$dest, $src0, $src1"
 >;
 
+class HSAILInstSourceType_3Op<string opName, bits<16> BrigVal> :
+  HSAILInstSourceType<BrigVal,
+                 (outs unknown:$dest),
+                 (ins unknown:$src0, unknown:$src1, unknown:$src2,
+                      BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+  opName#"$TypeLength$sourceType\t$dest, $src0, $src1, $src2"
+>;
+
 class HSAILInstSourceType_4Op<string opName, bits<16> BrigVal> :
   HSAILInstSourceType<BrigVal,
                  (outs unknown:$dest),
@@ -421,6 +429,15 @@ class InstSourceType_2Op_Pat<HSAILInst inst,
                              int srcbt> : Pat <
   (vt (node (GPROrImm vt:$src0), (GPROrImm vt:$src1))),
   (inst $src0, $src1, destbt, srcbt)
+>;
+
+class InstSourceType_3Op_Pat<HSAILInst inst,
+                             SDPatternOperator node,
+                             ValueType vt,
+                             int destbt,
+                             int srcbt> : Pat <
+  (vt (node (GPROrImm vt:$src0), (GPROrImm vt:$src1), (GPROrImm vt:$src2))),
+  (inst $src0, $src1, $src2, destbt, srcbt)
 >;
 
 class InstSourceType_4Op_Pat<HSAILInst inst,

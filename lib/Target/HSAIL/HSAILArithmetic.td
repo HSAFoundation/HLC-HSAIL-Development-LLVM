@@ -311,8 +311,11 @@ def : InstBasic_3Op_Pat<bytealign_inst, int_HSAIL_bytealign_b32, i32, BrigTypeX.
 def lerp_inst : HSAILInstBasic_3Op<"lerp", BrigOpcode.LERP>;
 def : InstBasic_3Op_Pat<lerp_inst, int_HSAIL_lerp_u8x4, i32, BrigTypeX.U8X4>;
 
+def sad_inst : HSAILInstSourceType_3Op<"sad", BrigOpcode.SAD>;
+def : InstSourceType_3Op_Pat<sad_inst, int_HSAIL_sad_u32_u8x4,
+   i32, BrigTypeX.U32, BrigTypeX.U8X4
+>;
 
-defm media_sad :     TernaryIntrU32<int_HSAIL_sad_u32_u8x4, "sad_u32_u8x4">;
 defm media_sadhi : TernaryIntrU32<int_HSAIL_sadhi_u16x2_u8x4, "sadhi_u16x2_u8x4">;
 
 defm popcount  : UnaryIntrS32<int_HSAIL_popcount_u32_b32, "popcount_u32_b32">;

@@ -457,7 +457,8 @@ def int_HSAIL_lerp_u8x4 : GCCBuiltin<"__hsail_lerp_u8x4">,
 >;
 
 def int_HSAIL_sad_u32_u8x4 : GCCBuiltin<"__hsail_sad_u32_u8x4">,
-          Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
+>;
 
 def int_HSAIL_sadhi_u16x2_u8x4 : GCCBuiltin<"__hsail_sadhi_u16x2_u8x4">,
           Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]>;
