@@ -693,15 +693,15 @@ def int_HSAIL_imax3: GCCBuiltin<"__hsail_imax3">,
   Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
 >;
 
-def int_HSAIL_umedian3: GCCBuiltin<"__hsail_umedian3">,
+def int_HSAIL_umed3: GCCBuiltin<"__hsail_umedian3">,
   Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
 >;
 
-def int_HSAIL_f32_median3: GCCBuiltin<"__hsail_f32_median3">,
+def int_HSAIL_fmed3: GCCBuiltin<"__hsail_f32_median3">,
   Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty,  llvm_float_ty], [IntrNoMem]
 >;
 
-def int_HSAIL_imedian3: GCCBuiltin<"__hsail_imedian3">,
+def int_HSAIL_imed3: GCCBuiltin<"__hsail_imedian3">,
   Intrinsic<[llvm_i32_ty], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], [IntrNoMem]
 >;
 
