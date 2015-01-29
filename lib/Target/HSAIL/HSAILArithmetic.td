@@ -295,21 +295,12 @@ def : InstSourceType_4Op_Pat<packcvt_inst, int_HSAIL_packcvt_u8x4_f32,
    f32, BrigTypeX.U8X4, BrigTypeX.F32
 >;
 
-//Media - unpackcvt
-multiclass UnpackIntr<Intrinsic intr, string asm> {
+// Media - unpackcvt
 
-    def ri:     HSAILInst<
-            (outs GPR32:$dest), (ins GPR32:$src0, i32imm:$src1),
-            !strconcat(asm, "\t$dest, $src0, $src1"),
-            [(set (f32 GPR32:$dest), (intr (i32 GPR32:$src0),
-                                          (i32 imm:$src1)))]>;
-
-    def ii:     HSAILInst<
-            (outs GPR32:$dest), (ins i32imm:$src0, i32imm:$src1),
-            !strconcat(asm, "\t$dest, $src0, $src1"),
-            [(set (f32 GPR32:$dest), (intr (i32 imm:$src0),
-                                          (i32 imm:$src1)))]>;
-}
+def unpackcvt_inst : HSAILInstSourceType_2Op<"unpackcvt", BrigOpcode.UNPACKCVT>;
+def : InstSourceType_2Op_Pat<unpackcvt_inst, int_HSAIL_unpackcvt_f32_u8x4,
+   f32, BrigTypeX.F32, BrigTypeX.U8X4
+>;
 
 def bitalign_inst : HSAILInstBasic_3Op<"bitalign", BrigOpcode.BITALIGN>;
 def bytealign_inst : HSAILInstBasic_3Op<"bytealign", BrigOpcode.BYTEALIGN>;
@@ -321,7 +312,6 @@ def : InstBasic_3Op_Pat<bytealign_inst, int_HSAIL_bytealign_b32, i32, BrigTypeX.
 defm media_lerp : TernaryIntrU32<int_HSAIL_lerp_u8x4, "lerp_u8x4">;
 defm media_sad :     TernaryIntrU32<int_HSAIL_sad_u32_u8x4, "sad_u32_u8x4">;
 defm media_sadhi : TernaryIntrU32<int_HSAIL_sadhi_u16x2_u8x4, "sadhi_u16x2_u8x4">;
-defm media_unpackcvt : UnpackIntr<int_HSAIL_unpackcvt_f32_u8x4, "unpackcvt_f32_u8x4">;
 
 defm popcount  : UnaryIntrS32<int_HSAIL_popcount_u32_b32, "popcount_u32_b32">;
 

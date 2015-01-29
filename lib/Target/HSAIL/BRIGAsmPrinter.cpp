@@ -712,6 +712,8 @@ static Brig::BrigOpcode getInstSourceTypeBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_LASTBIT;
   case HSAIL::packcvt_inst:
     return Brig::BRIG_OPCODE_PACKCVT;
+  case HSAIL::unpackcvt_inst:
+    return Brig::BRIG_OPCODE_UNPACKCVT;
   default:
     llvm_unreachable("unhandled opcode");
   }
