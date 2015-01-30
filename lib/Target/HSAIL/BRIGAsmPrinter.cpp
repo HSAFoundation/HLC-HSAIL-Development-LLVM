@@ -2021,9 +2021,6 @@ BRIGAsmPrinter::BrigEmitSourceTypeInst(const MachineInstr &MI,
   inst.sourceType()
     = TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
 
-  assert(HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest) == 0);
-  assert(HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0) == 1);
-
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
                   inst);
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0),
