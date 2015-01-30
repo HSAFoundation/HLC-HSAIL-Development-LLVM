@@ -636,6 +636,36 @@ static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_NEG;
   case HSAIL::cmov_inst:
     return Brig::BRIG_OPCODE_CMOV;
+  case HSAIL::workitemabsid_inst:
+    return Brig::BRIG_OPCODE_WORKITEMABSID;
+  case HSAIL::workgroupid_inst:
+    return Brig::BRIG_OPCODE_WORKGROUPID;
+  case HSAIL::workitemid_inst:
+    return Brig::BRIG_OPCODE_WORKITEMID;
+  case HSAIL::workgroupsize_inst:
+    return Brig::BRIG_OPCODE_WORKGROUPSIZE;
+  case HSAIL::currentworkgroupsize_inst:
+    return Brig::BRIG_OPCODE_CURRENTWORKGROUPSIZE;
+  case HSAIL::gridgroups_inst:
+    return Brig::BRIG_OPCODE_GRIDGROUPS;
+  case HSAIL::gridsize_inst:
+    return Brig::BRIG_OPCODE_GRIDSIZE;
+  case HSAIL::dim_inst:
+    return Brig::BRIG_OPCODE_DIM;
+  case HSAIL::workitemflatid_inst:
+    return Brig::BRIG_OPCODE_WORKITEMFLATID;
+  case HSAIL::workitemflatabsid_inst:
+    return Brig::BRIG_OPCODE_WORKITEMFLATABSID;
+  case HSAIL::laneid_inst:
+    return Brig::BRIG_OPCODE_LANEID;
+  case HSAIL::waveid_inst:
+    return Brig::BRIG_OPCODE_WAVEID;
+  case HSAIL::maxwaveid_inst:
+    return Brig::BRIG_OPCODE_MAXWAVEID;
+  case HSAIL::clock_inst:
+    return Brig::BRIG_OPCODE_CLOCK;
+  case HSAIL::cuid_inst:
+    return Brig::BRIG_OPCODE_CUID;
   case HSAIL::rem_inst:
     return Brig::BRIG_OPCODE_REM;
   case HSAIL::mad_inst:
@@ -1971,7 +2001,8 @@ HSAIL_ASM::InstBasic BRIGAsmPrinter::BrigEmitBasicInst(const MachineInstr &MI,
   BrigEmitOperand(&MI, 0, inst);
 
   int Src0Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0);
-  BrigEmitOperand(&MI, Src0Idx, inst);
+  if (Src0Idx != -1)
+    BrigEmitOperand(&MI, Src0Idx, inst);
 
   int Src1Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src1);
   if (Src1Idx != -1)

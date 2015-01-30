@@ -100,6 +100,13 @@ class HSAILInstBasic<bits<16> BrigVal,
   let InstBasic = 1;
 }
 
+class HSAILInstBasic_0Op<string opName, bits<16> BrigVal> :
+  HSAILInstBasic<BrigVal,
+                 (outs unknown:$dest),
+                 (ins BrigTypeX:$TypeLength),
+  opName#"$TypeLength\t$dest"
+>;
+
 class HSAILInstBasic_1Op<string opName, bits<16> BrigVal> :
   HSAILInstBasic<BrigVal,
                  (outs unknown:$dest),
@@ -250,6 +257,14 @@ class ActiveLaneShufflePat<Instruction inst,
 ////////////////////////////////////////////////////////////////////////////////
 // Basic instruction patterns
 ////////////////////////////////////////////////////////////////////////////////
+
+class InstBasic_0Op_Pat<HSAILInst inst,
+                        SDPatternOperator node,
+                        ValueType vt,
+                        int bt> : Pat <
+  (vt (node)),
+  (inst bt)
+>;
 
 class InstBasic_1Op_Pat<HSAILInst inst,
                         SDPatternOperator node,

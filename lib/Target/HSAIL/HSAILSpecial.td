@@ -3,90 +3,52 @@
 
 let isAsCheapAsAMove = 1 in {
   let isReMaterializable = 1 in {
-    def get_global_id_i : HSAILInst<(outs GPR32:$dest), (ins i32imm:$dimNumber),
-                           "workitemabsid_u32\t$dest, $dimNumber",
-                           [(set (i32 GPR32:$dest),
-                                 (int_HSAIL_get_global_id (i32 imm:$dimNumber)))]>;
-
-    def get_group_id_i : HSAILInst<(outs GPR32:$dest), (ins i32imm:$dimNumber),
-                        "workgroupid_u32\t$dest, $dimNumber",
-                        [(set (i32 GPR32:$dest),
-                              (int_HSAIL_get_group_id (i32 imm:$dimNumber)))]>;
-
-    def get_local_id_i : HSAILInst<(outs GPR32:$dest), (ins i32imm:$dimNumber),
-                         "workitemid_u32\t$dest, $dimNumber",
-                         [(set (i32 GPR32:$dest),
-                               (int_HSAIL_get_local_id (i32 imm:$dimNumber)))]>;
-
-    def workgroup_size_i : HSAILInst<(outs GPR32:$dest), (ins i32imm:$dimNumber),
-                         "workgroupsize_u32\t$dest, $dimNumber",
-                         [(set (i32 GPR32:$dest),
-                               (int_HSAIL_workgroup_size (i32 imm:$dimNumber)))]>;
-
-    def currentworkgroup_size_i : HSAILInst<(outs GPR32:$dest), (ins i32imm:$dimNumber),
-                         "currentworkgroupsize_u32\t$dest, $dimNumber",
-                         [(set (i32 GPR32:$dest),
-                               (int_HSAIL_currentworkgroup_size (i32 imm:$dimNumber)))]>;
-
-    def get_num_groups_i : HSAILInst<(outs GPR32:$dest), (ins i32imm:$dimNumber),
-                          "gridgroups_u32\t$dest, $dimNumber",
-                          [(set (i32 GPR32:$dest),
-                                (int_HSAIL_get_num_groups (i32 imm:$dimNumber)))]>;
-
-    def get_global_size_i : HSAILInst<(outs GPR32:$dest), (ins i32imm:$dimNumber),
-                          "gridsize_u32\t$dest, $dimNumber",
-                          [(set (i32 GPR32:$dest),
-                                (int_HSAIL_get_global_size (i32 imm:$dimNumber)))]>;
+    def workitemabsid_inst : HSAILInstBasic_1Op<"workitemabsid", BrigOpcode.WORKITEMABSID>;
+    def workgroupid_inst : HSAILInstBasic_1Op<"workgroupid", BrigOpcode.WORKGROUPID>;
+    def workitemid_inst : HSAILInstBasic_1Op<"workitemid", BrigOpcode.WORKITEMID>;
+    def workgroupsize_inst : HSAILInstBasic_1Op<"workgroupsize", BrigOpcode.WORKGROUPSIZE>;
+    def currentworkgroupsize_inst : HSAILInstBasic_1Op<"currentworkgroupsize", BrigOpcode.CURRENTWORKGROUPSIZE>;
+    def gridgroups_inst : HSAILInstBasic_1Op<"gridgroups", BrigOpcode.GRIDGROUPS>;
+    def gridsize_inst : HSAILInstBasic_1Op<"gridsize", BrigOpcode.GRIDSIZE>;
   }
 
-  def get_work_dim: HSAILInst<(outs GPR32:$dest), (ins),
-                    "dim_u32\t$dest",
-                    [(set (i32 GPR32:$dest),
-                      (int_HSAIL_get_work_dim))]>;
+  def dim_inst : HSAILInstBasic_0Op<"dim", BrigOpcode.DIM>;
+  def workitemflatid_inst : HSAILInstBasic_0Op<"workitemflatid", BrigOpcode.WORKITEMFLATID>;
+  def workitemflatabsid_inst : HSAILInstBasic_0Op<"workitemflatabsid", BrigOpcode.WORKITEMFLATABSID>;
+  def laneid_inst : HSAILInstBasic_0Op<"laneid", BrigOpcode.LANEID>;
+  def waveid_inst : HSAILInstBasic_0Op<"waveid", BrigOpcode.WAVEID>;
+  def maxwaveid_inst : HSAILInstBasic_0Op<"maxwaveid", BrigOpcode.MAXWAVEID>;
 
-  def get_workitemid_flat : HSAILInst<(outs GPR32:$dest), (ins),
-                    "workitemflatid_u32\t$dest",
-                    [(set (i32 GPR32:$dest),
-                      (int_HSAIL_workitemid_flat))]>;
-
-  def get_workitemid_flatabs : HSAILInst<(outs GPR32:$dest), (ins),
-                    "workitemflatabsid_u32\t$dest",
-                    [(set (i32 GPR32:$dest),
-                      (int_HSAIL_workitemid_flatabs))]>;
-
-  def get_lane_id : HSAILInst<(outs GPR32:$dest), (ins),
-                    "laneid_u32\t$dest",
-                    [(set (i32 GPR32:$dest),
-                                  (int_HSAIL_get_lane_id))]>;
-
-  def get_dynwave_id : HSAILInst<(outs GPR32:$dest), (ins),
-                       "waveid_u32\t$dest",
-                       [(set (i32 GPR32:$dest),
-                             (int_HSAIL_get_dynwave_id))]>;
-
-  def get_maxdynwave_id : HSAILInst<(outs GPR32:$dest), (ins),
-                          "maxwaveid_u32\t$dest",
-                          [(set (i32 GPR32:$dest),
-                                (int_HSAIL_get_maxdynwave_id))]>;
-
-  def get_clock : HSAILInst<(outs GPR64:$dest), (ins),
-                        "clock_u64\t$dest",
-                        [(set (i64 GPR64:$dest),
-                            (int_HSAIL_get_clock))]>;
-
-  def get_cu : HSAILInst<(outs GPR32:$dest), (ins),
-                        "cuid_u32\t$dest",
-                        [(set (i32 GPR32:$dest),
-                            (int_HSAIL_get_cu))]>;
-
-  let isNotDuplicable = 1, isBarrier = 1 in {
-    def barrier : HSAILInst<(outs), (ins),
-             "barrier", [(int_HSAIL_barrier)]>;
-    def wavebarrier : HSAILInst<(outs), (ins),
-             "wavebarrier", [(int_HSAIL_wavebarrier)]>;
-
+  let hasSideEffects = 1 in {
+    def clock_inst : HSAILInstBasic_0Op<"clock", BrigOpcode.CLOCK>;
+    def cuid_inst : HSAILInstBasic_0Op<"cuid", BrigOpcode.CUID>;
   }
+}
 
+def : InstBasic_1Op_Pat<workitemabsid_inst, int_HSAIL_get_global_id, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<workgroupid_inst, int_HSAIL_get_group_id, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<workitemid_inst, int_HSAIL_get_local_id, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<workgroupsize_inst, int_HSAIL_workgroup_size, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<currentworkgroupsize_inst, int_HSAIL_currentworkgroup_size, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<gridgroups_inst, int_HSAIL_get_num_groups, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<gridsize_inst, int_HSAIL_get_global_size, i32, BrigTypeX.U32>;
+
+def : InstBasic_0Op_Pat<dim_inst, int_HSAIL_get_work_dim, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<workitemflatid_inst, int_HSAIL_workitemid_flat, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<workitemflatabsid_inst, int_HSAIL_workitemid_flatabs, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<laneid_inst, int_HSAIL_get_lane_id, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<waveid_inst, int_HSAIL_get_dynwave_id, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<maxwaveid_inst, int_HSAIL_get_maxdynwave_id, i32, BrigTypeX.U32>;
+
+
+def : InstBasic_0Op_Pat<clock_inst, int_HSAIL_get_clock, i64, BrigTypeX.U64>;
+def : InstBasic_0Op_Pat<cuid_inst, int_HSAIL_get_cu, i32, BrigTypeX.U32>;
+
+
+
+let isNotDuplicable = 1, isBarrier = 1 in {
+  def barrier : HSAILInst<(outs), (ins), "barrier", [(int_HSAIL_barrier)]>;
+  def wavebarrier : HSAILInst<(outs), (ins), "wavebarrier", [(int_HSAIL_wavebarrier)]>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
