@@ -768,31 +768,9 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
   unsigned Opc = II->getOpcode();
 
-  if (TII->isInstBasic(Opc)) {
-    // FIXME: We should be able to get the encoding / Brig value from MC.
-    Brig::BrigOpcode Encoding = getInstBasicBrigOpcode(Opc);
-
-    HSAIL_ASM::InstBasic inst
-      = brigantine.addInst<HSAIL_ASM::InstBasic>(Encoding);
-
-    inst.type() = TII->getNamedOperand(*II, HSAIL::OpName::TypeLength)->getImm();
-
-    // All have dest as first operand.
-    BrigEmitOperand(II, 0, inst);
-
-    int Src0Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0);
-    BrigEmitOperand(II, Src0Idx, inst);
-
-    int Src1Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src1);
-    if (Src1Idx != -1)
-      BrigEmitOperand(II, Src1Idx, inst);
-
-    int Src2Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src2);
-    if (Src2Idx != -1)
-      BrigEmitOperand(II, Src2Idx, inst);
-
-    return inst;
-  }
+  // FIXME: We should be able to get the encoding / Brig value from MC.
+  if (TII->isInstBasic(Opc))
+    return BrigEmitBasicInst(*II, getInstBasicBrigOpcode(Opc));
 
   if (TII->isInstMod(Opc)) {
     // FIXME: We should be able to get the encoding / Brig value from MC.
@@ -1980,6 +1958,30 @@ void BRIGAsmPrinter::BrigEmitImageInst(const MachineInstr *MI,
     BrigEmitVecOperand(MI, opCnt, 3, inst); opCnt += 3;
     break;
   }
+}
+
+HSAIL_ASM::InstBasic BRIGAsmPrinter::BrigEmitBasicInst(const MachineInstr &MI,
+                                                       unsigned BrigOpc) {
+  HSAIL_ASM::InstBasic inst = brigantine.addInst<HSAIL_ASM::InstBasic>(BrigOpc);
+  unsigned Opc = MI.getOpcode();
+
+  inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
+
+  // All have dest as first operand.
+  BrigEmitOperand(&MI, 0, inst);
+
+  int Src0Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0);
+  BrigEmitOperand(&MI, Src0Idx, inst);
+
+  int Src1Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src1);
+  if (Src1Idx != -1)
+    BrigEmitOperand(&MI, Src1Idx, inst);
+
+  int Src2Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src2);
+  if (Src2Idx != -1)
+    BrigEmitOperand(&MI, Src2Idx, inst);
+
+  return inst;
 }
 
 HSAIL_ASM::InstMod BRIGAsmPrinter::BrigEmitModInst(const MachineInstr &MI,
