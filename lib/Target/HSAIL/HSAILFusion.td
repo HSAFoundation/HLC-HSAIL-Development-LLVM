@@ -146,86 +146,18 @@ def isMask : PatLeaf<(imm), [{
     return isMask_64(N->getZExtValue());
 }], popCnt>;
 
-def extractShift : SDNodeXForm<imm, [{
-    return CurDAG->getTargetConstant(N->getZExtValue(), MVT::i32);
-}]>;
-
-def isMax32bitShift : PatLeaf<(imm), [{
-    return N->getZExtValue() < 32;
-}], extractShift>;
-
-def isMax64bitShift : PatLeaf<(imm), [{
-    return N->getZExtValue() < 64;
-}], extractShift>;
-
 // Extract masks like (val & 0b0001111000) >> 3
 // Most common use looks like: (x & 0xFF00) >> 8
-multiclass ExtractOp<string asm, ValueType Ty, RegisterClass RC, PatLeaf ShImm,
-                     SDNode op> {
-    def _rii : HSAILInst<(outs RC:$dest), (ins RC:$src0, i32imm:$src1,
-                                          i32imm:$src2),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-        [(set (Ty RC:$dest), (and
-            (op (Ty RC:$src0), (i32 ShImm:$src1)), (Ty isMask:$src2)))]>;
-
-    def _rri : HSAILInst<(outs RC:$dest), (ins RC:$src0, GPR32:$src1,
-                                          i32imm:$src2),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-        [(set (Ty RC:$dest), (and
-            (op (Ty RC:$src0), (i32 GPR32:$src1)), (Ty isMask:$src2)))]>;
-}
-
-// Pattren for extract where we can use unsigned insn for signed argumet.
-def SignNeutralExtract : PatFrag<(ops node:$reg, node:$shift, node:$mask),
-                                 (and (sra node:$reg, node:$shift), node:$mask),
-                                 [{
-    ConstantSDNode *CNShift, *CNMask;
-    if ((CNShift = dyn_cast<ConstantSDNode>(N->getOperand(0)->getOperand(1))) &&
-        (CNMask  = dyn_cast<ConstantSDNode>(N->getOperand(1)))) {
-        uint64_t mask = CNMask->getZExtValue();
-        uint64_t shift = CNShift->getZExtValue();
-        unsigned int size = N->getValueSizeInBits(0);
-        if ((CountPopulation_64(mask) + shift) > size) return false;
-        if (size == 32) {
-            return ((0xffffffffu >> shift) & mask) == ((-1 >> shift) & mask);
-        } else if (size == 64) {
-            return ((((uint64_t)-1) >> shift) & mask) ==
-                   ((((int64_t)-1) >> shift) & mask);
-        }
-    }
-    return false;
-}]>;
-
-multiclass SignNeutralExtractOp<string asm, ValueType Ty, RegisterClass RC,
-                                PatLeaf ShImm> {
-    def _rii : HSAILInst<(outs RC:$dest), (ins RC:$src0, i32imm:$src1,
-                                          i32imm:$src2),
-        !strconcat(asm, "\t $dest, $src0, $src1, $src2"),
-        [(set (Ty RC:$dest), (SignNeutralExtract (Ty RC:$src0),
-                                (i32 ShImm:$src1), (Ty isMask:$src2)))]>;
-}
+class BitExtractOp<ValueType Ty, int bt> : Pat<
+  (and (srl Ty:$src0, (i32 (GPROrImm i32:$src1))), (Ty isMask:$src2)),
+  (bitextract_inst $src0, $src1, isMask:$src2, bt)
+>;
 
 // No signed extract operations are defined since HSAIL specifies extract as
 // left + right shifts rather than right shift + and
-let Predicates = [EnableOpt] in {
-  def : Pat<
-    (and (srl i32:$src0, (i32 isMax32bitShift:$src1)), (i32 isMask:$src2)),
-    (bitextract_inst $src0, isMax32bitShift:$src1, isMask:$src2, BrigTypeX.U32)
-  >;
-
-  def : Pat<
-    (and (srl GPR32:$src0, GPR32:$src1), (i32 isMask:$src2)),
-    (bitextract_inst GPR32:$src0, GPR32:$src1, isMask:$src2, BrigTypeX.U32)
-  >;
-
-  defm extract_u64 : ExtractOp<"bitextract_u64", i64, GPR64, isMax64bitShift, srl>;
-
-  def : Pat<
-    (SignNeutralExtract i32:$src0, (i32 isMax32bitShift:$src1), (i32 isMask:$src2)),
-    (bitextract_inst GPR32:$src0, isMax32bitShift:$src1, isMask:$src2, BrigTypeX.U32)
-  >;
-
-  defm extract_b64 : SignNeutralExtractOp<"bitextract_u64", i64, GPR64, isMax64bitShift>;
+let Predicates = [EnableOpt], AddedComplexity = 10 in {
+  def : BitExtractOp<i32, BrigTypeX.U32>;
+  def : BitExtractOp<i64, BrigTypeX.U64>;
 }
 
 // BFI
