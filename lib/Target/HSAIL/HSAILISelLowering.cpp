@@ -1202,6 +1202,8 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::LDA_PRIVATE";
   case HSAILISD::LDA_READONLY:
     return "HSAILISD::LDA_READONLY";
+  case HSAILISD::ACTIVELANESHUFFLE:
+    return "HSAILISD::ACTIVELANESHUFFLE";
   }
 }
 
@@ -1495,11 +1497,78 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
   }
 }
 
-SDValue
-HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op, SelectionDAG &DAG) const {
+SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
+                                                    SelectionDAG &DAG) const {
   unsigned IntNo = cast<ConstantSDNode>(Op->getOperand(1))->getZExtValue();
-  if (!isRdimage(IntNo)) return Op;
-  return lowerSamplerInitializerOperand(Op, DAG);
+  SDLoc SL(Op);
+
+  if (isRdimage(IntNo))
+    return lowerSamplerInitializerOperand(Op, DAG);
+
+  switch (IntNo) {
+  case HSAILIntrinsic::HSAIL_activelaneshuffle_b32: {
+    SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
+
+    const SDValue Ops[] = {
+      Op.getOperand(0), // Chain
+      DAG.getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32), // width
+      Op.getOperand(2), // src0
+      Op.getOperand(3), // src1
+      Op.getOperand(4), // src2
+      Op.getOperand(5)  // src3
+    };
+
+    return DAG.getNode(HSAILISD::ACTIVELANESHUFFLE, SL, VTs, Ops);
+  }
+
+  case HSAILIntrinsic::HSAIL_activelaneshuffle_b64: {
+    SDVTList VTs = DAG.getVTList(MVT::i64, MVT::Other);
+
+    const SDValue Ops[] = {
+      Op.getOperand(0), // Chain
+      DAG.getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32), // width
+      Op.getOperand(2), // src0
+      Op.getOperand(3), // src1
+      Op.getOperand(4), // src2
+      Op.getOperand(5)  // src3
+    };
+
+    return DAG.getNode(HSAILISD::ACTIVELANESHUFFLE, SL, VTs, Ops);
+  }
+
+  case HSAILIntrinsic::HSAIL_activelaneshuffle_width_b32: {
+    SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
+
+    const SDValue Ops[] = {
+      Op.getOperand(0), // Chain
+      DAG.getTargetConstant(Brig::BRIG_WIDTH_WAVESIZE, MVT::i32), // width
+      Op.getOperand(2), // src0
+      Op.getOperand(3), // src1
+      Op.getOperand(4), // src2
+      Op.getOperand(5)  // src3
+    };
+
+    return DAG.getNode(HSAILISD::ACTIVELANESHUFFLE, SL, VTs, Ops);
+  }
+
+  case HSAILIntrinsic::HSAIL_activelaneshuffle_width_b64: {
+    SDVTList VTs = DAG.getVTList(MVT::i64, MVT::Other);
+
+    const SDValue Ops[] = {
+      Op.getOperand(0), // Chain
+      DAG.getTargetConstant(Brig::BRIG_WIDTH_WAVESIZE, MVT::i32), // width
+      Op.getOperand(2), // src0
+      Op.getOperand(3), // src1
+      Op.getOperand(4), // src2
+      Op.getOperand(5)  // src3
+    };
+
+    return DAG.getNode(HSAILISD::ACTIVELANESHUFFLE, SL, VTs, Ops);
+  }
+
+  default:
+    return Op;
+  }
 }
 
 /// \brief Replace sampler initializer with sampler handle from

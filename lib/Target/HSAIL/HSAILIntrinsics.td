@@ -56,30 +56,16 @@ def int_HSAIL_activelanecount_width_u32_b1 :
   Intrinsic<[llvm_i32_ty], [llvm_i1_ty], []
 >;
 
-// FIXME: This seems to be completely broken.
-def int_HSAIL_activelaneshuffle_b1 :
-  GCCBuiltin<"__hsail_activelaneshuffle_b1">,
-  Intrinsic<[llvm_anyint_ty],
-    [llvm_anyint_ty, llvm_i32_ty, llvm_anyint_ty, llvm_i1_ty], []
->;
-
-def int_HSAIL_activelaneshuffle_width_b1 :
-  GCCBuiltin<"__hsail_activelaneshuffle_wavewidth_b1">,
-  Intrinsic<[llvm_anyint_ty],
-  [llvm_anyint_ty, llvm_i32_ty, llvm_anyint_ty, llvm_i1_ty], []
->;
-
-
 def int_HSAIL_activelaneshuffle_b32 :
   GCCBuiltin<"__hsail_activelaneshuffle_b32">,
-  Intrinsic<[llvm_anyint_ty],
-    [llvm_anyint_ty, llvm_i32_ty, llvm_anyint_ty, llvm_i1_ty], []
+  Intrinsic<[llvm_i32_ty],
+    [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i1_ty], []
 >;
 
 def int_HSAIL_activelaneshuffle_width_b32 :
   GCCBuiltin<"__hsail_activelaneshuffle_wavewidth_b32">,
-  Intrinsic<[llvm_anyint_ty],
-    [llvm_anyint_ty, llvm_i32_ty, llvm_anyint_ty, llvm_i1_ty], []
+  Intrinsic<[llvm_i32_ty],
+    [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i1_ty], []
 >;
 
 def int_HSAIL_activelanemask_v4_b64_b1 :
@@ -93,17 +79,16 @@ def int_HSAIL_activelanemask_v4_width_b64_b1 :
 
 // For OCL 2.0 64-bit built-ins
 
-// FIXME: These should be i64 / i32 instead of llvm_anyint_ty
 def int_HSAIL_activelaneshuffle_b64 :
   GCCBuiltin< "__hsail_activelaneshuffle_b64">,
-  Intrinsic<[llvm_anyint_ty],
-  [llvm_anyint_ty, llvm_i32_ty, llvm_anyint_ty, llvm_i1_ty], []
+  Intrinsic<[llvm_i64_ty],
+  [llvm_i64_ty, llvm_i32_ty, llvm_i64_ty, llvm_i1_ty], []
 >;
 
 def int_HSAIL_activelaneshuffle_width_b64 :
   GCCBuiltin<"__hsail_activelaneshuffle_wavewidth_b64">,
-  Intrinsic<[llvm_anyint_ty],
-    [llvm_anyint_ty, llvm_i32_ty, llvm_anyint_ty, llvm_i1_ty], []
+  Intrinsic<[llvm_i64_ty],
+    [llvm_i64_ty, llvm_i32_ty, llvm_i64_ty, llvm_i1_ty], []
 >;
 
 // Intrinsics for OpenCL workitem built-ins (OCL 1.2 6.12.2)

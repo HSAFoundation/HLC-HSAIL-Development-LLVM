@@ -99,6 +99,16 @@ let isNotDuplicable = 1, isBarrier = 1 in {
     [(int_HSAIL_memfence (i32 imm:$order), (i32 imm:$globalscope), (i32 imm:$groupscope), (i32 imm:$imagescope))]>;
 }
 
+def activelaneshuffle_inst :
+  HSAILInstLane_ActiveLaneShuffle<"activelaneshuffle",
+                                   BrigOpcode.ACTIVELANESHUFFLE>;
+
+def : ActiveLaneShufflePat<activelaneshuffle_inst,
+                           HSAILactivelaneshuffle, i32, BrigTypeX.B32>;
+def : ActiveLaneShufflePat<activelaneshuffle_inst,
+                           HSAILactivelaneshuffle, i64, BrigTypeX.B64>;
+
+
 // Cross-Lane Operations
   class CrossLaneV4<string asm>
 		: HSAILInst<(outs GPR64:$dest0, GPR64:$dest1,  GPR64:$dest2,  GPR64:$dest3),
@@ -123,27 +133,6 @@ let isNotDuplicable = 1, isBarrier = 1 in {
                     "activelanecount_u32_b1\t$dest, $src",
                     [(set (i32 GPR32:$dest),
                           (int_HSAIL_activelanecount_u32_b1 (i1 imm:$src)))]>;
-
-  defm activelaneshuffle_b1 :        CrossLaneIntrB1<
-                    int_HSAIL_activelaneshuffle_b1,"activelaneshuffle_b1">;
-
-  defm activelaneshuffle_b32 :       CrossLaneIntrB32<
-                    int_HSAIL_activelaneshuffle_b32, "activelaneshuffle_b32">;
-
-  defm activelaneshuffle_b64 :       CrossLaneIntrB64<
-                    int_HSAIL_activelaneshuffle_b64, "activelaneshuffle_b64">;
-
-  defm activelaneshuffle_width_b1 :  CrossLaneIntrB1<
-                    int_HSAIL_activelaneshuffle_width_b1,
-                                      "activelaneshuffle_width(WAVESIZE)_b1">;
-
-  defm activelaneshuffle_width_b32 : CrossLaneIntrB32<
-                    int_HSAIL_activelaneshuffle_width_b32,
-                                      "activelaneshuffle_width(WAVESIZE)_b32">;
-
-  defm activelaneshuffle_width_b64 : CrossLaneIntrB64<
-                    int_HSAIL_activelaneshuffle_width_b64,
-                                      "activelaneshuffle_width(WAVESIZE)_b64">;
 
   let hasWidthOperand = 1 in {
     def activelaneid_width_u32 : HSAILInst<(outs GPR32:$dest), (ins),

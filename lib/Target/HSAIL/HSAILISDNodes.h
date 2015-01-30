@@ -32,6 +32,7 @@ namespace llvm {
       LDA_GROUP,
       LDA_PRIVATE,
       LDA_READONLY,
+      ACTIVELANESHUFFLE,
       INTRINSIC
     };
   }

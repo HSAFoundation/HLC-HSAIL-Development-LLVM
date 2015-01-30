@@ -854,6 +854,10 @@ public:
     return get(Opcode).TSFlags & HSAILInstrFlags::InstSourceType;
   }
 
+  bool isInstLane(uint16_t Opcode) const {
+    return get(Opcode).TSFlags & HSAILInstrFlags::InstLane;
+  }
+
 private:
   RegScavenger *RS;
 

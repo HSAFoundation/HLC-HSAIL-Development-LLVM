@@ -753,6 +753,15 @@ static Brig::BrigOpcode getInstSourceTypeBrigOpcode(unsigned Opc) {
   }
 }
 
+static Brig::BrigOpcode getInstLaneBrigOpcode(unsigned Opc) {
+  switch (Opc) {
+  case HSAIL::activelaneshuffle_inst:
+    return Brig::BRIG_OPCODE_ACTIVELANESHUFFLE;
+  default:
+    llvm_unreachable("unhandled opcode");
+  }
+}
+
 HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   // autoCodeEmitter will emit required amount of bytes in corresponding MCSection
   autoCodeEmitter ace(&OutStreamer, &brigantine);
@@ -794,6 +803,9 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
   if (TII->isInstSourceType(Opc))
     return BrigEmitSourceTypeInst(*II, getInstSourceTypeBrigOpcode(Opc));
+
+  if (TII->isInstLane(Opc))
+    return BrigEmitLaneInst(*II, getInstLaneBrigOpcode(Opc));
 
   if (HSAIL::isAtomicOp(II)) {
     bool hasRet = HSAIL::isRetAtomicOp(II);
@@ -2011,6 +2023,39 @@ BRIGAsmPrinter::BrigEmitSourceTypeInst(const MachineInstr &MI,
 
   assert(HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest) == 0);
   assert(HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0) == 1);
+
+  BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
+                  inst);
+  BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0),
+                  inst);
+
+  int Src1Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src1);
+  if (Src1Idx != -1)
+    BrigEmitOperand(&MI, Src1Idx, inst);
+
+  int Src2Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src2);
+  if (Src2Idx != -1)
+    BrigEmitOperand(&MI, Src2Idx, inst);
+
+  int Src3Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src3);
+  if (Src3Idx != -1)
+    BrigEmitOperand(&MI, Src3Idx, inst);
+
+  return inst;
+}
+
+HSAIL_ASM::InstLane BRIGAsmPrinter::BrigEmitLaneInst(const MachineInstr &MI,
+                                                     unsigned BrigOpc) {
+  HSAIL_ASM::InstLane inst = brigantine.addInst<HSAIL_ASM::InstLane>(BrigOpc);
+
+  unsigned Opc = MI.getOpcode();
+
+  inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
+  inst.sourceType()
+    = TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
+
+  inst.width()
+    = TII->getNamedOperand(MI, HSAIL::OpName::width)->getImm();
 
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
                   inst);
