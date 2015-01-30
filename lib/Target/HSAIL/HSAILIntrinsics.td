@@ -309,8 +309,13 @@ def int_HSAIL_min_f64 : GCCBuiltin<"__hsail_min_f64">,
   Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_double_ty], [IntrNoMem]
 >;
 
-def int_HSAIL_gcn_min_f32 : GCCBuiltin<"__gcn_min_f32">, BinaryFloatIntrNoMem;
-def int_HSAIL_gcn_min_f64 : GCCBuiltin<"__gcn_min_f64">, BinaryFloatIntrNoMem;
+def int_HSAIL_gcn_min_f32 : GCCBuiltin<"__gcn_min_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty], [IntrNoMem]
+>;
+
+def int_HSAIL_gcn_min_f64 : GCCBuiltin<"__gcn_min_f64">,
+  Intrinsic<[llvm_double_ty], [llvm_double_ty, llvm_double_ty], [IntrNoMem]
+>;
 
 def int_HSAIL_div_f32 : GCCBuiltin<"__hsail_div_f32">,
   Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty], [IntrNoMem]

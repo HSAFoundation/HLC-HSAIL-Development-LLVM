@@ -71,11 +71,14 @@ defm : InstMod_2Op_IntTypes<max_inst, HSAILsmax, 1>;
 defm : InstMod_2Op_IntTypes<min_inst, HSAILumin, 0>;
 defm : InstMod_2Op_IntTypes<min_inst, HSAILsmin, 1>;
 
-defm gcn_max : BinaryIntrF32<int_HSAIL_gcn_max_f32, "gcn_max_f32">;
-defm gcn_max : BinaryIntrF64<int_HSAIL_gcn_max_f64, "gcn_max_f64">;
+def gcn_max_inst : HSAILInstBasic_2Op<"gcn_max", BrigOpcode.GCNMAX>;
+def gcn_min_inst : HSAILInstBasic_2Op<"gcn_min", BrigOpcode.GCNMIN>;
 
-defm gcn_min : BinaryIntrF32<int_HSAIL_gcn_min_f32, "gcn_min_f32">;
-defm gcn_min : BinaryIntrF64<int_HSAIL_gcn_min_f64, "gcn_min_f64">;
+// FIXME: Remove these intrinsics
+def : InstBasic_2Op_Pat<gcn_max_inst, int_HSAIL_gcn_max_f32, f32, f32, BrigTypeX.F32>;
+def : InstBasic_2Op_Pat<gcn_max_inst, int_HSAIL_gcn_max_f64, f64, f64, BrigTypeX.F64>;
+def : InstBasic_2Op_Pat<gcn_min_inst, int_HSAIL_gcn_min_f32, f32, f32, BrigTypeX.F32>;
+def : InstBasic_2Op_Pat<gcn_min_inst, int_HSAIL_gcn_min_f64, f64, f64, BrigTypeX.F64>;
 
 
 def mul24_inst : HSAILInstBasic_2Op<"mul24", BrigOpcode.MUL24>;

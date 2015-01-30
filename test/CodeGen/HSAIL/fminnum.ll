@@ -15,6 +15,9 @@ declare <16 x double> @llvm.minnum.v16f64(<16 x double>, <16 x double>) #0
 declare float @llvm.HSAIL.min.f32(float, float) #0
 declare double @llvm.HSAIL.min.f64(double, double) #0
 
+declare float @llvm.HSAIL.gcn.min.f32(float, float) #0
+declare double @llvm.HSAIL.gcn.min.f64(double, double) #0
+
 ; HSAIL-LABEL: {{^}}prog function &test_fminnum_f32(
 ; HSAIL: min_ftz_f32 {{\$s[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}}
 define void @test_fminnum_f32(float addrspace(1)* %out, float %a, float %b) #1 {
@@ -159,6 +162,22 @@ define void @test_legacy_hsail_min_f32(float addrspace(1)* %out, float %a, float
 ; HSAIL: min_f64 {{\$d[0-9]+}}, {{\$d[0-9]+}}, {{\$d[0-9]+}}
 define void @test_legacy_hsail_min_f64(double addrspace(1)* %out, double %a, double %b) #1 {
   %val = call double @llvm.HSAIL.min.f64(double %a, double %b) #0
+  store double %val, double addrspace(1)* %out, align 8
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &test_legacy_gcn_min_f32(
+; HSAIL: gcn_min_f32 {{\$s[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}}
+define void @test_legacy_gcn_min_f32(float addrspace(1)* %out, float %a, float %b) #1 {
+  %val = call float @llvm.HSAIL.gcn.min.f32(float %a, float %b) #0
+  store float %val, float addrspace(1)* %out, align 4
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &test_legacy_gcn_min_f64(
+; HSAIL: gcn_min_f64 {{\$d[0-9]+}}, {{\$d[0-9]+}}, {{\$d[0-9]+}}
+define void @test_legacy_gcn_min_f64(double addrspace(1)* %out, double %a, double %b) #1 {
+  %val = call double @llvm.HSAIL.gcn.min.f64(double %a, double %b) #0
   store double %val, double addrspace(1)* %out, align 8
   ret void
 }
