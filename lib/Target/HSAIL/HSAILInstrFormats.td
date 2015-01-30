@@ -254,6 +254,35 @@ class ActiveLaneShufflePat<Instruction inst,
   (inst (i32 $width), $src0, $src1, $src2, $src3, bt, BrigTypeX.NONE)
 >;
 
+// InstBr
+class HSAILInstBr<bits<16> BrigVal,
+                  dag outs, dag ins, string asmstr> :
+  HSAILInst<outs, ins, asmstr, [], BrigVal> {
+  let hasSideEffects = 1;
+  let InstBr = 1;
+}
+
+class HSAILInstBr_0Op_NoRet<string opName, bits<16> BrigVal> :
+  HSAILInstBr<BrigVal,
+              (outs),
+              (ins BrigWidth:$width, BrigTypeX:$TypeLength),
+  opName#"$width$TypeLength"
+>;
+
+class HSAILInstBr_0Op<string opName, bits<16> BrigVal> :
+  HSAILInstBr<BrigVal,
+              (outs unknown:$dest),
+              (ins BrigWidth:$width, BrigTypeX:$TypeLength),
+  opName#"$width$TypeLength\t$dest"
+>;
+
+class HSAILInstBr_1Op<string opName, bits<16> BrigVal> :
+  HSAILInstBr<BrigVal,
+              (outs unknown:$dest),
+              (ins BrigWidth:$width, unknown:$src0, BrigTypeX:$TypeLength),
+  opName#"$width$TypeLength\t$dest, $src0"
+>;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Basic instruction patterns
 ////////////////////////////////////////////////////////////////////////////////
@@ -499,6 +528,24 @@ class InstSourceType_4Op_Pat<HSAILInst inst,
   (inst $src0, $src1, $src2, $src3, destbt, srcbt)
 >;
 
+////////////////////////////////////////////////////////////////////////////////
+// Br instruction patterns
+////////////////////////////////////////////////////////////////////////////////
+
+class InstBr_0Op_NoRet_Pat<HSAILInst inst,
+                           SDPatternOperator node,
+                           int width = BrigWidth._1> : Pat <
+  (node),
+  (inst width, BrigTypeX.NONE)
+>;
+
+class InstBr_0Op_Pat<HSAILInst inst,
+                        SDPatternOperator node,
+                        int bt,
+                        int width = BrigWidth._1> : Pat <
+  (vt (node)),
+  (inst width, bt)
+>;
 
 let TargetPrefix = "HSAIL", isTarget = 1 in {
 

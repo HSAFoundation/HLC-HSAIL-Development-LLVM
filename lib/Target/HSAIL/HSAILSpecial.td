@@ -47,9 +47,12 @@ def : InstBasic_0Op_Pat<cuid_inst, int_HSAIL_get_cu, i32, BrigTypeX.U32>;
 
 
 let isNotDuplicable = 1, isBarrier = 1 in {
-  def barrier : HSAILInst<(outs), (ins), "barrier", [(int_HSAIL_barrier)]>;
-  def wavebarrier : HSAILInst<(outs), (ins), "wavebarrier", [(int_HSAIL_wavebarrier)]>;
+  def barrier_inst : HSAILInstBr_0Op_NoRet<"barrier", BrigOpcode.BARRIER>;
+  def wavebarrier_inst : HSAILInstBr_0Op_NoRet<"wavebarrier", BrigOpcode.WAVEBARRIER>;
 }
+
+def : InstBr_0Op_NoRet_Pat<barrier_inst, int_HSAIL_barrier, BrigWidth._ALL>;
+def : InstBr_0Op_NoRet_Pat<wavebarrier_inst, int_HSAIL_wavebarrier, BrigWidth._WAVESIZE>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // SYNC OCL 2.0

@@ -858,6 +858,10 @@ public:
     return get(Opcode).TSFlags & HSAILInstrFlags::InstLane;
   }
 
+  bool isInstBr(uint16_t Opcode) const {
+    return get(Opcode).TSFlags & HSAILInstrFlags::InstBr;
+  }
+
 private:
   RegScavenger *RS;
 
