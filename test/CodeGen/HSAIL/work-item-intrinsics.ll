@@ -120,6 +120,25 @@ define void @tidig_z(i32 addrspace(1)* %out) #1 {
   ret void
 }
 
+; FUNC-LABEL: {{^}}prog function &tidig_out_of_range
+; HSAIL-NOT: workitemabsid_u32
+; HSAIL: ret;
+define void @tidig_out_of_range(i32 addrspace(1)* %out) #1 {
+  %tmp0 = call i32 @llvm.HSAIL.get.global.id(i32 3) #0
+  store i32 %tmp0, i32 addrspace(1)* %out
+  ret void
+}
+
+; Undefined
+; FUNC-LABEL: {{^}}prog function &tidig_reg
+; HSAIL-NOT: workitemabsid
+; HSAIL: ret;
+define void @tidig_reg(i32 addrspace(1)* %out, i32 %dim) #1 {
+  %tmp0 = call i32 @llvm.HSAIL.get.global.id(i32 %dim) #0
+  store i32 %tmp0, i32 addrspace(1)* %out
+  ret void
+}
+
 ; FUNC-LABEL: {{^}}prog function &currentworkgroup_size_x
 ; HSAIL: currentworkgroupsize_u32 {{\$s[0-9]+}}, 0;
 define void @currentworkgroup_size_x(i32 addrspace(1)* %out) #1 {

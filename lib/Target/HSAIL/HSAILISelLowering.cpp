@@ -1316,6 +1316,13 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
   // FIXME: This is for compatability with old, custom HSAIL intrinsics. These
   // should be removed once users are updated to use the LLVM intrinsics.
   switch (IntrID) {
+  case HSAILIntrinsic::HSAIL_get_global_id: {
+    ConstantSDNode *Dim = dyn_cast<ConstantSDNode>(Op.getOperand(1));
+    if (!Dim || Dim->getZExtValue() > 2)
+      return DAG.getUNDEF(Op.getValueType());
+    return Op;
+  }
+
   case HSAILIntrinsic::HSAIL_abs_f32:
     return DAG.getNode(ISD::FABS, SL, MVT::f32, Op.getOperand(1));
 
