@@ -682,12 +682,9 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
       if (offset & (alignment - 1))
         alignment = 1;
       if (AddressSpace == HSAILAS::KERNARG_ADDRESS) {
-        // If argument symbol is unknown generate a kernargbaseptr
-        // instruction for Ptr instead on %noreg value.
-        Reg = SDValue(DAG.getMachineNode(
-          Subtarget->is64Bit() ? HSAIL::kernargbaseptr_u64
-                               : HSAIL::kernargbaseptr_u32,
-          dl, PtrTy), 0);
+        // If the argument symbol is unknown, generate a kernargbaseptr
+        // instruction for Ptr instead of a %noreg value.
+        Reg = DAG.getNode(HSAILISD::KERNARGBASEPTR, dl, PtrTy);
       }
     } else if (Ptr.getOpcode() != ISD::TargetExternalSymbol) {
       // %noreg [%reg + offset]
@@ -1210,6 +1207,8 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::ACTIVELANEID";
   case HSAILISD::ACTIVELANECOUNT:
     return "HSAILISD::ACTIVELANECOUNT";
+  case HSAILISD::KERNARGBASEPTR:
+    return "HSAILISD::KERNARGBASEPTR";
   }
 }
 

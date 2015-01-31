@@ -79,20 +79,6 @@ def : ActiveLaneIdPat<activelaneid_inst, HSAILactivelaneid, i32, BrigTypeX.U32>;
 def activelanecount_inst : HSAILInstLane_1Op<"activelanecount", BrigOpcode.ACTIVELANECOUNT>;
 def : ActiveLaneCountPat<activelanecount_inst, HSAILactivelanecount, i32, BrigTypeX.U32>;
 
-
-// Cross-Lane Operations
-  class CrossLaneV4<string asm>
-		: HSAILInst<(outs GPR64:$dest0, GPR64:$dest1,  GPR64:$dest2,  GPR64:$dest3),
-					(ins CR:$src1),
-					!strconcat(asm,
-							   " ( $dest0, $dest1, $dest2, $dest3 ), "
-							   "$src1"), []> {
-    let isCrossLaneInst = 1;
-  }
-
-  def activelanemask_v4_b64_b1 : CrossLaneV4<"activelanemask_v4_b64_b1">;
-  def activelanemask_v4_width_b64_b1 : CrossLaneV4<"activelanemask_v4_width(WAVESIZE)_b64_b1">;
-
 let isAsCheapAsAMove = 1, isReMaterializable = 1 in {
   def nullptr_inst : HSAILInstSeg_0Op<"nullptr", BrigOpcode.NULLPTR>;
 }
@@ -115,8 +101,24 @@ let Predicates = [In32BitMode] in {
 }
 
 let isAsCheapAsAMove = 1, isReMaterializable = 1 in {
-  def kernargbaseptr_u64 : HSAILInst<(outs GPR64:$dest), (ins ),
-            "kernargbaseptr_u64 \t $dest", []>;
-  def kernargbaseptr_u32 : HSAILInst<(outs GPR32:$dest), (ins ),
-            "kernargbaseptr_u32 \t $dest", []>;
+  def kernargbaseptr_inst : HSAILInstBasic_0Op<"kernargbaseptr", BrigOpcode.KERNARGBASEPTR>;
 }
+
+let Predicates = [In64BitMode] in {
+  def : InstBasic_0Op_Pat<kernargbaseptr_inst, HSAILkernargbaseptr, i64, BrigTypeX.U64>;
+}
+
+let Predicates = [In32BitMode] in {
+  def : InstBasic_0Op_Pat<kernargbaseptr_inst, HSAILkernargbaseptr, i32, BrigTypeX.U32>;
+}
+
+
+// Cross-Lane Operations
+class CrossLaneV4<string asm> :
+  HSAILInst<(outs GPR64:$dest0, GPR64:$dest1,  GPR64:$dest2,  GPR64:$dest3), (ins CR:$src1),
+  !strconcat(asm, " ( $dest0, $dest1, $dest2, $dest3 ), " "$src1"), []> {
+  let isCrossLaneInst = 1;
+}
+
+def activelanemask_v4_b64_b1 : CrossLaneV4<"activelanemask_v4_b64_b1">;
+def activelanemask_v4_width_b64_b1 : CrossLaneV4<"activelanemask_v4_width(WAVESIZE)_b64_b1">;

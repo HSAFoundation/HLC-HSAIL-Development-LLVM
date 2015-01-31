@@ -702,6 +702,8 @@ static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_BYTEALIGN;
   case HSAIL::lerp_inst:
     return Brig::BRIG_OPCODE_LERP;
+  case HSAIL::kernargbaseptr_inst:
+    return Brig::BRIG_OPCODE_KERNARGBASEPTR;
   case HSAIL::gcn_fldexp_inst:
     return Brig::BRIG_OPCODE_GCNFLDEXP;
   case HSAIL::gcn_mqsad_inst:

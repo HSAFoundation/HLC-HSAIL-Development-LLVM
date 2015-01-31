@@ -107,3 +107,5 @@ def HSAILactivelanecount : SDNode<"HSAILISD::ACTIVELANECOUNT",
 >;
 
 def HSAILclass : SDNode<"HSAILISD::CLASS", HSAILFPClassOp>;
+
+def HSAILkernargbaseptr : SDNode<"HSAILISD::KERNARGBASEPTR", SDTIntLeaf>;
