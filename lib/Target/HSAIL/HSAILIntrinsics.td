@@ -70,11 +70,15 @@ def int_HSAIL_activelaneshuffle_width_b32 :
 
 def int_HSAIL_activelanemask_v4_b64_b1 :
   GCCBuiltin<"__hsail_activelanemask_v4_b64_b1">,
-  CrossLaneVecIntr;
+  Intrinsic<[llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i64_ty],
+    [llvm_i1_ty], []
+>;
 
 def int_HSAIL_activelanemask_v4_width_b64_b1 :
   GCCBuiltin<"__hsail_activelanemask_v4_wavewidth_b64_b1">,
-  CrossLaneVecIntr;
+  Intrinsic<[llvm_i64_ty, llvm_i64_ty, llvm_i64_ty, llvm_i64_ty],
+    [llvm_i1_ty], []
+>;
 
 
 // For OCL 2.0 64-bit built-ins
@@ -1008,78 +1012,136 @@ def int_HSAIL_stimagef_2dadepth_i32 : GCCBuiltin<"__hsail_stimagef_2dadepth_i32"
 
 // Image query
 def int_HSAIL_query_width_1d  : GCCBuiltin<"__hsail_query_width_1d">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_width_1db : GCCBuiltin<"__hsail_query_width_1db">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_width_1da : GCCBuiltin<"__hsail_query_width_1da">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_width_2d  : GCCBuiltin<"__hsail_query_width_2d">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_width_2da : GCCBuiltin<"__hsail_query_width_2da">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_width_3d  : GCCBuiltin<"__hsail_query_width_3d">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_width_2ddepth : GCCBuiltin<"__hsail_query_width_2ddepth">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_width_2dadepth : GCCBuiltin<"__hsail_query_width_2dadepth">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
 
 def int_HSAIL_query_height_2d  : GCCBuiltin<"__hsail_query_height_2d">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_height_2da : GCCBuiltin<"__hsail_query_height_2da">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_height_3d  : GCCBuiltin<"__hsail_query_height_3d">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_height_2ddepth : GCCBuiltin<"__hsail_query_height_2ddepth">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_height_2dadepth : GCCBuiltin<"__hsail_query_height_2dadepth">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
 
 def int_HSAIL_query_depth_3d  : GCCBuiltin<"__hsail_depth_3d">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
 
 def int_HSAIL_query_format_1d  : GCCBuiltin<"__hsail_query_format_1d">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_format_1db : GCCBuiltin<"__hsail_query_format_1db">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_format_1da : GCCBuiltin<"__hsail_query_format_1da">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_format_2d  : GCCBuiltin<"__hsail_query_format_2d">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_format_2da : GCCBuiltin<"__hsail_query_format_2da">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_format_3d  : GCCBuiltin<"__hsail_query_format_3d">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
 
 def int_HSAIL_query_order_1d  : GCCBuiltin<"__hsail_query_order_1d">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_order_1db : GCCBuiltin<"__hsail_query_order_1db">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_order_1da : GCCBuiltin<"__hsail_query_order_1da">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_order_2d  : GCCBuiltin<"__hsail_query_order_2d">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_order_2da : GCCBuiltin<"__hsail_query_order_2da">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_order_3d  : GCCBuiltin<"__hsail_query_order_3d">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
 
 def int_HSAIL_query_array_1da : GCCBuiltin<"__hsail_query_array_1da">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_array_2da : GCCBuiltin<"__hsail_query_array_2da">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_array_2dadepth : GCCBuiltin<"__hsail_query_array_2dadepth">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
 
 def int_HSAIL_query_channelorder_2ddepth : GCCBuiltin<"__hsail_query_channelorder_2ddepth">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_channelorder_2dadepth : GCCBuiltin<"__hsail_query_channelorder_2dadepth">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
 
 def int_HSAIL_query_channeltype_2ddepth : GCCBuiltin<"__hsail_query_channeltype_2ddepth">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
+
 def int_HSAIL_query_channeltype_2dadepth : GCCBuiltin<"__hsail_query_channeltype_2dadepth">,
-        UnaryIntIntr;
+  Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
+>;
 
 def int_HSAIL_addrspacecast_g2f : GCCBuiltin<"__hsail_addrspacecast_g2f">,
   Intrinsic<[llvm_anyptr_ty], [llvm_anyptr_ty], [IntrNoMem]
