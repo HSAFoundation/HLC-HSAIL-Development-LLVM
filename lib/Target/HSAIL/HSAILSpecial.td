@@ -73,6 +73,9 @@ def : ActiveLaneShufflePat<activelaneshuffle_inst,
 def : ActiveLaneShufflePat<activelaneshuffle_inst,
                            HSAILactivelaneshuffle, i64, BrigTypeX.B64>;
 
+def activelaneid_inst : HSAILInstLane_0Op<"activelaneid", BrigOpcode.ACTIVELANEID>;
+def : ActiveLaneIdPat<activelaneid_inst, HSAILactivelaneid, i32, BrigTypeX.U32>;
+
 
 // Cross-Lane Operations
   class CrossLaneV4<string asm>
@@ -84,11 +87,6 @@ def : ActiveLaneShufflePat<activelaneshuffle_inst,
     let isCrossLaneInst = 1;
   }
 
-  def activelaneid_u32 :         HSAILInst<(outs GPR32:$dest), (ins),
-                    "activelaneid_u32\t$dest",
-                    [(set (i32 GPR32:$dest),
-                          (int_HSAIL_activelaneid_u32))]>;
-
   def activelanecount_u32_b1 :   HSAILInst<(outs GPR32:$dest), (ins CR:$src),
                     "activelanecount_u32_b1\t$dest, $src",
                     [(set (i32 GPR32:$dest),
@@ -98,12 +96,6 @@ def : ActiveLaneShufflePat<activelaneshuffle_inst,
                     "activelanecount_u32_b1\t$dest, $src",
                     [(set (i32 GPR32:$dest),
                           (int_HSAIL_activelanecount_u32_b1 (i1 imm:$src)))]>;
-
-  let hasWidthOperand = 1 in {
-    def activelaneid_width_u32 : HSAILInst<(outs GPR32:$dest), (ins),
-                      "activelaneid_width(WAVESIZE)_u32\t$dest",
-                      [(set (i32 GPR32:$dest),
-                            (int_HSAIL_activelaneid_width_u32))]>;
 
     def activelanecount_width_u32_b1 : HSAILInst<(outs GPR32:$dest),
                                                  (ins CR:$src),
@@ -117,7 +109,6 @@ def : ActiveLaneShufflePat<activelaneshuffle_inst,
                       [(set (i32 GPR32:$dest),
                             (int_HSAIL_activelanecount_width_u32_b1
                                 (i1 imm:$src)))]>;
-  }
 
   def activelanemask_v4_b64_b1 : CrossLaneV4<"activelanemask_v4_b64_b1">;
   def activelanemask_v4_width_b64_b1 : CrossLaneV4<"activelanemask_v4_width(WAVESIZE)_b64_b1">;

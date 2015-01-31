@@ -20,7 +20,6 @@ class HSAILInst<dag outs, dag ins,
                 bits<16> BrigVal = 0>
   : Instruction {
   field bits<32> Inst;
-  bit hasWidthOperand = 0;
   let Namespace = "HSAIL";
   dag OutOperandList = outs;
   dag InOperandList = ins;
@@ -232,6 +231,14 @@ class HSAILInstLane<bits<16> BrigVal,
   let InstLane = 1;
 }
 
+class HSAILInstLane_0Op<string opName, bits<16> BrigVal> :
+  HSAILInstLane<
+    BrigVal,
+    (outs unknown:$dest),
+    (ins BrigWidth:$width, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+  opName#"$width$TypeLength$sourceType\t$dest"
+>;
+
 class HSAILInstLane_ActiveLaneShuffle<string opName, bits<16> BrigVal> :
   HSAILInstLane<
     BrigVal,
@@ -240,18 +247,6 @@ class HSAILInstLane_ActiveLaneShuffle<string opName, bits<16> BrigVal> :
          unknown:$src0, unknown:$src1, unknown:$src2, unknown:$src3,
          BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
   opName#"$width$TypeLength$sourceType\t$dest, $src0, $src1, $src2, $src3"
->;
-
-class ActiveLaneShufflePat<Instruction inst,
-                           SDPatternOperator node,
-                           ValueType vt,
-                           int bt> : Pat<
-  (vt (node (i32 timm:$width),
-            (vt (GPROrImm vt:$src0)),
-            (i32 (GPROrImm i32:$src1)),
-            (vt (GPROrImm vt:$src2)),
-            (i1 (GPROrImm i1:$src3)))),
-  (inst (i32 $width), $src0, $src1, $src2, $src3, bt, BrigTypeX.NONE)
 >;
 
 // InstBr
@@ -526,6 +521,30 @@ class InstSourceType_4Op_Pat<HSAILInst inst,
         (GPROrImm vt:$src2),
         (GPROrImm vt:$src3)),
   (inst $src0, $src1, $src2, $src3, destbt, srcbt)
+>;
+
+////////////////////////////////////////////////////////////////////////////////
+// Lane instruction patterns
+////////////////////////////////////////////////////////////////////////////////
+
+class ActiveLaneShufflePat<Instruction inst,
+                           SDPatternOperator node,
+                           ValueType vt,
+                           int bt> : Pat<
+  (vt (node (i32 timm:$width),
+            (vt (GPROrImm vt:$src0)),
+            (i32 (GPROrImm i32:$src1)),
+            (vt (GPROrImm vt:$src2)),
+            (i1 (GPROrImm i1:$src3)))),
+  (inst (i32 $width), $src0, $src1, $src2, $src3, bt, BrigTypeX.NONE)
+>;
+
+class ActiveLaneIdPat<Instruction inst,
+                      SDPatternOperator node,
+                      ValueType vt,
+                      int bt> : Pat<
+  (vt (node (i32 timm:$width))),
+  (inst $width, bt, BrigTypeX.NONE)
 >;
 
 ////////////////////////////////////////////////////////////////////////////////

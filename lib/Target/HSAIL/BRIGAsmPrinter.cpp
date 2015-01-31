@@ -787,6 +787,8 @@ static Brig::BrigOpcode getInstLaneBrigOpcode(unsigned Opc) {
   switch (Opc) {
   case HSAIL::activelaneshuffle_inst:
     return Brig::BRIG_OPCODE_ACTIVELANESHUFFLE;
+  case HSAIL::activelaneid_inst:
+    return Brig::BRIG_OPCODE_ACTIVELANEID;
   default:
     llvm_unreachable("unhandled opcode");
   }
@@ -2103,8 +2105,10 @@ HSAIL_ASM::InstLane BRIGAsmPrinter::BrigEmitLaneInst(const MachineInstr &MI,
 
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
                   inst);
-  BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0),
-                  inst);
+
+  int Src0Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0);
+  if (Src0Idx != -1)
+    BrigEmitOperand(&MI, Src0Idx, inst);
 
   int Src1Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src1);
   if (Src1Idx != -1)

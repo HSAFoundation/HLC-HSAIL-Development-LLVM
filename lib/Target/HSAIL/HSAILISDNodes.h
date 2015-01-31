@@ -33,6 +33,7 @@ namespace llvm {
       LDA_PRIVATE,
       LDA_READONLY,
       ACTIVELANESHUFFLE,
+      ACTIVELANEID,
       INTRINSIC
     };
   }
