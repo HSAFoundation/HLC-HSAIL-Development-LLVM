@@ -510,6 +510,14 @@ class InstSourceType_2Op_Pat<HSAILInst inst,
   (inst $src0, $src1, destbt, srcbt)
 >;
 
+class InstSourceType_Class_Pat<HSAILInst inst,
+                              SDPatternOperator node,
+                              ValueType vt,
+                              int srcbt> : Pat <
+  (i1 (node (vt (GPROrImm vt:$src0)), (i32 (GPROrImm i32:$src1)))),
+  (inst $src0, $src1, BrigTypeX.B1, srcbt)
+>;
+
 class InstSourceType_3Op_Pat<HSAILInst inst,
                              SDPatternOperator node,
                              ValueType vt,

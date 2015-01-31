@@ -27,6 +27,7 @@ namespace llvm {
       SBITEXTRACT,
       UBITEXTRACT,
       FLDEXP,
+      CLASS,
       LDA_FLAT,
       LDA_GLOBAL,
       LDA_GROUP,

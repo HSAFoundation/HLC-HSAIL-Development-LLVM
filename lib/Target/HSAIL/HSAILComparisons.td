@@ -123,27 +123,7 @@ let isCompare = 1 in {
 ////////////////////////////////////////////////////////////////////////////////
 // floating-point classify instructions
 
-multiclass FPClassIntr<Intrinsic intr, string asm, RegisterClass OpRC,
-                        ValueType OpVT, Operand OpImmTy> {
-  def _rr : HSAILInst<(outs CR:$dest), (ins OpRC:$src0, GPR32:$src1),
-      !strconcat(asm, "\t $dest, $src0, $src1"),
-      [(set (i1 CR:$dest), (intr (OpVT OpRC:$src0), (i32 GPR32:$src1)))]>;
 
-  def _ri : HSAILInst<(outs CR:$dest), (ins OpRC:$src0, i32imm:$src1),
-      !strconcat(asm, "\t $dest, $src0, $src1"),
-      [(set (i1 CR:$dest), (intr (OpVT OpRC:$src0), (i32 imm:$src1)))]>;
-
-  def _ir : HSAILInst<(outs CR:$dest), (ins OpImmTy:$src0, GPR32:$src1),
-      !strconcat(asm, "\t $dest, $src0, $src1"),
-      [(set (i1 CR:$dest), (intr (OpVT fpimm:$src0), (i32 GPR32:$src1)))]>;
-
-  def _ii : HSAILInst<(outs CR:$dest), (ins OpImmTy:$src0, i32imm:$src1),
-      !strconcat(asm, "\t $dest, $src0, $src1"),
-      [(set (i1 CR:$dest), (intr (OpVT fpimm:$src0), (i32 imm:$src1)))]>;
-}
-
-defm class_f32 : FPClassIntr<int_HSAIL_class_f32, "class_b1_f32",
-      GPR32, f32, f32imm>;
-defm class_f64 : FPClassIntr<int_HSAIL_class_f64, "class_b1_f64",
-      GPR64, f64, f64imm>;
-
+def class_inst : HSAILInstSourceType_2Op<"class", BrigOpcode.CLASS>;
+def : InstSourceType_Class_Pat<class_inst, HSAILclass, f32, BrigTypeX.F32>;
+def : InstSourceType_Class_Pat<class_inst, HSAILclass, f64, BrigTypeX.F64>;
