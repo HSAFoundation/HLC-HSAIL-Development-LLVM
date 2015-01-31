@@ -841,29 +841,29 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
   // FIXME: We should be able to get the encoding / Brig value from MC.
   if (TII->isInstBasic(Opc))
-    return BrigEmitBasicInst(*II, getInstBasicBrigOpcode(Opc));
+    return BrigEmitInstBasic(*II, getInstBasicBrigOpcode(Opc));
 
   if (TII->isInstMod(Opc)) {
     // FIXME: We should be able to get the encoding / Brig value from MC.
     // FIXME: Some instructions are available as InstBasic if they don't use
     // modifiers.
-    return BrigEmitModInst(*II, getInstModBrigOpcode(Opc));
+    return BrigEmitInstMod(*II, getInstModBrigOpcode(Opc));
   }
 
   if (TII->isInstSourceType(Opc))
-    return BrigEmitSourceTypeInst(*II, getInstSourceTypeBrigOpcode(Opc));
-
-  if (TII->isInstLane(Opc))
-    return BrigEmitLaneInst(*II, getInstLaneBrigOpcode(Opc));
+    return BrigEmitInstSourceType(*II, getInstSourceTypeBrigOpcode(Opc));
 
   if (TII->isInstBr(Opc))
-    return BrigEmitBrInst(*II, getInstBrBrigOpcode(Opc));
-
-  if (TII->isInstSeg(Opc))
-    return BrigEmitSegInst(*II, getInstSegBrigOpcode(Opc));
+    return BrigEmitInstBr(*II, getInstBrBrigOpcode(Opc));
 
   if (TII->isInstMemFence(Opc))
-    return BrigEmitMemFenceInst(*II, getInstMemFenceBrigOpcode(Opc));
+    return BrigEmitInstMemFence(*II, getInstMemFenceBrigOpcode(Opc));
+
+  if (TII->isInstLane(Opc))
+    return BrigEmitInstLane(*II, getInstLaneBrigOpcode(Opc));
+
+  if (TII->isInstSeg(Opc))
+    return BrigEmitInstSeg(*II, getInstSegBrigOpcode(Opc));
 
   if (HSAIL::isAtomicOp(II)) {
     bool hasRet = HSAIL::isRetAtomicOp(II);
@@ -946,13 +946,13 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     return cvt;
   }
   case HSAIL::rint:
-    return BrigEmitModInst(*II, Brig::BRIG_OPCODE_RINT);
+    return BrigEmitInstMod(*II, Brig::BRIG_OPCODE_RINT);
   case HSAIL::floor:
-    return BrigEmitModInst(*II, Brig::BRIG_OPCODE_FLOOR);
+    return BrigEmitInstMod(*II, Brig::BRIG_OPCODE_FLOOR);
   case HSAIL::ceil:
-    return BrigEmitModInst(*II, Brig::BRIG_OPCODE_CEIL);
+    return BrigEmitInstMod(*II, Brig::BRIG_OPCODE_CEIL);
   case HSAIL::trunc_hsail:
-    return BrigEmitModInst(*II, Brig::BRIG_OPCODE_TRUNC);
+    return BrigEmitInstMod(*II, Brig::BRIG_OPCODE_TRUNC);
   case HSAIL::ret:
     return brigantine.addInst<HSAIL_ASM::InstBasic>(Brig::BRIG_OPCODE_RET,Brig::BRIG_TYPE_NONE);
 
@@ -2024,7 +2024,7 @@ void BRIGAsmPrinter::BrigEmitImageInst(const MachineInstr *MI,
   }
 }
 
-HSAIL_ASM::InstBasic BRIGAsmPrinter::BrigEmitBasicInst(const MachineInstr &MI,
+HSAIL_ASM::InstBasic BRIGAsmPrinter::BrigEmitInstBasic(const MachineInstr &MI,
                                                        unsigned BrigOpc) {
   HSAIL_ASM::InstBasic inst = brigantine.addInst<HSAIL_ASM::InstBasic>(BrigOpc);
   unsigned Opc = MI.getOpcode();
@@ -2049,7 +2049,7 @@ HSAIL_ASM::InstBasic BRIGAsmPrinter::BrigEmitBasicInst(const MachineInstr &MI,
   return inst;
 }
 
-HSAIL_ASM::InstMod BRIGAsmPrinter::BrigEmitModInst(const MachineInstr &MI,
+HSAIL_ASM::InstMod BRIGAsmPrinter::BrigEmitInstMod(const MachineInstr &MI,
                                                    unsigned BrigOpc) {
   HSAIL_ASM::InstMod inst = brigantine.addInst<HSAIL_ASM::InstMod>(BrigOpc);
   unsigned Opc = MI.getOpcode();
@@ -2077,7 +2077,7 @@ HSAIL_ASM::InstMod BRIGAsmPrinter::BrigEmitModInst(const MachineInstr &MI,
 }
 
 HSAIL_ASM::InstSourceType
-BRIGAsmPrinter::BrigEmitSourceTypeInst(const MachineInstr &MI,
+BRIGAsmPrinter::BrigEmitInstSourceType(const MachineInstr &MI,
                                        unsigned BrigOpc) {
   HSAIL_ASM::InstSourceType inst
     = brigantine.addInst<HSAIL_ASM::InstSourceType>(BrigOpc);
@@ -2108,7 +2108,7 @@ BRIGAsmPrinter::BrigEmitSourceTypeInst(const MachineInstr &MI,
   return inst;
 }
 
-HSAIL_ASM::InstLane BRIGAsmPrinter::BrigEmitLaneInst(const MachineInstr &MI,
+HSAIL_ASM::InstLane BRIGAsmPrinter::BrigEmitInstLane(const MachineInstr &MI,
                                                      unsigned BrigOpc) {
   HSAIL_ASM::InstLane inst = brigantine.addInst<HSAIL_ASM::InstLane>(BrigOpc);
 
@@ -2143,7 +2143,7 @@ HSAIL_ASM::InstLane BRIGAsmPrinter::BrigEmitLaneInst(const MachineInstr &MI,
   return inst;
 }
 
-HSAIL_ASM::InstBr BRIGAsmPrinter::BrigEmitBrInst(const MachineInstr &MI,
+HSAIL_ASM::InstBr BRIGAsmPrinter::BrigEmitInstBr(const MachineInstr &MI,
                                                  unsigned BrigOpc) {
   HSAIL_ASM::InstBr inst = brigantine.addInst<HSAIL_ASM::InstBr>(BrigOpc);
   unsigned Opc = MI.getOpcode();
@@ -2166,7 +2166,7 @@ HSAIL_ASM::InstBr BRIGAsmPrinter::BrigEmitBrInst(const MachineInstr &MI,
   return inst;
 }
 
-HSAIL_ASM::InstSeg BRIGAsmPrinter::BrigEmitSegInst(const MachineInstr &MI,
+HSAIL_ASM::InstSeg BRIGAsmPrinter::BrigEmitInstSeg(const MachineInstr &MI,
                                                   unsigned BrigOpc) {
   HSAIL_ASM::InstSeg inst = brigantine.addInst<HSAIL_ASM::InstSeg>(BrigOpc);
   unsigned Opc = MI.getOpcode();
@@ -2184,7 +2184,7 @@ HSAIL_ASM::InstSeg BRIGAsmPrinter::BrigEmitSegInst(const MachineInstr &MI,
 }
 
 HSAIL_ASM::InstMemFence
-BRIGAsmPrinter::BrigEmitMemFenceInst(const MachineInstr &MI, unsigned BrigOpc) {
+BRIGAsmPrinter::BrigEmitInstMemFence(const MachineInstr &MI, unsigned BrigOpc) {
   HSAIL_ASM::InstMemFence inst
     = brigantine.addInst<HSAIL_ASM::InstMemFence>(BrigOpc, Brig::BRIG_TYPE_NONE);
 

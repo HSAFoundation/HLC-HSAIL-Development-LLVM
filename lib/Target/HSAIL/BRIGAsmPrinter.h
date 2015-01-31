@@ -186,19 +186,19 @@ protected:
   void BrigEmitOperandImage(const MachineInstr *MI, unsigned opNum);
   void BrigEmitImageInst(const MachineInstr *MI, HSAIL_ASM::InstImage inst);
 
-  HSAIL_ASM::InstBasic BrigEmitBasicInst(const MachineInstr &MI,
+  HSAIL_ASM::InstBasic BrigEmitInstBasic(const MachineInstr &MI,
                                          unsigned BrigOpc);
-  HSAIL_ASM::InstMod BrigEmitModInst(const MachineInstr &MI, unsigned BrigOpc);
-  HSAIL_ASM::InstSourceType BrigEmitSourceTypeInst(const MachineInstr &MI,
+  HSAIL_ASM::InstMod BrigEmitInstMod(const MachineInstr &MI, unsigned BrigOpc);
+  HSAIL_ASM::InstSourceType BrigEmitInstSourceType(const MachineInstr &MI,
                                                    unsigned BrigOpc);
 
-  HSAIL_ASM::InstLane BrigEmitLaneInst(const MachineInstr &MI,
+  HSAIL_ASM::InstLane BrigEmitInstLane(const MachineInstr &MI,
                                        unsigned BrigOpc);
-  HSAIL_ASM::InstBr BrigEmitBrInst(const MachineInstr &MI,
+  HSAIL_ASM::InstBr BrigEmitInstBr(const MachineInstr &MI,
                                    unsigned BrigOpc);
-  HSAIL_ASM::InstSeg BrigEmitSegInst(const MachineInstr &MI,
+  HSAIL_ASM::InstSeg BrigEmitInstSeg(const MachineInstr &MI,
                                      unsigned BrigOpc);
-  HSAIL_ASM::InstMemFence BrigEmitMemFenceInst(const MachineInstr &MI,
+  HSAIL_ASM::InstMemFence BrigEmitInstMemFence(const MachineInstr &MI,
                                                unsigned BrigOpc);
 
   void BrigEmitVecOperand(const MachineInstr *MI, unsigned opStart,
