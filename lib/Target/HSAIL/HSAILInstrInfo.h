@@ -866,6 +866,10 @@ public:
     return get(Opcode).TSFlags & HSAILInstrFlags::InstSeg;
   }
 
+  bool isInstMemFence(uint16_t Opcode) const {
+    return get(Opcode).TSFlags & HSAILInstrFlags::InstMemFence;
+  }
+
 private:
   RegScavenger *RS;
 

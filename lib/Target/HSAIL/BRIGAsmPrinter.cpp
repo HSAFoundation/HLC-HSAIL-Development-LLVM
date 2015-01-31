@@ -820,6 +820,15 @@ static Brig::BrigOpcode getInstSegBrigOpcode(unsigned Opc) {
   }
 }
 
+static Brig::BrigOpcode getInstMemFenceBrigOpcode(unsigned Opc) {
+  switch (Opc) {
+  case HSAIL::memfence_inst:
+    return Brig::BRIG_OPCODE_MEMFENCE;
+  default:
+    llvm_unreachable("unhandled opcode");
+  }
+}
+
 HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   // autoCodeEmitter will emit required amount of bytes in corresponding MCSection
   autoCodeEmitter ace(&OutStreamer, &brigantine);
@@ -848,6 +857,9 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
   if (TII->isInstSeg(Opc))
     return BrigEmitSegInst(*II, getInstSegBrigOpcode(Opc));
+
+  if (TII->isInstMemFence(Opc))
+    return BrigEmitMemFenceInst(*II, getInstMemFenceBrigOpcode(Opc));
 
   if (HSAIL::isAtomicOp(II)) {
     bool hasRet = HSAIL::isRetAtomicOp(II);
@@ -1042,22 +1054,6 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   case HSAIL::arg_decl:
     BrigEmitVecArgDeclaration(II);
     return HSAIL_ASM::Inst();
-
-  case HSAIL::hsail_memfence: {
-    HSAIL_ASM::InstMemFence memfence =
-        brigantine.addInst<HSAIL_ASM::InstMemFence>(Brig::BRIG_OPCODE_MEMFENCE,
-                                                    Brig::BRIG_TYPE_NONE);
-    memfence.memoryOrder() =
-      TII->getNamedModifierOperand(*II, HSAIL::OpName::order);
-    memfence.globalSegmentMemoryScope() =
-      TII->getNamedModifierOperand(*II, HSAIL::OpName::globalscope);
-    memfence.groupSegmentMemoryScope() =
-      TII->getNamedModifierOperand(*II, HSAIL::OpName::groupscope);
-    memfence.imageSegmentMemoryScope() =
-      TII->getNamedModifierOperand(*II, HSAIL::OpName::imagescope);
-
-    return memfence;
-  }
   }
 }
 
@@ -2171,6 +2167,23 @@ HSAIL_ASM::InstSeg BRIGAsmPrinter::BrigEmitSegInst(const MachineInstr &MI,
   int DestIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest);
   if (DestIdx != -1)
     BrigEmitOperand(&MI, DestIdx, inst);
+
+  return inst;
+}
+
+HSAIL_ASM::InstMemFence
+BRIGAsmPrinter::BrigEmitMemFenceInst(const MachineInstr &MI, unsigned BrigOpc) {
+  HSAIL_ASM::InstMemFence inst
+    = brigantine.addInst<HSAIL_ASM::InstMemFence>(BrigOpc, Brig::BRIG_TYPE_NONE);
+
+  inst.memoryOrder()
+    = TII->getNamedModifierOperand(MI, HSAIL::OpName::order);
+  inst.globalSegmentMemoryScope()
+    = TII->getNamedModifierOperand(MI, HSAIL::OpName::globalscope);
+  inst.groupSegmentMemoryScope() =
+    TII->getNamedModifierOperand(MI, HSAIL::OpName::groupscope);
+  inst.imageSegmentMemoryScope() =
+    TII->getNamedModifierOperand(MI, HSAIL::OpName::imagescope);
 
   return inst;
 }

@@ -57,12 +57,20 @@ def : InstBr_0Op_NoRet_Pat<wavebarrier_inst, int_HSAIL_wavebarrier, BrigWidth._W
 ////////////////////////////////////////////////////////////////////////////////
 // SYNC OCL 2.0
 
-let isNotDuplicable = 1, isBarrier = 1 in {
-  def hsail_memfence : HSAILInst< (outs),
-    (ins i32imm:$order, i32imm:$globalscope, i32imm:$groupscope, i32imm:$imagescope),
-    "memfence_$order$globalscope$groupscope$imagescope",
-    [(int_HSAIL_memfence (i32 imm:$order), (i32 imm:$globalscope), (i32 imm:$groupscope), (i32 imm:$imagescope))]>;
-}
+def memfence_inst : InstMemFence<"memfence", BrigOpcode.MEMFENCE>;
+
+def : Pat<
+  (int_HSAIL_memfence (i32 imm:$order),
+                      (i32 imm:$globalscope),
+                      (i32 imm:$groupscope),
+                      (i32 imm:$imagescope)),
+  (memfence_inst imm:$order,
+                 imm:$globalscope,
+                 imm:$groupscope,
+                 imm:$imagescope)
+>;
+
+
 
 def activelaneshuffle_inst :
   HSAILInstLane_ActiveLaneShuffle<"activelaneshuffle",

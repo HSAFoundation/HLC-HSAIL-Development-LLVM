@@ -302,6 +302,29 @@ class HSAILInstSeg_0Op<string opName, bits<16> BrigVal> :
   opName#"$segment$TypeLength\t$dest"
 >;
 
+// InstMemFence
+class HSAILInstMemFence<bits<16> BrigVal,
+                        dag outs, dag ins, string asmstr> :
+  HSAILInst<outs, ins, asmstr, [], BrigVal> {
+  let hasSideEffects = 1;
+  let mayLoad = 1;
+  let mayStore = 1;
+  let isBarrier = 1;
+  let isNotDuplicable = 1; // XXX - This seems unnecessary
+  let InstMemFence = 1;
+}
+
+class InstMemFence<string opName, bits<16> BrigVal> :
+  HSAILInstMemFence<
+    BrigVal,
+    (outs),
+    (ins BrigMemoryOrder:$order,
+         BrigMemoryScope:$globalscope,
+         BrigMemoryScope:$groupscope,
+         BrigMemoryScope:$imagescope),
+    opName#"$order$globalscope$groupscope$imagescope"
+>;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Basic instruction patterns
 ////////////////////////////////////////////////////////////////////////////////
