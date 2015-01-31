@@ -37,20 +37,13 @@ let isBranch = 1, isTerminator = 1, hasCtrlDep = 1 in {
 
   def cbr_inst : HSAILInstBr_2Op_NoRet<"cbr", BrigOpcode.CBR>;
 
-  def branch_ind : HSAILInst<(outs), (ins GPR32:$label),
-                "br\t$label ",
-        [(brind GPR32:$label)]>;
+  // TODO: can sbr be used to support brind?
 }
 
 def : Pat<
   (br bb:$src0),
   (br_inst BrigWidth._ALL, bb:$src0, BrigTypeX.NONE)
 >;
-
-// def : Pat<
-//   (brind i32:$src0),
-//   (br_inst BrigWidth._ALL, $src0, BrigTypeX.NONE)
-// >;
 
 def : Pat<
   (brcond i1:$src0, bb:$src1),

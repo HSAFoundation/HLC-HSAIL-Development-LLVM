@@ -301,10 +301,6 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
     if (!I->getDesc().isBranch())
       return true;
 
-    // Don't know anything about indirect branches.
-    if (I->getOpcode() == HSAIL::branch_ind)
-      return true;
-
     // Handle unconditional branches.
     if (I->getOpcode() == HSAIL::br_inst) {
       int Src0Idx = HSAIL::getNamedOperandIdx(HSAIL::br_inst, HSAIL::OpName::src0);
@@ -706,8 +702,7 @@ HSAILInstrInfo::RemoveBranch(MachineBasicBlock &MBB) const
       continue;
 
     if (I->getOpcode() != HSAIL::br_inst &&
-        I->getOpcode() != HSAIL::cbr_inst &&
-        I->getOpcode() != HSAIL::branch_ind)
+        I->getOpcode() != HSAIL::cbr_inst)
       break;
 
     // Remove the branch.
