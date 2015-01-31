@@ -306,14 +306,15 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
       return true;
 
     // Handle unconditional branches.
-    if (I->getOpcode() == HSAIL::branch) {
+    if (I->getOpcode() == HSAIL::br_inst) {
+      int Src0Idx = HSAIL::getNamedOperandIdx(HSAIL::br_inst, HSAIL::OpName::src0);
       UnCondBrIter = I;
 
       Cond.clear();
       FBB = 0;
 
       if (!AllowModify) {
-        TBB = I->getOperand(0).getMBB();
+        TBB = I->getOperand(Src0Idx).getMBB();
         continue;
       }
 
@@ -322,7 +323,7 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
         std::next(I)->eraseFromParent();
 
       // Delete the JMP if it's equivalent to a fall-through.
-      if (MBB.isLayoutSuccessor(I->getOperand(0).getMBB())) {
+      if (MBB.isLayoutSuccessor(I->getOperand(Src0Idx).getMBB())) {
         TBB = 0;
         I->eraseFromParent();
         I = MBB.end();
@@ -331,22 +332,24 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
       }
 
       // TBB is used to indicate the unconditional destination.
-      TBB = I->getOperand(0).getMBB();
+      TBB = I->getOperand(Src0Idx).getMBB();
       continue;
     }
 
     // Handle conditional branches.
 
     // First conditional branch
-    if (Cond.empty())
-    {
+    if (Cond.empty()) {
+      int Src0Idx = HSAIL::getNamedOperandIdx(HSAIL::cbr_inst, HSAIL::OpName::src0);
+      int Src1Idx = HSAIL::getNamedOperandIdx(HSAIL::cbr_inst, HSAIL::OpName::src1);
+
       FBB = TBB;
-      TBB = I->getOperand(1).getMBB();
+      TBB = I->getOperand(Src1Idx).getMBB();
 
       // Insert condition as pair - (register, reverse flag)
       // Or in case if there is dependencies
       // (register, COND_REVERSE_DEPENDANT, free reg num, reverse flag)
-      Cond.push_back(I->getOperand(0));
+      Cond.push_back(I->getOperand(Src0Idx));
 
       if (DisableCondReversion)
       {
@@ -355,7 +358,7 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
       }
 
       // Determine condition dependencies
-      unsigned reg = I->getOperand(0).getReg();
+      unsigned reg = I->getOperand(Src0Idx).getReg();
       bool can_reverse = false;
       bool is_def_before_use = IsDefBeforeUse(MBB, reg, MRI, can_reverse);
       if (can_reverse)
@@ -618,7 +621,10 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
   if (Cond.empty()) {
     // Unconditional branch?
     assert(!FBB && "Unconditional branch with multiple successors!");
-    BuildMI(&MBB, DL, get(HSAIL::branch)).addMBB(TBB);
+    BuildMI(&MBB, DL, get(HSAIL::br_inst))
+      .addImm(Brig::BRIG_WIDTH_ALL)
+      .addMBB(TBB)
+      .addImm(Brig::BRIG_TYPE_NONE);
     return 1;
   }
 
@@ -667,13 +673,21 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
 
   unsigned Count = 0;
 
-  BuildMI(&MBB, DL, get(HSAIL::branch_cond)).addReg(cond_reg).addMBB(TBB);
-  
+  BuildMI(&MBB, DL, get(HSAIL::cbr_inst))
+    .addImm(Brig::BRIG_WIDTH_1)
+    .addReg(cond_reg)
+    .addMBB(TBB)
+    .addImm(Brig::BRIG_TYPE_B1);
+
   ++Count;
 
   if (FBB) {
     // Two-way Conditional branch. Insert the second branch.
-    BuildMI(&MBB, DL, get(HSAIL::branch)).addMBB(FBB);
+    BuildMI(&MBB, DL, get(HSAIL::br_inst))
+      .addImm(Brig::BRIG_WIDTH_ALL)
+      .addMBB(FBB)
+      .addImm(Brig::BRIG_TYPE_NONE);
+
     ++Count;
   }
 
@@ -690,9 +704,9 @@ HSAILInstrInfo::RemoveBranch(MachineBasicBlock &MBB) const
     --I;
     if (I->isDebugValue())
       continue;
-    
-    if (I->getOpcode() != HSAIL::branch &&
-        I->getOpcode() != HSAIL::branch_cond && 
+
+    if (I->getOpcode() != HSAIL::br_inst &&
+        I->getOpcode() != HSAIL::cbr_inst &&
         I->getOpcode() != HSAIL::branch_ind)
       break;
 

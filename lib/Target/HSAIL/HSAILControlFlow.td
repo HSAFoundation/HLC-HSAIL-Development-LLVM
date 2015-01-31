@@ -29,17 +29,30 @@ let isTerminator = 1, isReturn = 1, isBarrier = 1, hasCtrlDep = 1,
 ////////////////////////////////////////////////////////////////////////////////
 // branch (unconditional and conditional)
 
+
 let isBranch = 1, isTerminator = 1, hasCtrlDep = 1 in {
   let isBarrier = 1 in {
-    def branch : HSAILInst<(outs), (ins target:$label),
-             "br\t$label",
-             [(br bb:$label)]>;
+    def br_inst : HSAILInstBr_1Op_NoRet<"br", BrigOpcode.BR>;
   }
-  def branch_cond : HSAILInst<(outs), (ins CR:$src, target:$label),
-                "cbr_b1\t$src, $label",
-                [(brcond (i1 CR:$src), (bb:$label))]>;
+
+  def cbr_inst : HSAILInstBr_2Op_NoRet<"cbr", BrigOpcode.CBR>;
+
   def branch_ind : HSAILInst<(outs), (ins GPR32:$label),
                 "br\t$label ",
         [(brind GPR32:$label)]>;
 }
 
+def : Pat<
+  (br bb:$src0),
+  (br_inst BrigWidth._ALL, bb:$src0, BrigTypeX.NONE)
+>;
+
+// def : Pat<
+//   (brind i32:$src0),
+//   (br_inst BrigWidth._ALL, $src0, BrigTypeX.NONE)
+// >;
+
+def : Pat<
+  (brcond i1:$src0, bb:$src1),
+  (cbr_inst BrigWidth._1, $src0, bb:$src1, BrigTypeX.B1)
+>;

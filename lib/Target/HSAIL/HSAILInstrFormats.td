@@ -287,6 +287,20 @@ class HSAILInstBr_1Op<string opName, bits<16> BrigVal> :
 >;
 
 
+class HSAILInstBr_1Op_NoRet<string opName, bits<16> BrigVal> :
+  HSAILInstBr<BrigVal,
+              (outs),
+              (ins BrigWidth:$width, unknown:$src0, BrigTypeX:$TypeLength),
+  opName#"$width$TypeLength\t$src0"
+>;
+
+class HSAILInstBr_2Op_NoRet<string opName, bits<16> BrigVal> :
+  HSAILInstBr<BrigVal,
+              (outs),
+              (ins BrigWidth:$width, unknown:$src0, unknown:$src1, BrigTypeX:$TypeLength),
+  opName#"$width$TypeLength\t$src0, $src1"
+>;
+
 // InstSeg
 class HSAILInstSeg<bits<16> BrigVal,
                   dag outs, dag ins, string asmstr> :
@@ -622,9 +636,9 @@ class InstBr_0Op_NoRet_Pat<HSAILInst inst,
 >;
 
 class InstBr_0Op_Pat<HSAILInst inst,
-                        SDPatternOperator node,
-                        int bt,
-                        int width = BrigWidth._1> : Pat <
+                     SDPatternOperator node,
+                     int bt,
+                     int width = BrigWidth._1> : Pat <
   (vt (node)),
   (inst width, bt)
 >;

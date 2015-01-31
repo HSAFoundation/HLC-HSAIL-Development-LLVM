@@ -802,6 +802,10 @@ static Brig::BrigOpcode getInstLaneBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstBrBrigOpcode(unsigned Opc) {
   switch (Opc) {
+  case HSAIL::br_inst:
+    return Brig::BRIG_OPCODE_BR;
+  case HSAIL::cbr_inst:
+    return Brig::BRIG_OPCODE_CBR;
   case HSAIL::barrier_inst:
     return Brig::BRIG_OPCODE_BARRIER;
   case HSAIL::wavebarrier_inst:
@@ -2150,6 +2154,14 @@ HSAIL_ASM::InstBr BRIGAsmPrinter::BrigEmitBrInst(const MachineInstr &MI,
   int DestIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest);
   if (DestIdx != -1)
     BrigEmitOperand(&MI, DestIdx, inst);
+
+  int Src0Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0);
+  if (Src0Idx != -1)
+    BrigEmitOperand(&MI, Src0Idx, inst);
+
+  int Src1Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src1);
+  if (Src1Idx != -1)
+    BrigEmitOperand(&MI, Src1Idx, inst);
 
   return inst;
 }
