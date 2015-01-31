@@ -286,6 +286,22 @@ class HSAILInstBr_1Op<string opName, bits<16> BrigVal> :
   opName#"$width$TypeLength\t$dest, $src0"
 >;
 
+
+// InstSeg
+class HSAILInstSeg<bits<16> BrigVal,
+                  dag outs, dag ins, string asmstr> :
+  HSAILInst<outs, ins, asmstr, [], BrigVal> {
+  let hasSideEffects = 0;
+  let InstSeg = 1;
+}
+
+class HSAILInstSeg_0Op<string opName, bits<16> BrigVal> :
+  HSAILInstSeg<BrigVal,
+               (outs unknown:$dest),
+               (ins BrigSegment:$segment, BrigTypeX:$TypeLength),
+  opName#"$segment$TypeLength\t$dest"
+>;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Basic instruction patterns
 ////////////////////////////////////////////////////////////////////////////////
@@ -589,6 +605,21 @@ class InstBr_0Op_Pat<HSAILInst inst,
   (vt (node)),
   (inst width, bt)
 >;
+
+////////////////////////////////////////////////////////////////////////////////
+// Seg instruction patterns
+////////////////////////////////////////////////////////////////////////////////
+
+
+class InstSeg_0Op_Pat<HSAILInst inst,
+                      SDPatternOperator node,
+                      ValueType vt,
+                      int bt,
+                      int segment> : Pat <
+  (vt (node)),
+  (inst segment, bt)
+>;
+
 
 let TargetPrefix = "HSAIL", isTarget = 1 in {
     // Read image intrinsic classes

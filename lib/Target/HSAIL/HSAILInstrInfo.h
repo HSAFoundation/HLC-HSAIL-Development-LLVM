@@ -862,6 +862,10 @@ public:
     return get(Opcode).TSFlags & HSAILInstrFlags::InstBr;
   }
 
+  bool isInstSeg(uint16_t Opcode) const {
+    return get(Opcode).TSFlags & HSAILInstrFlags::InstSeg;
+  }
+
 private:
   RegScavenger *RS;
 

@@ -628,6 +628,18 @@ def BrigSegment : Operand<i32> {
   int EXTSPACE0 = 9;
 }
 
+def AddressSpace : Operand<i32> {
+  int PRIVATE = 0;
+  int GLOBAL = 1;
+  int READONLY = 2;
+  int GROUP = 3;
+  int FLAT = 4;
+  int REGION = 5;
+  int SPILL = 6;
+  int KERNARG = 7;
+  int ARG = 8;
+}
+
 def BrigTypeX : Operand<i32> {
   let PrintMethod = "printBrigTypeX";
   int NONE = 0;

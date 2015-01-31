@@ -809,6 +809,15 @@ static Brig::BrigOpcode getInstBrBrigOpcode(unsigned Opc) {
   }
 }
 
+static Brig::BrigOpcode getInstSegBrigOpcode(unsigned Opc) {
+  switch (Opc) {
+  case HSAIL::nullptr_inst:
+    return Brig::BRIG_OPCODE_NULLPTR;
+  default:
+    llvm_unreachable("unhandled opcode");
+  }
+}
+
 HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   // autoCodeEmitter will emit required amount of bytes in corresponding MCSection
   autoCodeEmitter ace(&OutStreamer, &brigantine);
@@ -834,6 +843,9 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
   if (TII->isInstBr(Opc))
     return BrigEmitBrInst(*II, getInstBrBrigOpcode(Opc));
+
+  if (TII->isInstSeg(Opc))
+    return BrigEmitSegInst(*II, getInstSegBrigOpcode(Opc));
 
   if (HSAIL::isAtomicOp(II)) {
     bool hasRet = HSAIL::isRetAtomicOp(II);
@@ -2136,6 +2148,23 @@ HSAIL_ASM::InstBr BRIGAsmPrinter::BrigEmitBrInst(const MachineInstr &MI,
 
   inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
   inst.width() = TII->getNamedOperand(MI, HSAIL::OpName::width)->getImm();
+
+  int DestIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest);
+  if (DestIdx != -1)
+    BrigEmitOperand(&MI, DestIdx, inst);
+
+  return inst;
+}
+
+HSAIL_ASM::InstSeg BRIGAsmPrinter::BrigEmitSegInst(const MachineInstr &MI,
+                                                  unsigned BrigOpc) {
+  HSAIL_ASM::InstSeg inst = brigantine.addInst<HSAIL_ASM::InstSeg>(BrigOpc);
+  unsigned Opc = MI.getOpcode();
+
+  inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
+
+  unsigned Segment = TII->getNamedOperand(MI, HSAIL::OpName::segment)->getImm();
+  inst.segment() = getHSAILSegment(Segment);
 
   int DestIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest);
   if (DestIdx != -1)

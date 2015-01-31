@@ -94,36 +94,27 @@ def : ActiveLaneCountPat<activelanecount_inst, HSAILactivelanecount, i32, BrigTy
   def activelanemask_v4_width_b64_b1 : CrossLaneV4<"activelanemask_v4_width(WAVESIZE)_b64_b1">;
 
 let isAsCheapAsAMove = 1, isReMaterializable = 1 in {
-  def nullptr_flat_u64  : HSAILInst<(outs GPR64:$dest), (ins),
-            "nullptr_u64\t $dest",
-            [(set (i64 GPR64:$dest), (int_HSAIL_nullptr_flat))]>, Requires<[In64BitMode]>;
-  def nullptr_flat_u32  : HSAILInst<(outs GPR32:$dest), (ins),
-            "nullptr_u32\t $dest",
-            [(set (i32 GPR32:$dest), (int_HSAIL_nullptr_flat))]>, Requires<[In32BitMode]>;
-  def nullptr_global_u64  : HSAILInst<(outs GPR64:$dest), (ins),
-            "nullptr_global_u64\t $dest",
-            [(set (i64 GPR64:$dest), (int_HSAIL_nullptr_global))]>, Requires<[In64BitMode]>;
-  def nullptr_global_u32  : HSAILInst<(outs GPR32:$dest), (ins),
-            "nullptr_global_u32\t $dest",
-            [(set (i32 GPR32:$dest), (int_HSAIL_nullptr_global))]>, Requires<[In32BitMode]>;
-  def nullptr_group_u32  : HSAILInst<(outs GPR32:$dest), (ins),
-            "nullptr_group_u32\t $dest",
-            [(set (i32 GPR32:$dest), (int_HSAIL_nullptr_group))]>;
-  def nullptr_private_u32  : HSAILInst<(outs GPR32:$dest), (ins),
-            "nullptr_private_u32\t $dest",
-            [(set (i32 GPR32:$dest), (int_HSAIL_nullptr_private))]>;
-  def nullptr_readonly_u64  : HSAILInst<(outs GPR64:$dest), (ins),
-            "nullptr_readonly_u64\t $dest",
-            [(set (i64 GPR64:$dest), (int_HSAIL_nullptr_readonly))]>, Requires<[In64BitMode]>;
-  def nullptr_readonly_u32  : HSAILInst<(outs GPR32:$dest), (ins),
-            "nullptr_readonly_u32\t $dest",
-            [(set (i32 GPR32:$dest), (int_HSAIL_nullptr_readonly))]>, Requires<[In32BitMode]>;
-  def nullptr_kernarg_u64   : HSAILInst<(outs GPR64:$dest), (ins),
-            "nullptr_kernarg_u64\t $dest",
-            [(set (i64 GPR64:$dest), (int_HSAIL_nullptr_kernarg))]>, Requires<[In64BitMode]>;
-  def nullptr_kernarg_u32   : HSAILInst<(outs GPR32:$dest), (ins),
-            "nullptr_kernarg_u32\t $dest",
-            [(set (i32 GPR32:$dest), (int_HSAIL_nullptr_kernarg))]>, Requires<[In32BitMode]>;
+  def nullptr_inst : HSAILInstSeg_0Op<"nullptr", BrigOpcode.NULLPTR>;
+}
+
+def : InstSeg_0Op_Pat<nullptr_inst, int_HSAIL_nullptr_group, i32, BrigTypeX.U32, AddressSpace.GROUP>;
+def : InstSeg_0Op_Pat<nullptr_inst, int_HSAIL_nullptr_private, i32, BrigTypeX.U32, AddressSpace.PRIVATE>;
+
+let Predicates = [In64BitMode] in {
+  def : InstSeg_0Op_Pat<nullptr_inst, int_HSAIL_nullptr_global, i64, BrigTypeX.U64, AddressSpace.GLOBAL>;
+  def : InstSeg_0Op_Pat<nullptr_inst, int_HSAIL_nullptr_flat, i64, BrigTypeX.U64, AddressSpace.FLAT>;
+  def : InstSeg_0Op_Pat<nullptr_inst, int_HSAIL_nullptr_readonly, i64, BrigTypeX.U64, AddressSpace.READONLY>;
+  def : InstSeg_0Op_Pat<nullptr_inst, int_HSAIL_nullptr_kernarg, i64, BrigTypeX.U64, AddressSpace.KERNARG>;
+}
+
+let Predicates = [In32BitMode] in {
+  def : InstSeg_0Op_Pat<nullptr_inst, int_HSAIL_nullptr_global, i32, BrigTypeX.U32, AddressSpace.GLOBAL>;
+  def : InstSeg_0Op_Pat<nullptr_inst, int_HSAIL_nullptr_flat, i32, BrigTypeX.U32, AddressSpace.FLAT>;
+  def : InstSeg_0Op_Pat<nullptr_inst, int_HSAIL_nullptr_readonly, i32, BrigTypeX.U32, AddressSpace.READONLY>;
+  def : InstSeg_0Op_Pat<nullptr_inst, int_HSAIL_nullptr_kernarg, i32, BrigTypeX.U32, AddressSpace.KERNARG>;
+}
+
+let isAsCheapAsAMove = 1, isReMaterializable = 1 in {
   def kernargbaseptr_u64 : HSAILInst<(outs GPR64:$dest), (ins ),
             "kernargbaseptr_u64 \t $dest", []>;
   def kernargbaseptr_u32 : HSAILInst<(outs GPR32:$dest), (ins ),
