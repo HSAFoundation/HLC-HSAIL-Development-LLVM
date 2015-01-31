@@ -757,6 +757,14 @@ static Brig::BrigOpcode getInstModBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_MAX;
   case HSAIL::copysign_inst:
     return Brig::BRIG_OPCODE_COPYSIGN;
+  case HSAIL::rint_inst:
+    return Brig::BRIG_OPCODE_RINT;
+  case HSAIL::floor_inst:
+    return Brig::BRIG_OPCODE_FLOOR;
+  case HSAIL::ceil_inst:
+    return Brig::BRIG_OPCODE_CEIL;
+  case HSAIL::trunc_inst:
+    return Brig::BRIG_OPCODE_TRUNC;
   default:
     llvm_unreachable("unhandled opcode");
   }
@@ -945,14 +953,6 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
                     cvt);
     return cvt;
   }
-  case HSAIL::rint:
-    return BrigEmitInstMod(*II, Brig::BRIG_OPCODE_RINT);
-  case HSAIL::floor:
-    return BrigEmitInstMod(*II, Brig::BRIG_OPCODE_FLOOR);
-  case HSAIL::ceil:
-    return BrigEmitInstMod(*II, Brig::BRIG_OPCODE_CEIL);
-  case HSAIL::trunc_hsail:
-    return BrigEmitInstMod(*II, Brig::BRIG_OPCODE_TRUNC);
   case HSAIL::ret:
     return brigantine.addInst<HSAIL_ASM::InstBasic>(Brig::BRIG_OPCODE_RET,Brig::BRIG_TYPE_NONE);
 

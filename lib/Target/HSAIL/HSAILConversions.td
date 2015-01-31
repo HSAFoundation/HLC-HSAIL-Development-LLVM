@@ -22,39 +22,12 @@ class CvtSInt32RoundPat<ValueType srcvt,
   (cvt ftz, roundmode, BrigTypeX.S32, srcbt, $src)
 >;
 
-class UnaryFTZInst<string opName> : HSAILInst<
-    (outs unknown:$dest),
-    (ins ftz:$ftz, BrigRound:$round, BrigTypeX:$TypeLength, unknown:$src0),
-    opName#"$ftz$round$TypeLength\t$dest, $src0",
-   []
->;
-
-def rint : UnaryFTZInst<"rint"> {
-  let isConv = 1;
+let isConv = 1 in {
+  def rint_inst : HSAILInstMod_1Op<"rint", BrigOpcode.RINT>;
+  def floor_inst : HSAILInstMod_1Op<"floor", BrigOpcode.FLOOR>;
+  def ceil_inst : HSAILInstMod_1Op<"ceil", BrigOpcode.CEIL>;
+  def trunc_inst : HSAILInstMod_1Op<"trunc", BrigOpcode.TRUNC>;
 }
-
-def floor : UnaryFTZInst<"floor"> {
-  let isConv = 1;
-}
-
-def ceil : UnaryFTZInst<"ceil"> {
-  let isConv = 1;
-}
-
-// Need to call something different because trunc is already a
-// standard SDNode name.
-def trunc_hsail : UnaryFTZInst<"trunc"> {
-  let isConv = 1;
-}
-
-class UnaryFTZPat<Instruction inst,
-                  ValueType vt,
-                  int bt,
-                  SDPatternOperator node,
-                  int ftz = 0> : Pat <
-  (vt (node vt:$src)),
-  (inst ftz, BrigRound.NONE, bt, $src)
->;
 
 
 def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.S64, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
@@ -343,14 +316,14 @@ def : CvtPat<f32, f64, BrigTypeX.F32, BrigTypeX.F64,
   int_HSAIL_cvt_f32_zero_f64, BrigRound.FLOAT_ZERO, 1
 >;
 
-def : UnaryFTZPat<rint, f32, BrigTypeX.F32, frint, 1>;
-def : UnaryFTZPat<rint, f64, BrigTypeX.F64, frint>;
+def : InstMod_1Op_Pat<rint_inst, frint, f32, BrigTypeX.F32, BrigRound.NONE, 1>;
+def : InstMod_1Op_Pat<rint_inst, frint, f64, BrigTypeX.F64>;
 
-def : UnaryFTZPat<floor, f32, BrigTypeX.F32, ffloor, 1>;
-def : UnaryFTZPat<floor, f64, BrigTypeX.F64, ffloor>;
+def : InstMod_1Op_Pat<floor_inst, ffloor, f32, BrigTypeX.F32, BrigRound.NONE, 1>;
+def : InstMod_1Op_Pat<floor_inst, ffloor, f64, BrigTypeX.F64>;
 
-def : UnaryFTZPat<ceil, f32, BrigTypeX.F32, fceil, 1>;
-def : UnaryFTZPat<ceil, f64, BrigTypeX.F64, fceil>;
+def : InstMod_1Op_Pat<ceil_inst, fceil, f32, BrigTypeX.F32, BrigRound.NONE, 1>;
+def : InstMod_1Op_Pat<ceil_inst, fceil, f64, BrigTypeX.F64>;
 
-def : UnaryFTZPat<trunc_hsail, f32, BrigTypeX.F32, ftrunc, 1>;
-def : UnaryFTZPat<trunc_hsail, f64, BrigTypeX.F64, ftrunc>;
+def : InstMod_1Op_Pat<trunc_inst, ftrunc, f32, BrigTypeX.F32, BrigRound.NONE, 1>;
+def : InstMod_1Op_Pat<trunc_inst, ftrunc, f64, BrigTypeX.F64>;
