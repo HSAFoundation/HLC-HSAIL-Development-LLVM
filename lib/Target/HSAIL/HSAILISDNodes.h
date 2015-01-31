@@ -34,6 +34,7 @@ namespace llvm {
       LDA_READONLY,
       ACTIVELANESHUFFLE,
       ACTIVELANEID,
+      ACTIVELANECOUNT,
       INTRINSIC
     };
   }

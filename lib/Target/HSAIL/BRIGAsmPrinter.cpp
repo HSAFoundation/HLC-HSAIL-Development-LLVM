@@ -789,6 +789,8 @@ static Brig::BrigOpcode getInstLaneBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_ACTIVELANESHUFFLE;
   case HSAIL::activelaneid_inst:
     return Brig::BRIG_OPCODE_ACTIVELANEID;
+  case HSAIL::activelanecount_inst:
+    return Brig::BRIG_OPCODE_ACTIVELANECOUNT;
   default:
     llvm_unreachable("unhandled opcode");
   }

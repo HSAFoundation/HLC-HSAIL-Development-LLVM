@@ -17,6 +17,10 @@ def HSAILActiveLaneIdOp : SDTypeProfile<1, 1,
   [SDTCisInt<0>, SDTCisInt<1>]
 >;
 
+def HSAILActiveLaneCountOp : SDTypeProfile<1, 2,
+  [SDTCisInt<0>, SDTCisInt<1>, SDTCisInt<2>]
+>;
+
 //===----------------------------------------------------------------------===//
 // Call/Return DAG Nodes
 //===----------------------------------------------------------------------===//
@@ -92,4 +96,8 @@ def HSAILactivelaneshuffle : SDNode<"HSAILISD::ACTIVELANESHUFFLE",
 
 def HSAILactivelaneid : SDNode<"HSAILISD::ACTIVELANEID",
   HSAILActiveLaneIdOp, [SDNPHasChain, SDNPSideEffect]
+>;
+
+def HSAILactivelanecount : SDNode<"HSAILISD::ACTIVELANECOUNT",
+  HSAILActiveLaneCountOp, [SDNPHasChain, SDNPSideEffect]
 >;

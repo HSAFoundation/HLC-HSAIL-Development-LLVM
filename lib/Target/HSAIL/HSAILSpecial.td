@@ -76,6 +76,9 @@ def : ActiveLaneShufflePat<activelaneshuffle_inst,
 def activelaneid_inst : HSAILInstLane_0Op<"activelaneid", BrigOpcode.ACTIVELANEID>;
 def : ActiveLaneIdPat<activelaneid_inst, HSAILactivelaneid, i32, BrigTypeX.U32>;
 
+def activelanecount_inst : HSAILInstLane_1Op<"activelanecount", BrigOpcode.ACTIVELANECOUNT>;
+def : ActiveLaneCountPat<activelanecount_inst, HSAILactivelanecount, i32, BrigTypeX.U32>;
+
 
 // Cross-Lane Operations
   class CrossLaneV4<string asm>
@@ -86,29 +89,6 @@ def : ActiveLaneIdPat<activelaneid_inst, HSAILactivelaneid, i32, BrigTypeX.U32>;
 							   "$src1"), []> {
     let isCrossLaneInst = 1;
   }
-
-  def activelanecount_u32_b1 :   HSAILInst<(outs GPR32:$dest), (ins CR:$src),
-                    "activelanecount_u32_b1\t$dest, $src",
-                    [(set (i32 GPR32:$dest),
-                          (int_HSAIL_activelanecount_u32_b1 (i1 CR:$src)))]>;
-
-  def activelanecount_u32_b1_i : HSAILInst<(outs GPR32:$dest), (ins i1imm:$src),
-                    "activelanecount_u32_b1\t$dest, $src",
-                    [(set (i32 GPR32:$dest),
-                          (int_HSAIL_activelanecount_u32_b1 (i1 imm:$src)))]>;
-
-    def activelanecount_width_u32_b1 : HSAILInst<(outs GPR32:$dest),
-                                                 (ins CR:$src),
-                      "activelanecount_width(WAVESIZE)_u32_b1\t$dest, $src",
-                      [(set (i32 GPR32:$dest),
-                            (int_HSAIL_activelanecount_width_u32_b1
-                                (i1 CR:$src)))]>;
-    def activelanecount_width_u32_b1_i : HSAILInst<(outs GPR32:$dest),
-                                                   (ins i1imm:$src),
-                      "activelanecount_width(WAVESIZE)_u32_b1\t$dest, $src",
-                      [(set (i32 GPR32:$dest),
-                            (int_HSAIL_activelanecount_width_u32_b1
-                                (i1 imm:$src)))]>;
 
   def activelanemask_v4_b64_b1 : CrossLaneV4<"activelanemask_v4_b64_b1">;
   def activelanemask_v4_width_b64_b1 : CrossLaneV4<"activelanemask_v4_width(WAVESIZE)_b64_b1">;

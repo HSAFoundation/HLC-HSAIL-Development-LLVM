@@ -1206,6 +1206,8 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::ACTIVELANESHUFFLE";
   case HSAILISD::ACTIVELANEID:
     return "HSAILISD::ACTIVELANEID";
+  case HSAILISD::ACTIVELANECOUNT:
+    return "HSAILISD::ACTIVELANECOUNT";
   }
 }
 
@@ -1595,6 +1597,30 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     };
 
     return DAG.getNode(HSAILISD::ACTIVELANEID, SL, VTs, Ops);
+  }
+
+  case HSAILIntrinsic::HSAIL_activelanecount_u32_b1: {
+    SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
+
+    const SDValue Ops[] = {
+      Op.getOperand(0), // Chain
+      DAG.getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32), // width
+      Op.getOperand(2)
+    };
+
+    return DAG.getNode(HSAILISD::ACTIVELANECOUNT, SL, VTs, Ops);
+  }
+
+  case HSAILIntrinsic::HSAIL_activelanecount_width_u32_b1: {
+    SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
+
+    const SDValue Ops[] = {
+      Op.getOperand(0), // Chain
+      DAG.getTargetConstant(Brig::BRIG_WIDTH_WAVESIZE, MVT::i32), // width
+      Op.getOperand(2)
+    };
+
+    return DAG.getNode(HSAILISD::ACTIVELANECOUNT, SL, VTs, Ops);
   }
 
   default:

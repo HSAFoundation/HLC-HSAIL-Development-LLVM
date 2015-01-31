@@ -239,6 +239,14 @@ class HSAILInstLane_0Op<string opName, bits<16> BrigVal> :
   opName#"$width$TypeLength$sourceType\t$dest"
 >;
 
+class HSAILInstLane_1Op<string opName, bits<16> BrigVal> :
+  HSAILInstLane<
+    BrigVal,
+    (outs unknown:$dest),
+    (ins BrigWidth:$width, unknown:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+  opName#"$width$TypeLength$sourceType\t$dest, $src0"
+>;
+
 class HSAILInstLane_ActiveLaneShuffle<string opName, bits<16> BrigVal> :
   HSAILInstLane<
     BrigVal,
@@ -545,6 +553,14 @@ class ActiveLaneIdPat<Instruction inst,
                       int bt> : Pat<
   (vt (node (i32 timm:$width))),
   (inst $width, bt, BrigTypeX.NONE)
+>;
+
+class ActiveLaneCountPat<Instruction inst,
+                      SDPatternOperator node,
+                      ValueType vt,
+                      int bt> : Pat<
+  (vt (node (i32 timm:$width), (i1 (GPROrImm i1:$src0)))),
+  (inst $width, $src0, bt, BrigTypeX.B1)
 >;
 
 ////////////////////////////////////////////////////////////////////////////////
