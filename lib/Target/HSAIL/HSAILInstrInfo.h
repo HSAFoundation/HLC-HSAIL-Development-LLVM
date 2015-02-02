@@ -781,25 +781,6 @@ public:
   virtual bool
   isSafeToMoveRegClassDefs(const TargetRegisterClass *RC) const;
 
-  /// AnalyzeCompare - For a comparison instruction, return the source register
-  /// in SrcReg and the value it compares against in CmpValue. Return true if
-  /// the comparison instruction can be analyzed.
-  virtual bool
-  AnalyzeCompare(const MachineInstr *MI,
-                 unsigned &SrcReg,
-                 int &Mask,
-                 int &Value) const;
-
-  /// OptimizeCompareInstr - See if the comparison instruction can be converted
-  /// into something more efficient. E.g., on ARM most instructions can set the
-  /// flags register, obviating the need for a separate CMP.
-  virtual bool
-  OptimizeCompareInstr(MachineInstr *CmpInstr,
-                       unsigned SrcReg,
-                       int Mask,
-                       int Value,
-                       const MachineRegisterInfo *MRI) const;
-
   bool
   copyRegToReg(MachineBasicBlock &MBB,
                MachineBasicBlock::iterator I,
