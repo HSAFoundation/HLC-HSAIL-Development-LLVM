@@ -181,7 +181,6 @@ define void @f32_uno(i32 addrspace(1)* %out, float %a, float %b) {
 ; FUNC-LABEL: {{^}}prog function &i32_eq
 ; HSAIL: cmp_eq_b1_s32 {{\$c[0-9]+}}, {{\$s[0-9]+}}, {{\$s[0-9]+}};
 ; HSAIL: cmov_b32 {{\$s[0-9]+}}, {{\$c[0-9]+}}, 4294967295, 0;
-
 define void @i32_eq(i32 addrspace(1)* %out, i32 %a, i32 %b) {
   %tmp0 = icmp eq i32 %a, %b
   %tmp1 = sext i1 %tmp0 to i32
@@ -274,6 +273,86 @@ define void @i32_slt(i32 addrspace(1)* %out, i32 %a, i32 %b) {
 ; HSAIL: cmov_b32 {{\$s[0-9]+}}, {{\$c[0-9]+}}, 4294967295, 0;
 define void @i32_sle(i32 addrspace(1)* %out, i32 %a, i32 %b) {
   %tmp0 = icmp sle i32 %a, %b
+  %tmp1 = sext i1 %tmp0 to i32
+  store i32 %tmp1, i32 addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &i1_eq(
+define void @i1_eq(i32 addrspace(1)* %out, i1 %a, i1 %b) {
+  %tmp0 = icmp eq i1 %a, %b
+  %tmp1 = sext i1 %tmp0 to i32
+  store i32 %tmp1, i32 addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &i1_ne(
+define void @i1_ne(i32 addrspace(1)* %out, i1 %a, i1 %b) {
+  %tmp0 = icmp ne i1 %a, %b
+  %tmp1 = sext i1 %tmp0 to i32
+  store i32 %tmp1, i32 addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &i1_ugt(
+define void @i1_ugt(i32 addrspace(1)* %out, i1 %a, i1 %b) {
+  %tmp0 = icmp ugt i1 %a, %b
+  %tmp1 = sext i1 %tmp0 to i32
+  store i32 %tmp1, i32 addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &i1_uge(
+define void @i1_uge(i32 addrspace(1)* %out, i1 %a, i1 %b) {
+  %tmp0 = icmp uge i1 %a, %b
+  %tmp1 = sext i1 %tmp0 to i32
+  store i32 %tmp1, i32 addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &i1_ult(
+define void @i1_ult(i32 addrspace(1)* %out, i1 %a, i1 %b) {
+  %tmp0 = icmp ult i1 %a, %b
+  %tmp1 = sext i1 %tmp0 to i32
+  store i32 %tmp1, i32 addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &i1_ule(
+define void @i1_ule(i32 addrspace(1)* %out, i1 %a, i1 %b) {
+  %tmp0 = icmp ule i1 %a, %b
+  %tmp1 = sext i1 %tmp0 to i32
+  store i32 %tmp1, i32 addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &i1_sgt(
+define void @i1_sgt(i32 addrspace(1)* %out, i1 %a, i1 %b) {
+  %tmp0 = icmp sgt i1 %a, %b
+  %tmp1 = sext i1 %tmp0 to i32
+  store i32 %tmp1, i32 addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &i1_sge(
+define void @i1_sge(i32 addrspace(1)* %out, i1 %a, i1 %b) {
+  %tmp0 = icmp sge i1 %a, %b
+  %tmp1 = sext i1 %tmp0 to i32
+  store i32 %tmp1, i32 addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &i1_slt(
+define void @i1_slt(i32 addrspace(1)* %out, i1 %a, i1 %b) {
+  %tmp0 = icmp slt i1 %a, %b
+  %tmp1 = sext i1 %tmp0 to i32
+  store i32 %tmp1, i32 addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &i1_sle(
+define void @i1_sle(i32 addrspace(1)* %out, i1 %a, i1 %b) {
+  %tmp0 = icmp sle i1 %a, %b
   %tmp1 = sext i1 %tmp0 to i32
   store i32 %tmp1, i32 addrspace(1)* %out
   ret void
