@@ -85,7 +85,7 @@ define void @struct_private_byval_arg(%struct.i32pair* sret %test_byval_arg, %st
 ; HSAIL: prog function &return_arg_array_i32(arg_u32 %return_arg_array_i32[4])(arg_u32 %x[4])
 ; HSAIL-DAG: st_arg_align(4)_u32 {{\$s[0-9]+}}, [%return_arg_array_i32];
 ; HSAIL-DAG: st_arg_align(4)_u32 {{\$s[0-9]+}}, [%return_arg_array_i32][4];
-; HSAIL-DAG: st_arg_align(8)_u32 {{\$s[0-9]+}}, [%return_arg_array_i32][8];
+; HSAIL-DAG: st_arg_align(4)_u32 {{\$s[0-9]+}}, [%return_arg_array_i32][8];
 ; HSAIL-DAG: st_arg_align(4)_u32 {{\$s[0-9]+}}, [%return_arg_array_i32][12];
 ; HSAIL: ret;
 define [4 x i32] @return_arg_array_i32([4 x i32] %x) {

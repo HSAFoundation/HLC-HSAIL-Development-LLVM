@@ -535,12 +535,15 @@ HSAILTargetLowering::IsDesirableToPromoteOp(SDValue Op, EVT &PVT) const
 
 /// n-th element of a vector has different alignment than a base.
 /// This function returns alignment for n-th alement.
+
+// FIXME: It is probably not correct to use this.
 static unsigned getElementAlignment(const DataLayout *DL, Type *Ty, unsigned n) {
+  if (Ty->isArrayTy()) // FIXME
+    return getElementAlignment(DL, Ty->getArrayElementType(), 0);
+
   unsigned Alignment = DL->getABITypeAlignment(Ty);
   if (n && (Alignment > 1)) {
     Type* EltTy = Ty->getScalarType();
-    if (Ty->isArrayTy())
-      EltTy = Ty->getArrayElementType();
     unsigned ffs = 0;
     while (((n >> ffs) & 1) == 0) ffs++;
     Alignment = (DL->getABITypeAlignment(EltTy) * (1 << ffs)) &
