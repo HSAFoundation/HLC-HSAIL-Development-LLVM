@@ -65,7 +65,6 @@ private:
   void printBrigMemoryOrder(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
   void printBrigMemoryScope(const MCInst *MI, unsigned OpNo, raw_ostream &O);
-  void printBrigOpcode(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printBrigPack(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printBrigProfile(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printBrigRound(const MCInst *MI, unsigned OpNo, raw_ostream &O);
