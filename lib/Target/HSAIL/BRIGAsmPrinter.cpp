@@ -1755,8 +1755,6 @@ void BRIGAsmPrinter::BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSA
                                        brigantine.getMachineModel(), brigantine.getProfile());
 
   switch (MO.getType()) {
-  default:
-    printf("<unknown operand type>"); break;
   case MachineOperand::MO_Register:
     m_opndList.push_back(getBrigReg(MO));
     break;
@@ -1785,6 +1783,8 @@ void BRIGAsmPrinter::BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSA
     m_opndList.push_back(brigantine.createLabelRef(sLabel));
     break;
   }
+  default:
+    llvm_unreachable("unhandled operand type");
   }
 }
 
