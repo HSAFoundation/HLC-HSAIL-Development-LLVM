@@ -859,6 +859,10 @@ public:
     return get(Opcode).TSFlags & HSAILInstrFlags::InstMem;
   }
 
+  bool isInstCvt(uint16_t Opcode) const {
+    return get(Opcode).TSFlags & HSAILInstrFlags::InstCvt;
+  }
+
 private:
   RegScavenger *RS;
 

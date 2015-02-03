@@ -850,6 +850,15 @@ static Brig::BrigOpcode getInstCmpBrigOpcode(unsigned Opc) {
   }
 }
 
+static Brig::BrigOpcode getInstCvtBrigOpcode(unsigned Opc) {
+  switch (Opc) {
+  case HSAIL::cvt:
+    return Brig::BRIG_OPCODE_CVT;
+  default:
+    llvm_unreachable("unhandled opcode");
+  }
+}
+
 static Brig::BrigOpcode getInstMemBrigOpcode(unsigned Opc) {
   switch (Opc) {
   case HSAIL::ld_v1:
@@ -893,6 +902,9 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
   if (TII->isInstMem(Opc))
     return BrigEmitInstMem(*II, getInstMemBrigOpcode(Opc));
+
+  if (TII->isInstCvt(Opc))
+    return BrigEmitInstCvt(*II, getInstCvtBrigOpcode(Opc));
 
   if (TII->isInstSourceType(Opc))
     return BrigEmitInstSourceType(*II, getInstSourceTypeBrigOpcode(Opc));
@@ -963,31 +975,6 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
       BrigEmitOperand(II, OpNum, inst);
     }
     return inst;
-  }
-  case HSAIL::cvt: {
-    HSAIL_ASM::InstCvt cvt
-      = brigantine.addInst<HSAIL_ASM::InstCvt>(Brig::BRIG_OPCODE_CVT);
-
-    cvt.type()
-      = TII->getNamedOperand(*II, HSAIL::OpName::destTypedestLength)->getImm();
-    cvt.sourceType()
-      = TII->getNamedOperand(*II, HSAIL::OpName::srcTypesrcLength)->getImm();
-
-    // XXX - srcTypesrcLength, destTypedestLength - These names are awful
-    cvt.modifier().ftz()
-      = TII->getNamedOperand(*II, HSAIL::OpName::ftz)->getImm();
-    cvt.modifier().round()
-      = TII->getNamedOperand(*II, HSAIL::OpName::round)->getImm();
-
-    assert(HSAIL::getNamedOperandIdx(II->getOpcode(), HSAIL::OpName::dest) == 0);
-    BrigEmitOperand(II,
-                    HSAIL::getNamedOperandIdx(II->getOpcode(), HSAIL::OpName::dest),
-                    cvt);
-
-    BrigEmitOperand(II,
-                    HSAIL::getNamedOperandIdx(II->getOpcode(), HSAIL::OpName::src),
-                    cvt);
-    return cvt;
   }
   case HSAIL::ret:
     return brigantine.addInst<HSAIL_ASM::InstBasic>(Brig::BRIG_OPCODE_RET,Brig::BRIG_TYPE_NONE);
@@ -2063,6 +2050,29 @@ HSAIL_ASM::InstCmp BRIGAsmPrinter::BrigEmitInstCmp(const MachineInstr &MI,
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0),
                   inst);
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src1),
+                  inst);
+  return inst;
+}
+
+HSAIL_ASM::InstCvt BRIGAsmPrinter::BrigEmitInstCvt(const MachineInstr &MI,
+                                                   unsigned BrigOpc) {
+  HSAIL_ASM::InstCvt inst = brigantine.addInst<HSAIL_ASM::InstCvt>(BrigOpc);
+  unsigned Opc = MI.getOpcode();
+
+  inst.type()
+    = TII->getNamedOperand(MI, HSAIL::OpName::destTypedestLength)->getImm();
+  inst.sourceType()
+    = TII->getNamedOperand(MI, HSAIL::OpName::srcTypesrcLength)->getImm();
+
+  // XXX - srcTypesrcLength, destTypedestLength - These names are awful
+  inst.modifier().ftz()
+    = TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
+  inst.modifier().round()
+    = TII->getNamedOperand(MI, HSAIL::OpName::round)->getImm();
+
+  BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
+                  inst);
+  BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src),
                   inst);
   return inst;
 }
