@@ -39,6 +39,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 // SOFTWARE.
 
+let OperandType = "OPERAND_IMMEDIATE" in {
+
+
 def BrigAlignment : Operand<i32> {
   let PrintMethod = "printBrigAlignment";
   int _NONE = 0;
@@ -748,3 +751,4 @@ def BrigWidth : Operand<i32> {
   int _ALL = 34;
 }
 
+} // End OperandType = "OPERAND_IMMEDIATE"
