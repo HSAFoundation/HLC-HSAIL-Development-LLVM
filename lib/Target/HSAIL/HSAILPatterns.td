@@ -12,3 +12,5 @@ def ADDR : ComplexPattern<iPTR, 3, "SelectAddr", [], []>;
 // chain in a Pat.
 def LoadAddr : ComplexPattern<iPTR, 8, "SelectLoadAddr", [], [SDNPWantParent]>;
 def StoreAddr : ComplexPattern<iPTR, 6, "SelectStoreAddr", [], [SDNPWantParent]>;
+
+def SetCCPat : ComplexPattern<i1, 6, "SelectSetCC", [setcc], []>;

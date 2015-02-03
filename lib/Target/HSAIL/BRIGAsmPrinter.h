@@ -189,6 +189,8 @@ protected:
   HSAIL_ASM::InstBasic BrigEmitInstBasic(const MachineInstr &MI,
                                          unsigned BrigOpc);
   HSAIL_ASM::InstMod BrigEmitInstMod(const MachineInstr &MI, unsigned BrigOpc);
+  HSAIL_ASM::InstCmp BrigEmitInstCmp(const MachineInstr &MI,
+                                     unsigned BrigOpc);
   HSAIL_ASM::InstSourceType BrigEmitInstSourceType(const MachineInstr &MI,
                                                    unsigned BrigOpc);
 

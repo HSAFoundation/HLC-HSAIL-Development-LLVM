@@ -422,116 +422,69 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
   return false;
 }
 
-static unsigned short
-ReverseConditionOpcode( unsigned short OpCode, bool &IsOk )
-{
-  IsOk = true;
-#define REVERSE_OPCODE(op_name, rev_op_name, op_type) \
-  case HSAIL::cmp_i1_##op_name##_##op_type##_rr: return HSAIL::cmp_i1_##rev_op_name##_##op_type##_rr; \
-  case HSAIL::cmp_i1_##op_name##_##op_type##_ri: return HSAIL::cmp_i1_##rev_op_name##_##op_type##_ri; \
-  case HSAIL::cmp_i32_##op_name##_##op_type##_rr: return HSAIL::cmp_i32_##rev_op_name##_##op_type##_rr; \
-  case HSAIL::cmp_i32_##op_name##_##op_type##_ri: return HSAIL::cmp_i32_##rev_op_name##_##op_type##_ri; \
-  case HSAIL::cmp_i64_##op_name##_##op_type##_rr: return HSAIL::cmp_i64_##rev_op_name##_##op_type##_rr; \
-  case HSAIL::cmp_i64_##op_name##_##op_type##_ri: return HSAIL::cmp_i64_##rev_op_name##_##op_type##_ri
-
-  switch (OpCode)
-  {
-  REVERSE_OPCODE(eq, ne, i1);
-  REVERSE_OPCODE(eq, ne, i32);
-  REVERSE_OPCODE(eq, ne, i64);
-  
-  REVERSE_OPCODE(ge, lt, i32);
-  REVERSE_OPCODE(ge, lt, i64);
-  REVERSE_OPCODE(uge, ult, i32);
-  REVERSE_OPCODE(uge, ult, i64);
-
-  REVERSE_OPCODE(gt, le, i32);
-  REVERSE_OPCODE(gt, le, i64);
-  REVERSE_OPCODE(ugt, ule, i32);
-  REVERSE_OPCODE(ugt, ule, i64);
-
-  REVERSE_OPCODE(le, gt, i32);
-  REVERSE_OPCODE(le, gt, i64);
-  REVERSE_OPCODE(ule, ugt, i32);
-  REVERSE_OPCODE(ule, ugt, i64);
-
-  REVERSE_OPCODE(lt, ge, i32);
-  REVERSE_OPCODE(lt, ge, i64);
-  REVERSE_OPCODE(ult, uge, i32);
-  REVERSE_OPCODE(ult, uge, i64);
-
-  REVERSE_OPCODE(ne, eq, i1);
-  REVERSE_OPCODE(ne, eq, i32);
-  REVERSE_OPCODE(ne, eq, i64);
-
-  REVERSE_OPCODE(o, uo, f32);
-  REVERSE_OPCODE(o, uo, f64);
-
-  REVERSE_OPCODE(oeq, une, f32);
-  REVERSE_OPCODE(oeq, une, f64);
-
-  REVERSE_OPCODE(oge, ult, f32);
-  REVERSE_OPCODE(oge, ult, f64);
-
-  REVERSE_OPCODE(ogt, ule, f32);
-  REVERSE_OPCODE(ogt, ule, f64);
-
-  REVERSE_OPCODE(ole, ugt, f32);
-  REVERSE_OPCODE(ole, ugt, f64);
-
-  REVERSE_OPCODE(olt, uge, f32);
-  REVERSE_OPCODE(olt, uge, f64);
-
-  REVERSE_OPCODE(one, ueq, f32);
-  REVERSE_OPCODE(one, ueq, f64);
-
-  REVERSE_OPCODE(eq, ne, f32);
-  REVERSE_OPCODE(eq, ne, f64);
-
-  REVERSE_OPCODE(ge, lt, f32);
-  REVERSE_OPCODE(ge, lt, f64);
-
-  REVERSE_OPCODE(gt, le, f32);
-  REVERSE_OPCODE(gt, le, f64);
-
-  REVERSE_OPCODE(le, gt, f32);
-  REVERSE_OPCODE(le, gt, f64);
-
-  REVERSE_OPCODE(lt, ge, f32);
-  REVERSE_OPCODE(lt, ge, f64);
-
-  REVERSE_OPCODE(ne, eq, f32);
-  REVERSE_OPCODE(ne, eq, f64);
-
-  REVERSE_OPCODE(ueq, one, f32);
-  REVERSE_OPCODE(ueq, one, f64);
-
-  REVERSE_OPCODE(uge, olt, f32);
-  REVERSE_OPCODE(uge, olt, f64);
-
-  REVERSE_OPCODE(ugt, ole, f32);
-  REVERSE_OPCODE(ugt, ole, f64);
-
-  REVERSE_OPCODE(ule, ogt, f32);
-  REVERSE_OPCODE(ule, ogt, f64);
-
-  REVERSE_OPCODE(ult, oge, f32);
-  REVERSE_OPCODE(ult, oge, f64);
-
-  REVERSE_OPCODE(une, oeq, f32);
-  REVERSE_OPCODE(une, oeq, f64);
-
-  REVERSE_OPCODE(uo, o, f32);
-  REVERSE_OPCODE(uo, o, f64);
-
-  default: 
-    assert(!"Unknown comparison opcode");
-    IsOk = false;
+static Brig::BrigCompareOperation invIntCondOp(Brig::BrigCompareOperation Op) {
+  switch (Op) {
+  case Brig::BRIG_COMPARE_EQ:
+    return Brig::BRIG_COMPARE_NE;
+  case Brig::BRIG_COMPARE_GE:
+    return Brig::BRIG_COMPARE_LT;
+  case Brig::BRIG_COMPARE_GT:
+    return Brig::BRIG_COMPARE_LE;
+  case Brig::BRIG_COMPARE_LE:
+    return Brig::BRIG_COMPARE_GT;
+  case Brig::BRIG_COMPARE_LT:
+    return Brig::BRIG_COMPARE_GE;
+  case Brig::BRIG_COMPARE_NE:
+    return Brig::BRIG_COMPARE_EQ;
+  default:
+    return Op;
   }
+}
 
-#undef REVERSE_OPCODE
+static Brig::BrigCompareOperation invFPCondOp(Brig::BrigCompareOperation Op) {
+  switch (Op) {
+  case Brig::BRIG_COMPARE_NUM:
+    return Brig::BRIG_COMPARE_NAN;
+  case Brig::BRIG_COMPARE_EQ:
+    return Brig::BRIG_COMPARE_NEU;
+  case Brig::BRIG_COMPARE_GE:
+    return Brig::BRIG_COMPARE_LTU;
+  case Brig::BRIG_COMPARE_GT:
+    return Brig::BRIG_COMPARE_LEU;
+  case Brig::BRIG_COMPARE_LE:
+    return Brig::BRIG_COMPARE_GTU;
+  case Brig::BRIG_COMPARE_LT:
+    return Brig::BRIG_COMPARE_GEU;
+  case Brig::BRIG_COMPARE_NE:
+    return Brig::BRIG_COMPARE_EQU;
+  case Brig::BRIG_COMPARE_EQU:
+    return Brig::BRIG_COMPARE_NE;
+  case Brig::BRIG_COMPARE_GEU:
+    return Brig::BRIG_COMPARE_LT;
+  case Brig::BRIG_COMPARE_GTU:
+    return Brig::BRIG_COMPARE_LE;
+  case Brig::BRIG_COMPARE_LEU:
+    return Brig::BRIG_COMPARE_GT;
+  case Brig::BRIG_COMPARE_LTU:
+    return Brig::BRIG_COMPARE_GE;
+  case Brig::BRIG_COMPARE_NEU:
+    return Brig::BRIG_COMPARE_EQ;
+  case Brig::BRIG_COMPARE_NAN:
+    return Brig::BRIG_COMPARE_NUM;
+  default:
+    return Op;
+  }
+}
 
-  return 0;
+static bool isFPBrigType(Brig::BrigTypeX BT) {
+  switch (BT) {
+  case Brig::BRIG_TYPE_F32:
+  case Brig::BRIG_TYPE_F64:
+  case Brig::BRIG_TYPE_F16:
+    return true;
+  default:
+    return false;
+  }
 }
 
 // Helper for `HSAILInstrInfo::InsertBranch`
@@ -568,14 +521,24 @@ static unsigned GenerateBranchCondReversion(
 
   // If condition is compare instruction - reverse it
   bool need_insert_not = false;
-  if (cond_expr && cond_expr->getDesc().isCompare())
-  {   
-    bool can_reverse = false;
-    unsigned short reversed_opcode = 
-      ReverseConditionOpcode(cond_expr->getOpcode(), can_reverse);
-      
-    if (can_reverse)
-      cond_expr->setDesc(TII->get(reversed_opcode));
+  if (cond_expr && cond_expr->isCompare()) {
+    MachineOperand *CmpOp
+      = TII->getNamedOperand(*cond_expr, HSAIL::OpName::op);
+
+    Brig::BrigTypeX CmpType
+      = static_cast<Brig::BrigTypeX>(
+        TII->getNamedOperand(*cond_expr,
+                             HSAIL::OpName::srcTypesrcLength)->getImm());
+
+    Brig::BrigCompareOperation OrigOp
+      = static_cast<Brig::BrigCompareOperation>(CmpOp->getImm());
+
+    Brig::BrigCompareOperation RevOp = isFPBrigType(CmpType) ?
+      invFPCondOp(OrigOp) :
+      invIntCondOp(OrigOp);
+
+    if (OrigOp != RevOp) // Can invert the operation.
+      CmpOp->setImm(RevOp);
     else
       need_insert_not = true;
   }

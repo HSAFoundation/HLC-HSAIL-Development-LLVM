@@ -339,6 +339,27 @@ class InstMemFence<string opName, bits<16> BrigVal> :
     opName#"$order$globalscope$groupscope$imagescope"
 >;
 
+// InstCmp
+class HSAILInstCmp<bits<16> BrigVal,
+                   dag outs, dag ins, string asmstr> :
+  HSAILInst<outs, ins, asmstr, [], BrigVal> {
+  let hasSideEffects = 0;
+  let InstCmp = 1;
+  let isCompare = 1;
+}
+
+class InstCmp<string opName, bits<16> BrigVal> :
+  HSAILInstCmp<BrigVal,
+    (outs unknown:$dest),
+    (ins BrigCompareOperation:$op,
+         i1imm:$ftz,
+         unknown:$src0,
+         unknown:$src1,
+         BrigTypeX:$destTypedestLength,
+         BrigTypeX:$srcTypesrcLength),
+    opName#"$op$ftz$destTypedestLength$srcTypesrcLength\t$dest, $src0, $src1"
+>;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Basic instruction patterns
 ////////////////////////////////////////////////////////////////////////////////

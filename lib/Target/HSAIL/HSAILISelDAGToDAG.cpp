@@ -130,6 +130,14 @@ private:
                        /*SDValue &Equiv,*/
                        SDValue &Type) const;
 
+  bool SelectSetCC(SDValue SetCC,
+                   SDValue &LHS,
+                   SDValue &RHS,
+                   SDValue &CmpOp,
+                   SDValue &FTZ,
+                   SDValue &DestType,
+                   SDValue &SrcType) const;
+
   bool SelectGPROrImm(SDValue In, SDValue &Src) const;
   bool MemOpHasPtr32(SDNode *N) const;
 
@@ -907,33 +915,18 @@ HSAILDAGToDAGISel::SelectAddr(SDValue Addr,
   return true;
 }
 
-static unsigned getBrigTypeFromLoadType(MVT::SimpleValueType VT,
-                                        ISD::LoadExtType Ext) {
+static Brig::BrigTypeX getBrigType(MVT::SimpleValueType VT, bool Signed) {
   switch (VT) {
   case MVT::i32:
-    return Brig::BRIG_TYPE_U32; // XXX - B32
+    return Signed ? Brig::BRIG_TYPE_S32 : Brig::BRIG_TYPE_U32;
   case MVT::f32:
     return Brig::BRIG_TYPE_F32;
-  case MVT::i8: {
-    switch (Ext) {
-    case ISD::SEXTLOAD:
-      return Brig::BRIG_TYPE_S8;
-    case ISD::ZEXTLOAD:
-    default:
-      return Brig::BRIG_TYPE_U8;
-    }
-  }
-  case MVT::i16: {
-    switch (Ext) {
-    case ISD::SEXTLOAD:
-      return Brig::BRIG_TYPE_S16;
-    case ISD::ZEXTLOAD:
-    default:
-      return Brig::BRIG_TYPE_U16;
-    }
-  }
+  case MVT::i8:
+    return Signed ? Brig::BRIG_TYPE_S8 : Brig::BRIG_TYPE_U8;
+  case MVT::i16:
+    return Signed ? Brig::BRIG_TYPE_S16 : Brig::BRIG_TYPE_U16;
   case MVT::i64:
-    return Brig::BRIG_TYPE_U64; // XXX - B64
+    return Signed ? Brig::BRIG_TYPE_S64 : Brig::BRIG_TYPE_U64;
   case MVT::f64:
     return Brig::BRIG_TYPE_F64;
   default:
@@ -941,7 +934,7 @@ static unsigned getBrigTypeFromLoadType(MVT::SimpleValueType VT,
   }
 }
 
-static unsigned getBrigTypeFromStoreType(MVT::SimpleValueType VT) {
+static Brig::BrigTypeX getBrigTypeFromStoreType(MVT::SimpleValueType VT) {
   switch (VT) {
   case MVT::i32:
     return Brig::BRIG_TYPE_U32;
@@ -980,7 +973,7 @@ bool HSAILDAGToDAGISel::SelectLoadAddr(SDNode *ParentLoad,
 
   MVT MemVT = Load->getMemoryVT().getSimpleVT();
   ISD::LoadExtType ExtTy = Load->getExtensionType();
-  unsigned BrigType = getBrigTypeFromLoadType(MemVT.SimpleTy, ExtTy);
+  unsigned BrigType = getBrigType(MemVT.SimpleTy, ExtTy == ISD::SEXTLOAD);
 
   Segment = CurDAG->getTargetConstant(AS, MVT::i32);
   Align = CurDAG->getTargetConstant(Load->getAlignment(), MVT::i32);
@@ -1014,6 +1007,124 @@ bool HSAILDAGToDAGISel::SelectStoreAddr(SDNode *ParentStore,
   Align = CurDAG->getTargetConstant(Store->getAlignment(), MVT::i32);
   //Equiv = CurDAG->getTargetConstant(0, MVT::i32);
   Type = CurDAG->getTargetConstant(BrigType, MVT::i32);
+  return true;
+}
+
+static Brig::BrigCompareOperation getBrigIntCompare(ISD::CondCode CC,
+                                                    bool &Signed) {
+  switch (CC) {
+  case ISD::SETUEQ:
+    Signed = true; // Sign is irrelevant, use to be consistent.
+    return Brig::BRIG_COMPARE_EQ;
+  case ISD::SETUGT:
+    return Brig::BRIG_COMPARE_GT;
+  case ISD::SETUGE:
+    return Brig::BRIG_COMPARE_GE;
+  case ISD::SETULT:
+    return Brig::BRIG_COMPARE_LT;
+  case ISD::SETULE:
+    return Brig::BRIG_COMPARE_LE;
+  case ISD::SETUNE:
+    Signed = true; // Sign is irrelevant, use to be consistent.
+    return Brig::BRIG_COMPARE_NE;
+  case ISD::SETEQ:
+    Signed = true;
+    return Brig::BRIG_COMPARE_EQ;
+  case ISD::SETGT:
+    Signed = true;
+    return Brig::BRIG_COMPARE_GT;
+  case ISD::SETGE:
+    Signed = true;
+    return Brig::BRIG_COMPARE_GE;
+  case ISD::SETLT:
+    Signed = true;
+    return Brig::BRIG_COMPARE_LT;
+  case ISD::SETLE:
+    Signed = true;
+    return Brig::BRIG_COMPARE_LE;
+  case ISD::SETNE:
+    Signed = true;
+    return Brig::BRIG_COMPARE_NE;
+  default:
+    llvm_unreachable("unhandled cond code");
+  }
+}
+
+static Brig::BrigCompareOperation getBrigFPCompare(ISD::CondCode CC) {
+  switch (CC) {
+  case ISD::SETOEQ:
+  case ISD::SETEQ:
+    return Brig::BRIG_COMPARE_EQ;
+  case ISD::SETOGT:
+  case ISD::SETGT:
+    return Brig::BRIG_COMPARE_GT;
+  case ISD::SETOGE:
+  case ISD::SETGE:
+    return Brig::BRIG_COMPARE_GE;
+  case ISD::SETOLT:
+  case ISD::SETLT:
+    return Brig::BRIG_COMPARE_LT;
+  case ISD::SETOLE:
+  case ISD::SETLE:
+    return Brig::BRIG_COMPARE_LE;
+  case ISD::SETONE:
+  case ISD::SETNE:
+    return Brig::BRIG_COMPARE_NE;
+  case ISD::SETO:
+    return Brig::BRIG_COMPARE_NUM;
+  case ISD::SETUO:
+    return Brig::BRIG_COMPARE_NAN;
+  case ISD::SETUEQ:
+    return Brig::BRIG_COMPARE_EQU;
+  case ISD::SETUGT:
+    return Brig::BRIG_COMPARE_GTU;
+  case ISD::SETUGE:
+    return Brig::BRIG_COMPARE_GEU;
+  case ISD::SETULT:
+    return Brig::BRIG_COMPARE_LTU;
+  case ISD::SETULE:
+    return Brig::BRIG_COMPARE_LEU;
+  case ISD::SETUNE:
+    return Brig::BRIG_COMPARE_NEU;
+  default:
+    llvm_unreachable("unhandled cond code");
+  }
+}
+
+bool HSAILDAGToDAGISel::SelectSetCC(SDValue SetCC,
+                                    SDValue &LHS,
+                                    SDValue &RHS,
+                                    SDValue &CmpOp,
+                                    SDValue &FTZ,
+                                    SDValue &DestType,
+                                    SDValue &SrcType) const {
+  if (!SelectGPROrImm(SetCC.getOperand(0), LHS))
+    return false;
+
+  if (!SelectGPROrImm(SetCC.getOperand(1), RHS))
+    return false;
+
+  MVT VT = LHS.getValueType().getSimpleVT();
+  ISD::CondCode CC = cast<CondCodeSDNode>(SetCC.getOperand(2))->get();
+  bool Signed = false;
+  Brig::BrigCompareOperation BrigCmp;
+
+  if (VT.isFloatingPoint())
+    BrigCmp = getBrigFPCompare(CC);
+  else
+    BrigCmp = getBrigIntCompare(CC, Signed);
+
+  CmpOp = CurDAG->getTargetConstant(BrigCmp, MVT::i32);
+  FTZ = CurDAG->getTargetConstant(VT == MVT::f32, MVT::i1);
+
+
+  // TODO: Should be able to fold conversions into this instead.
+  DestType = CurDAG->getTargetConstant(Brig::BRIG_TYPE_B1, MVT::i32);
+
+
+  Brig::BrigTypeX SrcBT = getBrigType(VT.SimpleTy, Signed);
+  SrcType = CurDAG->getTargetConstant(SrcBT, MVT::i32);
+
   return true;
 }
 

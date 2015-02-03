@@ -851,6 +851,10 @@ public:
     return get(Opcode).TSFlags & HSAILInstrFlags::InstMemFence;
   }
 
+  bool isInstCmp(uint16_t Opcode) const {
+    return get(Opcode).TSFlags & HSAILInstrFlags::InstCmp;
+  }
+
 private:
   RegScavenger *RS;
 
