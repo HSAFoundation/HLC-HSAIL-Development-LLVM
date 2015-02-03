@@ -599,7 +599,7 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
     Chain = DAG.getNode(ISD::TokenFactor, dl, MVT::Other, RetOps);
   }
 
-  return DAG.getNode(HSAILISD::RET_FLAG, dl, MVT::Other, Chain);
+  return DAG.getNode(HSAILISD::RET, dl, MVT::Other, Chain);
 }
 
 /// getTypeForExtArgOrReturn - Return the type that should be used to zero or
@@ -1156,8 +1156,8 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return NULL;
   case HSAILISD::CALL:
     return "HSAILISD::CALL";
-  case HSAILISD::RET_FLAG:
-    return "HSAILISD::RET_FLAG";
+  case HSAILISD::RET:
+    return "HSAILISD::RET";
   case HSAILISD::SMAX:
     return "HSAILISD::SMAX";
   case HSAILISD::UMAX:

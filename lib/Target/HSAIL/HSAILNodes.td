@@ -41,8 +41,9 @@ def IL_callseq_end : SDNode<"ISD::CALLSEQ_END",   SDTIL_CallSeqEnd,
 def IL_call : SDNode<"HSAILISD::CALL", SDTIL_Call,
               [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
 
-def IL_retflag : SDNode<"HSAILISD::RET_FLAG", SDTNone,
-                 [SDNPHasChain, SDNPOptInGlue]>;
+def HSAILret : SDNode<"HSAILISD::RET", SDTNone,
+  [SDNPHasChain, SDNPOptInGlue]
+>;
 
 def HSAILlda : SDNode<"HSAILISD::LDA", HSAILLdaOp>;
 

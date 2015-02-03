@@ -620,6 +620,8 @@ static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
   switch (Opc) {
   case HSAIL::mov:
     return Brig::BRIG_OPCODE_MOV;
+  case HSAIL::ret:
+    return Brig::BRIG_OPCODE_RET;
   case HSAIL::shl_inst:
     return Brig::BRIG_OPCODE_SHL;
   case HSAIL::shr_inst:
@@ -1982,8 +1984,9 @@ HSAIL_ASM::InstBasic BRIGAsmPrinter::BrigEmitInstBasic(const MachineInstr &MI,
 
   inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
 
-  // All have dest as first operand.
-  BrigEmitOperand(&MI, 0, inst);
+  int DestIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest);
+  if (DestIdx != -1)
+    BrigEmitOperand(&MI, DestIdx, inst);
 
   int Src0Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0);
   if (Src0Idx != -1)

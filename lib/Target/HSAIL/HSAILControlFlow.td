@@ -22,9 +22,14 @@ let isNotDuplicable = 1, hasSideEffects = 1 in {
 // ret
 
 let isTerminator = 1, isReturn = 1, isBarrier = 1, hasCtrlDep = 1,
-    isNotDuplicable = 1 in {
-  def ret : HSAILInst<(outs), (ins), "ret", [(IL_retflag)]>;
+    isNotDuplicable = 1, hasSideEffects = 1 in {
+  def ret : HSAILInstBasic_0Op_NoRet<"ret", BrigOpcode.RET>;
 }
+
+def : Pat<
+  (HSAILret),
+  (ret BrigTypeX.NONE)
+>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // branch (unconditional and conditional)

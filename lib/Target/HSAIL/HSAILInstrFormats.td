@@ -99,6 +99,13 @@ class HSAILInstBasic<bits<16> BrigVal,
   let InstBasic = 1;
 }
 
+class HSAILInstBasic_0Op_NoRet<string opName, bits<16> BrigVal> :
+  HSAILInstBasic<BrigVal,
+                 (outs),
+                 (ins BrigTypeX:$TypeLength),
+  opName#"$TypeLength"
+>;
+
 class HSAILInstBasic_0Op<string opName, bits<16> BrigVal> :
   HSAILInstBasic<BrigVal,
                  (outs unknown:$dest),
