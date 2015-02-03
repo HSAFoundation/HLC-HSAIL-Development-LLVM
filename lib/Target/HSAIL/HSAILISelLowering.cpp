@@ -716,8 +716,7 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
                                     : Brig::BRIG_WIDTH_1, MVT::i32);
 
       // Const qualifier.
-        Ops[opNo++] = DAG.getTargetConstant(
-          (AddressSpace == HSAILAS::KERNARG_ADDRESS) ? 1 : 0, MVT::i1);
+        Ops[opNo++] = DAG.getTargetConstant(0, MVT::i1);
     }
 
     Ops[opNo++] = Chain;
