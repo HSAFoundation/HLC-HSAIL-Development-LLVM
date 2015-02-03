@@ -1193,16 +1193,8 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::FLDEXP";
   case HSAILISD::CLASS:
     return "HSAILISD::CLASS";
-  case HSAILISD::LDA_FLAT:
-    return "HSAILISD::LDA_FLAT";
-  case HSAILISD::LDA_GLOBAL:
-    return "HSAILISD::LDA_GLOBAL";
-  case HSAILISD::LDA_GROUP:
-    return "HSAILISD::LDA_GROUP";
-  case HSAILISD::LDA_PRIVATE:
-    return "HSAILISD::LDA_PRIVATE";
-  case HSAILISD::LDA_READONLY:
-    return "HSAILISD::LDA_READONLY";
+  case HSAILISD::LDA:
+    return "HSAILISD::LDA";
   case HSAILISD::ACTIVELANESHUFFLE:
     return "HSAILISD::ACTIVELANESHUFFLE";
   case HSAILISD::ACTIVELANEID:
@@ -1224,27 +1216,14 @@ HSAILTargetLowering::LowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const {
   const GlobalAddressSDNode *GSDN = cast<GlobalAddressSDNode>(Op);
   const GlobalValue *GV = GSDN->getGlobal();
 
-  unsigned addrSpace = GSDN->getAddressSpace();
-  EVT PtrVT = getPointerTy(addrSpace);
-  SDLoc dl = SDLoc(Op);
-  unsigned opcode;
+  unsigned AS = GSDN->getAddressSpace();
+  EVT PtrVT = getPointerTy(AS);
+  SDLoc SL(Op);
 
-  if (addrSpace == HSAILAS::FLAT_ADDRESS) {
-    opcode = HSAILISD::LDA_FLAT;
-  } else if (addrSpace == HSAILAS::GLOBAL_ADDRESS) {
-    opcode = HSAILISD::LDA_GLOBAL;
-  } else if (addrSpace == HSAILAS::GROUP_ADDRESS) {
-    opcode = HSAILISD::LDA_GROUP;
-  } else if (addrSpace == HSAILAS::PRIVATE_ADDRESS) {
-    opcode = HSAILISD::LDA_PRIVATE;
-  } else if (addrSpace == HSAILAS::CONSTANT_ADDRESS) {
-    opcode = HSAILISD::LDA_READONLY;
-  } else {
-    assert(!"cannot lower GlobalAddress");
-  }
-  SDValue targetGlobal = DAG.getTargetGlobalAddress(GV, dl, PtrVT,
-                                                    GSDN->getOffset());
-  return DAG.getNode(opcode, dl, PtrVT.getSimpleVT(), targetGlobal);
+  SDValue Segment = DAG.getTargetConstant(AS, MVT::i32);
+
+  SDValue Address = DAG.getTargetGlobalAddress(GV, SL, PtrVT, GSDN->getOffset());
+  return DAG.getNode(HSAILISD::LDA, SL, PtrVT, Segment, Address);
 }
 
 SDValue

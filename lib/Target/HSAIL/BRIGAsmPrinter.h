@@ -202,6 +202,8 @@ protected:
                                                unsigned BrigOpc);
   HSAIL_ASM::InstMem BrigEmitInstMem(const MachineInstr &MI,
                                      unsigned BrigOpc);
+  HSAIL_ASM::InstAddr BrigEmitInstAddr(const MachineInstr &MI,
+                                       unsigned BrigOpc);
 
   void BrigEmitVecOperand(const MachineInstr *MI, unsigned opStart,
                           unsigned numRegs, HSAIL_ASM::Inst inst);

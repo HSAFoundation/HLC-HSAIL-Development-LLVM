@@ -841,6 +841,15 @@ static Brig::BrigOpcode getInstMemFenceBrigOpcode(unsigned Opc) {
   }
 }
 
+static Brig::BrigOpcode getInstAddrBrigOpcode(unsigned Opc) {
+  switch (Opc) {
+  case HSAIL::lda_inst:
+    return Brig::BRIG_OPCODE_LDA;
+  default:
+    llvm_unreachable("unhandled opcode");
+  }
+}
+
 static Brig::BrigOpcode getInstCmpBrigOpcode(unsigned Opc) {
   switch (Opc) {
   case HSAIL::cmp_inst:
@@ -914,6 +923,9 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
   if (TII->isInstMemFence(Opc))
     return BrigEmitInstMemFence(*II, getInstMemFenceBrigOpcode(Opc));
+
+  if (TII->isInstAddr(Opc))
+    return BrigEmitInstAddr(*II, getInstAddrBrigOpcode(Opc));
 
   if (TII->isInstLane(Opc))
     return BrigEmitInstLane(*II, getInstLaneBrigOpcode(Opc));
@@ -1037,19 +1049,6 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
       return call;
   }
-
-  case HSAIL::lda_32:
-  case HSAIL::lda_64: {
-    HSAIL_ASM::InstAddr lda = brigantine
-      .addInst<HSAIL_ASM::InstAddr>(Brig::BRIG_OPCODE_LDA);
-    BrigEmitOperand(II, 0, lda);
-    BrigEmitOperandLdStAddress(II, 1);
-    lda.segment() = TII->getNamedOperand(*II, HSAIL::OpName::segment)->getImm();
-    lda.type() = (II->getOpcode() == HSAIL::lda_32) ? Brig::BRIG_TYPE_U32
-                                                    : Brig::BRIG_TYPE_U64;
-    return lda;
-  }
-
   case HSAIL::arg_decl:
     BrigEmitVecArgDeclaration(II);
     return HSAIL_ASM::Inst();
@@ -2247,6 +2246,25 @@ HSAIL_ASM::InstMem BRIGAsmPrinter::BrigEmitInstMem(const MachineInstr &MI,
     BrigEmitVecOperand(&MI, 0, VecSize, inst);
 
   BrigEmitOperandLdStAddress(&MI, VecSize);
+
+  return inst;
+}
+
+HSAIL_ASM::InstAddr BRIGAsmPrinter::BrigEmitInstAddr(const MachineInstr &MI,
+                                                     unsigned BrigOpc) {
+  HSAIL_ASM::InstAddr inst = brigantine.addInst<HSAIL_ASM::InstAddr>(BrigOpc);
+  unsigned Opc = MI.getOpcode();
+
+  inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
+
+  unsigned Segment = TII->getNamedOperand(MI, HSAIL::OpName::segment)->getImm();
+  inst.segment() = getHSAILSegment(Segment);
+
+  int DestIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest);
+  int AddressIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::address);
+
+  BrigEmitOperand(&MI, DestIdx, inst);
+  BrigEmitOperandLdStAddress(&MI, AddressIdx);
 
   return inst;
 }

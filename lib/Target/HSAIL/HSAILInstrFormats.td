@@ -394,6 +394,22 @@ class InstCmp<string opName, bits<16> BrigVal> :
     opName#"$op$ftz$destTypedestLength$srcTypesrcLength\t$dest, $src0, $src1"
 >;
 
+
+// InstAddr
+class HSAILInstAddr<bits<16> BrigVal,
+                    dag outs, dag ins, string asmstr> :
+  HSAILInst<outs, ins, asmstr, [], BrigVal> {
+  let hasSideEffects = 0;
+  let InstAddr = 1;
+}
+
+class HSAILInstAddr_1Op<string opName, bits<16> BrigVal> :
+  HSAILInstAddr<BrigVal,
+                (outs unknown:$dest),
+                (ins BrigSegment:$segment, MEMOP:$address, BrigTypeX:$TypeLength),
+  opName#"$segment$TypeLength\t$dest, $address"
+>;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Basic instruction patterns
 ////////////////////////////////////////////////////////////////////////////////

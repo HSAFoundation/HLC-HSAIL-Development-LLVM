@@ -863,6 +863,10 @@ public:
     return get(Opcode).TSFlags & HSAILInstrFlags::InstCvt;
   }
 
+  bool isInstAddr(uint16_t Opcode) const {
+    return get(Opcode).TSFlags & HSAILInstrFlags::InstAddr;
+  }
+
 private:
   RegScavenger *RS;
 

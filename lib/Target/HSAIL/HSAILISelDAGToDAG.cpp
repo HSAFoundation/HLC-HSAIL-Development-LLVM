@@ -661,16 +661,19 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
     ResNode = SelectCode(Node);
     break;
   case ISD::FrameIndex:
-      if (FrameIndexSDNode *FIN = dyn_cast<FrameIndexSDNode>(Node)) {
+    if (FrameIndexSDNode *FIN = dyn_cast<FrameIndexSDNode>(Node)) {
       SDValue Ops[] = {
+        CurDAG->getTargetConstant(HSAILAS::PRIVATE_ADDRESS, MVT::i32),
         CurDAG->getTargetFrameIndex(FIN->getIndex(), MVT::i32),
-        CurDAG->getRegister(0, NVT), CurDAG->getTargetConstant(0, NVT),
-        CurDAG->getTargetConstant(Brig::BRIG_SEGMENT_PRIVATE, MVT::i32)
+        CurDAG->getRegister(0, NVT),
+        CurDAG->getTargetConstant(0, NVT),
+        CurDAG->getTargetConstant(Brig::BRIG_TYPE_U32, MVT::i32)
       };
-      ResNode = CurDAG->SelectNodeTo(Node, HSAIL::lda_32, NVT, Ops);
-       } else {
-          ResNode = Node;
-       }
+
+      ResNode = CurDAG->SelectNodeTo(Node, HSAIL::lda_inst, NVT, Ops);
+    } else {
+      ResNode = Node;
+    }
     break;
 
   case ISD::INTRINSIC_WO_CHAIN:
@@ -679,6 +682,28 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
   case ISD::INTRINSIC_W_CHAIN:
     ResNode = SelectINTRINSIC_W_CHAIN(Node);
     break;
+  case HSAILISD::LDA: {
+    EVT VT = Node->getValueType(0);
+
+    SDValue Base, Reg, Offset;
+
+    if (!SelectAddr(Node->getOperand(1), Base, Reg, Offset))
+      llvm_unreachable("selecting lda address should not fail");
+
+    Brig::BrigTypeX BT
+      = (VT == MVT::i32) ? Brig::BRIG_TYPE_U32 : Brig::BRIG_TYPE_U64;
+
+    const SDValue Ops[] = {
+      Node->getOperand(0),
+      Base,
+      Reg,
+      Offset,
+      CurDAG->getTargetConstant(BT, MVT::i32)
+    };
+
+    ResNode = CurDAG->SelectNodeTo(Node, HSAIL::lda_inst, VT, Ops);
+    break;
+  }
 #if 0
   case ISD::ATOMIC_LOAD:
   case ISD::ATOMIC_STORE:
@@ -858,15 +883,9 @@ bool HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr,
     Offset = backup_offset;
     break;
   }
-  case HSAILISD::LDA_FLAT:
-  case HSAILISD::LDA_GLOBAL:
-  case HSAILISD::LDA_GROUP:
-  case HSAILISD::LDA_PRIVATE:
-  case HSAILISD::LDA_READONLY:
-  {
-    if (SelectAddrCommon(Addr.getOperand(0), Base, Reg, Offset, 
-                         ValueType, Depth+1))
-    {
+  case HSAILISD::LDA: {
+    if (SelectAddrCommon(Addr.getOperand(1), Base, Reg, Offset,
+                         ValueType, Depth + 1)) {
       return true;
     }
     Base = backup_base;
