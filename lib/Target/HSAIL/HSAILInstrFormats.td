@@ -339,6 +339,40 @@ class InstMemFence<string opName, bits<16> BrigVal> :
     opName#"$order$globalscope$groupscope$imagescope"
 >;
 
+// InstMem
+class HSAILInstMem<bits<16> BrigVal,
+                   dag outs, dag ins, string asmstr> :
+  HSAILInst<outs, ins, asmstr, [], BrigVal> {
+  let mayLoad = 1;
+  let mayStore = 1;
+  let InstMem = 1;
+}
+
+class LD<string opName, bits<16> BrigVal, dag outs> :
+  HSAILInstMem<BrigVal, outs,
+    (ins MEMOP:$address,
+       BrigTypeX:$TypeLength,
+       BrigSegment:$segment,
+       BrigAlignment:$align,
+       BrigWidth:$width,
+       BrigMemoryModifierMask:$mask),
+    opName#"$segment$align$width$mask$TypeLength\t$dest, $address"> {
+  let isLoad = 1;
+  let isStore = 0;
+  let mayStore = 0;
+  let hasSideEffects = 0;
+}
+
+class ST<string opName, bits<16> BrigVal, dag ins> :
+  HSAILInstMem<BrigVal, (outs),
+    ins,
+    opName#"$segment$align$TypeLength\t$src, $address"> {
+  let isLoad = 0;
+  let mayLoad = 0;
+  let isStore = 1;
+  let hasSideEffects = 0;
+}
+
 // InstCmp
 class HSAILInstCmp<bits<16> BrigVal,
                    dag outs, dag ins, string asmstr> :

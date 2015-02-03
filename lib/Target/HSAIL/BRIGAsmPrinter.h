@@ -107,10 +107,6 @@ public:
 
   virtual void EmitFunctionEntryLabel();
 
-  /// Emit ld_* or st_* instruction.
-  HSAIL_ASM::Inst EmitLoadOrStore(const MachineInstr *MI, bool isLoad,
-                                  unsigned vec_size);
-
   /// isBlockOnlyReachableByFallthough - Return true if the basic block has
   /// exactly one predecessor and the control transfer mechanism between
   /// the predecessor and this block is a fall-through.
@@ -202,6 +198,8 @@ protected:
                                      unsigned BrigOpc);
   HSAIL_ASM::InstMemFence BrigEmitInstMemFence(const MachineInstr &MI,
                                                unsigned BrigOpc);
+  HSAIL_ASM::InstMem BrigEmitInstMem(const MachineInstr &MI,
+                                     unsigned BrigOpc);
 
   void BrigEmitVecOperand(const MachineInstr *MI, unsigned opStart,
                           unsigned numRegs, HSAIL_ASM::Inst inst);

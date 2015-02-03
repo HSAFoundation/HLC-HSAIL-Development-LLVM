@@ -172,22 +172,6 @@ def getLdStVectorOpcode : InstrMapping {
   let ValueCols   = [["1"], ["2"], ["3"], ["4"]];
 }
 
-class LD<string opName, dag outs> : HSAILInst<outs,
-  (ins MEMOP:$address,
-       BrigTypeX:$TypeLength,
-       BrigSegment:$segment,
-       BrigAlignment:$align,
-       BrigWidth:$width,
-       BrigMemoryModifierMask:$mask),
-    opName#"$segment$align$width$mask$TypeLength\t$dest, $address", []>
-     {
-  let isLoad = 1;
-  let mayLoad = 1;
-  let isStore = 0;
-  let mayStore = 0;
-  let hasSideEffects = 0;
-}
-
 // FIXME: If the MEMOP isn't explicitly typed in output, counts as
 // wrong number of operands.
 class LDPat<Instruction inst, ValueType vt> : Pat <
@@ -208,10 +192,10 @@ multiclass HSAIL_LD<int Dummy> {
 
   // We define the output registers to be unknown. The used register
   // class will be selected based on the used type.
-  def _v1 : LD<"ld", (outs unknown:$dest)>, LdStVectorMap<NAME, 1>;
-  def _v2 : LD<"ld_v2", (outs Vec2Op:$dest)>, LdStVectorMap<NAME, 2>;
-  def _v3 : LD<"ld_v3", (outs Vec3Op:$dest)>, LdStVectorMap<NAME, 3>;
-  def _v4 : LD<"ld_v4", (outs Vec4Op:$dest)>, LdStVectorMap<NAME, 4>;
+  def _v1 : LD<"ld", BrigOpcode.LD, (outs unknown:$dest)>, LdStVectorMap<NAME, 1>;
+  def _v2 : LD<"ld_v2", BrigOpcode.LD, (outs Vec2Op:$dest)>, LdStVectorMap<NAME, 2>;
+  def _v3 : LD<"ld_v3", BrigOpcode.LD, (outs Vec3Op:$dest)>, LdStVectorMap<NAME, 3>;
+  def _v4 : LD<"ld_v4", BrigOpcode.LD, (outs Vec4Op:$dest)>, LdStVectorMap<NAME, 4>;
 }
 
 defm ld : HSAIL_LD<0>;
@@ -229,18 +213,6 @@ let hasSideEffects = 1, hasCtrlDep = 1 in {
   defm rarg_ld : HSAIL_LD<0>;
 }
 
-class ST<string opName, dag ins> :
-  HSAILInst<(outs),
-    ins,
-    opName#"$segment$align$TypeLength\t$src, $address",
-    []> {
-  let isLoad = 0;
-  let mayLoad = 0;
-  let isStore = 1;
-  let mayStore = 1;
-  let hasSideEffects = 0;
-}
-
 class STPat<Instruction inst, ValueType vt> : Pat <
   (st (vt (GPROrImm vt:$src)),
       (StoreAddr MEMOP:$address,
@@ -251,19 +223,19 @@ class STPat<Instruction inst, ValueType vt> : Pat <
 >;
 
 multiclass HSAIL_ST<int dummy> {
-  def _v1 : ST<"st",
+  def _v1 : ST<"st", BrigOpcode.ST,
     (ins unknown:$src, MEMOP:$address, BrigTypeX:$TypeLength,
          BrigSegment:$segment, BrigAlignment:$align)>,
     LdStVectorMap<NAME, 1>;
-  def _v2 : ST<"st_v2",
+  def _v2 : ST<"st_v2", BrigOpcode.ST,
     (ins Vec2Op:$src, MEMOP:$address, BrigTypeX:$TypeLength,
          BrigSegment:$segment, BrigAlignment:$align)>,
     LdStVectorMap<NAME, 2>;
-  def _v3 : ST<"st_v3",
+  def _v3 : ST<"st_v3", BrigOpcode.ST,
     (ins Vec3Op:$src, MEMOP:$address, BrigTypeX:$TypeLength,
          BrigSegment:$segment, BrigAlignment:$align)>,
     LdStVectorMap<NAME, 3>;
-  def _v4 : ST<"st_v4",
+  def _v4 : ST<"st_v4", BrigOpcode.ST,
     (ins Vec4Op:$src, MEMOP:$address, BrigTypeX:$TypeLength,
       BrigSegment:$segment, BrigAlignment:$align)>,
     LdStVectorMap<NAME, 4>;
@@ -282,12 +254,15 @@ def : STPat<st_v1, f64>;
 // limitation storeRegToStackSlot currently has where it assumes only
 // 1 instruction is created for spilling.
 let isPseudo = 1 in {
-  def spill_b1 : ST<"spill_b1",
+  def spill_b1 : ST<"spill_b1", BrigOpcode.NOP,
     (ins CR:$src, MEMOP:$address,
          BrigTypeX:$TypeLength, BrigSegment:$segment,
-         BrigAlignment:$align)>;
+         BrigAlignment:$align)
+  >;
 
-def restore_b1 : LD<"restore_b1", (outs CR:$dest)>;
+  def restore_b1 : LD<"restore_b1", BrigOpcode.NOP,
+    (outs CR:$dest)
+  >;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
