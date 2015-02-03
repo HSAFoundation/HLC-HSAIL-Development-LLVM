@@ -660,7 +660,7 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
   default:
     ResNode = SelectCode(Node);
     break;
-  case ISD::FrameIndex:
+  case ISD::FrameIndex: {
     if (FrameIndexSDNode *FIN = dyn_cast<FrameIndexSDNode>(Node)) {
       SDValue Ops[] = {
         CurDAG->getTargetConstant(HSAILAS::PRIVATE_ADDRESS, MVT::i32),
@@ -675,35 +675,34 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
       ResNode = Node;
     }
     break;
+  }
+  case ISD::GlobalAddress: {
+    const GlobalAddressSDNode *GSDN = cast<GlobalAddressSDNode>(Node);
+    const GlobalValue *GV = GSDN->getGlobal();
+    EVT PtrVT = Node->getValueType(0);
+    unsigned AS = GSDN->getAddressSpace();
+    SDLoc SL(Node);
 
+    Brig::BrigTypeX BT
+      = (PtrVT == MVT::i32) ? Brig::BRIG_TYPE_U32 : Brig::BRIG_TYPE_U64;
+
+    const SDValue Ops[] = {
+      CurDAG->getTargetConstant(AS, MVT::i32),
+      CurDAG->getTargetGlobalAddress(GV, SL, PtrVT, 0),
+      CurDAG->getRegister(HSAIL::NoRegister, NVT),
+      CurDAG->getTargetConstant(GSDN->getOffset(), PtrVT),
+      CurDAG->getTargetConstant(BT, MVT::i32)
+    };
+
+    ResNode = CurDAG->SelectNodeTo(Node, HSAIL::lda_inst, PtrVT, Ops);
+    break;
+  }
   case ISD::INTRINSIC_WO_CHAIN:
     ResNode = SelectINTRINSIC_WO_CHAIN(Node);
     break;
   case ISD::INTRINSIC_W_CHAIN:
     ResNode = SelectINTRINSIC_W_CHAIN(Node);
     break;
-  case HSAILISD::LDA: {
-    EVT VT = Node->getValueType(0);
-
-    SDValue Base, Reg, Offset;
-
-    if (!SelectAddr(Node->getOperand(1), Base, Reg, Offset))
-      llvm_unreachable("selecting lda address should not fail");
-
-    Brig::BrigTypeX BT
-      = (VT == MVT::i32) ? Brig::BRIG_TYPE_U32 : Brig::BRIG_TYPE_U64;
-
-    const SDValue Ops[] = {
-      Node->getOperand(0),
-      Base,
-      Reg,
-      Offset,
-      CurDAG->getTargetConstant(BT, MVT::i32)
-    };
-
-    ResNode = CurDAG->SelectNodeTo(Node, HSAIL::lda_inst, VT, Ops);
-    break;
-  }
 #if 0
   case ISD::ATOMIC_LOAD:
   case ISD::ATOMIC_STORE:

@@ -144,8 +144,8 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   setOperationAction(ISD::SELECT_CC, MVT::f64, Expand);
   setOperationAction(ISD::SELECT_CC, MVT::i1, Expand);
 
-  setOperationAction(ISD::GlobalAddress, MVT::i32, Custom);
-  setOperationAction(ISD::GlobalAddress, MVT::i64, Custom);
+  setOperationAction(ISD::GlobalAddress, MVT::i32, Legal);
+  setOperationAction(ISD::GlobalAddress, MVT::i64, Legal);
 
   setOperationAction(ISD::ConstantFP, MVT::f64, Legal);
   setOperationAction(ISD::ConstantFP, MVT::f32, Legal);
@@ -1106,7 +1106,6 @@ HSAILTargetLowering::LowerOperation(SDValue Op,
                                     SelectionDAG &DAG) const
 {
   switch (Op.getOpcode()) {
-    LOWER(GlobalAddress);
     LOWER(INTRINSIC_WO_CHAIN);
     LOWER(INTRINSIC_W_CHAIN);
     LOWER(ROTL);
@@ -1209,22 +1208,6 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
 //===--------------------------------------------------------------------===//
 // Custom lowering methods
 //
-
-/// LowerGlobalAddress - Lowers a global address ref to a target global address lda.
-SDValue
-HSAILTargetLowering::LowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const {
-  const GlobalAddressSDNode *GSDN = cast<GlobalAddressSDNode>(Op);
-  const GlobalValue *GV = GSDN->getGlobal();
-
-  unsigned AS = GSDN->getAddressSpace();
-  EVT PtrVT = getPointerTy(AS);
-  SDLoc SL(Op);
-
-  SDValue Segment = DAG.getTargetConstant(AS, MVT::i32);
-
-  SDValue Address = DAG.getTargetGlobalAddress(GV, SL, PtrVT, GSDN->getOffset());
-  return DAG.getNode(HSAILISD::LDA, SL, PtrVT, Segment, Address);
-}
 
 SDValue
 HSAILTargetLowering::LowerADD(SDValue Op, SelectionDAG &DAG) const {

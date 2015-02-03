@@ -320,9 +320,6 @@ public:
   getTargetNodeName(unsigned Opcode) const;
 
   /// Custom lowering methods
-  SDValue 
-  LowerGlobalAddress(SDValue Op, SelectionDAG &DAG) const;
-
  SDValue
   LowerADD(SDValue Op, SelectionDAG &DAG) const;
 
