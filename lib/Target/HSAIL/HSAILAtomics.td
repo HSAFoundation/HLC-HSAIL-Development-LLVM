@@ -27,22 +27,26 @@ def getAtomicPtr32Version : InstrMapping {
   let ValueCols = [["1"]];
 }
 
-let mayLoad = 1, mayStore = 1 in {
-
-// gcn atomic append/consume
-class AtomicCounter32<Intrinsic intr, string asm>:
-    HSAILInst<(outs GPR32:$dest), (ins MEMOP:$address),
-          !strconcat(asm, "\t $dest, [$address]"),
-          [(set (i32 GPR32:$dest), (intr ADDR:$address))]>
-{
+let mayLoad = 1, mayStore = 1, hasSideEffects = 1 in {
+  def gcn_atomic_append : HSAILInstAddr_1Op<"gcn_atomic_append", BrigOpcode.GCNAPPEND>;
+  def gcn_atomic_consume : HSAILInstAddr_1Op<"gcn_atomic_consume", BrigOpcode.GCNCONSUME>;
 }
 
+def : InstAddr_1Op_Pat<
+  gcn_atomic_append,
+  int_HSAIL_gcn_atomic_append_u32,
+  BrigTypeX.U32,
+  AddressSpace.REGION
+>;
 
-def gcn_atomic_append : AtomicCounter32<int_HSAIL_gcn_atomic_append_u32,
-  "gcn_atomic_append_u32">;
-def gcn_atomic_consume : AtomicCounter32<int_HSAIL_gcn_atomic_consume_u32,
-  "gcn_atomic_consume_u32">;
+def : InstAddr_1Op_Pat<
+  gcn_atomic_consume,
+  int_HSAIL_gcn_atomic_consume_u32,
+  BrigTypeX.U32,
+  AddressSpace.REGION
+>;
 
+let mayLoad = 1, mayStore = 1 in {
 
 /// Declare atomic opcodes, but don't match. All atomic instructions
 /// are custom-lowered in ISelDAGToDAG.

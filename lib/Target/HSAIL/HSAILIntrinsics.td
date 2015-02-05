@@ -800,6 +800,7 @@ def int_HSAIL_gcn_fldexp_f64  : GCCBuiltin<"__gcn_fldexp_f64">,
 >;
 
 // atomic counter32
+// TODO: IntrReadWriteArgMem?
 def int_HSAIL_gcn_atomic_append_u32 : GCCBuiltin<"__gcn_atomic_append_u32">,
   Intrinsic<[llvm_i32_ty], [llvm_ptr_ty], []
 >;

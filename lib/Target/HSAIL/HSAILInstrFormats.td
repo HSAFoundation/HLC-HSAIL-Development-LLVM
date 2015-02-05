@@ -754,6 +754,17 @@ class InstSeg_0Op_Pat<HSAILInst inst,
   (inst segment, bt)
 >;
 
+////////////////////////////////////////////////////////////////////////////////
+// Addr instruction patterns
+////////////////////////////////////////////////////////////////////////////////
+
+class InstAddr_1Op_Pat<HSAILInst inst,
+                      SDPatternOperator node,
+                      int bt,
+                      int segment> : Pat <
+  (node ADDR:$address),
+  (inst segment, MEMOP:$address, bt)
+>;
 
 let TargetPrefix = "HSAIL", isTarget = 1 in {
     // Read image intrinsic classes

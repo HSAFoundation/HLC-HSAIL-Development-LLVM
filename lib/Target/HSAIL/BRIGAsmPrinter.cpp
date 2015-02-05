@@ -860,6 +860,10 @@ static Brig::BrigOpcode getInstAddrBrigOpcode(unsigned Opc) {
   switch (Opc) {
   case HSAIL::lda_inst:
     return Brig::BRIG_OPCODE_LDA;
+  case HSAIL::gcn_atomic_append:
+    return Brig::BRIG_OPCODE_GCNAPPEND;
+  case HSAIL::gcn_atomic_consume:
+    return Brig::BRIG_OPCODE_GCNCONSUME;
   default:
     llvm_unreachable("unhandled opcode");
   }
