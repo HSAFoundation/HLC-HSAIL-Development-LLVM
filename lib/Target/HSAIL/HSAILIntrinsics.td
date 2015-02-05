@@ -1143,30 +1143,6 @@ def int_HSAIL_query_channeltype_2dadepth : GCCBuiltin<"__hsail_query_channeltype
   Intrinsic<[llvm_anyint_ty], [LLVMMatchType<0>], []
 >;
 
-def int_HSAIL_addrspacecast_g2f : GCCBuiltin<"__hsail_addrspacecast_g2f">,
-  Intrinsic<[llvm_anyptr_ty], [llvm_anyptr_ty], [IntrNoMem]
->;
-
-def int_HSAIL_addrspacecast_l2f : GCCBuiltin<"__hsail_addrspacecast_l2f">,
-  Intrinsic<[llvm_anyptr_ty], [llvm_i32_ty], [IntrNoMem]
->;
-
-def int_HSAIL_addrspacecast_p2f : GCCBuiltin<"__hsail_addrspacecast_p2f">,
-  Intrinsic<[llvm_anyptr_ty], [llvm_i32_ty], [IntrNoMem]
->;
-
-def int_HSAIL_addrspacecast_f2g : GCCBuiltin<"__hsail_addrspacecast_f2g">,
-  Intrinsic<[llvm_anyptr_ty], [llvm_anyptr_ty], [IntrNoMem]
->;
-
-def int_HSAIL_addrspacecast_f2l : GCCBuiltin<"__hsail_addrspacecast_f2l">,
-  Intrinsic<[llvm_i32_ty], [llvm_anyptr_ty], [IntrNoMem]
->;
-
-def int_HSAIL_addrspacecast_f2p : GCCBuiltin<"__hsail_addrspacecast_f2p">,
-  Intrinsic<[llvm_i32_ty], [llvm_anyptr_ty], [IntrNoMem]
->;
-
 def int_HSAIL_segmentp_global : GCCBuiltin<"__hsail_segmentp_global">,
   Intrinsic<[llvm_i1_ty], [llvm_anyptr_ty], [IntrNoMem]
 >;

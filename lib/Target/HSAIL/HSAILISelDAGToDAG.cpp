@@ -130,6 +130,26 @@ private:
                        /*SDValue &Equiv,*/
                        SDValue &Type) const;
 
+  void SelectAddrSpaceCastCommon(const AddrSpaceCastSDNode &ASC,
+                                 SDValue &NoNull,
+                                 SDValue &Ptr,
+                                 SDValue &DestType,
+                                 SDValue &SrcType) const;
+
+  bool SelectSTOF(SDValue Cast,
+                  SDValue &Segment,
+                  SDValue &NoNull,
+                  SDValue &Ptr,
+                  SDValue &DestType,
+                  SDValue &SrcType) const;
+
+  bool SelectFTOS(SDValue Cast,
+                  SDValue &Segment,
+                  SDValue &NoNull,
+                  SDValue &Ptr,
+                  SDValue &DestType,
+                  SDValue &SrcType) const;
+
   bool SelectSetCC(SDValue SetCC,
                    SDValue &LHS,
                    SDValue &RHS,
@@ -1025,6 +1045,55 @@ bool HSAILDAGToDAGISel::SelectStoreAddr(SDNode *ParentStore,
   Align = CurDAG->getTargetConstant(Store->getAlignment(), MVT::i32);
   //Equiv = CurDAG->getTargetConstant(0, MVT::i32);
   Type = CurDAG->getTargetConstant(BrigType, MVT::i32);
+  return true;
+}
+
+void HSAILDAGToDAGISel::SelectAddrSpaceCastCommon(const AddrSpaceCastSDNode &ASC,
+                                                  SDValue &NoNull,
+                                                  SDValue &Ptr,
+                                                  SDValue &DestType,
+                                                  SDValue &SrcType) const {
+  SelectGPROrImm(ASC.getOperand(0), Ptr);
+  NoNull = CurDAG->getTargetConstant(0, MVT::i1);
+
+  Brig::BrigTypeX DestBT
+    = getBrigType(ASC.getValueType(0).getSimpleVT().SimpleTy, false);
+  Brig::BrigTypeX SrcBT
+    = getBrigType(Ptr.getValueType().getSimpleVT().SimpleTy, false);
+
+  DestType = CurDAG->getTargetConstant(DestBT, MVT::i32);
+  SrcType = CurDAG->getTargetConstant(SrcBT, MVT::i32);
+}
+
+
+bool HSAILDAGToDAGISel::SelectSTOF(SDValue Cast,
+                                   SDValue &Segment,
+                                   SDValue &NoNull,
+                                   SDValue &Ptr,
+                                   SDValue &DestType,
+                                   SDValue &SrcType) const {
+  const AddrSpaceCastSDNode *ASC = cast<AddrSpaceCastSDNode>(Cast);
+  if (ASC->getDestAddressSpace() != HSAILAS::FLAT_ADDRESS)
+    return false;
+
+  Segment = CurDAG->getTargetConstant(ASC->getSrcAddressSpace(), MVT::i32);
+
+  SelectAddrSpaceCastCommon(*ASC, NoNull, Ptr, DestType, SrcType);
+  return true;
+}
+
+bool HSAILDAGToDAGISel::SelectFTOS(SDValue Cast,
+                                   SDValue &Segment,
+                                   SDValue &NoNull,
+                                   SDValue &Ptr,
+                                   SDValue &DestType,
+                                   SDValue &SrcType) const {
+  const AddrSpaceCastSDNode *ASC = cast<AddrSpaceCastSDNode>(Cast);
+  if (ASC->getSrcAddressSpace() != HSAILAS::FLAT_ADDRESS)
+    return false;
+
+  Segment = CurDAG->getTargetConstant(ASC->getDestAddressSpace(), MVT::i32);
+  SelectAddrSpaceCastCommon(*ASC, NoNull, Ptr, DestType, SrcType);
   return true;
 }
 

@@ -847,6 +847,10 @@ public:
     return get(Opcode).TSFlags & HSAILInstrFlags::InstSeg;
   }
 
+  bool isInstSegCvt(uint16_t Opcode) const {
+    return get(Opcode).TSFlags & HSAILInstrFlags::InstSegCvt;
+  }
+
   bool isInstMemFence(uint16_t Opcode) const {
     return get(Opcode).TSFlags & HSAILInstrFlags::InstMemFence;
   }

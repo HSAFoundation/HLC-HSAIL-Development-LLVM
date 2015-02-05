@@ -323,6 +323,25 @@ class HSAILInstSeg_0Op<string opName, bits<16> BrigVal> :
   opName#"$segment$TypeLength\t$dest"
 >;
 
+// InstSegCvt
+class HSAILInstSegCvt<bits<16> BrigVal,
+                      dag outs, dag ins, string asmstr> :
+  HSAILInst<outs, ins, asmstr, [], BrigVal> {
+  let hasSideEffects = 0;
+  let InstSegCvt = 1;
+}
+
+class HSAILInstSegCvt_1Op<string opName, bits<16> BrigVal> :
+  HSAILInstSegCvt<BrigVal,
+                 (outs unknown:$dest),
+                 (ins BrigSegment:$segment,
+                      i1imm:$nonull,
+                      unknown:$src0,
+                      BrigTypeX:$destTypedestLength,
+                      BrigTypeX:$srcTypesrcLength),
+  opName#"$segment$nonull$destTypedestLength$srcTypesrcLength\t$dest, $src0"
+>;
+
 // InstMemFence
 class HSAILInstMemFence<bits<16> BrigVal,
                         dag outs, dag ins, string asmstr> :

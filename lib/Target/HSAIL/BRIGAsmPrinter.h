@@ -198,6 +198,8 @@ protected:
                                    unsigned BrigOpc);
   HSAIL_ASM::InstSeg BrigEmitInstSeg(const MachineInstr &MI,
                                      unsigned BrigOpc);
+  HSAIL_ASM::InstSegCvt BrigEmitInstSegCvt(const MachineInstr &MI,
+                                           unsigned BrigOpc);
   HSAIL_ASM::InstMemFence BrigEmitInstMemFence(const MachineInstr &MI,
                                                unsigned BrigOpc);
   HSAIL_ASM::InstMem BrigEmitInstMem(const MachineInstr &MI,
