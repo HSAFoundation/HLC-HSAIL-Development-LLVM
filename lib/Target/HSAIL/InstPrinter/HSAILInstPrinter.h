@@ -40,6 +40,7 @@ private:
   void printOperand(const MCInst *MI, unsigned OpNo, raw_ostream &O);
 
   void printBrigAlignment(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printEquiv(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printBrigAllocation(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printBrigAluModifierMask(const MCInst *MI, unsigned OpNo,
                                 raw_ostream &O);

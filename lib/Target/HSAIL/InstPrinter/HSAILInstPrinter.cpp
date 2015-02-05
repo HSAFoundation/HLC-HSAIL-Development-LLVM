@@ -134,6 +134,13 @@ void HSAILInstPrinter::printBrigAlignment(const MCInst *MI, unsigned OpNo,
     O << "_align(" << formatDec(Align) << ')';
 }
 
+void HSAILInstPrinter::printEquiv(const MCInst *MI, unsigned OpNo,
+                                  raw_ostream &O) {
+  unsigned Equiv = MI->getOperand(OpNo).getImm();
+  if (Equiv != 0)
+    O << "_equiv(" << formatDec(Equiv) << ')';
+}
+
 void HSAILInstPrinter::printBrigAllocation(const MCInst *MI, unsigned OpNo,
                                            raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {

@@ -399,6 +399,50 @@ class ST<string opName, bits<16> BrigVal, dag ins> :
   let hasSideEffects = 0;
 }
 
+// InstAtomic
+class HSAILInstAtomic<bits<16> BrigVal,
+                        dag outs, dag ins, string asmstr> :
+  HSAILInst<outs, ins, asmstr, [], BrigVal> {
+  let hasSideEffects = 1;
+  let mayLoad = 1;
+  let mayStore = 1;
+  let InstAtomic = 1;
+}
+
+// FIXME: We need to not print src0 / src1 depending on the specific
+// atomic op instead of noreg.
+class InstAtomic<string opName, bits<16> BrigVal> :
+  HSAILInstAtomic<
+    BrigVal,
+    (outs unknown:$dest),
+    (ins BrigAtomicOperation:$op,
+         AddressSpace:$segment,
+         BrigMemoryOrder:$order,
+         BrigMemoryScope:$scope,
+         equiv:$equiv,
+         MEMOP:$address,
+         unknown:$src0,
+         unknown:$src1,
+         BrigTypeX:$TypeLength),
+    opName#"$op$segment$order$scope$equiv$TypeLength\t$dest, $address, $src0, $src1"
+>;
+
+class InstAtomic_NoRet<string opName, bits<16> BrigVal> :
+  HSAILInstAtomic<
+    BrigVal,
+    (outs),
+    (ins BrigAtomicOperation:$op,
+         AddressSpace:$segment,
+         BrigMemoryOrder:$order,
+         BrigMemoryScope:$scope,
+         equiv:$equiv,
+         MEMOP:$address,
+         unknown:$src0,
+         unknown:$src1,
+         BrigTypeX:$TypeLength),
+    opName#"$op$segment$order$scope$equiv$TypeLength\t$dest, $address, $src0, $src1"
+>;
+
 // InstCmp
 class HSAILInstCmp<bits<16> BrigVal,
                    dag outs, dag ins, string asmstr> :

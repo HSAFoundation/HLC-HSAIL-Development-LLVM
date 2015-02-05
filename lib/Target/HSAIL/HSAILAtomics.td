@@ -117,3 +117,43 @@ defm atomic_b64       : AtomicRRInst<(outs GPR64:$dest), GPR64, i64imm, MEMOP, 0
 defm atomic_b64_ptr32 : AtomicRRInst<(outs GPR64:$dest), GPR64, i64imm, MEMOP, 1>;
 
 }
+
+let hasPostISelHook = 1 in {
+  def atomic_inst : InstAtomic<"atomic", BrigOpcode.ATOMIC>;
+}
+
+// atomic is replaced by atomicnoret in the post-isel hook if there
+// are no uses of the returned value.
+def atomicnoret_inst : InstAtomic<"atomicnoret", BrigOpcode.ATOMICNORET>;
+
+class AtomicPat<SDPatternOperator node, int op, ValueType vt> : Pat<
+  (node (AtomicAddr AddressSpace:$segment,
+                    BrigMemoryOrder:$order,
+                    BrigMemoryScope:$scope,
+                    equiv:$equiv,
+                    MEMOP:$address,
+                               BrigTypeX:$TypeLength), vt:$src0),
+  (vt (atomic_inst op,
+                   $segment,
+                   $order,
+                   $scope,
+                   $equiv,
+                   MEMOP:$address,
+                   vt:$src0,
+                   (vt zero_reg),
+                   $TypeLength))
+>;
+
+multiclass AtomicPatIntTypes<SDPatternOperator node, int op> {
+  def : AtomicPat<node, op, i32>;
+  def : AtomicPat<node, op, i64>;
+}
+
+
+defm : AtomicPatIntTypes<atomic_load_add, BrigAtomicOperation.ADD>;
+defm : AtomicPatIntTypes<atomic_load_sub, BrigAtomicOperation.SUB>;
+defm : AtomicPatIntTypes<atomic_load_and, BrigAtomicOperation.AND>;
+defm : AtomicPatIntTypes<atomic_load_or, BrigAtomicOperation.OR>;
+defm : AtomicPatIntTypes<atomic_load_xor, BrigAtomicOperation.XOR>;
+defm : AtomicPatIntTypes<atomic_load_min, BrigAtomicOperation.MIN>;
+defm : AtomicPatIntTypes<atomic_load_max, BrigAtomicOperation.MAX>;

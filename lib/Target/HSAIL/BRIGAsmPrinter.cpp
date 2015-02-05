@@ -856,6 +856,17 @@ static Brig::BrigOpcode getInstMemFenceBrigOpcode(unsigned Opc) {
   }
 }
 
+static Brig::BrigOpcode getInstAtomicBrigOpcode(unsigned Opc) {
+  switch (Opc) {
+  case HSAIL::atomic_inst:
+    return Brig::BRIG_OPCODE_ATOMIC;
+  case HSAIL::atomicnoret_inst:
+    return Brig::BRIG_OPCODE_ATOMICNORET;
+  default:
+    llvm_unreachable("unhandled opcode");
+  }
+}
+
 static Brig::BrigOpcode getInstAddrBrigOpcode(unsigned Opc) {
   switch (Opc) {
   case HSAIL::lda_inst:
@@ -942,6 +953,9 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
   if (TII->isInstMemFence(Opc))
     return BrigEmitInstMemFence(*II, getInstMemFenceBrigOpcode(Opc));
+
+  if (TII->isInstAtomic(Opc))
+    return BrigEmitInstAtomic(*II, getInstAtomicBrigOpcode(Opc));
 
   if (TII->isInstAddr(Opc))
     return BrigEmitInstAddr(*II, getInstAddrBrigOpcode(Opc));
@@ -2294,6 +2308,44 @@ HSAIL_ASM::InstMem BRIGAsmPrinter::BrigEmitInstMem(const MachineInstr &MI,
     BrigEmitVecOperand(&MI, 0, VecSize, inst);
 
   BrigEmitOperandLdStAddress(&MI, VecSize);
+
+  return inst;
+}
+
+HSAIL_ASM::InstAtomic BRIGAsmPrinter::BrigEmitInstAtomic(const MachineInstr &MI,
+                                                         unsigned BrigOpc) {
+  HSAIL_ASM::InstAtomic inst = brigantine.addInst<HSAIL_ASM::InstAtomic>(BrigOpc);
+  unsigned Opc = MI.getOpcode();
+
+  unsigned Segment = TII->getNamedOperand(MI, HSAIL::OpName::segment)->getImm();
+  inst.segment() = getHSAILSegment(Segment);
+  inst.memoryOrder() = TII->getNamedModifierOperand(MI, HSAIL::OpName::order);
+  inst.memoryScope() = TII->getNamedModifierOperand(MI, HSAIL::OpName::scope);
+  inst.atomicOperation() = TII->getNamedModifierOperand(MI, HSAIL::OpName::op);
+  inst.equivClass() = TII->getNamedOperand(MI, HSAIL::OpName::equiv)->getImm();
+  inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
+
+  int DestIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest);
+  if (DestIdx != -1)
+    BrigEmitOperand(&MI, DestIdx, inst);
+
+  int AddressIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::address);
+  BrigEmitOperandLdStAddress(&MI, AddressIdx);
+
+  // InstAtomic is unusual in that the number of operands differs with the same
+  // instruction opcode depending on the atomicOperation modifier. We always
+  // have these operands in the MachineInstr, and must not emit them if they are
+  // unused for this operation.
+
+  int Src0Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0);
+  const MachineOperand &Src0 = MI.getOperand(Src0Idx);
+  if (!Src0.isReg() || Src0.getReg() != HSAIL::NoRegister)
+    BrigEmitOperand(&MI, Src0Idx, inst);
+
+  int Src1Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src1);
+  const MachineOperand &Src1 = MI.getOperand(Src1Idx);
+  if (!Src1.isReg() || Src1.getReg() != HSAIL::NoRegister)
+    BrigEmitOperand(&MI, Src1Idx, inst);
 
   return inst;
 }

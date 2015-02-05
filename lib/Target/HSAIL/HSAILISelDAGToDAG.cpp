@@ -130,6 +130,20 @@ private:
                        /*SDValue &Equiv,*/
                        SDValue &Type) const;
 
+  bool SelectAtomicAddr(SDNode *ParentLoad,
+                        SDValue Addr,
+                        SDValue &Segment,
+                        SDValue &Order,
+                        SDValue &Scope,
+                        SDValue &Equiv,
+
+                        SDValue &Base,
+                        SDValue &Reg,
+                        SDValue &Offset,
+
+                        SDValue &Type) const;
+
+
   void SelectAddrSpaceCastCommon(const AddrSpaceCastSDNode &ASC,
                                  SDValue &NoNull,
                                  SDValue &Ptr,
@@ -1045,6 +1059,63 @@ bool HSAILDAGToDAGISel::SelectStoreAddr(SDNode *ParentStore,
   Align = CurDAG->getTargetConstant(Store->getAlignment(), MVT::i32);
   //Equiv = CurDAG->getTargetConstant(0, MVT::i32);
   Type = CurDAG->getTargetConstant(BrigType, MVT::i32);
+  return true;
+}
+
+static Brig::BrigMemoryOrder getBrigMemoryOrder(AtomicOrdering Order) {
+  switch (Order) {
+  case Acquire:
+    return Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE;
+  case Release:
+    return Brig::BRIG_MEMORY_ORDER_SC_RELEASE;
+  case SequentiallyConsistent:
+    return Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE;
+  default:
+    llvm_unreachable("unhandled memory order");
+  }
+}
+
+static Brig::BrigMemoryScope getBrigMemoryScope(SynchronizationScope Scope) {
+  switch (Scope) {
+  case SingleThread:
+    return Brig::BRIG_MEMORY_SCOPE_WORKITEM;
+  case CrossThread:
+    // FIXME: This needs to be fixed when LLVM support other scope values.
+    return Brig::BRIG_MEMORY_SCOPE_WORKGROUP;
+  }
+}
+
+bool HSAILDAGToDAGISel::SelectAtomicAddr(SDNode *ParentAtomic,
+                                         SDValue Addr,
+                                         SDValue &Segment,
+                                         SDValue &Order,
+                                         SDValue &Scope,
+                                         SDValue &Equiv,
+
+                                         SDValue &Base,
+                                         SDValue &Reg,
+                                         SDValue &Offset,
+
+                                         SDValue &Type) const {
+  if (!SelectAddr(Addr, Base, Reg, Offset))
+    return false;
+
+  const AtomicSDNode *Atomic = cast<AtomicSDNode>(ParentAtomic);
+
+  // XXX - What do we do with the failure ordering?
+  AtomicOrdering SuccOrder = Atomic->getSuccessOrdering();
+  SynchronizationScope SyncScope = Atomic->getSynchScope();
+
+  unsigned AS = Atomic->getAddressSpace();
+  MVT MemVT = Atomic->getMemoryVT().getSimpleVT();
+  unsigned BrigType = getBrigTypeFromStoreType(MemVT.SimpleTy);
+
+  Segment = CurDAG->getTargetConstant(AS, MVT::i32);
+  Order = CurDAG->getTargetConstant(getBrigMemoryOrder(SuccOrder), MVT::i32);
+  Scope = CurDAG->getTargetConstant(getBrigMemoryScope(SyncScope), MVT::i32);
+  Equiv = CurDAG->getTargetConstant(0, MVT::i32);
+  Type = CurDAG->getTargetConstant(BrigType, MVT::i32);
+
   return true;
 }
 

@@ -38,3 +38,7 @@ def GPROrImm : ComplexPattern<untyped, 1, "SelectGPROrImm">;
 def ftz : Operand <i1> {
   let PrintMethod = "printFTZ";
 }
+
+def equiv : Operand <i32> {
+  let PrintMethod = "printEquiv";
+}
