@@ -30,7 +30,8 @@ namespace llvm {
       ACTIVELANESHUFFLE,
       ACTIVELANEID,
       ACTIVELANECOUNT,
-      KERNARGBASEPTR
+      KERNARGBASEPTR,
+      SEGMENTP
     };
   }
 }

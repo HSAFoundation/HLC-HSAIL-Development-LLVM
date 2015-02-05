@@ -840,6 +840,8 @@ static Brig::BrigOpcode getInstSegCvtBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_FTOS;
   case HSAIL::stof_inst:
     return Brig::BRIG_OPCODE_STOF;
+  case HSAIL::segmentp_inst:
+    return Brig::BRIG_OPCODE_SEGMENTP;
   default:
     llvm_unreachable("unhandled opcode");
   }

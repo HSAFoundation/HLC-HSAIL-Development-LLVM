@@ -29,6 +29,11 @@ def HSAILLdaOp : SDTypeProfile<1, 2,
   [SDTCisInt<0>, SDTCisInt<1>, SDTCisSameAs<0, 2>]
 >;
 
+// i1 = segment, i1:nonull, ptr
+def HSAILSegmentPOp : SDTypeProfile<1, 3,
+  [SDTCisInt<0>, SDTCisInt<1>, SDTCisSameAs<0, 2>, SDTCisInt<3>]
+>;
+
 //===----------------------------------------------------------------------===//
 // Call/Return DAG Nodes
 //===----------------------------------------------------------------------===//
@@ -110,3 +115,5 @@ def HSAILactivelanecount : SDNode<"HSAILISD::ACTIVELANECOUNT",
 def HSAILclass : SDNode<"HSAILISD::CLASS", HSAILFPClassOp>;
 
 def HSAILkernargbaseptr : SDNode<"HSAILISD::KERNARGBASEPTR", SDTIntLeaf>;
+
+def HSAILsegmentp : SDNode<"HSAILISD::SEGMENTP", HSAILSegmentPOp>;

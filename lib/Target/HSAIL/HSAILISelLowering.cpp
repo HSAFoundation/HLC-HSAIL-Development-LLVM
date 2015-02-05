@@ -1202,6 +1202,8 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::ACTIVELANECOUNT";
   case HSAILISD::KERNARGBASEPTR:
     return "HSAILISD::KERNARGBASEPTR";
+  case HSAILISD::SEGMENTP:
+    return "HSAILISD::SEGMENTP";
   }
 }
 
@@ -1473,6 +1475,24 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
     return DAG.getNode(HSAILISD::CLASS, SL, MVT::i1,
                        Op.getOperand(1), Op.getOperand(2));
 
+  case HSAILIntrinsic::HSAIL_segmentp_global: {
+    return DAG.getNode(HSAILISD::SEGMENTP, SL, MVT::i1,
+                       DAG.getTargetConstant(HSAILAS::GLOBAL_ADDRESS, MVT::i32),
+                       DAG.getTargetConstant(0, MVT::i1),
+                       Op.getOperand(1));
+  }
+  case HSAILIntrinsic::HSAIL_segmentp_local: {
+    return DAG.getNode(HSAILISD::SEGMENTP, SL, MVT::i1,
+                       DAG.getTargetConstant(HSAILAS::GROUP_ADDRESS, MVT::i32),
+                       DAG.getTargetConstant(0, MVT::i1),
+                       Op.getOperand(1));
+  }
+  case HSAILIntrinsic::HSAIL_segmentp_private: {
+    return DAG.getNode(HSAILISD::SEGMENTP, SL, MVT::i1,
+                       DAG.getTargetConstant(HSAILAS::PRIVATE_ADDRESS, MVT::i32),
+                       DAG.getTargetConstant(0, MVT::i1),
+                       Op.getOperand(1));
+  }
   default:
     return Op;
   }

@@ -32,28 +32,24 @@ def : FTOSPat<i32>;
 def : FTOSPat<i64>;
 
 
-// segmentp
-multiclass SegmentPInst<Intrinsic intr, string asm> {
-  def _r_addr32 : HSAILInst<(outs CR:$dest), (ins GPR32:$src),
-      asm#"_b1_u32"#"\t $dest, $src",
-      [(set (i1 CR:$dest), (intr (i32 GPR32:$src)))]>;
 
-  def _i_addr32 : HSAILInst<(outs CR:$dest), (ins i32imm:$src),
-      asm#"_b1_u32"#"\t $dest, $src",
-      [(set (i1 CR:$dest), (intr (i32 imm:$src)))]>;
+def segmentp_inst : HSAILInstSegCvt_1Op<"segmentp", BrigOpcode.SEGMENTP>;
 
-  def _r : HSAILInst<(outs CR:$dest), (ins GPR64:$src),
-      asm#"_b1_u64"#"\t $dest, $src",
-      [(set (i1 CR:$dest), (intr (i64 GPR64:$src)))]>;
+class SegmentPPat<ValueType srcvt, int srcbt> : Pat<
+  (HSAILsegmentp (i32 timm:$segment),
+                 (i1 timm:$nonull),
+                 (srcvt (GPROrImm srcvt:$src0))),
+  (segmentp_inst $segment, $nonull, $src0, BrigTypeX.B1, srcbt)
+>;
 
-  def _i : HSAILInst<(outs CR:$dest), (ins i64imm:$src),
-      asm#"_b1_u64"#"\t $dest, $src",
-      [(set (i1 CR:$dest), (intr (i64 imm:$src)))]>;
+
+let Predicates = [In64BitMode] in {
+  def : SegmentPPat<i64, BrigTypeX.U64>;
 }
 
-defm segmentp_global  : SegmentPInst<int_HSAIL_segmentp_global, "segmentp_global">;
-defm segmentp_local   : SegmentPInst<int_HSAIL_segmentp_local, "segmentp_group">;
-defm segmentp_private : SegmentPInst<int_HSAIL_segmentp_private, "segmentp_private">;
+let Predicates = [In32BitMode] in {
+  def : SegmentPPat<i32, BrigTypeX.U32>;
+}
 
 let isNotDuplicable = 1, hasCtrlDep = 1, hasSideEffects = 1 in {
   def arg_decl : HSAILInst<(outs), (ins PtrRC:$symbol, BrigTypeX:$TypeLength, i32imm:$size,
