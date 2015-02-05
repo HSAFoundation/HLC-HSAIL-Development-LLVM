@@ -139,10 +139,7 @@ private:
 
                         SDValue &Base,
                         SDValue &Reg,
-                        SDValue &Offset,
-
-                        SDValue &Type) const;
-
+                        SDValue &Offset) const;
 
   void SelectAddrSpaceCastCommon(const AddrSpaceCastSDNode &ASC,
                                  SDValue &NoNull,
@@ -1094,9 +1091,7 @@ bool HSAILDAGToDAGISel::SelectAtomicAddr(SDNode *ParentAtomic,
 
                                          SDValue &Base,
                                          SDValue &Reg,
-                                         SDValue &Offset,
-
-                                         SDValue &Type) const {
+                                         SDValue &Offset) const {
   if (!SelectAddr(Addr, Base, Reg, Offset))
     return false;
 
@@ -1107,14 +1102,11 @@ bool HSAILDAGToDAGISel::SelectAtomicAddr(SDNode *ParentAtomic,
   SynchronizationScope SyncScope = Atomic->getSynchScope();
 
   unsigned AS = Atomic->getAddressSpace();
-  MVT MemVT = Atomic->getMemoryVT().getSimpleVT();
-  unsigned BrigType = getBrigTypeFromStoreType(MemVT.SimpleTy);
 
   Segment = CurDAG->getTargetConstant(AS, MVT::i32);
   Order = CurDAG->getTargetConstant(getBrigMemoryOrder(SuccOrder), MVT::i32);
   Scope = CurDAG->getTargetConstant(getBrigMemoryScope(SyncScope), MVT::i32);
   Equiv = CurDAG->getTargetConstant(0, MVT::i32);
-  Type = CurDAG->getTargetConstant(BrigType, MVT::i32);
 
   return true;
 }

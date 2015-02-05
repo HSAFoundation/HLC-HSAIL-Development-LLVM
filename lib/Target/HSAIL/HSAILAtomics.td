@@ -126,13 +126,13 @@ let hasPostISelHook = 1 in {
 // are no uses of the returned value.
 def atomicnoret_inst : InstAtomic<"atomicnoret", BrigOpcode.ATOMICNORET>;
 
-class AtomicPat<SDPatternOperator node, int op, ValueType vt> : Pat<
+class AtomicPat<SDPatternOperator node, int op, ValueType vt, int bt> : Pat<
   (node (AtomicAddr AddressSpace:$segment,
                     BrigMemoryOrder:$order,
                     BrigMemoryScope:$scope,
                     equiv:$equiv,
-                    MEMOP:$address,
-                               BrigTypeX:$TypeLength), vt:$src0),
+                    MEMOP:$address),
+         vt:$src0),
   (vt (atomic_inst op,
                    $segment,
                    $order,
@@ -141,12 +141,12 @@ class AtomicPat<SDPatternOperator node, int op, ValueType vt> : Pat<
                    MEMOP:$address,
                    vt:$src0,
                    (vt zero_reg),
-                   $TypeLength))
+                   bt))
 >;
 
-multiclass AtomicPatIntTypes<SDPatternOperator node, int op> {
-  def : AtomicPat<node, op, i32>;
-  def : AtomicPat<node, op, i64>;
+multiclass AtomicPatIntTypes<SDPatternOperator node, int op, bit signed = 0> {
+  def : AtomicPat<node, op, i32, !if(signed, BrigTypeX.S32, BrigTypeX.U32)>;
+  def : AtomicPat<node, op, i64, !if(signed, BrigTypeX.S64, BrigTypeX.U64)>;
 }
 
 
@@ -155,5 +155,7 @@ defm : AtomicPatIntTypes<atomic_load_sub, BrigAtomicOperation.SUB>;
 defm : AtomicPatIntTypes<atomic_load_and, BrigAtomicOperation.AND>;
 defm : AtomicPatIntTypes<atomic_load_or, BrigAtomicOperation.OR>;
 defm : AtomicPatIntTypes<atomic_load_xor, BrigAtomicOperation.XOR>;
-defm : AtomicPatIntTypes<atomic_load_min, BrigAtomicOperation.MIN>;
-defm : AtomicPatIntTypes<atomic_load_max, BrigAtomicOperation.MAX>;
+defm : AtomicPatIntTypes<atomic_load_min, BrigAtomicOperation.MIN, 1>;
+defm : AtomicPatIntTypes<atomic_load_max, BrigAtomicOperation.MAX, 1>;
+defm : AtomicPatIntTypes<atomic_load_umin, BrigAtomicOperation.MIN>;
+defm : AtomicPatIntTypes<atomic_load_umax, BrigAtomicOperation.MAX>;
