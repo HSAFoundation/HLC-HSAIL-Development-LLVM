@@ -440,7 +440,7 @@ class InstAtomic_NoRet<string opName, bits<16> BrigVal> :
          unknown:$src0,
          unknown:$src1,
          BrigTypeX:$TypeLength),
-    opName#"$op$segment$order$scope$equiv$TypeLength\t$dest, $address, $src0, $src1"
+    opName#"$op$segment$order$scope$equiv$TypeLength\t$address, $src0, $src1"
 >;
 
 // InstCmp
@@ -463,7 +463,6 @@ class InstCmp<string opName, bits<16> BrigVal> :
          BrigTypeX:$srcTypesrcLength),
     opName#"$op$ftz$destTypedestLength$srcTypesrcLength\t$dest, $src0, $src1"
 >;
-
 
 // InstAddr
 class HSAILInstAddr<bits<16> BrigVal,
@@ -809,6 +808,117 @@ class InstAddr_1Op_Pat<HSAILInst inst,
   (node ADDR:$address),
   (inst segment, MEMOP:$address, bt)
 >;
+
+////////////////////////////////////////////////////////////////////////////////
+// Atomic instruction patterns
+////////////////////////////////////////////////////////////////////////////////
+
+class AtomicPat_0Op_Pat<Instruction inst, SDPatternOperator node,
+                        int op, ValueType vt, int bt> : Pat<
+  (node (AtomicAddr AddressSpace:$segment,
+                    BrigMemoryOrder:$order,
+                    BrigMemoryScope:$scope,
+                    equiv:$equiv,
+                    MEMOP:$address)),
+  (vt (inst op,
+            $segment,
+            $order,
+            $scope,
+            $equiv,
+            MEMOP:$address,
+            (vt zero_reg),
+            (vt zero_reg),
+            bt))
+>;
+
+class AtomicPat_1Op_Pat<Instruction inst, SDPatternOperator node,
+                        int op, ValueType vt, int bt> : Pat<
+  (node (AtomicAddr AddressSpace:$segment,
+                    BrigMemoryOrder:$order,
+                    BrigMemoryScope:$scope,
+                    equiv:$equiv,
+                    MEMOP:$address),
+         (GPROrImm vt:$src0)),
+  (vt (inst op,
+            $segment,
+            $order,
+            $scope,
+            $equiv,
+            MEMOP:$address,
+            $src0,
+            (vt zero_reg),
+            bt))
+>;
+
+class AtomicPat_2Op_Pat<Instruction inst, SDPatternOperator node,
+                        int op, ValueType vt, int bt> : Pat<
+  (node (AtomicAddr AddressSpace:$segment,
+                    BrigMemoryOrder:$order,
+                    BrigMemoryScope:$scope,
+                    equiv:$equiv,
+                    MEMOP:$address),
+         (GPROrImm vt:$src0),
+         (GPROrImm vt:$src1)),
+  (vt (inst op,
+            $segment,
+            $order,
+            $scope,
+            $equiv,
+            MEMOP:$address,
+            vt:$src0,
+            vt:$src1,
+            bt))
+>;
+
+multiclass AtomicPat_0Op_IntTypes<Instruction inst,
+                                  SDPatternOperator node,
+                                  int op,
+                                  bit signed = 0> {
+  def : AtomicPat_0Op_Pat<
+    inst, node, op, i32, !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+  >;
+
+  def : AtomicPat_0Op_Pat<
+    inst, node, op, i64, !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+  >;
+}
+
+multiclass AtomicPat_1Op_IntTypes<Instruction inst,
+                                  SDPatternOperator node,
+                                  int op,
+                                  bit signed = 0> {
+  def : AtomicPat_1Op_Pat<
+    inst, node, op, i32, !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+  >;
+
+  def : AtomicPat_1Op_Pat<
+    inst, node, op, i64, !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+  >;
+}
+
+multiclass AtomicPat_1Op_BitTypes<Instruction inst,
+                                  SDPatternOperator node,
+                                  int op> {
+  def : AtomicPat_1Op_Pat<
+    inst, node, op, i32, BrigTypeX.B32
+  >;
+
+  def : AtomicPat_1Op_Pat<
+    inst, node, op, i64, BrigTypeX.B64
+  >;
+}
+
+multiclass AtomicPat_2Op_BitTypes<Instruction inst,
+                                  SDPatternOperator node,
+                                  int op> {
+  def : AtomicPat_2Op_Pat<
+    inst, node, op, i32, BrigTypeX.B32
+  >;
+
+  def : AtomicPat_2Op_Pat<
+    inst, node, op, i64, BrigTypeX.B64
+  >;
+}
 
 let TargetPrefix = "HSAIL", isTarget = 1 in {
     // Read image intrinsic classes

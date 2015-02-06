@@ -1951,11 +1951,25 @@ void HSAILTargetLowering::replaceUnusedAtomicRetInst(MachineInstr *MI,
       DEBUG(dbgs() << '\n');
 }
 
-void
-HSAILTargetLowering::AdjustInstrPostInstrSelection(MachineInstr *MI, SDNode *Node) const
-{
+void HSAILTargetLowering::AdjustInstrPostInstrSelection(MachineInstr *MI,
+                                                        SDNode *Node) const {
   if (HSAIL::isRetAtomicOp(MI) && Node->use_size() <= 1)
     replaceUnusedAtomicRetInst(MI, Node);
+
+  const HSAILInstrInfo *TII =
+    static_cast<const HSAILInstrInfo *>(Subtarget->getInstrInfo());
+
+  if (MI->getOpcode() == HSAIL::atomic_inst && !Node->hasAnyUseOfValue(0)) {
+    const MachineOperand *OpOp = TII->getNamedOperand(*MI, HSAIL::OpName::op);
+    auto Op = static_cast<Brig::BrigAtomicOperation>(OpOp->getImm());
+
+    if (Op != Brig::BRIG_ATOMIC_EXCH) {
+      MI->setDesc(TII->get(HSAIL::atomicnoret_inst));
+      MI->RemoveOperand(0);
+    }
+
+    return;
+  }
 }
 //#endif
 

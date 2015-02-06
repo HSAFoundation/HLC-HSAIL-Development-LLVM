@@ -124,38 +124,41 @@ let hasPostISelHook = 1 in {
 
 // atomic is replaced by atomicnoret in the post-isel hook if there
 // are no uses of the returned value.
-def atomicnoret_inst : InstAtomic<"atomicnoret", BrigOpcode.ATOMICNORET>;
-
-class AtomicPat<SDPatternOperator node, int op, ValueType vt, int bt> : Pat<
-  (node (AtomicAddr AddressSpace:$segment,
-                    BrigMemoryOrder:$order,
-                    BrigMemoryScope:$scope,
-                    equiv:$equiv,
-                    MEMOP:$address),
-         vt:$src0),
-  (vt (atomic_inst op,
-                   $segment,
-                   $order,
-                   $scope,
-                   $equiv,
-                   MEMOP:$address,
-                   vt:$src0,
-                   (vt zero_reg),
-                   bt))
->;
-
-multiclass AtomicPatIntTypes<SDPatternOperator node, int op, bit signed = 0> {
-  def : AtomicPat<node, op, i32, !if(signed, BrigTypeX.S32, BrigTypeX.U32)>;
-  def : AtomicPat<node, op, i64, !if(signed, BrigTypeX.S64, BrigTypeX.U64)>;
-}
+def atomicnoret_inst : InstAtomic_NoRet<"atomicnoret", BrigOpcode.ATOMICNORET>;
 
 
-defm : AtomicPatIntTypes<atomic_load_add, BrigAtomicOperation.ADD>;
-defm : AtomicPatIntTypes<atomic_load_sub, BrigAtomicOperation.SUB>;
-defm : AtomicPatIntTypes<atomic_load_and, BrigAtomicOperation.AND>;
-defm : AtomicPatIntTypes<atomic_load_or, BrigAtomicOperation.OR>;
-defm : AtomicPatIntTypes<atomic_load_xor, BrigAtomicOperation.XOR>;
-defm : AtomicPatIntTypes<atomic_load_min, BrigAtomicOperation.MIN, 1>;
-defm : AtomicPatIntTypes<atomic_load_max, BrigAtomicOperation.MAX, 1>;
-defm : AtomicPatIntTypes<atomic_load_umin, BrigAtomicOperation.MIN>;
-defm : AtomicPatIntTypes<atomic_load_umax, BrigAtomicOperation.MAX>;
+// def atomic_load_inc : PatFrag<
+//   (ops node:$ptr),
+//   (atomic_load_add node:$ptr, 1)
+// >;
+
+// def atomic_load_dec : PatFrag<
+//   (ops node:$ptr),
+//   (atomic_load_sub node:$ptr, 1)
+// >;
+
+
+// FIXME: We may need to define a separate opcode for each atomic
+// operation. The mayLoad / mayStore flags conflict for atomic_load
+// and atomic_store.
+
+// defm : AtomicPat_0Op_IntTypes<atomic_inst, atomic_load, BrigAtomicOperation.LD>;
+// defm : AtomicPat_1Op_IntTypes<atomic_inst, atomic_store, BrigAtomicOperation.ST>;
+
+// let AddedComplexity = 1 in {
+//   defm : AtomicPat_0Op_IntTypes<atomic_inst, atomic_load_inc, BrigAtomicOperation.WRAPINC>;
+//   defm : AtomicPat_0Op_IntTypes<atomic_inst, atomic_load_dec, BrigAtomicOperation.WRAPDEC>;
+// }
+
+defm : AtomicPat_1Op_BitTypes<atomic_inst, atomic_swap, BrigAtomicOperation.EXCH>;
+defm : AtomicPat_1Op_IntTypes<atomic_inst, atomic_load_add, BrigAtomicOperation.ADD>;
+defm : AtomicPat_1Op_IntTypes<atomic_inst, atomic_load_sub, BrigAtomicOperation.SUB>;
+defm : AtomicPat_1Op_BitTypes<atomic_inst, atomic_load_and, BrigAtomicOperation.AND>;
+defm : AtomicPat_1Op_BitTypes<atomic_inst, atomic_load_or, BrigAtomicOperation.OR>;
+defm : AtomicPat_1Op_BitTypes<atomic_inst, atomic_load_xor, BrigAtomicOperation.XOR>;
+defm : AtomicPat_1Op_IntTypes<atomic_inst, atomic_load_min, BrigAtomicOperation.MIN, 1>;
+defm : AtomicPat_1Op_IntTypes<atomic_inst, atomic_load_max, BrigAtomicOperation.MAX, 1>;
+defm : AtomicPat_1Op_IntTypes<atomic_inst, atomic_load_umin, BrigAtomicOperation.MIN>;
+defm : AtomicPat_1Op_IntTypes<atomic_inst, atomic_load_umax, BrigAtomicOperation.MAX>;
+
+defm : AtomicPat_2Op_BitTypes<atomic_inst, atomic_cmp_swap, BrigAtomicOperation.CAS>;
