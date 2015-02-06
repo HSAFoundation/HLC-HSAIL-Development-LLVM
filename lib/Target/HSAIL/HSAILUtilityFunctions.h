@@ -131,10 +131,6 @@ static inline bool isImageInst(const llvm::MachineInstr *MI) {
   return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_IMAGEINST;
 }
 
-inline bool isCrosslaneInst(const llvm::MachineInstr *MI) {
-  return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_CROSSLANE;
-}
-
 bool HSAILisArgInst(const llvm::TargetMachine &TM, const llvm::MachineInstr *MI);
 
 bool isKernelFunc(const llvm::Function *F);

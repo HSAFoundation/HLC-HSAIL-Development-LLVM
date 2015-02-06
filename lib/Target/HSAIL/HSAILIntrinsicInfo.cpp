@@ -89,16 +89,6 @@ bool HSAILIntrinsicInfo::isLoadImage(HSAILIntrinsic::ID intr)
   }
 }
 
-bool HSAILIntrinsicInfo::isCrossLane(HSAILIntrinsic::ID intr)
-{
-  switch (intr) {
-    default: return false;
-    case HSAILIntrinsic::HSAIL_activelanemask_v4_b64_b1:
-    case HSAILIntrinsic::HSAIL_activelanemask_v4_width_b64_b1:
-	return true;
-  }
-}
-
 HSAILIntrinsicInfo::HSAILIntrinsicInfo(HSAILTargetMachine *tm)
   : TargetIntrinsicInfo() {}
 

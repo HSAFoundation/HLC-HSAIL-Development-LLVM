@@ -73,7 +73,6 @@ public:
 
   static bool isReadImage(llvm::HSAILIntrinsic::ID intr);
   static bool isLoadImage(llvm::HSAILIntrinsic::ID intr);
-  static bool isCrossLane(llvm::HSAILIntrinsic::ID intr);
 
 };
 

@@ -21,6 +21,11 @@ def HSAILActiveLaneCountOp : SDTypeProfile<1, 2,
   [SDTCisInt<0>, SDTCisInt<1>, SDTCisInt<2>]
 >;
 
+def HSAILActiveLaneMaskOp : SDTypeProfile<4, 2,
+  [SDTCisInt<0>, SDTCisSameAs<0, 1>, SDTCisSameAs<0, 2>, SDTCisSameAs<0, 3>,
+   SDTCisInt<4>, SDTCisInt<5>]
+>;
+
 def HSAILFPClassOp : SDTypeProfile<1, 2,
   [SDTCisInt<0>, SDTCisFP<1>, SDTCisInt<2>]
 >;
@@ -110,6 +115,10 @@ def HSAILactivelaneid : SDNode<"HSAILISD::ACTIVELANEID",
 
 def HSAILactivelanecount : SDNode<"HSAILISD::ACTIVELANECOUNT",
   HSAILActiveLaneCountOp, [SDNPHasChain, SDNPSideEffect]
+>;
+
+def HSAILactivelanemask : SDNode<"HSAILISD::ACTIVELANEMASK",
+  HSAILActiveLaneMaskOp, [SDNPHasChain, SDNPSideEffect]
 >;
 
 def HSAILclass : SDNode<"HSAILISD::CLASS", HSAILFPClassOp>;

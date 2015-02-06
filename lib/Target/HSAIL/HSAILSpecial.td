@@ -122,11 +122,5 @@ let Predicates = [In32BitMode] in {
 
 
 // Cross-Lane Operations
-class CrossLaneV4<string asm> :
-  HSAILInst<(outs GPR64:$dest0, GPR64:$dest1,  GPR64:$dest2,  GPR64:$dest3), (ins CR:$src1),
-  !strconcat(asm, " ( $dest0, $dest1, $dest2, $dest3 ), " "$src1"), []> {
-  let isCrossLaneInst = 1;
-}
+def activelanemask_inst : HSAILInstLane_ActiveLaneMask<"activelanemask", BrigOpcode.ACTIVELANEMASK>;
 
-def activelanemask_v4_b64_b1 : CrossLaneV4<"activelanemask_v4_b64_b1">;
-def activelanemask_v4_width_b64_b1 : CrossLaneV4<"activelanemask_v4_width(WAVESIZE)_b64_b1">;

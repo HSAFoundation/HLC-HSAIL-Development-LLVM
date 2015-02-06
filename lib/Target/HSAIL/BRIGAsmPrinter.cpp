@@ -805,6 +805,8 @@ static Brig::BrigOpcode getInstLaneBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_ACTIVELANEID;
   case HSAIL::activelanecount_inst:
     return Brig::BRIG_OPCODE_ACTIVELANECOUNT;
+  case HSAIL::activelanemask_inst:
+    return Brig::BRIG_OPCODE_ACTIVELANEMASK;
   default:
     llvm_unreachable("unhandled opcode");
   }
@@ -973,14 +975,6 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     const char *AsmStr = getInstMnemonic(II);
     HSAIL_ASM::InstImage inst = HSAIL_ASM::parseMnemo(AsmStr, brigantine);
     BrigEmitImageInst(II, inst);
-    return inst;
-  }
-
-  if (HSAIL::isCrosslaneInst(II)) {
-    const char *AsmStr = getInstMnemonic(II);
-    HSAIL_ASM::Inst inst = HSAIL_ASM::parseMnemo(AsmStr, brigantine);
-    BrigEmitVecOperand(II, 0, 4, inst);
-    BrigEmitOperand(II, 4, inst);
     return inst;
   }
 
@@ -2128,8 +2122,15 @@ HSAIL_ASM::InstLane BRIGAsmPrinter::BrigEmitInstLane(const MachineInstr &MI,
   inst.width()
     = TII->getNamedOperand(MI, HSAIL::OpName::width)->getImm();
 
-  BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
-                  inst);
+  int DestIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest);
+  if (DestIdx != -1) {
+    BrigEmitOperand(&MI, DestIdx, inst);
+  } else {
+    // FIXME: There appears to be a bug when trying to use a custom operand with
+    // multiple fields in the outs.
+    int Dest0Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest0);
+    BrigEmitVecOperand(&MI, Dest0Idx, 4, inst);
+  }
 
   int Src0Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0);
   if (Src0Idx != -1)

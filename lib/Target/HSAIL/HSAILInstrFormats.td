@@ -57,7 +57,6 @@ class HSAILInst<dag outs, dag ins,
   bit isStore = 0;
   bit isConv = 0;
   bit isImageInst = 0;
-  bit isCrossLaneInst = 0;
 
 
   let TSFlags{3} = InstAddr;
@@ -83,7 +82,6 @@ class HSAILInst<dag outs, dag ins,
   let TSFlags{22} = isStore;
   let TSFlags{23} = isConv;
   let TSFlags{24} = isImageInst;
-  let TSFlags{25} = isCrossLaneInst;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -260,6 +258,18 @@ class HSAILInstLane_ActiveLaneShuffle<string opName, bits<16> BrigVal> :
          unknown:$src0, unknown:$src1, unknown:$src2, unknown:$src3,
          BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
   opName#"$width$TypeLength$sourceType\t$dest, $src0, $src1, $src2, $src3"
+>;
+
+class HSAILInstLane_ActiveLaneMask<string opName, bits<16> BrigVal> :
+  HSAILInstLane<
+    BrigVal,
+    // FIXME: Using compound operands as dest seems to not be selectable
+  //(outs Vec4Op:$dest),
+    (outs GPR64:$dest0, GPR64:$dest1,  GPR64:$dest2,  GPR64:$dest3),
+    (ins BrigWidth:$width,
+         unknown:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+//  opName#"$width$TypeLength$sourceType\t$dest, $src0"
+  opName#"$width$TypeLength$sourceType\t($dest0, $dest1, $dest2, $dest3), $src0"
 >;
 
 // InstBr

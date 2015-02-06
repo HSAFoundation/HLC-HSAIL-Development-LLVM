@@ -1196,6 +1196,8 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::ACTIVELANEID";
   case HSAILISD::ACTIVELANECOUNT:
     return "HSAILISD::ACTIVELANECOUNT";
+  case HSAILISD::ACTIVELANEMASK:
+    return "HSAILISD::ACTIVELANEMASK";
   case HSAILISD::KERNARGBASEPTR:
     return "HSAILISD::KERNARGBASEPTR";
   case HSAILISD::SEGMENTP:
@@ -1607,6 +1609,26 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     };
 
     return DAG.getNode(HSAILISD::ACTIVELANECOUNT, SL, VTs, Ops);
+  }
+
+  case HSAILIntrinsic::HSAIL_activelanemask_v4_b64_b1: {
+    const SDValue Ops[] = {
+      Op.getOperand(0), // Chain
+      DAG.getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32), // width
+      Op.getOperand(2)
+    };
+
+    return DAG.getNode(HSAILISD::ACTIVELANEMASK, SL, Op->getVTList(), Ops);
+  }
+
+  case HSAILIntrinsic::HSAIL_activelanemask_v4_width_b64_b1: {
+    const SDValue Ops[] = {
+      Op.getOperand(0), // Chain
+      DAG.getTargetConstant(Brig::BRIG_WIDTH_WAVESIZE, MVT::i32), // width
+      Op.getOperand(2)
+    };
+
+    return DAG.getNode(HSAILISD::ACTIVELANEMASK, SL, Op->getVTList(), Ops);
   }
 
   default:

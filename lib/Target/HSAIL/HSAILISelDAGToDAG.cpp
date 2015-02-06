@@ -91,7 +91,7 @@ private:
   SDNode* SelectAtomic(SDNode *Node, bool bitwise, bool isSigned);
   SDNode* SelectLdKernargIntrinsic(SDNode *Node);
   SDNode* SelectImageIntrinsic(SDNode *Node);
-  SDNode* SelectCrossLaneIntrinsic(SDNode *Node);
+  SDNode *SelectActiveLaneMask(SDNode *Node);
   // Helper for SelectAddrCommon
   // Checks that OR operation is semantically equivalent to ADD
   bool IsOREquivalentToADD(SDValue Op) const;
@@ -272,23 +272,12 @@ static unsigned getImageInstr(HSAILIntrinsic::ID intr)
   }
 }
 
-static unsigned getCrossLaneInstr(HSAILIntrinsic::ID intr)
-{
-  switch (intr) {
-      default: llvm_unreachable("unexpected intrinsinc ID for Cross Lane Ops");
-      case HSAILIntrinsic::HSAIL_activelanemask_v4_b64_b1:  return HSAIL::activelanemask_v4_b64_b1;
-      case HSAILIntrinsic::HSAIL_activelanemask_v4_width_b64_b1:  return HSAIL::activelanemask_v4_width_b64_b1;
-  }
-}
-
 SDNode* HSAILDAGToDAGISel::SelectINTRINSIC_W_CHAIN(SDNode *Node)
 {
   unsigned IntNo = cast<ConstantSDNode>(Node->getOperand(1))->getZExtValue();
   if (HSAILIntrinsicInfo::isReadImage((HSAILIntrinsic::ID)IntNo) ||
       HSAILIntrinsicInfo::isLoadImage((HSAILIntrinsic::ID)IntNo ))
     return SelectImageIntrinsic(Node);
-  if (HSAILIntrinsicInfo::isCrossLane((HSAILIntrinsic::ID)IntNo))
-    return SelectCrossLaneIntrinsic(Node);
   if (IntNo == HSAILIntrinsic::HSAIL_ld_kernarg_u32 ||
       IntNo == HSAILIntrinsic::HSAIL_ld_kernarg_u64)
     return SelectLdKernargIntrinsic(Node);
@@ -357,31 +346,18 @@ SDNode* HSAILDAGToDAGISel::SelectImageIntrinsic(SDNode *Node)
   return ResNode;
 }
 
-SDNode* HSAILDAGToDAGISel::SelectCrossLaneIntrinsic(SDNode *Node)
-{
-  SDValue Chain = Node->getOperand(0);
-  SDNode *ResNode;
+SDNode *HSAILDAGToDAGISel::SelectActiveLaneMask(SDNode *Node) {
+  SDValue Ops[] = {
+    Node->getOperand(1), // width
+    Node->getOperand(2), // src0
+    CurDAG->getTargetConstant(Brig::BRIG_TYPE_B64, MVT::i32), // TypeLength
+    CurDAG->getTargetConstant(Brig::BRIG_TYPE_B1, MVT::i32),  // sourceType
+    Node->getOperand(0) // Chain
+  };
 
-  unsigned IntNo = cast<ConstantSDNode>(Node->getOperand(1))->getZExtValue();
+  SelectGPROrImm(Ops[1], Ops[1]);
 
-  if (!HSAILIntrinsicInfo::isCrossLane((HSAILIntrinsic::ID)IntNo)) {
-    return SelectCode(Node);
-  }
-
-  assert(Node->getNumValues() > 4);
-
-  SmallVector<SDValue, 6> NewOps;
-
-  unsigned OpIndex = 2;
-
-  SDValue ActiveWI = Node->getOperand(OpIndex++);
-  NewOps.push_back(ActiveWI);
-
-  NewOps.push_back(Chain);
-
-  ResNode = CurDAG->SelectNodeTo(Node, getCrossLaneInstr((HSAILIntrinsic::ID)IntNo),
-                                 Node->getVTList(), NewOps);
-  return ResNode;
+  return CurDAG->SelectNodeTo(Node, HSAIL::activelanemask_inst, Node->getVTList(), Ops);
 }
 
 SDNode* HSAILDAGToDAGISel::SelectLdKernargIntrinsic(SDNode *Node) {
@@ -758,6 +734,9 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
     ResNode = SelectAtomic(Node, false, false);
     break;
 #endif
+
+  case HSAILISD::ACTIVELANEMASK:
+    return SelectActiveLaneMask(Node);
   }
 
   DEBUG(dbgs() << "=> ";
