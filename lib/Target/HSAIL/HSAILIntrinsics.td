@@ -812,6 +812,124 @@ def int_HSAIL_gcn_atomic_consume_u32 : GCCBuiltin<"__gcn_atomic_consume_u32">,
 // Image intrinsics
 
 // Image read instrinsics
+let TargetPrefix = "HSAIL", isTarget = 1 in {
+  // Read image intrinsic classes
+  class ReadImage1DIntr<string name, LLVMType DestType, LLVMType CoordType> :
+    GCCBuiltin<name>,
+    Intrinsic<[DestType, DestType, DestType, DestType],
+              [llvm_ptr_ty, llvm_ptr_ty, CoordType],
+              [IntrReadArgMem, NoCapture<4>, NoCapture<5>]
+  >;
+
+  class ReadImage2DIntr<string name, LLVMType DestType, LLVMType CoordType> :
+    GCCBuiltin<name>,
+    Intrinsic<[DestType, DestType, DestType, DestType],
+              [llvm_ptr_ty, llvm_ptr_ty, CoordType, CoordType],
+              [IntrReadArgMem, NoCapture<4>, NoCapture<5>]
+  >;
+
+  class ReadImage3DIntr<string name, LLVMType DestType, LLVMType CoordType> :
+    GCCBuiltin<name>,
+    Intrinsic<[DestType, DestType, DestType, DestType],
+              [llvm_ptr_ty, llvm_ptr_ty, CoordType, CoordType, CoordType],
+              [IntrReadArgMem, NoCapture<4>, NoCapture<5>]
+   >;
+
+  // OpenCL 2.0 image 2D Depth
+  class ReadImage2DDepthIntr<string name, LLVMType DestType, LLVMType CoordType> :
+    GCCBuiltin<name>,
+      Intrinsic<[DestType],
+                [llvm_ptr_ty, llvm_ptr_ty, CoordType, CoordType],
+                [IntrReadArgMem, NoCapture<1>, NoCapture<2>]
+  >;
+
+  // OpenCL 2.0 image 2D Array Depth
+  class ReadImage2DArrayDepthIntr<string name, LLVMType DestType, LLVMType CoordType> :
+    GCCBuiltin<name>,
+    Intrinsic<[DestType],
+              [llvm_ptr_ty, llvm_ptr_ty, CoordType, CoordType, CoordType],
+              [IntrReadArgMem, NoCapture<1>, NoCapture<2>]
+  >;
+
+  // Load Image intrinsic classes
+  class LoadImage1DIntr<string name, LLVMType DestType, LLVMType CoordType> :
+    GCCBuiltin<name>,
+    Intrinsic<[DestType, DestType, DestType, DestType],
+              [llvm_ptr_ty, CoordType],
+              [IntrReadArgMem, NoCapture<4>]
+  >;
+
+  class LoadImage2DIntr<string name, LLVMType DestType, LLVMType CoordType> :
+    GCCBuiltin<name>,
+    Intrinsic<[DestType, DestType, DestType, DestType],
+              [llvm_ptr_ty, CoordType, CoordType],
+              [IntrReadArgMem, NoCapture<4>]
+  >;
+
+  class LoadImage3DIntr<string name, LLVMType DestType, LLVMType CoordType> :
+    GCCBuiltin<name>,
+    Intrinsic<[DestType, DestType, DestType, DestType],
+              [llvm_ptr_ty, CoordType, CoordType, CoordType],
+              [IntrReadArgMem, NoCapture<4>]
+  >;
+
+  class LoadImage2DDepthIntr<string name, LLVMType DestType, LLVMType CoordType> :
+    GCCBuiltin<name>,
+    Intrinsic<[DestType],
+              [llvm_ptr_ty, CoordType, CoordType],
+              [IntrReadArgMem, NoCapture<1>]
+  >;
+
+  class LoadImage2DArrayDepthIntr<string name, LLVMType DestType, LLVMType CoordType> :
+    GCCBuiltin<name>,
+    Intrinsic<[DestType],
+              [llvm_ptr_ty, CoordType, CoordType, CoordType],
+              [IntrReadArgMem, NoCapture<1>]
+  >;
+
+  // Store image intrinsic classes
+  class StoreImage1dInt :
+    Intrinsic<[], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty,
+                  llvm_ptr_ty, llvm_i32_ty], []
+  >;
+
+  class StoreImage1dFloat :
+    Intrinsic<[], [llvm_float_ty, llvm_float_ty, llvm_float_ty,
+                   llvm_float_ty, llvm_ptr_ty, llvm_i32_ty], []
+  >;
+
+  class StoreImage2dInt :
+    Intrinsic<[], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty,
+                   llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty], []
+  >;
+
+  class StoreImage2dFloat :
+    Intrinsic<[], [llvm_float_ty, llvm_float_ty, llvm_float_ty,
+                   llvm_float_ty, llvm_ptr_ty, llvm_i32_ty,
+                   llvm_i32_ty], []
+  >;
+
+  class StoreImage3dInt :
+    Intrinsic<[], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty,
+    llvm_ptr_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], []
+  >;
+
+  class StoreImage3dFloat :
+    Intrinsic<[], [llvm_float_ty, llvm_float_ty, llvm_float_ty,
+                   llvm_float_ty, llvm_ptr_ty, llvm_i32_ty,
+                   llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], []
+  >;
+
+  class StoreImage2dDepthFloat :
+    Intrinsic<[], [llvm_float_ty, llvm_ptr_ty,
+                   llvm_i32_ty, llvm_i32_ty], []
+  >;
+
+  class StoreImage2dArrayDepthFloat :
+    Intrinsic<[], [llvm_float_ty, llvm_ptr_ty, llvm_i32_ty,
+                   llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], []
+  >;
+}
 
 // read image 1d
 def int_HSAIL_rd_imgf_1d_s32 :
