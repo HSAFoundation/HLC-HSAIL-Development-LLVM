@@ -489,49 +489,6 @@ bool isSPIRModule(const Module &M) {
   return M.getNamedMetadata("opencl.kernels");
 }
 
-namespace {
-  // This must match the declarations in HSAILAtomics.td
-  enum AtomicNumOps {
-    ATOMIC_UNARY_NUM_OPS = 8,
-    ATOMIC_BINARY_NUM_OPS = 9,
-    ATOMIC_TERNARY_NUM_OPS = 10
-  };
-}
-
-bool isUnaryAtomicOp(const MachineInstr *MI)
-{
-  if (!HSAIL::isAtomicOp(MI)) return false;
-
-  const MCInstrDesc &D = MI->getDesc();
-  return ATOMIC_UNARY_NUM_OPS == (D.getNumOperands() - D.getNumDefs());
-}
-
-bool isBinaryAtomicOp(const MachineInstr *MI)
-{
-  if (!HSAIL::isAtomicOp(MI)) return false;
-
-  const MCInstrDesc &D = MI->getDesc();
-  return ATOMIC_BINARY_NUM_OPS == (D.getNumOperands() - D.getNumDefs());
-}
-
-bool isTernaryAtomicOp(const MachineInstr *MI)
-{
-  if (!HSAIL::isAtomicOp(MI)) return false;
-
-  const MCInstrDesc &D = MI->getDesc();
-  return ATOMIC_TERNARY_NUM_OPS == (D.getNumOperands() - D.getNumDefs());
-}
-
-bool isRetAtomicOp(const MachineInstr *MI)
-{
-  return isAtomicOp(MI) && MI->getDesc().getNumDefs() == 1;
-}
-
-bool isNoretAtomicOp(const MachineInstr *MI)
-{
-  return isAtomicOp(MI) && MI->getDesc().getNumDefs() == 0;
-}
-
 static SDValue generateFenceIntrinsicHelper(SDValue Chain, SDLoc dl,
                 unsigned brigMemoryOrder,
                 unsigned brigGlobalMemoryScope, 

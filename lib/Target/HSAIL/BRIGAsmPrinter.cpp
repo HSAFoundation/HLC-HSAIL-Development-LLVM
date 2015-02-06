@@ -969,36 +969,6 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   if (TII->isInstSegCvt(Opc))
     return BrigEmitInstSegCvt(*II, getInstSegCvtBrigOpcode(Opc));
 
-  if (HSAIL::isAtomicOp(II)) {
-    bool hasRet = HSAIL::isRetAtomicOp(II);
-    Brig::BrigTypeX btype = getAtomicType(II);
-    unsigned brigAtomicOp = hasRet ? Brig::BRIG_OPCODE_ATOMIC :
-                                     Brig::BRIG_OPCODE_ATOMICNORET;
-    HSAIL_ASM::InstAtomic instAtomic =
-        brigantine.addInst<HSAIL_ASM::InstAtomic>(brigAtomicOp, btype);
-
-    instAtomic.atomicOperation() = getAtomicOpcode(II);
-    instAtomic.segment() = getAtomicSegment(II);
-    instAtomic.memoryOrder() = getAtomicOrder(II);
-    instAtomic.memoryScope() = getAtomicScope(II);
-    instAtomic.equivClass() = 0;
-
-    if (hasRet)
-      BrigEmitOperand(II, 0, instAtomic);
-
-    int AddressIdx = HSAIL::getNamedOperandIdx(II->getOpcode(),
-                                               HSAIL::OpName::address);
-    BrigEmitOperandLdStAddress(II, AddressIdx);
-    if (HSAIL::isTernaryAtomicOp(II)) {
-      BrigEmitOperand(II, II->getNumOperands() - 2, instAtomic);
-    }
-    if (HSAIL::isTernaryAtomicOp(II) ||
-        HSAIL::isBinaryAtomicOp(II)) {
-      BrigEmitOperand(II, II->getNumOperands() - 1, instAtomic);
-    }
-    return instAtomic;
-  }
-
   if (HSAIL::isImageInst(II)) {
     const char *AsmStr = getInstMnemonic(II);
     HSAIL_ASM::InstImage inst = HSAIL_ASM::parseMnemo(AsmStr, brigantine);

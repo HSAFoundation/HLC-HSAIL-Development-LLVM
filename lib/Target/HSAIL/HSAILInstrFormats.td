@@ -56,7 +56,6 @@ class HSAILInst<dag outs, dag ins,
   bit isLoad = 0;
   bit isStore = 0;
   bit isConv = 0;
-  bit isAtomic = 0;
   bit isImageInst = 0;
   bit isCrossLaneInst = 0;
 
@@ -83,9 +82,8 @@ class HSAILInst<dag outs, dag ins,
   let TSFlags{21} = isLoad;
   let TSFlags{22} = isStore;
   let TSFlags{23} = isConv;
-  let TSFlags{24} = isAtomic;
-  let TSFlags{25} = isImageInst;
-  let TSFlags{26} = isCrossLaneInst;
+  let TSFlags{24} = isImageInst;
+  let TSFlags{25} = isCrossLaneInst;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

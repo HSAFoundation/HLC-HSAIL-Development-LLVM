@@ -234,9 +234,8 @@ namespace llvm {
       IS_LOAD         = 1 << 21,
       IS_STORE        = 1 << 22,
       IS_CONV         = 1 << 23,
-      IS_ATOMIC       = 1 << 24,
-      IS_IMAGEINST    = 1 << 25,
-      IS_CROSSLANE    = 1 << 26
+      IS_IMAGEINST    = 1 << 24,
+      IS_CROSSLANE    = 1 << 25
     };
   }
 

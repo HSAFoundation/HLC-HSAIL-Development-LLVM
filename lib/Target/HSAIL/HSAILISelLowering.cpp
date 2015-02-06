@@ -1114,10 +1114,6 @@ HSAILTargetLowering::LowerOperation(SDValue Op,
     LOWER(ADD);
     LOWER(LOAD);
     LOWER(STORE);
-#if 0
-    LOWER(ATOMIC_LOAD);
-    LOWER(ATOMIC_STORE);
-#endif
     break;
   default:
     Op.getNode()->dump();
@@ -1930,32 +1926,8 @@ MVT HSAILTargetLowering::getScalarShiftAmountTy(EVT LHSTy) const {
   return MVT::i32;
 }
 
-//#if 0
-void HSAILTargetLowering::replaceUnusedAtomicRetInst(MachineInstr *MI,
-                                                     SDNode *Node) const {
-  unsigned BrigOp = cast<ConstantSDNode>(Node->getOperand(0))->getZExtValue();
-  if (BrigOp == Brig::BRIG_ATOMIC_EXCH ||
-      BrigOp == Brig::BRIG_ATOMIC_LD) return;
-
-  int NoretOp = HSAIL::getAtomicNoretVersion(MI->getOpcode());
-  assert(NoretOp != -1);
-
-      DEBUG(dbgs() << "Replacing atomic ");
-      DEBUG(MI->dump());
-      DEBUG(dbgs() << " with no return version ");
-      const HSAILInstrInfo *TII = static_cast<const HSAILInstrInfo *>(
-        getTargetMachine().getSubtargetImpl()->getInstrInfo());
-      MI->setDesc(TII->get(NoretOp));
-      MI->RemoveOperand(0);
-      DEBUG(MI->dump());
-      DEBUG(dbgs() << '\n');
-}
-
 void HSAILTargetLowering::AdjustInstrPostInstrSelection(MachineInstr *MI,
                                                         SDNode *Node) const {
-  if (HSAIL::isRetAtomicOp(MI) && Node->use_size() <= 1)
-    replaceUnusedAtomicRetInst(MI, Node);
-
   const HSAILInstrInfo *TII =
     static_cast<const HSAILInstrInfo *>(Subtarget->getInstrInfo());
 
@@ -1971,7 +1943,6 @@ void HSAILTargetLowering::AdjustInstrPostInstrSelection(MachineInstr *MI,
     return;
   }
 }
-//#endif
 
 bool
 HSAILTargetLowering::isLoadBitCastBeneficial(EVT lVT, EVT bVT) const

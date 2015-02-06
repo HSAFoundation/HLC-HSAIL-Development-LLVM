@@ -144,26 +144,6 @@ bool notUsedInKernel(const llvm::GlobalVariable *GV);
 bool isIgnoredGV(const llvm::GlobalVariable *GV);
 bool sanitizeGlobalValueName(llvm::GlobalValue *GV);
 
-static inline bool isAtomicOp(const llvm::MachineInstr *MI) {
-  return MI->getDesc().TSFlags & HSAILInstrFlags::IS_ATOMIC;
-}
-
-bool isRetAtomicOp(const llvm::MachineInstr *MI);
-bool isNoretAtomicOp(const llvm::MachineInstr *MI);
-
-bool isUnaryAtomicOp(const llvm::MachineInstr *MI);
-bool isBinaryAtomicOp(const llvm::MachineInstr *MI);
-bool isTernaryAtomicOp(const llvm::MachineInstr *MI);
-
-// TabelGen'erated function (see HSAILAtomics.td)
-
-// IMPORTANT: The value returned is invalid when the actual
-// operation is BRIG_ATOMIC_EXCH (binary) or BRIG_ATOMIC_LD
-// (unary). These two operations do not have equivalent noret
-// versions in HSAIL.
-int getAtomicNoretVersion(uint16_t Opcode);
-int getAtomicPtr32Version(uint16_t Opcode);
-
 SDValue generateFenceIntrinsic(SDValue Chain, SDLoc dl,
         unsigned memSeg,
         unsigned brigMemoryOrder,

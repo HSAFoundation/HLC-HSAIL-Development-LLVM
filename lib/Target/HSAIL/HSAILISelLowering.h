@@ -346,12 +346,6 @@ public:
   SDValue
   LowerSTORE(SDValue Op, SelectionDAG &DAG) const;
 
-  SDValue
-  LowerATOMIC_LOAD(SDValue Op, SelectionDAG &DAG) const;
-
-  SDValue
-  LowerATOMIC_STORE(SDValue Op, SelectionDAG &DAG) const;
-
   //===--------------------------------------------------------------------===//
   // Instruction Emitting Hooks
   //
@@ -401,9 +395,6 @@ public:
   bool isLegalICmpImmediate(int64_t Imm) const override;
 
   MVT getScalarShiftAmountTy(EVT LHSTy) const override;
-
-  void replaceUnusedAtomicRetInst(MachineInstr *MI,
-                                  SDNode *Node) const;
 
   void AdjustInstrPostInstrSelection(MachineInstr *MI,
                                      SDNode *Node) const override;
