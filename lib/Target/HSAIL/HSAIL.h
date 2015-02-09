@@ -174,6 +174,9 @@ createHSAILMaxStackAlignmentHeuristicPass();
 FunctionPass *
 createHSAILFuncArgScopeEmitter(TargetMachine &tm, CodeGenOpt::Level OL);
 
+ModulePass*
+createHSAILAlwaysInlinePass();
+
 extern Target TheHSAIL_32Target, TheHSAIL_64Target;
 
 } // End llvm namespace

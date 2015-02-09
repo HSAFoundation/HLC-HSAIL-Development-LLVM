@@ -144,6 +144,9 @@ HSAILTargetMachine::createPassConfig(PassManagerBase &PM) {
 void HSAILPassConfig::addIRPasses() {
   HSAILTargetMachine &HSATM = getTM<HSAILTargetMachine>();
 
+  addPass(createHSAILAlwaysInlinePass());
+  addPass(createAlwaysInlinerPass());
+
   // AddrSpaceCast optimization and lowering. Add dead code elimination
   // to eliminate dead instructions (AddrSpaceCast, etc.).
   TargetPassConfig::addIRPasses();
