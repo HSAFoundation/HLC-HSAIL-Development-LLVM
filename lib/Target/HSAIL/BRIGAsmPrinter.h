@@ -206,6 +206,8 @@ protected:
                                      unsigned BrigOpc);
   HSAIL_ASM::InstAtomic BrigEmitInstAtomic(const MachineInstr &MI,
                                            unsigned BrigOpc);
+  HSAIL_ASM::InstImage BrigEmitInstImage(const MachineInstr &MI,
+                                         unsigned BrigOpc);
   HSAIL_ASM::InstAddr BrigEmitInstAddr(const MachineInstr &MI,
                                        unsigned BrigOpc);
 

@@ -869,6 +869,15 @@ static Brig::BrigOpcode getInstAtomicBrigOpcode(unsigned Opc) {
   }
 }
 
+static Brig::BrigOpcode getInstCmpBrigOpcode(unsigned Opc) {
+  switch (Opc) {
+  case HSAIL::cmp_inst:
+    return Brig::BRIG_OPCODE_CMP;
+  default:
+    llvm_unreachable("unhandled opcode");
+  }
+}
+
 static Brig::BrigOpcode getInstAddrBrigOpcode(unsigned Opc) {
   switch (Opc) {
   case HSAIL::lda_inst:
@@ -882,10 +891,10 @@ static Brig::BrigOpcode getInstAddrBrigOpcode(unsigned Opc) {
   }
 }
 
-static Brig::BrigOpcode getInstCmpBrigOpcode(unsigned Opc) {
+static Brig::BrigOpcode getInstImageBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::cmp_inst:
-    return Brig::BRIG_OPCODE_CMP;
+  case HSAIL::rdimage_inst:
+    return Brig::BRIG_OPCODE_RDIMAGE;
   default:
     llvm_unreachable("unhandled opcode");
   }
@@ -958,6 +967,9 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
   if (TII->isInstAtomic(Opc))
     return BrigEmitInstAtomic(*II, getInstAtomicBrigOpcode(Opc));
+
+  if (TII->isInstImage(Opc))
+    return BrigEmitInstImage(*II, getInstImageBrigOpcode(Opc));
 
   if (TII->isInstAddr(Opc))
     return BrigEmitInstAddr(*II, getInstAddrBrigOpcode(Opc));
@@ -2317,6 +2329,40 @@ HSAIL_ASM::InstAtomic BRIGAsmPrinter::BrigEmitInstAtomic(const MachineInstr &MI,
   const MachineOperand &Src1 = MI.getOperand(Src1Idx);
   if (!Src1.isReg() || Src1.getReg() != HSAIL::NoRegister)
     BrigEmitOperand(&MI, Src1Idx, inst);
+
+  return inst;
+}
+
+HSAIL_ASM::InstImage BRIGAsmPrinter::BrigEmitInstImage(const MachineInstr &MI,
+                                                       unsigned BrigOpc) {
+  HSAIL_ASM::InstImage inst = brigantine.addInst<HSAIL_ASM::InstImage>(BrigOpc);
+  unsigned Opc = MI.getOpcode();
+
+  inst.imageType() = TII->getNamedOperand(MI, HSAIL::OpName::imageType)->getImm();
+  inst.coordType() = TII->getNamedOperand(MI, HSAIL::OpName::coordType)->getImm();
+  inst.geometry() = TII->getNamedOperand(MI, HSAIL::OpName::geometry)->getImm();
+  inst.equivClass() = TII->getNamedOperand(MI, HSAIL::OpName::equiv)->getImm();
+
+  inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::destType)->getImm();
+
+
+  int DestRIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::destR);
+  if (DestRIdx != -1) {
+    int DestGIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::destG);
+    if (DestGIdx == -1) // 1 component.
+      BrigEmitOperand(&MI, DestRIdx, inst);
+    else
+      BrigEmitVecOperand(&MI, DestRIdx, 4, inst);
+  }
+
+  int ImageIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::image);
+  BrigEmitOperand(&MI, ImageIdx, inst);
+
+  int SamplerIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::sampler);
+  BrigEmitOperand(&MI, SamplerIdx, inst);
+
+  int CoordWidthIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::coordWidth);
+  BrigEmitOperand(&MI, CoordWidthIdx, inst);
 
   return inst;
 }

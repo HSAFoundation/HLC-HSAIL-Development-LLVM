@@ -867,6 +867,10 @@ public:
     return get(Opcode).TSFlags & HSAILInstrFlags::InstAtomic;
   }
 
+  bool isInstImage(uint16_t Opcode) const {
+    return get(Opcode).TSFlags & HSAILInstrFlags::InstImage;
+  }
+
   bool isInstCvt(uint16_t Opcode) const {
     return get(Opcode).TSFlags & HSAILInstrFlags::InstCvt;
   }

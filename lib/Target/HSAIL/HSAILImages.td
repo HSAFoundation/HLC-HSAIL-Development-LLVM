@@ -41,6 +41,8 @@ class ReadImage2DArrayDepth<string asm>
                              "$image, $sampler, ( $coordWidth, $coordHeight, $coordArrayIndex )"), []>;
 
 // read image 1d
+def rdimage_inst : HSAILInstImage_Ld_1D<"rdimage", BrigOpcode.RDIMAGE>;
+
 
 def rd_imgf_1d_s32 : ReadImage1D<"rdimage_v4_1d_f32_roimg_s32">;
 def rd_imgf_1d_f32 : ReadImage1D<"rdimage_v4_1d_f32_roimg_f32">;

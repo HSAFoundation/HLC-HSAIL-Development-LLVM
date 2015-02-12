@@ -303,6 +303,24 @@ SDNode* HSAILDAGToDAGISel::SelectImageIntrinsic(SDNode *Node)
   unsigned IntNo = cast<ConstantSDNode>(Node->getOperand(1))->getZExtValue();
   bool hasSampler = false;
 
+  if (IntNo == HSAILIntrinsic::HSAIL_rd_imgf_1d_s32) {
+    const SDValue Ops[] = {
+      CurDAG->getTargetConstant(1, MVT::i1),                       // v4
+      CurDAG->getTargetConstant(Brig::BRIG_TYPE_ROIMG, MVT::i32),  // imageType
+      CurDAG->getTargetConstant(Brig::BRIG_TYPE_S32, MVT::i32),    // coordType
+      CurDAG->getTargetConstant(Brig::BRIG_GEOMETRY_1D, MVT::i32), // geometry
+      CurDAG->getTargetConstant(0, MVT::i32),                      // equiv
+      Node->getOperand(2),                                         // image
+      Node->getOperand(3),                                         // sampler
+      Node->getOperand(4),                                         // coordWidth
+      CurDAG->getTargetConstant(Brig::BRIG_TYPE_F32, MVT::i32),    // destType
+      Chain
+    };
+
+    return CurDAG->SelectNodeTo(Node, HSAIL::rdimage_inst,
+                                Node->getVTList(), Ops);
+  }
+
   if (HSAILIntrinsicInfo::isReadImage((HSAILIntrinsic::ID)IntNo)) {
     hasSampler = true;
   } else if (!HSAILIntrinsicInfo::isLoadImage((HSAILIntrinsic::ID)IntNo)) {

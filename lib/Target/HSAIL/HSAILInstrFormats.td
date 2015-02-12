@@ -487,6 +487,31 @@ class HSAILInstAddr_1Op<string opName, bits<16> BrigVal> :
   opName#"$segment$TypeLength\t$dest, $address"
 >;
 
+// InstImage
+class HSAILInstImage<bits<16> BrigVal,
+                     dag outs, dag ins, string asmstr> :
+  HSAILInst<outs, ins, asmstr, [], BrigVal> {
+  let mayLoad = 1;
+  let mayStore = 1;
+  let InstImage = 1;
+}
+
+class HSAILInstImage_Ld_1D<string opName, bits<16> BrigVal> :
+  HSAILInstImage<BrigVal,
+                (outs GPR32:$destR, GPR32:$destG, GPR32:$destB, GPR32:$destA),
+                (ins v4mod:$v4,
+                     BrigTypeX:$imageType,
+                     BrigTypeX:$coordType,
+                     BrigImageGeometry:$geometry,
+                     equiv:$equiv,
+                     GPR64:$image,
+                     GPR64:$sampler,
+                     GPR32:$coordWidth,
+                     BrigTypeX:$destType),
+  opName#"$v4$geometry$equiv$destType$imageType$coordType\t($destR, $destG, $destB, $destA), $image, $coordWidth"> {
+  let mayStore = 0;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Basic instruction patterns
 ////////////////////////////////////////////////////////////////////////////////

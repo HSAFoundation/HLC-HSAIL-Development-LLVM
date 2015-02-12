@@ -42,3 +42,7 @@ def ftz : Operand <i1> {
 def equiv : Operand <i32> {
   let PrintMethod = "printEquiv";
 }
+
+def v4mod : Operand <i1> {
+  let PrintMethod = "printV4";
+}
