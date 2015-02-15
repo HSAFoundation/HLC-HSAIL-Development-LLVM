@@ -26814,32 +26814,30 @@ define linkonce_odr spir_func i64 @_Z17get_global_offsetj(i32) #0 {
 
 ; Function Attrs: alwaysinline nounwind readnone
 define linkonce_odr spir_func i64 @_Z13get_global_idj(i32) #0 {
-  %2 = tail call spir_func i64 @_Z17get_global_offsetj(i32 %0) #1
-  switch i32 %0, label %12 [
-    i32 0, label %3
-    i32 1, label %6
-    i32 2, label %9
+  switch i32 %0, label %11 [
+    i32 0, label %2
+    i32 1, label %5
+    i32 2, label %8
   ]
 
-; <label>:3                                       ; preds = %1
-  %4 = tail call spir_func i32 @__hsail_get_global_id(i32 0) #1
-  %5 = zext i32 %4 to i64
-  br label %12
+; <label>:2                                       ; preds = %1
+  %3 = tail call spir_func i32 @__hsail_get_global_id(i32 0) #1
+  %4 = zext i32 %3 to i64
+  br label %11
 
-; <label>:6                                       ; preds = %1
-  %7 = tail call spir_func i32 @__hsail_get_global_id(i32 1) #1
-  %8 = zext i32 %7 to i64
-  br label %12
+; <label>:5                                       ; preds = %1
+  %6 = tail call spir_func i32 @__hsail_get_global_id(i32 1) #1
+  %7 = zext i32 %6 to i64
+  br label %11
 
-; <label>:9                                       ; preds = %1
-  %10 = tail call spir_func i32 @__hsail_get_global_id(i32 2) #1
-  %11 = zext i32 %10 to i64
-  br label %12
+; <label>:8                                       ; preds = %1
+  %9 = tail call spir_func i32 @__hsail_get_global_id(i32 2) #1
+  %10 = zext i32 %9 to i64
+  br label %11
 
-; <label>:12                                      ; preds = %9, %6, %3, %1
-  %13 = phi i64 [ %11, %9 ], [ %8, %6 ], [ %5, %3 ], [ 0, %1 ]
-  %14 = add i64 %13, %2
-  ret i64 %14
+; <label>:11                                      ; preds = %8, %5, %2, %1
+  %12 = phi i64 [ %10, %8 ], [ %7, %5 ], [ %4, %2 ], [ 0, %1 ]
+  ret i64 %12
 }
 
 ; Function Attrs: nounwind readnone
