@@ -17,6 +17,7 @@ add_subdirectory(HSAILUtil)
 
 set(sources
   HSAILAsmPrinter.cpp
+  HSAILAlwaysInlinePass.cpp
   BRIGAsmPrinter.cpp
 #  BRIGDwarfCompileUnit.cpp
 #  BRIGDwarfDebug.cpp
