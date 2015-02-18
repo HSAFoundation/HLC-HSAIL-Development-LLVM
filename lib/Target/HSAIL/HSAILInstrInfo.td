@@ -22,6 +22,10 @@ def In32BitMode  : Predicate<"!Subtarget->is64Bit()">;
 def In64BitMode  : Predicate<"Subtarget->is64Bit()">;
 def EnableOpt    : Predicate<"CodeGenOpt::None != TM.getOptLevel()">;
 
+// Predicate defs
+def HSAILisKernel         : Predicate<"isKernelFunc()">;
+def HSAILisNotKernel      : Predicate<"!isKernelFunc()">;
+
 //===----------------------------------------------------------------------===//
 // Custom Operands
 //===----------------------------------------------------------------------===//

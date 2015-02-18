@@ -1,7 +1,3 @@
-// Predicate defs
-def HSAILisKernel         : Predicate<"isKernelFunc()">;
-def HSAILisNotKernel      : Predicate<"!isKernelFunc()">;
-
 ////////////////////////////////////////////////////////////////////////////////
 // All basic int and fp arithmetic instructions, shifts, bit manipulation,
 // moves, cmoves and multimedia like unpack.
