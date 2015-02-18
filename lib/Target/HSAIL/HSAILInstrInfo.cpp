@@ -184,7 +184,7 @@ IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg,
             // Which will require to insert or remove not
             if (instr->getParent() == &MBB &&
                 (instr->isBranch() ||
-                 (instr->getOpcode() == HSAIL::not_inst
+                 (instr->getOpcode() == HSAIL::NOT
                   // XXX - & b1?
                    )))
             {
@@ -302,8 +302,8 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
       return true;
 
     // Handle unconditional branches.
-    if (I->getOpcode() == HSAIL::br_inst) {
-      int Src0Idx = HSAIL::getNamedOperandIdx(HSAIL::br_inst, HSAIL::OpName::src0);
+    if (I->getOpcode() == HSAIL::BR) {
+      int Src0Idx = HSAIL::getNamedOperandIdx(HSAIL::BR, HSAIL::OpName::src0);
       UnCondBrIter = I;
 
       Cond.clear();
@@ -336,8 +336,8 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
 
     // First conditional branch
     if (Cond.empty()) {
-      int Src0Idx = HSAIL::getNamedOperandIdx(HSAIL::cbr_inst, HSAIL::OpName::src0);
-      int Src1Idx = HSAIL::getNamedOperandIdx(HSAIL::cbr_inst, HSAIL::OpName::src1);
+      int Src0Idx = HSAIL::getNamedOperandIdx(HSAIL::CBR, HSAIL::OpName::src0);
+      int Src1Idx = HSAIL::getNamedOperandIdx(HSAIL::CBR, HSAIL::OpName::src1);
 
       FBB = TBB;
       TBB = I->getOperand(Src1Idx).getMBB();
@@ -543,7 +543,7 @@ static unsigned GenerateBranchCondReversion(
       need_insert_not = true;
   }
   // If condition is logical not - just remove it
-  else if (cond_expr && cond_expr->getOpcode() == HSAIL::not_inst)
+  else if (cond_expr && cond_expr->getOpcode() == HSAIL::NOT)
   {
     cond_reg = cond_expr->getOperand(1).getReg();
     cond_expr->eraseFromParent();
@@ -558,7 +558,7 @@ static unsigned GenerateBranchCondReversion(
     if (TargetRegisterInfo::isVirtualRegister(CondOp.getReg()))
       cond_reg = MRI.createVirtualRegister(MRI.getRegClass(CondOp.getReg()));
 
-    BuildMI(&MBB, DL, TII->get(HSAIL::not_inst))
+    BuildMI(&MBB, DL, TII->get(HSAIL::NOT))
       .addReg(cond_reg, RegState::Define)
       .addReg(CondOp.getReg())
       .addImm(Brig::BRIG_TYPE_B1);
@@ -580,7 +580,7 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
   if (Cond.empty()) {
     // Unconditional branch?
     assert(!FBB && "Unconditional branch with multiple successors!");
-    BuildMI(&MBB, DL, get(HSAIL::br_inst))
+    BuildMI(&MBB, DL, get(HSAIL::BR))
       .addImm(Brig::BRIG_WIDTH_ALL)
       .addMBB(TBB)
       .addImm(Brig::BRIG_TYPE_NONE);
@@ -611,7 +611,7 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
       else
         cond_reg = Cond[2].getImm();
 
-      BuildMI(&MBB, DL, get(HSAIL::not_inst))
+      BuildMI(&MBB, DL, get(HSAIL::NOT))
         .addReg(cond_reg, RegState::Define)
         .addReg(Cond[0].getReg())
         .addImm(Brig::BRIG_TYPE_B1);
@@ -632,7 +632,7 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
 
   unsigned Count = 0;
 
-  BuildMI(&MBB, DL, get(HSAIL::cbr_inst))
+  BuildMI(&MBB, DL, get(HSAIL::CBR))
     .addImm(Brig::BRIG_WIDTH_1)
     .addReg(cond_reg)
     .addMBB(TBB)
@@ -642,7 +642,7 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
 
   if (FBB) {
     // Two-way Conditional branch. Insert the second branch.
-    BuildMI(&MBB, DL, get(HSAIL::br_inst))
+    BuildMI(&MBB, DL, get(HSAIL::BR))
       .addImm(Brig::BRIG_WIDTH_ALL)
       .addMBB(FBB)
       .addImm(Brig::BRIG_TYPE_NONE);
@@ -664,8 +664,8 @@ HSAILInstrInfo::RemoveBranch(MachineBasicBlock &MBB) const
     if (I->isDebugValue())
       continue;
 
-    if (I->getOpcode() != HSAIL::br_inst &&
-        I->getOpcode() != HSAIL::cbr_inst)
+    if (I->getOpcode() != HSAIL::BR &&
+        I->getOpcode() != HSAIL::CBR)
       break;
 
     // Remove the branch.
@@ -685,7 +685,7 @@ bool HSAILInstrInfo::copyRegToReg(MachineBasicBlock &MBB,
                                   DebugLoc DL) const {
   assert(DestRC == SrcRC);
 
-  BuildMI(MBB, I, DL, get(HSAIL::mov), DestReg)
+  BuildMI(MBB, I, DL, get(HSAIL::MOV), DestReg)
     .addReg(SrcReg)
     .addImm(getBrigTypeFromRCID(DestRC->getID()));
   return true;
@@ -726,15 +726,15 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
       llvm_unreachable("unrecognized TargetRegisterClass");
       break;
     case HSAIL::GPR32RegClassID:
-      Opc = HSAIL::st_v1;
+      Opc = HSAIL::ST_V1;
       BT = Brig::BRIG_TYPE_U32;
       break;
     case HSAIL::GPR64RegClassID:
-      Opc = HSAIL::st_v1;
+      Opc = HSAIL::ST_V1;
       BT = Brig::BRIG_TYPE_U64;
       break;
     case HSAIL::CRRegClassID:
-      Opc = HSAIL::spill_b1;
+      Opc = HSAIL::SPILL_B1;
       BT = Brig::BRIG_TYPE_B1;
       break;
   }
@@ -797,15 +797,15 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
       llvm_unreachable("unrecognized TargetRegisterClass");
       break;
     case HSAIL::GPR32RegClassID:
-      Opc = HSAIL::ld_v1;
+      Opc = HSAIL::LD_V1;
       BT = Brig::BRIG_TYPE_U32;
       break;
     case HSAIL::GPR64RegClassID:
-      Opc = HSAIL::ld_v1;
+      Opc = HSAIL::LD_V1;
       BT = Brig::BRIG_TYPE_U64;
       break;
     case HSAIL::CRRegClassID:
-      Opc = HSAIL::restore_b1;
+      Opc = HSAIL::RESTORE_B1;
       BT = Brig::BRIG_TYPE_B1;
       break;
   }
@@ -969,21 +969,21 @@ void HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
                                  unsigned SrcReg,
                                  bool KillSrc) const {
   if (HSAIL::GPR32RegClass.contains(DestReg, SrcReg)) {
-    BuildMI(MBB, MI, DL, get(HSAIL::mov), DestReg)
+    BuildMI(MBB, MI, DL, get(HSAIL::MOV), DestReg)
       .addReg(SrcReg, getKillRegState(KillSrc))
       .addImm(Brig::BRIG_TYPE_B32);
       return;
   }
 
   if (HSAIL::GPR64RegClass.contains(DestReg, SrcReg)) {
-    BuildMI(MBB, MI, DL, get(HSAIL::mov), DestReg)
+    BuildMI(MBB, MI, DL, get(HSAIL::MOV), DestReg)
       .addReg(SrcReg, getKillRegState(KillSrc))
       .addImm(Brig::BRIG_TYPE_B64);
       return;
   }
 
   if (HSAIL::CRRegClass.contains(DestReg, SrcReg)) {
-    BuildMI(MBB, MI, DL, get(HSAIL::mov), DestReg)
+    BuildMI(MBB, MI, DL, get(HSAIL::MOV), DestReg)
       .addReg(SrcReg, getKillRegState(KillSrc))
       .addImm(Brig::BRIG_TYPE_B1);
       return;
@@ -1015,7 +1015,7 @@ void HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
     return TargetInstrInfo::copyPhysReg(MBB, MI, DL, DestReg, SrcReg, KillSrc);
   }
 
-  BuildMI(MBB, MI, DL, get(HSAIL::cvt), DestReg)
+  BuildMI(MBB, MI, DL, get(HSAIL::CVT), DestReg)
     .addImm(0)      // ftz
     .addImm(0)      // round
     .addImm(DestBT) // destTypedestLength
@@ -1067,36 +1067,36 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
   unsigned opcode = MI.getOpcode();
 
   switch (opcode) {
-  case HSAIL::spill_b1:
+  case HSAIL::SPILL_B1:
     {
       unsigned tempU32 = getTempGPR32PostRA(MBBI);
       DebugLoc DL = MI.getDebugLoc();
-      BuildMI(*MBB, MBBI, DL, get(HSAIL::cvt), tempU32)
+      BuildMI(*MBB, MBBI, DL, get(HSAIL::CVT), tempU32)
         .addImm(0)                   // ftz
         .addImm(0)                   // round
         .addImm(Brig::BRIG_TYPE_U32) // destTypedestLength
         .addImm(Brig::BRIG_TYPE_B1)  // srcTypesrcLength
         .addOperand(MI.getOperand(0));
 
-      MI.setDesc(get(HSAIL::st_v1));
+      MI.setDesc(get(HSAIL::ST_V1));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsKill();
       HSAIL::getBrigType(&MI).setImm(Brig::BRIG_TYPE_U32);
       RS->setRegUsed(tempU32);
     }
     return true;
-  case HSAIL::restore_b1: {
+  case HSAIL::RESTORE_B1: {
       unsigned tempU32 = getTempGPR32PostRA(MBBI);
       DebugLoc DL = MI.getDebugLoc();
 
-      BuildMI(*MBB, ++MBBI, DL, get(HSAIL::cvt), MI.getOperand(0).getReg())
+      BuildMI(*MBB, ++MBBI, DL, get(HSAIL::CVT), MI.getOperand(0).getReg())
         .addImm(0)                   // ftz
         .addImm(0)                   // round
         .addImm(Brig::BRIG_TYPE_B1)  // destTypedestLength
         .addImm(Brig::BRIG_TYPE_U32) // srcTypesrcLength
         .addReg(tempU32, RegState::Kill);
 
-      MI.setDesc(get(HSAIL::ld_v1));
+      MI.setDesc(get(HSAIL::LD_V1));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsDef();
       HSAIL::getBrigType(&MI).setImm(Brig::BRIG_TYPE_U32);
@@ -1125,13 +1125,13 @@ const TargetRegisterClass *HSAILInstrInfo::getOpRegClass(
 
 static unsigned numStComponents(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::st_v1:
+  case HSAIL::ST_V1:
     return 1;
-  case HSAIL::st_v2:
+  case HSAIL::ST_V2:
     return 2;
-  case HSAIL::st_v3:
+  case HSAIL::ST_V3:
     return 3;
-  case HSAIL::st_v4:
+  case HSAIL::ST_V4:
     return 4;
   }
 
@@ -1146,10 +1146,10 @@ bool HSAILInstrInfo::verifyInstruction(const MachineInstr *MI,
   const MachineRegisterInfo &MRI = MI->getParent()->getParent()->getRegInfo();
 
   // Verify that all the load destinations are registers with the same size.
-  if (Opc == HSAIL::ld_v1 ||
-      Opc == HSAIL::ld_v2 ||
-      Opc == HSAIL::ld_v3 ||
-      Opc == HSAIL::ld_v4) {
+  if (Opc == HSAIL::LD_V1 ||
+      Opc == HSAIL::LD_V2 ||
+      Opc == HSAIL::LD_V3 ||
+      Opc == HSAIL::LD_V4) {
     const TargetRegisterClass *DestRC = getOpRegClass(MRI, *MI, 0);
     if (!DestRC) {
       ErrInfo = "Load into non-register";
@@ -1166,10 +1166,10 @@ bool HSAILInstrInfo::verifyInstruction(const MachineInstr *MI,
   }
 
   // Verify that all store sources are registers with the same size.
-  if (Opc == HSAIL::st_v1 ||
-      Opc == HSAIL::st_v2 ||
-      Opc == HSAIL::st_v3 ||
-      Opc == HSAIL::st_v4) {
+  if (Opc == HSAIL::ST_V1 ||
+      Opc == HSAIL::ST_V2 ||
+      Opc == HSAIL::ST_V3 ||
+      Opc == HSAIL::ST_V4) {
     int NSrc = numStComponents(Opc);
     int BaseSrcIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src);
 

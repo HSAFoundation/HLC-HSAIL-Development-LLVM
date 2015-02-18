@@ -661,7 +661,7 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     if (AddressSpace == HSAILAS::KERNARG_ADDRESS)
       alignment = DL->getABITypeAlignment(EltTy);
 
-    unsigned op = isLoad ? HSAIL::ld_v1 : HSAIL::st_v1;
+    unsigned op = isLoad ? HSAIL::LD_V1 : HSAIL::ST_V1;
     unsigned BrigType = HSAIL::getBrigType(EltTy, *DL, isSExt);
 
     // Change opcode for load of return value
@@ -669,8 +669,8 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
         AAInfo.TBAA && AAInfo.TBAA->getNumOperands() >= 1) {
       if (const MDString *MDS = dyn_cast<MDString>(AAInfo.TBAA->getOperand(0))) {
         if (MDS->getString().equals("retarg")) {
-          assert(op != HSAIL::ld_v1);
-          op = HSAIL::rarg_ld_v1;
+          assert(op != HSAIL::LD_V1);
+          op = HSAIL::RARG_LD_V1;
         }
       }
     }
@@ -972,7 +972,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     SDValue Align = DAG.getTargetConstant(alignment, MVT::i32);
     SDValue ArgDeclOps[] = { RetValue, SDBrigType, arrSize, Align,
                              Chain, InFlag };
-    SDNode *ArgDeclNode = DAG.getMachineNode(HSAIL::arg_decl, dl, VTs,
+    SDNode *ArgDeclNode = DAG.getMachineNode(HSAIL::ARG_DECL, dl, VTs,
                   makeArrayRef(ArgDeclOps).drop_back(InFlag.getNode() ? 0 : 1));
     
     SDValue ArgDecl(ArgDeclNode, 0);
@@ -1025,7 +1025,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     SDValue Align = DAG.getTargetConstant(alignment, MVT::i32);
     SDValue ArgDeclOps[] = { StParamValue, SDBrigType, arrSize, Align,
                              Chain, InFlag };
-    SDNode *ArgDeclNode = DAG.getMachineNode(HSAIL::arg_decl, dl, VTs,
+    SDNode *ArgDeclNode = DAG.getMachineNode(HSAIL::ARG_DECL, dl, VTs,
                   makeArrayRef(ArgDeclOps).drop_back(InFlag.getNode() ? 0 : 1));
     SDValue ArgDecl(ArgDeclNode, 0);
     Chain = ArgDecl.getValue(0);
@@ -1681,7 +1681,7 @@ HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
 
     // Don't use ptr32 since this is the readonly segment.
         MachineSDNode *LDSamp = DAG
-          .getMachineNode(HSAIL::ld_v1, SDLoc(Op), VT, MVT::Other, Ops);
+          .getMachineNode(HSAIL::LD_V1, SDLoc(Op), VT, MVT::Other, Ops);
 
         MachineFunction &MF = DAG.getMachineFunction();
         MachineSDNode::mmo_iterator MemOp = MF.allocateMemRefsArray(1);
@@ -1953,12 +1953,12 @@ void HSAILTargetLowering::AdjustInstrPostInstrSelection(MachineInstr *MI,
   const HSAILInstrInfo *TII =
     static_cast<const HSAILInstrInfo *>(Subtarget->getInstrInfo());
 
-  if (MI->getOpcode() == HSAIL::atomic_inst && !Node->hasAnyUseOfValue(0)) {
+  if (MI->getOpcode() == HSAIL::ATOMIC && !Node->hasAnyUseOfValue(0)) {
     const MachineOperand *OpOp = TII->getNamedOperand(*MI, HSAIL::OpName::op);
     auto Op = static_cast<Brig::BrigAtomicOperation>(OpOp->getImm());
 
     if (Op != Brig::BRIG_ATOMIC_EXCH) {
-      MI->setDesc(TII->get(HSAIL::atomicnoret_inst));
+      MI->setDesc(TII->get(HSAIL::ATOMICNORET));
       MI->RemoveOperand(0);
     }
 

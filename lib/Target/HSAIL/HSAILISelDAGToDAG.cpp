@@ -317,7 +317,7 @@ SDNode* HSAILDAGToDAGISel::SelectImageIntrinsic(SDNode *Node)
       Chain
     };
 
-    return CurDAG->SelectNodeTo(Node, HSAIL::rdimage_inst,
+    return CurDAG->SelectNodeTo(Node, HSAIL::RDIMAGE,
                                 Node->getVTList(), Ops);
   }
 
@@ -375,7 +375,7 @@ SDNode *HSAILDAGToDAGISel::SelectActiveLaneMask(SDNode *Node) {
 
   SelectGPROrImm(Ops[1], Ops[1]);
 
-  return CurDAG->SelectNodeTo(Node, HSAIL::activelanemask_inst, Node->getVTList(), Ops);
+  return CurDAG->SelectNodeTo(Node, HSAIL::ACTIVELANEMASK, Node->getVTList(), Ops);
 }
 
 SDNode* HSAILDAGToDAGISel::SelectLdKernargIntrinsic(SDNode *Node) {
@@ -695,7 +695,7 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
         CurDAG->getTargetConstant(Brig::BRIG_TYPE_U32, MVT::i32)
       };
 
-      ResNode = CurDAG->SelectNodeTo(Node, HSAIL::lda_inst, NVT, Ops);
+      ResNode = CurDAG->SelectNodeTo(Node, HSAIL::LDA, NVT, Ops);
     } else {
       ResNode = Node;
     }
@@ -719,7 +719,7 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
       CurDAG->getTargetConstant(BT, MVT::i32)
     };
 
-    ResNode = CurDAG->SelectNodeTo(Node, HSAIL::lda_inst, PtrVT, Ops);
+    ResNode = CurDAG->SelectNodeTo(Node, HSAIL::LDA, PtrVT, Ops);
     break;
   }
   case ISD::INTRINSIC_WO_CHAIN:

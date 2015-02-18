@@ -1,156 +1,156 @@
 
-def add_inst : HSAILInstMod_2Op<"add", BrigOpcode.ADD>;
-def sub_inst : HSAILInstMod_2Op<"sub", BrigOpcode.SUB>;
-def mul_inst : HSAILInstMod_2Op<"mul", BrigOpcode.MUL>;
-def div_inst : HSAILInstMod_2Op<"div", BrigOpcode.DIV>;
-def rem_inst : HSAILInstBasic_2Op<"rem", BrigOpcode.REM>;
-def mulhi_inst : HSAILInstBasic_2Op<"mulhi", BrigOpcode.MULHI>;
-def abs_inst : HSAILInstMod_1Op<"abs", BrigOpcode.ABS>;
+def ADD : HSAILInstMod_2Op<"add", BrigOpcode.ADD>;
+def SUB : HSAILInstMod_2Op<"sub", BrigOpcode.SUB>;
+def MUL : HSAILInstMod_2Op<"mul", BrigOpcode.MUL>;
+def DIV : HSAILInstMod_2Op<"div", BrigOpcode.DIV>;
+def REM : HSAILInstBasic_2Op<"rem", BrigOpcode.REM>;
+def MULHI : HSAILInstBasic_2Op<"mulhi", BrigOpcode.MULHI>;
+def ABS : HSAILInstMod_1Op<"abs", BrigOpcode.ABS>;
 
-defm : InstMod_2Op_IntTypes<add_inst, add>;
-defm : InstMod_2Op_FPTypes<add_inst, fadd>;
-defm : InstMod_2Op_IntTypes<sub_inst, sub, 0>;
-defm : InstMod_2Op_FPTypes<sub_inst, fsub>;
-defm : InstMod_2Op_IntTypes<mul_inst, mul, 0>;
-defm : InstMod_2Op_FPTypes<mul_inst, fmul>;
+defm : InstMod_2Op_IntTypes<ADD, add>;
+defm : InstMod_2Op_FPTypes<ADD, fadd>;
+defm : InstMod_2Op_IntTypes<SUB, sub, 0>;
+defm : InstMod_2Op_FPTypes<SUB, fsub>;
+defm : InstMod_2Op_IntTypes<MUL, mul, 0>;
+defm : InstMod_2Op_FPTypes<MUL, fmul>;
 
-defm : InstMod_2Op_IntTypes<div_inst, udiv, 0>;
-defm : InstMod_2Op_IntTypes<div_inst, sdiv, 1>;
-defm : InstMod_2Op_FPTypes<div_inst, fdiv>;
+defm : InstMod_2Op_IntTypes<DIV, udiv, 0>;
+defm : InstMod_2Op_IntTypes<DIV, sdiv, 1>;
+defm : InstMod_2Op_FPTypes<DIV, fdiv>;
 
 // Division without implicit ftz.
-def : InstMod_2Op_Pat<div_inst, int_HSAIL_div_f32, f32,
+def : InstMod_2Op_Pat<DIV, int_HSAIL_div_f32, f32,
   BrigTypeX.F32, BrigRound.FLOAT_NEAR_EVEN, 0
 >;
 
-defm : InstBasic_2Op_IntTypes<rem_inst, urem, 0>;
-defm : InstBasic_2Op_IntTypes<rem_inst, srem, 1>;
+defm : InstBasic_2Op_IntTypes<REM, urem, 0>;
+defm : InstBasic_2Op_IntTypes<REM, srem, 1>;
 
-defm : InstBasic_2Op_IntTypes<mulhi_inst, mulhu, 0>;
-defm : InstBasic_2Op_IntTypes<mulhi_inst, mulhs, 1>;
+defm : InstBasic_2Op_IntTypes<MULHI, mulhu, 0>;
+defm : InstBasic_2Op_IntTypes<MULHI, mulhs, 1>;
 
 
-def : InstMod_1Op_Pat<abs_inst, fabs, f32, BrigTypeX.F32>;
-def : InstMod_1Op_Pat<abs_inst, fabs, f64, BrigTypeX.F64>;
+def : InstMod_1Op_Pat<ABS, fabs, f32, BrigTypeX.F32>;
+def : InstMod_1Op_Pat<ABS, fabs, f64, BrigTypeX.F64>;
 
-def mad_inst : HSAILInstBasic_3Op<"mad", BrigOpcode.MAD>;
-defm : InstBasic_3Op_IntTypes<mad_inst, HSAILumad, 0>;
+def MAD : HSAILInstBasic_3Op<"mad", BrigOpcode.MAD>;
+defm : InstBasic_3Op_IntTypes<MAD, HSAILumad, 0>;
 
 // u[32,64] forms illegal in HSAIL
-def neg : HSAILInstBasic_1Op<"neg", BrigOpcode.NEG>;
+def NEG : HSAILInstBasic_1Op<"neg", BrigOpcode.NEG>;
 
 let AddedComplexity = 2 in {
 // Needs to match before sub pattern.
-defm : InstBasic_1Op_IntTypes<neg, ineg, 1>;
+defm : InstBasic_1Op_IntTypes<NEG, ineg, 1>;
 }
 
-defm : InstBasic_1Op_FPTypes<neg, fneg>;
+defm : InstBasic_1Op_FPTypes<NEG, fneg>;
 
-def copysign_inst : HSAILInstMod_2Op<"copysign", BrigOpcode.COPYSIGN>;
+def COPYSIGN : HSAILInstMod_2Op<"copysign", BrigOpcode.COPYSIGN>;
 
 // FIXME: Need to support fcopysign with different second operand type.
-def : InstMod_2Op_Pat<copysign_inst, fcopysign, f32, BrigTypeX.F32, BrigRound.NONE, 0>;
-def : InstMod_2Op_Pat<copysign_inst, fcopysign, f64, BrigTypeX.F64, BrigRound.NONE, 0>;
+def : InstMod_2Op_Pat<COPYSIGN, fcopysign, f32, BrigTypeX.F32, BrigRound.NONE, 0>;
+def : InstMod_2Op_Pat<COPYSIGN, fcopysign, f64, BrigTypeX.F64, BrigRound.NONE, 0>;
 
 
-def fma_inst : HSAILInstMod_3Op<"fma", BrigOpcode.FMA>;
-defm : InstMod_3Op_FPTypes<fma_inst, fma>;
+def FMA : HSAILInstMod_3Op<"fma", BrigOpcode.FMA>;
+defm : InstMod_3Op_FPTypes<FMA, fma>;
 
-def nfma_inst : HSAILInstBasic_3Op<"nfma", BrigOpcode.NFMA>;
-defm : InstBasic_3Op_FPTypes<nfma_inst, HSAILnfma>;
+def NFMA : HSAILInstBasic_3Op<"nfma", BrigOpcode.NFMA>;
+defm : InstBasic_3Op_FPTypes<NFMA, HSAILnfma>;
 
-def max_inst : HSAILInstMod_2Op<"max", BrigOpcode.MAX>;
-def min_inst : HSAILInstMod_2Op<"min", BrigOpcode.MIN>;
+def MAX : HSAILInstMod_2Op<"max", BrigOpcode.MAX>;
+def MIN : HSAILInstMod_2Op<"min", BrigOpcode.MIN>;
 
-defm : InstMod_2Op_FPTypes<max_inst, fmaxnum, BrigRound.NONE>;
-defm : InstMod_2Op_FPTypes<min_inst, fminnum, BrigRound.NONE>;
+defm : InstMod_2Op_FPTypes<MAX, fmaxnum, BrigRound.NONE>;
+defm : InstMod_2Op_FPTypes<MIN, fminnum, BrigRound.NONE>;
 
-defm : InstMod_2Op_IntTypes<max_inst, HSAILumax, 0>;
-defm : InstMod_2Op_IntTypes<max_inst, HSAILsmax, 1>;
+defm : InstMod_2Op_IntTypes<MAX, HSAILumax, 0>;
+defm : InstMod_2Op_IntTypes<MAX, HSAILsmax, 1>;
 
-defm : InstMod_2Op_IntTypes<min_inst, HSAILumin, 0>;
-defm : InstMod_2Op_IntTypes<min_inst, HSAILsmin, 1>;
+defm : InstMod_2Op_IntTypes<MIN, HSAILumin, 0>;
+defm : InstMod_2Op_IntTypes<MIN, HSAILsmin, 1>;
 
-def gcn_max_inst : HSAILInstBasic_2Op<"gcn_max", BrigOpcode.GCNMAX>;
-def gcn_min_inst : HSAILInstBasic_2Op<"gcn_min", BrigOpcode.GCNMIN>;
+def GCN_MAX : HSAILInstBasic_2Op<"gcn_max", BrigOpcode.GCNMAX>;
+def GCN_MIN : HSAILInstBasic_2Op<"gcn_min", BrigOpcode.GCNMIN>;
 
 // FIXME: Remove these intrinsics
-def : InstBasic_2Op_Pat<gcn_max_inst, int_HSAIL_gcn_max_f32, f32, f32, BrigTypeX.F32>;
-def : InstBasic_2Op_Pat<gcn_max_inst, int_HSAIL_gcn_max_f64, f64, f64, BrigTypeX.F64>;
-def : InstBasic_2Op_Pat<gcn_min_inst, int_HSAIL_gcn_min_f32, f32, f32, BrigTypeX.F32>;
-def : InstBasic_2Op_Pat<gcn_min_inst, int_HSAIL_gcn_min_f64, f64, f64, BrigTypeX.F64>;
+def : InstBasic_2Op_Pat<GCN_MAX, int_HSAIL_gcn_max_f32, f32, f32, BrigTypeX.F32>;
+def : InstBasic_2Op_Pat<GCN_MAX, int_HSAIL_gcn_max_f64, f64, f64, BrigTypeX.F64>;
+def : InstBasic_2Op_Pat<GCN_MIN, int_HSAIL_gcn_min_f32, f32, f32, BrigTypeX.F32>;
+def : InstBasic_2Op_Pat<GCN_MIN, int_HSAIL_gcn_min_f64, f64, f64, BrigTypeX.F64>;
 
 
-def mul24_inst : HSAILInstBasic_2Op<"mul24", BrigOpcode.MUL24>;
-def : InstBasic_2Op_Pat<mul24_inst, HSAILsmul24, i32, i32, BrigTypeX.S32>;
-def : InstBasic_2Op_Pat<mul24_inst, HSAILumul24, i32, i32, BrigTypeX.U32>;
+def MUL24 : HSAILInstBasic_2Op<"mul24", BrigOpcode.MUL24>;
+def : InstBasic_2Op_Pat<MUL24, HSAILsmul24, i32, i32, BrigTypeX.S32>;
+def : InstBasic_2Op_Pat<MUL24, HSAILumul24, i32, i32, BrigTypeX.U32>;
 
 
-def mad24_inst : HSAILInstBasic_3Op<"mad24", BrigOpcode.MAD24>;
-def : InstBasic_3Op_Pat<mad24_inst, HSAILsmad24, i32, BrigTypeX.S32>;
-def : InstBasic_3Op_Pat<mad24_inst, HSAILumad24, i32, BrigTypeX.U32>;
+def MAD24 : HSAILInstBasic_3Op<"mad24", BrigOpcode.MAD24>;
+def : InstBasic_3Op_Pat<MAD24, HSAILsmad24, i32, BrigTypeX.S32>;
+def : InstBasic_3Op_Pat<MAD24, HSAILumad24, i32, BrigTypeX.U32>;
 
-def sqrt_inst : HSAILInstMod_1Op<"sqrt", BrigOpcode.SQRT>;
-def nsqrt_inst : HSAILInstBasic_1Op<"nsqrt", BrigOpcode.NSQRT>;
-def nrsqrt_inst : HSAILInstBasic_1Op<"nrsqrt", BrigOpcode.NRSQRT>;
-def nrcp_inst : HSAILInstBasic_1Op<"rcp", BrigOpcode.NRCP>;
+def SQRT : HSAILInstMod_1Op<"sqrt", BrigOpcode.SQRT>;
+def NSQRT : HSAILInstBasic_1Op<"nsqrt", BrigOpcode.NSQRT>;
+def NRSQRT : HSAILInstBasic_1Op<"nrsqrt", BrigOpcode.NRSQRT>;
+def NRCP : HSAILInstBasic_1Op<"rcp", BrigOpcode.NRCP>;
 
 // FIXME: Having the ftz explicitly in this one is totally inconsistent
-def : InstMod_1Op_Pat<sqrt_inst, int_HSAIL_sqrt_ftz_f32, f32, BrigTypeX.F32,
+def : InstMod_1Op_Pat<SQRT, int_HSAIL_sqrt_ftz_f32, f32, BrigTypeX.F32,
                       BrigRound.FLOAT_NEAR_EVEN, 1
 >;
 
-def : InstMod_1Op_Pat<sqrt_inst, int_HSAIL_sqrt_f64, f64, BrigTypeX.F64,
+def : InstMod_1Op_Pat<SQRT, int_HSAIL_sqrt_f64, f64, BrigTypeX.F64,
                       BrigRound.FLOAT_NEAR_EVEN, 0
 >;
 
-def : InstBasic_1Op_Pat<nsqrt_inst, int_HSAIL_nsqrt_f32, f32, BrigTypeX.F32>;
-def : InstBasic_1Op_Pat<nsqrt_inst, int_HSAIL_nsqrt_f64, f64, BrigTypeX.F64>;
+def : InstBasic_1Op_Pat<NSQRT, int_HSAIL_nsqrt_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<NSQRT, int_HSAIL_nsqrt_f64, f64, BrigTypeX.F64>;
 
-def : InstBasic_1Op_Pat<nrsqrt_inst, int_HSAIL_nrsqrt_f32, f32, BrigTypeX.F32>;
-def : InstBasic_1Op_Pat<nrsqrt_inst, int_HSAIL_nrsqrt_f64, f64, BrigTypeX.F64>;
+def : InstBasic_1Op_Pat<NRSQRT, int_HSAIL_nrsqrt_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<NRSQRT, int_HSAIL_nrsqrt_f64, f64, BrigTypeX.F64>;
 
-def : InstBasic_1Op_Pat<nrcp_inst, int_HSAIL_nrcp_f32, f32, BrigTypeX.F32>;
-def : InstBasic_1Op_Pat<nrcp_inst, int_HSAIL_nrcp_f64, f64, BrigTypeX.F64>;
+def : InstBasic_1Op_Pat<NRCP, int_HSAIL_nrcp_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<NRCP, int_HSAIL_nrcp_f64, f64, BrigTypeX.F64>;
 
 
 // HSAIL_SPEC_CURRENT <
-def fract_inst : HSAILInstMod_1Op<"fract", BrigOpcode.FRACT>;
-defm : InstMod_1Op_FPTypes<fract_inst, HSAILfract, BrigRound.NONE>;
+def FRACT : HSAILInstMod_1Op<"fract", BrigOpcode.FRACT>;
+defm : InstMod_1Op_FPTypes<FRACT, HSAILfract, BrigRound.NONE>;
 // > HSAIL_SPEC_CURRENT
 
 // Native Floating-Point Special Functions Operations
-def nsin_inst : HSAILInstBasic_1Op<"nsin", BrigOpcode.NSIN>;
-def ncos_inst : HSAILInstBasic_1Op<"ncos", BrigOpcode.NCOS>;
-def nexp2_inst : HSAILInstBasic_1Op<"nexp2", BrigOpcode.NEXP2>;
-def nlog2_inst : HSAILInstBasic_1Op<"nlog2", BrigOpcode.NLOG2>;
+def NSIN : HSAILInstBasic_1Op<"nsin", BrigOpcode.NSIN>;
+def NCOS : HSAILInstBasic_1Op<"ncos", BrigOpcode.NCOS>;
+def NEXP2 : HSAILInstBasic_1Op<"nexp2", BrigOpcode.NEXP2>;
+def NLOG2 : HSAILInstBasic_1Op<"nlog2", BrigOpcode.NLOG2>;
 
-def : InstBasic_1Op_Pat<nsin_inst, int_HSAIL_nsin_f32, f32, BrigTypeX.F32>;
-def : InstBasic_1Op_Pat<ncos_inst, int_HSAIL_ncos_f32, f32, BrigTypeX.F32>;
-def : InstBasic_1Op_Pat<nexp2_inst, int_HSAIL_nexp2_f32, f32, BrigTypeX.F32>;
-def : InstBasic_1Op_Pat<nlog2_inst, int_HSAIL_nlog2_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<NSIN, int_HSAIL_nsin_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<NCOS, int_HSAIL_ncos_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<NEXP2, int_HSAIL_nexp2_f32, f32, BrigTypeX.F32>;
+def : InstBasic_1Op_Pat<NLOG2, int_HSAIL_nlog2_f32, f32, BrigTypeX.F32>;
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Logical bit ops.
 
-def and_inst : HSAILInstBasic_2Op<"and", BrigOpcode.AND>;
-def or_inst : HSAILInstBasic_2Op<"or", BrigOpcode.OR>;
-def xor_inst : HSAILInstBasic_2Op<"xor", BrigOpcode.XOR>;
+def AND : HSAILInstBasic_2Op<"and", BrigOpcode.AND>;
+def OR : HSAILInstBasic_2Op<"or", BrigOpcode.OR>;
+def XOR : HSAILInstBasic_2Op<"xor", BrigOpcode.XOR>;
 
-defm : InstBasic_2Op_BitIntTypes<and_inst, and>;
-defm : InstBasic_2Op_BitIntTypes<or_inst, or>;
-defm : InstBasic_2Op_BitIntTypes<xor_inst, xor>;
+defm : InstBasic_2Op_BitIntTypes<AND, and>;
+defm : InstBasic_2Op_BitIntTypes<OR, or>;
+defm : InstBasic_2Op_BitIntTypes<XOR, xor>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // not (integer, 1-bit, 32-bit, and 64-bit)
-def not_inst : HSAILInstBasic_1Op<"not", BrigOpcode.NOT>;
-defm : InstBasic_1Op_BitIntTypes<not_inst, not>;
+def NOT : HSAILInstBasic_1Op<"not", BrigOpcode.NOT>;
+defm : InstBasic_1Op_BitIntTypes<NOT, not>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // cvt
 
-def cvt : InstCvt<"cvt">;
+def CVT : InstCvt<"cvt">;
 
 ////////////////////////////////////////////////////////////////////////////////
 // popcount (integer, 1-bit, 32-bit, and 64-bit)
@@ -163,7 +163,7 @@ multiclass InstSourceType_1Op_Pats<Instruction inst,
                                    bit bit_src = 0> {
   def : Pat<
     (i64 (node i64:$src0)),
-    (cvt 0, 0, BrigTypeX.U64, BrigTypeX.U32,
+    (CVT 0, 0, BrigTypeX.U64, BrigTypeX.U32,
       (i32 (inst i64:$src0, BrigTypeX.U32, !if(bit_src, BrigTypeX.B64, BrigTypeX.U64))))
   >;
 
@@ -178,17 +178,17 @@ multiclass InstSourceType_1Op_Pats<Instruction inst,
   >;
 }
 
-def popcount_inst : HSAILInstSourceType_1Op<"popcount", BrigOpcode.POPCOUNT>;
+def POPCOUNT : HSAILInstSourceType_1Op<"popcount", BrigOpcode.POPCOUNT>;
 
-defm : InstSourceType_1Op_Pats<popcount_inst, ctpop, 1>;
+defm : InstSourceType_1Op_Pats<POPCOUNT, ctpop, 1>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // firstbit (integer, 1-bit, 32-bit, and 64-bit)
 // HSAIL_SPEC_CURRENT <
 
-def firstbit_inst : HSAILInstSourceType_1Op<"firstbit", BrigOpcode.FIRSTBIT>;
-defm : InstSourceType_1Op_Pats<firstbit_inst, ctlz>;
-def : InstSourceType_1Op_Pat<firstbit_inst, int_HSAIL_firstbit_u32, i32, BrigTypeX.U32, BrigTypeX.U32>;
+def FIRSTBIT : HSAILInstSourceType_1Op<"firstbit", BrigOpcode.FIRSTBIT>;
+defm : InstSourceType_1Op_Pats<FIRSTBIT, ctlz>;
+def : InstSourceType_1Op_Pat<FIRSTBIT, int_HSAIL_firstbit_u32, i32, BrigTypeX.U32, BrigTypeX.U32>;
 
 // > HSAIL_SPEC_CURRENT
 
@@ -196,10 +196,10 @@ def : InstSourceType_1Op_Pat<firstbit_inst, int_HSAIL_firstbit_u32, i32, BrigTyp
 // lastbit (integer, 1-bit, 32-bit, and 64-bit)
 // HSAIL_SPEC_CURRENT <
 
-def lastbit_inst : HSAILInstSourceType_1Op<"lastbit", BrigOpcode.LASTBIT>;
+def LASTBIT : HSAILInstSourceType_1Op<"lastbit", BrigOpcode.LASTBIT>;
 
-defm : InstSourceType_1Op_Pats<lastbit_inst, cttz>;
-def : InstSourceType_1Op_Pat<lastbit_inst, int_HSAIL_lastbit_u32, i32, BrigTypeX.U32, BrigTypeX.U32>;
+defm : InstSourceType_1Op_Pats<LASTBIT, cttz>;
+def : InstSourceType_1Op_Pat<LASTBIT, int_HSAIL_lastbit_u32, i32, BrigTypeX.U32, BrigTypeX.U32>;
 
 // > HSAIL_SPEC_CURRENT
 
@@ -209,31 +209,31 @@ def : InstSourceType_1Op_Pat<lastbit_inst, int_HSAIL_lastbit_u32, i32, BrigTypeX
 ////////////////////////////////////////////////////////////////////////////////
 // shl (integer, signed and unsigned, 32-bit and 64-bit)
 // shr (integer, signed and unsigned, 32-bit and 64-bit)
-def shl_inst : HSAILInstBasic_2Op<"shl", BrigOpcode.SHL>;
-def shr_inst : HSAILInstBasic_2Op<"shr", BrigOpcode.SHR>;
+def SHL : HSAILInstBasic_2Op<"shl", BrigOpcode.SHL>;
+def SHR : HSAILInstBasic_2Op<"shr", BrigOpcode.SHR>;
 
-def : InstBasic_2Op_Pat<shl_inst, shl, i32, i32, BrigTypeX.U32>;
-def : InstBasic_2Op_Pat<shl_inst, shl, i64, i32, BrigTypeX.U64>;
+def : InstBasic_2Op_Pat<SHL, shl, i32, i32, BrigTypeX.U32>;
+def : InstBasic_2Op_Pat<SHL, shl, i64, i32, BrigTypeX.U64>;
 
-def : InstBasic_2Op_Pat<shr_inst, srl, i32, i32, BrigTypeX.U32>;
-def : InstBasic_2Op_Pat<shr_inst, srl, i64, i32, BrigTypeX.U64>;
+def : InstBasic_2Op_Pat<SHR, srl, i32, i32, BrigTypeX.U32>;
+def : InstBasic_2Op_Pat<SHR, srl, i64, i32, BrigTypeX.U64>;
 
-def : InstBasic_2Op_Pat<shr_inst, sra, i32, i32, BrigTypeX.S32>;
-def : InstBasic_2Op_Pat<shr_inst, sra, i64, i32, BrigTypeX.S64>;
+def : InstBasic_2Op_Pat<SHR, sra, i32, i32, BrigTypeX.S32>;
+def : InstBasic_2Op_Pat<SHR, sra, i64, i32, BrigTypeX.S64>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // cmov (1-bit, 32-bit, and 64-bit; integer and float)
 
-def cmov_inst : HSAILInstBasic_3Op<"cmov", BrigOpcode.CMOV>;
+def CMOV : HSAILInstBasic_3Op<"cmov", BrigOpcode.CMOV>;
 
 // Reduce complexity to prefer selecting various min / max patterns on
 // select.
 let AddedComplexity = -10 in {
-  def : InstBasic_CMov_Pat<cmov_inst, i1, BrigTypeX.B1>;
-  def : InstBasic_CMov_Pat<cmov_inst, i32, BrigTypeX.B32>;
-  def : InstBasic_CMov_Pat<cmov_inst, f32, BrigTypeX.B32>;
-  def : InstBasic_CMov_Pat<cmov_inst, i64, BrigTypeX.B64>;
-  def : InstBasic_CMov_Pat<cmov_inst, f64, BrigTypeX.B64>;
+  def : InstBasic_CMov_Pat<CMOV, i1, BrigTypeX.B1>;
+  def : InstBasic_CMov_Pat<CMOV, i32, BrigTypeX.B32>;
+  def : InstBasic_CMov_Pat<CMOV, f32, BrigTypeX.B32>;
+  def : InstBasic_CMov_Pat<CMOV, i64, BrigTypeX.B64>;
+  def : InstBasic_CMov_Pat<CMOV, f64, BrigTypeX.B64>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -250,7 +250,7 @@ let AddedComplexity = -10 in {
 
 // FIXME: Spec calls TypeLength moveType for some reason, but that
 // would be painful to deal with.
-def mov : HSAILInstBasic_1Op<"mov", BrigOpcode.MOV> {
+def MOV : HSAILInstBasic_1Op<"mov", BrigOpcode.MOV> {
   let isAsCheapAsAMove = 1;
   let isReMaterializable = 1;
 }
@@ -260,12 +260,12 @@ def mov : HSAILInstBasic_1Op<"mov", BrigOpcode.MOV> {
 // output with a mov using and defining the same register.
 class MovImmPat<SDPatternOperator node, ValueType vt, int bt> : Pat <
   (vt node:$src0),
-  (mov node:$src0, bt)
+  (MOV node:$src0, bt)
 >;
 
 class BitconvertMovPat<ValueType destvt, ValueType srcvt, int bt> : Pat <
   (destvt (bitconvert srcvt:$src0)),
-  (mov $src0, bt)
+  (MOV $src0, bt)
 >;
 
 
@@ -285,96 +285,96 @@ def : BitconvertMovPat<i32, f32, BrigTypeX.B32>;
 // misc operations
 def : Pat <
   (f32 (int_HSAIL_ftz_f32 f32:$src0)),
-  (add_inst 1, BrigRound.FLOAT_PLUS_INFINITY, $src0, (i32 0), BrigTypeX.F32)
+  (ADD 1, BrigRound.FLOAT_PLUS_INFINITY, $src0, (i32 0), BrigTypeX.F32)
 >;
 
-def bitselect_inst : HSAILInstBasic_3Op<"bitselect", BrigOpcode.BITSELECT>;
-defm : InstBasic_3Op_BitIntTypes<bitselect_inst, HSAILbitselect>;
+def BITSELECT : HSAILInstBasic_3Op<"bitselect", BrigOpcode.BITSELECT>;
+defm : InstBasic_3Op_BitIntTypes<BITSELECT, HSAILbitselect>;
 
-def pack_inst : HSAILInstSourceType_3Op<"pack", BrigOpcode.PACK>;
+def PACK : HSAILInstSourceType_3Op<"pack", BrigOpcode.PACK>;
 
 // Media - packcvt
-def packcvt_inst : HSAILInstSourceType_4Op<"packcvt", BrigOpcode.PACKCVT>;
+def PACKCVT : HSAILInstSourceType_4Op<"packcvt", BrigOpcode.PACKCVT>;
 
-def : InstSourceType_4Op_Pat<packcvt_inst, int_HSAIL_packcvt_u8x4_f32,
+def : InstSourceType_4Op_Pat<PACKCVT, int_HSAIL_packcvt_u8x4_f32,
    f32, BrigTypeX.U8X4, BrigTypeX.F32
 >;
 
 // Media - unpackcvt
 
-def unpackcvt_inst : HSAILInstSourceType_2Op<"unpackcvt", BrigOpcode.UNPACKCVT>;
-def : InstSourceType_2Op_Pat<unpackcvt_inst, int_HSAIL_unpackcvt_f32_u8x4,
+def UNPACKCVT : HSAILInstSourceType_2Op<"unpackcvt", BrigOpcode.UNPACKCVT>;
+def : InstSourceType_2Op_Pat<UNPACKCVT, int_HSAIL_unpackcvt_f32_u8x4,
    f32, BrigTypeX.F32, BrigTypeX.U8X4
 >;
 
-def bitalign_inst : HSAILInstBasic_3Op<"bitalign", BrigOpcode.BITALIGN>;
-def bytealign_inst : HSAILInstBasic_3Op<"bytealign", BrigOpcode.BYTEALIGN>;
+def BITALIGN : HSAILInstBasic_3Op<"bitalign", BrigOpcode.BITALIGN>;
+def BYTEALIGN : HSAILInstBasic_3Op<"bytealign", BrigOpcode.BYTEALIGN>;
 
-def : InstBasic_3Op_Pat<bitalign_inst, int_HSAIL_bitalign_b32, i32, BrigTypeX.B32>;
-def : InstBasic_3Op_Pat<bytealign_inst, int_HSAIL_bytealign_b32, i32, BrigTypeX.B32>;
+def : InstBasic_3Op_Pat<BITALIGN, int_HSAIL_bitalign_b32, i32, BrigTypeX.B32>;
+def : InstBasic_3Op_Pat<BYTEALIGN, int_HSAIL_bytealign_b32, i32, BrigTypeX.B32>;
 
-def lerp_inst : HSAILInstBasic_3Op<"lerp", BrigOpcode.LERP>;
-def : InstBasic_3Op_Pat<lerp_inst, int_HSAIL_lerp_u8x4, i32, BrigTypeX.U8X4>;
+def LERP : HSAILInstBasic_3Op<"lerp", BrigOpcode.LERP>;
+def : InstBasic_3Op_Pat<LERP, int_HSAIL_lerp_u8x4, i32, BrigTypeX.U8X4>;
 
-def sad_inst : HSAILInstSourceType_3Op<"sad", BrigOpcode.SAD>;
-def : InstSourceType_3Op_Pat<sad_inst, int_HSAIL_sad_u32_u8x4,
+def SAD : HSAILInstSourceType_3Op<"sad", BrigOpcode.SAD>;
+def : InstSourceType_3Op_Pat<SAD, int_HSAIL_sad_u32_u8x4,
    i32, BrigTypeX.U32, BrigTypeX.U8X4
 >;
 
-def sadhi_inst : HSAILInstSourceType_3Op<"sadhi", BrigOpcode.SADHI>;
-def : InstSourceType_3Op_Pat<sadhi_inst, int_HSAIL_sadhi_u16x2_u8x4,
+def SADHI : HSAILInstSourceType_3Op<"sadhi", BrigOpcode.SADHI>;
+def : InstSourceType_3Op_Pat<SADHI, int_HSAIL_sadhi_u16x2_u8x4,
    i32, BrigTypeX.U16X2, BrigTypeX.U8X4
 >;
 
 // media_ops2
 
-def gcn_msad_inst : HSAILInstBasic_3Op<"gcn_msad", BrigOpcode.GCNMSAD>;
-def : InstBasic_3Op_Pat<gcn_msad_inst, int_HSAIL_msad, i32, BrigTypeX.B32>;
+def GCN_MSAD : HSAILInstBasic_3Op<"gcn_msad", BrigOpcode.GCNMSAD>;
+def : InstBasic_3Op_Pat<GCN_MSAD, int_HSAIL_msad, i32, BrigTypeX.B32>;
 
-def gcn_sadw_inst : HSAILInstBasic_3Op<"gcn_sadw", BrigOpcode.GCNSADW>;
-def : InstBasic_3Op_Pat<gcn_sadw_inst, int_HSAIL_sadw, i32, BrigTypeX.B32>;
+def GCN_SADW : HSAILInstBasic_3Op<"gcn_sadw", BrigOpcode.GCNSADW>;
+def : InstBasic_3Op_Pat<GCN_SADW, int_HSAIL_sadw, i32, BrigTypeX.B32>;
 
-def gcn_sadd_inst : HSAILInstBasic_3Op<"gcn_sadd", BrigOpcode.GCNSADD>;
-def : InstBasic_3Op_Pat<gcn_sadd_inst, int_HSAIL_sadd, i32, BrigTypeX.B32>;
+def GCN_SADD : HSAILInstBasic_3Op<"gcn_sadd", BrigOpcode.GCNSADD>;
+def : InstBasic_3Op_Pat<GCN_SADD, int_HSAIL_sadd, i32, BrigTypeX.B32>;
 
-def gcn_min3_inst : HSAILInstBasic_3Op<"gcn_min3", BrigOpcode.GCNMIN3>;
-def : InstBasic_3Op_Pat<gcn_min3_inst, int_HSAIL_imin3, i32, BrigTypeX.S32>;
-def : InstBasic_3Op_Pat<gcn_min3_inst, int_HSAIL_umin3, i32, BrigTypeX.U32>;
-def : InstBasic_3Op_Pat<gcn_min3_inst, int_HSAIL_fmin3, f32, BrigTypeX.F32>;
+def GCN_MIN3 : HSAILInstBasic_3Op<"gcn_min3", BrigOpcode.GCNMIN3>;
+def : InstBasic_3Op_Pat<GCN_MIN3, int_HSAIL_imin3, i32, BrigTypeX.S32>;
+def : InstBasic_3Op_Pat<GCN_MIN3, int_HSAIL_umin3, i32, BrigTypeX.U32>;
+def : InstBasic_3Op_Pat<GCN_MIN3, int_HSAIL_fmin3, f32, BrigTypeX.F32>;
 
-def gcn_max3_inst : HSAILInstBasic_3Op<"gcn_max3", BrigOpcode.GCNMAX3>;
-def : InstBasic_3Op_Pat<gcn_max3_inst, int_HSAIL_imax3, i32, BrigTypeX.S32>;
-def : InstBasic_3Op_Pat<gcn_max3_inst, int_HSAIL_umax3, i32, BrigTypeX.U32>;
-def : InstBasic_3Op_Pat<gcn_max3_inst, int_HSAIL_fmax3, f32, BrigTypeX.F32>;
+def GCN_MAX3 : HSAILInstBasic_3Op<"gcn_max3", BrigOpcode.GCNMAX3>;
+def : InstBasic_3Op_Pat<GCN_MAX3, int_HSAIL_imax3, i32, BrigTypeX.S32>;
+def : InstBasic_3Op_Pat<GCN_MAX3, int_HSAIL_umax3, i32, BrigTypeX.U32>;
+def : InstBasic_3Op_Pat<GCN_MAX3, int_HSAIL_fmax3, f32, BrigTypeX.F32>;
 
-def gcn_med3_inst : HSAILInstBasic_3Op<"gcn_med3", BrigOpcode.GCNMED3>;
-def : InstBasic_3Op_Pat<gcn_med3_inst, int_HSAIL_imed3, i32, BrigTypeX.S32>;
-def : InstBasic_3Op_Pat<gcn_med3_inst, int_HSAIL_umed3, i32, BrigTypeX.U32>;
-def : InstBasic_3Op_Pat<gcn_med3_inst, int_HSAIL_fmed3, f32, BrigTypeX.F32>;
+def GCN_MED3 : HSAILInstBasic_3Op<"gcn_med3", BrigOpcode.GCNMED3>;
+def : InstBasic_3Op_Pat<GCN_MED3, int_HSAIL_imed3, i32, BrigTypeX.S32>;
+def : InstBasic_3Op_Pat<GCN_MED3, int_HSAIL_umed3, i32, BrigTypeX.U32>;
+def : InstBasic_3Op_Pat<GCN_MED3, int_HSAIL_fmed3, f32, BrigTypeX.F32>;
 
-def bitextract_inst : HSAILInstBasic_3Op<"bitextract", BrigOpcode.BITEXTRACT>;
-defm : InstBasic_3Op_IntTypes<bitextract_inst, HSAILubitextract, 0>;
-defm : InstBasic_3Op_IntTypes<bitextract_inst, HSAILsbitextract, 1>;
+def BITEXTRACT : HSAILInstBasic_3Op<"bitextract", BrigOpcode.BITEXTRACT>;
+defm : InstBasic_3Op_IntTypes<BITEXTRACT, HSAILubitextract, 0>;
+defm : InstBasic_3Op_IntTypes<BITEXTRACT, HSAILsbitextract, 1>;
 
 
-def gcn_bfm_inst : HSAILInstBasic_2Op<"gcn_bfm", BrigOpcode.GCNBFM>;
-def : InstBasic_2Op_Pat<gcn_bfm_inst, int_HSAIL_bfm,
+def GCN_BFM : HSAILInstBasic_2Op<"gcn_bfm", BrigOpcode.GCNBFM>;
+def : InstBasic_2Op_Pat<GCN_BFM, int_HSAIL_bfm,
    i32, i32, BrigTypeX.B32
 >;
 
-def gcn_qsad_inst : HSAILInstBasic_3Op<"gcn_qsad", BrigOpcode.GCNQSAD>;
-def : InstBasic_3Op_Pat<gcn_qsad_inst, int_HSAIL_qsad,
+def GCN_QSAD : HSAILInstBasic_3Op<"gcn_qsad", BrigOpcode.GCNQSAD>;
+def : InstBasic_3Op_Pat<GCN_QSAD, int_HSAIL_qsad,
    i64, BrigTypeX.B64
 >;
 
-def gcn_mqsad_inst : HSAILInstBasic_3Op<"gcn_mqsad", BrigOpcode.GCNMQSAD>;
+def GCN_MQSAD : HSAILInstBasic_3Op<"gcn_mqsad", BrigOpcode.GCNMQSAD>;
 
 def : Pat<
   (int_HSAIL_mqsad (i64 (GPROrImm i64:$src0)), i32:$src1, i64:$src2),
-  (gcn_mqsad_inst $src0, $src1, $src2, BrigTypeX.B64)
+  (GCN_MQSAD $src0, $src1, $src2, BrigTypeX.B64)
 >;
 
 
-def gcn_fldexp_inst : HSAILInstBasic_2Op<"gcn_fldexp", BrigOpcode.GCNFLDEXP>;
-def : InstBasic_2Op_Pat<gcn_fldexp_inst, HSAILfldexp, f32, i32, BrigTypeX.F32>;
-def : InstBasic_2Op_Pat<gcn_fldexp_inst, HSAILfldexp, f64, i32, BrigTypeX.F64>;
+def GCN_FLDEXP : HSAILInstBasic_2Op<"gcn_fldexp", BrigOpcode.GCNFLDEXP>;
+def : InstBasic_2Op_Pat<GCN_FLDEXP, HSAILfldexp, f32, i32, BrigTypeX.F32>;
+def : InstBasic_2Op_Pat<GCN_FLDEXP, HSAILfldexp, f64, i32, BrigTypeX.F64>;

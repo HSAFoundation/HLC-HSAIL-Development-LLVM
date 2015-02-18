@@ -99,8 +99,8 @@ def orShlAsMad : PatFrag<
 // }
 
 let Predicates = [EnableFPMAD] in {
-  defm : TernaryFusedPairOp<nfma_inst, f32, fpimm, GPR32, fadd, fmul, BrigTypeX.F32>;
-  defm : TernaryFusedPairOp<nfma_inst, f64, fpimm, GPR64, fadd, fmul, BrigTypeX.F64>;
+  defm : TernaryFusedPairOp<NFMA, f32, fpimm, GPR32, fadd, fmul, BrigTypeX.F32>;
+  defm : TernaryFusedPairOp<NFMA, f64, fpimm, GPR64, fadd, fmul, BrigTypeX.F64>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -150,7 +150,7 @@ def isMask : PatLeaf<(imm), [{
 // Most common use looks like: (x & 0xFF00) >> 8
 class BitExtractOp<ValueType Ty, int bt> : Pat<
   (and (srl Ty:$src0, (i32 (GPROrImm i32:$src1))), (Ty isMask:$src2)),
-  (bitextract_inst $src0, $src1, isMask:$src2, bt)
+  (BITEXTRACT $src0, $src1, isMask:$src2, bt)
 >;
 
 // No signed extract operations are defined since HSAIL specifies extract as
@@ -194,50 +194,50 @@ multiclass BitSelect<ValueType Ty, int bt> {
   def _rrr : Pat<
     (or (and Ty:$src0, Ty:$src1),
         (and Ty:$src2, (not Ty:$src0))),
-    (bitselect_inst $src0, $src1, $src2, bt)
+    (BITSELECT $src0, $src1, $src2, bt)
   >;
 
   def _irr : Pat<
     (bfiImmIRR (Ty imm:$src0), Ty:$src1, Ty:$src2, (Ty imm)),
-    (bitselect_inst imm:$src0, $src1, $src2, bt)
+    (BITSELECT imm:$src0, $src1, $src2, bt)
   >;
 
   def _rir : Pat<
     (or (and Ty:$src0, (Ty imm:$src1)), (and Ty:$src2, (not Ty:$src0))),
-    (bitselect_inst $src0, imm:$src1, $src2, bt)
+    (BITSELECT $src0, imm:$src1, $src2, bt)
   >;
 
   def _rii : Pat<
     (or (and Ty:$src0, (Ty imm:$src1)),
         (and (not Ty:$src0), (Ty imm:$src2))),
-    (bitselect_inst $src0, imm:$src1, imm:$src2, bt)
+    (BITSELECT $src0, imm:$src1, imm:$src2, bt)
   >;
 
   // Alternative rii pattern: (src0 & src1) | ((src0 & src2) ^ src2)
   def _rii1 : Pat<
     (or (and Ty:$src0, (Ty imm:$src1)),
         (xor (and Ty:$src0, (Ty imm:$src2)), (Ty imm:$src2))),
-    (bitselect_inst $src0, imm:$src1, imm:$src2, bt)
+    (BITSELECT $src0, imm:$src1, imm:$src2, bt)
   >;
 
   def _rri : Pat<
     (or (and Ty:$src0, Ty:$src1),
         (and (not Ty:$src0), (Ty imm:$src2))),
-    (bitselect_inst $src0, $src1, imm:$src2, bt)
+    (BITSELECT $src0, $src1, imm:$src2, bt)
   >;
 
   // Alternative rri pattern: (src0 & src1) | ((src0 & src2) ^ src2)
   def _rri1 : Pat<
     (or (and Ty:$src0, Ty:$src1),
         (xor (and Ty:$src0, (Ty imm:$src2)), (Ty imm:$src2))),
-    (bitselect_inst $src0, $src1, imm:$src2, bt)
+    (BITSELECT $src0, $src1, imm:$src2, bt)
   >;
 
   // Alternative pattern: (src2 ^ (src0 & (src1 ^ src2)))
   let AddedComplexity = 10 in {
     def _rrr2 : Pat<
       (xor Ty:$src2, (and Ty:$src0, (xor Ty:$src1, Ty:$src2))),
-      (bitselect_inst $src0, $src1, $src2, bt)
+      (BITSELECT $src0, $src1, $src2, bt)
     >;
   }
 
@@ -245,22 +245,22 @@ multiclass BitSelect<ValueType Ty, int bt> {
     // XXX - This is higher priority to fold the immediate.
     def _irr2 : Pat<
       (xor Ty:$src2, (and (xor Ty:$src1, Ty:$src2), imm:$src0)),
-      (bitselect_inst imm:$src0, $src1, $src2, bt)
+      (BITSELECT imm:$src0, $src1, $src2, bt)
     >;
 
     def _iir2 : Pat<
       (xor Ty:$src2, (and (xor Ty:$src2, (Ty imm:$src1)), (Ty imm:$src0))),
-      (bitselect_inst imm:$src0, imm:$src1, $src2, bt)
+      (BITSELECT imm:$src0, imm:$src1, $src2, bt)
     >;
 
     def _rir2 : Pat<
       (xor Ty:$src2, (and Ty:$src0, (xor Ty:$src2, (Ty imm:$src1)))),
-      (bitselect_inst $src0, imm:$src1, $src2, bt)
+      (BITSELECT $src0, imm:$src1, $src2, bt)
     >;
 
     def _rri2 : Pat<
       (xor (and Ty:$src0, (xor Ty:$src1, (Ty imm:$src2))), (Ty imm:$src2)),
-      (bitselect_inst $src0, $src1, imm:$src2, bt)
+      (BITSELECT $src0, $src1, imm:$src2, bt)
     >;
   }
 
@@ -268,7 +268,7 @@ multiclass BitSelect<ValueType Ty, int bt> {
   let AddedComplexity = 4 in {
     def _rrr3 : Pat<
       (xor (xor Ty:$src2, (and Ty:$src0, Ty:$src2)), (and Ty:$src0, Ty:$src1)),
-      (bitselect_inst $src0, $src1, $src2, bt)
+      (BITSELECT $src0, $src1, $src2, bt)
     >;
   }
 
@@ -276,25 +276,25 @@ multiclass BitSelect<ValueType Ty, int bt> {
     def _irr3 : Pat<
       (xor (xor Ty:$src2, (and Ty:$src2, (Ty imm:$src0))),
            (and Ty:$src1, (Ty imm:$src0))),
-      (bitselect_inst imm:$src0, $src1, $src2, bt)
+      (BITSELECT imm:$src0, $src1, $src2, bt)
     >;
 
     def _iir3 : Pat<
       (bfiImmIIR3 (Ty imm:$src0), (Ty imm:$src1), Ty:$src2),
-      (bitselect_inst imm:$src0, imm:$src1, $src2, bt)
+      (BITSELECT imm:$src0, imm:$src1, $src2, bt)
     >;
   }
 
   def _rri3 : Pat<
     (xor (xor (and Ty:$src0, (Ty imm:$src2)), (Ty imm:$src2)),
          (and Ty:$src0, Ty:$src1)),
-    (bitselect_inst $src0, $src1, imm:$src2, bt)
+    (BITSELECT $src0, $src1, imm:$src2, bt)
   >;
 
   def _rii3 : Pat<
     (xor (xor (and Ty:$src0, (Ty imm:$src2)), (Ty imm:$src2)),
          (and Ty:$src0, (Ty imm:$src1))),
-    (bitselect_inst $src0, imm:$src1, imm:$src2, bt)
+    (BITSELECT $src0, imm:$src1, imm:$src2, bt)
   >;
 }
 
@@ -308,7 +308,7 @@ defm : BitSelect<i64, BrigTypeX.B64>;
 let Predicates = [EnableOpt], AddedComplexity = 5 in {
   def : Pat<
     (shl (i64 (anyext i32:$src)), (i32 32)),
-    (pack_inst (i32 0), $src, (i32 1), BrigTypeX.U32X2, BrigTypeX.U32)
+    (PACK (i32 0), $src, (i32 1), BrigTypeX.U32X2, BrigTypeX.U32)
   >;
 }
 
@@ -336,12 +336,12 @@ let Predicates = [UnsafeFPMath] in {
   let AddedComplexity = 5 in {
     def : Pat<
       (fdiv fp32imm1, f32:$src),
-      (nrcp_inst $src, BrigTypeX.F32)
+      (NRCP $src, BrigTypeX.F32)
     >;
 
     def : Pat<
       (fdiv fp64imm1, f64:$src),
-      (nrcp_inst $src, BrigTypeX.F64)
+      (NRCP $src, BrigTypeX.F64)
     >;
   }
 
@@ -349,24 +349,24 @@ let Predicates = [UnsafeFPMath] in {
   let AddedComplexity = 4 in {
      def : Pat<
        (fdiv fp32imm_minus1, f32:$src),
-       (neg (f32 (nrcp_inst $src, BrigTypeX.F32)), BrigTypeX.F32)
+       (NEG (f32 (NRCP $src, BrigTypeX.F32)), BrigTypeX.F32)
      >;
 
      def : Pat<
        (fdiv fp64imm_minus1, f64:$src),
-       (neg (f64 (nrcp_inst $src, BrigTypeX.F64)), BrigTypeX.F64)
+       (NEG (f64 (NRCP $src, BrigTypeX.F64)), BrigTypeX.F64)
      >;
   }
 
   let AddedComplexity = 5 in {
     def : Pat<
       (fdiv fp32imm_minus1, (fneg f32:$src)),
-      (nrcp_inst $src, BrigTypeX.F32)
+      (NRCP $src, BrigTypeX.F32)
     >;
 
     def : Pat<
       (fdiv fp64imm_minus1, (fneg f64:$src)),
-      (nrcp_inst $src, BrigTypeX.F64)
+      (NRCP $src, BrigTypeX.F64)
     >;
   }
 }
@@ -379,34 +379,34 @@ let Predicates = [UnsafeFPMath] in {
   let AddedComplexity = 15 in {
     def : Pat<
       (fdiv fp32imm1, (int_HSAIL_nsqrt_f32 f32:$src)),
-      (nrsqrt_inst $src, BrigTypeX.F32)
+      (NRSQRT $src, BrigTypeX.F32)
     >;
 
     def : Pat<
       (fdiv fp64imm1, (int_HSAIL_nsqrt_f64 f64:$src)),
-      (nrsqrt_inst $src, BrigTypeX.F64)
+      (NRSQRT $src, BrigTypeX.F64)
     >;
   }
 
   let AddedComplexity = 10 in {
     def : Pat<
       (fdiv f32:$src0, (int_HSAIL_nsqrt_f32 f32:$src1)),
-      (f32 (mul_inst 1, 0, $src0, (f32 (nrsqrt_inst $src1, BrigTypeX.F32)), BrigTypeX.F32))
+      (f32 (MUL 1, 0, $src0, (f32 (NRSQRT $src1, BrigTypeX.F32)), BrigTypeX.F32))
     >;
 
     def : Pat<
       (f32 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f32 f32:$src1))),
-      (f32 (mul_inst 1, 0, fpimm:$src0, (f32 (nrsqrt_inst $src1, BrigTypeX.F32)), BrigTypeX.F32))
+      (f32 (MUL 1, 0, fpimm:$src0, (f32 (NRSQRT $src1, BrigTypeX.F32)), BrigTypeX.F32))
     >;
 
     def : Pat<
       (f64 (fdiv GPR64:$src0, (int_HSAIL_nsqrt_f64 f64:$src1))),
-      (f64 (mul_inst 0, 0, $src0, (f64 (nrsqrt_inst $src1, BrigTypeX.F64)), BrigTypeX.F64))
+      (f64 (MUL 0, 0, $src0, (f64 (NRSQRT $src1, BrigTypeX.F64)), BrigTypeX.F64))
     >;
 
     def : Pat<
       (f64 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f64 f64:$src1))),
-      (f64 (mul_inst 0, 0, fpimm:$src0, (f64 (nrsqrt_inst (f64 GPR64:$src1), BrigTypeX.F64)), BrigTypeX.F64))
+      (f64 (MUL 0, 0, fpimm:$src0, (f64 (NRSQRT (f64 GPR64:$src1), BrigTypeX.F64)), BrigTypeX.F64))
     >;
   }
 }
@@ -450,14 +450,14 @@ multiclass minmax<Instruction inst, ValueType Ty, SDNode ImmTy,
 }
 
 let Predicates = [EnableOpt] in {
-defm min_s32  : minmax<min_inst, i32, imm, SETLT,  SETGT, BrigTypeX.S32>;
-defm min_u32  : minmax<min_inst, i32, imm, SETULT, SETUGT, BrigTypeX.U32>;
-defm max_s32  : minmax<max_inst, i32, imm, SETGT,  SETLT, BrigTypeX.S32>;
-defm max_u32  : minmax<max_inst, i32, imm, SETUGT, SETULT, BrigTypeX.U32>;
-defm min_s64  : minmax<min_inst, i64, imm, SETLT,  SETGT, BrigTypeX.S64>;
-defm min_u64  : minmax<min_inst, i64, imm, SETULT, SETUGT, BrigTypeX.U64>;
-defm max_s64  : minmax<max_inst, i64, imm, SETGT,  SETLT, BrigTypeX.S64>;
-defm max_u64  : minmax<max_inst, i64, imm, SETUGT, SETULT, BrigTypeX.U64>;
+defm min_s32  : minmax<MIN, i32, imm, SETLT,  SETGT, BrigTypeX.S32>;
+defm min_u32  : minmax<MIN, i32, imm, SETULT, SETUGT, BrigTypeX.U32>;
+defm max_s32  : minmax<MAX, i32, imm, SETGT,  SETLT, BrigTypeX.S32>;
+defm max_u32  : minmax<MAX, i32, imm, SETUGT, SETULT, BrigTypeX.U32>;
+defm min_s64  : minmax<MIN, i64, imm, SETLT,  SETGT, BrigTypeX.S64>;
+defm min_u64  : minmax<MIN, i64, imm, SETULT, SETUGT, BrigTypeX.U64>;
+defm max_s64  : minmax<MAX, i64, imm, SETGT,  SETLT, BrigTypeX.S64>;
+defm max_u64  : minmax<MAX, i64, imm, SETUGT, SETULT, BrigTypeX.U64>;
 }
 
 // Abs
@@ -465,13 +465,13 @@ let Predicates = [EnableOpt] in {
   def : Pat<
     (xor (add (sra i32:$src, (i32 31)), i32:$src),
          (sra i32:$src, (i32 31))),
-    (abs_inst 0, 0, $src, BrigTypeX.S32)
+    (ABS 0, 0, $src, BrigTypeX.S32)
   >;
 
   def : Pat<
     (xor (add (sra i64:$src, (i32 63)), i64:$src),
          (sra i64:$src, (i32 63))),
-    (abs_inst 0, 0, $src, BrigTypeX.S64)
+    (ABS 0, 0, $src, BrigTypeX.S64)
   >;
 }
 
@@ -491,9 +491,9 @@ multiclass FusedAddMul1<HSAILInst op, ValueType Ty, int bt, RegisterClass RC,
 }
 
 let Predicates = [EnableOpt] in {
-  defm addmul1_f32 : FusedAddMul1<add_inst, f32, BrigTypeX.F32, GPR32, fp32imm1,
+  defm addmul1_f32 : FusedAddMul1<ADD, f32, BrigTypeX.F32, GPR32, fp32imm1,
                                   BrigRound.FLOAT_NEAR_EVEN, 1>;
-  defm addmul1_f64 : FusedAddMul1<add_inst, f64, BrigTypeX.F64, GPR64, fp64imm1,
+  defm addmul1_f64 : FusedAddMul1<ADD, f64, BrigTypeX.F64, GPR64, fp64imm1,
                                   BrigRound.FLOAT_NEAR_EVEN, 0>;
 }
 
@@ -501,6 +501,6 @@ let Predicates = [EnableOpt] in {
   def : Pat<
     (or (shl i32:$src0, i32:$src1),
         (srl i32:$src0, (sub imm32, (and i32:$src1, imm31)))),
-    (bitalign_inst $src0, $src0, (i32 (neg $src1, BrigTypeX.S32)), BrigTypeX.B32)
+    (BITALIGN $src0, $src0, (i32 (NEG $src1, BrigTypeX.S32)), BrigTypeX.B32)
   >;
 }

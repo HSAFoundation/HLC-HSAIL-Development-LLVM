@@ -513,7 +513,7 @@ void BRIGAsmPrinter::EmitSamplerDefs() {
 }
 
 bool BRIGAsmPrinter::isMacroFunc(const MachineInstr *MI) {
-  if (MI->getOpcode() != HSAIL::target_call) {
+  if (MI->getOpcode() != HSAIL::TARGET_CALL) {
     return false;
   }
   const llvm::StringRef &nameRef = MI->getOperand(0).getGlobal()->getName();
@@ -618,117 +618,117 @@ void BRIGAsmPrinter::EmitInstruction(const MachineInstr *II) {
 // FIXME: Should get encoding from getBinaryCodeForInstr
 static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::mov:
+  case HSAIL::MOV:
     return Brig::BRIG_OPCODE_MOV;
-  case HSAIL::ret:
+  case HSAIL::RET:
     return Brig::BRIG_OPCODE_RET;
-  case HSAIL::shl_inst:
+  case HSAIL::SHL:
     return Brig::BRIG_OPCODE_SHL;
-  case HSAIL::shr_inst:
+  case HSAIL::SHR:
     return Brig::BRIG_OPCODE_SHR;
-  case HSAIL::and_inst:
+  case HSAIL::AND:
     return Brig::BRIG_OPCODE_AND;
-  case HSAIL::or_inst:
+  case HSAIL::OR:
     return Brig::BRIG_OPCODE_OR;
-  case HSAIL::xor_inst:
+  case HSAIL::XOR:
     return Brig::BRIG_OPCODE_XOR;
-  case HSAIL::not_inst:
+  case HSAIL::NOT:
     return Brig::BRIG_OPCODE_NOT;
-  case HSAIL::neg:
+  case HSAIL::NEG:
     return Brig::BRIG_OPCODE_NEG;
-  case HSAIL::cmov_inst:
+  case HSAIL::CMOV:
     return Brig::BRIG_OPCODE_CMOV;
-  case HSAIL::workitemabsid_inst:
+  case HSAIL::WORKITEMABSID:
     return Brig::BRIG_OPCODE_WORKITEMABSID;
-  case HSAIL::workgroupid_inst:
+  case HSAIL::WORKGROUPID:
     return Brig::BRIG_OPCODE_WORKGROUPID;
-  case HSAIL::workitemid_inst:
+  case HSAIL::WORKITEMID:
     return Brig::BRIG_OPCODE_WORKITEMID;
-  case HSAIL::workgroupsize_inst:
+  case HSAIL::WORKGROUPSIZE:
     return Brig::BRIG_OPCODE_WORKGROUPSIZE;
-  case HSAIL::currentworkgroupsize_inst:
+  case HSAIL::CURRENTWORKGROUPSIZE:
     return Brig::BRIG_OPCODE_CURRENTWORKGROUPSIZE;
-  case HSAIL::gridgroups_inst:
+  case HSAIL::GRIDGROUPS:
     return Brig::BRIG_OPCODE_GRIDGROUPS;
-  case HSAIL::gridsize_inst:
+  case HSAIL::GRIDSIZE:
     return Brig::BRIG_OPCODE_GRIDSIZE;
-  case HSAIL::dim_inst:
+  case HSAIL::DIM:
     return Brig::BRIG_OPCODE_DIM;
-  case HSAIL::workitemflatid_inst:
+  case HSAIL::WORKITEMFLATID:
     return Brig::BRIG_OPCODE_WORKITEMFLATID;
-  case HSAIL::workitemflatabsid_inst:
+  case HSAIL::WORKITEMFLATABSID:
     return Brig::BRIG_OPCODE_WORKITEMFLATABSID;
-  case HSAIL::laneid_inst:
+  case HSAIL::LANEID:
     return Brig::BRIG_OPCODE_LANEID;
-  case HSAIL::waveid_inst:
+  case HSAIL::WAVEID:
     return Brig::BRIG_OPCODE_WAVEID;
-  case HSAIL::maxwaveid_inst:
+  case HSAIL::MAXWAVEID:
     return Brig::BRIG_OPCODE_MAXWAVEID;
-  case HSAIL::clock_inst:
+  case HSAIL::CLOCK:
     return Brig::BRIG_OPCODE_CLOCK;
-  case HSAIL::cuid_inst:
+  case HSAIL::CUID:
     return Brig::BRIG_OPCODE_CUID;
-  case HSAIL::rem_inst:
+  case HSAIL::REM:
     return Brig::BRIG_OPCODE_REM;
-  case HSAIL::mad_inst:
+  case HSAIL::MAD:
     return Brig::BRIG_OPCODE_MAD;
-  case HSAIL::mulhi_inst:
+  case HSAIL::MULHI:
     return Brig::BRIG_OPCODE_MULHI;
-  case HSAIL::nsqrt_inst:
+  case HSAIL::NSQRT:
     return Brig::BRIG_OPCODE_NSQRT;
-  case HSAIL::nrsqrt_inst:
+  case HSAIL::NRSQRT:
     return Brig::BRIG_OPCODE_NRSQRT;
-  case HSAIL::nrcp_inst:
+  case HSAIL::NRCP:
     return Brig::BRIG_OPCODE_NRCP;
-  case HSAIL::nsin_inst:
+  case HSAIL::NSIN:
     return Brig::BRIG_OPCODE_NSIN;
-  case HSAIL::ncos_inst:
+  case HSAIL::NCOS:
     return Brig::BRIG_OPCODE_NCOS;
-  case HSAIL::nexp2_inst:
+  case HSAIL::NEXP2:
     return Brig::BRIG_OPCODE_NEXP2;
-  case HSAIL::nlog2_inst:
+  case HSAIL::NLOG2:
     return Brig::BRIG_OPCODE_NLOG2;
-  case HSAIL::nfma_inst:
+  case HSAIL::NFMA:
     return Brig::BRIG_OPCODE_NFMA;
-  case HSAIL::bitselect_inst:
+  case HSAIL::BITSELECT:
     return Brig::BRIG_OPCODE_BITSELECT;
-  case HSAIL::bitextract_inst:
+  case HSAIL::BITEXTRACT:
     return Brig::BRIG_OPCODE_BITEXTRACT;
-  case HSAIL::mul24_inst:
+  case HSAIL::MUL24:
     return Brig::BRIG_OPCODE_MUL24;
-  case HSAIL::mad24_inst:
+  case HSAIL::MAD24:
     return Brig::BRIG_OPCODE_MAD24;
-  case HSAIL::bitalign_inst:
+  case HSAIL::BITALIGN:
     return Brig::BRIG_OPCODE_BITALIGN;
-  case HSAIL::bytealign_inst:
+  case HSAIL::BYTEALIGN:
     return Brig::BRIG_OPCODE_BYTEALIGN;
-  case HSAIL::lerp_inst:
+  case HSAIL::LERP:
     return Brig::BRIG_OPCODE_LERP;
-  case HSAIL::kernargbaseptr_inst:
+  case HSAIL::KERNARGBASEPTR:
     return Brig::BRIG_OPCODE_KERNARGBASEPTR;
-  case HSAIL::gcn_fldexp_inst:
+  case HSAIL::GCN_FLDEXP:
     return Brig::BRIG_OPCODE_GCNFLDEXP;
-  case HSAIL::gcn_mqsad_inst:
+  case HSAIL::GCN_MQSAD:
     return Brig::BRIG_OPCODE_GCNMQSAD;
-  case HSAIL::gcn_qsad_inst:
+  case HSAIL::GCN_QSAD:
     return Brig::BRIG_OPCODE_GCNQSAD;
-  case HSAIL::gcn_msad_inst:
+  case HSAIL::GCN_MSAD:
     return Brig::BRIG_OPCODE_GCNMSAD;
-  case HSAIL::gcn_sadw_inst:
+  case HSAIL::GCN_SADW:
     return Brig::BRIG_OPCODE_GCNSADW;
-  case HSAIL::gcn_sadd_inst:
+  case HSAIL::GCN_SADD:
     return Brig::BRIG_OPCODE_GCNSADD;
-  case HSAIL::gcn_min3_inst:
+  case HSAIL::GCN_MIN3:
     return Brig::BRIG_OPCODE_GCNMIN3;
-  case HSAIL::gcn_max3_inst:
+  case HSAIL::GCN_MAX3:
     return Brig::BRIG_OPCODE_GCNMAX3;
-  case HSAIL::gcn_med3_inst:
+  case HSAIL::GCN_MED3:
     return Brig::BRIG_OPCODE_GCNMED3;
-  case HSAIL::gcn_bfm_inst:
+  case HSAIL::GCN_BFM:
     return Brig::BRIG_OPCODE_GCNBFM;
-  case HSAIL::gcn_min_inst:
+  case HSAIL::GCN_MIN:
     return Brig::BRIG_OPCODE_GCNMIN;
-  case HSAIL::gcn_max_inst:
+  case HSAIL::GCN_MAX:
     return Brig::BRIG_OPCODE_GCNMAX;
   default:
     llvm_unreachable("unhandled opcode");
@@ -737,35 +737,35 @@ static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstModBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::add_inst:
+  case HSAIL::ADD:
     return Brig::BRIG_OPCODE_ADD;
-  case HSAIL::sub_inst:
+  case HSAIL::SUB:
     return Brig::BRIG_OPCODE_SUB;
-  case HSAIL::mul_inst:
+  case HSAIL::MUL:
     return Brig::BRIG_OPCODE_MUL;
-  case HSAIL::div_inst:
+  case HSAIL::DIV:
     return Brig::BRIG_OPCODE_DIV;
-  case HSAIL::fma_inst:
+  case HSAIL::FMA:
     return Brig::BRIG_OPCODE_FMA;
-  case HSAIL::abs_inst:
+  case HSAIL::ABS:
     return Brig::BRIG_OPCODE_ABS;
-  case HSAIL::sqrt_inst:
+  case HSAIL::SQRT:
     return Brig::BRIG_OPCODE_SQRT;
-  case HSAIL::fract_inst:
+  case HSAIL::FRACT:
     return Brig::BRIG_OPCODE_FRACT;
-  case HSAIL::min_inst:
+  case HSAIL::MIN:
     return Brig::BRIG_OPCODE_MIN;
-  case HSAIL::max_inst:
+  case HSAIL::MAX:
     return Brig::BRIG_OPCODE_MAX;
-  case HSAIL::copysign_inst:
+  case HSAIL::COPYSIGN:
     return Brig::BRIG_OPCODE_COPYSIGN;
-  case HSAIL::rint_inst:
+  case HSAIL::RINT:
     return Brig::BRIG_OPCODE_RINT;
-  case HSAIL::floor_inst:
+  case HSAIL::FLOOR:
     return Brig::BRIG_OPCODE_FLOOR;
-  case HSAIL::ceil_inst:
+  case HSAIL::CEIL:
     return Brig::BRIG_OPCODE_CEIL;
-  case HSAIL::trunc_inst:
+  case HSAIL::TRUNC:
     return Brig::BRIG_OPCODE_TRUNC;
   default:
     llvm_unreachable("unhandled opcode");
@@ -774,23 +774,23 @@ static Brig::BrigOpcode getInstModBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstSourceTypeBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::popcount_inst:
+  case HSAIL::POPCOUNT:
     return Brig::BRIG_OPCODE_POPCOUNT;
-  case HSAIL::firstbit_inst:
+  case HSAIL::FIRSTBIT:
     return Brig::BRIG_OPCODE_FIRSTBIT;
-  case HSAIL::lastbit_inst:
+  case HSAIL::LASTBIT:
     return Brig::BRIG_OPCODE_LASTBIT;
-  case HSAIL::packcvt_inst:
+  case HSAIL::PACKCVT:
     return Brig::BRIG_OPCODE_PACKCVT;
-  case HSAIL::unpackcvt_inst:
+  case HSAIL::UNPACKCVT:
     return Brig::BRIG_OPCODE_UNPACKCVT;
-  case HSAIL::sad_inst:
+  case HSAIL::SAD:
     return Brig::BRIG_OPCODE_SAD;
-  case HSAIL::sadhi_inst:
+  case HSAIL::SADHI:
     return Brig::BRIG_OPCODE_SADHI;
-  case HSAIL::pack_inst:
+  case HSAIL::PACK:
     return Brig::BRIG_OPCODE_PACK;
-  case HSAIL::class_inst:
+  case HSAIL::CLASS:
     return Brig::BRIG_OPCODE_CLASS;
   default:
     llvm_unreachable("unhandled opcode");
@@ -799,13 +799,13 @@ static Brig::BrigOpcode getInstSourceTypeBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstLaneBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::activelaneshuffle_inst:
+  case HSAIL::ACTIVELANESHUFFLE:
     return Brig::BRIG_OPCODE_ACTIVELANESHUFFLE;
-  case HSAIL::activelaneid_inst:
+  case HSAIL::ACTIVELANEID:
     return Brig::BRIG_OPCODE_ACTIVELANEID;
-  case HSAIL::activelanecount_inst:
+  case HSAIL::ACTIVELANECOUNT:
     return Brig::BRIG_OPCODE_ACTIVELANECOUNT;
-  case HSAIL::activelanemask_inst:
+  case HSAIL::ACTIVELANEMASK:
     return Brig::BRIG_OPCODE_ACTIVELANEMASK;
   default:
     llvm_unreachable("unhandled opcode");
@@ -814,13 +814,13 @@ static Brig::BrigOpcode getInstLaneBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstBrBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::br_inst:
+  case HSAIL::BR:
     return Brig::BRIG_OPCODE_BR;
-  case HSAIL::cbr_inst:
+  case HSAIL::CBR:
     return Brig::BRIG_OPCODE_CBR;
-  case HSAIL::barrier_inst:
+  case HSAIL::BARRIER:
     return Brig::BRIG_OPCODE_BARRIER;
-  case HSAIL::wavebarrier_inst:
+  case HSAIL::WAVEBARRIER:
     return Brig::BRIG_OPCODE_WAVEBARRIER;
   default:
     llvm_unreachable("unhandled opcode");
@@ -829,7 +829,7 @@ static Brig::BrigOpcode getInstBrBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstSegBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::nullptr_inst:
+  case HSAIL::NULLPTR:
     return Brig::BRIG_OPCODE_NULLPTR;
   default:
     llvm_unreachable("unhandled opcode");
@@ -838,11 +838,11 @@ static Brig::BrigOpcode getInstSegBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstSegCvtBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::ftos_inst:
+  case HSAIL::FTOS:
     return Brig::BRIG_OPCODE_FTOS;
-  case HSAIL::stof_inst:
+  case HSAIL::STOF:
     return Brig::BRIG_OPCODE_STOF;
-  case HSAIL::segmentp_inst:
+  case HSAIL::SEGMENTP:
     return Brig::BRIG_OPCODE_SEGMENTP;
   default:
     llvm_unreachable("unhandled opcode");
@@ -851,7 +851,7 @@ static Brig::BrigOpcode getInstSegCvtBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstMemFenceBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::memfence_inst:
+  case HSAIL::MEMFENCE:
     return Brig::BRIG_OPCODE_MEMFENCE;
   default:
     llvm_unreachable("unhandled opcode");
@@ -860,9 +860,9 @@ static Brig::BrigOpcode getInstMemFenceBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstAtomicBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::atomic_inst:
+  case HSAIL::ATOMIC:
     return Brig::BRIG_OPCODE_ATOMIC;
-  case HSAIL::atomicnoret_inst:
+  case HSAIL::ATOMICNORET:
     return Brig::BRIG_OPCODE_ATOMICNORET;
   default:
     llvm_unreachable("unhandled opcode");
@@ -871,7 +871,7 @@ static Brig::BrigOpcode getInstAtomicBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstCmpBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::cmp_inst:
+  case HSAIL::CMP:
     return Brig::BRIG_OPCODE_CMP;
   default:
     llvm_unreachable("unhandled opcode");
@@ -880,11 +880,11 @@ static Brig::BrigOpcode getInstCmpBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstAddrBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::lda_inst:
+  case HSAIL::LDA:
     return Brig::BRIG_OPCODE_LDA;
-  case HSAIL::gcn_atomic_append:
+  case HSAIL::GCN_ATOMIC_APPEND:
     return Brig::BRIG_OPCODE_GCNAPPEND;
-  case HSAIL::gcn_atomic_consume:
+  case HSAIL::GCN_ATOMIC_CONSUME:
     return Brig::BRIG_OPCODE_GCNCONSUME;
   default:
     llvm_unreachable("unhandled opcode");
@@ -893,7 +893,7 @@ static Brig::BrigOpcode getInstAddrBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstImageBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::rdimage_inst:
+  case HSAIL::RDIMAGE:
     return Brig::BRIG_OPCODE_RDIMAGE;
   default:
     llvm_unreachable("unhandled opcode");
@@ -902,7 +902,7 @@ static Brig::BrigOpcode getInstImageBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstCvtBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::cvt:
+  case HSAIL::CVT:
     return Brig::BRIG_OPCODE_CVT;
   default:
     llvm_unreachable("unhandled opcode");
@@ -911,19 +911,19 @@ static Brig::BrigOpcode getInstCvtBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstMemBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::ld_v1:
-  case HSAIL::ld_v2:
-  case HSAIL::ld_v3:
-  case HSAIL::ld_v4:
-  case HSAIL::rarg_ld_v1:
-  case HSAIL::rarg_ld_v2:
-  case HSAIL::rarg_ld_v3:
-  case HSAIL::rarg_ld_v4:
+  case HSAIL::LD_V1:
+  case HSAIL::LD_V2:
+  case HSAIL::LD_V3:
+  case HSAIL::LD_V4:
+  case HSAIL::RARG_LD_V1:
+  case HSAIL::RARG_LD_V2:
+  case HSAIL::RARG_LD_V3:
+  case HSAIL::RARG_LD_V4:
     return Brig::BRIG_OPCODE_LD;
-  case HSAIL::st_v1:
-  case HSAIL::st_v2:
-  case HSAIL::st_v3:
-  case HSAIL::st_v4:
+  case HSAIL::ST_V1:
+  case HSAIL::ST_V2:
+  case HSAIL::ST_V3:
+  case HSAIL::ST_V4:
     return Brig::BRIG_OPCODE_ST;
   default:
     llvm_unreachable("unhandled opcode");
@@ -1000,18 +1000,18 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     }
     return inst;
   }
-  case HSAIL::ret:
+  case HSAIL::RET:
     return brigantine.addInst<HSAIL_ASM::InstBasic>(Brig::BRIG_OPCODE_RET,Brig::BRIG_TYPE_NONE);
 
-  case HSAIL::arg_scope_start:
+  case HSAIL::ARG_SCOPE_START:
     brigantine.startArgScope();
     return HSAIL_ASM::Inst();
 
-  case HSAIL::arg_scope_end:
+  case HSAIL::ARG_SCOPE_END:
     brigantine.endArgScope();
     return HSAIL_ASM::Inst();
 
-  case HSAIL::target_call:
+  case HSAIL::TARGET_CALL:
     if (isMacroFunc(II)) {
       // TODO_HSA: SINCE THE 'barrier' ONLY IS CURRENTLY HANDLED WE'll SUPPORT THIS LATER
 #if 0
@@ -1061,7 +1061,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
 
       return call;
   }
-  case HSAIL::arg_decl:
+  case HSAIL::ARG_DECL:
     BrigEmitVecArgDeclaration(II);
     return HSAIL_ASM::Inst();
   }
@@ -1828,7 +1828,7 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned
     int64_t addr = base.getImm();
     assert(isInt<32>(addr));
 
-    if ((MI->getOpcode() == HSAIL::ld_v1) &&
+    if ((MI->getOpcode() == HSAIL::LD_V1) &&
         HSAIL::getBrigType(MI).getImm() == Brig::BRIG_TYPE_SAMP) {
       BrigEmitOperandImage(MI, opNum); // Constant sampler.
       return;
@@ -2251,19 +2251,19 @@ HSAIL_ASM::InstMem BRIGAsmPrinter::BrigEmitInstMem(const MachineInstr &MI,
 
   unsigned VecSize = 1; // FIXME: Stop special casing this.
   switch (MI.getOpcode()) {
-  case HSAIL::ld_v2:
-  case HSAIL::st_v2:
-  case HSAIL::rarg_ld_v2:
+  case HSAIL::LD_V2:
+  case HSAIL::ST_V2:
+  case HSAIL::RARG_LD_V2:
     VecSize = 2;
     break;
-  case HSAIL::ld_v3:
-  case HSAIL::st_v3:
-  case HSAIL::rarg_ld_v3:
+  case HSAIL::LD_V3:
+  case HSAIL::ST_V3:
+  case HSAIL::RARG_LD_V3:
     VecSize = 3;
     break;
-  case HSAIL::ld_v4:
-  case HSAIL::st_v4:
-  case HSAIL::rarg_ld_v4:
+  case HSAIL::LD_V4:
+  case HSAIL::ST_V4:
+  case HSAIL::RARG_LD_V4:
     VecSize = 4;
     break;
   }
@@ -2396,8 +2396,8 @@ bool BRIGAsmPrinter::usesGCNAtomicCounter(void) {
       switch (II->getOpcode()) {
       default:
         continue;
-      case HSAIL::gcn_atomic_append:
-      case HSAIL::gcn_atomic_consume:
+      case HSAIL::GCN_ATOMIC_APPEND:
+      case HSAIL::GCN_ATOMIC_CONSUME:
         return true;
       }
     }

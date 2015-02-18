@@ -4,6 +4,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-def : Pat<(IL_call tglobaladdr:$dest), (target_call tglobaladdr:$dest)>;
-def : Pat<(IL_call texternalsym:$dest), (target_call texternalsym:$dest)>;
-def : Pat<(IL_call tconstpool:$dest), (target_call tconstpool:$dest)>;
+def : Pat<(IL_call tglobaladdr:$dest), (TARGET_CALL tglobaladdr:$dest)>;
+def : Pat<(IL_call texternalsym:$dest), (TARGET_CALL texternalsym:$dest)>;
+def : Pat<(IL_call tconstpool:$dest), (TARGET_CALL tconstpool:$dest)>;
