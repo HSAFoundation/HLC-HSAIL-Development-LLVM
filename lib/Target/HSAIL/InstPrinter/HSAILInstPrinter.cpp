@@ -1210,7 +1210,9 @@ void HSAILInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
     const MCInstrDesc &Desc = MII.get(MI->getOpcode());
     const MCOperandInfo &OpInfo = Desc.OpInfo[OpNo];
 
-    O << Op.getFPImm();
+    // FIXME: Need to find out if this is an f32 imm.
+    O << "0D" << formatHex(DoubleToBits(Op.getFPImm()));
+
 #if 0
     double Imm = Op.getFPImm();
     const MCRegisterClass &ImmRC = MRI.getRegClass(OpInfo.RegClass);
