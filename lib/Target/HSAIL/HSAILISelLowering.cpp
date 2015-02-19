@@ -65,11 +65,6 @@ namespace llvm {
   extern enum OptimizeForTargetArch OptimizeFor;
 }
 
-static cl::opt<bool>
-Flag_ampPtrFtos("mamp_ptr_ftos",
-            cl::desc("Convert AMP incoming pointers to segment address"),
-            cl::init(false));
-
 HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   TargetLowering(TM) {
   // HSAIL uses a -1 to store a Boolean value as an int. For example,
