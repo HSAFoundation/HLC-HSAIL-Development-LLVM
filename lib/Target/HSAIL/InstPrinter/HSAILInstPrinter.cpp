@@ -1193,7 +1193,7 @@ void HSAILInstPrinter::printBrigWidth(const MCInst *MI, unsigned OpNo,
     O << "_width(WAVESIZE)";
     break;
   case BRIG_WIDTH_ALL:
-    O << "_width(ALL)";
+    O << "_width(all)";
     break;
   }
 }
