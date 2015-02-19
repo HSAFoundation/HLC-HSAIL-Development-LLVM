@@ -99,8 +99,6 @@ HSAILgetTypeName(llvm::Type *ptr,
                  llvm::HSAILMachineFunctionInfo *mMFI,
                  bool signedType);
 
-bool HSAILcommaPrint(int i, raw_ostream &O);
-
 // Helper functions that check the opcode for status information
 llvm::MachineOperand &getBase(llvm::MachineInstr *MI);
 const llvm::MachineOperand &getBase(const llvm::MachineInstr *MI);

@@ -579,7 +579,10 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
     if (!mMFI->func_empty()) {
       oss.str().clear();  
       oss << "function:" << mMFI->func_size();
-      binaryForEach(mMFI->func_begin(), mMFI->func_end(), HSAIL::HSAILcommaPrint, oss);
+
+      for (unsigned FID : mMFI->funcs())
+        oss << ':' << FID;
+
       RTI(brig) << oss.str();
     }
 

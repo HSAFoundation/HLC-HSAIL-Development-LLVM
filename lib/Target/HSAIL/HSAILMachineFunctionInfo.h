@@ -238,6 +238,10 @@ namespace llvm
     func_iterator func_begin() { return mFuncs.begin(); }
     func_iterator func_end() { return mFuncs.end(); }
 
+    inline iterator_range<func_iterator> funcs() {
+      return iterator_range<func_iterator>(func_begin(), func_end());
+    }
+
     /// Add a semaphore
     void sema_insert(uint32_t id) { mSemaphore.insert(id); }
     bool sema_count(uint32_t id) { return mSemaphore.count(id); }

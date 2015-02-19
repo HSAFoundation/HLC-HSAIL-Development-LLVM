@@ -184,11 +184,6 @@ unsigned HSAILgetAlignTypeQualifier(Type *ty, const DataLayout& DL,
   return align;
 }
 
-bool HSAILcommaPrint(int i, raw_ostream &O) {
-  O << ":" << i;
-  return false;
-}
-
 llvm::MachineOperand &getBase(llvm::MachineInstr *MI) {
   int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address);
   return MI->getOperand(Idx + HSAILADDRESS::BASE);
