@@ -50,7 +50,6 @@
 #include "libHSAIL/HSAILBrigantine.h"
 #include "HSAILKernelManager.h"
 #include "AMDOpenCLKernenv.h"
-#include "HSAILAlgorithms.tpp"
 #include "HSAILCompilerErrors.h"
 #include "HSAILKernel.h"
 #include "HSAILMachineFunctionInfo.h"
@@ -599,13 +598,6 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
       RTI(brig) << "memory:64bitABI";
     }
 
-    if (mMFI->errors_empty()) {
-      oss.str().clear();  
-      binaryForEach(mMFI->errors_begin(), mMFI->errors_end(), errorPrint, oss);
-      if ( ! oss.str().empty() ) {
-        RTI(brig) << oss.str();
-      }
-    }
     if (isKernel) {
       RTI(brig) << "privateid:" << DEFAULT_SCRATCH_ID;
     }

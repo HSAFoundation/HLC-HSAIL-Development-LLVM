@@ -263,6 +263,8 @@ namespace llvm
       DEBUG_ONLY, /// Only emit error message in debug mode.
       ALWAYS /// Always emit the error message.
     } ErrorMsgEnum;
+
+    // FIXME: Remove these and use normal error reporting mechanism.
     /// Add an error message to the set of all error messages.
     void addErrorMsg(const char* msg, ErrorMsgEnum val = ALWAYS);
     bool errors_empty() { return mErrors.empty(); }
