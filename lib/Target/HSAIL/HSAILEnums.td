@@ -632,6 +632,7 @@ def BrigSegment : Operand<i32> {
 }
 
 def AddressSpace : Operand<i32> {
+  let PrintMethod = "printBrigSegment";
   int PRIVATE = 0;
   int GLOBAL = 1;
   int READONLY = 2;
