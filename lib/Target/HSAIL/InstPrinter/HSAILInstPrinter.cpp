@@ -36,7 +36,7 @@ void HSAILInstPrinter::printInst(const MCInst *MI, raw_ostream &OS,
 }
 
 void HSAILInstPrinter::printImmediate(uint64_t Imm, raw_ostream &O) {
-  O << formatDec(Imm);
+  O << format("%" PRIu64, Imm);
 }
 
 void HSAILInstPrinter::printAddrMode3Op(const MCInst *MI,
