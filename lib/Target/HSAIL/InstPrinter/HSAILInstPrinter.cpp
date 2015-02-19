@@ -128,6 +128,13 @@ void HSAILInstPrinter::printFTZ(const MCInst *MI,
     O << "_ftz";
 }
 
+void HSAILInstPrinter::printNoNull(const MCInst *MI,
+                                unsigned OpNo,
+                                raw_ostream &O) {
+  if (MI->getOperand(OpNo).getImm())
+    O << "_nonull";
+}
+
 void HSAILInstPrinter::printV4(const MCInst *MI,
                                unsigned OpNo,
                                raw_ostream &O) {

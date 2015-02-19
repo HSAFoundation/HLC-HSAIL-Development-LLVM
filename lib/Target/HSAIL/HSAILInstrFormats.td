@@ -343,7 +343,7 @@ class HSAILInstSegCvt_1Op<string opName, bits<16> BrigVal> :
   HSAILInstSegCvt<BrigVal,
                  (outs unknown:$dest),
                  (ins BrigSegment:$segment,
-                      i1imm:$nonull,
+                      nonull:$nonull,
                       unknown:$src0,
                       BrigTypeX:$destTypedestLength,
                       BrigTypeX:$srcTypesrcLength),

@@ -39,6 +39,10 @@ def ftz : Operand <i1> {
   let PrintMethod = "printFTZ";
 }
 
+def nonull : Operand <i1> {
+  let PrintMethod = "printNoNull";
+}
+
 def equiv : Operand <i32> {
   let PrintMethod = "printEquiv";
 }
