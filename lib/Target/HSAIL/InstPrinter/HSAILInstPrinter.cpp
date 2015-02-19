@@ -1211,7 +1211,7 @@ void HSAILInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
     const MCOperandInfo &OpInfo = Desc.OpInfo[OpNo];
 
     // FIXME: Need to find out if this is an f32 imm.
-    O << "0D" << formatHex(DoubleToBits(Op.getFPImm()));
+    O << format("0D%016" PRIx64, DoubleToBits(Op.getFPImm()));
 
 #if 0
     double Imm = Op.getFPImm();
