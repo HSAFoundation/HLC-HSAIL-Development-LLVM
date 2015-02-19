@@ -464,7 +464,7 @@ class InstCmp<string opName, bits<16> BrigVal> :
   HSAILInstCmp<BrigVal,
     (outs unknown:$dest),
     (ins BrigCompareOperation:$op,
-         i1imm:$ftz,
+         ftz:$ftz,
          unknown:$src0,
          unknown:$src1,
          BrigTypeX:$destTypedestLength,
