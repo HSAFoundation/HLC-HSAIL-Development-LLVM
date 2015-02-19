@@ -37,21 +37,14 @@ static cl::opt<bool> DisableHSAILCFGOpts("disable-hsail-cfg-opts",
 
 static cl::opt<bool>
 UseStandardAsmPrinter("hsail-asmprinter",
-                      cl::desc("Use standard LLVM AsmPrinter instead of BRIGAsmPrinter"));
+                      cl::desc("Use standard LLVM AsmPrinter instead of BRIGAsmPrinter"),
+                      cl::init(true)
+  );
 
 
 // TODO_HSA: As soon as -enable-experimetal llc option is not needed anymore
 //           the code block below shall be removed.
 namespace llvm {
-  bool EnableExperimentalFeatures;
-
-  cl::opt<bool,true> 
-  EnableExperimental("enable-experimental",
-    cl::desc("Enable experimental features"),
-    cl::location(EnableExperimentalFeatures),
-    cl::init(getenv("HSA_ENABLE_EXPERIMENTAL_FEATURES") && std::string(getenv("HSA_ENABLE_EXPERIMENTAL_FEATURES")) == std::string("1")));
-
-
   bool EnableUniformOperations;
 
   cl::opt<bool, true> EnableUniformOps("hsail-enable-uniform-ops", cl::Hidden,

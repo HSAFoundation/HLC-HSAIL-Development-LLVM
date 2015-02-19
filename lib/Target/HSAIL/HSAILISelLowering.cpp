@@ -61,7 +61,6 @@ using namespace llvm;
 using namespace dwarf;
 
 namespace llvm {
-  extern bool EnableExperimentalFeatures;
   extern enum OptimizeForTargetArch OptimizeFor;
 }
 
