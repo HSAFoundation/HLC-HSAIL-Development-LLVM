@@ -484,47 +484,6 @@ bool isSPIRModule(const Module &M) {
   return M.getNamedMetadata("opencl.kernels");
 }
 
-static SDValue generateFenceIntrinsicHelper(SDValue Chain, SDLoc dl,
-                unsigned brigMemoryOrder,
-                unsigned brigGlobalMemoryScope, 
-                unsigned brigGroupMemoryScope, 
-                unsigned brigImageMemoryScope, 
-                SelectionDAG &CurDAG) 
-{
-  unsigned fenceOp = HSAILIntrinsic::HSAIL_memfence;
-  SmallVector<SDValue, 7> Ops;
-
-  Ops.push_back(Chain);
-  Ops.push_back(CurDAG.getTargetConstant(fenceOp, MVT::i64));
-  Ops.push_back(CurDAG.getConstant(brigMemoryOrder, MVT::getIntegerVT(32)));
-  Ops.push_back(CurDAG.getConstant(brigGlobalMemoryScope, MVT::getIntegerVT(32)));
-  Ops.push_back(CurDAG.getConstant(brigGroupMemoryScope, MVT::getIntegerVT(32)));
-  Ops.push_back(CurDAG.getConstant(brigImageMemoryScope, MVT::getIntegerVT(32)));
-  return CurDAG.getNode(ISD::INTRINSIC_VOID, dl, MVT::Other, Ops);
-}
-
-
-SDValue generateFenceIntrinsic(SDValue Chain, SDLoc dl, unsigned memSeg,
-        unsigned brigMemoryOrder, unsigned brigMemoryScope, SelectionDAG &CurDAG) {
-  switch(memSeg) {
-    case llvm::HSAILAS::GLOBAL_ADDRESS:
-        return generateFenceIntrinsicHelper(Chain, dl, brigMemoryOrder, 
-          brigMemoryScope, Brig::BRIG_MEMORY_SCOPE_NONE, 
-          Brig::BRIG_MEMORY_SCOPE_NONE, CurDAG);
-
-    case llvm::HSAILAS::GROUP_ADDRESS:
-        return generateFenceIntrinsicHelper(Chain, dl, brigMemoryOrder, 
-            Brig::BRIG_MEMORY_SCOPE_NONE, brigMemoryScope, 
-            Brig::BRIG_MEMORY_SCOPE_NONE, CurDAG);
-
-    case llvm::HSAILAS::FLAT_ADDRESS:
-        return generateFenceIntrinsicHelper(Chain, dl, brigMemoryOrder, 
-            brigMemoryScope, Brig::BRIG_MEMORY_SCOPE_WORKGROUP, 
-            Brig::BRIG_MEMORY_SCOPE_NONE, CurDAG);
-    default: llvm_unreachable("unexpected memory segment ");
-  }
-}
-
 } // End namespace HSAIL
 
 } // End namespace llvm

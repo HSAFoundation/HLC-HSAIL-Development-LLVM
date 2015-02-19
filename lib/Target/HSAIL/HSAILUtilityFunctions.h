@@ -138,12 +138,6 @@ bool notUsedInKernel(const llvm::GlobalVariable *GV);
 bool isIgnoredGV(const llvm::GlobalVariable *GV);
 bool sanitizeGlobalValueName(llvm::GlobalValue *GV);
 
-SDValue generateFenceIntrinsic(SDValue Chain, SDLoc dl,
-        unsigned memSeg,
-        unsigned brigMemoryOrder,
-        unsigned brigMemoryScope,
-        SelectionDAG &CurDAG);
-
 } // End namespace HSAIL
 
 } // End namespace llvm
