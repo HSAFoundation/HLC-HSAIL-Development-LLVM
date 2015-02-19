@@ -713,7 +713,7 @@ void HSAILInstPrinter::printBrigRound(const MCInst *MI, unsigned OpNo,
   case BRIG_ROUND_NONE:
     break;
   case BRIG_ROUND_FLOAT_NEAR_EVEN:
-    O << "_near";
+    // This is the default, omit it.
     break;
   case BRIG_ROUND_FLOAT_ZERO:
     O << "_zero";
