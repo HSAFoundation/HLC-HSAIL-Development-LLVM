@@ -32,9 +32,6 @@
 
 using namespace llvm;
 
-static cl::opt<bool> DisableHSAILCFGOpts("disable-hsail-cfg-opts",
-  cl::desc("Disable hsail control flow optimizations"));
-
 static cl::opt<bool>
 UseStandardAsmPrinter("hsail-asmprinter",
                       cl::desc("Use standard LLVM AsmPrinter instead of BRIGAsmPrinter"),
