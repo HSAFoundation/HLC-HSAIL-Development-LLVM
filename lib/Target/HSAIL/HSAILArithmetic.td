@@ -93,7 +93,7 @@ def : InstBasic_3Op_Pat<MAD24, HSAILumad24, i32, BrigTypeX.U32>;
 def SQRT : HSAILInstMod_1Op<"sqrt", BrigOpcode.SQRT>;
 def NSQRT : HSAILInstBasic_1Op<"nsqrt", BrigOpcode.NSQRT>;
 def NRSQRT : HSAILInstBasic_1Op<"nrsqrt", BrigOpcode.NRSQRT>;
-def NRCP : HSAILInstBasic_1Op<"rcp", BrigOpcode.NRCP>;
+def NRCP : HSAILInstBasic_1Op<"nrcp", BrigOpcode.NRCP>;
 
 // FIXME: Having the ftz explicitly in this one is totally inconsistent
 def : InstMod_1Op_Pat<SQRT, int_HSAIL_sqrt_ftz_f32, f32, BrigTypeX.F32,
