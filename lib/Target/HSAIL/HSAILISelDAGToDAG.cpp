@@ -48,8 +48,6 @@ using namespace llvm;
 //===----------------------------------------------------------------------===//
 
 namespace llvm {
-  extern bool EnableGCNMinMax;
-
   void initializeHSAILDAGToDAGISelPass(PassRegistry &);
 }
 

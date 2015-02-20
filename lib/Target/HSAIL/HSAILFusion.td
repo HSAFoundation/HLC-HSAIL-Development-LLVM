@@ -12,7 +12,6 @@ def EnableFPMAD        : Predicate<"CurDAG->getTarget().Options.LessPreciseFPMAD
 def UnsafeFPMath       : Predicate<"CurDAG->getTarget().Options.UnsafeFPMath">;
 def NoInfsFPMath       : Predicate<"CurDAG->getTarget().Options.NoInfsFPMath">;
 def NoNaNsFPMath       : Predicate<"CurDAG->getTarget().Options.NoNaNsFPMath">;
-def EnableGCNMinMax    : Predicate<"llvm::EnableGCNMinMax">;
 
 ////////////////////////////////////////////////////////////////////////////////
 // fused operation multiclasses

@@ -52,14 +52,6 @@ namespace llvm {
     clEnumValEnd),
     cl::location(OptimizeFor),
     cl::init(SI));
-
-  bool EnableGCNMinMax;
-
-  cl::opt<bool, true> OptEnableGCNMinMax("hsail-enable-gcnminmax", cl::Hidden,
-    cl::desc("Enable GCN min/max ops in tablegen Fusion"),
-    cl::location(EnableGCNMinMax),
-    cl::init(true));
-
 }
 
 extern "C" void LLVMInitializeHSAILTarget() {
