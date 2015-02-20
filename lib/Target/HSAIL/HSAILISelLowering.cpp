@@ -99,18 +99,13 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   setOperationAction(ISD::FMAXNUM, MVT::f32, Legal);
   setOperationAction(ISD::FMAXNUM, MVT::f64, Legal);
 
-  setOperationAction(ISD::BSWAP, MVT::i16, Expand);
   setOperationAction(ISD::BSWAP, MVT::i32, Custom);
   setOperationAction(ISD::BSWAP, MVT::i64, Expand);
   setOperationAction(ISD::ADD, MVT::i1, Custom);
   setOperationAction(ISD::ROTL, MVT::i1, Expand);
-  setOperationAction(ISD::ROTL, MVT::i8, Expand);
-  setOperationAction(ISD::ROTL, MVT::i16, Expand);
   setOperationAction(ISD::ROTL, MVT::i32, Custom);
   setOperationAction(ISD::ROTL, MVT::i64, Expand);
   setOperationAction(ISD::ROTR, MVT::i1, Expand);
-  setOperationAction(ISD::ROTR, MVT::i8, Expand);
-  setOperationAction(ISD::ROTR, MVT::i16, Expand);
   setOperationAction(ISD::ROTR, MVT::i32, Custom);
   setOperationAction(ISD::ROTR, MVT::i64, Expand);
 
