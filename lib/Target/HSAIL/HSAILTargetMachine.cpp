@@ -42,13 +42,6 @@ UseStandardAsmPrinter("hsail-asmprinter",
 // TODO_HSA: As soon as -enable-experimetal llc option is not needed anymore
 //           the code block below shall be removed.
 namespace llvm {
-  bool EnableUniformOperations;
-
-  cl::opt<bool, true> EnableUniformOps("hsail-enable-uniform-ops", cl::Hidden,
-    cl::desc("Enable width modifier for uniform operation"),
-    cl::location(EnableUniformOperations),
-    cl::init(true));
-
   enum OptimizeForTargetArch OptimizeFor;
 
   cl::opt<enum OptimizeForTargetArch, true> HsailOptimizeFor("hsail-optimize-for", cl::Hidden,

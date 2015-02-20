@@ -66,7 +66,6 @@ using std::string;
 #undef GET_LLVM_INTRINSIC_FOR_GCC_BUILTIN
 
 namespace llvm {
-  extern bool EnableUniformOperations;
   inline std::ostream& operator<<(std::ostream& s, StringRef arg) {
     s.write(arg.data(), arg.size()); return s;
   }
