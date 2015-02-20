@@ -12,22 +12,11 @@
 //===----------------------------------------------------------------------===//
 
 #include "HSAILTargetMachine.h"
-#include "HSAIL.h"
 #include "HSAILELFTargetObjectFile.h"
 
-#include "llvm/CodeGen/MachineFunction.h"
-#include "llvm/MC/MCCodeGenInfo.h"
-#include "llvm/MC/MCCodeEmitter.h"
-#include "llvm/MC/MCStreamer.h"
-#include "llvm/PassManager.h"
-#include "llvm/Support/Debug.h"
-#include "llvm/Support/FormattedStream.h"
-#include "llvm/Target/TargetOptions.h"
-#include "llvm/Support/TargetRegistry.h"
-#include "llvm/Transforms/IPO.h"
 #include "llvm/CodeGen/Passes.h"
-#include "llvm/Analysis/LoopPass.h"
 #include "llvm/Support/CommandLine.h"
+#include "llvm/Support/TargetRegistry.h"
 #include "llvm/Transforms/Scalar.h"
 
 using namespace llvm;
