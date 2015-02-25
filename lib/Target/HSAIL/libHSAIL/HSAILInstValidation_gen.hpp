@@ -67,11 +67,9 @@ public:
 
 private:
     template<class T> unsigned operand2_to_attr_atomic(T inst);
-    template<class T> unsigned operand2_to_attr_atomic_noret(T inst);
     template<class T> unsigned operand2_to_attr_gcn_atomic(T inst);
     template<class T> unsigned operand2_to_attr_gcn_atomic_noret(T inst);
     template<class T> unsigned operand2_to_attr_signal(T inst);
-    template<class T> unsigned operand2_to_attr_signal_noret(T inst);
 
 public:
     unsigned getOperand3Attr(Inst inst);
@@ -93,6 +91,7 @@ private:
     template<class T> unsigned round_to_attr_add(T inst);
     template<class T> unsigned round_to_attr_cvt(T inst);
     template<class T> unsigned round_to_attr_div(T inst);
+    template<class T> unsigned round_to_attr_mad(T inst);
     template<class T> unsigned round_to_attr_mul(T inst);
 
 public:
@@ -102,8 +101,8 @@ private:
 
 private:
     static unsigned ALIGN_VALUES_ANY[];
-    static unsigned ATMOP_VALUES_GENERIC_ATOMIC_EXCH_LD[];
-    static unsigned ATMOP_VALUES_GENERIC_EXCH_LD_WAIT_WAITTIMEOUT[];
+    static unsigned ATMOP_VALUES_GENERIC_ATOMIC_CAS_EXCH_LD[];
+    static unsigned ATMOP_VALUES_GENERIC_CAS_EXCH_LD_WAIT_WAITTIMEOUT[];
     static unsigned ATMOP_VALUES_GENERIC_ATOMIC_ST[];
     static unsigned ATMOP_VALUES_GENERIC_ST[];
     static unsigned ATMOP_VALUES_ADD_SUB_MIN_MAX[];
@@ -145,14 +144,13 @@ private:
     static unsigned MEMORD_VALUES_ANY[];
     static unsigned MEMORD_VALUES_ST[];
     static unsigned MEMORD_VALUES_ACQ_REL_AR[];
-    static unsigned MEMORD_VALUES_AR[];
-    static unsigned MEMSCP_VALUES_NONE_WV_WG_CMP_SYS[];
-    static unsigned MEMSCP_VALUES_WV_WG_CMP_SYS[];
+    static unsigned MEMSCP_VALUES_AGT[];
+    static unsigned MEMSCP_VALUES_WV_WG_AGT_SYS[];
     static unsigned MEMSCP_VALUES_NONE[];
-    static unsigned MEMSCP_VALUES_NONE_WV_WG[];
-    static unsigned MEMSCP_VALUES_NONE_WI_WV_WG[];
+    static unsigned MEMSCP_VALUES_SYS[];
+    static unsigned MEMSCP_VALUES_WV[];
     static unsigned MEMSCP_VALUES_WV_WG[];
-    static unsigned MEMSCP_VALUES_WI_WV_WG[];
+    static unsigned MEMSCP_VALUES_WG[];
     static unsigned NONULL_VALUES_ANY[];
     static unsigned OPERAND_VALUES_ADDRSEG[];
     static unsigned OPERAND_VALUES_ARGLIST[];
@@ -162,14 +160,12 @@ private:
     static unsigned OPERAND_VALUES_FBARRIERU32[];
     static unsigned OPERAND_VALUES_REGU32_FBARRIERU32[];
     static unsigned OPERAND_VALUES_FUNC[];
-    static unsigned OPERAND_VALUES_IFUNC[];
     static unsigned OPERAND_VALUES_IMM[];
     static unsigned OPERAND_VALUES_REGSTYPE_IMMSTYPE[];
     static unsigned OPERAND_VALUES_REG_VECTOR_IMM[];
     static unsigned OPERAND_VALUES_IMM0T2U32[];
     static unsigned OPERAND_VALUES_IMM0T3U32[];
     static unsigned OPERAND_VALUES_JUMPTAB[];
-    static unsigned OPERAND_VALUES_KERNEL[];
     static unsigned OPERAND_VALUES_LAB[];
     static unsigned OPERAND_VALUES_NULL[];
     static unsigned OPERAND_VALUES_REG[];
@@ -190,12 +186,15 @@ private:
     static unsigned SEGMENT_VALUES_ARG[];
     static unsigned SEGMENT_VALUES_ANY[];
     static unsigned SEGMENT_VALUES_WRITABLE[];
-    static unsigned SEGMENT_VALUES_GROUP_PRIVATE_READONLY_KERNARG_SPILL_ARG[];
+    static unsigned SEGMENT_VALUES_GROUP_PRIVATE_KERNARG_SPILL_ARG[];
     static unsigned SEGMENT_VALUES_FLAT_GLOBAL[];
     static unsigned SEGMENT_VALUES_GLOBAL_GROUP_FLAT[];
     static unsigned SEGMENT_VALUES_GLOBAL_GROUP_PRIVATE_FLAT_KERNARG_READONLY[];
+    static unsigned SEGMENT_VALUES_GLOBAL_READONLY_FLAT[];
+    static unsigned SEGMENT_VALUES_FLAT_GROUP_PRIVATE_KERNARG[];
     static unsigned SEGMENT_VALUES_GLOBAL_GROUP_PRIVATE[];
     static unsigned SEGMENT_VALUES_GROUP[];
+    static unsigned SEGMENT_VALUES_GROUP_PRIVATE[];
     static unsigned SEGMENT_VALUES_PRIVATE[];
     static unsigned SPROP_VALUES_ANY[];
     static unsigned STYPESIZE_VALUES_MODEL[];
@@ -222,9 +221,8 @@ private:
     static unsigned TYPE_VALUES_B128[];
     static unsigned TYPE_VALUES_B64_B128[];
     static unsigned TYPE_VALUES_U_S_F_B128_OPAQUE[];
+    static unsigned TYPE_VALUES_U_S_F_B128_SIG[];
     static unsigned TYPE_VALUES_U_S_F_B128[];
-    static unsigned TYPE_VALUES_B128_OPAQUE[];
-    static unsigned TYPE_VALUES_B128_SIG[];
     static unsigned TYPE_VALUES_B32[];
     static unsigned TYPE_VALUES_B32_B64[];
     static unsigned TYPE_VALUES_B32_S32_U32_B64_S64_U64[];
@@ -311,8 +309,8 @@ private:
 
 private:
     static bool check_align_values_any(unsigned val);
-    static bool check_atmop_values_generic_atomic_exch_ld(unsigned val);
-    static bool check_atmop_values_generic_exch_ld_wait_waittimeout(unsigned val);
+    static bool check_atmop_values_generic_atomic_cas_exch_ld(unsigned val);
+    static bool check_atmop_values_generic_cas_exch_ld_wait_waittimeout(unsigned val);
     static bool check_atmop_values_generic_atomic_st(unsigned val);
     static bool check_atmop_values_generic_st(unsigned val);
     static bool check_atmop_values_add_sub_min_max(unsigned val);
@@ -352,14 +350,13 @@ private:
     static bool check_memord_values_any(unsigned val);
     static bool check_memord_values_st(unsigned val);
     static bool check_memord_values_acq_rel_ar(unsigned val);
-    static bool check_memord_values_ar(unsigned val);
-    static bool check_memscp_values_none_wv_wg_cmp_sys(unsigned val);
-    static bool check_memscp_values_wv_wg_cmp_sys(unsigned val);
+    static bool check_memscp_values_agt(unsigned val);
+    static bool check_memscp_values_wv_wg_agt_sys(unsigned val);
     static bool check_memscp_values_none(unsigned val);
-    static bool check_memscp_values_none_wv_wg(unsigned val);
-    static bool check_memscp_values_none_wi_wv_wg(unsigned val);
+    static bool check_memscp_values_sys(unsigned val);
+    static bool check_memscp_values_wv(unsigned val);
     static bool check_memscp_values_wv_wg(unsigned val);
-    static bool check_memscp_values_wi_wv_wg(unsigned val);
+    static bool check_memscp_values_wg(unsigned val);
     static bool check_nonull_values_any(unsigned val);
     static bool check_pack_values_none(unsigned val);
     static bool check_pack_values_p_s(unsigned val);
@@ -373,12 +370,15 @@ private:
     static bool check_segment_values_arg(unsigned val);
     static bool check_segment_values_any(unsigned val);
     static bool check_segment_values_writable(unsigned val);
-    static bool check_segment_values_group_private_readonly_kernarg_spill_arg(unsigned val);
+    static bool check_segment_values_group_private_kernarg_spill_arg(unsigned val);
     static bool check_segment_values_flat_global(unsigned val);
     static bool check_segment_values_global_group_flat(unsigned val);
     static bool check_segment_values_global_group_private_flat_kernarg_readonly(unsigned val);
+    static bool check_segment_values_global_readonly_flat(unsigned val);
+    static bool check_segment_values_flat_group_private_kernarg(unsigned val);
     static bool check_segment_values_global_group_private(unsigned val);
     static bool check_segment_values_group(unsigned val);
+    static bool check_segment_values_group_private(unsigned val);
     static bool check_segment_values_private(unsigned val);
     static bool check_sprop_values_any(unsigned val);
     static bool check_type_values_b1(unsigned val);
@@ -403,9 +403,8 @@ private:
     static bool check_type_values_b128(unsigned val);
     static bool check_type_values_b64_b128(unsigned val);
     static bool check_type_values_u_s_f_b128_opaque(unsigned val);
+    static bool check_type_values_u_s_f_b128_sig(unsigned val);
     static bool check_type_values_u_s_f_b128(unsigned val);
-    static bool check_type_values_b128_opaque(unsigned val);
-    static bool check_type_values_b128_sig(unsigned val);
     static bool check_type_values_b32(unsigned val);
     static bool check_type_values_b32_b64(unsigned val);
     static bool check_type_values_b32_s32_u32_b64_s64_u64(unsigned val);
@@ -490,7 +489,7 @@ private:
     template<class T> bool req_activelanecount(T inst);
     template<class T> bool req_activelaneid(T inst);
     template<class T> bool req_activelanemask(T inst);
-    template<class T> bool req_activelaneshuffle(T inst);
+    template<class T> bool req_activelanepermute(T inst);
     template<class T> bool req_add(T inst);
     template<class T> bool req_addq(T inst);
     template<class T> bool req_align(T inst);
@@ -537,6 +536,7 @@ private:
     template<class T> bool req_gcn_b4xchg(T inst);
     template<class T> bool req_gcn_bfm(T inst);
     template<class T> bool req_gcn_div_relaxed(T inst);
+    template<class T> bool req_gcn_div_relaxed_narrow(T inst);
     template<class T> bool req_gcn_fldexp(T inst);
     template<class T> bool req_gcn_frexp_exp(T inst);
     template<class T> bool req_gcn_frexp_mant(T inst);
@@ -554,13 +554,12 @@ private:
     template<class T> bool req_gcn_st(T inst);
     template<class T> bool req_gcn_trig_preop(T inst);
     template<class T> bool req_icall(T inst);
+    template<class T> bool req_imagefence(T inst);
     template<class T> bool req_ld(T inst);
     template<class T> bool req_ld_image(T inst);
     template<class T> bool req_ld_st_image(T inst);
     template<class T> bool req_lda(T inst);
     template<class T> bool req_ldf(T inst);
-    template<class T> bool req_ldi(T inst);
-    template<class T> bool req_ldk(T inst);
     template<class T> bool req_ldq(T inst);
     template<class T> bool req_lerp(T inst);
     template<class T> bool req_mad(T inst);
@@ -623,7 +622,7 @@ unsigned InstValidator::ALIGN_VALUES_ANY[] = {
     Brig::BRIG_ALIGNMENT_8
 };
 
-unsigned InstValidator::ATMOP_VALUES_GENERIC_ATOMIC_EXCH_LD[] = {
+unsigned InstValidator::ATMOP_VALUES_GENERIC_ATOMIC_CAS_EXCH_LD[] = {
     Brig::BRIG_ATOMIC_ADD,
     Brig::BRIG_ATOMIC_AND,
     Brig::BRIG_ATOMIC_CAS,
@@ -638,7 +637,7 @@ unsigned InstValidator::ATMOP_VALUES_GENERIC_ATOMIC_EXCH_LD[] = {
     Brig::BRIG_ATOMIC_XOR
 };
 
-unsigned InstValidator::ATMOP_VALUES_GENERIC_EXCH_LD_WAIT_WAITTIMEOUT[] = {
+unsigned InstValidator::ATMOP_VALUES_GENERIC_CAS_EXCH_LD_WAIT_WAITTIMEOUT[] = {
     Brig::BRIG_ATOMIC_ADD,
     Brig::BRIG_ATOMIC_AND,
     Brig::BRIG_ATOMIC_CAS,
@@ -660,7 +659,6 @@ unsigned InstValidator::ATMOP_VALUES_GENERIC_EXCH_LD_WAIT_WAITTIMEOUT[] = {
 unsigned InstValidator::ATMOP_VALUES_GENERIC_ATOMIC_ST[] = {
     Brig::BRIG_ATOMIC_ADD,
     Brig::BRIG_ATOMIC_AND,
-    Brig::BRIG_ATOMIC_CAS,
     Brig::BRIG_ATOMIC_MAX,
     Brig::BRIG_ATOMIC_MIN,
     Brig::BRIG_ATOMIC_OR,
@@ -674,7 +672,6 @@ unsigned InstValidator::ATMOP_VALUES_GENERIC_ATOMIC_ST[] = {
 unsigned InstValidator::ATMOP_VALUES_GENERIC_ST[] = {
     Brig::BRIG_ATOMIC_ADD,
     Brig::BRIG_ATOMIC_AND,
-    Brig::BRIG_ATOMIC_CAS,
     Brig::BRIG_ATOMIC_OR,
     Brig::BRIG_ATOMIC_ST,
     Brig::BRIG_ATOMIC_SUB,
@@ -924,20 +921,12 @@ unsigned InstValidator::MEMORD_VALUES_ACQ_REL_AR[] = {
     Brig::BRIG_MEMORY_ORDER_SC_RELEASE
 };
 
-unsigned InstValidator::MEMORD_VALUES_AR[] = {
-    Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE
+unsigned InstValidator::MEMSCP_VALUES_AGT[] = {
+    Brig::BRIG_MEMORY_SCOPE_AGENT
 };
 
-unsigned InstValidator::MEMSCP_VALUES_NONE_WV_WG_CMP_SYS[] = {
-    Brig::BRIG_MEMORY_SCOPE_COMPONENT,
-    Brig::BRIG_MEMORY_SCOPE_NONE,
-    Brig::BRIG_MEMORY_SCOPE_SYSTEM,
-    Brig::BRIG_MEMORY_SCOPE_WAVEFRONT,
-    Brig::BRIG_MEMORY_SCOPE_WORKGROUP
-};
-
-unsigned InstValidator::MEMSCP_VALUES_WV_WG_CMP_SYS[] = {
-    Brig::BRIG_MEMORY_SCOPE_COMPONENT,
+unsigned InstValidator::MEMSCP_VALUES_WV_WG_AGT_SYS[] = {
+    Brig::BRIG_MEMORY_SCOPE_AGENT,
     Brig::BRIG_MEMORY_SCOPE_SYSTEM,
     Brig::BRIG_MEMORY_SCOPE_WAVEFRONT,
     Brig::BRIG_MEMORY_SCOPE_WORKGROUP
@@ -947,17 +936,12 @@ unsigned InstValidator::MEMSCP_VALUES_NONE[] = {
     Brig::BRIG_MEMORY_SCOPE_NONE
 };
 
-unsigned InstValidator::MEMSCP_VALUES_NONE_WV_WG[] = {
-    Brig::BRIG_MEMORY_SCOPE_NONE,
-    Brig::BRIG_MEMORY_SCOPE_WAVEFRONT,
-    Brig::BRIG_MEMORY_SCOPE_WORKGROUP
+unsigned InstValidator::MEMSCP_VALUES_SYS[] = {
+    Brig::BRIG_MEMORY_SCOPE_SYSTEM
 };
 
-unsigned InstValidator::MEMSCP_VALUES_NONE_WI_WV_WG[] = {
-    Brig::BRIG_MEMORY_SCOPE_NONE,
-    Brig::BRIG_MEMORY_SCOPE_WAVEFRONT,
-    Brig::BRIG_MEMORY_SCOPE_WORKGROUP,
-    Brig::BRIG_MEMORY_SCOPE_WORKITEM
+unsigned InstValidator::MEMSCP_VALUES_WV[] = {
+    Brig::BRIG_MEMORY_SCOPE_WAVEFRONT
 };
 
 unsigned InstValidator::MEMSCP_VALUES_WV_WG[] = {
@@ -965,10 +949,8 @@ unsigned InstValidator::MEMSCP_VALUES_WV_WG[] = {
     Brig::BRIG_MEMORY_SCOPE_WORKGROUP
 };
 
-unsigned InstValidator::MEMSCP_VALUES_WI_WV_WG[] = {
-    Brig::BRIG_MEMORY_SCOPE_WAVEFRONT,
-    Brig::BRIG_MEMORY_SCOPE_WORKGROUP,
-    Brig::BRIG_MEMORY_SCOPE_WORKITEM
+unsigned InstValidator::MEMSCP_VALUES_WG[] = {
+    Brig::BRIG_MEMORY_SCOPE_WORKGROUP
 };
 
 unsigned InstValidator::NONULL_VALUES_ANY[] = {
@@ -1010,10 +992,6 @@ unsigned InstValidator::OPERAND_VALUES_FUNC[] = {
     OPERAND_VAL_FUNC
 };
 
-unsigned InstValidator::OPERAND_VALUES_IFUNC[] = {
-    OPERAND_VAL_IFUNC
-};
-
 unsigned InstValidator::OPERAND_VALUES_IMM[] = {
     OPERAND_VAL_IMM
 };
@@ -1041,10 +1019,6 @@ unsigned InstValidator::OPERAND_VALUES_IMM0T3U32[] = {
 
 unsigned InstValidator::OPERAND_VALUES_JUMPTAB[] = {
     OPERAND_VAL_JUMPTAB
-};
-
-unsigned InstValidator::OPERAND_VALUES_KERNEL[] = {
-    OPERAND_VAL_KERNEL
 };
 
 unsigned InstValidator::OPERAND_VALUES_LAB[] = {
@@ -1114,6 +1088,7 @@ unsigned InstValidator::PACK_VALUES_BINNOSAT[] = {
 };
 
 unsigned InstValidator::ROUND_VALUES_FLOAT[] = {
+    Brig::BRIG_ROUND_FLOAT_DEFAULT,
     Brig::BRIG_ROUND_FLOAT_MINUS_INFINITY,
     Brig::BRIG_ROUND_FLOAT_NEAR_EVEN,
     Brig::BRIG_ROUND_FLOAT_PLUS_INFINITY,
@@ -1127,14 +1102,14 @@ unsigned InstValidator::ROUND_VALUES_INT[] = {
     Brig::BRIG_ROUND_INTEGER_NEAR_EVEN,
     Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY_SAT,
     Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY,
-    Brig::BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY_SAT,
-    Brig::BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY,
-    Brig::BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN_SAT,
-    Brig::BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN,
-    Brig::BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY_SAT,
-    Brig::BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY,
-    Brig::BRIG_ROUND_INTEGER_SIGNALLING_ZERO_SAT,
-    Brig::BRIG_ROUND_INTEGER_SIGNALLING_ZERO,
+    Brig::BRIG_ROUND_INTEGER_SIGNALING_MINUS_INFINITY_SAT,
+    Brig::BRIG_ROUND_INTEGER_SIGNALING_MINUS_INFINITY,
+    Brig::BRIG_ROUND_INTEGER_SIGNALING_NEAR_EVEN_SAT,
+    Brig::BRIG_ROUND_INTEGER_SIGNALING_NEAR_EVEN,
+    Brig::BRIG_ROUND_INTEGER_SIGNALING_PLUS_INFINITY_SAT,
+    Brig::BRIG_ROUND_INTEGER_SIGNALING_PLUS_INFINITY,
+    Brig::BRIG_ROUND_INTEGER_SIGNALING_ZERO_SAT,
+    Brig::BRIG_ROUND_INTEGER_SIGNALING_ZERO,
     Brig::BRIG_ROUND_INTEGER_ZERO_SAT,
     Brig::BRIG_ROUND_INTEGER_ZERO
 };
@@ -1144,7 +1119,7 @@ unsigned InstValidator::ROUND_VALUES_NONE[] = {
 };
 
 unsigned InstValidator::SEGMENT_VALUES_GCN[] = {
-    Brig::BRIG_SEGMENT_EXTSPACE0
+    Brig::BRIG_SEGMENT_AMD_GCN
 };
 
 unsigned InstValidator::SEGMENT_VALUES_ARG[] = {
@@ -1171,12 +1146,11 @@ unsigned InstValidator::SEGMENT_VALUES_WRITABLE[] = {
     Brig::BRIG_SEGMENT_SPILL
 };
 
-unsigned InstValidator::SEGMENT_VALUES_GROUP_PRIVATE_READONLY_KERNARG_SPILL_ARG[] = {
+unsigned InstValidator::SEGMENT_VALUES_GROUP_PRIVATE_KERNARG_SPILL_ARG[] = {
     Brig::BRIG_SEGMENT_ARG,
     Brig::BRIG_SEGMENT_GROUP,
     Brig::BRIG_SEGMENT_KERNARG,
     Brig::BRIG_SEGMENT_PRIVATE,
-    Brig::BRIG_SEGMENT_READONLY,
     Brig::BRIG_SEGMENT_SPILL
 };
 
@@ -1200,6 +1174,19 @@ unsigned InstValidator::SEGMENT_VALUES_GLOBAL_GROUP_PRIVATE_FLAT_KERNARG_READONL
     Brig::BRIG_SEGMENT_READONLY
 };
 
+unsigned InstValidator::SEGMENT_VALUES_GLOBAL_READONLY_FLAT[] = {
+    Brig::BRIG_SEGMENT_FLAT,
+    Brig::BRIG_SEGMENT_GLOBAL,
+    Brig::BRIG_SEGMENT_READONLY
+};
+
+unsigned InstValidator::SEGMENT_VALUES_FLAT_GROUP_PRIVATE_KERNARG[] = {
+    Brig::BRIG_SEGMENT_FLAT,
+    Brig::BRIG_SEGMENT_GROUP,
+    Brig::BRIG_SEGMENT_KERNARG,
+    Brig::BRIG_SEGMENT_PRIVATE
+};
+
 unsigned InstValidator::SEGMENT_VALUES_GLOBAL_GROUP_PRIVATE[] = {
     Brig::BRIG_SEGMENT_GLOBAL,
     Brig::BRIG_SEGMENT_GROUP,
@@ -1208,6 +1195,11 @@ unsigned InstValidator::SEGMENT_VALUES_GLOBAL_GROUP_PRIVATE[] = {
 
 unsigned InstValidator::SEGMENT_VALUES_GROUP[] = {
     Brig::BRIG_SEGMENT_GROUP
+};
+
+unsigned InstValidator::SEGMENT_VALUES_GROUP_PRIVATE[] = {
+    Brig::BRIG_SEGMENT_GROUP,
+    Brig::BRIG_SEGMENT_PRIVATE
 };
 
 unsigned InstValidator::SEGMENT_VALUES_PRIVATE[] = {
@@ -1649,6 +1641,23 @@ unsigned InstValidator::TYPE_VALUES_U_S_F_B128_OPAQUE[] = {
     Brig::BRIG_TYPE_WOIMG
 };
 
+unsigned InstValidator::TYPE_VALUES_U_S_F_B128_SIG[] = {
+    Brig::BRIG_TYPE_B128,
+    Brig::BRIG_TYPE_F16,
+    Brig::BRIG_TYPE_F32,
+    Brig::BRIG_TYPE_F64,
+    Brig::BRIG_TYPE_S16,
+    Brig::BRIG_TYPE_S32,
+    Brig::BRIG_TYPE_S64,
+    Brig::BRIG_TYPE_S8,
+    Brig::BRIG_TYPE_SIG32,
+    Brig::BRIG_TYPE_SIG64,
+    Brig::BRIG_TYPE_U16,
+    Brig::BRIG_TYPE_U32,
+    Brig::BRIG_TYPE_U64,
+    Brig::BRIG_TYPE_U8
+};
+
 unsigned InstValidator::TYPE_VALUES_U_S_F_B128[] = {
     Brig::BRIG_TYPE_B128,
     Brig::BRIG_TYPE_F16,
@@ -1662,22 +1671,6 @@ unsigned InstValidator::TYPE_VALUES_U_S_F_B128[] = {
     Brig::BRIG_TYPE_U32,
     Brig::BRIG_TYPE_U64,
     Brig::BRIG_TYPE_U8
-};
-
-unsigned InstValidator::TYPE_VALUES_B128_OPAQUE[] = {
-    Brig::BRIG_TYPE_B128,
-    Brig::BRIG_TYPE_ROIMG,
-    Brig::BRIG_TYPE_RWIMG,
-    Brig::BRIG_TYPE_SAMP,
-    Brig::BRIG_TYPE_SIG32,
-    Brig::BRIG_TYPE_SIG64,
-    Brig::BRIG_TYPE_WOIMG
-};
-
-unsigned InstValidator::TYPE_VALUES_B128_SIG[] = {
-    Brig::BRIG_TYPE_B128,
-    Brig::BRIG_TYPE_SIG32,
-    Brig::BRIG_TYPE_SIG64
 };
 
 unsigned InstValidator::TYPE_VALUES_B32[] = {
@@ -2328,7 +2321,7 @@ bool InstValidator::check_align_values_any(unsigned val)
     }
 }
 
-bool InstValidator::check_atmop_values_generic_atomic_exch_ld(unsigned val)
+bool InstValidator::check_atmop_values_generic_atomic_cas_exch_ld(unsigned val)
 {
     switch(val)
     {
@@ -2350,7 +2343,7 @@ bool InstValidator::check_atmop_values_generic_atomic_exch_ld(unsigned val)
     }
 }
 
-bool InstValidator::check_atmop_values_generic_exch_ld_wait_waittimeout(unsigned val)
+bool InstValidator::check_atmop_values_generic_cas_exch_ld_wait_waittimeout(unsigned val)
 {
     switch(val)
     {
@@ -2382,7 +2375,6 @@ bool InstValidator::check_atmop_values_generic_atomic_st(unsigned val)
     {
     case Brig::BRIG_ATOMIC_ADD:
     case Brig::BRIG_ATOMIC_AND:
-    case Brig::BRIG_ATOMIC_CAS:
     case Brig::BRIG_ATOMIC_MAX:
     case Brig::BRIG_ATOMIC_MIN:
     case Brig::BRIG_ATOMIC_OR:
@@ -2403,7 +2395,6 @@ bool InstValidator::check_atmop_values_generic_st(unsigned val)
     {
     case Brig::BRIG_ATOMIC_ADD:
     case Brig::BRIG_ATOMIC_AND:
-    case Brig::BRIG_ATOMIC_CAS:
     case Brig::BRIG_ATOMIC_OR:
     case Brig::BRIG_ATOMIC_ST:
     case Brig::BRIG_ATOMIC_SUB:
@@ -2908,37 +2899,22 @@ bool InstValidator::check_memord_values_acq_rel_ar(unsigned val)
     }
 }
 
-bool InstValidator::check_memord_values_ar(unsigned val)
+bool InstValidator::check_memscp_values_agt(unsigned val)
 {
     switch(val)
     {
-    case Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE:
+    case Brig::BRIG_MEMORY_SCOPE_AGENT:
         return true;
     default:
         return false;
     }
 }
 
-bool InstValidator::check_memscp_values_none_wv_wg_cmp_sys(unsigned val)
+bool InstValidator::check_memscp_values_wv_wg_agt_sys(unsigned val)
 {
     switch(val)
     {
-    case Brig::BRIG_MEMORY_SCOPE_COMPONENT:
-    case Brig::BRIG_MEMORY_SCOPE_NONE:
-    case Brig::BRIG_MEMORY_SCOPE_SYSTEM:
-    case Brig::BRIG_MEMORY_SCOPE_WAVEFRONT:
-    case Brig::BRIG_MEMORY_SCOPE_WORKGROUP:
-        return true;
-    default:
-        return false;
-    }
-}
-
-bool InstValidator::check_memscp_values_wv_wg_cmp_sys(unsigned val)
-{
-    switch(val)
-    {
-    case Brig::BRIG_MEMORY_SCOPE_COMPONENT:
+    case Brig::BRIG_MEMORY_SCOPE_AGENT:
     case Brig::BRIG_MEMORY_SCOPE_SYSTEM:
     case Brig::BRIG_MEMORY_SCOPE_WAVEFRONT:
     case Brig::BRIG_MEMORY_SCOPE_WORKGROUP:
@@ -2959,27 +2935,22 @@ bool InstValidator::check_memscp_values_none(unsigned val)
     }
 }
 
-bool InstValidator::check_memscp_values_none_wv_wg(unsigned val)
+bool InstValidator::check_memscp_values_sys(unsigned val)
 {
     switch(val)
     {
-    case Brig::BRIG_MEMORY_SCOPE_NONE:
-    case Brig::BRIG_MEMORY_SCOPE_WAVEFRONT:
-    case Brig::BRIG_MEMORY_SCOPE_WORKGROUP:
+    case Brig::BRIG_MEMORY_SCOPE_SYSTEM:
         return true;
     default:
         return false;
     }
 }
 
-bool InstValidator::check_memscp_values_none_wi_wv_wg(unsigned val)
+bool InstValidator::check_memscp_values_wv(unsigned val)
 {
     switch(val)
     {
-    case Brig::BRIG_MEMORY_SCOPE_NONE:
     case Brig::BRIG_MEMORY_SCOPE_WAVEFRONT:
-    case Brig::BRIG_MEMORY_SCOPE_WORKGROUP:
-    case Brig::BRIG_MEMORY_SCOPE_WORKITEM:
         return true;
     default:
         return false;
@@ -2998,13 +2969,11 @@ bool InstValidator::check_memscp_values_wv_wg(unsigned val)
     }
 }
 
-bool InstValidator::check_memscp_values_wi_wv_wg(unsigned val)
+bool InstValidator::check_memscp_values_wg(unsigned val)
 {
     switch(val)
     {
-    case Brig::BRIG_MEMORY_SCOPE_WAVEFRONT:
     case Brig::BRIG_MEMORY_SCOPE_WORKGROUP:
-    case Brig::BRIG_MEMORY_SCOPE_WORKITEM:
         return true;
     default:
         return false;
@@ -3093,6 +3062,7 @@ bool InstValidator::check_round_values_float(unsigned val)
 {
     switch(val)
     {
+    case Brig::BRIG_ROUND_FLOAT_DEFAULT:
     case Brig::BRIG_ROUND_FLOAT_MINUS_INFINITY:
     case Brig::BRIG_ROUND_FLOAT_NEAR_EVEN:
     case Brig::BRIG_ROUND_FLOAT_PLUS_INFINITY:
@@ -3113,14 +3083,14 @@ bool InstValidator::check_round_values_int(unsigned val)
     case Brig::BRIG_ROUND_INTEGER_NEAR_EVEN:
     case Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY_SAT:
     case Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY:
-    case Brig::BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY_SAT:
-    case Brig::BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY:
-    case Brig::BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN_SAT:
-    case Brig::BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN:
-    case Brig::BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY_SAT:
-    case Brig::BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY:
-    case Brig::BRIG_ROUND_INTEGER_SIGNALLING_ZERO_SAT:
-    case Brig::BRIG_ROUND_INTEGER_SIGNALLING_ZERO:
+    case Brig::BRIG_ROUND_INTEGER_SIGNALING_MINUS_INFINITY_SAT:
+    case Brig::BRIG_ROUND_INTEGER_SIGNALING_MINUS_INFINITY:
+    case Brig::BRIG_ROUND_INTEGER_SIGNALING_NEAR_EVEN_SAT:
+    case Brig::BRIG_ROUND_INTEGER_SIGNALING_NEAR_EVEN:
+    case Brig::BRIG_ROUND_INTEGER_SIGNALING_PLUS_INFINITY_SAT:
+    case Brig::BRIG_ROUND_INTEGER_SIGNALING_PLUS_INFINITY:
+    case Brig::BRIG_ROUND_INTEGER_SIGNALING_ZERO_SAT:
+    case Brig::BRIG_ROUND_INTEGER_SIGNALING_ZERO:
     case Brig::BRIG_ROUND_INTEGER_ZERO_SAT:
     case Brig::BRIG_ROUND_INTEGER_ZERO:
         return true;
@@ -3144,7 +3114,7 @@ bool InstValidator::check_segment_values_gcn(unsigned val)
 {
     switch(val)
     {
-    case Brig::BRIG_SEGMENT_EXTSPACE0:
+    case Brig::BRIG_SEGMENT_AMD_GCN:
         return true;
     default:
         return false;
@@ -3196,7 +3166,7 @@ bool InstValidator::check_segment_values_writable(unsigned val)
     }
 }
 
-bool InstValidator::check_segment_values_group_private_readonly_kernarg_spill_arg(unsigned val)
+bool InstValidator::check_segment_values_group_private_kernarg_spill_arg(unsigned val)
 {
     switch(val)
     {
@@ -3204,7 +3174,6 @@ bool InstValidator::check_segment_values_group_private_readonly_kernarg_spill_ar
     case Brig::BRIG_SEGMENT_GROUP:
     case Brig::BRIG_SEGMENT_KERNARG:
     case Brig::BRIG_SEGMENT_PRIVATE:
-    case Brig::BRIG_SEGMENT_READONLY:
     case Brig::BRIG_SEGMENT_SPILL:
         return true;
     default:
@@ -3253,6 +3222,33 @@ bool InstValidator::check_segment_values_global_group_private_flat_kernarg_reado
     }
 }
 
+bool InstValidator::check_segment_values_global_readonly_flat(unsigned val)
+{
+    switch(val)
+    {
+    case Brig::BRIG_SEGMENT_FLAT:
+    case Brig::BRIG_SEGMENT_GLOBAL:
+    case Brig::BRIG_SEGMENT_READONLY:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool InstValidator::check_segment_values_flat_group_private_kernarg(unsigned val)
+{
+    switch(val)
+    {
+    case Brig::BRIG_SEGMENT_FLAT:
+    case Brig::BRIG_SEGMENT_GROUP:
+    case Brig::BRIG_SEGMENT_KERNARG:
+    case Brig::BRIG_SEGMENT_PRIVATE:
+        return true;
+    default:
+        return false;
+    }
+}
+
 bool InstValidator::check_segment_values_global_group_private(unsigned val)
 {
     switch(val)
@@ -3271,6 +3267,18 @@ bool InstValidator::check_segment_values_group(unsigned val)
     switch(val)
     {
     case Brig::BRIG_SEGMENT_GROUP:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool InstValidator::check_segment_values_group_private(unsigned val)
+{
+    switch(val)
+    {
+    case Brig::BRIG_SEGMENT_GROUP:
+    case Brig::BRIG_SEGMENT_PRIVATE:
         return true;
     default:
         return false;
@@ -3876,6 +3884,30 @@ bool InstValidator::check_type_values_u_s_f_b128_opaque(unsigned val)
     }
 }
 
+bool InstValidator::check_type_values_u_s_f_b128_sig(unsigned val)
+{
+    switch(val)
+    {
+    case Brig::BRIG_TYPE_B128:
+    case Brig::BRIG_TYPE_F16:
+    case Brig::BRIG_TYPE_F32:
+    case Brig::BRIG_TYPE_F64:
+    case Brig::BRIG_TYPE_S16:
+    case Brig::BRIG_TYPE_S32:
+    case Brig::BRIG_TYPE_S64:
+    case Brig::BRIG_TYPE_S8:
+    case Brig::BRIG_TYPE_SIG32:
+    case Brig::BRIG_TYPE_SIG64:
+    case Brig::BRIG_TYPE_U16:
+    case Brig::BRIG_TYPE_U32:
+    case Brig::BRIG_TYPE_U64:
+    case Brig::BRIG_TYPE_U8:
+        return true;
+    default:
+        return false;
+    }
+}
+
 bool InstValidator::check_type_values_u_s_f_b128(unsigned val)
 {
     switch(val)
@@ -3892,36 +3924,6 @@ bool InstValidator::check_type_values_u_s_f_b128(unsigned val)
     case Brig::BRIG_TYPE_U32:
     case Brig::BRIG_TYPE_U64:
     case Brig::BRIG_TYPE_U8:
-        return true;
-    default:
-        return false;
-    }
-}
-
-bool InstValidator::check_type_values_b128_opaque(unsigned val)
-{
-    switch(val)
-    {
-    case Brig::BRIG_TYPE_B128:
-    case Brig::BRIG_TYPE_ROIMG:
-    case Brig::BRIG_TYPE_RWIMG:
-    case Brig::BRIG_TYPE_SAMP:
-    case Brig::BRIG_TYPE_SIG32:
-    case Brig::BRIG_TYPE_SIG64:
-    case Brig::BRIG_TYPE_WOIMG:
-        return true;
-    default:
-        return false;
-    }
-}
-
-bool InstValidator::check_type_values_b128_sig(unsigned val)
-{
-    switch(val)
-    {
-    case Brig::BRIG_TYPE_B128:
-    case Brig::BRIG_TYPE_SIG32:
-    case Brig::BRIG_TYPE_SIG64:
         return true;
     default:
         return false;
@@ -5185,7 +5187,7 @@ template<class T> bool InstValidator::req_activelanemask(T inst)
 }
 
 //================================================================================
-//  Req activelaneshuffle = {
+//  Req activelanepermute = {
 //      type = b1, b32, b64, b128;
 //      stype = none;
 //      width = any_1;
@@ -5195,7 +5197,7 @@ template<class T> bool InstValidator::req_activelanemask(T inst)
 //      s3 = reg, imm;
 //      s4 = reg_b1, imm_b1;
 //  }
-template<class T> bool InstValidator::req_activelaneshuffle(T inst)
+template<class T> bool InstValidator::req_activelanepermute(T inst)
 {
     if (!check_type_values_b1_b32_b64_b128(getType<T>(inst))) {
         brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_B1_B32_B64_B128, sizeof(TYPE_VALUES_B1_B32_B64_B128) / sizeof(unsigned));
@@ -5379,7 +5381,7 @@ template<class T> bool InstValidator::req_and(T inst)
 //================================================================================
 //  Req atomic = {
 //      type = b32, s32, u32, b64, s64, u64;
-//      atmop = generic, atomic, exch, ld;
+//      atmop = generic, atomic, cas, exch, ld;
 //      segment = global, group, flat;
 //      eqclass = any;
 //      typesize = atomic;
@@ -5389,7 +5391,7 @@ template<class T> bool InstValidator::req_and(T inst)
 //      {atmop = wrapinc, wrapdec; ? type = u32, u64; memord = any; s2 = reg, imm; s3 = null;}
 //      {atmop = ld; ? type = b32, b64; memord = ld; s2 = null; s3 = null;}
 //      ;
-//      {segment = global, flat; ? memscp = wv, wg, cmp, sys;}
+//      {segment = global, flat; ? memscp = wv, wg, agt, sys;}
 //      {segment = group; ? memscp = wv, wg;}
 //      ;
 //      d0 = reg;
@@ -5401,8 +5403,8 @@ template<class T> bool InstValidator::req_atomic(T inst)
     if (!check_type_values_b32_s32_u32_b64_s64_u64(getType<T>(inst))) {
         brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_B32_S32_U32_B64_S64_U64, sizeof(TYPE_VALUES_B32_S32_U32_B64_S64_U64) / sizeof(unsigned));
     }
-    if (!check_atmop_values_generic_atomic_exch_ld(getAtomicOperation<T>(inst))) {
-        brigPropError(inst, PROP_ATOMICOPERATION, getAtomicOperation<T>(inst), ATMOP_VALUES_GENERIC_ATOMIC_EXCH_LD, sizeof(ATMOP_VALUES_GENERIC_ATOMIC_EXCH_LD) / sizeof(unsigned));
+    if (!check_atmop_values_generic_atomic_cas_exch_ld(getAtomicOperation<T>(inst))) {
+        brigPropError(inst, PROP_ATOMICOPERATION, getAtomicOperation<T>(inst), ATMOP_VALUES_GENERIC_ATOMIC_CAS_EXCH_LD, sizeof(ATMOP_VALUES_GENERIC_ATOMIC_CAS_EXCH_LD) / sizeof(unsigned));
     }
     if (!check_segment_values_global_group_flat(getSegment<T>(inst))) {
         brigPropError(inst, PROP_SEGMENT, getSegment<T>(inst), SEGMENT_VALUES_GLOBAL_GROUP_FLAT, sizeof(SEGMENT_VALUES_GLOBAL_GROUP_FLAT) / sizeof(unsigned));
@@ -5484,8 +5486,8 @@ template<class T> bool InstValidator::req_atomic(T inst)
             check_segment_values_flat_global(getSegment<T>(inst))
        )
     {
-        if (!check_memscp_values_wv_wg_cmp_sys(getMemoryScope<T>(inst))) {
-            brigPropError(inst, PROP_MEMORYSCOPE, getMemoryScope<T>(inst), MEMSCP_VALUES_WV_WG_CMP_SYS, sizeof(MEMSCP_VALUES_WV_WG_CMP_SYS) / sizeof(unsigned));
+        if (!check_memscp_values_wv_wg_agt_sys(getMemoryScope<T>(inst))) {
+            brigPropError(inst, PROP_MEMORYSCOPE, getMemoryScope<T>(inst), MEMSCP_VALUES_WV_WG_AGT_SYS, sizeof(MEMSCP_VALUES_WV_WG_AGT_SYS) / sizeof(unsigned));
         }
     }
     else if (
@@ -5513,17 +5515,17 @@ template<class T> bool InstValidator::req_atomic(T inst)
 //      segment = global, group, flat;
 //      eqclass = any;
 //      typesize = atomic;
-//      {atmop = cas; ? type = b32, b64; memord = any; s2 = reg, imm;}
-//      {atmop = and, or, xor; ? type = b32, b64; memord = any; s2 = null;}
-//      {atmop = add, sub, min, max; ? type = s32, u32, s64, u64; memord = any; s2 = null;}
-//      {atmop = wrapinc, wrapdec; ? type = u32, u64; memord = any; s2 = null;}
-//      {atmop = st; ? type = b32, b64; memord = st; s2 = null;}
+//      {atmop = and, or, xor; ? type = b32, b64; memord = any;}
+//      {atmop = add, sub, min, max; ? type = s32, u32, s64, u64; memord = any;}
+//      {atmop = wrapinc, wrapdec; ? type = u32, u64; memord = any;}
+//      {atmop = st; ? type = b32, b64; memord = st;}
 //      ;
-//      {segment = global, flat; ? memscp = wv, wg, cmp, sys;}
+//      {segment = global, flat; ? memscp = wv, wg, agt, sys;}
 //      {segment = group; ? memscp = wv, wg;}
 //      ;
 //      s0 = addr_seg;
 //      s1 = reg, imm;
+//      s2 = null;
 //      s3 = null;
 //      s4 = null;
 //  }
@@ -5542,18 +5544,6 @@ template<class T> bool InstValidator::req_atomic_noret(T inst)
     validateTypesize(inst, PROP_TYPESIZE, TYPESIZE_ATTR_NONE, TYPESIZE_VALUES_ATOMIC, sizeof(TYPESIZE_VALUES_ATOMIC) / sizeof(unsigned));
 
     if (
-            check_atmop_values_cas(getAtomicOperation<T>(inst))
-       )
-    {
-        if (!check_type_values_b32_b64(getType<T>(inst))) {
-            brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_B32_B64, sizeof(TYPE_VALUES_B32_B64) / sizeof(unsigned));
-        }
-        if (!check_memord_values_any(getMemoryOrder<T>(inst))) {
-            brigPropError(inst, PROP_MEMORYORDER, getMemoryOrder<T>(inst), MEMORD_VALUES_ANY, sizeof(MEMORD_VALUES_ANY) / sizeof(unsigned));
-        }
-        validateOperand(inst, PROP_S2, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
-    }
-    else if (
             check_atmop_values_and_or_xor(getAtomicOperation<T>(inst))
        )
     {
@@ -5563,7 +5553,6 @@ template<class T> bool InstValidator::req_atomic_noret(T inst)
         if (!check_memord_values_any(getMemoryOrder<T>(inst))) {
             brigPropError(inst, PROP_MEMORYORDER, getMemoryOrder<T>(inst), MEMORD_VALUES_ANY, sizeof(MEMORD_VALUES_ANY) / sizeof(unsigned));
         }
-        validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     }
     else if (
             check_atmop_values_add_sub_min_max(getAtomicOperation<T>(inst))
@@ -5575,7 +5564,6 @@ template<class T> bool InstValidator::req_atomic_noret(T inst)
         if (!check_memord_values_any(getMemoryOrder<T>(inst))) {
             brigPropError(inst, PROP_MEMORYORDER, getMemoryOrder<T>(inst), MEMORD_VALUES_ANY, sizeof(MEMORD_VALUES_ANY) / sizeof(unsigned));
         }
-        validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     }
     else if (
             check_atmop_values_wrapinc_wrapdec(getAtomicOperation<T>(inst))
@@ -5587,7 +5575,6 @@ template<class T> bool InstValidator::req_atomic_noret(T inst)
         if (!check_memord_values_any(getMemoryOrder<T>(inst))) {
             brigPropError(inst, PROP_MEMORYORDER, getMemoryOrder<T>(inst), MEMORD_VALUES_ANY, sizeof(MEMORD_VALUES_ANY) / sizeof(unsigned));
         }
-        validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     }
     else if (
             check_atmop_values_st(getAtomicOperation<T>(inst))
@@ -5599,7 +5586,6 @@ template<class T> bool InstValidator::req_atomic_noret(T inst)
         if (!check_memord_values_st(getMemoryOrder<T>(inst))) {
             brigPropError(inst, PROP_MEMORYORDER, getMemoryOrder<T>(inst), MEMORD_VALUES_ST, sizeof(MEMORD_VALUES_ST) / sizeof(unsigned));
         }
-        validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     }
     else
     {
@@ -5610,8 +5596,8 @@ template<class T> bool InstValidator::req_atomic_noret(T inst)
             check_segment_values_flat_global(getSegment<T>(inst))
        )
     {
-        if (!check_memscp_values_wv_wg_cmp_sys(getMemoryScope<T>(inst))) {
-            brigPropError(inst, PROP_MEMORYSCOPE, getMemoryScope<T>(inst), MEMSCP_VALUES_WV_WG_CMP_SYS, sizeof(MEMSCP_VALUES_WV_WG_CMP_SYS) / sizeof(unsigned));
+        if (!check_memscp_values_wv_wg_agt_sys(getMemoryScope<T>(inst))) {
+            brigPropError(inst, PROP_MEMORYSCOPE, getMemoryScope<T>(inst), MEMSCP_VALUES_WV_WG_AGT_SYS, sizeof(MEMSCP_VALUES_WV_WG_AGT_SYS) / sizeof(unsigned));
         }
     }
     else if (
@@ -5628,6 +5614,7 @@ template<class T> bool InstValidator::req_atomic_noret(T inst)
     }
     validateOperand(inst, PROP_S0, OPERAND_ATTR_SEG, OPERAND_VALUES_ADDRSEG, sizeof(OPERAND_VALUES_ADDRSEG) / sizeof(unsigned));
     validateOperand(inst, PROP_S1, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
+    validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     return true;
@@ -6061,7 +6048,6 @@ template<class T> bool InstValidator::req_cmov(T inst)
 //  Req cmp = {
 //      type = b1, s32, u32, s64, u64, f, ux;
 //      stype = b1, b32, s32, u32, b64, s64, u64, f, x;
-//      round = none;
 //      {stype = b1, b32, s32, u32, b64, s64, u64, f; ? type = b1, s32, u32, s64, u64, f;}
 //      {stype = s8x4, u8x4; ? type = u8x4;}
 //      {stype = s8x8, u8x8; ? type = u8x8;}
@@ -6093,7 +6079,6 @@ template<class T> bool InstValidator::req_cmp(T inst)
     if (!check_type_values_b1_b32_s32_u32_b64_s64_u64_f_x(getSourceType<T>(inst))) {
         brigPropError(inst, PROP_SOURCETYPE, getSourceType<T>(inst), TYPE_VALUES_B1_B32_S32_U32_B64_S64_U64_F_X, sizeof(TYPE_VALUES_B1_B32_S32_U32_B64_S64_U64_F_X) / sizeof(unsigned));
     }
-    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_NONE, sizeof(ROUND_VALUES_NONE) / sizeof(unsigned));
 
     if (
             check_type_values_b1_b32_s32_u32_b64_s64_u64_f(getSourceType<T>(inst))
@@ -6717,12 +6702,12 @@ template<class T> bool InstValidator::req_expand(T inst)
 //  Req f2s = {
 //      type = u32, u64;
 //      stype = u32, u64;
-//      segment = global, group, private;
+//      segment = group, private;
 //      nonull = any;
 //      typesize = seg;
 //      stypesize = model;
 //      d0 = reg;
-//      s1 = reg_stype, cnst_stype;
+//      s1 = reg_stype, imm_stype;
 //      s2 = null;
 //      s3 = null;
 //      s4 = null;
@@ -6735,8 +6720,8 @@ template<class T> bool InstValidator::req_f2s(T inst)
     if (!check_type_values_u32_u64(getSourceType<T>(inst))) {
         brigPropError(inst, PROP_SOURCETYPE, getSourceType<T>(inst), TYPE_VALUES_U32_U64, sizeof(TYPE_VALUES_U32_U64) / sizeof(unsigned));
     }
-    if (!check_segment_values_global_group_private(getSegment<T>(inst))) {
-        brigPropError(inst, PROP_SEGMENT, getSegment<T>(inst), SEGMENT_VALUES_GLOBAL_GROUP_PRIVATE, sizeof(SEGMENT_VALUES_GLOBAL_GROUP_PRIVATE) / sizeof(unsigned));
+    if (!check_segment_values_group_private(getSegment<T>(inst))) {
+        brigPropError(inst, PROP_SEGMENT, getSegment<T>(inst), SEGMENT_VALUES_GROUP_PRIVATE, sizeof(SEGMENT_VALUES_GROUP_PRIVATE) / sizeof(unsigned));
     }
     if (!check_nonull_values_any(getIsNoNull<T>(inst))) {
         brigPropError(inst, PROP_ISNONULL, getIsNoNull<T>(inst), NONULL_VALUES_ANY, sizeof(NONULL_VALUES_ANY) / sizeof(unsigned));
@@ -6744,7 +6729,7 @@ template<class T> bool InstValidator::req_f2s(T inst)
     validateTypesize(inst, PROP_TYPESIZE, TYPESIZE_ATTR_NONE, TYPESIZE_VALUES_SEG, sizeof(TYPESIZE_VALUES_SEG) / sizeof(unsigned));
     validateStypesize(inst, PROP_STYPESIZE, STYPESIZE_ATTR_NONE, STYPESIZE_VALUES_MODEL, sizeof(STYPESIZE_VALUES_MODEL) / sizeof(unsigned));
     validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
-    validateOperand(inst, PROP_S1, OPERAND_ATTR_STYPE, OPERAND_VALUES_REGU32_CNSTU32, sizeof(OPERAND_VALUES_REGU32_CNSTU32) / sizeof(unsigned));
+    validateOperand(inst, PROP_S1, OPERAND_ATTR_STYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
     validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
@@ -6850,7 +6835,7 @@ template<class T> bool InstValidator::req_fma(T inst)
 //================================================================================
 //  Req fract = {
 //      type = f, fx;
-//      round = none;
+//      round = float;
 //      ftz = any;
 //      {type = f; ? pack = none;}
 //      {type = fx; ? pack = p, s;}
@@ -6862,7 +6847,7 @@ template<class T> bool InstValidator::req_fract(T inst)
     if (!check_type_values_f_fx(getType<T>(inst))) {
         brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_F_FX, sizeof(TYPE_VALUES_F_FX) / sizeof(unsigned));
     }
-    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_NONE, sizeof(ROUND_VALUES_NONE) / sizeof(unsigned));
+    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_FLOAT, sizeof(ROUND_VALUES_FLOAT) / sizeof(unsigned));
     validateFtz(inst, PROP_FTZ, getFtzEx<T>(inst), FTZ_VALUES_ANY, sizeof(FTZ_VALUES_ANY) / sizeof(unsigned));
 
     if (
@@ -6918,9 +6903,9 @@ template<class T> bool InstValidator::req_gcn_append_consume(T inst)
 //================================================================================
 //  Req gcn_atomic = {
 //      type = b32, s32, u32, b64, s64, u64;
-//      atmop = generic, atomic, exch, ld;
+//      atmop = generic, atomic, cas, exch, ld;
 //      segment = gcn;
-//      memscp = wv, wg, cmp, sys;
+//      memscp = wv, wg, agt, sys;
 //      eqclass = any;
 //      typesize = atomic;
 //      {atmop = cas; ? type = b32, b64; memord = any; s2 = reg, imm; s3 = reg, imm;}
@@ -6938,14 +6923,14 @@ template<class T> bool InstValidator::req_gcn_atomic(T inst)
     if (!check_type_values_b32_s32_u32_b64_s64_u64(getType<T>(inst))) {
         brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_B32_S32_U32_B64_S64_U64, sizeof(TYPE_VALUES_B32_S32_U32_B64_S64_U64) / sizeof(unsigned));
     }
-    if (!check_atmop_values_generic_atomic_exch_ld(getAtomicOperation<T>(inst))) {
-        brigPropError(inst, PROP_ATOMICOPERATION, getAtomicOperation<T>(inst), ATMOP_VALUES_GENERIC_ATOMIC_EXCH_LD, sizeof(ATMOP_VALUES_GENERIC_ATOMIC_EXCH_LD) / sizeof(unsigned));
+    if (!check_atmop_values_generic_atomic_cas_exch_ld(getAtomicOperation<T>(inst))) {
+        brigPropError(inst, PROP_ATOMICOPERATION, getAtomicOperation<T>(inst), ATMOP_VALUES_GENERIC_ATOMIC_CAS_EXCH_LD, sizeof(ATMOP_VALUES_GENERIC_ATOMIC_CAS_EXCH_LD) / sizeof(unsigned));
     }
     if (!check_segment_values_gcn(getSegment<T>(inst))) {
         brigPropError(inst, PROP_SEGMENT, getSegment<T>(inst), SEGMENT_VALUES_GCN, sizeof(SEGMENT_VALUES_GCN) / sizeof(unsigned));
     }
-    if (!check_memscp_values_wv_wg_cmp_sys(getMemoryScope<T>(inst))) {
-        brigPropError(inst, PROP_MEMORYSCOPE, getMemoryScope<T>(inst), MEMSCP_VALUES_WV_WG_CMP_SYS, sizeof(MEMSCP_VALUES_WV_WG_CMP_SYS) / sizeof(unsigned));
+    if (!check_memscp_values_wv_wg_agt_sys(getMemoryScope<T>(inst))) {
+        brigPropError(inst, PROP_MEMORYSCOPE, getMemoryScope<T>(inst), MEMSCP_VALUES_WV_WG_AGT_SYS, sizeof(MEMSCP_VALUES_WV_WG_AGT_SYS) / sizeof(unsigned));
     }
     validateEqclass(inst, PROP_EQUIVCLASS, EQCLASS_ATTR_NONE, EQCLASS_VALUES_ANY, sizeof(EQCLASS_VALUES_ANY) / sizeof(unsigned));
     validateTypesize(inst, PROP_TYPESIZE, TYPESIZE_ATTR_NONE, TYPESIZE_VALUES_ATOMIC, sizeof(TYPESIZE_VALUES_ATOMIC) / sizeof(unsigned));
@@ -7030,7 +7015,7 @@ template<class T> bool InstValidator::req_gcn_atomic(T inst)
 //      type = b32, s32, u32, b64, s64, u64;
 //      atmop = generic, atomic, st;
 //      segment = gcn;
-//      memscp = wv, wg, cmp, sys;
+//      memscp = wv, wg, agt, sys;
 //      eqclass = any;
 //      typesize = atomic;
 //      {atmop = cas; ? type = b32, b64; memord = any; s2 = reg, imm;}
@@ -7055,8 +7040,8 @@ template<class T> bool InstValidator::req_gcn_atomic_noret(T inst)
     if (!check_segment_values_gcn(getSegment<T>(inst))) {
         brigPropError(inst, PROP_SEGMENT, getSegment<T>(inst), SEGMENT_VALUES_GCN, sizeof(SEGMENT_VALUES_GCN) / sizeof(unsigned));
     }
-    if (!check_memscp_values_wv_wg_cmp_sys(getMemoryScope<T>(inst))) {
-        brigPropError(inst, PROP_MEMORYSCOPE, getMemoryScope<T>(inst), MEMSCP_VALUES_WV_WG_CMP_SYS, sizeof(MEMSCP_VALUES_WV_WG_CMP_SYS) / sizeof(unsigned));
+    if (!check_memscp_values_wv_wg_agt_sys(getMemoryScope<T>(inst))) {
+        brigPropError(inst, PROP_MEMORYSCOPE, getMemoryScope<T>(inst), MEMSCP_VALUES_WV_WG_AGT_SYS, sizeof(MEMSCP_VALUES_WV_WG_AGT_SYS) / sizeof(unsigned));
     }
     validateEqclass(inst, PROP_EQUIVCLASS, EQCLASS_ATTR_NONE, EQCLASS_VALUES_ANY, sizeof(EQCLASS_VALUES_ANY) / sizeof(unsigned));
     validateTypesize(inst, PROP_TYPESIZE, TYPESIZE_ATTR_NONE, TYPESIZE_VALUES_ATOMIC, sizeof(TYPESIZE_VALUES_ATOMIC) / sizeof(unsigned));
@@ -7179,9 +7164,31 @@ template<class T> bool InstValidator::req_gcn_bfm(T inst)
 //================================================================================
 //  Req gcn_div_relaxed = {
 //      type = f32;
+//      pack = none;
+//      round = float;
+//      ftz = any;
 //      d0_s1_s2;
 //  }
 template<class T> bool InstValidator::req_gcn_div_relaxed(T inst)
+{
+    if (!check_type_values_f32(getType<T>(inst))) {
+        brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_F32, sizeof(TYPE_VALUES_F32) / sizeof(unsigned));
+    }
+    if (!check_pack_values_none(getPackEx<T>(inst))) {
+        brigPropError(inst, PROP_PACK, getPackEx<T>(inst), PACK_VALUES_NONE, sizeof(PACK_VALUES_NONE) / sizeof(unsigned));
+    }
+    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_FLOAT, sizeof(ROUND_VALUES_FLOAT) / sizeof(unsigned));
+    validateFtz(inst, PROP_FTZ, getFtzEx<T>(inst), FTZ_VALUES_ANY, sizeof(FTZ_VALUES_ANY) / sizeof(unsigned));
+    req_d0_s1_s2(inst);
+    return true;
+}
+
+//================================================================================
+//  Req gcn_div_relaxed_narrow = {
+//      type = f32;
+//      d0_s1_s2;
+//  }
+template<class T> bool InstValidator::req_gcn_div_relaxed_narrow(T inst)
 {
     if (!check_type_values_f32(getType<T>(inst))) {
         brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_F32, sizeof(TYPE_VALUES_F32) / sizeof(unsigned));
@@ -7193,6 +7200,9 @@ template<class T> bool InstValidator::req_gcn_div_relaxed(T inst)
 //================================================================================
 //  Req gcn_fldexp = {
 //      type = f32, f64;
+//      pack = none;
+//      round = float;
+//      ftz = any;
 //      d0 = reg;
 //      s1 = reg, imm;
 //      s2 = reg_s32, imm_s32;
@@ -7204,6 +7214,11 @@ template<class T> bool InstValidator::req_gcn_fldexp(T inst)
     if (!check_type_values_f32_f64(getType<T>(inst))) {
         brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_F32_F64, sizeof(TYPE_VALUES_F32_F64) / sizeof(unsigned));
     }
+    if (!check_pack_values_none(getPackEx<T>(inst))) {
+        brigPropError(inst, PROP_PACK, getPackEx<T>(inst), PACK_VALUES_NONE, sizeof(PACK_VALUES_NONE) / sizeof(unsigned));
+    }
+    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_FLOAT, sizeof(ROUND_VALUES_FLOAT) / sizeof(unsigned));
+    validateFtz(inst, PROP_FTZ, getFtzEx<T>(inst), FTZ_VALUES_ANY, sizeof(FTZ_VALUES_ANY) / sizeof(unsigned));
     validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
     validateOperand(inst, PROP_S1, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
     validateOperand(inst, PROP_S2, OPERAND_ATTR_S32, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
@@ -7215,6 +7230,9 @@ template<class T> bool InstValidator::req_gcn_fldexp(T inst)
 //================================================================================
 //  Req gcn_frexp_exp = {
 //      type = f32, f64;
+//      pack = none;
+//      round = float;
+//      ftz = any;
 //      d0 = reg_s32;
 //      s1 = reg, imm;
 //      s2 = null;
@@ -7226,6 +7244,11 @@ template<class T> bool InstValidator::req_gcn_frexp_exp(T inst)
     if (!check_type_values_f32_f64(getType<T>(inst))) {
         brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_F32_F64, sizeof(TYPE_VALUES_F32_F64) / sizeof(unsigned));
     }
+    if (!check_pack_values_none(getPackEx<T>(inst))) {
+        brigPropError(inst, PROP_PACK, getPackEx<T>(inst), PACK_VALUES_NONE, sizeof(PACK_VALUES_NONE) / sizeof(unsigned));
+    }
+    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_FLOAT, sizeof(ROUND_VALUES_FLOAT) / sizeof(unsigned));
+    validateFtz(inst, PROP_FTZ, getFtzEx<T>(inst), FTZ_VALUES_ANY, sizeof(FTZ_VALUES_ANY) / sizeof(unsigned));
     validateOperand(inst, PROP_D0, OPERAND_ATTR_S32, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
     validateOperand(inst, PROP_S1, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
     validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
@@ -7237,6 +7260,9 @@ template<class T> bool InstValidator::req_gcn_frexp_exp(T inst)
 //================================================================================
 //  Req gcn_frexp_mant = {
 //      type = f32, f64;
+//      pack = none;
+//      round = float;
+//      ftz = any;
 //      d0 = reg;
 //      s1 = reg, imm;
 //      s2 = null;
@@ -7248,6 +7274,11 @@ template<class T> bool InstValidator::req_gcn_frexp_mant(T inst)
     if (!check_type_values_f32_f64(getType<T>(inst))) {
         brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_F32_F64, sizeof(TYPE_VALUES_F32_F64) / sizeof(unsigned));
     }
+    if (!check_pack_values_none(getPackEx<T>(inst))) {
+        brigPropError(inst, PROP_PACK, getPackEx<T>(inst), PACK_VALUES_NONE, sizeof(PACK_VALUES_NONE) / sizeof(unsigned));
+    }
+    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_FLOAT, sizeof(ROUND_VALUES_FLOAT) / sizeof(unsigned));
+    validateFtz(inst, PROP_FTZ, getFtzEx<T>(inst), FTZ_VALUES_ANY, sizeof(FTZ_VALUES_ANY) / sizeof(unsigned));
     validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
     validateOperand(inst, PROP_S1, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
     validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
@@ -7264,10 +7295,8 @@ template<class T> bool InstValidator::req_gcn_frexp_mant(T inst)
 //      const = none;
 //      eqclass = any;
 //      width = any_1;
-//      {type = u, s, f; ? d0 = reg, vector;}
-//      {type = b128; ? d0 = reg;}
-//      ;
-//      s1 = addr_tseg;
+//      d0 = reg, vector;
+//      s1 = addr_seg;
 //      s2 = null;
 //      s3 = null;
 //      s4 = null;
@@ -7290,24 +7319,8 @@ template<class T> bool InstValidator::req_gcn_ld(T inst)
     if (!check_width_values_any1(getWidth<T>(inst))) {
         brigPropError(inst, PROP_WIDTH, getWidth<T>(inst), WIDTH_VALUES_ANY1, sizeof(WIDTH_VALUES_ANY1) / sizeof(unsigned));
     }
-
-    if (
-            check_type_values_s_u_f(getType<T>(inst))
-       )
-    {
-        validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG_VECTOR, sizeof(OPERAND_VALUES_REG_VECTOR) / sizeof(unsigned));
-    }
-    else if (
-            check_type_values_b128(getType<T>(inst))
-       )
-    {
-        validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
-    }
-    else
-    {
-        invalidVariant(inst, PROP_TYPE);
-    }
-    validateOperand(inst, PROP_S1, OPERAND_ATTR_TSEG, OPERAND_VALUES_ADDRSEG, sizeof(OPERAND_VALUES_ADDRSEG) / sizeof(unsigned));
+    validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG_VECTOR, sizeof(OPERAND_VALUES_REG_VECTOR) / sizeof(unsigned));
+    validateOperand(inst, PROP_S1, OPERAND_ATTR_SEG, OPERAND_VALUES_ADDRSEG, sizeof(OPERAND_VALUES_ADDRSEG) / sizeof(unsigned));
     validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
@@ -7534,13 +7547,11 @@ template<class T> bool InstValidator::req_gcn_slp_prt(T inst)
 //      const = none;
 //      eqclass = any;
 //      width = none;
-//      s1 = addr_tseg;
+//      s0 = reg, vector, imm;
+//      s1 = addr_seg;
 //      s2 = null;
 //      s3 = null;
 //      s4 = null;
-//      {type = u, s, f; ? s0 = reg, vector, imm;}
-//      {type = b128; ? s0 = reg;}
-//      ;
 //  }
 template<class T> bool InstValidator::req_gcn_st(T inst)
 {
@@ -7560,36 +7571,23 @@ template<class T> bool InstValidator::req_gcn_st(T inst)
     if (!check_width_values_none(getWidth<T>(inst))) {
         brigPropError(inst, PROP_WIDTH, getWidth<T>(inst), WIDTH_VALUES_NONE, sizeof(WIDTH_VALUES_NONE) / sizeof(unsigned));
     }
-    validateOperand(inst, PROP_S1, OPERAND_ATTR_TSEG, OPERAND_VALUES_ADDRSEG, sizeof(OPERAND_VALUES_ADDRSEG) / sizeof(unsigned));
+    validateOperand(inst, PROP_S0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG_VECTOR_IMM, sizeof(OPERAND_VALUES_REG_VECTOR_IMM) / sizeof(unsigned));
+    validateOperand(inst, PROP_S1, OPERAND_ATTR_SEG, OPERAND_VALUES_ADDRSEG, sizeof(OPERAND_VALUES_ADDRSEG) / sizeof(unsigned));
     validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
-
-    if (
-            check_type_values_s_u_f(getType<T>(inst))
-       )
-    {
-        validateOperand(inst, PROP_S0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG_VECTOR_IMM, sizeof(OPERAND_VALUES_REG_VECTOR_IMM) / sizeof(unsigned));
-    }
-    else if (
-            check_type_values_b128(getType<T>(inst))
-       )
-    {
-        validateOperand(inst, PROP_S0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
-    }
-    else
-    {
-        invalidVariant(inst, PROP_TYPE);
-    }
     return true;
 }
 
 //================================================================================
 //  Req gcn_trig_preop = {
 //      type = f64;
+//      pack = none;
+//      round = none;
+//      ftz = any;
 //      d0 = reg;
 //      s1 = reg, imm;
-//      s2 = imm_u32;
+//      s2 = reg_u32, imm_u32;
 //      s3 = null;
 //      s4 = null;
 //  }
@@ -7598,9 +7596,14 @@ template<class T> bool InstValidator::req_gcn_trig_preop(T inst)
     if (!check_type_values_f64(getType<T>(inst))) {
         brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_F64, sizeof(TYPE_VALUES_F64) / sizeof(unsigned));
     }
+    if (!check_pack_values_none(getPackEx<T>(inst))) {
+        brigPropError(inst, PROP_PACK, getPackEx<T>(inst), PACK_VALUES_NONE, sizeof(PACK_VALUES_NONE) / sizeof(unsigned));
+    }
+    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_NONE, sizeof(ROUND_VALUES_NONE) / sizeof(unsigned));
+    validateFtz(inst, PROP_FTZ, getFtzEx<T>(inst), FTZ_VALUES_ANY, sizeof(FTZ_VALUES_ANY) / sizeof(unsigned));
     validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
     validateOperand(inst, PROP_S1, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
-    validateOperand(inst, PROP_S2, OPERAND_ATTR_U32, OPERAND_VALUES_IMM, sizeof(OPERAND_VALUES_IMM) / sizeof(unsigned));
+    validateOperand(inst, PROP_S2, OPERAND_ATTR_U32, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
     validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     return true;
@@ -7635,6 +7638,28 @@ template<class T> bool InstValidator::req_icall(T inst)
 }
 
 //================================================================================
+//  Req imagefence = {
+//      type = none;
+//      s0 = null;
+//      s1 = null;
+//      s2 = null;
+//      s3 = null;
+//      s4 = null;
+//  }
+template<class T> bool InstValidator::req_imagefence(T inst)
+{
+    if (!check_type_values_none(getType<T>(inst))) {
+        brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_NONE, sizeof(TYPE_VALUES_NONE) / sizeof(unsigned));
+    }
+    validateOperand(inst, PROP_S0, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
+    validateOperand(inst, PROP_S1, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
+    validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
+    validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
+    validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
+    return true;
+}
+
+//================================================================================
 //  Req ld = {
 //      type = u, s, f, b128, opaque;
 //      segment = any;
@@ -7642,12 +7667,10 @@ template<class T> bool InstValidator::req_icall(T inst)
 //      const = any;
 //      eqclass = any;
 //      width = any_1;
-//      {type = u, s, f; ? d0 = reg, vector;}
-//      {type = b128, opaque; ? d0 = reg;}
+//      {segment = global, readonly, flat; ? const = any;}
+//      {segment = group, private, kernarg, spill, arg; ? const = none;}
 //      ;
-//      {segment = global, flat; ? const = any;}
-//      {segment = group, private, readonly, kernarg, spill, arg; ? const = none;}
-//      ;
+//      d0 = reg, vector;
 //      s1 = addr_tseg;
 //      s2 = null;
 //      s3 = null;
@@ -7673,24 +7696,7 @@ template<class T> bool InstValidator::req_ld(T inst)
     }
 
     if (
-            check_type_values_s_u_f(getType<T>(inst))
-       )
-    {
-        validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG_VECTOR, sizeof(OPERAND_VALUES_REG_VECTOR) / sizeof(unsigned));
-    }
-    else if (
-            check_type_values_b128_opaque(getType<T>(inst))
-       )
-    {
-        validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
-    }
-    else
-    {
-        invalidVariant(inst, PROP_TYPE);
-    }
-
-    if (
-            check_segment_values_flat_global(getSegment<T>(inst))
+            check_segment_values_global_readonly_flat(getSegment<T>(inst))
        )
     {
         if (!check_const_values_any(getIsConst<T>(inst))) {
@@ -7698,7 +7704,7 @@ template<class T> bool InstValidator::req_ld(T inst)
         }
     }
     else if (
-            check_segment_values_group_private_readonly_kernarg_spill_arg(getSegment<T>(inst))
+            check_segment_values_group_private_kernarg_spill_arg(getSegment<T>(inst))
        )
     {
         if (!check_const_values_none(getIsConst<T>(inst))) {
@@ -7709,6 +7715,7 @@ template<class T> bool InstValidator::req_ld(T inst)
     {
         invalidVariant(inst, PROP_SEGMENT);
     }
+    validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG_VECTOR, sizeof(OPERAND_VALUES_REG_VECTOR) / sizeof(unsigned));
     validateOperand(inst, PROP_S1, OPERAND_ATTR_TSEG, OPERAND_VALUES_ADDRSEG, sizeof(OPERAND_VALUES_ADDRSEG) / sizeof(unsigned));
     validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
@@ -7720,7 +7727,7 @@ template<class T> bool InstValidator::req_ld(T inst)
 //  Req ld_image = {
 //      ld_st_image;
 //      itype = roimg, rwimg;
-//      {geometry = 1d, 1db; ? d0 = vec_4; s2 = reg_ctype;}
+//      {geometry = 1d, 1db; ? d0 = vec_4; s2 = reg_ctype, imm_ctype;}
 //      {geometry = 2d, 1da; ? d0 = vec_4; s2 = vec_2_ctype;}
 //      {geometry = 3d, 2da; ? d0 = vec_4; s2 = vec_3_ctype;}
 //      {geometry = 2ddepth; ? d0 = reg; s2 = vec_2_ctype;}
@@ -7742,7 +7749,7 @@ template<class T> bool InstValidator::req_ld_image(T inst)
        )
     {
         validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_VEC4, sizeof(OPERAND_VALUES_VEC4) / sizeof(unsigned));
-        validateOperand(inst, PROP_S2, OPERAND_ATTR_CTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
+        validateOperand(inst, PROP_S2, OPERAND_ATTR_CTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
     }
     else if (
             check_geometry_values_2d_1da(getGeometry<T>(inst))
@@ -7855,54 +7862,6 @@ template<class T> bool InstValidator::req_ldf(T inst)
 }
 
 //================================================================================
-//  Req ldi = {
-//      type = u32, u64;
-//      typesize = model;
-//      d0 = reg;
-//      s1 = ifunc;
-//      s2 = null;
-//      s3 = null;
-//      s4 = null;
-//  }
-template<class T> bool InstValidator::req_ldi(T inst)
-{
-    if (!check_type_values_u32_u64(getType<T>(inst))) {
-        brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_U32_U64, sizeof(TYPE_VALUES_U32_U64) / sizeof(unsigned));
-    }
-    validateTypesize(inst, PROP_TYPESIZE, TYPESIZE_ATTR_NONE, TYPESIZE_VALUES_MODEL, sizeof(TYPESIZE_VALUES_MODEL) / sizeof(unsigned));
-    validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
-    validateOperand(inst, PROP_S1, OPERAND_ATTR_NONE, OPERAND_VALUES_IFUNC, sizeof(OPERAND_VALUES_IFUNC) / sizeof(unsigned));
-    validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
-    validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
-    validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
-    return true;
-}
-
-//================================================================================
-//  Req ldk = {
-//      type = u32, u64;
-//      typesize = model;
-//      d0 = reg;
-//      s1 = kernel;
-//      s2 = null;
-//      s3 = null;
-//      s4 = null;
-//  }
-template<class T> bool InstValidator::req_ldk(T inst)
-{
-    if (!check_type_values_u32_u64(getType<T>(inst))) {
-        brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_U32_U64, sizeof(TYPE_VALUES_U32_U64) / sizeof(unsigned));
-    }
-    validateTypesize(inst, PROP_TYPESIZE, TYPESIZE_ATTR_NONE, TYPESIZE_VALUES_MODEL, sizeof(TYPESIZE_VALUES_MODEL) / sizeof(unsigned));
-    validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
-    validateOperand(inst, PROP_S1, OPERAND_ATTR_NONE, OPERAND_VALUES_KERNEL, sizeof(OPERAND_VALUES_KERNEL) / sizeof(unsigned));
-    validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
-    validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
-    validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
-    return true;
-}
-
-//================================================================================
 //  Req ldq = {
 //      type = u64;
 //      segment = flat, global;
@@ -7948,13 +7907,41 @@ template<class T> bool InstValidator::req_lerp(T inst)
 
 //================================================================================
 //  Req mad = {
-//      type = s32, u32, s64, u64;
+//      type = s32, u32, s64, u64, f;
+//      {type = s32, u32, s64, u64; ? pack = none; round = none; ftz = none;}
+//      {type = f; ? pack = none; round = float; ftz = any;}
+//      ;
 //      d0_s1_s2_s3;
 //  }
 template<class T> bool InstValidator::req_mad(T inst)
 {
-    if (!check_type_values_s32_u32_s64_u64(getType<T>(inst))) {
-        brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_S32_U32_S64_U64, sizeof(TYPE_VALUES_S32_U32_S64_U64) / sizeof(unsigned));
+    if (!check_type_values_s32_u32_s64_u64_f(getType<T>(inst))) {
+        brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_S32_U32_S64_U64_F, sizeof(TYPE_VALUES_S32_U32_S64_U64_F) / sizeof(unsigned));
+    }
+
+    if (
+            check_type_values_s32_u32_s64_u64(getType<T>(inst))
+       )
+    {
+        if (!check_pack_values_none(getPackEx<T>(inst))) {
+            brigPropError(inst, PROP_PACK, getPackEx<T>(inst), PACK_VALUES_NONE, sizeof(PACK_VALUES_NONE) / sizeof(unsigned));
+        }
+        validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_NONE, sizeof(ROUND_VALUES_NONE) / sizeof(unsigned));
+        validateFtz(inst, PROP_FTZ, getFtzEx<T>(inst), FTZ_VALUES_NONE, sizeof(FTZ_VALUES_NONE) / sizeof(unsigned));
+    }
+    else if (
+            check_type_values_f(getType<T>(inst))
+       )
+    {
+        if (!check_pack_values_none(getPackEx<T>(inst))) {
+            brigPropError(inst, PROP_PACK, getPackEx<T>(inst), PACK_VALUES_NONE, sizeof(PACK_VALUES_NONE) / sizeof(unsigned));
+        }
+        validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_FLOAT, sizeof(ROUND_VALUES_FLOAT) / sizeof(unsigned));
+        validateFtz(inst, PROP_FTZ, getFtzEx<T>(inst), FTZ_VALUES_ANY, sizeof(FTZ_VALUES_ANY) / sizeof(unsigned));
+    }
+    else
+    {
+        invalidVariant(inst, PROP_TYPE);
     }
     req_d0_s1_s2_s3(inst);
     return true;
@@ -8040,16 +8027,13 @@ template<class T> bool InstValidator::req_max(T inst)
 //  Req memfence = {
 //      type = none;
 //      memord = acq, rel, ar;
-//      memscpglobal = none, wv, wg, cmp, sys;
-//      memscpgroup = none, wv, wg;
-//      memscpimage = none, wi, wv, wg;
-//      {memscpimage = none; ? }
-//      {memscpimage = wi, wv, wg; ? memscpglobal = none; memscpgroup = none; memord = ar;}
-//      ;
-//      {memscpglobal = none; memscpgroup = none; ? memscpimage = wi, wv, wg;}
-//      {memscpimage = none; memscpgroup = none; ? memscpglobal = wv, wg, cmp, sys;}
-//      {memscpglobal = none; memscpimage = none; ? memscpgroup = wv, wg;}
-//      {memscpimage = none, wi, wv, wg; ? }
+//      memscpglobal = wv, wg, agt, sys;
+//      memscpgroup = wv, wg, agt, sys;
+//      memscpimage = none;
+//      {memscpglobal = wv; ? memscpgroup = wv;}
+//      {memscpglobal = wg; ? memscpgroup = wg;}
+//      {memscpglobal = agt; ? memscpgroup = agt;}
+//      {memscpglobal = sys; ? memscpgroup = sys;}
 //      ;
 //      s0 = null;
 //      s1 = null;
@@ -8065,75 +8049,51 @@ template<class T> bool InstValidator::req_memfence(T inst)
     if (!check_memord_values_acq_rel_ar(getMemoryOrder<T>(inst))) {
         brigPropError(inst, PROP_MEMORYORDER, getMemoryOrder<T>(inst), MEMORD_VALUES_ACQ_REL_AR, sizeof(MEMORD_VALUES_ACQ_REL_AR) / sizeof(unsigned));
     }
-    if (!check_memscp_values_none_wv_wg_cmp_sys(getGlobalSegmentMemoryScope<T>(inst))) {
-        brigPropError(inst, PROP_GLOBALSEGMENTMEMORYSCOPE, getGlobalSegmentMemoryScope<T>(inst), MEMSCP_VALUES_NONE_WV_WG_CMP_SYS, sizeof(MEMSCP_VALUES_NONE_WV_WG_CMP_SYS) / sizeof(unsigned));
+    if (!check_memscp_values_wv_wg_agt_sys(getGlobalSegmentMemoryScope<T>(inst))) {
+        brigPropError(inst, PROP_GLOBALSEGMENTMEMORYSCOPE, getGlobalSegmentMemoryScope<T>(inst), MEMSCP_VALUES_WV_WG_AGT_SYS, sizeof(MEMSCP_VALUES_WV_WG_AGT_SYS) / sizeof(unsigned));
     }
-    if (!check_memscp_values_none_wv_wg(getGroupSegmentMemoryScope<T>(inst))) {
-        brigPropError(inst, PROP_GROUPSEGMENTMEMORYSCOPE, getGroupSegmentMemoryScope<T>(inst), MEMSCP_VALUES_NONE_WV_WG, sizeof(MEMSCP_VALUES_NONE_WV_WG) / sizeof(unsigned));
+    if (!check_memscp_values_wv_wg_agt_sys(getGroupSegmentMemoryScope<T>(inst))) {
+        brigPropError(inst, PROP_GROUPSEGMENTMEMORYSCOPE, getGroupSegmentMemoryScope<T>(inst), MEMSCP_VALUES_WV_WG_AGT_SYS, sizeof(MEMSCP_VALUES_WV_WG_AGT_SYS) / sizeof(unsigned));
     }
-    if (!check_memscp_values_none_wi_wv_wg(getImageSegmentMemoryScope<T>(inst))) {
-        brigPropError(inst, PROP_IMAGESEGMENTMEMORYSCOPE, getImageSegmentMemoryScope<T>(inst), MEMSCP_VALUES_NONE_WI_WV_WG, sizeof(MEMSCP_VALUES_NONE_WI_WV_WG) / sizeof(unsigned));
+    if (!check_memscp_values_none(getImageSegmentMemoryScope<T>(inst))) {
+        brigPropError(inst, PROP_IMAGESEGMENTMEMORYSCOPE, getImageSegmentMemoryScope<T>(inst), MEMSCP_VALUES_NONE, sizeof(MEMSCP_VALUES_NONE) / sizeof(unsigned));
     }
 
     if (
-            check_memscp_values_none(getImageSegmentMemoryScope<T>(inst))
+            check_memscp_values_wv(getGlobalSegmentMemoryScope<T>(inst))
        )
     {
+        if (!check_memscp_values_wv(getGroupSegmentMemoryScope<T>(inst))) {
+            brigPropError(inst, PROP_GROUPSEGMENTMEMORYSCOPE, getGroupSegmentMemoryScope<T>(inst), MEMSCP_VALUES_WV, sizeof(MEMSCP_VALUES_WV) / sizeof(unsigned));
         }
+    }
     else if (
-            check_memscp_values_wi_wv_wg(getImageSegmentMemoryScope<T>(inst))
+            check_memscp_values_wg(getGlobalSegmentMemoryScope<T>(inst))
        )
     {
-        if (!check_memscp_values_none(getGlobalSegmentMemoryScope<T>(inst))) {
-            brigPropError(inst, PROP_GLOBALSEGMENTMEMORYSCOPE, getGlobalSegmentMemoryScope<T>(inst), MEMSCP_VALUES_NONE, sizeof(MEMSCP_VALUES_NONE) / sizeof(unsigned));
+        if (!check_memscp_values_wg(getGroupSegmentMemoryScope<T>(inst))) {
+            brigPropError(inst, PROP_GROUPSEGMENTMEMORYSCOPE, getGroupSegmentMemoryScope<T>(inst), MEMSCP_VALUES_WG, sizeof(MEMSCP_VALUES_WG) / sizeof(unsigned));
         }
-        if (!check_memscp_values_none(getGroupSegmentMemoryScope<T>(inst))) {
-            brigPropError(inst, PROP_GROUPSEGMENTMEMORYSCOPE, getGroupSegmentMemoryScope<T>(inst), MEMSCP_VALUES_NONE, sizeof(MEMSCP_VALUES_NONE) / sizeof(unsigned));
+    }
+    else if (
+            check_memscp_values_agt(getGlobalSegmentMemoryScope<T>(inst))
+       )
+    {
+        if (!check_memscp_values_agt(getGroupSegmentMemoryScope<T>(inst))) {
+            brigPropError(inst, PROP_GROUPSEGMENTMEMORYSCOPE, getGroupSegmentMemoryScope<T>(inst), MEMSCP_VALUES_AGT, sizeof(MEMSCP_VALUES_AGT) / sizeof(unsigned));
         }
-        if (!check_memord_values_ar(getMemoryOrder<T>(inst))) {
-            brigPropError(inst, PROP_MEMORYORDER, getMemoryOrder<T>(inst), MEMORD_VALUES_AR, sizeof(MEMORD_VALUES_AR) / sizeof(unsigned));
+    }
+    else if (
+            check_memscp_values_sys(getGlobalSegmentMemoryScope<T>(inst))
+       )
+    {
+        if (!check_memscp_values_sys(getGroupSegmentMemoryScope<T>(inst))) {
+            brigPropError(inst, PROP_GROUPSEGMENTMEMORYSCOPE, getGroupSegmentMemoryScope<T>(inst), MEMSCP_VALUES_SYS, sizeof(MEMSCP_VALUES_SYS) / sizeof(unsigned));
         }
     }
     else
     {
-        invalidVariant(inst, PROP_IMAGESEGMENTMEMORYSCOPE);
-    }
-
-    if (
-            check_memscp_values_none(getGlobalSegmentMemoryScope<T>(inst)) &&
-            check_memscp_values_none(getGroupSegmentMemoryScope<T>(inst))
-       )
-    {
-        if (!check_memscp_values_wi_wv_wg(getImageSegmentMemoryScope<T>(inst))) {
-            brigPropError(inst, PROP_IMAGESEGMENTMEMORYSCOPE, getImageSegmentMemoryScope<T>(inst), MEMSCP_VALUES_WI_WV_WG, sizeof(MEMSCP_VALUES_WI_WV_WG) / sizeof(unsigned));
-        }
-    }
-    else if (
-            check_memscp_values_none(getImageSegmentMemoryScope<T>(inst)) &&
-            check_memscp_values_none(getGroupSegmentMemoryScope<T>(inst))
-       )
-    {
-        if (!check_memscp_values_wv_wg_cmp_sys(getGlobalSegmentMemoryScope<T>(inst))) {
-            brigPropError(inst, PROP_GLOBALSEGMENTMEMORYSCOPE, getGlobalSegmentMemoryScope<T>(inst), MEMSCP_VALUES_WV_WG_CMP_SYS, sizeof(MEMSCP_VALUES_WV_WG_CMP_SYS) / sizeof(unsigned));
-        }
-    }
-    else if (
-            check_memscp_values_none(getGlobalSegmentMemoryScope<T>(inst)) &&
-            check_memscp_values_none(getImageSegmentMemoryScope<T>(inst))
-       )
-    {
-        if (!check_memscp_values_wv_wg(getGroupSegmentMemoryScope<T>(inst))) {
-            brigPropError(inst, PROP_GROUPSEGMENTMEMORYSCOPE, getGroupSegmentMemoryScope<T>(inst), MEMSCP_VALUES_WV_WG, sizeof(MEMSCP_VALUES_WV_WG) / sizeof(unsigned));
-        }
-    }
-    else if (
-            check_memscp_values_none_wi_wv_wg(getImageSegmentMemoryScope<T>(inst))
-       )
-    {
-        }
-    else
-    {
-        invalidVariant(inst, PROP_GLOBALSEGMENTMEMORYSCOPE, PROP_GROUPSEGMENTMEMORYSCOPE, PROP_IMAGESEGMENTMEMORYSCOPE);
+        invalidVariant(inst, PROP_GLOBALSEGMENTMEMORYSCOPE);
     }
     validateOperand(inst, PROP_S0, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S1, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
@@ -8147,13 +8107,12 @@ template<class T> bool InstValidator::req_memfence(T inst)
 //  Req mov = {
 //      type = b1, b32, b64, b128, s32, u32, s64, u64, f, opaque;
 //      d0 = reg;
-//      s1 = reg, imm;
-//      s2 = null;
-//      s3 = null;
-//      s4 = null;
 //      {type = b1, b32, b64, b128, s32, u32, s64, u64, f; ? s1 = reg, imm;}
 //      {type = opaque; ? s1 = reg;}
 //      ;
+//      s2 = null;
+//      s3 = null;
+//      s4 = null;
 //  }
 template<class T> bool InstValidator::req_mov(T inst)
 {
@@ -8161,10 +8120,6 @@ template<class T> bool InstValidator::req_mov(T inst)
         brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_B1_B32_B64_B128_S32_U32_S64_U64_F_OPAQUE, sizeof(TYPE_VALUES_B1_B32_B64_B128_S32_U32_S64_U64_F_OPAQUE) / sizeof(unsigned));
     }
     validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
-    validateOperand(inst, PROP_S1, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
-    validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
-    validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
-    validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
 
     if (
             check_type_values_b1_b32_b64_b128_s32_u32_s64_u64_f(getType<T>(inst))
@@ -8182,6 +8137,9 @@ template<class T> bool InstValidator::req_mov(T inst)
     {
         invalidVariant(inst, PROP_TYPE);
     }
+    validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
+    validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
+    validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     return true;
 }
 
@@ -8400,7 +8358,7 @@ template<class T> bool InstValidator::req_not(T inst)
 //================================================================================
 //  Req nullptr = {
 //      type = u32, u64;
-//      segment = flat, global, readonly, group, private, kernarg;
+//      segment = flat, group, private, kernarg;
 //      typesize = seg;
 //      s0 = reg;
 //      s1 = null;
@@ -8413,8 +8371,8 @@ template<class T> bool InstValidator::req_nullptr(T inst)
     if (!check_type_values_u32_u64(getType<T>(inst))) {
         brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_U32_U64, sizeof(TYPE_VALUES_U32_U64) / sizeof(unsigned));
     }
-    if (!check_segment_values_global_group_private_flat_kernarg_readonly(getSegment<T>(inst))) {
-        brigPropError(inst, PROP_SEGMENT, getSegment<T>(inst), SEGMENT_VALUES_GLOBAL_GROUP_PRIVATE_FLAT_KERNARG_READONLY, sizeof(SEGMENT_VALUES_GLOBAL_GROUP_PRIVATE_FLAT_KERNARG_READONLY) / sizeof(unsigned));
+    if (!check_segment_values_flat_group_private_kernarg(getSegment<T>(inst))) {
+        brigPropError(inst, PROP_SEGMENT, getSegment<T>(inst), SEGMENT_VALUES_FLAT_GROUP_PRIVATE_KERNARG, sizeof(SEGMENT_VALUES_FLAT_GROUP_PRIVATE_KERNARG) / sizeof(unsigned));
     }
     validateTypesize(inst, PROP_TYPESIZE, TYPESIZE_ATTR_NONE, TYPESIZE_VALUES_SEG, sizeof(TYPESIZE_VALUES_SEG) / sizeof(unsigned));
     validateOperand(inst, PROP_S0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
@@ -8732,7 +8690,7 @@ template<class T> bool InstValidator::req_querysampler(T inst)
 //      s1 = reg_itype;
 //      s2 = reg_samp;
 //      s4 = null;
-//      {geometry = 1d; ? d0 = vec_4; s3 = reg_ctype;}
+//      {geometry = 1d; ? d0 = vec_4; s3 = reg_ctype, imm_ctype;}
 //      {geometry = 2d, 1da; ? d0 = vec_4; s3 = vec_2_ctype;}
 //      {geometry = 3d, 2da; ? d0 = vec_4; s3 = vec_3_ctype;}
 //      {geometry = 2ddepth; ? d0 = reg; s3 = vec_2_ctype;}
@@ -8763,7 +8721,7 @@ template<class T> bool InstValidator::req_rdimage(T inst)
        )
     {
         validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_VEC4, sizeof(OPERAND_VALUES_VEC4) / sizeof(unsigned));
-        validateOperand(inst, PROP_S3, OPERAND_ATTR_CTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
+        validateOperand(inst, PROP_S3, OPERAND_ATTR_CTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
     }
     else if (
             check_geometry_values_2d_1da(getGeometry<T>(inst))
@@ -8840,12 +8798,12 @@ template<class T> bool InstValidator::req_ret(T inst)
 //  Req s2f = {
 //      type = u32, u64;
 //      stype = u32, u64;
-//      segment = global, group, private;
+//      segment = group, private;
 //      nonull = any;
 //      typesize = model;
 //      stypesize = seg;
 //      d0 = reg;
-//      s1 = reg_stype, cnst_stype;
+//      s1 = reg_stype, imm_stype;
 //      s2 = null;
 //      s3 = null;
 //      s4 = null;
@@ -8858,8 +8816,8 @@ template<class T> bool InstValidator::req_s2f(T inst)
     if (!check_type_values_u32_u64(getSourceType<T>(inst))) {
         brigPropError(inst, PROP_SOURCETYPE, getSourceType<T>(inst), TYPE_VALUES_U32_U64, sizeof(TYPE_VALUES_U32_U64) / sizeof(unsigned));
     }
-    if (!check_segment_values_global_group_private(getSegment<T>(inst))) {
-        brigPropError(inst, PROP_SEGMENT, getSegment<T>(inst), SEGMENT_VALUES_GLOBAL_GROUP_PRIVATE, sizeof(SEGMENT_VALUES_GLOBAL_GROUP_PRIVATE) / sizeof(unsigned));
+    if (!check_segment_values_group_private(getSegment<T>(inst))) {
+        brigPropError(inst, PROP_SEGMENT, getSegment<T>(inst), SEGMENT_VALUES_GROUP_PRIVATE, sizeof(SEGMENT_VALUES_GROUP_PRIVATE) / sizeof(unsigned));
     }
     if (!check_nonull_values_any(getIsNoNull<T>(inst))) {
         brigPropError(inst, PROP_ISNONULL, getIsNoNull<T>(inst), NONULL_VALUES_ANY, sizeof(NONULL_VALUES_ANY) / sizeof(unsigned));
@@ -8867,7 +8825,7 @@ template<class T> bool InstValidator::req_s2f(T inst)
     validateTypesize(inst, PROP_TYPESIZE, TYPESIZE_ATTR_NONE, TYPESIZE_VALUES_MODEL, sizeof(TYPESIZE_VALUES_MODEL) / sizeof(unsigned));
     validateStypesize(inst, PROP_STYPESIZE, STYPESIZE_ATTR_NONE, STYPESIZE_VALUES_SEG, sizeof(STYPESIZE_VALUES_SEG) / sizeof(unsigned));
     validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
-    validateOperand(inst, PROP_S1, OPERAND_ATTR_STYPE, OPERAND_VALUES_REGU32_CNSTU32, sizeof(OPERAND_VALUES_REGU32_CNSTU32) / sizeof(unsigned));
+    validateOperand(inst, PROP_S1, OPERAND_ATTR_STYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
     validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
@@ -8986,7 +8944,7 @@ template<class T> bool InstValidator::req_scall(T inst)
 //      nonull = any;
 //      stypesize = model;
 //      d0 = reg;
-//      s1 = reg_stype, cnst_stype;
+//      s1 = reg_stype, imm_stype;
 //      s2 = null;
 //      s3 = null;
 //      s4 = null;
@@ -9007,7 +8965,7 @@ template<class T> bool InstValidator::req_segmentp(T inst)
     }
     validateStypesize(inst, PROP_STYPESIZE, STYPESIZE_ATTR_NONE, STYPESIZE_VALUES_MODEL, sizeof(STYPESIZE_VALUES_MODEL) / sizeof(unsigned));
     validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
-    validateOperand(inst, PROP_S1, OPERAND_ATTR_STYPE, OPERAND_VALUES_REGU32_CNSTU32, sizeof(OPERAND_VALUES_REGU32_CNSTU32) / sizeof(unsigned));
+    validateOperand(inst, PROP_S1, OPERAND_ATTR_STYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
     validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
@@ -9062,7 +9020,7 @@ template<class T> bool InstValidator::req_shuffle(T inst)
 //  Req signal = {
 //      type = b32, s32, u32, b64, s64, u64;
 //      sigtype = sig32, sig64;
-//      sigop = generic, exch, ld, wait, waittimeout;
+//      sigop = generic, cas, exch, ld, wait, waittimeout;
 //      memord = any;
 //      typesize = model;
 //      {type = b32, s32, u32; ? sigtype = sig32; s1 = reg_sig32;}
@@ -9086,8 +9044,8 @@ template<class T> bool InstValidator::req_signal(T inst)
     if (!check_type_values_sig32_sig64(getSignalType<T>(inst))) {
         brigPropError(inst, PROP_SIGNALTYPE, getSignalType<T>(inst), TYPE_VALUES_SIG32_SIG64, sizeof(TYPE_VALUES_SIG32_SIG64) / sizeof(unsigned));
     }
-    if (!check_atmop_values_generic_exch_ld_wait_waittimeout(getSignalOperation<T>(inst))) {
-        brigPropError(inst, PROP_SIGNALOPERATION, getSignalOperation<T>(inst), ATMOP_VALUES_GENERIC_EXCH_LD_WAIT_WAITTIMEOUT, sizeof(ATMOP_VALUES_GENERIC_EXCH_LD_WAIT_WAITTIMEOUT) / sizeof(unsigned));
+    if (!check_atmop_values_generic_cas_exch_ld_wait_waittimeout(getSignalOperation<T>(inst))) {
+        brigPropError(inst, PROP_SIGNALOPERATION, getSignalOperation<T>(inst), ATMOP_VALUES_GENERIC_CAS_EXCH_LD_WAIT_WAITTIMEOUT, sizeof(ATMOP_VALUES_GENERIC_CAS_EXCH_LD_WAIT_WAITTIMEOUT) / sizeof(unsigned));
     }
     if (!check_memord_values_any(getMemoryOrder<T>(inst))) {
         brigPropError(inst, PROP_MEMORYORDER, getMemoryOrder<T>(inst), MEMORD_VALUES_ANY, sizeof(MEMORD_VALUES_ANY) / sizeof(unsigned));
@@ -9214,12 +9172,12 @@ template<class T> bool InstValidator::req_signal(T inst)
 //      {type = b32, s32, u32; ? sigtype = sig32; s0 = reg_sig32;}
 //      {type = b64, s64, u64; ? sigtype = sig64; s0 = reg_sig64;}
 //      ;
-//      {sigop = st; ? type = b32, b64; memord = st; s2 = null;}
-//      {sigop = and, or, xor; ? type = b32, b64; memord = any; s2 = null;}
-//      {sigop = cas; ? type = b32, b64; memord = any; s2 = reg, imm;}
-//      {sigop = add, sub; ? type = s32, u32, s64, u64; memord = any; s2 = null;}
+//      {sigop = st; ? type = b32, b64; memord = st;}
+//      {sigop = and, or, xor; ? type = b32, b64; memord = any;}
+//      {sigop = add, sub; ? type = s32, u32, s64, u64; memord = any;}
 //      ;
 //      s1 = reg, imm;
+//      s2 = null;
 //      s3 = null;
 //      s4 = null;
 //  }
@@ -9272,7 +9230,6 @@ template<class T> bool InstValidator::req_signal_noret(T inst)
         if (!check_memord_values_st(getMemoryOrder<T>(inst))) {
             brigPropError(inst, PROP_MEMORYORDER, getMemoryOrder<T>(inst), MEMORD_VALUES_ST, sizeof(MEMORD_VALUES_ST) / sizeof(unsigned));
         }
-        validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     }
     else if (
             check_atmop_values_and_or_xor(getSignalOperation<T>(inst))
@@ -9284,19 +9241,6 @@ template<class T> bool InstValidator::req_signal_noret(T inst)
         if (!check_memord_values_any(getMemoryOrder<T>(inst))) {
             brigPropError(inst, PROP_MEMORYORDER, getMemoryOrder<T>(inst), MEMORD_VALUES_ANY, sizeof(MEMORD_VALUES_ANY) / sizeof(unsigned));
         }
-        validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
-    }
-    else if (
-            check_atmop_values_cas(getSignalOperation<T>(inst))
-       )
-    {
-        if (!check_type_values_b32_b64(getType<T>(inst))) {
-            brigPropError(inst, PROP_TYPE, getType<T>(inst), TYPE_VALUES_B32_B64, sizeof(TYPE_VALUES_B32_B64) / sizeof(unsigned));
-        }
-        if (!check_memord_values_any(getMemoryOrder<T>(inst))) {
-            brigPropError(inst, PROP_MEMORYORDER, getMemoryOrder<T>(inst), MEMORD_VALUES_ANY, sizeof(MEMORD_VALUES_ANY) / sizeof(unsigned));
-        }
-        validateOperand(inst, PROP_S2, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
     }
     else if (
             check_atmop_values_add_sub(getSignalOperation<T>(inst))
@@ -9308,13 +9252,13 @@ template<class T> bool InstValidator::req_signal_noret(T inst)
         if (!check_memord_values_any(getMemoryOrder<T>(inst))) {
             brigPropError(inst, PROP_MEMORYORDER, getMemoryOrder<T>(inst), MEMORD_VALUES_ANY, sizeof(MEMORD_VALUES_ANY) / sizeof(unsigned));
         }
-        validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     }
     else
     {
         invalidVariant(inst, PROP_SIGNALOPERATION);
     }
     validateOperand(inst, PROP_S1, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
+    validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S4, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     return true;
@@ -9414,10 +9358,10 @@ template<class T> bool InstValidator::req_sqrt(T inst)
 //      const = none;
 //      eqclass = any;
 //      width = none;
-//      {type = u, s, f; ? s0 = reg, vector, imm;}
-//      {type = b128, sig; ? s0 = reg;}
-//      {type = img; ? s0 = reg; segment = arg;}
+//      {type = u, s, f, b128, sig; ? segment = writable;}
+//      {type = img; ? segment = arg;}
 //      ;
+//      s0 = reg, vector, imm;
 //      s1 = addr_tseg;
 //      s2 = null;
 //      s3 = null;
@@ -9443,22 +9387,17 @@ template<class T> bool InstValidator::req_st(T inst)
     }
 
     if (
-            check_type_values_s_u_f(getType<T>(inst))
+            check_type_values_u_s_f_b128_sig(getType<T>(inst))
        )
     {
-        validateOperand(inst, PROP_S0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG_VECTOR_IMM, sizeof(OPERAND_VALUES_REG_VECTOR_IMM) / sizeof(unsigned));
-    }
-    else if (
-            check_type_values_b128_sig(getType<T>(inst))
-       )
-    {
-        validateOperand(inst, PROP_S0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
+        if (!check_segment_values_writable(getSegment<T>(inst))) {
+            brigPropError(inst, PROP_SEGMENT, getSegment<T>(inst), SEGMENT_VALUES_WRITABLE, sizeof(SEGMENT_VALUES_WRITABLE) / sizeof(unsigned));
+        }
     }
     else if (
             check_type_values_img(getType<T>(inst))
        )
     {
-        validateOperand(inst, PROP_S0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
         if (!check_segment_values_arg(getSegment<T>(inst))) {
             brigPropError(inst, PROP_SEGMENT, getSegment<T>(inst), SEGMENT_VALUES_ARG, sizeof(SEGMENT_VALUES_ARG) / sizeof(unsigned));
         }
@@ -9467,6 +9406,7 @@ template<class T> bool InstValidator::req_st(T inst)
     {
         invalidVariant(inst, PROP_TYPE);
     }
+    validateOperand(inst, PROP_S0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG_VECTOR_IMM, sizeof(OPERAND_VALUES_REG_VECTOR_IMM) / sizeof(unsigned));
     validateOperand(inst, PROP_S1, OPERAND_ATTR_TSEG, OPERAND_VALUES_ADDRSEG, sizeof(OPERAND_VALUES_ADDRSEG) / sizeof(unsigned));
     validateOperand(inst, PROP_S2, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
     validateOperand(inst, PROP_S3, OPERAND_ATTR_NONE, OPERAND_VALUES_NULL, sizeof(OPERAND_VALUES_NULL) / sizeof(unsigned));
@@ -9478,7 +9418,7 @@ template<class T> bool InstValidator::req_st(T inst)
 //  Req st_image = {
 //      ld_st_image;
 //      itype = woimg, rwimg;
-//      {geometry = 1d, 1db; ? s0 = vec_4; s2 = reg_ctype;}
+//      {geometry = 1d, 1db; ? s0 = vec_4; s2 = reg_ctype, imm_ctype;}
 //      {geometry = 2d, 1da; ? s0 = vec_4; s2 = vec_2_ctype;}
 //      {geometry = 3d, 2da; ? s0 = vec_4; s2 = vec_3_ctype;}
 //      {geometry = 2ddepth; ? s0 = reg; s2 = vec_2_ctype;}
@@ -9500,7 +9440,7 @@ template<class T> bool InstValidator::req_st_image(T inst)
        )
     {
         validateOperand(inst, PROP_S0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_VEC4, sizeof(OPERAND_VALUES_VEC4) / sizeof(unsigned));
-        validateOperand(inst, PROP_S2, OPERAND_ATTR_CTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
+        validateOperand(inst, PROP_S2, OPERAND_ATTR_CTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
     }
     else if (
             check_geometry_values_2d_1da(getGeometry<T>(inst))
@@ -9800,11 +9740,11 @@ void InstValidator::validateInst(Inst inst)
             req_activelanemask<InstLane>(i);
             break;
         }
-        case (Brig::BRIG_OPCODE_ACTIVELANESHUFFLE):
+        case (Brig::BRIG_OPCODE_ACTIVELANEPERMUTE):
         {
             InstLane i = inst;
             if (!i) { invalidFormat(inst, "InstLane"); }
-            req_activelaneshuffle<InstLane>(i);
+            req_activelanepermute<InstLane>(i);
             break;
         }
         case (Brig::BRIG_OPCODE_ADD):
@@ -9828,20 +9768,6 @@ void InstValidator::validateInst(Inst inst)
             InstQueue i = inst;
             if (!i) { invalidFormat(inst, "InstQueue"); }
             req_addq<InstQueue>(i);
-            break;
-        }
-        case (Brig::BRIG_OPCODE_AGENTCOUNT):
-        {
-            InstBasic i = inst;
-            if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_basic_dst_u32<InstBasic>(i);
-            break;
-        }
-        case (Brig::BRIG_OPCODE_AGENTID):
-        {
-            InstBasic i = inst;
-            if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_basic_dst_u32<InstBasic>(i);
             break;
         }
         case (Brig::BRIG_OPCODE_ALLOCA):
@@ -10065,6 +9991,13 @@ void InstValidator::validateInst(Inst inst)
             req_basic_dst_u32_dim<InstBasic>(i);
             break;
         }
+        case (Brig::BRIG_OPCODE_CURRENTWORKITEMFLATID):
+        {
+            InstBasic i = inst;
+            if (!i) { invalidFormat(inst, "InstBasic"); }
+            req_basic_dst_u32<InstBasic>(i);
+            break;
+        }
         case (Brig::BRIG_OPCODE_CVT):
         {
             InstCvt i = inst;
@@ -10222,37 +10155,73 @@ void InstValidator::validateInst(Inst inst)
         }
         case (Brig::BRIG_OPCODE_GCNDIVRELAXED):
         {
-            InstBasic i = inst;
-            if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_gcn_div_relaxed<InstBasic>(i);
+            if (InstMod i = inst)
+            {
+                req_gcn_div_relaxed<InstMod>(i);
+            }
+            else if (InstBasic i = inst)
+            {
+                req_gcn_div_relaxed<InstBasic>(i);
+            }
+            else
+            {
+                invalidFormat(inst, "InstBasic or InstMod");
+            }
             break;
         }
         case (Brig::BRIG_OPCODE_GCNDIVRELAXEDNARROW):
         {
             InstBasic i = inst;
             if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_gcn_div_relaxed<InstBasic>(i);
+            req_gcn_div_relaxed_narrow<InstBasic>(i);
             break;
         }
         case (Brig::BRIG_OPCODE_GCNFLDEXP):
         {
-            InstBasic i = inst;
-            if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_gcn_fldexp<InstBasic>(i);
+            if (InstMod i = inst)
+            {
+                req_gcn_fldexp<InstMod>(i);
+            }
+            else if (InstBasic i = inst)
+            {
+                req_gcn_fldexp<InstBasic>(i);
+            }
+            else
+            {
+                invalidFormat(inst, "InstBasic or InstMod");
+            }
             break;
         }
         case (Brig::BRIG_OPCODE_GCNFREXP_EXP):
         {
-            InstBasic i = inst;
-            if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_gcn_frexp_exp<InstBasic>(i);
+            if (InstMod i = inst)
+            {
+                req_gcn_frexp_exp<InstMod>(i);
+            }
+            else if (InstBasic i = inst)
+            {
+                req_gcn_frexp_exp<InstBasic>(i);
+            }
+            else
+            {
+                invalidFormat(inst, "InstBasic or InstMod");
+            }
             break;
         }
         case (Brig::BRIG_OPCODE_GCNFREXP_MANT):
         {
-            InstBasic i = inst;
-            if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_gcn_frexp_mant<InstBasic>(i);
+            if (InstMod i = inst)
+            {
+                req_gcn_frexp_mant<InstMod>(i);
+            }
+            else if (InstBasic i = inst)
+            {
+                req_gcn_frexp_mant<InstBasic>(i);
+            }
+            else
+            {
+                invalidFormat(inst, "InstBasic or InstMod");
+            }
             break;
         }
         case (Brig::BRIG_OPCODE_GCNLD):
@@ -10383,9 +10352,18 @@ void InstValidator::validateInst(Inst inst)
         }
         case (Brig::BRIG_OPCODE_GCNTRIG_PREOP):
         {
-            InstBasic i = inst;
-            if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_gcn_trig_preop<InstBasic>(i);
+            if (InstMod i = inst)
+            {
+                req_gcn_trig_preop<InstMod>(i);
+            }
+            else if (InstBasic i = inst)
+            {
+                req_gcn_trig_preop<InstBasic>(i);
+            }
+            else
+            {
+                invalidFormat(inst, "InstBasic or InstMod");
+            }
             break;
         }
         case (Brig::BRIG_OPCODE_GETDETECTEXCEPT):
@@ -10406,7 +10384,7 @@ void InstValidator::validateInst(Inst inst)
         {
             InstBasic i = inst;
             if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_basic_dst_u32_dim<InstBasic>(i);
+            req_basic_dst_u32_u64_dim<InstBasic>(i);
             break;
         }
         case (Brig::BRIG_OPCODE_GROUPBASEPTR):
@@ -10421,6 +10399,13 @@ void InstValidator::validateInst(Inst inst)
             InstBr i = inst;
             if (!i) { invalidFormat(inst, "InstBr"); }
             req_icall<InstBr>(i);
+            break;
+        }
+        case (Brig::BRIG_OPCODE_IMAGEFENCE):
+        {
+            InstBasic i = inst;
+            if (!i) { invalidFormat(inst, "InstBasic"); }
+            req_imagefence<InstBasic>(i);
             break;
         }
         case (Brig::BRIG_OPCODE_INITFBAR):
@@ -10479,25 +10464,11 @@ void InstValidator::validateInst(Inst inst)
             req_ldf<InstBasic>(i);
             break;
         }
-        case (Brig::BRIG_OPCODE_LDI):
-        {
-            InstBasic i = inst;
-            if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_ldi<InstBasic>(i);
-            break;
-        }
         case (Brig::BRIG_OPCODE_LDIMAGE):
         {
             InstImage i = inst;
             if (!i) { invalidFormat(inst, "InstImage"); }
             req_ld_image<InstImage>(i);
-            break;
-        }
-        case (Brig::BRIG_OPCODE_LDK):
-        {
-            InstBasic i = inst;
-            if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_ldk<InstBasic>(i);
             break;
         }
         case (Brig::BRIG_OPCODE_LDQUEUEREADINDEX):
@@ -10530,9 +10501,18 @@ void InstValidator::validateInst(Inst inst)
         }
         case (Brig::BRIG_OPCODE_MAD):
         {
-            InstBasic i = inst;
-            if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_mad<InstBasic>(i);
+            if (InstMod i = inst)
+            {
+                req_mad<InstMod>(i);
+            }
+            else if (InstBasic i = inst)
+            {
+                req_mad<InstBasic>(i);
+            }
+            else
+            {
+                invalidFormat(inst, "InstBasic or InstMod");
+            }
             break;
         }
         case (Brig::BRIG_OPCODE_MAD24):
@@ -10802,20 +10782,6 @@ void InstValidator::validateInst(Inst inst)
             InstQuerySampler i = inst;
             if (!i) { invalidFormat(inst, "InstQuerySampler"); }
             req_querysampler<InstQuerySampler>(i);
-            break;
-        }
-        case (Brig::BRIG_OPCODE_QUEUEID):
-        {
-            InstBasic i = inst;
-            if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_basic_dst_u32<InstBasic>(i);
-            break;
-        }
-        case (Brig::BRIG_OPCODE_QUEUEPTR):
-        {
-            InstBasic i = inst;
-            if (!i) { invalidFormat(inst, "InstBasic"); }
-            req_ptr_model<InstBasic>(i);
             break;
         }
         case (Brig::BRIG_OPCODE_RDIMAGE):
@@ -11151,11 +11117,9 @@ unsigned InstValidator::getOperand0Attr(Inst inst)
         case (Brig::BRIG_OPCODE_ACTIVELANECOUNT): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ACTIVELANEID): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ACTIVELANEMASK): return OPERAND_ATTR_DTYPE;
-        case (Brig::BRIG_OPCODE_ACTIVELANESHUFFLE): return OPERAND_ATTR_DTYPE;
+        case (Brig::BRIG_OPCODE_ACTIVELANEPERMUTE): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ADD): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ADDQUEUEWRITEINDEX): return OPERAND_ATTR_DTYPE;
-        case (Brig::BRIG_OPCODE_AGENTCOUNT): return OPERAND_ATTR_DTYPE;
-        case (Brig::BRIG_OPCODE_AGENTID): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ALLOCA): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_AND): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ARRIVEFBAR): return OPERAND_ATTR_U32;
@@ -11185,6 +11149,7 @@ unsigned InstValidator::getOperand0Attr(Inst inst)
         case (Brig::BRIG_OPCODE_COPYSIGN): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_CUID): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_CURRENTWORKGROUPSIZE): return OPERAND_ATTR_DTYPE;
+        case (Brig::BRIG_OPCODE_CURRENTWORKITEMFLATID): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_CVT): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_DEBUGTRAP): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_DIM): return OPERAND_ATTR_DTYPE;
@@ -11231,6 +11196,7 @@ unsigned InstValidator::getOperand0Attr(Inst inst)
         case (Brig::BRIG_OPCODE_GRIDSIZE): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_GROUPBASEPTR): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ICALL): return OPERAND_ATTR_NONE;
+        case (Brig::BRIG_OPCODE_IMAGEFENCE): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_INITFBAR): return OPERAND_ATTR_U32;
         case (Brig::BRIG_OPCODE_JOINFBAR): return OPERAND_ATTR_U32;
         case (Brig::BRIG_OPCODE_KERNARGBASEPTR): return OPERAND_ATTR_DTYPE;
@@ -11239,9 +11205,7 @@ unsigned InstValidator::getOperand0Attr(Inst inst)
         case (Brig::BRIG_OPCODE_LD): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_LDA): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_LDF): return OPERAND_ATTR_DTYPE;
-        case (Brig::BRIG_OPCODE_LDI): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_LDIMAGE): return OPERAND_ATTR_DTYPE;
-        case (Brig::BRIG_OPCODE_LDK): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_LDQUEUEREADINDEX): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_LDQUEUEWRITEINDEX): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_LEAVEFBAR): return OPERAND_ATTR_U32;
@@ -11279,8 +11243,6 @@ unsigned InstValidator::getOperand0Attr(Inst inst)
         case (Brig::BRIG_OPCODE_POPCOUNT): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_QUERYIMAGE): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_QUERYSAMPLER): return OPERAND_ATTR_DTYPE;
-        case (Brig::BRIG_OPCODE_QUEUEID): return OPERAND_ATTR_DTYPE;
-        case (Brig::BRIG_OPCODE_QUEUEPTR): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_RDIMAGE): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_RELEASEFBAR): return OPERAND_ATTR_U32;
         case (Brig::BRIG_OPCODE_REM): return OPERAND_ATTR_DTYPE;
@@ -11373,11 +11335,9 @@ unsigned InstValidator::getOperand1Attr(Inst inst)
         case (Brig::BRIG_OPCODE_ACTIVELANECOUNT): return OPERAND_ATTR_STYPE;
         case (Brig::BRIG_OPCODE_ACTIVELANEID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ACTIVELANEMASK): return OPERAND_ATTR_STYPE;
-        case (Brig::BRIG_OPCODE_ACTIVELANESHUFFLE): return OPERAND_ATTR_DTYPE;
+        case (Brig::BRIG_OPCODE_ACTIVELANEPERMUTE): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ADD): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ADDQUEUEWRITEINDEX): return OPERAND_ATTR_SEG;
-        case (Brig::BRIG_OPCODE_AGENTCOUNT): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_AGENTID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ALLOCA): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_AND): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ARRIVEFBAR): return OPERAND_ATTR_NONE;
@@ -11413,6 +11373,7 @@ unsigned InstValidator::getOperand1Attr(Inst inst)
         case (Brig::BRIG_OPCODE_COPYSIGN): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_CUID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_CURRENTWORKGROUPSIZE): return OPERAND_ATTR_U32;
+        case (Brig::BRIG_OPCODE_CURRENTWORKITEMFLATID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_CVT): return OPERAND_ATTR_STYPE;
         case (Brig::BRIG_OPCODE_DEBUGTRAP): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_DIM): return OPERAND_ATTR_NONE;
@@ -11435,7 +11396,7 @@ unsigned InstValidator::getOperand1Attr(Inst inst)
         case (Brig::BRIG_OPCODE_GCNFLDEXP): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_GCNFREXP_EXP): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_GCNFREXP_MANT): return OPERAND_ATTR_DTYPE;
-        case (Brig::BRIG_OPCODE_GCNLD): return OPERAND_ATTR_TSEG;
+        case (Brig::BRIG_OPCODE_GCNLD): return OPERAND_ATTR_SEG;
         case (Brig::BRIG_OPCODE_GCNMADS): return OPERAND_ATTR_S32;
         case (Brig::BRIG_OPCODE_GCNMADU): return OPERAND_ATTR_U32;
         case (Brig::BRIG_OPCODE_GCNMAX): return OPERAND_ATTR_DTYPE;
@@ -11452,13 +11413,14 @@ unsigned InstValidator::getOperand1Attr(Inst inst)
         case (Brig::BRIG_OPCODE_GCNSADD): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_GCNSADW): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_GCNSLEEP): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_GCNST): return OPERAND_ATTR_TSEG;
+        case (Brig::BRIG_OPCODE_GCNST): return OPERAND_ATTR_SEG;
         case (Brig::BRIG_OPCODE_GCNTRIG_PREOP): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_GETDETECTEXCEPT): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_GRIDGROUPS): return OPERAND_ATTR_U32;
         case (Brig::BRIG_OPCODE_GRIDSIZE): return OPERAND_ATTR_U32;
         case (Brig::BRIG_OPCODE_GROUPBASEPTR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ICALL): return OPERAND_ATTR_DTYPE;
+        case (Brig::BRIG_OPCODE_IMAGEFENCE): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_INITFBAR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_JOINFBAR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_KERNARGBASEPTR): return OPERAND_ATTR_NONE;
@@ -11467,9 +11429,7 @@ unsigned InstValidator::getOperand1Attr(Inst inst)
         case (Brig::BRIG_OPCODE_LD): return OPERAND_ATTR_TSEG;
         case (Brig::BRIG_OPCODE_LDA): return OPERAND_ATTR_SEG;
         case (Brig::BRIG_OPCODE_LDF): return OPERAND_ATTR_U32;
-        case (Brig::BRIG_OPCODE_LDI): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDIMAGE): return OPERAND_ATTR_ITYPE;
-        case (Brig::BRIG_OPCODE_LDK): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDQUEUEREADINDEX): return OPERAND_ATTR_SEG;
         case (Brig::BRIG_OPCODE_LDQUEUEWRITEINDEX): return OPERAND_ATTR_SEG;
         case (Brig::BRIG_OPCODE_LEAVEFBAR): return OPERAND_ATTR_NONE;
@@ -11507,8 +11467,6 @@ unsigned InstValidator::getOperand1Attr(Inst inst)
         case (Brig::BRIG_OPCODE_POPCOUNT): return OPERAND_ATTR_STYPE;
         case (Brig::BRIG_OPCODE_QUERYIMAGE): return OPERAND_ATTR_ITYPE;
         case (Brig::BRIG_OPCODE_QUERYSAMPLER): return OPERAND_ATTR_SAMP;
-        case (Brig::BRIG_OPCODE_QUEUEID): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_QUEUEPTR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_RDIMAGE): return OPERAND_ATTR_ITYPE;
         case (Brig::BRIG_OPCODE_RELEASEFBAR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_REM): return OPERAND_ATTR_DTYPE;
@@ -11587,41 +11545,6 @@ template<class T> unsigned InstValidator::operand2_to_attr_atomic(T inst)
     }
     if (
         check_atmop_values_ld(getAtomicOperation<T>(inst))
-       )
-    {
-            return OPERAND_ATTR_NONE;
-    }
-    return OPERAND_ATTR_INVALID;
-}
-
-template<class T> unsigned InstValidator::operand2_to_attr_atomic_noret(T inst)
-{
-    if (
-        check_atmop_values_cas(getAtomicOperation<T>(inst))
-       )
-    {
-            return OPERAND_ATTR_DTYPE;
-    }
-    if (
-        check_atmop_values_and_or_xor(getAtomicOperation<T>(inst))
-       )
-    {
-            return OPERAND_ATTR_NONE;
-    }
-    if (
-        check_atmop_values_add_sub_min_max(getAtomicOperation<T>(inst))
-       )
-    {
-            return OPERAND_ATTR_NONE;
-    }
-    if (
-        check_atmop_values_wrapinc_wrapdec(getAtomicOperation<T>(inst))
-       )
-    {
-            return OPERAND_ATTR_NONE;
-    }
-    if (
-        check_atmop_values_st(getAtomicOperation<T>(inst))
        )
     {
             return OPERAND_ATTR_NONE;
@@ -11740,35 +11663,6 @@ template<class T> unsigned InstValidator::operand2_to_attr_signal(T inst)
     return OPERAND_ATTR_INVALID;
 }
 
-template<class T> unsigned InstValidator::operand2_to_attr_signal_noret(T inst)
-{
-    if (
-        check_atmop_values_st(getSignalOperation<T>(inst))
-       )
-    {
-            return OPERAND_ATTR_NONE;
-    }
-    if (
-        check_atmop_values_and_or_xor(getSignalOperation<T>(inst))
-       )
-    {
-            return OPERAND_ATTR_NONE;
-    }
-    if (
-        check_atmop_values_cas(getSignalOperation<T>(inst))
-       )
-    {
-            return OPERAND_ATTR_DTYPE;
-    }
-    if (
-        check_atmop_values_add_sub(getSignalOperation<T>(inst))
-       )
-    {
-            return OPERAND_ATTR_NONE;
-    }
-    return OPERAND_ATTR_INVALID;
-}
-
 unsigned InstValidator::getOperand2Attr(Inst inst)
 {
     switch (inst.opcode())
@@ -11777,11 +11671,9 @@ unsigned InstValidator::getOperand2Attr(Inst inst)
         case (Brig::BRIG_OPCODE_ACTIVELANECOUNT): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ACTIVELANEID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ACTIVELANEMASK): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_ACTIVELANESHUFFLE): return OPERAND_ATTR_U32;
+        case (Brig::BRIG_OPCODE_ACTIVELANEPERMUTE): return OPERAND_ATTR_U32;
         case (Brig::BRIG_OPCODE_ADD): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ADDQUEUEWRITEINDEX): return OPERAND_ATTR_DTYPE;
-        case (Brig::BRIG_OPCODE_AGENTCOUNT): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_AGENTID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ALLOCA): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_AND): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ARRIVEFBAR): return OPERAND_ATTR_NONE;
@@ -11792,13 +11684,7 @@ unsigned InstValidator::getOperand2Attr(Inst inst)
             return operand2_to_attr_atomic<InstAtomic>(i);
             break;
         }
-        case (Brig::BRIG_OPCODE_ATOMICNORET):
-        {
-            InstAtomic i = inst;
-            if (!i) { return OPERAND_ATTR_INVALID; }
-            return operand2_to_attr_atomic_noret<InstAtomic>(i);
-            break;
-        }
+        case (Brig::BRIG_OPCODE_ATOMICNORET): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_BARRIER): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_BITALIGN): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_BITEXTRACT): return OPERAND_ATTR_U32;
@@ -11823,6 +11709,7 @@ unsigned InstValidator::getOperand2Attr(Inst inst)
         case (Brig::BRIG_OPCODE_COPYSIGN): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_CUID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_CURRENTWORKGROUPSIZE): return OPERAND_ATTR_NONE;
+        case (Brig::BRIG_OPCODE_CURRENTWORKITEMFLATID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_CVT): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_DEBUGTRAP): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_DIM): return OPERAND_ATTR_NONE;
@@ -11881,6 +11768,7 @@ unsigned InstValidator::getOperand2Attr(Inst inst)
         case (Brig::BRIG_OPCODE_GRIDSIZE): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_GROUPBASEPTR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ICALL): return OPERAND_ATTR_NONE;
+        case (Brig::BRIG_OPCODE_IMAGEFENCE): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_INITFBAR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_JOINFBAR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_KERNARGBASEPTR): return OPERAND_ATTR_NONE;
@@ -11889,9 +11777,7 @@ unsigned InstValidator::getOperand2Attr(Inst inst)
         case (Brig::BRIG_OPCODE_LD): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDA): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDF): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_LDI): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDIMAGE): return OPERAND_ATTR_CTYPE;
-        case (Brig::BRIG_OPCODE_LDK): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDQUEUEREADINDEX): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDQUEUEWRITEINDEX): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LEAVEFBAR): return OPERAND_ATTR_NONE;
@@ -11929,8 +11815,6 @@ unsigned InstValidator::getOperand2Attr(Inst inst)
         case (Brig::BRIG_OPCODE_POPCOUNT): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_QUERYIMAGE): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_QUERYSAMPLER): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_QUEUEID): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_QUEUEPTR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_RDIMAGE): return OPERAND_ATTR_SAMP;
         case (Brig::BRIG_OPCODE_RELEASEFBAR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_REM): return OPERAND_ATTR_DTYPE;
@@ -11952,13 +11836,7 @@ unsigned InstValidator::getOperand2Attr(Inst inst)
             return operand2_to_attr_signal<InstSignal>(i);
             break;
         }
-        case (Brig::BRIG_OPCODE_SIGNALNORET):
-        {
-            InstSignal i = inst;
-            if (!i) { return OPERAND_ATTR_INVALID; }
-            return operand2_to_attr_signal_noret<InstSignal>(i);
-            break;
-        }
+        case (Brig::BRIG_OPCODE_SIGNALNORET): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_SQRT): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ST): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_STIMAGE): return OPERAND_ATTR_CTYPE;
@@ -12106,11 +11984,9 @@ unsigned InstValidator::getOperand3Attr(Inst inst)
         case (Brig::BRIG_OPCODE_ACTIVELANECOUNT): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ACTIVELANEID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ACTIVELANEMASK): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_ACTIVELANESHUFFLE): return OPERAND_ATTR_DTYPE;
+        case (Brig::BRIG_OPCODE_ACTIVELANEPERMUTE): return OPERAND_ATTR_DTYPE;
         case (Brig::BRIG_OPCODE_ADD): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ADDQUEUEWRITEINDEX): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_AGENTCOUNT): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_AGENTID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ALLOCA): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_AND): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ARRIVEFBAR): return OPERAND_ATTR_NONE;
@@ -12146,6 +12022,7 @@ unsigned InstValidator::getOperand3Attr(Inst inst)
         case (Brig::BRIG_OPCODE_COPYSIGN): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_CUID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_CURRENTWORKGROUPSIZE): return OPERAND_ATTR_NONE;
+        case (Brig::BRIG_OPCODE_CURRENTWORKITEMFLATID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_CVT): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_DEBUGTRAP): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_DIM): return OPERAND_ATTR_NONE;
@@ -12198,6 +12075,7 @@ unsigned InstValidator::getOperand3Attr(Inst inst)
         case (Brig::BRIG_OPCODE_GRIDSIZE): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_GROUPBASEPTR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ICALL): return OPERAND_ATTR_NONE;
+        case (Brig::BRIG_OPCODE_IMAGEFENCE): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_INITFBAR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_JOINFBAR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_KERNARGBASEPTR): return OPERAND_ATTR_NONE;
@@ -12206,9 +12084,7 @@ unsigned InstValidator::getOperand3Attr(Inst inst)
         case (Brig::BRIG_OPCODE_LD): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDA): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDF): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_LDI): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDIMAGE): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_LDK): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDQUEUEREADINDEX): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDQUEUEWRITEINDEX): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LEAVEFBAR): return OPERAND_ATTR_NONE;
@@ -12246,8 +12122,6 @@ unsigned InstValidator::getOperand3Attr(Inst inst)
         case (Brig::BRIG_OPCODE_POPCOUNT): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_QUERYIMAGE): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_QUERYSAMPLER): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_QUEUEID): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_QUEUEPTR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_RDIMAGE): return OPERAND_ATTR_CTYPE;
         case (Brig::BRIG_OPCODE_RELEASEFBAR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_REM): return OPERAND_ATTR_NONE;
@@ -12306,11 +12180,9 @@ unsigned InstValidator::getOperand4Attr(Inst inst)
         case (Brig::BRIG_OPCODE_ACTIVELANECOUNT): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ACTIVELANEID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ACTIVELANEMASK): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_ACTIVELANESHUFFLE): return OPERAND_ATTR_B1;
+        case (Brig::BRIG_OPCODE_ACTIVELANEPERMUTE): return OPERAND_ATTR_B1;
         case (Brig::BRIG_OPCODE_ADD): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ADDQUEUEWRITEINDEX): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_AGENTCOUNT): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_AGENTID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ALLOCA): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_AND): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ARRIVEFBAR): return OPERAND_ATTR_NONE;
@@ -12340,6 +12212,7 @@ unsigned InstValidator::getOperand4Attr(Inst inst)
         case (Brig::BRIG_OPCODE_COPYSIGN): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_CUID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_CURRENTWORKGROUPSIZE): return OPERAND_ATTR_NONE;
+        case (Brig::BRIG_OPCODE_CURRENTWORKITEMFLATID): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_CVT): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_DEBUGTRAP): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_DIM): return OPERAND_ATTR_NONE;
@@ -12386,6 +12259,7 @@ unsigned InstValidator::getOperand4Attr(Inst inst)
         case (Brig::BRIG_OPCODE_GRIDSIZE): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_GROUPBASEPTR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ICALL): return OPERAND_ATTR_NONE;
+        case (Brig::BRIG_OPCODE_IMAGEFENCE): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_INITFBAR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_JOINFBAR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_KERNARGBASEPTR): return OPERAND_ATTR_NONE;
@@ -12394,9 +12268,7 @@ unsigned InstValidator::getOperand4Attr(Inst inst)
         case (Brig::BRIG_OPCODE_LD): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDA): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDF): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_LDI): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDIMAGE): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_LDK): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDQUEUEREADINDEX): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LDQUEUEWRITEINDEX): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_LEAVEFBAR): return OPERAND_ATTR_NONE;
@@ -12434,8 +12306,6 @@ unsigned InstValidator::getOperand4Attr(Inst inst)
         case (Brig::BRIG_OPCODE_POPCOUNT): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_QUERYIMAGE): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_QUERYSAMPLER): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_QUEUEID): return OPERAND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_QUEUEPTR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_RDIMAGE): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_RELEASEFBAR): return OPERAND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_REM): return OPERAND_ATTR_NONE;
@@ -12492,7 +12362,7 @@ template<class T> unsigned InstValidator::round_to_attr_add(T inst)
         check_type_values_f(getType<T>(inst))
        )
     {
-            return ROUND_ATTR_NEAR;
+            return ROUND_ATTR_DEFAULT;
     }
     if (
         check_type_values_sx_ux(getType<T>(inst))
@@ -12504,7 +12374,7 @@ template<class T> unsigned InstValidator::round_to_attr_add(T inst)
         check_type_values_fx(getType<T>(inst))
        )
     {
-            return ROUND_ATTR_NEAR;
+            return ROUND_ATTR_DEFAULT;
     }
     return ROUND_ATTR_INVALID;
 }
@@ -12530,7 +12400,7 @@ template<class T> unsigned InstValidator::round_to_attr_cvt(T inst)
         check_type_values_f(getType<T>(inst))
        )
     {
-            return ROUND_ATTR_NEAR;
+            return ROUND_ATTR_DEFAULT;
     }
     if (
         check_type_values_f(getSourceType<T>(inst)) &&
@@ -12551,14 +12421,14 @@ template<class T> unsigned InstValidator::round_to_attr_cvt(T inst)
         check_type_values_f16(getType<T>(inst))
        )
     {
-            return ROUND_ATTR_NEAR;
+            return ROUND_ATTR_DEFAULT;
     }
     if (
         check_type_values_f64(getSourceType<T>(inst)) &&
         check_type_values_f16_f32(getType<T>(inst))
        )
     {
-            return ROUND_ATTR_NEAR;
+            return ROUND_ATTR_DEFAULT;
     }
     if (
         check_type_values_f(getSourceType<T>(inst)) &&
@@ -12582,13 +12452,30 @@ template<class T> unsigned InstValidator::round_to_attr_div(T inst)
         check_type_values_f(getType<T>(inst))
        )
     {
-            return ROUND_ATTR_NEAR;
+            return ROUND_ATTR_DEFAULT;
     }
     if (
         check_type_values_fx(getType<T>(inst))
        )
     {
-            return ROUND_ATTR_NEAR;
+            return ROUND_ATTR_DEFAULT;
+    }
+    return ROUND_ATTR_INVALID;
+}
+
+template<class T> unsigned InstValidator::round_to_attr_mad(T inst)
+{
+    if (
+        check_type_values_s32_u32_s64_u64(getType<T>(inst))
+       )
+    {
+            return ROUND_ATTR_NONE;
+    }
+    if (
+        check_type_values_f(getType<T>(inst))
+       )
+    {
+            return ROUND_ATTR_DEFAULT;
     }
     return ROUND_ATTR_INVALID;
 }
@@ -12605,7 +12492,7 @@ template<class T> unsigned InstValidator::round_to_attr_mul(T inst)
         check_type_values_f(getType<T>(inst))
        )
     {
-            return ROUND_ATTR_NEAR;
+            return ROUND_ATTR_DEFAULT;
     }
     if (
         check_type_values_sx_ux(getType<T>(inst))
@@ -12617,7 +12504,7 @@ template<class T> unsigned InstValidator::round_to_attr_mul(T inst)
         check_type_values_fx(getType<T>(inst))
        )
     {
-            return ROUND_ATTR_NEAR;
+            return ROUND_ATTR_DEFAULT;
     }
     return ROUND_ATTR_INVALID;
 }
@@ -12644,7 +12531,6 @@ unsigned InstValidator::getRoundAttr(Inst inst)
             break;
         }
         case (Brig::BRIG_OPCODE_CEIL): return ROUND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_CMP): return ROUND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_COPYSIGN): return ROUND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_CVT):
         {
@@ -12670,8 +12556,29 @@ unsigned InstValidator::getRoundAttr(Inst inst)
             break;
         }
         case (Brig::BRIG_OPCODE_FLOOR): return ROUND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_FMA): return ROUND_ATTR_NEAR;
-        case (Brig::BRIG_OPCODE_FRACT): return ROUND_ATTR_NONE;
+        case (Brig::BRIG_OPCODE_FMA): return ROUND_ATTR_DEFAULT;
+        case (Brig::BRIG_OPCODE_FRACT): return ROUND_ATTR_DEFAULT;
+        case (Brig::BRIG_OPCODE_GCNDIVRELAXED): return ROUND_ATTR_DEFAULT;
+        case (Brig::BRIG_OPCODE_GCNFLDEXP): return ROUND_ATTR_DEFAULT;
+        case (Brig::BRIG_OPCODE_GCNFREXP_EXP): return ROUND_ATTR_DEFAULT;
+        case (Brig::BRIG_OPCODE_GCNFREXP_MANT): return ROUND_ATTR_DEFAULT;
+        case (Brig::BRIG_OPCODE_GCNTRIG_PREOP): return ROUND_ATTR_NONE;
+        case (Brig::BRIG_OPCODE_MAD):
+        {
+            if (InstMod i = inst)
+            {
+                return round_to_attr_mad<InstMod>(i);
+            }
+            else if (InstBasic i = inst)
+            {
+                return round_to_attr_mad<InstBasic>(i);
+            }
+            else
+            {
+                return ROUND_ATTR_INVALID;
+            }
+            break;
+        }
         case (Brig::BRIG_OPCODE_MAX): return ROUND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_MIN): return ROUND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_MUL):
@@ -12693,7 +12600,7 @@ unsigned InstValidator::getRoundAttr(Inst inst)
         case (Brig::BRIG_OPCODE_MULHI): return ROUND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_NEG): return ROUND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_RINT): return ROUND_ATTR_NONE;
-        case (Brig::BRIG_OPCODE_SQRT): return ROUND_ATTR_NEAR;
+        case (Brig::BRIG_OPCODE_SQRT): return ROUND_ATTR_DEFAULT;
         case (Brig::BRIG_OPCODE_SUB):
         {
             if (InstMod i = inst)
@@ -12724,7 +12631,7 @@ unsigned InstValidator::getWidthAttr(Inst inst)
         case (Brig::BRIG_OPCODE_ACTIVELANECOUNT): return WIDTH_ATTR_1;
         case (Brig::BRIG_OPCODE_ACTIVELANEID): return WIDTH_ATTR_1;
         case (Brig::BRIG_OPCODE_ACTIVELANEMASK): return WIDTH_ATTR_1;
-        case (Brig::BRIG_OPCODE_ACTIVELANESHUFFLE): return WIDTH_ATTR_1;
+        case (Brig::BRIG_OPCODE_ACTIVELANEPERMUTE): return WIDTH_ATTR_1;
         case (Brig::BRIG_OPCODE_ALLOCA): return WIDTH_ATTR_NONE;
         case (Brig::BRIG_OPCODE_ARRIVEFBAR): return WIDTH_ATTR_WAVESIZE;
         case (Brig::BRIG_OPCODE_BARRIER): return WIDTH_ATTR_ALL;

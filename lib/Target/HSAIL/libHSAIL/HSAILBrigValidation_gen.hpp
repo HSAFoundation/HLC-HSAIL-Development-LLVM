@@ -90,7 +90,6 @@ bool ValidatorImpl::ValidateBrigDirectiveFields(Directive item) const
            validate_BrigCodeOffset(item, it.brig()->firstInArg, "DirectiveFunction", "firstInArg");
            validate_BrigCodeOffset(item, it.brig()->firstCodeBlockEntry, "DirectiveFunction", "firstCodeBlockEntry");
            validate_BrigCodeOffset(item, it.brig()->nextModuleEntry, "DirectiveFunction", "nextModuleEntry");
-           validate_fld_CodeBlockEntryCount(item, it.brig()->codeBlockEntryCount, "DirectiveFunction", "codeBlockEntryCount");
            validate_BrigExecutableModifier(item, it.brig()->modifier, "DirectiveFunction", "modifier");
            validate_BrigLinkage(item, it.brig()->linkage, "DirectiveFunction", "linkage");
            validate_fld_Reserved(item, it.brig()->reserved, "DirectiveFunction", "reserved");
@@ -107,7 +106,6 @@ bool ValidatorImpl::ValidateBrigDirectiveFields(Directive item) const
            validate_BrigCodeOffset(item, it.brig()->firstInArg, "DirectiveIndirectFunction", "firstInArg");
            validate_BrigCodeOffset(item, it.brig()->firstCodeBlockEntry, "DirectiveIndirectFunction", "firstCodeBlockEntry");
            validate_BrigCodeOffset(item, it.brig()->nextModuleEntry, "DirectiveIndirectFunction", "nextModuleEntry");
-           validate_fld_CodeBlockEntryCount(item, it.brig()->codeBlockEntryCount, "DirectiveIndirectFunction", "codeBlockEntryCount");
            validate_BrigExecutableModifier(item, it.brig()->modifier, "DirectiveIndirectFunction", "modifier");
            validate_BrigLinkage(item, it.brig()->linkage, "DirectiveIndirectFunction", "linkage");
            validate_fld_Reserved(item, it.brig()->reserved, "DirectiveIndirectFunction", "reserved");
@@ -124,7 +122,6 @@ bool ValidatorImpl::ValidateBrigDirectiveFields(Directive item) const
            validate_BrigCodeOffset(item, it.brig()->firstInArg, "DirectiveKernel", "firstInArg");
            validate_BrigCodeOffset(item, it.brig()->firstCodeBlockEntry, "DirectiveKernel", "firstCodeBlockEntry");
            validate_BrigCodeOffset(item, it.brig()->nextModuleEntry, "DirectiveKernel", "nextModuleEntry");
-           validate_fld_CodeBlockEntryCount(item, it.brig()->codeBlockEntryCount, "DirectiveKernel", "codeBlockEntryCount");
            validate_BrigExecutableModifier(item, it.brig()->modifier, "DirectiveKernel", "modifier");
            validate_BrigLinkage(item, it.brig()->linkage, "DirectiveKernel", "linkage");
            validate_fld_Reserved(item, it.brig()->reserved, "DirectiveKernel", "reserved");
@@ -141,7 +138,6 @@ bool ValidatorImpl::ValidateBrigDirectiveFields(Directive item) const
            validate_BrigCodeOffset(item, it.brig()->firstInArg, "DirectiveSignature", "firstInArg");
            validate_BrigCodeOffset(item, it.brig()->firstCodeBlockEntry, "DirectiveSignature", "firstCodeBlockEntry");
            validate_BrigCodeOffset(item, it.brig()->nextModuleEntry, "DirectiveSignature", "nextModuleEntry");
-           validate_fld_CodeBlockEntryCount(item, it.brig()->codeBlockEntryCount, "DirectiveSignature", "codeBlockEntryCount");
            validate_BrigExecutableModifier(item, it.brig()->modifier, "DirectiveSignature", "modifier");
            validate_BrigLinkage(item, it.brig()->linkage, "DirectiveSignature", "linkage");
            validate_fld_Reserved(item, it.brig()->reserved, "DirectiveSignature", "reserved");
@@ -161,7 +157,7 @@ bool ValidatorImpl::ValidateBrigDirectiveFields(Directive item) const
            DirectiveFbarrier it = item;
 
            validate_BrigDataOffsetString(item, it.brig()->name, "DirectiveFbarrier", "name");
-           validate_BrigExecutableModifier(item, it.brig()->modifier, "DirectiveFbarrier", "modifier");
+           validate_BrigVariableModifier(item, it.brig()->modifier, "DirectiveFbarrier", "modifier");
            validate_BrigLinkage(item, it.brig()->linkage, "DirectiveFbarrier", "linkage");
            validate_fld_Reserved(item, it.brig()->reserved, "DirectiveFbarrier", "reserved");
        }
@@ -182,6 +178,20 @@ bool ValidatorImpl::ValidateBrigDirectiveFields(Directive item) const
            validate_BrigDataOffsetString(item, it.brig()->filename, "DirectiveLoc", "filename");
            validate_fld_Line(item, it.brig()->line, "DirectiveLoc", "line");
            validate_fld_Column(item, it.brig()->column, "DirectiveLoc", "column");
+       }
+       break;
+
+       case BRIG_KIND_DIRECTIVE_MODULE:
+       {
+           DirectiveModule it = item;
+
+           validate_BrigDataOffsetString(item, it.brig()->name, "DirectiveModule", "name");
+           validate_BrigVersion(item, it.brig()->hsailMajor, "DirectiveModule", "hsailMajor");
+           validate_BrigVersion(item, it.brig()->hsailMinor, "DirectiveModule", "hsailMinor");
+           validate_BrigProfile(item, it.brig()->profile, "DirectiveModule", "profile");
+           validate_BrigMachineModel(item, it.brig()->machineModel, "DirectiveModule", "machineModel");
+           validate_BrigRound(item, it.brig()->defaultFloatRound, "DirectiveModule", "defaultFloatRound");
+           validate_fld_Reserved(item, it.brig()->reserved, "DirectiveModule", "reserved");
        }
        break;
 
@@ -214,20 +224,6 @@ bool ValidatorImpl::ValidateBrigDirectiveFields(Directive item) const
            validate_BrigLinkage(item, it.brig()->linkage, "DirectiveVariable", "linkage");
            validate_BrigAllocation(item, it.brig()->allocation, "DirectiveVariable", "allocation");
            validate_fld_Reserved(item, it.brig()->reserved, "DirectiveVariable", "reserved");
-       }
-       break;
-
-       case BRIG_KIND_DIRECTIVE_VERSION:
-       {
-           DirectiveVersion it = item;
-
-           validate_BrigVersion(item, it.brig()->hsailMajor, "DirectiveVersion", "hsailMajor");
-           validate_BrigVersion(item, it.brig()->hsailMinor, "DirectiveVersion", "hsailMinor");
-           validate_BrigVersion(item, it.brig()->brigMajor, "DirectiveVersion", "brigMajor");
-           validate_BrigVersion(item, it.brig()->brigMinor, "DirectiveVersion", "brigMinor");
-           validate_BrigProfile(item, it.brig()->profile, "DirectiveVersion", "profile");
-           validate_BrigMachineModel(item, it.brig()->machineModel, "DirectiveVersion", "machineModel");
-           validate_fld_Reserved(item, it.brig()->reserved, "DirectiveVersion", "reserved");
        }
        break;
 
@@ -315,7 +311,9 @@ bool ValidatorImpl::ValidateBrigInstFields(Inst item) const
            validate_BrigAluModifier(item, it.brig()->modifier, "InstCmp", "modifier");
            validate_BrigCompareOperation(item, it.brig()->compare, "InstCmp", "compare");
            validate_BrigPack(item, it.brig()->pack, "InstCmp", "pack");
-           validate_fld_Reserved(item, it.brig()->reserved, "InstCmp", "reserved");
+           for (unsigned i = 0; i < 3; i++) {
+               validate_fld_Reserved(item, it.brig()->reserved[i], "InstCmp", "reserved");
+           }
        }
        break;
 
@@ -328,6 +326,7 @@ bool ValidatorImpl::ValidateBrigInstFields(Inst item) const
            validate_BrigDataOffsetOperandList(item, it.brig()->base.operands, "InstCvt", "operands");
            validate_BrigType(item, it.brig()->sourceType, "InstCvt", "sourceType");
            validate_BrigAluModifier(item, it.brig()->modifier, "InstCvt", "modifier");
+           validate_BrigRound(item, it.brig()->round, "InstCvt", "round");
        }
        break;
 
@@ -399,6 +398,7 @@ bool ValidatorImpl::ValidateBrigInstFields(Inst item) const
            validate_BrigType(item, it.brig()->base.type, "InstMod", "type");
            validate_BrigDataOffsetOperandList(item, it.brig()->base.operands, "InstMod", "operands");
            validate_BrigAluModifier(item, it.brig()->modifier, "InstMod", "modifier");
+           validate_BrigRound(item, it.brig()->round, "InstMod", "round");
            validate_BrigPack(item, it.brig()->pack, "InstMod", "pack");
            validate_fld_Reserved(item, it.brig()->reserved, "InstMod", "reserved");
        }
@@ -523,6 +523,17 @@ bool ValidatorImpl::ValidateBrigOperandFields(Operand item) const
        }
        break;
 
+       case BRIG_KIND_OPERAND_ALIGN:
+       {
+           OperandAlign it = item;
+
+           validate_BrigAlignment(item, it.brig()->align, "OperandAlign", "align");
+           for (unsigned i = 0; i < 3; i++) {
+               validate_fld_Reserved(item, it.brig()->reserved[i], "OperandAlign", "reserved");
+           }
+       }
+       break;
+
        case BRIG_KIND_OPERAND_CODE_LIST:
        {
            OperandCodeList it = item;
@@ -539,26 +550,55 @@ bool ValidatorImpl::ValidateBrigOperandFields(Operand item) const
        }
        break;
 
-       case BRIG_KIND_OPERAND_DATA:
+       case BRIG_KIND_OPERAND_CONSTANT_BYTES:
        {
-           OperandData it = item;
+           OperandConstantBytes it = item;
 
-           validate_BrigDataOffsetString(item, it.brig()->data, "OperandData", "data");
+           validate_BrigType(item, it.brig()->type, "OperandConstantBytes", "type");
+           validate_fld_Reserved(item, it.brig()->reserved, "OperandConstantBytes", "reserved");
+           validate_BrigDataOffsetString(item, it.brig()->bytes, "OperandConstantBytes", "bytes");
        }
        break;
 
-       case BRIG_KIND_OPERAND_IMAGE_PROPERTIES:
+       case BRIG_KIND_OPERAND_CONSTANT_IMAGE:
        {
-           OperandImageProperties it = item;
+           OperandConstantImage it = item;
 
-           validate_fld_Width(item, it.brig()->width, "OperandImageProperties", "width");
-           validate_fld_Height(item, it.brig()->height, "OperandImageProperties", "height");
-           validate_fld_Depth(item, it.brig()->depth, "OperandImageProperties", "depth");
-           validate_fld_Array(item, it.brig()->array, "OperandImageProperties", "array");
-           validate_BrigImageGeometry(item, it.brig()->geometry, "OperandImageProperties", "geometry");
-           validate_BrigImageChannelOrder(item, it.brig()->channelOrder, "OperandImageProperties", "channelOrder");
-           validate_BrigImageChannelType(item, it.brig()->channelType, "OperandImageProperties", "channelType");
-           validate_fld_Reserved(item, it.brig()->reserved, "OperandImageProperties", "reserved");
+           validate_BrigType(item, it.brig()->type, "OperandConstantImage", "type");
+           validate_BrigImageGeometry(item, it.brig()->geometry, "OperandConstantImage", "geometry");
+           validate_BrigImageChannelOrder(item, it.brig()->channelOrder, "OperandConstantImage", "channelOrder");
+           validate_BrigImageChannelType(item, it.brig()->channelType, "OperandConstantImage", "channelType");
+           for (unsigned i = 0; i < 3; i++) {
+               validate_fld_Reserved(item, it.brig()->reserved[i], "OperandConstantImage", "reserved");
+           }
+           validate_fld_Width(item, it.brig()->width, "OperandConstantImage", "width");
+           validate_fld_Height(item, it.brig()->height, "OperandConstantImage", "height");
+           validate_fld_Depth(item, it.brig()->depth, "OperandConstantImage", "depth");
+           validate_fld_Array(item, it.brig()->array, "OperandConstantImage", "array");
+       }
+       break;
+
+       case BRIG_KIND_OPERAND_CONSTANT_OPERAND_LIST:
+       {
+           OperandConstantOperandList it = item;
+
+           validate_BrigType(item, it.brig()->type, "OperandConstantOperandList", "type");
+           validate_fld_Reserved(item, it.brig()->reserved, "OperandConstantOperandList", "reserved");
+           validate_BrigDataOffsetOperandList(item, it.brig()->elements, "OperandConstantOperandList", "elements");
+       }
+       break;
+
+       case BRIG_KIND_OPERAND_CONSTANT_SAMPLER:
+       {
+           OperandConstantSampler it = item;
+
+           validate_BrigType(item, it.brig()->type, "OperandConstantSampler", "type");
+           validate_BrigSamplerCoordNormalization(item, it.brig()->coord, "OperandConstantSampler", "coord");
+           validate_BrigSamplerFilter(item, it.brig()->filter, "OperandConstantSampler", "filter");
+           validate_BrigSamplerAddressing(item, it.brig()->addressing, "OperandConstantSampler", "addressing");
+           for (unsigned i = 0; i < 3; i++) {
+               validate_fld_Reserved(item, it.brig()->reserved[i], "OperandConstantSampler", "reserved");
+           }
        }
        break;
 
@@ -570,23 +610,12 @@ bool ValidatorImpl::ValidateBrigOperandFields(Operand item) const
        }
        break;
 
-       case BRIG_KIND_OPERAND_REG:
+       case BRIG_KIND_OPERAND_REGISTER:
        {
-           OperandReg it = item;
+           OperandRegister it = item;
 
-           validate_BrigRegisterKind(item, it.brig()->regKind, "OperandReg", "regKind");
-           validate_fld_RegNum(item, it.brig()->regNum, "OperandReg", "regNum");
-       }
-       break;
-
-       case BRIG_KIND_OPERAND_SAMPLER_PROPERTIES:
-       {
-           OperandSamplerProperties it = item;
-
-           validate_BrigSamplerCoordNormalization(item, it.brig()->coord, "OperandSamplerProperties", "coord");
-           validate_BrigSamplerFilter(item, it.brig()->filter, "OperandSamplerProperties", "filter");
-           validate_BrigSamplerAddressing(item, it.brig()->addressing, "OperandSamplerProperties", "addressing");
-           validate_fld_Reserved(item, it.brig()->reserved, "OperandSamplerProperties", "reserved");
+           validate_BrigRegisterKind(item, it.brig()->regKind, "OperandRegister", "regKind");
+           validate_fld_RegNum(item, it.brig()->regNum, "OperandRegister", "regNum");
        }
        break;
 

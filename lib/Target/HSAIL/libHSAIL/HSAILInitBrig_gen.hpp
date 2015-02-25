@@ -80,7 +80,6 @@ void DirectiveExecutable::initBrig() {
   brig()->firstInArg = 0;
   brig()->firstCodeBlockEntry = 0;
   brig()->nextModuleEntry = 0;
-  brig()->codeBlockEntryCount = 0;
   modifier().initBrig();
   brig()->linkage = Brig::BRIG_LINKAGE_NONE;
   brig()->reserved = 0;
@@ -134,6 +133,16 @@ void DirectiveLoc::initBrig() {
   brig()->column = 1;
 }
 
+void DirectiveModule::initBrig() {
+  initBrigBase(sizeof(Brig::BrigDirectiveModule), Brig::BRIG_KIND_DIRECTIVE_MODULE);
+  Directive::initBrig();
+  brig()->name = 0;
+  brig()->profile = Brig::BRIG_PROFILE_FULL;
+  brig()->machineModel = Brig::BRIG_MACHINE_LARGE;
+  brig()->defaultFloatRound = Brig::BRIG_ROUND_NONE;
+  brig()->reserved = 0;
+}
+
 void DirectiveNone::initBrig() {
   initBrigBase(sizeof(Brig::BrigDirectiveNone), Brig::BRIG_KIND_NONE);
   Directive::initBrig();
@@ -156,14 +165,6 @@ void DirectiveVariable::initBrig() {
   modifier().initBrig();
   brig()->linkage = Brig::BRIG_LINKAGE_NONE;
   brig()->allocation = Brig::BRIG_ALLOCATION_NONE;
-  brig()->reserved = 0;
-}
-
-void DirectiveVersion::initBrig() {
-  initBrigBase(sizeof(Brig::BrigDirectiveVersion), Brig::BRIG_KIND_DIRECTIVE_VERSION);
-  Directive::initBrig();
-  brig()->profile = Brig::BRIG_PROFILE_FULL;
-  brig()->machineModel = Brig::BRIG_MACHINE_LARGE;
   brig()->reserved = 0;
 }
 
@@ -210,13 +211,16 @@ void InstCmp::initBrig() {
   Inst::initBrig();
   modifier().initBrig();
   brig()->pack = Brig::BRIG_PACK_NONE;
-  brig()->reserved = 0;
+  for (int i=0;i<3;i++) {
+    brig()->reserved[i] = 0;
+  }
 }
 
 void InstCvt::initBrig() {
   initBrigBase(sizeof(Brig::BrigInstCvt), Brig::BRIG_KIND_INST_CVT);
   Inst::initBrig();
   modifier().initBrig();
+  brig()->round = Brig::BRIG_ROUND_NONE;
 }
 
 void InstImage::initBrig() {
@@ -256,6 +260,7 @@ void InstMod::initBrig() {
   initBrigBase(sizeof(Brig::BrigInstMod), Brig::BRIG_KIND_INST_MOD);
   Inst::initBrig();
   modifier().initBrig();
+  brig()->round = Brig::BRIG_ROUND_NONE;
   brig()->pack = Brig::BRIG_PACK_NONE;
   brig()->reserved = 0;
 }
@@ -329,6 +334,15 @@ void OperandAddress::initBrig() {
   offset().initBrig();
 }
 
+void OperandAlign::initBrig() {
+  initBrigBase(sizeof(Brig::BrigOperandAlign), Brig::BRIG_KIND_OPERAND_ALIGN);
+  Operand::initBrig();
+  brig()->align = Brig::BRIG_ALIGNMENT_NONE;
+  for (int i=0;i<3;i++) {
+    brig()->reserved[i] = 0;
+  }
+}
+
 void OperandCodeList::initBrig() {
   initBrigBase(sizeof(Brig::BrigOperandCodeList), Brig::BRIG_KIND_OPERAND_CODE_LIST);
   Operand::initBrig();
@@ -341,23 +355,43 @@ void OperandCodeRef::initBrig() {
   brig()->ref = 0;
 }
 
-void OperandData::initBrig() {
-  initBrigBase(sizeof(Brig::BrigOperandData), Brig::BRIG_KIND_OPERAND_DATA);
+void OperandConstantBytes::initBrig() {
+  initBrigBase(sizeof(Brig::BrigOperandConstantBytes), Brig::BRIG_KIND_OPERAND_CONSTANT_BYTES);
   Operand::initBrig();
-  brig()->data = 0;
+  brig()->type = 0;
+  brig()->reserved = 0;
+  brig()->bytes = 0;
 }
 
-void OperandImageProperties::initBrig() {
-  initBrigBase(sizeof(Brig::BrigOperandImageProperties), Brig::BRIG_KIND_OPERAND_IMAGE_PROPERTIES);
+void OperandConstantImage::initBrig() {
+  initBrigBase(sizeof(Brig::BrigOperandConstantImage), Brig::BRIG_KIND_OPERAND_CONSTANT_IMAGE);
   Operand::initBrig();
+  brig()->geometry = Brig::BRIG_GEOMETRY_UNKNOWN;
+  brig()->channelOrder = Brig::BRIG_CHANNEL_ORDER_UNKNOWN;
+  brig()->channelType = Brig::BRIG_CHANNEL_TYPE_UNKNOWN;
+  for (int i=0;i<3;i++) {
+    brig()->reserved[i] = 0;
+  }
   width().initBrig();
   height().initBrig();
   depth().initBrig();
   array().initBrig();
-  brig()->geometry = Brig::BRIG_GEOMETRY_UNKNOWN;
-  brig()->channelOrder = Brig::BRIG_CHANNEL_ORDER_UNKNOWN;
-  brig()->channelType = Brig::BRIG_CHANNEL_TYPE_UNKNOWN;
+}
+
+void OperandConstantOperandList::initBrig() {
+  initBrigBase(sizeof(Brig::BrigOperandConstantOperandList), Brig::BRIG_KIND_OPERAND_CONSTANT_OPERAND_LIST);
+  Operand::initBrig();
   brig()->reserved = 0;
+  brig()->elements = 0;
+}
+
+void OperandConstantSampler::initBrig() {
+  initBrigBase(sizeof(Brig::BrigOperandConstantSampler), Brig::BRIG_KIND_OPERAND_CONSTANT_SAMPLER);
+  Operand::initBrig();
+  brig()->addressing = Brig::BRIG_ADDRESSING_CLAMP_TO_EDGE;
+  for (int i=0;i<3;i++) {
+    brig()->reserved[i] = 0;
+  }
 }
 
 void OperandOperandList::initBrig() {
@@ -366,16 +400,9 @@ void OperandOperandList::initBrig() {
   brig()->elements = 0;
 }
 
-void OperandReg::initBrig() {
-  initBrigBase(sizeof(Brig::BrigOperandReg), Brig::BRIG_KIND_OPERAND_REG);
+void OperandRegister::initBrig() {
+  initBrigBase(sizeof(Brig::BrigOperandRegister), Brig::BRIG_KIND_OPERAND_REGISTER);
   Operand::initBrig();
-}
-
-void OperandSamplerProperties::initBrig() {
-  initBrigBase(sizeof(Brig::BrigOperandSamplerProperties), Brig::BRIG_KIND_OPERAND_SAMPLER_PROPERTIES);
-  Operand::initBrig();
-  brig()->addressing = Brig::BRIG_ADDRESSING_CLAMP_TO_EDGE;
-  brig()->reserved = 0;
 }
 
 void OperandString::initBrig() {

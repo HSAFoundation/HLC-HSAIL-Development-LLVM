@@ -96,7 +96,6 @@ void visitBrigProps(Inst inst)
             visitProp(inst, PROP_OPCODE, it.opcode());
             visitProp(inst, PROP_TYPE, it.type());
             visitProp(inst, PROP_SOURCETYPE, it.sourceType());
-            visitProp(inst, PROP_ROUND, it.modifier().round());
             visitProp(inst, PROP_FTZ, it.modifier().ftz());
             visitProp(inst, PROP_COMPARE, it.compare());
             visitProp(inst, PROP_PACK, it.pack());
@@ -110,8 +109,8 @@ void visitBrigProps(Inst inst)
             visitProp(inst, PROP_OPCODE, it.opcode());
             visitProp(inst, PROP_TYPE, it.type());
             visitProp(inst, PROP_SOURCETYPE, it.sourceType());
-            visitProp(inst, PROP_ROUND, it.modifier().round());
             visitProp(inst, PROP_FTZ, it.modifier().ftz());
+            visitProp(inst, PROP_ROUND, it.round());
         }
         break;
 
@@ -172,8 +171,8 @@ void visitBrigProps(Inst inst)
 
             visitProp(inst, PROP_OPCODE, it.opcode());
             visitProp(inst, PROP_TYPE, it.type());
-            visitProp(inst, PROP_ROUND, it.modifier().round());
             visitProp(inst, PROP_FTZ, it.modifier().ftz());
+            visitProp(inst, PROP_ROUND, it.round());
             visitProp(inst, PROP_PACK, it.pack());
         }
         break;

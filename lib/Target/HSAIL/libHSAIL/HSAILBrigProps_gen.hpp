@@ -63,7 +63,7 @@ enum
     PROP_MEMORYSCOPE,         // type = BrigMemoryScope8_t,             acc = memoryScope()
     PROP_OPCODE,              // type = BrigOpcode16_t,                 acc = opcode()
     PROP_PACK,                // type = BrigPack8_t,                    acc = pack()
-    PROP_ROUND,               // type = BrigRound8_t,                   acc = modifier().round()
+    PROP_ROUND,               // type = BrigRound8_t,                   acc = round()
     PROP_SAMPLERQUERY,        // type = BrigSamplerQuery8_t,            acc = samplerQuery()
     PROP_SEGMENT,             // type = BrigSegment8_t,                 acc = segment()
     PROP_SIGNALOPERATION,     // type = BrigAtomicOperation8_t,         acc = signalOperation()
@@ -115,7 +115,6 @@ enum
 //    PROP_OPCODE,
 //    PROP_TYPE,
 //    PROP_SOURCETYPE,
-//    PROP_ROUND,
 //    PROP_FTZ,
 //    PROP_COMPARE,
 //    PROP_PACK,
@@ -127,8 +126,8 @@ enum
 //    PROP_OPCODE,
 //    PROP_TYPE,
 //    PROP_SOURCETYPE,
-//    PROP_ROUND,
 //    PROP_FTZ,
+//    PROP_ROUND,
 //};
 
 
@@ -179,8 +178,8 @@ enum
 //{
 //    PROP_OPCODE,
 //    PROP_TYPE,
-//    PROP_ROUND,
 //    PROP_FTZ,
+//    PROP_ROUND,
 //    PROP_PACK,
 //};
 

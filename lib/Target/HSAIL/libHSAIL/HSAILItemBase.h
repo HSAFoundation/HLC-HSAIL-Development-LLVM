@@ -85,6 +85,11 @@ public:
         memcpy(&m_buffer[pos], p, n);
     }
 
+    void alignBack(unsigned a) {
+        for(unsigned s = m_buffer.size() % a; s > 0; --s)
+          m_buffer.push_back(0);
+    }
+
     size_t numBytes() const { return m_buffer.size(); }
 };
 
@@ -589,7 +594,7 @@ public:
 template <typename DstItem, typename SrcItem>
 inline bool isa(SrcItem src) {
     DstItem dst = src;
-    return dst;
+    return dst!=false;
 }
 
 /// grows an item size. Item should be the last item in it's section.

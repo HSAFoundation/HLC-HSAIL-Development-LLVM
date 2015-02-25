@@ -54,10 +54,10 @@ class DirectiveExtension;
 class DirectiveFbarrier;
 class DirectiveLabel;
 class DirectiveLoc;
+class DirectiveModule;
 class DirectiveNone;
 class DirectivePragma;
 class DirectiveVariable;
-class DirectiveVersion;
 class Inst;
 class InstAddr;
 class InstAtomic;
@@ -81,13 +81,15 @@ class ExecutableModifier;
 class MemoryModifier;
 class Operand;
 class OperandAddress;
+class OperandAlign;
 class OperandCodeList;
 class OperandCodeRef;
-class OperandData;
-class OperandImageProperties;
+class OperandConstantBytes;
+class OperandConstantImage;
+class OperandConstantOperandList;
+class OperandConstantSampler;
 class OperandOperandList;
-class OperandReg;
-class OperandSamplerProperties;
+class OperandRegister;
 class OperandString;
 class OperandWavesize;
 class SegCvtModifier;
@@ -100,8 +102,7 @@ public:
 
 	/// accessors
 	ValRef<uint16_t>                                   allBits();
-	BFValRef<Brig::BrigRound8_t,0,5>                   round();
-	BitValRef<5>                                       ftz();
+	BitValRef<0>                                       ftz();
 
 
 	/// constructors
@@ -121,7 +122,7 @@ public:
 };
 
 class Code : public ItemBase {
-    // children: BrigDirective,BrigDirectiveArgBlockEnd,BrigDirectiveArgBlockStart,BrigDirectiveComment,BrigDirectiveControl,BrigDirectiveExecutable,BrigDirectiveExtension,BrigDirectiveFbarrier,BrigDirectiveFunction,BrigDirectiveIndirectFunction,BrigDirectiveKernel,BrigDirectiveLabel,BrigDirectiveLoc,BrigDirectiveNone,BrigDirectivePragma,BrigDirectiveSignature,BrigDirectiveVariable,BrigDirectiveVersion,BrigInstAddr,BrigInstAtomic,BrigInstBase,BrigInstBasic,BrigInstBr,BrigInstCmp,BrigInstCvt,BrigInstImage,BrigInstLane,BrigInstMem,BrigInstMemFence,BrigInstMod,BrigInstQueryImage,BrigInstQuerySampler,BrigInstQueue,BrigInstSeg,BrigInstSegCvt,BrigInstSignal,BrigInstSourceType
+    // children: BrigDirective,BrigDirectiveArgBlockEnd,BrigDirectiveArgBlockStart,BrigDirectiveComment,BrigDirectiveControl,BrigDirectiveExecutable,BrigDirectiveExtension,BrigDirectiveFbarrier,BrigDirectiveFunction,BrigDirectiveIndirectFunction,BrigDirectiveKernel,BrigDirectiveLabel,BrigDirectiveLoc,BrigDirectiveModule,BrigDirectiveNone,BrigDirectivePragma,BrigDirectiveSignature,BrigDirectiveVariable,BrigInstAddr,BrigInstAtomic,BrigInstBase,BrigInstBasic,BrigInstBr,BrigInstCmp,BrigInstCvt,BrigInstImage,BrigInstLane,BrigInstMem,BrigInstMemFence,BrigInstMod,BrigInstQueryImage,BrigInstQuerySampler,BrigInstQueue,BrigInstSeg,BrigInstSegCvt,BrigInstSignal,BrigInstSourceType
 public:
 
 	typedef Code Kind;
@@ -149,10 +150,10 @@ public:
 		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_KERNEL
 		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_LABEL
 		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_LOC
+		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_MODULE
 		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_PRAGMA
 		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_SIGNATURE
 		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_VARIABLE
-		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_VERSION
 		    || rhs.kind() == Brig::BRIG_KIND_INST_ADDR
 		    || rhs.kind() == Brig::BRIG_KIND_INST_ATOMIC
 		    || rhs.kind() == Brig::BRIG_KIND_INST_BASIC
@@ -188,7 +189,7 @@ public:
 };
 
 class Directive : public Code {
-    // children: BrigDirectiveArgBlockEnd,BrigDirectiveArgBlockStart,BrigDirectiveComment,BrigDirectiveControl,BrigDirectiveExecutable,BrigDirectiveExtension,BrigDirectiveFbarrier,BrigDirectiveFunction,BrigDirectiveIndirectFunction,BrigDirectiveKernel,BrigDirectiveLabel,BrigDirectiveLoc,BrigDirectiveNone,BrigDirectivePragma,BrigDirectiveSignature,BrigDirectiveVariable,BrigDirectiveVersion
+    // children: BrigDirectiveArgBlockEnd,BrigDirectiveArgBlockStart,BrigDirectiveComment,BrigDirectiveControl,BrigDirectiveExecutable,BrigDirectiveExtension,BrigDirectiveFbarrier,BrigDirectiveFunction,BrigDirectiveIndirectFunction,BrigDirectiveKernel,BrigDirectiveLabel,BrigDirectiveLoc,BrigDirectiveModule,BrigDirectiveNone,BrigDirectivePragma,BrigDirectiveSignature,BrigDirectiveVariable
 public:
 
 	/// accessors
@@ -212,10 +213,10 @@ public:
 		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_KERNEL
 		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_LABEL
 		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_LOC
+		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_MODULE
 		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_PRAGMA
 		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_SIGNATURE
 		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_VARIABLE
-		    || rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_VERSION
 		    || rhs.kind() == Brig::BRIG_KIND_NONE;
 	}
 	Directive(const ItemBase& rhs) { assignItem(*this,rhs); }
@@ -354,7 +355,6 @@ public:
 	ItemRef<Code>                                      firstInArg();
 	ItemRef<Code>                                      firstCodeBlockEntry();
 	ItemRef<Code>                                      nextModuleEntry();
-	ValRef<uint32_t>                                   codeBlockEntryCount();
 	ExecutableModifier                                 modifier();
 	EnumValRef<Brig::BrigLinkage,uint8_t>              linkage();
 
@@ -527,7 +527,7 @@ public:
 
 	/// accessors
 	StrRef                                             name();
-	ExecutableModifier                                 modifier();
+	VariableModifier                                   modifier();
 	EnumValRef<Brig::BrigLinkage,uint8_t>              linkage();
 
 
@@ -613,6 +613,40 @@ public:
 	static const char *kindName() { return "DirectiveLoc"; }
 };
 
+class DirectiveModule : public Directive {
+public:
+
+	/// accessors
+	StrRef                                             name();
+	ValRef<uint32_t>                                   hsailMajor();
+	ValRef<uint32_t>                                   hsailMinor();
+	EnumValRef<Brig::BrigProfile,uint8_t>              profile();
+	EnumValRef<Brig::BrigMachineModel,uint8_t>         machineModel();
+	EnumValRef<Brig::BrigRound,uint8_t>                defaultFloatRound();
+
+
+	/// constructors
+	DirectiveModule()                           : Directive() { }
+	DirectiveModule(MySection* s, Offset o)     : Directive(s, o) { }
+	DirectiveModule(BrigContainer* c, Offset o) : Directive(&c->sectionById(SECTION), o) { }
+
+	/// assignment
+	static bool isAssignable(const ItemBase& rhs) {
+		return rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_MODULE;
+	}
+	DirectiveModule(const ItemBase& rhs) { assignItem(*this,rhs); }
+	DirectiveModule& operator=(const ItemBase& rhs) { assignItem(*this,rhs); return *this; }
+
+	/// raw brig access
+	typedef Brig::BrigDirectiveModule BrigStruct;
+	      BrigStruct* brig()       { return reinterpret_cast<BrigStruct*>      (m_section->getData(m_offset)); }
+	const BrigStruct* brig() const { return reinterpret_cast<const BrigStruct*>(m_section->getData(m_offset)); }
+	void initBrig();
+
+	/// final utilities
+	static const char *kindName() { return "DirectiveModule"; }
+};
+
 class DirectiveNone : public Directive {
 public:
 
@@ -677,6 +711,8 @@ public:
 	StrRef                                             name();
 	ItemRef<Operand>                                   init();
 	ValRef<uint16_t>                                   type();
+	bool isArray();
+	unsigned elementType();
 	EnumValRef<Brig::BrigSegment,uint8_t>              segment();
 	EnumValRef<Brig::BrigAlignment,uint8_t>            align();
 	UInt64                                             dim();
@@ -705,40 +741,6 @@ public:
 
 	/// final utilities
 	static const char *kindName() { return "DirectiveVariable"; }
-};
-
-class DirectiveVersion : public Directive {
-public:
-
-	/// accessors
-	ValRef<uint32_t>                                   hsailMajor();
-	ValRef<uint32_t>                                   hsailMinor();
-	ValRef<uint32_t>                                   brigMajor();
-	ValRef<uint32_t>                                   brigMinor();
-	EnumValRef<Brig::BrigProfile,uint8_t>              profile();
-	EnumValRef<Brig::BrigMachineModel,uint8_t>         machineModel();
-
-
-	/// constructors
-	DirectiveVersion()                           : Directive() { }
-	DirectiveVersion(MySection* s, Offset o)     : Directive(s, o) { }
-	DirectiveVersion(BrigContainer* c, Offset o) : Directive(&c->sectionById(SECTION), o) { }
-
-	/// assignment
-	static bool isAssignable(const ItemBase& rhs) {
-		return rhs.kind() == Brig::BRIG_KIND_DIRECTIVE_VERSION;
-	}
-	DirectiveVersion(const ItemBase& rhs) { assignItem(*this,rhs); }
-	DirectiveVersion& operator=(const ItemBase& rhs) { assignItem(*this,rhs); return *this; }
-
-	/// raw brig access
-	typedef Brig::BrigDirectiveVersion BrigStruct;
-	      BrigStruct* brig()       { return reinterpret_cast<BrigStruct*>      (m_section->getData(m_offset)); }
-	const BrigStruct* brig() const { return reinterpret_cast<const BrigStruct*>(m_section->getData(m_offset)); }
-	void initBrig();
-
-	/// final utilities
-	static const char *kindName() { return "DirectiveVersion"; }
 };
 
 class Inst : public Code {
@@ -945,6 +947,7 @@ public:
 	/// accessors
 	ValRef<uint16_t>                                   sourceType();
 	AluModifier                                        modifier();
+	EnumValRef<Brig::BrigRound,uint8_t>                round();
 
 
 	/// constructors
@@ -1101,6 +1104,7 @@ public:
 
 	/// accessors
 	AluModifier                                        modifier();
+	EnumValRef<Brig::BrigRound,uint8_t>                round();
 	EnumValRef<Brig::BrigPack,uint8_t>                 pack();
 
 
@@ -1385,7 +1389,7 @@ public:
 };
 
 class Operand : public ItemBase {
-    // children: BrigOperandAddress,BrigOperandCodeList,BrigOperandCodeRef,BrigOperandData,BrigOperandImageProperties,BrigOperandOperandList,BrigOperandReg,BrigOperandSamplerProperties,BrigOperandString,BrigOperandWavesize
+    // children: BrigOperandAddress,BrigOperandAlign,BrigOperandCodeList,BrigOperandCodeRef,BrigOperandConstantBytes,BrigOperandConstantImage,BrigOperandConstantOperandList,BrigOperandConstantSampler,BrigOperandOperandList,BrigOperandRegister,BrigOperandString,BrigOperandWavesize
 public:
 
 	typedef Operand Kind;
@@ -1403,13 +1407,15 @@ public:
 	/// assignment
 	static bool isAssignable(const ItemBase& rhs) {
 		return rhs.kind() == Brig::BRIG_KIND_OPERAND_ADDRESS
+		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_ALIGN
 		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_CODE_LIST
 		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_CODE_REF
-		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_DATA
-		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_IMAGE_PROPERTIES
+		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_CONSTANT_BYTES
+		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_CONSTANT_IMAGE
+		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_CONSTANT_OPERAND_LIST
+		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_CONSTANT_SAMPLER
 		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_OPERAND_LIST
-		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_REG
-		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_SAMPLER_PROPERTIES
+		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_REGISTER
 		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_STRING
 		    || rhs.kind() == Brig::BRIG_KIND_OPERAND_WAVESIZE;
 	}
@@ -1432,7 +1438,7 @@ public:
 
 	/// accessors
 	ItemRef<DirectiveVariable>                         symbol();
-	ItemRef<OperandReg>                                reg();
+	ItemRef<OperandRegister>                           reg();
 	UInt64                                             offset();
 
 
@@ -1456,6 +1462,35 @@ public:
 
 	/// final utilities
 	static const char *kindName() { return "OperandAddress"; }
+};
+
+class OperandAlign : public Operand {
+public:
+
+	/// accessors
+	EnumValRef<Brig::BrigAlignment,uint8_t>            align();
+
+
+	/// constructors
+	OperandAlign()                           : Operand() { }
+	OperandAlign(MySection* s, Offset o)     : Operand(s, o) { }
+	OperandAlign(BrigContainer* c, Offset o) : Operand(&c->sectionById(SECTION), o) { }
+
+	/// assignment
+	static bool isAssignable(const ItemBase& rhs) {
+		return rhs.kind() == Brig::BRIG_KIND_OPERAND_ALIGN;
+	}
+	OperandAlign(const ItemBase& rhs) { assignItem(*this,rhs); }
+	OperandAlign& operator=(const ItemBase& rhs) { assignItem(*this,rhs); return *this; }
+
+	/// raw brig access
+	typedef Brig::BrigOperandAlign BrigStruct;
+	      BrigStruct* brig()       { return reinterpret_cast<BrigStruct*>      (m_section->getData(m_offset)); }
+	const BrigStruct* brig() const { return reinterpret_cast<const BrigStruct*>(m_section->getData(m_offset)); }
+	void initBrig();
+
+	/// final utilities
+	static const char *kindName() { return "OperandAlign"; }
 };
 
 class OperandCodeList : public Operand {
@@ -1518,68 +1553,134 @@ public:
 	static const char *kindName() { return "OperandCodeRef"; }
 };
 
-class OperandData : public Operand {
+class OperandConstantBytes : public Operand {
 public:
 
 	/// accessors
-	StrRef                                             data();
+	ValRef<uint16_t>                                   type();
+	StrRef                                             bytes();
 
 
 	/// constructors
-	OperandData()                           : Operand() { }
-	OperandData(MySection* s, Offset o)     : Operand(s, o) { }
-	OperandData(BrigContainer* c, Offset o) : Operand(&c->sectionById(SECTION), o) { }
+	OperandConstantBytes()                           : Operand() { }
+	OperandConstantBytes(MySection* s, Offset o)     : Operand(s, o) { }
+	OperandConstantBytes(BrigContainer* c, Offset o) : Operand(&c->sectionById(SECTION), o) { }
 
 	/// assignment
 	static bool isAssignable(const ItemBase& rhs) {
-		return rhs.kind() == Brig::BRIG_KIND_OPERAND_DATA;
+		return rhs.kind() == Brig::BRIG_KIND_OPERAND_CONSTANT_BYTES;
 	}
-	OperandData(const ItemBase& rhs) { assignItem(*this,rhs); }
-	OperandData& operator=(const ItemBase& rhs) { assignItem(*this,rhs); return *this; }
+	OperandConstantBytes(const ItemBase& rhs) { assignItem(*this,rhs); }
+	OperandConstantBytes& operator=(const ItemBase& rhs) { assignItem(*this,rhs); return *this; }
 
 	/// raw brig access
-	typedef Brig::BrigOperandData BrigStruct;
+	typedef Brig::BrigOperandConstantBytes BrigStruct;
 	      BrigStruct* brig()       { return reinterpret_cast<BrigStruct*>      (m_section->getData(m_offset)); }
 	const BrigStruct* brig() const { return reinterpret_cast<const BrigStruct*>(m_section->getData(m_offset)); }
 	void initBrig();
 
 	/// final utilities
-	static const char *kindName() { return "OperandData"; }
+	static const char *kindName() { return "OperandConstantBytes"; }
 };
 
-class OperandImageProperties : public Operand {
+class OperandConstantImage : public Operand {
 public:
 
 	/// accessors
+	ValRef<uint16_t>                                   type();
+	EnumValRef<Brig::BrigImageGeometry,uint8_t>        geometry();
+	EnumValRef<Brig::BrigImageChannelOrder,uint8_t>    channelOrder();
+	EnumValRef<Brig::BrigImageChannelType,uint8_t>     channelType();
 	UInt64                                             width();
 	UInt64                                             height();
 	UInt64                                             depth();
 	UInt64                                             array();
-	EnumValRef<Brig::BrigImageGeometry,uint8_t>        geometry();
-	EnumValRef<Brig::BrigImageChannelOrder,uint8_t>    channelOrder();
-	EnumValRef<Brig::BrigImageChannelType,uint8_t>     channelType();
 
 
 	/// constructors
-	OperandImageProperties()                           : Operand() { }
-	OperandImageProperties(MySection* s, Offset o)     : Operand(s, o) { }
-	OperandImageProperties(BrigContainer* c, Offset o) : Operand(&c->sectionById(SECTION), o) { }
+	OperandConstantImage()                           : Operand() { }
+	OperandConstantImage(MySection* s, Offset o)     : Operand(s, o) { }
+	OperandConstantImage(BrigContainer* c, Offset o) : Operand(&c->sectionById(SECTION), o) { }
 
 	/// assignment
 	static bool isAssignable(const ItemBase& rhs) {
-		return rhs.kind() == Brig::BRIG_KIND_OPERAND_IMAGE_PROPERTIES;
+		return rhs.kind() == Brig::BRIG_KIND_OPERAND_CONSTANT_IMAGE;
 	}
-	OperandImageProperties(const ItemBase& rhs) { assignItem(*this,rhs); }
-	OperandImageProperties& operator=(const ItemBase& rhs) { assignItem(*this,rhs); return *this; }
+	OperandConstantImage(const ItemBase& rhs) { assignItem(*this,rhs); }
+	OperandConstantImage& operator=(const ItemBase& rhs) { assignItem(*this,rhs); return *this; }
 
 	/// raw brig access
-	typedef Brig::BrigOperandImageProperties BrigStruct;
+	typedef Brig::BrigOperandConstantImage BrigStruct;
 	      BrigStruct* brig()       { return reinterpret_cast<BrigStruct*>      (m_section->getData(m_offset)); }
 	const BrigStruct* brig() const { return reinterpret_cast<const BrigStruct*>(m_section->getData(m_offset)); }
 	void initBrig();
 
 	/// final utilities
-	static const char *kindName() { return "OperandImageProperties"; }
+	static const char *kindName() { return "OperandConstantImage"; }
+};
+
+class OperandConstantOperandList : public Operand {
+public:
+
+	/// accessors
+	ValRef<uint16_t>                                   type();
+	ListRef<Operand>                                   elements();
+	unsigned elementCount();
+	Operand elements(int index);
+
+
+	/// constructors
+	OperandConstantOperandList()                           : Operand() { }
+	OperandConstantOperandList(MySection* s, Offset o)     : Operand(s, o) { }
+	OperandConstantOperandList(BrigContainer* c, Offset o) : Operand(&c->sectionById(SECTION), o) { }
+
+	/// assignment
+	static bool isAssignable(const ItemBase& rhs) {
+		return rhs.kind() == Brig::BRIG_KIND_OPERAND_CONSTANT_OPERAND_LIST;
+	}
+	OperandConstantOperandList(const ItemBase& rhs) { assignItem(*this,rhs); }
+	OperandConstantOperandList& operator=(const ItemBase& rhs) { assignItem(*this,rhs); return *this; }
+
+	/// raw brig access
+	typedef Brig::BrigOperandConstantOperandList BrigStruct;
+	      BrigStruct* brig()       { return reinterpret_cast<BrigStruct*>      (m_section->getData(m_offset)); }
+	const BrigStruct* brig() const { return reinterpret_cast<const BrigStruct*>(m_section->getData(m_offset)); }
+	void initBrig();
+
+	/// final utilities
+	static const char *kindName() { return "OperandConstantOperandList"; }
+};
+
+class OperandConstantSampler : public Operand {
+public:
+
+	/// accessors
+	ValRef<uint16_t>                                   type();
+	EnumValRef<Brig::BrigSamplerCoordNormalization,uint8_t> coord();
+	EnumValRef<Brig::BrigSamplerFilter,uint8_t>        filter();
+	EnumValRef<Brig::BrigSamplerAddressing,uint8_t>    addressing();
+
+
+	/// constructors
+	OperandConstantSampler()                           : Operand() { }
+	OperandConstantSampler(MySection* s, Offset o)     : Operand(s, o) { }
+	OperandConstantSampler(BrigContainer* c, Offset o) : Operand(&c->sectionById(SECTION), o) { }
+
+	/// assignment
+	static bool isAssignable(const ItemBase& rhs) {
+		return rhs.kind() == Brig::BRIG_KIND_OPERAND_CONSTANT_SAMPLER;
+	}
+	OperandConstantSampler(const ItemBase& rhs) { assignItem(*this,rhs); }
+	OperandConstantSampler& operator=(const ItemBase& rhs) { assignItem(*this,rhs); return *this; }
+
+	/// raw brig access
+	typedef Brig::BrigOperandConstantSampler BrigStruct;
+	      BrigStruct* brig()       { return reinterpret_cast<BrigStruct*>      (m_section->getData(m_offset)); }
+	const BrigStruct* brig() const { return reinterpret_cast<const BrigStruct*>(m_section->getData(m_offset)); }
+	void initBrig();
+
+	/// final utilities
+	static const char *kindName() { return "OperandConstantSampler"; }
 };
 
 class OperandOperandList : public Operand {
@@ -1613,7 +1714,7 @@ public:
 	static const char *kindName() { return "OperandOperandList"; }
 };
 
-class OperandReg : public Operand {
+class OperandRegister : public Operand {
 public:
 
 	/// accessors
@@ -1622,56 +1723,25 @@ public:
 
 
 	/// constructors
-	OperandReg()                           : Operand() { }
-	OperandReg(MySection* s, Offset o)     : Operand(s, o) { }
-	OperandReg(BrigContainer* c, Offset o) : Operand(&c->sectionById(SECTION), o) { }
+	OperandRegister()                           : Operand() { }
+	OperandRegister(MySection* s, Offset o)     : Operand(s, o) { }
+	OperandRegister(BrigContainer* c, Offset o) : Operand(&c->sectionById(SECTION), o) { }
 
 	/// assignment
 	static bool isAssignable(const ItemBase& rhs) {
-		return rhs.kind() == Brig::BRIG_KIND_OPERAND_REG;
+		return rhs.kind() == Brig::BRIG_KIND_OPERAND_REGISTER;
 	}
-	OperandReg(const ItemBase& rhs) { assignItem(*this,rhs); }
-	OperandReg& operator=(const ItemBase& rhs) { assignItem(*this,rhs); return *this; }
+	OperandRegister(const ItemBase& rhs) { assignItem(*this,rhs); }
+	OperandRegister& operator=(const ItemBase& rhs) { assignItem(*this,rhs); return *this; }
 
 	/// raw brig access
-	typedef Brig::BrigOperandReg BrigStruct;
+	typedef Brig::BrigOperandRegister BrigStruct;
 	      BrigStruct* brig()       { return reinterpret_cast<BrigStruct*>      (m_section->getData(m_offset)); }
 	const BrigStruct* brig() const { return reinterpret_cast<const BrigStruct*>(m_section->getData(m_offset)); }
 	void initBrig();
 
 	/// final utilities
-	static const char *kindName() { return "OperandReg"; }
-};
-
-class OperandSamplerProperties : public Operand {
-public:
-
-	/// accessors
-	EnumValRef<Brig::BrigSamplerCoordNormalization,uint8_t> coord();
-	EnumValRef<Brig::BrigSamplerFilter,uint8_t>        filter();
-	EnumValRef<Brig::BrigSamplerAddressing,uint8_t>    addressing();
-
-
-	/// constructors
-	OperandSamplerProperties()                           : Operand() { }
-	OperandSamplerProperties(MySection* s, Offset o)     : Operand(s, o) { }
-	OperandSamplerProperties(BrigContainer* c, Offset o) : Operand(&c->sectionById(SECTION), o) { }
-
-	/// assignment
-	static bool isAssignable(const ItemBase& rhs) {
-		return rhs.kind() == Brig::BRIG_KIND_OPERAND_SAMPLER_PROPERTIES;
-	}
-	OperandSamplerProperties(const ItemBase& rhs) { assignItem(*this,rhs); }
-	OperandSamplerProperties& operator=(const ItemBase& rhs) { assignItem(*this,rhs); return *this; }
-
-	/// raw brig access
-	typedef Brig::BrigOperandSamplerProperties BrigStruct;
-	      BrigStruct* brig()       { return reinterpret_cast<BrigStruct*>      (m_section->getData(m_offset)); }
-	const BrigStruct* brig() const { return reinterpret_cast<const BrigStruct*>(m_section->getData(m_offset)); }
-	void initBrig();
-
-	/// final utilities
-	static const char *kindName() { return "OperandSamplerProperties"; }
+	static const char *kindName() { return "OperandRegister"; }
 };
 
 class OperandString : public Operand {
@@ -1788,8 +1858,7 @@ public:
 	ValRef<uint8_t>                                    allBits();
 	BitValRef<0>                                       isDefinition();
 	BitValRef<1>                                       isConst();
-	BitValRef<2>                                       isArray();
-	BitValRef<3>                                       isFlexArray();
+	BitValRef<2>                                       isFlexArray();
 
 
 	/// constructors

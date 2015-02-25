@@ -122,7 +122,6 @@ void setBrigProp(Inst inst, unsigned propId, unsigned val, bool ignoreErrors)
             case PROP_OPCODE: it.opcode() = val; break;
             case PROP_TYPE: it.type() = val; break;
             case PROP_SOURCETYPE: it.sourceType() = val; break;
-            case PROP_ROUND: it.modifier().round() = val; break;
             case PROP_FTZ: it.modifier().ftz() = (val != 0); break;
             case PROP_COMPARE: it.compare() = val; break;
             case PROP_PACK: it.pack() = val; break;
@@ -142,8 +141,8 @@ void setBrigProp(Inst inst, unsigned propId, unsigned val, bool ignoreErrors)
             case PROP_OPCODE: it.opcode() = val; break;
             case PROP_TYPE: it.type() = val; break;
             case PROP_SOURCETYPE: it.sourceType() = val; break;
-            case PROP_ROUND: it.modifier().round() = val; break;
             case PROP_FTZ: it.modifier().ftz() = (val != 0); break;
+            case PROP_ROUND: it.round() = val; break;
             default:
                 assert(ignoreErrors);
                 break;
@@ -234,8 +233,8 @@ void setBrigProp(Inst inst, unsigned propId, unsigned val, bool ignoreErrors)
             {
             case PROP_OPCODE: it.opcode() = val; break;
             case PROP_TYPE: it.type() = val; break;
-            case PROP_ROUND: it.modifier().round() = val; break;
             case PROP_FTZ: it.modifier().ftz() = (val != 0); break;
+            case PROP_ROUND: it.round() = val; break;
             case PROP_PACK: it.pack() = val; break;
             default:
                 assert(ignoreErrors);
@@ -452,7 +451,6 @@ unsigned getBrigProp(Inst inst, unsigned propId, bool ignoreErrors, unsigned def
             case PROP_OPCODE: return it.opcode();
             case PROP_TYPE: return it.type();
             case PROP_SOURCETYPE: return it.sourceType();
-            case PROP_ROUND: return it.modifier().round();
             case PROP_FTZ: return it.modifier().ftz();
             case PROP_COMPARE: return it.compare();
             case PROP_PACK: return it.pack();
@@ -472,8 +470,8 @@ unsigned getBrigProp(Inst inst, unsigned propId, bool ignoreErrors, unsigned def
             case PROP_OPCODE: return it.opcode();
             case PROP_TYPE: return it.type();
             case PROP_SOURCETYPE: return it.sourceType();
-            case PROP_ROUND: return it.modifier().round();
             case PROP_FTZ: return it.modifier().ftz();
+            case PROP_ROUND: return it.round();
             default:
                 assert(ignoreErrors);
                 break;
@@ -564,8 +562,8 @@ unsigned getBrigProp(Inst inst, unsigned propId, bool ignoreErrors, unsigned def
             {
             case PROP_OPCODE: return it.opcode();
             case PROP_TYPE: return it.type();
-            case PROP_ROUND: return it.modifier().round();
             case PROP_FTZ: return it.modifier().ftz();
+            case PROP_ROUND: return it.round();
             case PROP_PACK: return it.pack();
             default:
                 assert(ignoreErrors);

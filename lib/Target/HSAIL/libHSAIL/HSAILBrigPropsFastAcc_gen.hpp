@@ -57,7 +57,7 @@ template<class T> static unsigned getMemoryOrder(T inst) { assert(inst); return 
 template<class T> static unsigned getMemoryScope(T inst) { assert(inst); return inst.memoryScope(); }
 template<class T> static unsigned getOpcode(T inst) { assert(inst); return inst.opcode(); }
 template<class T> static unsigned getPack(T inst) { assert(inst); return inst.pack(); }
-template<class T> static unsigned getRound(T inst) { assert(inst); return inst.modifier().round(); }
+template<class T> static unsigned getRound(T inst) { assert(inst); return inst.round(); }
 template<class T> static unsigned getSamplerQuery(T inst) { assert(inst); return inst.samplerQuery(); }
 template<class T> static unsigned getSegment(T inst) { assert(inst); return inst.segment(); }
 template<class T> static unsigned getSignalOperation(T inst) { assert(inst); return inst.signalOperation(); }

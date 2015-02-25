@@ -45,7 +45,7 @@ OpcodeParser getOpcodeParser(Brig::BrigOpcode16_t arg) {
     case BRIG_OPCODE_ACTIVELANECOUNT    : return parseMnemoLane;
     case BRIG_OPCODE_ACTIVELANEID       : return parseMnemoLane;
     case BRIG_OPCODE_ACTIVELANEMASK     : return parseMnemoLane;
-    case BRIG_OPCODE_ACTIVELANESHUFFLE  : return parseMnemoLane;
+    case BRIG_OPCODE_ACTIVELANEPERMUTE  : return parseMnemoLane;
     case BRIG_OPCODE_ADD                : return parseMnemoBasicOrMod;
     case BRIG_OPCODE_ADDQUEUEWRITEINDEX : return parseMnemoQueue;
     case BRIG_OPCODE_ALLOCA             : return parseMnemoMem;
@@ -74,13 +74,19 @@ OpcodeParser getOpcodeParser(Brig::BrigOpcode16_t arg) {
     case BRIG_OPCODE_GCNATOMIC          : return parseMnemoAtomic;
     case BRIG_OPCODE_GCNATOMICNORET     : return parseMnemoAtomic;
     case BRIG_OPCODE_GCNCONSUME         : return parseMnemoAddr;
+    case BRIG_OPCODE_GCNDIVRELAXED      : return parseMnemoBasicOrMod;
+    case BRIG_OPCODE_GCNFLDEXP          : return parseMnemoBasicOrMod;
+    case BRIG_OPCODE_GCNFREXP_EXP       : return parseMnemoBasicOrMod;
+    case BRIG_OPCODE_GCNFREXP_MANT      : return parseMnemoBasicOrMod;
     case BRIG_OPCODE_GCNLD              : return parseMnemoMem;
     case BRIG_OPCODE_GCNMADS            : return parseMnemoBasicNoType;
     case BRIG_OPCODE_GCNMADU            : return parseMnemoBasicNoType;
     case BRIG_OPCODE_GCNMQSAD4          : return parseMnemoBasicNoType;
     case BRIG_OPCODE_GCNREGIONALLOC     : return parseMnemoBasicNoType;
     case BRIG_OPCODE_GCNST              : return parseMnemoMem;
+    case BRIG_OPCODE_GCNTRIG_PREOP      : return parseMnemoBasicOrMod;
     case BRIG_OPCODE_ICALL              : return parseMnemoBr;
+    case BRIG_OPCODE_IMAGEFENCE         : return parseMnemoBasicNoType;
     case BRIG_OPCODE_INITFBAR           : return parseMnemoBasicNoType;
     case BRIG_OPCODE_JOINFBAR           : return parseMnemoBr;
     case BRIG_OPCODE_LASTBIT            : return parseMnemoSourceType;
@@ -90,6 +96,7 @@ OpcodeParser getOpcodeParser(Brig::BrigOpcode16_t arg) {
     case BRIG_OPCODE_LDQUEUEREADINDEX   : return parseMnemoQueue;
     case BRIG_OPCODE_LDQUEUEWRITEINDEX  : return parseMnemoQueue;
     case BRIG_OPCODE_LEAVEFBAR          : return parseMnemoBr;
+    case BRIG_OPCODE_MAD                : return parseMnemoBasicOrMod;
     case BRIG_OPCODE_MAX                : return parseMnemoBasicOrMod;
     case BRIG_OPCODE_MEMFENCE           : return parseMnemoMemFence;
     case BRIG_OPCODE_MIN                : return parseMnemoBasicOrMod;

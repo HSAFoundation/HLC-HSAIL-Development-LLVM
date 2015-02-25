@@ -63,8 +63,7 @@ static_assert(offsetof(Brig::BrigDirectiveExecutable, outArgCount)+sizeof(((Brig
 static_assert(offsetof(Brig::BrigDirectiveExecutable, inArgCount)+sizeof(((Brig::BrigDirectiveExecutable*)0)->inArgCount) == offsetof(Brig::BrigDirectiveExecutable,firstInArg), "bad alignment in Brig::BrigDirectiveExecutable");
 static_assert(offsetof(Brig::BrigDirectiveExecutable, firstInArg)+sizeof(((Brig::BrigDirectiveExecutable*)0)->firstInArg) == offsetof(Brig::BrigDirectiveExecutable,firstCodeBlockEntry), "bad alignment in Brig::BrigDirectiveExecutable");
 static_assert(offsetof(Brig::BrigDirectiveExecutable, firstCodeBlockEntry)+sizeof(((Brig::BrigDirectiveExecutable*)0)->firstCodeBlockEntry) == offsetof(Brig::BrigDirectiveExecutable,nextModuleEntry), "bad alignment in Brig::BrigDirectiveExecutable");
-static_assert(offsetof(Brig::BrigDirectiveExecutable, nextModuleEntry)+sizeof(((Brig::BrigDirectiveExecutable*)0)->nextModuleEntry) == offsetof(Brig::BrigDirectiveExecutable,codeBlockEntryCount), "bad alignment in Brig::BrigDirectiveExecutable");
-static_assert(offsetof(Brig::BrigDirectiveExecutable, codeBlockEntryCount)+sizeof(((Brig::BrigDirectiveExecutable*)0)->codeBlockEntryCount) == offsetof(Brig::BrigDirectiveExecutable,modifier), "bad alignment in Brig::BrigDirectiveExecutable");
+static_assert(offsetof(Brig::BrigDirectiveExecutable, nextModuleEntry)+sizeof(((Brig::BrigDirectiveExecutable*)0)->nextModuleEntry) == offsetof(Brig::BrigDirectiveExecutable,modifier), "bad alignment in Brig::BrigDirectiveExecutable");
 static_assert(offsetof(Brig::BrigDirectiveExecutable, modifier)+sizeof(((Brig::BrigDirectiveExecutable*)0)->modifier) == offsetof(Brig::BrigDirectiveExecutable,linkage), "bad alignment in Brig::BrigDirectiveExecutable");
 static_assert(offsetof(Brig::BrigDirectiveExecutable, linkage)+sizeof(((Brig::BrigDirectiveExecutable*)0)->linkage) == offsetof(Brig::BrigDirectiveExecutable,reserved), "bad alignment in Brig::BrigDirectiveExecutable");
 static_assert(offsetof(Brig::BrigDirectiveExecutable, reserved)+sizeof(((Brig::BrigDirectiveExecutable*)0)->reserved) == sizeof(Brig::BrigDirectiveExecutable), "bad alignment in Brig::BrigDirectiveExecutable");
@@ -90,6 +89,15 @@ static_assert(offsetof(Brig::BrigDirectiveLoc, filename)+sizeof(((Brig::BrigDire
 static_assert(offsetof(Brig::BrigDirectiveLoc, line)+sizeof(((Brig::BrigDirectiveLoc*)0)->line) == offsetof(Brig::BrigDirectiveLoc,column), "bad alignment in Brig::BrigDirectiveLoc");
 static_assert(offsetof(Brig::BrigDirectiveLoc, column)+sizeof(((Brig::BrigDirectiveLoc*)0)->column) == sizeof(Brig::BrigDirectiveLoc), "bad alignment in Brig::BrigDirectiveLoc");
 
+static_assert(offsetof(Brig::BrigDirectiveModule, base) == 0, "bad alignment in Brig::BrigDirectiveModule");
+static_assert(offsetof(Brig::BrigDirectiveModule, name)+sizeof(((Brig::BrigDirectiveModule*)0)->name) == offsetof(Brig::BrigDirectiveModule,hsailMajor), "bad alignment in Brig::BrigDirectiveModule");
+static_assert(offsetof(Brig::BrigDirectiveModule, hsailMajor)+sizeof(((Brig::BrigDirectiveModule*)0)->hsailMajor) == offsetof(Brig::BrigDirectiveModule,hsailMinor), "bad alignment in Brig::BrigDirectiveModule");
+static_assert(offsetof(Brig::BrigDirectiveModule, hsailMinor)+sizeof(((Brig::BrigDirectiveModule*)0)->hsailMinor) == offsetof(Brig::BrigDirectiveModule,profile), "bad alignment in Brig::BrigDirectiveModule");
+static_assert(offsetof(Brig::BrigDirectiveModule, profile)+sizeof(((Brig::BrigDirectiveModule*)0)->profile) == offsetof(Brig::BrigDirectiveModule,machineModel), "bad alignment in Brig::BrigDirectiveModule");
+static_assert(offsetof(Brig::BrigDirectiveModule, machineModel)+sizeof(((Brig::BrigDirectiveModule*)0)->machineModel) == offsetof(Brig::BrigDirectiveModule,defaultFloatRound), "bad alignment in Brig::BrigDirectiveModule");
+static_assert(offsetof(Brig::BrigDirectiveModule, defaultFloatRound)+sizeof(((Brig::BrigDirectiveModule*)0)->defaultFloatRound) == offsetof(Brig::BrigDirectiveModule,reserved), "bad alignment in Brig::BrigDirectiveModule");
+static_assert(offsetof(Brig::BrigDirectiveModule, reserved)+sizeof(((Brig::BrigDirectiveModule*)0)->reserved) == sizeof(Brig::BrigDirectiveModule), "bad alignment in Brig::BrigDirectiveModule");
+
 static_assert(offsetof(Brig::BrigDirectiveNone, base) == 0, "bad alignment in Brig::BrigDirectiveNone");
 static_assert(offsetof(Brig::BrigDirectiveNone, base)+sizeof(((Brig::BrigDirectiveNone*)0)->base) == sizeof(Brig::BrigDirectiveNone), "bad alignment in Brig::BrigDirectiveNone");
 
@@ -107,15 +115,6 @@ static_assert(offsetof(Brig::BrigDirectiveVariable, modifier)+sizeof(((Brig::Bri
 static_assert(offsetof(Brig::BrigDirectiveVariable, linkage)+sizeof(((Brig::BrigDirectiveVariable*)0)->linkage) == offsetof(Brig::BrigDirectiveVariable,allocation), "bad alignment in Brig::BrigDirectiveVariable");
 static_assert(offsetof(Brig::BrigDirectiveVariable, allocation)+sizeof(((Brig::BrigDirectiveVariable*)0)->allocation) == offsetof(Brig::BrigDirectiveVariable,reserved), "bad alignment in Brig::BrigDirectiveVariable");
 static_assert(offsetof(Brig::BrigDirectiveVariable, reserved)+sizeof(((Brig::BrigDirectiveVariable*)0)->reserved) == sizeof(Brig::BrigDirectiveVariable), "bad alignment in Brig::BrigDirectiveVariable");
-
-static_assert(offsetof(Brig::BrigDirectiveVersion, base) == 0, "bad alignment in Brig::BrigDirectiveVersion");
-static_assert(offsetof(Brig::BrigDirectiveVersion, hsailMajor)+sizeof(((Brig::BrigDirectiveVersion*)0)->hsailMajor) == offsetof(Brig::BrigDirectiveVersion,hsailMinor), "bad alignment in Brig::BrigDirectiveVersion");
-static_assert(offsetof(Brig::BrigDirectiveVersion, hsailMinor)+sizeof(((Brig::BrigDirectiveVersion*)0)->hsailMinor) == offsetof(Brig::BrigDirectiveVersion,brigMajor), "bad alignment in Brig::BrigDirectiveVersion");
-static_assert(offsetof(Brig::BrigDirectiveVersion, brigMajor)+sizeof(((Brig::BrigDirectiveVersion*)0)->brigMajor) == offsetof(Brig::BrigDirectiveVersion,brigMinor), "bad alignment in Brig::BrigDirectiveVersion");
-static_assert(offsetof(Brig::BrigDirectiveVersion, brigMinor)+sizeof(((Brig::BrigDirectiveVersion*)0)->brigMinor) == offsetof(Brig::BrigDirectiveVersion,profile), "bad alignment in Brig::BrigDirectiveVersion");
-static_assert(offsetof(Brig::BrigDirectiveVersion, profile)+sizeof(((Brig::BrigDirectiveVersion*)0)->profile) == offsetof(Brig::BrigDirectiveVersion,machineModel), "bad alignment in Brig::BrigDirectiveVersion");
-static_assert(offsetof(Brig::BrigDirectiveVersion, machineModel)+sizeof(((Brig::BrigDirectiveVersion*)0)->machineModel) == offsetof(Brig::BrigDirectiveVersion,reserved), "bad alignment in Brig::BrigDirectiveVersion");
-static_assert(offsetof(Brig::BrigDirectiveVersion, reserved)+sizeof(((Brig::BrigDirectiveVersion*)0)->reserved) == sizeof(Brig::BrigDirectiveVersion), "bad alignment in Brig::BrigDirectiveVersion");
 
 static_assert(offsetof(Brig::BrigInstBase, base) == 0, "bad alignment in Brig::BrigInstBase");
 static_assert(offsetof(Brig::BrigInstBase, opcode)+sizeof(((Brig::BrigInstBase*)0)->opcode) == offsetof(Brig::BrigInstBase,type), "bad alignment in Brig::BrigInstBase");
@@ -150,7 +149,8 @@ static_assert(offsetof(Brig::BrigInstCmp, reserved)+sizeof(((Brig::BrigInstCmp*)
 
 static_assert(offsetof(Brig::BrigInstCvt, base) == 0, "bad alignment in Brig::BrigInstCvt");
 static_assert(offsetof(Brig::BrigInstCvt, sourceType)+sizeof(((Brig::BrigInstCvt*)0)->sourceType) == offsetof(Brig::BrigInstCvt,modifier), "bad alignment in Brig::BrigInstCvt");
-static_assert(offsetof(Brig::BrigInstCvt, modifier)+sizeof(((Brig::BrigInstCvt*)0)->modifier) == sizeof(Brig::BrigInstCvt), "bad alignment in Brig::BrigInstCvt");
+static_assert(offsetof(Brig::BrigInstCvt, modifier)+sizeof(((Brig::BrigInstCvt*)0)->modifier) == offsetof(Brig::BrigInstCvt,round), "bad alignment in Brig::BrigInstCvt");
+static_assert(offsetof(Brig::BrigInstCvt, round)+sizeof(((Brig::BrigInstCvt*)0)->round) == sizeof(Brig::BrigInstCvt), "bad alignment in Brig::BrigInstCvt");
 
 static_assert(offsetof(Brig::BrigInstImage, base) == 0, "bad alignment in Brig::BrigInstImage");
 static_assert(offsetof(Brig::BrigInstImage, imageType)+sizeof(((Brig::BrigInstImage*)0)->imageType) == offsetof(Brig::BrigInstImage,coordType), "bad alignment in Brig::BrigInstImage");
@@ -179,7 +179,8 @@ static_assert(offsetof(Brig::BrigInstMemFence, groupSegmentMemoryScope)+sizeof((
 static_assert(offsetof(Brig::BrigInstMemFence, imageSegmentMemoryScope)+sizeof(((Brig::BrigInstMemFence*)0)->imageSegmentMemoryScope) == sizeof(Brig::BrigInstMemFence), "bad alignment in Brig::BrigInstMemFence");
 
 static_assert(offsetof(Brig::BrigInstMod, base) == 0, "bad alignment in Brig::BrigInstMod");
-static_assert(offsetof(Brig::BrigInstMod, modifier)+sizeof(((Brig::BrigInstMod*)0)->modifier) == offsetof(Brig::BrigInstMod,pack), "bad alignment in Brig::BrigInstMod");
+static_assert(offsetof(Brig::BrigInstMod, modifier)+sizeof(((Brig::BrigInstMod*)0)->modifier) == offsetof(Brig::BrigInstMod,round), "bad alignment in Brig::BrigInstMod");
+static_assert(offsetof(Brig::BrigInstMod, round)+sizeof(((Brig::BrigInstMod*)0)->round) == offsetof(Brig::BrigInstMod,pack), "bad alignment in Brig::BrigInstMod");
 static_assert(offsetof(Brig::BrigInstMod, pack)+sizeof(((Brig::BrigInstMod*)0)->pack) == offsetof(Brig::BrigInstMod,reserved), "bad alignment in Brig::BrigInstMod");
 static_assert(offsetof(Brig::BrigInstMod, reserved)+sizeof(((Brig::BrigInstMod*)0)->reserved) == sizeof(Brig::BrigInstMod), "bad alignment in Brig::BrigInstMod");
 
@@ -227,37 +228,50 @@ static_assert(offsetof(Brig::BrigOperandAddress, symbol)+sizeof(((Brig::BrigOper
 static_assert(offsetof(Brig::BrigOperandAddress, reg)+sizeof(((Brig::BrigOperandAddress*)0)->reg) == offsetof(Brig::BrigOperandAddress,offset), "bad alignment in Brig::BrigOperandAddress");
 static_assert(offsetof(Brig::BrigOperandAddress, offset)+sizeof(((Brig::BrigOperandAddress*)0)->offset) == sizeof(Brig::BrigOperandAddress), "bad alignment in Brig::BrigOperandAddress");
 
+static_assert(offsetof(Brig::BrigOperandAlign, base) == 0, "bad alignment in Brig::BrigOperandAlign");
+static_assert(offsetof(Brig::BrigOperandAlign, align)+sizeof(((Brig::BrigOperandAlign*)0)->align) == offsetof(Brig::BrigOperandAlign,reserved), "bad alignment in Brig::BrigOperandAlign");
+static_assert(offsetof(Brig::BrigOperandAlign, reserved)+sizeof(((Brig::BrigOperandAlign*)0)->reserved) == sizeof(Brig::BrigOperandAlign), "bad alignment in Brig::BrigOperandAlign");
+
 static_assert(offsetof(Brig::BrigOperandCodeList, base) == 0, "bad alignment in Brig::BrigOperandCodeList");
 static_assert(offsetof(Brig::BrigOperandCodeList, elements)+sizeof(((Brig::BrigOperandCodeList*)0)->elements) == sizeof(Brig::BrigOperandCodeList), "bad alignment in Brig::BrigOperandCodeList");
 
 static_assert(offsetof(Brig::BrigOperandCodeRef, base) == 0, "bad alignment in Brig::BrigOperandCodeRef");
 static_assert(offsetof(Brig::BrigOperandCodeRef, ref)+sizeof(((Brig::BrigOperandCodeRef*)0)->ref) == sizeof(Brig::BrigOperandCodeRef), "bad alignment in Brig::BrigOperandCodeRef");
 
-static_assert(offsetof(Brig::BrigOperandData, base) == 0, "bad alignment in Brig::BrigOperandData");
-static_assert(offsetof(Brig::BrigOperandData, data)+sizeof(((Brig::BrigOperandData*)0)->data) == sizeof(Brig::BrigOperandData), "bad alignment in Brig::BrigOperandData");
+static_assert(offsetof(Brig::BrigOperandConstantBytes, base) == 0, "bad alignment in Brig::BrigOperandConstantBytes");
+static_assert(offsetof(Brig::BrigOperandConstantBytes, type)+sizeof(((Brig::BrigOperandConstantBytes*)0)->type) == offsetof(Brig::BrigOperandConstantBytes,reserved), "bad alignment in Brig::BrigOperandConstantBytes");
+static_assert(offsetof(Brig::BrigOperandConstantBytes, reserved)+sizeof(((Brig::BrigOperandConstantBytes*)0)->reserved) == offsetof(Brig::BrigOperandConstantBytes,bytes), "bad alignment in Brig::BrigOperandConstantBytes");
+static_assert(offsetof(Brig::BrigOperandConstantBytes, bytes)+sizeof(((Brig::BrigOperandConstantBytes*)0)->bytes) == sizeof(Brig::BrigOperandConstantBytes), "bad alignment in Brig::BrigOperandConstantBytes");
 
-static_assert(offsetof(Brig::BrigOperandImageProperties, base) == 0, "bad alignment in Brig::BrigOperandImageProperties");
-static_assert(offsetof(Brig::BrigOperandImageProperties, width)+sizeof(((Brig::BrigOperandImageProperties*)0)->width) == offsetof(Brig::BrigOperandImageProperties,height), "bad alignment in Brig::BrigOperandImageProperties");
-static_assert(offsetof(Brig::BrigOperandImageProperties, height)+sizeof(((Brig::BrigOperandImageProperties*)0)->height) == offsetof(Brig::BrigOperandImageProperties,depth), "bad alignment in Brig::BrigOperandImageProperties");
-static_assert(offsetof(Brig::BrigOperandImageProperties, depth)+sizeof(((Brig::BrigOperandImageProperties*)0)->depth) == offsetof(Brig::BrigOperandImageProperties,array), "bad alignment in Brig::BrigOperandImageProperties");
-static_assert(offsetof(Brig::BrigOperandImageProperties, array)+sizeof(((Brig::BrigOperandImageProperties*)0)->array) == offsetof(Brig::BrigOperandImageProperties,geometry), "bad alignment in Brig::BrigOperandImageProperties");
-static_assert(offsetof(Brig::BrigOperandImageProperties, geometry)+sizeof(((Brig::BrigOperandImageProperties*)0)->geometry) == offsetof(Brig::BrigOperandImageProperties,channelOrder), "bad alignment in Brig::BrigOperandImageProperties");
-static_assert(offsetof(Brig::BrigOperandImageProperties, channelOrder)+sizeof(((Brig::BrigOperandImageProperties*)0)->channelOrder) == offsetof(Brig::BrigOperandImageProperties,channelType), "bad alignment in Brig::BrigOperandImageProperties");
-static_assert(offsetof(Brig::BrigOperandImageProperties, channelType)+sizeof(((Brig::BrigOperandImageProperties*)0)->channelType) == offsetof(Brig::BrigOperandImageProperties,reserved), "bad alignment in Brig::BrigOperandImageProperties");
-static_assert(offsetof(Brig::BrigOperandImageProperties, reserved)+sizeof(((Brig::BrigOperandImageProperties*)0)->reserved) == sizeof(Brig::BrigOperandImageProperties), "bad alignment in Brig::BrigOperandImageProperties");
+static_assert(offsetof(Brig::BrigOperandConstantImage, base) == 0, "bad alignment in Brig::BrigOperandConstantImage");
+static_assert(offsetof(Brig::BrigOperandConstantImage, type)+sizeof(((Brig::BrigOperandConstantImage*)0)->type) == offsetof(Brig::BrigOperandConstantImage,geometry), "bad alignment in Brig::BrigOperandConstantImage");
+static_assert(offsetof(Brig::BrigOperandConstantImage, geometry)+sizeof(((Brig::BrigOperandConstantImage*)0)->geometry) == offsetof(Brig::BrigOperandConstantImage,channelOrder), "bad alignment in Brig::BrigOperandConstantImage");
+static_assert(offsetof(Brig::BrigOperandConstantImage, channelOrder)+sizeof(((Brig::BrigOperandConstantImage*)0)->channelOrder) == offsetof(Brig::BrigOperandConstantImage,channelType), "bad alignment in Brig::BrigOperandConstantImage");
+static_assert(offsetof(Brig::BrigOperandConstantImage, channelType)+sizeof(((Brig::BrigOperandConstantImage*)0)->channelType) == offsetof(Brig::BrigOperandConstantImage,reserved), "bad alignment in Brig::BrigOperandConstantImage");
+static_assert(offsetof(Brig::BrigOperandConstantImage, reserved)+sizeof(((Brig::BrigOperandConstantImage*)0)->reserved) == offsetof(Brig::BrigOperandConstantImage,width), "bad alignment in Brig::BrigOperandConstantImage");
+static_assert(offsetof(Brig::BrigOperandConstantImage, width)+sizeof(((Brig::BrigOperandConstantImage*)0)->width) == offsetof(Brig::BrigOperandConstantImage,height), "bad alignment in Brig::BrigOperandConstantImage");
+static_assert(offsetof(Brig::BrigOperandConstantImage, height)+sizeof(((Brig::BrigOperandConstantImage*)0)->height) == offsetof(Brig::BrigOperandConstantImage,depth), "bad alignment in Brig::BrigOperandConstantImage");
+static_assert(offsetof(Brig::BrigOperandConstantImage, depth)+sizeof(((Brig::BrigOperandConstantImage*)0)->depth) == offsetof(Brig::BrigOperandConstantImage,array), "bad alignment in Brig::BrigOperandConstantImage");
+static_assert(offsetof(Brig::BrigOperandConstantImage, array)+sizeof(((Brig::BrigOperandConstantImage*)0)->array) == sizeof(Brig::BrigOperandConstantImage), "bad alignment in Brig::BrigOperandConstantImage");
+
+static_assert(offsetof(Brig::BrigOperandConstantOperandList, base) == 0, "bad alignment in Brig::BrigOperandConstantOperandList");
+static_assert(offsetof(Brig::BrigOperandConstantOperandList, type)+sizeof(((Brig::BrigOperandConstantOperandList*)0)->type) == offsetof(Brig::BrigOperandConstantOperandList,reserved), "bad alignment in Brig::BrigOperandConstantOperandList");
+static_assert(offsetof(Brig::BrigOperandConstantOperandList, reserved)+sizeof(((Brig::BrigOperandConstantOperandList*)0)->reserved) == offsetof(Brig::BrigOperandConstantOperandList,elements), "bad alignment in Brig::BrigOperandConstantOperandList");
+static_assert(offsetof(Brig::BrigOperandConstantOperandList, elements)+sizeof(((Brig::BrigOperandConstantOperandList*)0)->elements) == sizeof(Brig::BrigOperandConstantOperandList), "bad alignment in Brig::BrigOperandConstantOperandList");
+
+static_assert(offsetof(Brig::BrigOperandConstantSampler, base) == 0, "bad alignment in Brig::BrigOperandConstantSampler");
+static_assert(offsetof(Brig::BrigOperandConstantSampler, type)+sizeof(((Brig::BrigOperandConstantSampler*)0)->type) == offsetof(Brig::BrigOperandConstantSampler,coord), "bad alignment in Brig::BrigOperandConstantSampler");
+static_assert(offsetof(Brig::BrigOperandConstantSampler, coord)+sizeof(((Brig::BrigOperandConstantSampler*)0)->coord) == offsetof(Brig::BrigOperandConstantSampler,filter), "bad alignment in Brig::BrigOperandConstantSampler");
+static_assert(offsetof(Brig::BrigOperandConstantSampler, filter)+sizeof(((Brig::BrigOperandConstantSampler*)0)->filter) == offsetof(Brig::BrigOperandConstantSampler,addressing), "bad alignment in Brig::BrigOperandConstantSampler");
+static_assert(offsetof(Brig::BrigOperandConstantSampler, addressing)+sizeof(((Brig::BrigOperandConstantSampler*)0)->addressing) == offsetof(Brig::BrigOperandConstantSampler,reserved), "bad alignment in Brig::BrigOperandConstantSampler");
+static_assert(offsetof(Brig::BrigOperandConstantSampler, reserved)+sizeof(((Brig::BrigOperandConstantSampler*)0)->reserved) == sizeof(Brig::BrigOperandConstantSampler), "bad alignment in Brig::BrigOperandConstantSampler");
 
 static_assert(offsetof(Brig::BrigOperandOperandList, base) == 0, "bad alignment in Brig::BrigOperandOperandList");
 static_assert(offsetof(Brig::BrigOperandOperandList, elements)+sizeof(((Brig::BrigOperandOperandList*)0)->elements) == sizeof(Brig::BrigOperandOperandList), "bad alignment in Brig::BrigOperandOperandList");
 
-static_assert(offsetof(Brig::BrigOperandReg, base) == 0, "bad alignment in Brig::BrigOperandReg");
-static_assert(offsetof(Brig::BrigOperandReg, regKind)+sizeof(((Brig::BrigOperandReg*)0)->regKind) == offsetof(Brig::BrigOperandReg,regNum), "bad alignment in Brig::BrigOperandReg");
-static_assert(offsetof(Brig::BrigOperandReg, regNum)+sizeof(((Brig::BrigOperandReg*)0)->regNum) == sizeof(Brig::BrigOperandReg), "bad alignment in Brig::BrigOperandReg");
-
-static_assert(offsetof(Brig::BrigOperandSamplerProperties, base) == 0, "bad alignment in Brig::BrigOperandSamplerProperties");
-static_assert(offsetof(Brig::BrigOperandSamplerProperties, coord)+sizeof(((Brig::BrigOperandSamplerProperties*)0)->coord) == offsetof(Brig::BrigOperandSamplerProperties,filter), "bad alignment in Brig::BrigOperandSamplerProperties");
-static_assert(offsetof(Brig::BrigOperandSamplerProperties, filter)+sizeof(((Brig::BrigOperandSamplerProperties*)0)->filter) == offsetof(Brig::BrigOperandSamplerProperties,addressing), "bad alignment in Brig::BrigOperandSamplerProperties");
-static_assert(offsetof(Brig::BrigOperandSamplerProperties, addressing)+sizeof(((Brig::BrigOperandSamplerProperties*)0)->addressing) == offsetof(Brig::BrigOperandSamplerProperties,reserved), "bad alignment in Brig::BrigOperandSamplerProperties");
-static_assert(offsetof(Brig::BrigOperandSamplerProperties, reserved)+sizeof(((Brig::BrigOperandSamplerProperties*)0)->reserved) == sizeof(Brig::BrigOperandSamplerProperties), "bad alignment in Brig::BrigOperandSamplerProperties");
+static_assert(offsetof(Brig::BrigOperandRegister, base) == 0, "bad alignment in Brig::BrigOperandRegister");
+static_assert(offsetof(Brig::BrigOperandRegister, regKind)+sizeof(((Brig::BrigOperandRegister*)0)->regKind) == offsetof(Brig::BrigOperandRegister,regNum), "bad alignment in Brig::BrigOperandRegister");
+static_assert(offsetof(Brig::BrigOperandRegister, regNum)+sizeof(((Brig::BrigOperandRegister*)0)->regNum) == sizeof(Brig::BrigOperandRegister), "bad alignment in Brig::BrigOperandRegister");
 
 static_assert(offsetof(Brig::BrigOperandString, base) == 0, "bad alignment in Brig::BrigOperandString");
 static_assert(offsetof(Brig::BrigOperandString, string)+sizeof(((Brig::BrigOperandString*)0)->string) == sizeof(Brig::BrigOperandString), "bad alignment in Brig::BrigOperandString");

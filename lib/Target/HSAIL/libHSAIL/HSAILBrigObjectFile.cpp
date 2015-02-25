@@ -41,7 +41,6 @@
 #include "HSAILBrigObjectFile.h"
 #include "HSAILBrigContainer.h"
 
-// FIXME: Should use configure test
 #include <errno.h>
 #ifdef _WIN32
 #include <io.h>
@@ -51,11 +50,6 @@
 #include <unistd.h>
 #define O_BINARY_ 0
 #define LSEEK lseek64
-#endif
-
-#if defined(__APPLE__) & defined(__MACH__)
-#define lseek64 lseek
-#define open64 open
 #endif
 
 #include <cstring>
@@ -256,6 +250,17 @@ IOAdapter::~IOAdapter() {
 WriteAdapter::~WriteAdapter() {
 }
 
+int WriteAdapter::writeAlignPad(unsigned pow2) {
+    const char zeropad[] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+    size_t const p = (size_t)getPos();
+    size_t const numBytesWrite = align(p, pow2) - p;
+    if (numBytesWrite > 0) {
+        assert(numBytesWrite <= sizeof zeropad);
+        return write((const char*)zeropad, numBytesWrite);
+    }
+    return 0;
+}
+
 ReadAdapter::~ReadAdapter() {
 }
 
@@ -323,7 +328,7 @@ public:
 
             std::vector<char> data;
             if (readSection(data, s, i)) return 1;
-
+            
             bool includesHeader =
                   desc->sectionId < Brig::BRIG_SECTION_INDEX_IMPLEMENTATION_DEFINED;
             if (c.loadSection(desc->sectionId, data, includesHeader, s->errs)) {
@@ -581,6 +586,12 @@ struct FileAdapter : public ReadWriteAdapter {
             return 0;
         }
     }
+    virtual Position getPos() const {
+        return ::LSEEK(fd, 0, SEEK_CUR);
+    }
+    virtual void setPos(Position ofs) {
+        int64_t lrc = ::LSEEK(fd, ofs, SEEK_SET);
+    }
     virtual int write(const char* data, size_t numBytes) const {
         int res = ::write(fd, data, (unsigned)numBytes);
         if (check1(res)) {
@@ -622,14 +633,27 @@ struct FileAdapter : public ReadWriteAdapter {
 
 struct VectorAdapter : public ReadWriteAdapter {
     std::vector<char> &buf;
+    mutable size_t     pos;
     VectorAdapter(std::vector<char> &buf_, std::ostream &errs_)
         : IOAdapter(errs_)
         , ReadWriteAdapter(errs_)
         , buf(buf_)
+        , pos(0)
     {
     }
+    virtual Position getPos() const { 
+        return pos;
+    }
+    virtual void setPos(Position p) {
+        pos = (size_t)p;
+    }
     virtual int write(const char* data, size_t numBytes) const {
-        buf.insert(buf.end(), data, data + numBytes);
+        size_t newSize = pos + numBytes;
+        if (newSize > buf.size()) {
+            buf.resize(newSize);
+        }
+        std::copy(data, data + numBytes, buf.begin() + pos);
+        pos += numBytes;
         return 0;
     }
     virtual int pread(char* data, size_t numBytes, uint64_t offset) const {
@@ -656,6 +680,12 @@ struct MemoryAdapter : public ReadWriteAdapter {
         , bufSize(bufSize_)
         , pos(0)
     {
+    }
+    virtual Position getPos() const { 
+        return pos;
+    }
+    virtual void setPos(Position p) {
+        pos = (size_t)p;
     }
     virtual int write(const char* data, size_t numBytes) const {
         if (pos + numBytes > bufSize) {
@@ -688,6 +718,14 @@ struct istreamAdapter : public ReadAdapter {
         , is(is_)
     {}
     ~istreamAdapter() {}
+
+    virtual Position getPos() const {
+        return (Position)is.tellg();
+    }
+
+    virtual void setPos(Position p) {
+        is.seekg(static_cast<std::streamoff>(p), std::ios_base::beg);
+    }
 
     virtual int pread(char* data, size_t numBytes, uint64_t offset) const {
         if ((offset + numBytes) > static_cast<uint64_t>((std::numeric_limits<std::streamoff>::max)())) {
@@ -769,6 +807,9 @@ int BrigIO::load(BrigContainer &dst,
     if (0 != src.pread((char*)ident, 16, 0)) {
         return 1;
     }
+    if (memcmp("HSA BRIG", ident, 8)==0) {
+        return HSAIL_ASM::readContainer(src, dst) ? 0 : 1;
+    }
     switch(ident[EI_CLASS]) {
     case Elf32Policy::ELFCLASS: {
         BrigIOImpl<Elf32Policy> impl(fmt);
@@ -788,6 +829,9 @@ int BrigIO::save(BrigContainer &src,
                  int           fmt,
                  WriteAdapter& dst)
 {
+    if (fmt == FILE_FORMAT_BRIG) {
+        return src.write(dst) ? 0 : 1;
+    } 
     BrigIOImpl<Elf32Policy> impl(fmt);
     return impl.writeContainer(&dst, src);
 }
