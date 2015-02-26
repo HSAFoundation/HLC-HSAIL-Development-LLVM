@@ -284,7 +284,7 @@ private:
 
   bool usesGCNAtomicCounter(void);
 
-  HSAIL_ASM::OperandReg getBrigReg(MachineOperand s);
+  HSAIL_ASM::OperandRegister getBrigReg(MachineOperand s);
 
   HSAIL_ASM::DirectiveVariable EmitLocalVariable(const GlobalVariable *GV, Brig::BrigSegment8_t segment);
 

@@ -183,7 +183,7 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
   HSAIL_ASM::SRef init;
   char zeroes[32];
 
-  unsigned EltBrigType = HSAIL_ASM::convType2BitType(globalVar.type());
+  unsigned EltBrigType = HSAIL_ASM::type2bitType(globalVar.type());
   size_t typeBytes = HSAIL_ASM::getBrigTypeNumBytes(globalVar.type());
 
   assert(typeBytes <= sizeof(zeroes));
@@ -215,13 +215,14 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
                                        EltSize);
     }
 
-    if (globalVar.modifier().isArray()) {
+    bool isArray = globalVar.type() & Brig::BRIG_TYPE_ARRAY;
+    if (isArray) {
       assert(globalVar.dim() * typeBytes  >= init.length());
     } else {
       assert(globalVar.dim() == 0 && typeBytes == init.length());
     }
 
-    globalVar.init() = brigantine.createOperandData(init);
+    globalVar.init() = brigantine.createOperandConstantBytes(init, globalVar.type(), isArray);
   }
 }
 
@@ -349,8 +350,6 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   globalVar.linkage() = findGlobalBrigLinkage(*GV);
   globalVar.allocation() = Brig::BRIG_ALLOCATION_AGENT;
   globalVar.modifier().isDefinition() = 1;
-
-  globalVar.modifier().isArray() = (NElts != 0);
   globalVar.dim() = NElts;
 
   unsigned Alignment = GV->getAlignment();
@@ -487,7 +486,7 @@ void BRIGAsmPrinter::EmitSamplerDefs() {
       samplerVar.allocation() = Brig::BRIG_ALLOCATION_AGENT;
       samplerVar.linkage() = Brig::BRIG_LINKAGE_MODULE;
       samplerVar.modifier().isDefinition() = 1;
-      HSAIL_ASM::OperandSamplerProperties samplerProps = brigantine.append<HSAIL_ASM::OperandSamplerProperties>();
+      HSAIL_ASM::OperandConstantSampler samplerProps = brigantine.append<HSAIL_ASM::OperandConstantSampler>();
       // HSAIL_ASM::ItemList samplerInit;
       // samplerInit.push_back(samplerProps);
       samplerVar.init() = samplerProps;
@@ -1132,14 +1131,21 @@ void BRIGAsmPrinter::EmitStartOfAsmFile(Module &M) {
     dbgs() << std::string("*** IR Dump Before ") + getPassName() + " ***";
     M.dump();
   }
+
+  HSAIL_ASM::SRef ModuleName;
+
   // Clear global variable map
   globalVariableOffsets.clear();
 
   brigantine.startProgram();
-  brigantine.version(Brig::BRIG_VERSION_HSAIL_MAJOR,
+  brigantine.module(
+    ModuleName,
+    Brig::BRIG_VERSION_HSAIL_MAJOR,
     Brig::BRIG_VERSION_HSAIL_MINOR,
     Subtarget->is64Bit() ? Brig::BRIG_MACHINE_LARGE : Brig::BRIG_MACHINE_SMALL,
-    Brig::BRIG_PROFILE_FULL);
+    Brig::BRIG_PROFILE_FULL,
+    Brig::BRIG_ROUND_FLOAT_NEAR_EVEN
+  );
 
   //if (usesGCNAtomicCounter()) {
     brigantine.addExtension("amd:gcn");
@@ -1935,7 +1941,7 @@ void BRIGAsmPrinter::BrigEmitOperandImage(const MachineInstr *MI, unsigned opNum
   m_opndList.push_back(brigantine.createRef(sOp));
 }
 
-HSAIL_ASM::OperandReg BRIGAsmPrinter::getBrigReg(MachineOperand s) {
+HSAIL_ASM::OperandRegister BRIGAsmPrinter::getBrigReg(MachineOperand s) {
   assert(s.getType() == MachineOperand::MO_Register);
   return brigantine.createOperandReg(HSAIL_ASM::SRef(
                                        getRegisterName(s.getReg())));
@@ -2037,7 +2043,8 @@ HSAIL_ASM::InstMod BRIGAsmPrinter::BrigEmitInstMod(const MachineInstr &MI,
   inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
   inst.modifier().ftz()
     = TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
-  inst.modifier().round()
+
+  inst.round()
     = TII->getNamedOperand(MI, HSAIL::OpName::round)->getImm();
 
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
@@ -2095,8 +2102,7 @@ HSAIL_ASM::InstCvt BRIGAsmPrinter::BrigEmitInstCvt(const MachineInstr &MI,
   // XXX - sourceType, destTypedestLength - These names are awful
   inst.modifier().ftz()
     = TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
-  inst.modifier().round()
-    = TII->getNamedOperand(MI, HSAIL::OpName::round)->getImm();
+  inst.round() = TII->getNamedOperand(MI, HSAIL::OpName::round)->getImm();
 
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
                   inst);

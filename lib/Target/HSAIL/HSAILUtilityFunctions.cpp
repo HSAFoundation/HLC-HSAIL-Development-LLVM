@@ -136,11 +136,11 @@ Brig::BrigType16_t getBrigType(Type* type, const DataLayout &DL, bool Signed) {
   }
   case Type::StructTyID:
     // Treat struct as array of bytes.
-    return Brig::BRIG_TYPE_U8;
+    return Brig::BRIG_TYPE_U8_ARRAY;
   case Type::VectorTyID:
-    return getBrigType(type->getScalarType(), DL, Signed);
+    return getBrigType(type->getScalarType(), DL, Signed) | Brig::BRIG_TYPE_ARRAY;
   case Type::ArrayTyID:
-    return getBrigType(cast<ArrayType>(type)->getElementType(), DL, Signed);
+    return getBrigType(cast<ArrayType>(type)->getElementType(), DL, Signed) | Brig::BRIG_TYPE_ARRAY;
   default:
     type->dump();
     llvm_unreachable("Unhandled type");
