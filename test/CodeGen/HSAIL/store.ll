@@ -456,8 +456,8 @@ define void @vecload2(i32 addrspace(1)* nocapture %out, i32 addrspace(2)* nocapt
 }
 
 ; When i128 was a legal type this program generated cannot select errors:
-; FUNC-LABEL: {{^}}prog function &i128-const-store
-define void @i128-const-store(i32 addrspace(1)* %out) {
+; FUNC-LABEL: {{^}}prog function &i128_const_store
+define void @i128_const_store(i32 addrspace(1)* %out) {
   store i32 1, i32 addrspace(1)* %out, align 4
   %arrayidx2 = getelementptr inbounds i32 addrspace(1)* %out, i64 1
   store i32 1, i32 addrspace(1)* %arrayidx2, align 4
