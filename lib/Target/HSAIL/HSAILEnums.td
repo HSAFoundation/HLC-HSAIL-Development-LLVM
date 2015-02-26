@@ -41,7 +41,6 @@
 
 let OperandType = "OPERAND_IMMEDIATE" in {
 
-
 def BrigAlignment : Operand<i32> {
   let PrintMethod = "printBrigAlignment";
   int _NONE = 0;
@@ -68,8 +67,7 @@ def BrigAllocation : Operand<i32> {
 
 def BrigAluModifierMask : Operand<i32> {
   let PrintMethod = "printBrigAluModifierMask";
-  int ROUND = 31;
-  int FTZ = 32;
+  int FTZ = 1;
 }
 
 def BrigAtomicOperation : Operand<i32> {
@@ -137,11 +135,10 @@ def BrigControlDirective : Operand<i32> {
   int MAXDYNAMICGROUPSIZE = 3;
   int MAXFLATGRIDSIZE = 4;
   int MAXFLATWORKGROUPSIZE = 5;
-  int REQUESTEDWORKGROUPSPERCU = 6;
-  int REQUIREDDIM = 7;
-  int REQUIREDGRIDSIZE = 8;
-  int REQUIREDWORKGROUPSIZE = 9;
-  int REQUIRENOPARTIALWORKGROUPS = 10;
+  int REQUIREDDIM = 6;
+  int REQUIREDGRIDSIZE = 7;
+  int REQUIREDWORKGROUPSIZE = 8;
+  int REQUIRENOPARTIALWORKGROUPS = 9;
 }
 
 def BrigExecutableModifierMask : Operand<i32> {
@@ -172,6 +169,7 @@ def BrigImageChannelOrder : Operand<i32> {
   int DEPTH = 18;
   int DEPTH_STENCIL = 19;
   int UNKNOWN = 20;
+  int FIRST_USER_DEFINED = 128;
 }
 
 def BrigImageChannelType : Operand<i32> {
@@ -193,6 +191,7 @@ def BrigImageChannelType : Operand<i32> {
   int HALF_FLOAT = 14;
   int FLOAT = 15;
   int UNKNOWN = 16;
+  int FIRST_USER_DEFINED = 128;
 }
 
 def BrigImageGeometry : Operand<i32> {
@@ -206,6 +205,7 @@ def BrigImageGeometry : Operand<i32> {
   int _2DDEPTH = 6;
   int _2DADEPTH = 7;
   int _UNKNOWN = 8;
+  int _FIRST_USER_DEFINED = 128;
 }
 
 def BrigImageQuery : Operand<i32> {
@@ -216,60 +216,6 @@ def BrigImageQuery : Operand<i32> {
   int ARRAY = 3;
   int CHANNELORDER = 4;
   int CHANNELTYPE = 5;
-}
-
-def BrigKinds : Operand<i32> {
-  let PrintMethod = "printBrigKinds";
-  int NONE = 0x0000;
-  int DIRECTIVE_BEGIN = 0x1000;
-  int DIRECTIVE_ARG_BLOCK_END = 0x1000;
-  int DIRECTIVE_ARG_BLOCK_START = 0x1001;
-  int DIRECTIVE_COMMENT = 0x1002;
-  int DIRECTIVE_CONTROL = 0x1003;
-  int DIRECTIVE_EXTENSION = 0x1004;
-  int DIRECTIVE_FBARRIER = 0x1005;
-  int DIRECTIVE_FUNCTION = 0x1006;
-  int DIRECTIVE_INDIRECT_FUNCTION = 0x1007;
-  int DIRECTIVE_KERNEL = 0x1008;
-  int DIRECTIVE_LABEL = 0x1009;
-  int DIRECTIVE_LOC = 0x100a;
-  int DIRECTIVE_PRAGMA = 0x100b;
-  int DIRECTIVE_SIGNATURE = 0x100c;
-  int DIRECTIVE_VARIABLE = 0x100d;
-  int DIRECTIVE_VERSION = 0x100e;
-  int DIRECTIVE_END = 0x100f;
-  int INST_BEGIN = 0x2000;
-  int INST_ADDR = 0x2000;
-  int INST_ATOMIC = 0x2001;
-  int INST_BASIC = 0x2002;
-  int INST_BR = 0x2003;
-  int INST_CMP = 0x2004;
-  int INST_CVT = 0x2005;
-  int INST_IMAGE = 0x2006;
-  int INST_LANE = 0x2007;
-  int INST_MEM = 0x2008;
-  int INST_MEM_FENCE = 0x2009;
-  int INST_MOD = 0x200a;
-  int INST_QUERY_IMAGE = 0x200b;
-  int INST_QUERY_SAMPLER = 0x200c;
-  int INST_QUEUE = 0x200d;
-  int INST_SEG = 0x200e;
-  int INST_SEG_CVT = 0x200f;
-  int INST_SIGNAL = 0x2010;
-  int INST_SOURCE_TYPE = 0x2011;
-  int INST_END = 0x2012;
-  int OPERAND_BEGIN = 0x3000;
-  int OPERAND_ADDRESS = 0x3000;
-  int OPERAND_DATA = 0x3001;
-  int OPERAND_CODE_LIST = 0x3002;
-  int OPERAND_CODE_REF = 0x3003;
-  int OPERAND_IMAGE_PROPERTIES = 0x3004;
-  int OPERAND_OPERAND_LIST = 0x3005;
-  int OPERAND_REG = 0x3006;
-  int OPERAND_SAMPLER_PROPERTIES = 0x3007;
-  int OPERAND_STRING = 0x3008;
-  int OPERAND_WAVESIZE = 0x3009;
-  int OPERAND_END = 12298;
 }
 
 def BrigLinkage : Operand<i32> {
@@ -286,14 +232,6 @@ def BrigMachineModel : Operand<i32> {
   int SMALL = 0;
   int LARGE = 1;
   int UNDEF = 2;
-}
-
-def BrigMemoryFenceSegments : Operand<i32> {
-  let PrintMethod = "printBrigMemoryFenceSegments";
-  int GLOBAL = 0;
-  int GROUP = 1;
-  int IMAGE = 2;
-  int LAST = 3;
 }
 
 def BrigMemoryModifierMask : Operand<i32> {
@@ -317,18 +255,9 @@ def BrigMemoryScope : Operand<i32> {
   int WORKITEM = 1;
   int WAVEFRONT = 2;
   int WORKGROUP = 3;
-  int COMPONENT = 4;
+  int AGENT = 4;
   int SYSTEM = 5;
-}
-
-def BrigMemoryScope2 : Operand<i32> {
-  let PrintMethod = "printBrigMemoryScope2";
-  int NONE = 0;
-  int WORKITEM = 1;
-  int WAVEFRONT = 2;
-  int WORKGROUP = 3;
-  int COMPONENT = 4;
-  int SYSTEM = 5;
+  int LAST = 6;
 }
 
 def BrigOpcode : Operand<i32> {
@@ -414,66 +343,63 @@ def BrigOpcode : Operand<i32> {
   int RDIMAGE = 78;
   int LDIMAGE = 79;
   int STIMAGE = 80;
-  int QUERYIMAGE = 81;
-  int QUERYSAMPLER = 82;
-  int CBR = 83;
-  int BR = 84;
-  int SBR = 85;
-  int BARRIER = 86;
-  int WAVEBARRIER = 87;
-  int ARRIVEFBAR = 88;
-  int INITFBAR = 89;
-  int JOINFBAR = 90;
-  int LEAVEFBAR = 91;
-  int RELEASEFBAR = 92;
-  int WAITFBAR = 93;
-  int LDF = 94;
-  int ACTIVELANECOUNT = 95;
-  int ACTIVELANEID = 96;
-  int ACTIVELANEMASK = 97;
-  int ACTIVELANESHUFFLE = 98;
-  int CALL = 99;
-  int SCALL = 100;
-  int ICALL = 101;
-  int LDI = 102;
+  int IMAGEFENCE = 81;
+  int QUERYIMAGE = 82;
+  int QUERYSAMPLER = 83;
+  int CBR = 84;
+  int BR = 85;
+  int SBR = 86;
+  int BARRIER = 87;
+  int WAVEBARRIER = 88;
+  int ARRIVEFBAR = 89;
+  int INITFBAR = 90;
+  int JOINFBAR = 91;
+  int LEAVEFBAR = 92;
+  int RELEASEFBAR = 93;
+  int WAITFBAR = 94;
+  int LDF = 95;
+  int ACTIVELANECOUNT = 96;
+  int ACTIVELANEID = 97;
+  int ACTIVELANEMASK = 98;
+  int ACTIVELANEPERMUTE = 99;
+  int CALL = 100;
+  int SCALL = 101;
+  int ICALL = 102;
   int RET = 103;
   int ALLOCA = 104;
   int CURRENTWORKGROUPSIZE = 105;
-  int DIM = 106;
-  int GRIDGROUPS = 107;
-  int GRIDSIZE = 108;
-  int PACKETCOMPLETIONSIG = 109;
-  int PACKETID = 110;
-  int WORKGROUPID = 111;
-  int WORKGROUPSIZE = 112;
-  int WORKITEMABSID = 113;
-  int WORKITEMFLATABSID = 114;
-  int WORKITEMFLATID = 115;
-  int WORKITEMID = 116;
-  int CLEARDETECTEXCEPT = 117;
-  int GETDETECTEXCEPT = 118;
-  int SETDETECTEXCEPT = 119;
-  int ADDQUEUEWRITEINDEX = 120;
-  int AGENTCOUNT = 121;
-  int AGENTID = 122;
-  int CASQUEUEWRITEINDEX = 123;
-  int LDK = 124;
-  int LDQUEUEREADINDEX = 125;
-  int LDQUEUEWRITEINDEX = 126;
-  int QUEUEID = 127;
-  int QUEUEPTR = 128;
-  int STQUEUEREADINDEX = 129;
-  int STQUEUEWRITEINDEX = 130;
-  int CLOCK = 131;
-  int CUID = 132;
-  int DEBUGTRAP = 133;
-  int GROUPBASEPTR = 134;
-  int KERNARGBASEPTR = 135;
-  int LANEID = 136;
-  int MAXCUID = 137;
-  int MAXWAVEID = 138;
-  int NULLPTR = 139;
-  int WAVEID = 140;
+  int CURRENTWORKITEMFLATID = 106;
+  int DIM = 107;
+  int GRIDGROUPS = 108;
+  int GRIDSIZE = 109;
+  int PACKETCOMPLETIONSIG = 110;
+  int PACKETID = 111;
+  int WORKGROUPID = 112;
+  int WORKGROUPSIZE = 113;
+  int WORKITEMABSID = 114;
+  int WORKITEMFLATABSID = 115;
+  int WORKITEMFLATID = 116;
+  int WORKITEMID = 117;
+  int CLEARDETECTEXCEPT = 118;
+  int GETDETECTEXCEPT = 119;
+  int SETDETECTEXCEPT = 120;
+  int ADDQUEUEWRITEINDEX = 121;
+  int CASQUEUEWRITEINDEX = 122;
+  int LDQUEUEREADINDEX = 123;
+  int LDQUEUEWRITEINDEX = 124;
+  int STQUEUEREADINDEX = 125;
+  int STQUEUEWRITEINDEX = 126;
+  int CLOCK = 127;
+  int CUID = 128;
+  int DEBUGTRAP = 129;
+  int GROUPBASEPTR = 130;
+  int KERNARGBASEPTR = 131;
+  int LANEID = 132;
+  int MAXCUID = 133;
+  int MAXWAVEID = 134;
+  int NULLPTR = 135;
+  int WAVEID = 136;
+  int FIRST_USER_DEFINED = 32768;
   int GCNMADU = 32768;
   int GCNMADS = 32769;
   int GCNMAX3 = 32770;
@@ -524,17 +450,6 @@ def BrigPack : Operand<i32> {
   int PSAT = 12;
 }
 
-def BrigPackedTypeBits : Operand<i32> {
-  let PrintMethod = "printBrigPackedTypeBits";
-  int PACK_SHIFT = 5;
-  int BASE_MASK = 31;
-  int PACK_MASK = 96;
-  int PACK_NONE = 0;
-  int PACK_32 = 32;
-  int PACK_64 = 64;
-  int PACK_128 = 96;
-}
-
 def BrigProfile : Operand<i32> {
   let PrintMethod = "printBrigProfile";
   int BASE = 0;
@@ -542,37 +457,30 @@ def BrigProfile : Operand<i32> {
   int UNDEF = 2;
 }
 
-def BrigRegisterKind : Operand<i32> {
-  let PrintMethod = "printBrigRegisterKind";
-  int CONTROL = 0;
-  int SINGLE = 1;
-  int DOUBLE = 2;
-  int QUAD = 3;
-}
-
 def BrigRound : Operand<i32> {
   let PrintMethod = "printBrigRound";
   int NONE = 0;
-  int FLOAT_NEAR_EVEN = 1;
-  int FLOAT_ZERO = 2;
-  int FLOAT_PLUS_INFINITY = 3;
-  int FLOAT_MINUS_INFINITY = 4;
-  int INTEGER_NEAR_EVEN = 5;
-  int INTEGER_ZERO = 6;
-  int INTEGER_PLUS_INFINITY = 7;
-  int INTEGER_MINUS_INFINITY = 8;
-  int INTEGER_NEAR_EVEN_SAT = 9;
-  int INTEGER_ZERO_SAT = 10;
-  int INTEGER_PLUS_INFINITY_SAT = 11;
-  int INTEGER_MINUS_INFINITY_SAT = 12;
-  int INTEGER_SIGNALLING_NEAR_EVEN = 13;
-  int INTEGER_SIGNALLING_ZERO = 14;
-  int INTEGER_SIGNALLING_PLUS_INFINITY = 15;
-  int INTEGER_SIGNALLING_MINUS_INFINITY = 16;
-  int INTEGER_SIGNALLING_NEAR_EVEN_SAT = 17;
-  int INTEGER_SIGNALLING_ZERO_SAT = 18;
-  int INTEGER_SIGNALLING_PLUS_INFINITY_SAT = 19;
-  int INTEGER_SIGNALLING_MINUS_INFINITY_SAT = 20;
+  int FLOAT_DEFAULT = 1;
+  int FLOAT_NEAR_EVEN = 2;
+  int FLOAT_ZERO = 3;
+  int FLOAT_PLUS_INFINITY = 4;
+  int FLOAT_MINUS_INFINITY = 5;
+  int INTEGER_NEAR_EVEN = 6;
+  int INTEGER_ZERO = 7;
+  int INTEGER_PLUS_INFINITY = 8;
+  int INTEGER_MINUS_INFINITY = 9;
+  int INTEGER_NEAR_EVEN_SAT = 10;
+  int INTEGER_ZERO_SAT = 11;
+  int INTEGER_PLUS_INFINITY_SAT = 12;
+  int INTEGER_MINUS_INFINITY_SAT = 13;
+  int INTEGER_SIGNALING_NEAR_EVEN = 14;
+  int INTEGER_SIGNALING_ZERO = 15;
+  int INTEGER_SIGNALING_PLUS_INFINITY = 16;
+  int INTEGER_SIGNALING_MINUS_INFINITY = 17;
+  int INTEGER_SIGNALING_NEAR_EVEN_SAT = 18;
+  int INTEGER_SIGNALING_ZERO_SAT = 19;
+  int INTEGER_SIGNALING_PLUS_INFINITY_SAT = 20;
+  int INTEGER_SIGNALING_MINUS_INFINITY_SAT = 21;
 }
 
 def BrigSamplerAddressing : Operand<i32> {
@@ -582,6 +490,7 @@ def BrigSamplerAddressing : Operand<i32> {
   int CLAMP_TO_BORDER = 2;
   int REPEAT = 3;
   int MIRRORED_REPEAT = 4;
+  int FIRST_USER_DEFINED = 128;
 }
 
 def BrigSamplerCoordNormalization : Operand<i32> {
@@ -594,6 +503,7 @@ def BrigSamplerFilter : Operand<i32> {
   let PrintMethod = "printBrigSamplerFilter";
   int NEAREST = 0;
   int LINEAR = 1;
+  int FIRST_USER_DEFINED = 128;
 }
 
 def BrigSamplerQuery : Operand<i32> {
@@ -601,15 +511,6 @@ def BrigSamplerQuery : Operand<i32> {
   int ADDRESSING = 0;
   int COORD = 1;
   int FILTER = 2;
-}
-
-def BrigSectionIndex : Operand<i32> {
-  let PrintMethod = "printBrigSectionIndex";
-  int DATA = 0;
-  int CODE = 1;
-  int OPERAND = 2;
-  int BEGIN_IMPLEMENTATION_DEFINED = 3;
-  int IMPLEMENTATION_DEFINED = 3;
 }
 
 def BrigSegCvtModifierMask : Operand<i32> {
@@ -628,7 +529,8 @@ def BrigSegment : Operand<i32> {
   int PRIVATE = 6;
   int SPILL = 7;
   int ARG = 8;
-  int EXTSPACE0 = 9;
+  int FIRST_USER_DEFINED = 128;
+  int AMD_GCN = 9;
 }
 
 def AddressSpace : Operand<i32> {
@@ -694,6 +596,52 @@ def BrigTypeX : Operand<i32> {
   int F32X2 = 74;
   int F32X4 = 106;
   int F64X2 = 107;
+  int U8_ARRAY = 129;
+  int U16_ARRAY = 130;
+  int U32_ARRAY = 131;
+  int U64_ARRAY = 132;
+  int S8_ARRAY = 133;
+  int S16_ARRAY = 134;
+  int S32_ARRAY = 135;
+  int S64_ARRAY = 136;
+  int F16_ARRAY = 137;
+  int F32_ARRAY = 138;
+  int F64_ARRAY = 139;
+  int B8_ARRAY = 141;
+  int B16_ARRAY = 142;
+  int B32_ARRAY = 143;
+  int B64_ARRAY = 144;
+  int B128_ARRAY = 145;
+  int SAMP_ARRAY = 146;
+  int ROIMG_ARRAY = 147;
+  int WOIMG_ARRAY = 148;
+  int RWIMG_ARRAY = 149;
+  int SIG32_ARRAY = 150;
+  int SIG64_ARRAY = 151;
+  int U8X4_ARRAY = 161;
+  int U8X8_ARRAY = 193;
+  int U8X16_ARRAY = 225;
+  int U16X2_ARRAY = 162;
+  int U16X4_ARRAY = 194;
+  int U16X8_ARRAY = 226;
+  int U32X2_ARRAY = 195;
+  int U32X4_ARRAY = 227;
+  int U64X2_ARRAY = 228;
+  int S8X4_ARRAY = 165;
+  int S8X8_ARRAY = 197;
+  int S8X16_ARRAY = 229;
+  int S16X2_ARRAY = 166;
+  int S16X4_ARRAY = 198;
+  int S16X8_ARRAY = 230;
+  int S32X2_ARRAY = 199;
+  int S32X4_ARRAY = 231;
+  int S64X2_ARRAY = 232;
+  int F16X2_ARRAY = 169;
+  int F16X4_ARRAY = 201;
+  int F16X8_ARRAY = 233;
+  int F32X2_ARRAY = 202;
+  int F32X4_ARRAY = 234;
+  int F64X2_ARRAY = 235;
   int INVALID = -1;
 }
 
@@ -701,16 +649,7 @@ def BrigVariableModifierMask : Operand<i32> {
   let PrintMethod = "printBrigVariableModifierMask";
   int DEFINITION = 1;
   int CONST = 2;
-  int ARRAY = 4;
-  int FLEX_ARRAY = 8;
-}
-
-def BrigVersion : Operand<i32> {
-  let PrintMethod = "printBrigVersion";
-  int HSAIL_MAJOR = 0;
-  int HSAIL_MINOR = 20140528;
-  int BRIG_MAJOR = 0;
-  int BRIG_MINOR = 20140528;
+  int FLEX_ARRAY = 4;
 }
 
 def BrigWidth : Operand<i32> {
@@ -750,6 +689,7 @@ def BrigWidth : Operand<i32> {
   int _2147483648 = 32;
   int _WAVESIZE = 33;
   int _ALL = 34;
+  int _LAST = 35;
 }
 
-} // End OperandType = "OPERAND_IMMEDIATE"
+}
