@@ -1770,7 +1770,8 @@ void BRIGAsmPrinter::BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSA
   if (AddressIndex != -1) {
     unsigned addrStart = AddressIndex;
     if (opNum == addrStart) {
-      BrigEmitOperandLdStAddress(MI, opNum);
+      unsigned AS = TII->getNamedOperand(*MI, HSAIL::OpName::segment)->getImm();
+      BrigEmitOperandLdStAddress(MI, opNum, AS);
       return;
     }
 
@@ -1820,8 +1821,9 @@ void BRIGAsmPrinter::BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSA
   }
 }
 
-void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned opNum)
-{
+void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI,
+                                                unsigned opNum,
+                                                unsigned Segment)  {
   assert(opNum + 2 < MI->getNumOperands());
   const MachineOperand &base = MI->getOperand(opNum),
     &reg  = MI->getOperand(opNum+1),
@@ -1878,8 +1880,11 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned
     reg_name = HSAIL_ASM::SRef(getRegisterName(reg.getReg()));
   }
 
-  // Emit operand
-  m_opndList.push_back(brigantine.createRef(base_name, reg_name, offset));
+  const DataLayout &DL = getDataLayout();
+  bool Is32Bit = (DL.getPointerSize(Segment) == 4);
+
+  // Emit operand.
+  m_opndList.push_back(brigantine.createRef(base_name, reg_name, offset, Is32Bit));
 }
 
 void BRIGAsmPrinter::BrigEmitVecArgDeclaration(const MachineInstr *MI) {
@@ -2312,7 +2317,7 @@ HSAIL_ASM::InstMem BRIGAsmPrinter::BrigEmitInstMem(const MachineInstr &MI,
   else
     BrigEmitVecOperand(&MI, 0, VecSize, inst);
 
-  BrigEmitOperandLdStAddress(&MI, VecSize);
+  BrigEmitOperandLdStAddress(&MI, VecSize, Segment);
 
   return inst;
 }
@@ -2335,7 +2340,7 @@ HSAIL_ASM::InstAtomic BRIGAsmPrinter::BrigEmitInstAtomic(const MachineInstr &MI,
     BrigEmitOperand(&MI, DestIdx, inst);
 
   int AddressIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::address);
-  BrigEmitOperandLdStAddress(&MI, AddressIdx);
+  BrigEmitOperandLdStAddress(&MI, AddressIdx, Segment);
 
   // InstAtomic is unusual in that the number of operands differs with the same
   // instruction opcode depending on the atomicOperation modifier. We always
@@ -2403,7 +2408,7 @@ HSAIL_ASM::InstAddr BRIGAsmPrinter::BrigEmitInstAddr(const MachineInstr &MI,
   int AddressIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::address);
 
   BrigEmitOperand(&MI, DestIdx, inst);
-  BrigEmitOperandLdStAddress(&MI, AddressIdx);
+  BrigEmitOperandLdStAddress(&MI, AddressIdx, Segment);
 
   return inst;
 }
