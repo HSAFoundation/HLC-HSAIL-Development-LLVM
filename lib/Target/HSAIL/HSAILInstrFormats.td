@@ -694,7 +694,7 @@ class InstMod_3Op_Pat<HSAILInst inst,
 
 multiclass InstMod_1Op_FPTypes<HSAILInst inst,
                               SDPatternOperator node,
-                              int round = BrigRound.FLOAT_NEAR_EVEN> {
+                              int round = BrigRound.FLOAT_DEFAULT> {
   def : InstMod_1Op_Pat<inst, node, f32, BrigTypeX.F32, round, 1>;
   def : InstMod_1Op_Pat<inst, node, f64, BrigTypeX.F64, round, 0>;
 }
@@ -713,15 +713,15 @@ multiclass InstMod_2Op_IntTypes<HSAILInst inst,
 
 multiclass InstMod_2Op_FPTypes<HSAILInst inst,
                                SDPatternOperator node,
-                               int round = BrigRound.FLOAT_NEAR_EVEN> {
+                               int round = BrigRound.FLOAT_DEFAULT> {
   def : InstMod_2Op_Pat<inst, node, f32, BrigTypeX.F32, round, 1>;
   def : InstMod_2Op_Pat<inst, node, f64, BrigTypeX.F64, round, 0>;
 }
 
 multiclass InstMod_3Op_FPTypes<HSAILInst inst,
                                SDPatternOperator node> {
-  def : InstMod_3Op_Pat<inst, node, f32, BrigTypeX.F32, BrigRound.FLOAT_NEAR_EVEN, 1>;
-  def : InstMod_3Op_Pat<inst, node, f64, BrigTypeX.F64, BrigRound.FLOAT_NEAR_EVEN, 0>;
+  def : InstMod_3Op_Pat<inst, node, f32, BrigTypeX.F32, BrigRound.FLOAT_DEFAULT, 1>;
+  def : InstMod_3Op_Pat<inst, node, f64, BrigTypeX.F64, BrigRound.FLOAT_DEFAULT, 0>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

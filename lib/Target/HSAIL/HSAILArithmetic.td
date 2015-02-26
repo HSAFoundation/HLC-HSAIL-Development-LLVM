@@ -20,7 +20,7 @@ defm : InstMod_2Op_FPTypes<DIV, fdiv>;
 
 // Division without implicit ftz.
 def : InstMod_2Op_Pat<DIV, int_HSAIL_div_f32, f32,
-  BrigTypeX.F32, BrigRound.FLOAT_NEAR_EVEN, 0
+  BrigTypeX.F32, BrigRound.FLOAT_DEFAULT, 0
 >;
 
 defm : InstBasic_2Op_IntTypes<REM, urem, 0>;
@@ -97,11 +97,11 @@ def NRCP : HSAILInstBasic_1Op<"nrcp", BrigOpcode.NRCP>;
 
 // FIXME: Having the ftz explicitly in this one is totally inconsistent
 def : InstMod_1Op_Pat<SQRT, int_HSAIL_sqrt_ftz_f32, f32, BrigTypeX.F32,
-                      BrigRound.FLOAT_NEAR_EVEN, 1
+                      BrigRound.FLOAT_DEFAULT, 1
 >;
 
 def : InstMod_1Op_Pat<SQRT, int_HSAIL_sqrt_f64, f64, BrigTypeX.F64,
-                      BrigRound.FLOAT_NEAR_EVEN, 0
+                      BrigRound.FLOAT_DEFAULT, 0
 >;
 
 def : InstBasic_1Op_Pat<NSQRT, int_HSAIL_nsqrt_f32, f32, BrigTypeX.F32>;

@@ -30,19 +30,19 @@ let isConv = 1 in {
 }
 
 
-def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.S64, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
-def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.U64, uint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
-def : CvtPat<f64, i32, BrigTypeX.F64, BrigTypeX.S32, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
-def : CvtPat<f64, i32, BrigTypeX.F64, BrigTypeX.U32, uint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
-def : CvtPat<f64, i1, BrigTypeX.F64, BrigTypeX.B1, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
-def : CvtPat<f64, i1, BrigTypeX.F64, BrigTypeX.B1, uint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
+def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.S64, sint_to_fp, BrigRound.FLOAT_DEFAULT>;
+def : CvtPat<f64, i64, BrigTypeX.F64, BrigTypeX.U64, uint_to_fp, BrigRound.FLOAT_DEFAULT>;
+def : CvtPat<f64, i32, BrigTypeX.F64, BrigTypeX.S32, sint_to_fp, BrigRound.FLOAT_DEFAULT>;
+def : CvtPat<f64, i32, BrigTypeX.F64, BrigTypeX.U32, uint_to_fp, BrigRound.FLOAT_DEFAULT>;
+def : CvtPat<f64, i1, BrigTypeX.F64, BrigTypeX.B1, sint_to_fp, BrigRound.FLOAT_DEFAULT>;
+def : CvtPat<f64, i1, BrigTypeX.F64, BrigTypeX.B1, uint_to_fp, BrigRound.FLOAT_DEFAULT>;
 
-def : CvtPat<f32, i64, BrigTypeX.F32, BrigTypeX.S64, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
-def : CvtPat<f32, i64, BrigTypeX.F32, BrigTypeX.U64, uint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
-def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.S32, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
-def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.U32, uint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
-def : CvtPat<f32, i1, BrigTypeX.F32, BrigTypeX.B1, sint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
-def : CvtPat<f32, i1, BrigTypeX.F32, BrigTypeX.B1, uint_to_fp, BrigRound.FLOAT_NEAR_EVEN>;
+def : CvtPat<f32, i64, BrigTypeX.F32, BrigTypeX.S64, sint_to_fp, BrigRound.FLOAT_DEFAULT>;
+def : CvtPat<f32, i64, BrigTypeX.F32, BrigTypeX.U64, uint_to_fp, BrigRound.FLOAT_DEFAULT>;
+def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.S32, sint_to_fp, BrigRound.FLOAT_DEFAULT>;
+def : CvtPat<f32, i32, BrigTypeX.F32, BrigTypeX.U32, uint_to_fp, BrigRound.FLOAT_DEFAULT>;
+def : CvtPat<f32, i1, BrigTypeX.F32, BrigTypeX.B1, sint_to_fp, BrigRound.FLOAT_DEFAULT>;
+def : CvtPat<f32, i1, BrigTypeX.F32, BrigTypeX.B1, uint_to_fp, BrigRound.FLOAT_DEFAULT>;
 
 def : CvtPat<i32, f64, BrigTypeX.S32, BrigTypeX.F64, fp_to_sint, BrigRound.INTEGER_ZERO>;
 def : CvtPat<i32, f64, BrigTypeX.U32, BrigTypeX.F64, fp_to_uint, BrigRound.INTEGER_ZERO>;
@@ -74,7 +74,7 @@ def : CvtPat<i32, i64, BrigTypeX.U32, BrigTypeX.U64, trunc>;
 // because f32->f64 would not yield f64 denorms, so whether f64 is
 // flushed or not does not really matter.
 def : CvtPat<f64, f32, BrigTypeX.F64, BrigTypeX.F32, fextend, BrigRound.NONE, 1>;
-def : CvtPat<f32, f64, BrigTypeX.F32, BrigTypeX.F64, fround, BrigRound.FLOAT_NEAR_EVEN, 1>;
+def : CvtPat<f32, f64, BrigTypeX.F32, BrigTypeX.F64, fround, BrigRound.FLOAT_DEFAULT, 1>;
 
 def : CvtSInt32RoundPat<f64, BrigTypeX.F64, frint, BrigRound.INTEGER_NEAR_EVEN>;
 def : CvtSInt32RoundPat<f64, BrigTypeX.F64, ffloor, BrigRound.INTEGER_MINUS_INFINITY>;
@@ -216,7 +216,7 @@ def : CvtPat<f32, f32, BrigTypeX.F16, BrigTypeX.F32,
   int_HSAIL_cvt_zero_f16_f32, BrigRound.FLOAT_ZERO
 >;
 def : CvtPat<f32, f32, BrigTypeX.F16, BrigTypeX.F32,
-  int_HSAIL_cvt_near_f16_f32, BrigRound.FLOAT_NEAR_EVEN
+  int_HSAIL_cvt_near_f16_f32, BrigRound.FLOAT_DEFAULT
 >;
 def : CvtPat<f32, f32, BrigTypeX.F16, BrigTypeX.F32,
   int_HSAIL_cvt_down_f16_f32, BrigRound.FLOAT_MINUS_INFINITY
@@ -230,7 +230,7 @@ def : CvtPat<f32, f64, BrigTypeX.F16, BrigTypeX.F64,
   int_HSAIL_cvt_zero_f16_f64, BrigRound.FLOAT_ZERO
 >;
 def : CvtPat<f32, f64, BrigTypeX.F16, BrigTypeX.F64,
-  int_HSAIL_cvt_near_f16_f64, BrigRound.FLOAT_NEAR_EVEN
+  int_HSAIL_cvt_near_f16_f64, BrigRound.FLOAT_DEFAULT
 >;
 def : CvtPat<f32, f64, BrigTypeX.F16, BrigTypeX.F64,
   int_HSAIL_cvt_down_f16_f64, BrigRound.FLOAT_MINUS_INFINITY
