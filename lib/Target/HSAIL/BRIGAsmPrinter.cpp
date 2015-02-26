@@ -1798,7 +1798,7 @@ void BRIGAsmPrinter::BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSA
   }
 }
 
-void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned opNum) 
+void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned opNum)
 {
   assert(opNum + 2 < MI->getNumOperands());
   const MachineOperand &base = MI->getOperand(opNum),
@@ -1949,7 +1949,7 @@ void BRIGAsmPrinter::BrigEmitImageInst(const MachineInstr *MI,
   unsigned opCnt = 0;
 
   if (inst.geometry() == Brig::BRIG_GEOMETRY_2DDEPTH ||
-      inst.geometry() == Brig::BRIG_GEOMETRY_2DADEPTH) 
+      inst.geometry() == Brig::BRIG_GEOMETRY_2DADEPTH)
   {
     BrigEmitOperand(MI, opCnt++, inst);
   } else {
