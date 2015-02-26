@@ -310,12 +310,12 @@ bool BRIGAsmPrinter::canInitHSAILAddressSpace(const GlobalVariable* gv) const {
   return canInit;
 }
 
-static Brig::BrigLinkage findGlobalBrigLinkage(const GlobalVariable *GV) {
-  if (GV->isExternalLinkage(GV->getLinkage()))
-    return Brig::BRIG_LINKAGE_PROGRAM;
-
-  if (GV->isInternalLinkage(GV->getLinkage()))
+static Brig::BrigLinkage findGlobalBrigLinkage(const GlobalValue &GV) {
+  if (GV.isInternalLinkage(GV.getLinkage()))
     return Brig::BRIG_LINKAGE_MODULE;
+
+  if (GV.isExternalLinkage(GV.getLinkage()))
+    return Brig::BRIG_LINKAGE_PROGRAM;
 
   return  Brig::BRIG_LINKAGE_NONE;
 }
@@ -350,7 +350,7 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
                              getHSAILSegment(GV),
                              HSAIL::getBrigType(EltTy, DL));
 
-  globalVar.linkage() = findGlobalBrigLinkage(GV);
+  globalVar.linkage() = findGlobalBrigLinkage(*GV);
   globalVar.allocation() = Brig::BRIG_ALLOCATION_AGENT;
   globalVar.modifier().isDefinition() = 1;
 
@@ -400,9 +400,7 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &rF,
 
   HSAIL_ASM::DirectiveFunction fx = brigantine.declFunc(( "&" + sFuncName).str());
   // TODO_HSA: pending BRIG_LINKAGE_STATIC implementation in the Finalizer
-  fx.linkage() = F->isExternalLinkage(F->getLinkage()) ?
-      Brig::BRIG_LINKAGE_PROGRAM : ( F->isInternalLinkage(F->getLinkage()) ?
-     Brig::BRIG_LINKAGE_MODULE : Brig::BRIG_LINKAGE_NONE );
+  fx.linkage() = findGlobalBrigLinkage(*F);
 
   paramCounter = 0;
   if (retType && (retType->getTypeID() != Type::VoidTyID)) {
