@@ -106,8 +106,6 @@ llvm::MachineOperand &getIndex(llvm::MachineInstr *MI);
 const llvm::MachineOperand &getIndex(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getOffset(llvm::MachineInstr *MI);
 const llvm::MachineOperand &getOffset(const llvm::MachineInstr *MI);
-llvm::MachineOperand &getBrigType(llvm::MachineInstr *MI);
-const llvm::MachineOperand &getBrigType(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getWidth(llvm::MachineInstr *MI);
 const llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getLoadModifierMask(llvm::MachineInstr *MI);

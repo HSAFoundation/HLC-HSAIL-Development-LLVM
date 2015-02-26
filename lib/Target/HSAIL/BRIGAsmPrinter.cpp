@@ -1827,7 +1827,8 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned
     assert(isInt<32>(addr));
 
     if ((MI->getOpcode() == HSAIL::LD_V1) &&
-        HSAIL::getBrigType(MI).getImm() == Brig::BRIG_TYPE_SAMP) {
+        TII->getNamedOperand(*MI, HSAIL::OpName::TypeLength)->getImm() ==
+        Brig::BRIG_TYPE_SAMP) {
       BrigEmitOperandImage(MI, opNum); // Constant sampler.
       return;
     }

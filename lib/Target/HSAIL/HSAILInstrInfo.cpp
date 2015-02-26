@@ -1081,7 +1081,9 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
       MI.setDesc(get(HSAIL::ST_V1));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsKill();
-      HSAIL::getBrigType(&MI).setImm(Brig::BRIG_TYPE_U32);
+
+      MachineOperand *TypeOp = getNamedOperand(MI, HSAIL::OpName::TypeLength);
+      TypeOp->setImm(Brig::BRIG_TYPE_U32);
       RS->setRegUsed(tempU32);
     }
     return true;
@@ -1099,7 +1101,10 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
       MI.setDesc(get(HSAIL::LD_V1));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsDef();
-      HSAIL::getBrigType(&MI).setImm(Brig::BRIG_TYPE_U32);
+
+      MachineOperand *TypeOp = getNamedOperand(MI, HSAIL::OpName::TypeLength);
+      TypeOp->setImm(Brig::BRIG_TYPE_U32);
+
       RS->setRegUsed(tempU32);
     }
     return true;

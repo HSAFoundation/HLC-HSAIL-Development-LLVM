@@ -208,18 +208,6 @@ const llvm::MachineOperand &getOffset(const llvm::MachineInstr *MI) {
 }
 
 // FIXME: Remove this
-llvm::MachineOperand &getBrigType(llvm::MachineInstr *MI) {
-  int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::TypeLength);
-  assert(Idx != -1);
-  return MI->getOperand(Idx);
-}
-
-const llvm::MachineOperand &getBrigType(const llvm::MachineInstr *MI)
-{
-  return getBrigType(const_cast<llvm::MachineInstr*>(MI));
-}
-
-// FIXME: Remove this
 llvm::MachineOperand &getWidth(llvm::MachineInstr *MI) {
   int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::width);
   assert(Idx != -1);
