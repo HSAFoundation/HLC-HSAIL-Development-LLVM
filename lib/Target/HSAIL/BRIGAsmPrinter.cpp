@@ -320,6 +320,10 @@ static Brig::BrigLinkage findGlobalBrigLinkage(const GlobalVariable *GV) {
   return  Brig::BRIG_LINKAGE_NONE;
 }
 
+static HSAIL_ASM::SRef makeSRef(const SmallVectorImpl<char> &Str) {
+  return HSAIL_ASM::SRef(Str.begin(), Str.end());
+}
+
 /// EmitGlobalVariable - Emit the specified global variable to the .s file.
 void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
 {
@@ -327,12 +331,11 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
     return;
 
   const DataLayout& DL = getDataLayout();
-  std::stringstream ss;
 
+  SmallString<256> NameStr;
   unsigned AS = GV->getType()->getAddressSpace();
-  ss << getSymbolPrefixForAddressSpace(AS) << GV->getName();
-
-  string nameString = ss.str();
+  NameStr += getSymbolPrefixForAddressSpace(AS);
+  NameStr += GV->getName();
 
 
   // Initializer has pointer element type.
@@ -342,9 +345,10 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   Type *EltTy = analyzeType(InitTy, NElts, DL, GV->getContext());
 
   // TODO_HSA: pending BRIG_LINKAGE_STATIC implementation in the Finalizer
-  HSAIL_ASM::DirectiveVariable globalVar =
-    brigantine.addVariable(nameString, getHSAILSegment(GV),
-                           HSAIL::getBrigType(EltTy, DL));
+  HSAIL_ASM::DirectiveVariable globalVar
+    = brigantine.addVariable(makeSRef(NameStr),
+                             getHSAILSegment(GV),
+                             HSAIL::getBrigType(EltTy, DL));
 
   globalVar.linkage() = findGlobalBrigLinkage(GV);
   globalVar.allocation() = Brig::BRIG_ALLOCATION_AGENT;
