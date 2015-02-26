@@ -1169,8 +1169,8 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::CLASS";
   case HSAILISD::LDA:
     return "HSAILISD::LDA";
-  case HSAILISD::ACTIVELANESHUFFLE:
-    return "HSAILISD::ACTIVELANESHUFFLE";
+  case HSAILISD::ACTIVELANEPERMUTE:
+    return "HSAILISD::ACTIVELANEPERMUTE";
   case HSAILISD::ACTIVELANEID:
     return "HSAILISD::ACTIVELANEID";
   case HSAILISD::ACTIVELANECOUNT:
@@ -1484,7 +1484,7 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     return lowerSamplerInitializerOperand(Op, DAG);
 
   switch (IntNo) {
-  case HSAILIntrinsic::HSAIL_activelaneshuffle_b32: {
+  case HSAILIntrinsic::HSAIL_activelanepermute_b32: {
     SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
 
     const SDValue Ops[] = {
@@ -1496,10 +1496,10 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
       Op.getOperand(5)  // src3
     };
 
-    return DAG.getNode(HSAILISD::ACTIVELANESHUFFLE, SL, VTs, Ops);
+    return DAG.getNode(HSAILISD::ACTIVELANEPERMUTE, SL, VTs, Ops);
   }
 
-  case HSAILIntrinsic::HSAIL_activelaneshuffle_b64: {
+  case HSAILIntrinsic::HSAIL_activelanepermute_b64: {
     SDVTList VTs = DAG.getVTList(MVT::i64, MVT::Other);
 
     const SDValue Ops[] = {
@@ -1511,10 +1511,10 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
       Op.getOperand(5)  // src3
     };
 
-    return DAG.getNode(HSAILISD::ACTIVELANESHUFFLE, SL, VTs, Ops);
+    return DAG.getNode(HSAILISD::ACTIVELANEPERMUTE, SL, VTs, Ops);
   }
 
-  case HSAILIntrinsic::HSAIL_activelaneshuffle_width_b32: {
+  case HSAILIntrinsic::HSAIL_activelanepermute_width_b32: {
     SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
 
     const SDValue Ops[] = {
@@ -1526,10 +1526,10 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
       Op.getOperand(5)  // src3
     };
 
-    return DAG.getNode(HSAILISD::ACTIVELANESHUFFLE, SL, VTs, Ops);
+    return DAG.getNode(HSAILISD::ACTIVELANEPERMUTE, SL, VTs, Ops);
   }
 
-  case HSAILIntrinsic::HSAIL_activelaneshuffle_width_b64: {
+  case HSAILIntrinsic::HSAIL_activelanepermute_width_b64: {
     SDVTList VTs = DAG.getVTList(MVT::i64, MVT::Other);
 
     const SDValue Ops[] = {
@@ -1541,7 +1541,7 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
       Op.getOperand(5)  // src3
     };
 
-    return DAG.getNode(HSAILISD::ACTIVELANESHUFFLE, SL, VTs, Ops);
+    return DAG.getNode(HSAILISD::ACTIVELANEPERMUTE, SL, VTs, Ops);
   }
 
   case HSAILIntrinsic::HSAIL_activelaneid_u32: {

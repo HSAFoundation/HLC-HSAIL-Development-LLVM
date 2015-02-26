@@ -75,14 +75,14 @@ def : Pat<
 
 
 
-def ACTIVELANESHUFFLE :
-  HSAILInstLane_ActiveLaneShuffle<"activelaneshuffle",
-                                   BrigOpcode.ACTIVELANESHUFFLE>;
+def ACTIVELANEPERMUTE :
+  HSAILInstLane_ActiveLanePermute<"activelanepermute",
+                                   BrigOpcode.ACTIVELANEPERMUTE>;
 
-def : ActiveLaneShufflePat<ACTIVELANESHUFFLE,
-                           HSAILactivelaneshuffle, i32, BrigTypeX.B32>;
-def : ActiveLaneShufflePat<ACTIVELANESHUFFLE,
-                           HSAILactivelaneshuffle, i64, BrigTypeX.B64>;
+def : ActiveLanePermutePat<ACTIVELANEPERMUTE,
+                           HSAILactivelanepermute, i32, BrigTypeX.B32>;
+def : ActiveLanePermutePat<ACTIVELANEPERMUTE,
+                           HSAILactivelanepermute, i64, BrigTypeX.B64>;
 
 def ACTIVELANEID : HSAILInstLane_0Op<"activelaneid", BrigOpcode.ACTIVELANEID>;
 def : ActiveLaneIdPat<ACTIVELANEID, HSAILactivelaneid, i32, BrigTypeX.U32>;

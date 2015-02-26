@@ -27,7 +27,7 @@ namespace llvm {
       FLDEXP,
       CLASS,
       LDA,
-      ACTIVELANESHUFFLE,
+      ACTIVELANEPERMUTE,
       ACTIVELANEID,
       ACTIVELANECOUNT,
       ACTIVELANEMASK,

@@ -804,8 +804,8 @@ static Brig::BrigOpcode getInstSourceTypeBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstLaneBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::ACTIVELANESHUFFLE:
-    return Brig::BRIG_OPCODE_ACTIVELANESHUFFLE;
+  case HSAIL::ACTIVELANEPERMUTE:
+    return Brig::BRIG_OPCODE_ACTIVELANEPERMUTE;
   case HSAIL::ACTIVELANEID:
     return Brig::BRIG_OPCODE_ACTIVELANEID;
   case HSAIL::ACTIVELANECOUNT:

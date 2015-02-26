@@ -8,7 +8,7 @@ def HSAILLdExpOp : SDTypeProfile<1, 2,
   [SDTCisSameAs<0, 1>, SDTCisFP<0>, SDTCisInt<2>]
 >;
 
-def HSAILActiveLaneShuffleOp : SDTypeProfile<1, 5,
+def HSAILActiveLanePermuteOp : SDTypeProfile<1, 5,
   [SDTCisInt<0>, SDTCisInt<1>,
    SDTCisSameAs<0, 2>, SDTCisInt<3>, SDTCisSameAs<0, 4>, SDTCisInt<5>]
 >;
@@ -102,8 +102,8 @@ def HSAILsmad24 : SDNode<"HSAILISD::SMAD24", HSAILDTIntTernaryOp,
 
 def HSAILfldexp : SDNode<"HSAILISD::FLDEXP", HSAILLdExpOp>;
 
-def HSAILactivelaneshuffle : SDNode<"HSAILISD::ACTIVELANESHUFFLE",
-  HSAILActiveLaneShuffleOp, [SDNPHasChain, SDNPSideEffect]
+def HSAILactivelanepermute : SDNode<"HSAILISD::ACTIVELANEPERMUTE",
+  HSAILActiveLanePermuteOp, [SDNPHasChain, SDNPSideEffect]
 >;
 
 def HSAILactivelaneid : SDNode<"HSAILISD::ACTIVELANEID",

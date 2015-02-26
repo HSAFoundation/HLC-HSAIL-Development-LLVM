@@ -257,7 +257,7 @@ class HSAILInstLane_1Op<string opName, bits<16> BrigVal> :
   opName#"$width$TypeLength$sourceType\t$dest, $src0"
 >;
 
-class HSAILInstLane_ActiveLaneShuffle<string opName, bits<16> BrigVal> :
+class HSAILInstLane_ActiveLanePermute<string opName, bits<16> BrigVal> :
   HSAILInstLane<
     BrigVal,
     (outs unknown:$dest),
@@ -779,7 +779,7 @@ class InstSourceType_4Op_Pat<HSAILInst inst,
 // Lane instruction patterns
 ////////////////////////////////////////////////////////////////////////////////
 
-class ActiveLaneShufflePat<Instruction inst,
+class ActiveLanePermutePat<Instruction inst,
                            SDPatternOperator node,
                            ValueType vt,
                            int bt> : Pat<

@@ -56,14 +56,14 @@ def int_HSAIL_activelanecount_width_u32_b1 :
   Intrinsic<[llvm_i32_ty], [llvm_i1_ty], []
 >;
 
-def int_HSAIL_activelaneshuffle_b32 :
-  GCCBuiltin<"__hsail_activelaneshuffle_b32">,
+def int_HSAIL_activelanepermute_b32 :
+  GCCBuiltin<"__hsail_activelanepermute_b32">,
   Intrinsic<[llvm_i32_ty],
     [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i1_ty], []
 >;
 
-def int_HSAIL_activelaneshuffle_width_b32 :
-  GCCBuiltin<"__hsail_activelaneshuffle_wavewidth_b32">,
+def int_HSAIL_activelanepermute_width_b32 :
+  GCCBuiltin<"__hsail_activelanepermute_wavewidth_b32">,
   Intrinsic<[llvm_i32_ty],
     [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i1_ty], []
 >;
@@ -83,14 +83,14 @@ def int_HSAIL_activelanemask_v4_width_b64_b1 :
 
 // For OCL 2.0 64-bit built-ins
 
-def int_HSAIL_activelaneshuffle_b64 :
-  GCCBuiltin< "__hsail_activelaneshuffle_b64">,
+def int_HSAIL_activelanepermute_b64 :
+  GCCBuiltin< "__hsail_activelanepermute_b64">,
   Intrinsic<[llvm_i64_ty],
   [llvm_i64_ty, llvm_i32_ty, llvm_i64_ty, llvm_i1_ty], []
 >;
 
-def int_HSAIL_activelaneshuffle_width_b64 :
-  GCCBuiltin<"__hsail_activelaneshuffle_wavewidth_b64">,
+def int_HSAIL_activelanepermute_width_b64 :
+  GCCBuiltin<"__hsail_activelanepermute_wavewidth_b64">,
   Intrinsic<[llvm_i64_ty],
     [llvm_i64_ty, llvm_i32_ty, llvm_i64_ty, llvm_i1_ty], []
 >;
