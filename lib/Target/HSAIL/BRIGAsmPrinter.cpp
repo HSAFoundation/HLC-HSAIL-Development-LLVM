@@ -310,6 +310,16 @@ bool BRIGAsmPrinter::canInitHSAILAddressSpace(const GlobalVariable* gv) const {
   return canInit;
 }
 
+static Brig::BrigLinkage findGlobalBrigLinkage(const GlobalVariable *GV) {
+  if (GV->isExternalLinkage(GV->getLinkage()))
+    return Brig::BRIG_LINKAGE_PROGRAM;
+
+  if (GV->isInternalLinkage(GV->getLinkage()))
+    return Brig::BRIG_LINKAGE_MODULE;
+
+  return  Brig::BRIG_LINKAGE_NONE;
+}
+
 /// EmitGlobalVariable - Emit the specified global variable to the .s file.
 void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
 {
@@ -336,9 +346,7 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
     brigantine.addVariable(nameString, getHSAILSegment(GV),
                            HSAIL::getBrigType(EltTy, DL));
 
-  globalVar.linkage() = GV->isExternalLinkage(GV->getLinkage()) ?
-      Brig::BRIG_LINKAGE_PROGRAM : ( GV->isInternalLinkage(GV->getLinkage()) ?
-     Brig::BRIG_LINKAGE_MODULE : Brig::BRIG_LINKAGE_NONE );
+  globalVar.linkage() = findGlobalBrigLinkage(GV);
   globalVar.allocation() = Brig::BRIG_ALLOCATION_AGENT;
   globalVar.modifier().isDefinition() = 1;
 
