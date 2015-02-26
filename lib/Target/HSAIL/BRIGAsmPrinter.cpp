@@ -97,7 +97,7 @@ BRIGAsmPrinter::getAtomicOpcode(const MachineInstr *MI) const {
 Brig::BrigSegment
 BRIGAsmPrinter::getAtomicSegment(const MachineInstr *MI) const {
   int64_t Val = TII->getNamedModifierOperand(*MI, HSAIL::OpName::segment);
-  assert(Val > 0 && Val < Brig::BRIG_SEGMENT_EXTSPACE0);
+  assert(Val > 0 && Val < Brig::BRIG_SEGMENT_AMD_GCN);
   return static_cast<Brig::BrigSegment>(Val);
 }
 
@@ -282,7 +282,7 @@ Brig::BrigSegment8_t BRIGAsmPrinter::getHSAILSegment(unsigned AddressSpace)
   case HSAILAS::CONSTANT_ADDRESS: return Brig::BRIG_SEGMENT_READONLY;
   case HSAILAS::GROUP_ADDRESS:    return Brig::BRIG_SEGMENT_GROUP;
   case HSAILAS::FLAT_ADDRESS:     return Brig::BRIG_SEGMENT_FLAT;
-  case HSAILAS::REGION_ADDRESS:   return Brig::BRIG_SEGMENT_EXTSPACE0;
+  case HSAILAS::REGION_ADDRESS:   return Brig::BRIG_SEGMENT_AMD_GCN;
   case HSAILAS::KERNARG_ADDRESS:  return Brig::BRIG_SEGMENT_KERNARG;
   case HSAILAS::ARG_ADDRESS:      return Brig::BRIG_SEGMENT_ARG;
   case HSAILAS::SPILL_ADDRESS:    return Brig::BRIG_SEGMENT_SPILL;

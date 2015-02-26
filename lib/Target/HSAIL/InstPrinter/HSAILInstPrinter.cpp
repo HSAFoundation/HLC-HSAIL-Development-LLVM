@@ -922,7 +922,7 @@ void HSAILInstPrinter::printBrigSegment(const MCInst *MI, unsigned OpNo,
   case Brig::BRIG_SEGMENT_ARG:
     O << "_arg";
     break;
-  case Brig::BRIG_SEGMENT_EXTSPACE0:
+  case Brig::BRIG_SEGMENT_AMD_GCN:
     O << "_region";
     break;
   default:
