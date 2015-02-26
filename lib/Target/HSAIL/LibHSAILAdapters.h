@@ -1,4 +1,4 @@
-//===- LibHSAIL.h - Convert HSAIL LLVM code to assembly --*- C++ -*-===//
+//===- LibHSAIL.h - Convert HSAIL LLVM code to assembly ---------*- C++ -*-===//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -10,8 +10,6 @@
 #define _LIB_HSAIL_ADAPTERS_H_
 
 #include "libHSAIL/HSAILBrigObjectFile.h"
-
-#include <iosfwd>
 
 class RawOstreamWriteAdapter : public HSAIL_ASM::WriteAdapter {
     llvm::raw_ostream& os;
@@ -32,6 +30,5 @@ public:
         os.flush();
     }
 };
-
 
 #endif
