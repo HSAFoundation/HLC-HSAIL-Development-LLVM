@@ -31,7 +31,7 @@ define float @test_unpackcvt_f32_u8x4_3(i32 %x) #0 {
 }
 
 ; HSAIL-LABEL: {{^}}prog function &test_unpackcvt_f32_u8x4_0_imm(
-; HSAIL: unpackcvt_f32_u8x4 {{\$s[0-9]+}}, _u8x4(0,0,48,57), 0;
+; HSAIL: unpackcvt_f32_u8x4 {{\$s[0-9]+}}, u8x4(0,0,48,57), 0;
 define float @test_unpackcvt_f32_u8x4_0_imm() #0 {
   %val = call float @llvm.HSAIL.unpackcvt.f32.u8x4(i32 12345, i32 0) #0
   ret float %val
