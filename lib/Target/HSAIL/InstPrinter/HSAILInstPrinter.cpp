@@ -182,9 +182,6 @@ void HSAILInstPrinter::printBrigAllocation(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigAluModifierMask(const MCInst *MI, unsigned OpNo,
                                                 raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case Brig::BRIG_ALU_ROUND:
-    O << "ROUND";
-    break;
   case Brig::BRIG_ALU_FTZ:
     O << "FTZ";
     break;
@@ -369,9 +366,6 @@ void HSAILInstPrinter::printBrigControlDirective(const MCInst *MI,
     break;
   case Brig::BRIG_CONTROL_MAXFLATWORKGROUPSIZE:
     O << "maxflatworkgroupsize";
-    break;
-  case Brig::BRIG_CONTROL_REQUESTEDWORKGROUPSPERCU:
-    O << "requestedworkgroupspercu";
     break;
   case Brig::BRIG_CONTROL_REQUIREDDIM:
     O << "requireddim";
@@ -644,20 +638,17 @@ void HSAILInstPrinter::printBrigMemoryOrder(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigMemoryScope(const MCInst *MI, unsigned OpNo,
                                             raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case Brig::BRIG_MEMORY_SCOPE_WORKITEM:
-    O << "_wi";
-    break;
   case Brig::BRIG_MEMORY_SCOPE_WAVEFRONT:
-    O << "_wv";
+    O << "wave";
     break;
   case Brig::BRIG_MEMORY_SCOPE_WORKGROUP:
     O << "_wg";
     break;
-  case Brig::BRIG_MEMORY_SCOPE_COMPONENT:
-    O << "_cmp";
+  case Brig::BRIG_MEMORY_SCOPE_AGENT:
+    O << "agent";
     break;
   case Brig::BRIG_MEMORY_SCOPE_SYSTEM:
-    O << "_sys";
+    O << "system";
     break;
   }
 }
@@ -724,8 +715,11 @@ void HSAILInstPrinter::printBrigRound(const MCInst *MI, unsigned OpNo,
   switch (MI->getOperand(OpNo).getImm()) {
   case Brig::BRIG_ROUND_NONE:
     break;
+  case Brig::BRIG_ROUND_FLOAT_DEFAULT:
+    O << "_2";
+    break;
   case Brig::BRIG_ROUND_FLOAT_NEAR_EVEN:
-    // This is the default for FP ops, omit it.
+    O << "_near";
     break;
   case Brig::BRIG_ROUND_FLOAT_ZERO:
     O << "_zero";
@@ -741,6 +735,7 @@ void HSAILInstPrinter::printBrigRound(const MCInst *MI, unsigned OpNo,
     break;
   case Brig::BRIG_ROUND_INTEGER_ZERO:
     // This is the default for integer ops, omit it.
+    // O << "_zeroi";
     break;
   case Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY:
     O << "_upi";
@@ -760,28 +755,28 @@ void HSAILInstPrinter::printBrigRound(const MCInst *MI, unsigned OpNo,
   case Brig::BRIG_ROUND_INTEGER_MINUS_INFINITY_SAT:
     O << "_downi_sat";
     break;
-  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALING_NEAR_EVEN:
     O << "_sneari";
     break;
-  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_ZERO:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALING_ZERO:
     O << "_szeroi";
     break;
-  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALING_PLUS_INFINITY:
     O << "_supi";
     break;
-  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALING_MINUS_INFINITY:
     O << "_sdowni";
     break;
-  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN_SAT:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALING_NEAR_EVEN_SAT:
     O << "_sneari_sat";
     break;
-  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_ZERO_SAT:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALING_ZERO_SAT:
     O << "_szeroi_sat";
     break;
-  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY_SAT:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALING_PLUS_INFINITY_SAT:
     O << "_supi_sat";
     break;
-  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY_SAT:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALING_MINUS_INFINITY_SAT:
     O << "_sdowni_sat";
     break;
   }
@@ -1082,16 +1077,13 @@ void HSAILInstPrinter::printBrigVariableModifierMask(const MCInst *MI,
                                                      unsigned OpNo,
                                                      raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case Brig::BRIG_SYMBOL_DEFINITION:
+  case Brig::BRIG_VARIABLE_DEFINITION:
     O << "DEFINITION";
     break;
-  case Brig::BRIG_SYMBOL_CONST:
+  case Brig::BRIG_VARIABLE_CONST:
     O << "CONST";
     break;
-  case Brig::BRIG_SYMBOL_ARRAY:
-    O << "ARRAY";
-    break;
-  case Brig::BRIG_SYMBOL_FLEX_ARRAY:
+  case Brig::BRIG_VARIABLE_FLEX_ARRAY:
     O << "FLEX_ARRAY";
     break;
   }
