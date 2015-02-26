@@ -101,12 +101,11 @@ define void @positive_imm_offset_global(i32 addrspace(1)* %out) {
 
 ; FUNC-LABEL: {{^}}prog function &negative_imm_offset_global
 ; HSAIL: group_u32 %lds_global[128];
-; HSAIL: ld_group_align(4)_u32 [[REG:\$s[0-9]]], [%lds_global][-36];
-; HSAIL: add_u32 {{\$s[0-9]+}}, [[REG]], [[REG]];
-define void @negative_imm_offset_global(i32 addrspace(1)* %out) {
-  %a = load i32 addrspace(3)* getelementptr (i32 addrspace(3)* getelementptr inbounds ([128 x i32] addrspace(3)* @lds_global, i32 0, i32 0), i32 -9)
-  %result = add i32 %a, %a
-  store i32 %result, i32 addrspace(1)* %out
+; HSAIL: lda_group_u32 [[REG:\$s[0-9]]], [%lds_global][-36];
+; HSAIL: st_global_align(4)_u32 [[REG]],
+define void @negative_imm_offset_global(i32 addrspace(3)* addrspace(1)* %out) {
+  %gep = getelementptr inbounds [128 x i32] addrspace(3)* @lds_global, i32 0, i32 -9
+  store i32 addrspace(3)* %gep, i32 addrspace(3)* addrspace(1)* %out
   ret void
 }
 
