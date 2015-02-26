@@ -134,10 +134,8 @@ Brig::BrigType16_t getBrigType(Type* type, const DataLayout &DL, bool Signed) {
       return Signed ? Brig::BRIG_TYPE_S64 : Brig::BRIG_TYPE_U64;
     } else if (type->isIntegerTy(1)) {
       return Brig::BRIG_TYPE_B1;
-    } else {
-      type->dump();
-      assert(!"Found a case we don't handle!");
-    }
+    } else
+      llvm_unreachable("Unhandled type");
     break;
   case Type::PointerTyID: {
     if (OpaqueType OT = GetOpaqueType(type)) {
@@ -156,10 +154,8 @@ Brig::BrigType16_t getBrigType(Type* type, const DataLayout &DL, bool Signed) {
     return getBrigType(cast<ArrayType>(type)->getElementType(), DL, Signed);
   default:
     type->dump();
-    assert(!"Found a case we don't handle!");
-    break;
+    llvm_unreachable("Unhandled type");
   }
-  return Brig::BRIG_TYPE_U8;  // FIXME needs a value here for linux release build
 }
 
 unsigned HSAILgetAlignTypeQualifier(Type *ty, const DataLayout& DL,
