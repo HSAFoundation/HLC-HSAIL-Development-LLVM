@@ -403,7 +403,7 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &rF,
   fx.linkage() = findGlobalBrigLinkage(*F);
 
   paramCounter = 0;
-  if (retType && (retType->getTypeID() != Type::VoidTyID)) {
+  if (!retType->isVoidTy()) {
     EmitFunctionReturn(retType, false, StringRef(), F->getAttributes().getRetAttributes()
                        .hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt));
   }
