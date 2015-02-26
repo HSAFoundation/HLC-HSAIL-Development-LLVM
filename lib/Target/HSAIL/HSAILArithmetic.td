@@ -113,11 +113,8 @@ def : InstBasic_1Op_Pat<NRSQRT, int_HSAIL_nrsqrt_f64, f64, BrigTypeX.F64>;
 def : InstBasic_1Op_Pat<NRCP, int_HSAIL_nrcp_f32, f32, BrigTypeX.F32>;
 def : InstBasic_1Op_Pat<NRCP, int_HSAIL_nrcp_f64, f64, BrigTypeX.F64>;
 
-
-// HSAIL_SPEC_CURRENT <
 def FRACT : HSAILInstMod_1Op<"fract", BrigOpcode.FRACT>;
-defm : InstMod_1Op_FPTypes<FRACT, HSAILfract, BrigRound.NONE>;
-// > HSAIL_SPEC_CURRENT
+defm : InstMod_1Op_FPTypes<FRACT, HSAILfract, BrigRound.FLOAT_DEFAULT>;
 
 // Native Floating-Point Special Functions Operations
 def NSIN : HSAILInstBasic_1Op<"nsin", BrigOpcode.NSIN>;
