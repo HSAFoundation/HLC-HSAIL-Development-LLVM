@@ -24,8 +24,7 @@ using namespace llvm;
 static cl::opt<bool>
 UseStandardAsmPrinter("hsail-asmprinter",
                       cl::desc("Use standard LLVM AsmPrinter instead of BRIGAsmPrinter"),
-                      cl::init(true)
-  );
+                      cl::init(false));
 
 
 // TODO_HSA: As soon as -enable-experimetal llc option is not needed anymore
