@@ -360,7 +360,7 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   // Align arrays at least by 4 bytes
   unsigned align_value = std::max((globalVar.dim() > 1) ? 4U : 0U,
     std::max(GV->getAlignment(),
-             HSAIL::HSAILgetAlignTypeQualifier(GV->getType()->getElementType(), DL, true)));
+             HSAIL::HSAILgetAlignTypeQualifier(InitTy, DL, true)));
   globalVar.align() = getBrigAlignment(align_value);
 
   globalVariableOffsets[GV] = globalVar.brigOffset();
