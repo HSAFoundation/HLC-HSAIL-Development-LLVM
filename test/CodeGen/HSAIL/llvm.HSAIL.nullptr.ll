@@ -17,16 +17,16 @@ define i8* @test_nullptr_private() #0 {
 }
 
 ; HSAIL-LABEL: {{^}}prog function &test_nullptr_global(
-; HSAIL32: nullptr_global_u32 {{\$s[0-9]+}};
-; HSAIL64: nullptr_global_u64 {{\$d[0-9]+}};
+; HSAIL32: nullptr_u32 {{\$s[0-9]+}};
+; HSAIL64: nullptr_u64 {{\$d[0-9]+}};
 define i8 addrspace(1)* @test_nullptr_global() #0 {
   %val = call i8 addrspace(1)* @llvm.HSAIL.nullptr.global.p1i8() #0
   ret i8 addrspace(1)* %val
 }
 
 ; HSAIL-LABEL: {{^}}prog function &test_nullptr_readonly(
-; HSAIL32: nullptr_readonly_u32 {{\$s[0-9]+}};
-; HSAIL64: nullptr_readonly_u64 {{\$d[0-9]+}};
+; HSAIL32: nullptr_u32 {{\$s[0-9]+}};
+; HSAIL64: nullptr_u64 {{\$d[0-9]+}};
 define i8 addrspace(2)* @test_nullptr_readonly() #0 {
   %val = call i8 addrspace(2)* @llvm.HSAIL.nullptr.readonly.p2i8() #0
   ret i8 addrspace(2)* %val

@@ -1278,8 +1278,9 @@ def int_HSAIL_nullptr_flat : GCCBuiltin<"__hsail_nullptr_flat">,
   Intrinsic<[llvm_anyptr_ty], [], [IntrNoMem]
 >;
 
+// FIXME: Should this be removed? It produces the same output as for flat.
 def int_HSAIL_nullptr_global : GCCBuiltin<"__hsail_nullptr_global">,
- Intrinsic<[llvm_anyptr_ty],[], [IntrNoMem]
+  Intrinsic<[llvm_anyptr_ty],[], [IntrNoMem]
 >;
 
 def int_HSAIL_nullptr_group : GCCBuiltin<"__hsail_nullptr_group">,
@@ -1290,6 +1291,7 @@ def int_HSAIL_nullptr_private : GCCBuiltin<"__hsail_nullptr_private">,
   Intrinsic<[llvm_i32_ty], [], [IntrNoMem]
 >;
 
+// FIXME: Should this be removed? It produces the same output as for flat.
 def int_HSAIL_nullptr_readonly : GCCBuiltin<"__hsail_nullptr_readonly">,
   Intrinsic<[llvm_anyptr_ty], [], [IntrNoMem]
 >;

@@ -399,6 +399,8 @@ public:
 
   MVT getScalarShiftAmountTy(EVT LHSTy) const override;
 
+  bool isNoopAddrSpaceCast(unsigned SrcAS, unsigned DestAS) const override;
+
   void AdjustInstrPostInstrSelection(MachineInstr *MI,
                                      SDNode *Node) const override;
 };

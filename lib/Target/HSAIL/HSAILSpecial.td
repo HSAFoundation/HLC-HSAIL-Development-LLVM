@@ -98,16 +98,16 @@ def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_group, i32, BrigTypeX.U32, Addr
 def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_private, i32, BrigTypeX.U32, AddressSpace.PRIVATE>;
 
 let Predicates = [In64BitMode] in {
-  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_global, i64, BrigTypeX.U64, AddressSpace.GLOBAL>;
+  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_global, i64, BrigTypeX.U64, AddressSpace.FLAT>; // Same as flat.
   def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_flat, i64, BrigTypeX.U64, AddressSpace.FLAT>;
-  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_readonly, i64, BrigTypeX.U64, AddressSpace.READONLY>;
+  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_readonly, i64, BrigTypeX.U64, AddressSpace.FLAT>; // Same as flat.
   def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_kernarg, i64, BrigTypeX.U64, AddressSpace.KERNARG>;
 }
 
 let Predicates = [In32BitMode] in {
-  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_global, i32, BrigTypeX.U32, AddressSpace.GLOBAL>;
+  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_global, i32, BrigTypeX.U32, AddressSpace.FLAT>; // Same as flat.
   def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_flat, i32, BrigTypeX.U32, AddressSpace.FLAT>;
-  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_readonly, i32, BrigTypeX.U32, AddressSpace.READONLY>;
+  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_readonly, i32, BrigTypeX.U32, AddressSpace.FLAT>; // Same as flat.
   def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_kernarg, i32, BrigTypeX.U32, AddressSpace.KERNARG>;
 }
 

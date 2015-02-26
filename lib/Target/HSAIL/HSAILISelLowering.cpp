@@ -2039,6 +2039,12 @@ MVT HSAILTargetLowering::getScalarShiftAmountTy(EVT LHSTy) const {
   return MVT::i32;
 }
 
+bool HSAILTargetLowering::isNoopAddrSpaceCast(unsigned SrcAS,
+                                              unsigned DestAS) const {
+  return (SrcAS == HSAILAS::FLAT_ADDRESS && DestAS == HSAILAS::GLOBAL_ADDRESS) ||
+         (SrcAS == HSAILAS::GLOBAL_ADDRESS && DestAS == HSAILAS::FLAT_ADDRESS);
+}
+
 void HSAILTargetLowering::AdjustInstrPostInstrSelection(MachineInstr *MI,
                                                         SDNode *Node) const {
   const HSAILInstrInfo *TII =
