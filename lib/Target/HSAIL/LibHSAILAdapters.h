@@ -21,9 +21,17 @@ public:
     {
     };
 
-    virtual int write(const char* data, size_t numBytes) const {
+    int write(const char* data, size_t numBytes) const override {
         os.write(data, numBytes);
         return 0;
+    }
+
+    Position getPos() const override {
+      llvm_unreachable("Unimplemented");
+    }
+
+    void setPos(Position) override {
+      llvm_unreachable("Unimplemented");
     }
 
     ~RawOstreamWriteAdapter() {
