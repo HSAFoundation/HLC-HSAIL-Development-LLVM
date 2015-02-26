@@ -364,10 +364,6 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   globalVar.align() = getBrigAlignment(align_value);
 
   globalVariableOffsets[GV] = globalVar.brigOffset();
-#if 0
-  printf("GV %s[%p] is at offset %lu\n", nameString.c_str(), (const void*)(GV),
-         (unsigned long)(globalVar.brigOffset()));
-#endif
 
   // TODO_HSA: if group memory has initializer, then emit instructions to
   // initialize dynamically
@@ -587,10 +583,6 @@ namespace {
 
     ~autoCodeEmitter() {
       hipc = brigantine->container().code().size();
-#if 0
-      ::printf("Instruction %p emitted to range %08X - %08X\n",
-        (const void*)_instruction, (unsigned)_lowpc, (unsigned)_hipc);
-#endif
       streamer->SwitchSection(streamer->getContext().getObjectFileInfo()->
         getTextSection());
       assert(lowpc <= hipc);
@@ -1188,9 +1180,6 @@ void BRIGAsmPrinter::EmitEndOfAsmFile(Module &M) {
     mDwarfStream->flush();
     // Stop writing to another stream, if any provided
     mDwarfStream->releaseStream();
-#if 0
-    errs() << "BRIGAsmPrinter: captured " << pos << " DWARF bytes\n";
-#endif
     // Actual size of captured DWARF data may be less than the size of
     // mDwarfStream's internal buffer
     const uint64_t dwarfDataSize = mDwarfStream->tell();
