@@ -880,7 +880,6 @@ static Brig::BrigOpcode getInstAtomicBrigOpcode(unsigned Opc) {
 
   case HSAIL::ATOMICNORET_ADD:
   case HSAIL::ATOMICNORET_AND:
-  case HSAIL::ATOMICNORET_CAS:
   case HSAIL::ATOMICNORET_EXCH:
   case HSAIL::ATOMICNORET_LD:
   case HSAIL::ATOMICNORET_MAX:

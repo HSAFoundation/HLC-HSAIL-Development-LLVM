@@ -27,7 +27,7 @@ def : InstAddr_1Op_Pat<
 multiclass InstAtomicOp<string opName, bits<16> brigVal> {
   def _ADD : InstAtomic<opName#"_add", brigVal, BrigAtomicOperation.ADD, "atomicnoret_add">;
   def _AND : InstAtomic<opName#"_and", brigVal, BrigAtomicOperation.AND, "atomicnoret_and">;
-  def _CAS : InstAtomic<opName#"_cas", brigVal, BrigAtomicOperation.CAS, "atomicnoret_cas">;
+  def _CAS : InstAtomic<opName#"_cas", brigVal, BrigAtomicOperation.CAS>;
   def _EXCH : InstAtomic<opName#"_exch", brigVal, BrigAtomicOperation.EXCH>;
 
   let mayStore = 0 in {
@@ -51,7 +51,6 @@ let hasPostISelHook = 1 in {
 multiclass InstAtomicOp_NoRet<string opName, bits<16> brigVal> {
   def _ADD : InstAtomic_NoRet<opName#"_add", brigVal, BrigAtomicOperation.ADD>;
   def _AND : InstAtomic_NoRet<opName#"_and", brigVal, BrigAtomicOperation.AND>;
-  def _CAS : InstAtomic_NoRet<opName#"_cas", brigVal, BrigAtomicOperation.CAS>;
   def _EXCH : InstAtomic_NoRet<opName#"_exch", brigVal, BrigAtomicOperation.EXCH>;
   def _LD : InstAtomic_NoRet<opName#"_ld", brigVal, BrigAtomicOperation.LD>;
   def _MAX : InstAtomic_NoRet<opName#"_max", brigVal, BrigAtomicOperation.MAX>;
