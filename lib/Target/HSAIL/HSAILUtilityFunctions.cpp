@@ -104,7 +104,7 @@ uint64_t getNumElementsInHSAILType(Type* type, const DataLayout& dataLayout) {
   return 0;
 }
 
-Brig::BrigType16_t getBrigType(Type* type, const DataLayout &DL, bool Signed) {
+Brig::BrigTypeX getBrigType(Type* type, const DataLayout &DL, bool Signed) {
   switch (type->getTypeID()) {
   case Type::VoidTyID:
     return Brig::BRIG_TYPE_NONE; // TODO_HSA: FIXME: void
@@ -138,9 +138,9 @@ Brig::BrigType16_t getBrigType(Type* type, const DataLayout &DL, bool Signed) {
     // Treat struct as array of bytes.
     return Brig::BRIG_TYPE_U8_ARRAY;
   case Type::VectorTyID:
-    return getBrigType(type->getScalarType(), DL, Signed) | Brig::BRIG_TYPE_ARRAY;
+    return static_cast<Brig::BrigTypeX>(getBrigType(type->getScalarType(), DL, Signed) | Brig::BRIG_TYPE_ARRAY);
   case Type::ArrayTyID:
-    return getBrigType(cast<ArrayType>(type)->getElementType(), DL, Signed) | Brig::BRIG_TYPE_ARRAY;
+    return static_cast<Brig::BrigTypeX>(getBrigType(cast<ArrayType>(type)->getElementType(), DL, Signed) | Brig::BRIG_TYPE_ARRAY);
   default:
     type->dump();
     llvm_unreachable("Unhandled type");

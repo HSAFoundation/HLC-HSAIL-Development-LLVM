@@ -85,8 +85,8 @@ namespace HSAIL {
 
 uint64_t getNumElementsInHSAILType(llvm::Type* type,
                                    const llvm::DataLayout& dataLayout);
-Brig::BrigType16_t getBrigType(Type* Ty, const DataLayout &DL,
-                               bool Signed = false);
+Brig::BrigTypeX getBrigType(Type* Ty, const DataLayout &DL,
+                            bool Signed = false);
 
 unsigned getAlignTypeQualifier(llvm::Type *ty, const llvm::DataLayout& DL,
                                bool isPreferred);

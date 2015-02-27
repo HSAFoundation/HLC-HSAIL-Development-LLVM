@@ -180,49 +180,53 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
   if (isa<UndefValue>(CV)) // Don't emit anything for undefined initializers.
     return;
 
-  HSAIL_ASM::SRef init;
-  char zeroes[32];
+  Brig::BrigTypeX EltBT
+    = static_cast<Brig::BrigTypeX>(globalVar.type() & ~Brig::BRIG_TYPE_ARRAY);
 
-  unsigned EltBrigType = HSAIL_ASM::type2bitType(globalVar.type());
-  size_t typeBytes = HSAIL_ASM::getBrigTypeNumBytes(globalVar.type());
+  unsigned EltBrigType = HSAIL_ASM::type2bitType(EltBT);
+  size_t typeBytes = HSAIL_ASM::getBrigTypeNumBytes(EltBT);
 
-  assert(typeBytes <= sizeof(zeroes));
-
+  bool isArray = globalVar.type() & Brig::BRIG_TYPE_ARRAY;
   // If this is a trivially null constant, we only need to emit one zero.
   if (CV->isNullValue()) {
-    memset(zeroes, 0, typeBytes);
-    init = HSAIL_ASM::SRef(zeroes, zeroes + typeBytes);
-    globalVar.init() = brigantine.createOperandData(init);
+    unsigned NElts = globalVar.dim();
+    if (NElts == 0)
+      NElts = 1;
+
+    uint64_t Size = NElts * typeBytes;
+    std::unique_ptr<char[]> Zeros(new char[Size]());
+
+    // FIXME: Should not have to allocate a zero array for this.
+    HSAIL_ASM::SRef init(Zeros.get(), Zeros.get() + Size);
+    globalVar.init() = brigantine.createOperandConstantBytes(init, EltBrigType, isArray);
+    return;
+  }
+
+  unsigned EltSize = HSAIL_ASM::getBrigTypeNumBytes(EltBrigType);
+
+  auto Name = globalVar.name().str();
+
+  StoreInitializer store(EltTy, *this);
+  store.append(CV, Name);
+
+  if (store.elementCount() > 0) {
+    globalVar.init()
+      = brigantine.createOperandConstantBytes(makeSRef(store.str()),
+                                              EltBrigType,
+                                              isArray);
   } else {
-    unsigned EltSize = HSAIL_ASM::getBrigTypeNumBytes(EltBrigType);
+    uint64_t Size = globalVar.dim() * typeBytes;
+    std::unique_ptr<char[]> Zeros(new char[Size]());
 
-    auto Name = globalVar.name().str();
+    HSAIL_ASM::SRef init(Zeros.get(), Zeros.get() + Size);
+    globalVar.init() = brigantine.createOperandConstantBytes(init, EltBrigType, isArray);
+  }
 
-    StoreInitializer store(EltTy, *this);
-    store.append(CV, Name);
-
-    if (store.elementCount() > 0) {
-      init = makeSRef(store.str());
-    } else {
-      memset(zeroes, 0, typeBytes);
-      init = HSAIL_ASM::SRef(zeroes, zeroes + typeBytes);
-    }
-
-    for (const auto &VarInit : store.varInitAddresses()) {
-      BrigEmitInitVarWithAddressPragma(Name,
-                                       VarInit.BaseOffset,
-                                       VarInit.Expr,
-                                       EltSize);
-    }
-
-    bool isArray = globalVar.type() & Brig::BRIG_TYPE_ARRAY;
-    if (isArray) {
-      assert(globalVar.dim() * typeBytes  >= init.length());
-    } else {
-      assert(globalVar.dim() == 0 && typeBytes == init.length());
-    }
-
-    globalVar.init() = brigantine.createOperandConstantBytes(init, globalVar.type(), isArray);
+  for (const auto &VarInit : store.varInitAddresses()) {
+    BrigEmitInitVarWithAddressPragma(Name,
+                                     VarInit.BaseOffset,
+                                     VarInit.Expr,
+                                     EltSize);
   }
 }
 
@@ -341,11 +345,18 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   unsigned NElts = 0;
   Type *EltTy = analyzeType(InitTy, NElts, DL, GV->getContext());
 
+  HSAIL_ASM::DirectiveVariable globalVar;
   // TODO_HSA: pending BRIG_LINKAGE_STATIC implementation in the Finalizer
-  HSAIL_ASM::DirectiveVariable globalVar
-    = brigantine.addVariable(makeSRef(NameStr),
-                             getHSAILSegment(GV),
-                             HSAIL::getBrigType(EltTy, DL));
+  if (NElts == 0) {
+    globalVar = brigantine.addVariable(makeSRef(NameStr),
+                                       getHSAILSegment(GV),
+                                       HSAIL::getBrigType(EltTy, DL));
+  } else {
+    globalVar = brigantine.addArrayVariable(makeSRef(NameStr),
+                                            NElts,
+                                            getHSAILSegment(GV),
+                                            HSAIL::getBrigType(EltTy, DL));
+  }
 
   globalVar.linkage() = findGlobalBrigLinkage(*GV);
   globalVar.allocation() = Brig::BRIG_ALLOCATION_AGENT;
@@ -1286,11 +1297,12 @@ HSAIL_ASM::DirectiveVariable BRIGAsmPrinter::EmitLocalVariable(
   unsigned NElts = 0;
   Type *type = analyzeType(InitTy, NElts, DL, GV->getContext());
 
-
   HSAIL_ASM::DirectiveVariable var;
   if (NElts != 0) {
+    Brig::BrigTypeX BT = HSAIL::getBrigType(type, DL);
+
      var = brigantine.addArrayVariable(("%" + GV->getName()).str(), NElts,
-                 segment, HSAIL::getBrigType(type, getDataLayout()));
+                                       segment, BT & ~Brig::BRIG_TYPE_ARRAY);
     // Align arrays at least by 4 bytes
     var.align() = getBrigAlignment(std::max((var.dim() > 1) ? 4U : 0U,
                                             std::max(GV->getAlignment(),
@@ -1498,8 +1510,10 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
   HSAIL_ASM::DirectiveVariable retParam;
   if (NElts != 0) {
     retParam = brigantine.addArrayVariable(
-      ret, NElts, Brig::BRIG_SEGMENT_ARG,
-      HSAIL::getBrigType(EmitTy, DL, isSExt));
+      ret,
+      HSAIL::getNumElementsInHSAILType(type, getDataLayout()),
+      Brig::BRIG_SEGMENT_ARG,
+      HSAIL::getBrigType(EmitTy, getDataLayout(), isSExt));
   } else {
     retParam = brigantine.addVariable(
       ret,
@@ -1555,8 +1569,8 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
     Type *EmitTy = analyzeType(type, NElts, DL, type->getContext());
 
     if (NElts != 0) {
-      sym = brigantine.addArrayVariable(
-        name, NElts, symSegment, HSAIL::getBrigType(EmitTy, DL, isSExt));
+      Brig::BrigTypeX EltTy = HSAIL::getBrigType(EmitTy, DL, isSExt);
+      sym = brigantine.addArrayVariable(name, NElts, symSegment, EltTy);
     } else {
       sym = brigantine.addVariable(name, symSegment,
                           HSAIL::getBrigType(EmitTy, DL, isSExt));

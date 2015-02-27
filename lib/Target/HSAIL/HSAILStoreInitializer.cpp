@@ -79,14 +79,39 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
   }
   case Value::ConstantVectorVal: { // Almost leaf type.
     const ConstantVector *CVE = cast<ConstantVector>(CV);
-    for (unsigned I = 0, E = CVE->getType()->getNumElements(); I < E; ++I)
+    VectorType *Ty = CVE->getType();
+    Type *EltTy = Ty->getElementType();
+    unsigned NElts = Ty->getNumElements();
+    unsigned RealNElts = DL.getTypeAllocSize(Ty) / DL.getTypeAllocSize(EltTy);
+
+    unsigned I;
+    for (I = 0; I < NElts; ++I)
       append(cast<Constant>(CVE->getOperand(I)), Var);
+
+    Constant *Zero = Constant::getNullValue(EltTy);
+    while (I < RealNElts) {
+      append(Zero, Var);
+      ++I;
+    }
+
     break;
   }
   case Value::ConstantDataVectorVal: {
     const ConstantDataVector *CVE = cast<ConstantDataVector>(CV);
-    for (unsigned I = 0, E = CVE->getNumElements(); I < E; ++I)
+    VectorType *Ty = CVE->getType();
+    Type *EltTy = Ty->getElementType();
+    unsigned NElts = Ty->getNumElements();
+    unsigned RealNElts = DL.getTypeAllocSize(Ty) / DL.getTypeAllocSize(EltTy);
+
+    unsigned I;
+    for (I = 0; I < NElts; ++I)
       append(cast<Constant>(CVE->getElementAsConstant(I)), Var);
+
+    Constant *Zero = Constant::getNullValue(EltTy);
+    while (I < RealNElts) {
+      append(Zero, Var);
+      ++I;
+    }
 
     break;
   }
