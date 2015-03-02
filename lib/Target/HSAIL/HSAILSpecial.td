@@ -67,6 +67,8 @@ def : Pat<
   (MEMFENCE imm:$order, imm:$scope)
 >;
 
+def IMAGEFENCE : HSAILInstBasic_0Op_NoRet<"imagefence", BrigOpcode.IMAGEFENCE>;
+def : InstBasic_0Op_NoRet_Pat<IMAGEFENCE, int_HSAIL_imagefence>;
 
 
 def ACTIVELANEPERMUTE :

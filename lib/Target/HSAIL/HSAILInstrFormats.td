@@ -107,7 +107,9 @@ class HSAILInstBasic_0Op_NoRet<string opName, bits<16> BrigVal> :
                  (outs),
                  (ins BrigTypeX:$TypeLength),
   opName#"$TypeLength"
->;
+> {
+  let hasSideEffects = 1;
+}
 
 class HSAILInstBasic_0Op<string opName, bits<16> BrigVal> :
   HSAILInstBasic<BrigVal,
@@ -530,6 +532,12 @@ class InstBasic_0Op_Pat<HSAILInst inst,
                         int bt> : Pat <
   (vt (node)),
   (inst bt)
+>;
+
+class InstBasic_0Op_NoRet_Pat<HSAILInst inst,
+                             SDPatternOperator node> : Pat <
+  (node),
+  (inst BrigTypeX.NONE)
 >;
 
 class InstBasic_1Op_Pat<HSAILInst inst,

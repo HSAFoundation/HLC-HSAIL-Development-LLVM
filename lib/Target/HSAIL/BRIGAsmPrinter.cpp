@@ -681,6 +681,8 @@ static Brig::BrigOpcode getInstBasicBrigOpcode(unsigned Opc) {
     return Brig::BRIG_OPCODE_MAXWAVEID;
   case HSAIL::CLOCK:
     return Brig::BRIG_OPCODE_CLOCK;
+  case HSAIL::IMAGEFENCE:
+    return Brig::BRIG_OPCODE_IMAGEFENCE;
   case HSAIL::CUID:
     return Brig::BRIG_OPCODE_CUID;
   case HSAIL::REM:
