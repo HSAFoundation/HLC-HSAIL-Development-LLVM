@@ -329,7 +329,7 @@ def int_HSAIL_wavebarrier : GCCBuiltin<"__hsail_wavebarrier">,
 >;
 
 def int_HSAIL_memfence : GCCBuiltin<"__hsail_memfence">,
-  Intrinsic<[], [llvm_i32_ty, llvm_i32_ty, llvm_i32_ty, llvm_i32_ty], []
+  Intrinsic<[], [llvm_i32_ty, llvm_i32_ty], []
 >;
 
 // Instrinsics for explicit conversions

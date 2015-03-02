@@ -63,14 +63,8 @@ def : InstBr_0Op_NoRet_Pat<WAVEBARRIER, int_HSAIL_wavebarrier, BrigWidth._WAVESI
 def MEMFENCE : InstMemFence<"memfence", BrigOpcode.MEMFENCE>;
 
 def : Pat<
-  (int_HSAIL_memfence (i32 imm:$order),
-                      (i32 imm:$globalscope),
-                      (i32 imm:$groupscope),
-                      (i32 imm:$imagescope)),
-  (MEMFENCE imm:$order,
-            imm:$globalscope,
-            imm:$groupscope,
-            imm:$imagescope)
+  (int_HSAIL_memfence (i32 imm:$order), (i32 imm:$scope)),
+  (MEMFENCE imm:$order, imm:$scope)
 >;
 
 

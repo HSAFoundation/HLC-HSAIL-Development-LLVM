@@ -374,10 +374,8 @@ class InstMemFence<string opName, bits<16> BrigVal> :
     BrigVal,
     (outs),
     (ins BrigMemoryOrder:$order,
-         BrigMemoryScope:$globalscope,
-         BrigMemoryScope:$groupscope,
-         BrigMemoryScope:$imagescope),
-    opName#"$order$globalscope$groupscope$imagescope"
+         BrigMemoryScope:$scope),
+    opName#"$order$scope"
 >;
 
 // InstMem

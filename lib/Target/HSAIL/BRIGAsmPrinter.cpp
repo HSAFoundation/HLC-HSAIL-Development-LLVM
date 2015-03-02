@@ -2259,14 +2259,13 @@ BRIGAsmPrinter::BrigEmitInstMemFence(const MachineInstr &MI, unsigned BrigOpc) {
   HSAIL_ASM::InstMemFence inst
     = brigantine.addInst<HSAIL_ASM::InstMemFence>(BrigOpc, Brig::BRIG_TYPE_NONE);
 
-  inst.memoryOrder()
-    = TII->getNamedModifierOperand(MI, HSAIL::OpName::order);
+  // FIXME: libHSAIL seems to not have been updated for change to remove
+  // separate segment scope modifiers.
+  inst.memoryOrder() = TII->getNamedModifierOperand(MI, HSAIL::OpName::order);
   inst.globalSegmentMemoryScope()
-    = TII->getNamedModifierOperand(MI, HSAIL::OpName::globalscope);
-  inst.groupSegmentMemoryScope() =
-    TII->getNamedModifierOperand(MI, HSAIL::OpName::groupscope);
-  inst.imageSegmentMemoryScope() =
-    TII->getNamedModifierOperand(MI, HSAIL::OpName::imagescope);
+    = TII->getNamedModifierOperand(MI, HSAIL::OpName::scope);
+  inst.groupSegmentMemoryScope() = inst.globalSegmentMemoryScope();
+  inst.imageSegmentMemoryScope() = Brig::BRIG_MEMORY_SCOPE_NONE;
 
   return inst;
 }
