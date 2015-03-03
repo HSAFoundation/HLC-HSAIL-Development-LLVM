@@ -61,9 +61,3 @@ include "HSAILIntrinsics.td"
 // Instructions support
 //===----------------------------------------------------------------------===//
 include "HSAILInstructions.td"
-
-//===--------------------------------------------------------------------===//
-// Instruction Pattern support - This Must be the last include in the file
-// as it requires items defined in other files
-//===--------------------------------------------------------------------===//
-include "HSAILInstrPatterns.td"

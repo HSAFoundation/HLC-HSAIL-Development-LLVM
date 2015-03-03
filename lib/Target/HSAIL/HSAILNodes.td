@@ -43,13 +43,10 @@ def HSAILSegmentPOp : SDTypeProfile<1, 3,
 // Call/Return DAG Nodes
 //===----------------------------------------------------------------------===//
 def IL_callseq_start : SDNode<"ISD::CALLSEQ_START", SDTIL_CallSeqStart,
-                       [SDNPHasChain, SDNPOutGlue]>;
+                       [SDNPHasChain, SDNPOutGlue, SDNPSideEffect]>;
 
 def IL_callseq_end : SDNode<"ISD::CALLSEQ_END",   SDTIL_CallSeqEnd,
-                     [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue]>;
-
-def IL_call : SDNode<"HSAILISD::CALL", SDTIL_Call,
-              [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic]>;
+                     [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPSideEffect]>;
 
 def HSAILret : SDNode<"HSAILISD::RET", SDTNone,
   [SDNPHasChain, SDNPOptInGlue]

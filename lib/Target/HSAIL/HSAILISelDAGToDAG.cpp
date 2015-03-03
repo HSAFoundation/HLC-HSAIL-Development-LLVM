@@ -725,6 +725,30 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
   case ISD::INTRINSIC_W_CHAIN:
     ResNode = SelectINTRINSIC_W_CHAIN(Node);
     break;
+
+  case ISD::CALLSEQ_START: {
+    // LLVM 3.6 unable to select start/end of call sequence chained with the
+    // rest of the arg scope operations due to the WalkChainUsers check which
+    // reports it may induce a cycle in the graph, so select it manually.
+    ResNode = CurDAG->SelectNodeTo(Node, HSAIL::ARG_SCOPE_START,
+                                   MVT::Other, MVT::Glue,
+                                   Node->getOperand(1), // src0
+                                   Node->getOperand(0)); // Chain
+    break;
+  }
+  case ISD::CALLSEQ_END: {
+    const SDValue Ops[] = {
+      Node->getOperand(1), // src0
+      Node->getOperand(2), // src1
+      Node->getOperand(0), // Chain
+      Node->getOperand(3)  // Glue
+    };
+
+    ResNode = CurDAG->SelectNodeTo(Node, HSAIL::ARG_SCOPE_END,
+                                   MVT::Other, MVT::Glue, Ops);
+    break;
+  }
+
 #if 0
   case ISD::ATOMIC_LOAD:
   case ISD::ATOMIC_STORE:

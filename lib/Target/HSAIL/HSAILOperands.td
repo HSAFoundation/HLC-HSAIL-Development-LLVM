@@ -31,7 +31,7 @@ def Vec4Op : Operand<untyped> {
   let PrintMethod = "printVec4Op";
 }
 
-def calltarget : Operand<i32>;
+def calltarget : Operand<iPTR>;
 
 def GPROrImm : ComplexPattern<untyped, 1, "SelectGPROrImm">;
 

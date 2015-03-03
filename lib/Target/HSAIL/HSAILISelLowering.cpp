@@ -883,32 +883,16 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   SmallVector<ISD::InputArg, 32> &Ins   = CLI.Ins;
   SDValue Chain                         = CLI.Chain;
   SDValue Callee                        = CLI.Callee;
-  bool &isTailCall                      = CLI.IsTailCall;
+  CLI.IsTailCall = false;
 
-  isTailCall = false;
   MachineFunction& MF = DAG.getMachineFunction();
   HSAILParamManager &PM = MF.getInfo<HSAILMachineFunctionInfo>()->getParamManager();
-  Mangler Mang(getDataLayout());
-  // FIXME: DO we need to handle fast calling conventions and tail call
-  // optimizations?? X86/PPC ISelLowering
-  /*bool hasStructRet = (TheCall->getNumArgs())
-    ? TheCall->getArgFlags(0).device()->isSRet()
-    : false;*/
+  Mangler Mang(DL);
 
-  unsigned int NumBytes = 0;//CCInfo.getNextStackOffset();
-  if (isTailCall) {
-    assert(isTailCall && "Tail Call not handled yet!");
-    // See X86/PPC ISelLowering
-  }
+  Chain = DAG.getCALLSEQ_START(Chain, DAG.getIntPtrConstant(0, true), dl);
+  SDValue InFlag = Chain.getValue(1);
 
-  SDValue CallSeqStart = DAG.getCALLSEQ_START(Chain, DAG.getIntPtrConstant(NumBytes, true), dl);
-  Chain = CallSeqStart.getValue(0);
-
-  SmallVector<std::pair<unsigned int, SDValue>, 8> RegsToPass;
-  SmallVector<SDValue, 8> MemOpChains;
-  SDValue StackPtr;
-
-  const FunctionType * funcType = NULL;
+  const FunctionType *funcType = NULL;
   const Function *calleeFunc = NULL;
   const char *FuncName = NULL;
 
@@ -918,21 +902,14 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   // node so that legalize doesn't hack it.
   if (GlobalAddressSDNode *G = dyn_cast<GlobalAddressSDNode>(Callee))  {
     unsigned AS = G->getAddressSpace();
-    Callee = DAG.getTargetGlobalAddress(G->getGlobal(), dl, getPointerTy(AS));
-
     const GlobalValue *GV = G->getGlobal();
-    calleeFunc = static_cast<const Function*>(GV);
+    Callee = DAG.getTargetGlobalAddress(GV, dl, getPointerTy(AS));
+
+    calleeFunc = cast<Function>(GV);
     funcType = calleeFunc->getFunctionType();
     FuncName = GV->getName().data();
-  }
-  else if (ExternalSymbolSDNode *S = dyn_cast<ExternalSymbolSDNode>(Callee)) {
-    unsigned AS = G->getAddressSpace();
-    FuncName = S->getSymbol();
-    Callee = DAG.getTargetExternalSymbol(FuncName, getPointerTy(AS));
-
-    // HSA_TODO: Use `Outs` and `Ins` instead of funcType in the rest of this function
-    assert(!"Not implemented");
-  }
+  } else
+    llvm_unreachable("Cannot lower call to a function which is not a global address");
 
   assert(funcType != NULL);
 
@@ -940,7 +917,6 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   SmallVector<SDValue, 8> VarOps;
   SDVTList VTs = DAG.getVTList(MVT::Other, MVT::Glue);
 
-  SDValue InFlag = CallSeqStart.getValue(1);
   Type *retType = funcType->getReturnType();
   SDValue RetValue;
   if (retType->getTypeID() != Type::VoidTyID) {
@@ -957,16 +933,18 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     SDValue arrSize = DAG.getTargetConstant(
       HSAIL::getNumElementsInHSAILType(retType, *DL), MVT::i32);
     unsigned alignment = HSAIL::HSAILgetAlignTypeQualifier(retType, *DL, false);
+
     SDValue Align = DAG.getTargetConstant(alignment, MVT::i32);
     SDValue ArgDeclOps[] = { RetValue, SDBrigType, arrSize, Align,
                              Chain, InFlag };
-    SDNode *ArgDeclNode = DAG.getMachineNode(HSAIL::ARG_DECL, dl, VTs,
-                  makeArrayRef(ArgDeclOps).drop_back(InFlag.getNode() ? 0 : 1));
-    
+    SDNode *ArgDeclNode
+      = DAG.getMachineNode(HSAIL::ARG_DECL, dl, VTs, ArgDeclOps);
+
     SDValue ArgDecl(ArgDeclNode, 0);
 
-    Chain = ArgDecl.getValue(0);
-    InFlag = ArgDecl.getValue(1);
+    Chain = SDValue(ArgDeclNode, 0);
+    InFlag = Chain.getValue(1);
+
     VarOps.push_back(RetValue);
   }
   // Delimit return value and parameters with 0
@@ -1010,16 +988,16 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     SDValue arrSize =  DAG.getTargetConstant(
       HSAIL::getNumElementsInHSAILType(type, *DL), MVT::i32);
     unsigned alignment = HSAIL::HSAILgetAlignTypeQualifier(type, *DL, false);
+
     SDValue Align = DAG.getTargetConstant(alignment, MVT::i32);
     SDValue ArgDeclOps[] = { StParamValue, SDBrigType, arrSize, Align,
                              Chain, InFlag };
-    SDNode *ArgDeclNode = DAG.getMachineNode(HSAIL::ARG_DECL, dl, VTs,
-                  makeArrayRef(ArgDeclOps).drop_back(InFlag.getNode() ? 0 : 1));
-    SDValue ArgDecl(ArgDeclNode, 0);
-    Chain = ArgDecl.getValue(0);
-    InFlag = ArgDecl.getValue(1);
-    // END array parameter declaration
+    SDNode *ArgDeclNode
+      = DAG.getMachineNode(HSAIL::ARG_DECL, dl, VTs, ArgDeclOps);
+    Chain = SDValue(ArgDeclNode, 0);
+    InFlag = Chain.getValue(1);
 
+    // END array parameter declaration
     VarOps.push_back(StParamValue);
 
     for ( ; j < Outs.size() - 1; j++) {
@@ -1045,7 +1023,6 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
   // If this is a direct call, pass the chain and the callee
   if (Callee.getNode()) {
-    Ops.push_back(Chain);
     Ops.push_back(Callee);
   }
 
@@ -1054,11 +1031,12 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     Ops.push_back(VarOps[i]);
   }
 
-  if (InFlag.getNode()) {
-    Ops.push_back(InFlag);
-  }
+  Ops.push_back(Chain);
+  Ops.push_back(InFlag);
 
-  Chain = DAG.getNode(HSAILISD::CALL, dl, VTs, Ops);
+  SDNode *Call = DAG.getMachineNode(HSAIL::TARGET_CALL, dl, VTs, Ops);
+  Chain = SDValue(Call, 0);
+
   InFlag = Chain.getValue(1);
 
   // Read return value.
@@ -1074,7 +1052,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
   // Create the CALLSEQ_END node
   Chain = DAG.getCALLSEQ_END(Chain,
-                             DAG.getIntPtrConstant(NumBytes, true),
+                             DAG.getIntPtrConstant(0, true),
                              DAG.getIntPtrConstant(0, true),
                              InFlag, dl);
   return Chain;
