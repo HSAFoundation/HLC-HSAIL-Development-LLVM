@@ -35,10 +35,7 @@ let isTerminator = 1, isReturn = 1, isBarrier = 1, hasCtrlDep = 1,
   def RET : HSAILInstBasic_0Op_NoRet<"ret", BrigOpcode.RET>;
 }
 
-def : Pat<
-  (HSAILret),
-  (RET BrigTypeX.NONE)
->;
+def : InstBasic_0Op_NoRet_Pat<RET, HSAILret>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // branch (unconditional and conditional)
