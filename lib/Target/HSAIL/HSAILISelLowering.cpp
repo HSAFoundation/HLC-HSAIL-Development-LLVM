@@ -658,7 +658,6 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
         AAInfo.TBAA && AAInfo.TBAA->getNumOperands() >= 1) {
       if (const MDString *MDS = dyn_cast<MDString>(AAInfo.TBAA->getOperand(0))) {
         if (MDS->getString().equals("retarg")) {
-          assert(op != HSAIL::LD_V1);
           op = HSAIL::RARG_LD_V1;
         }
       }
