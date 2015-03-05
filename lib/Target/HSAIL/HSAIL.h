@@ -222,8 +222,6 @@ namespace llvm {
       InstSourceType = 1 << 20,
 
       // Others.
-      IS_LOAD         = 1 << 21,
-      IS_STORE        = 1 << 22,
       IS_CONV         = 1 << 23,
       IS_IMAGEINST    = 1 << 24
     };

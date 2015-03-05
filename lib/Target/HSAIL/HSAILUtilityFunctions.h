@@ -110,14 +110,6 @@ const llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI);
 llvm::MachineOperand &getLoadModifierMask(llvm::MachineInstr *MI);
 const llvm::MachineOperand &getLoadModifierMask(const llvm::MachineInstr *MI);
 
-static inline bool isLoad(const llvm::MachineInstr *MI) {
-  return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_LOAD;
-}
-
-static inline bool isStore(const llvm::MachineInstr *MI) {
-  return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_STORE;
-}
-
 static inline bool isConv(const llvm::MachineInstr *MI) {
   return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_CONV;
 }

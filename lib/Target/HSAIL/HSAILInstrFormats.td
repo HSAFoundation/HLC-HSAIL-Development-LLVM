@@ -53,8 +53,6 @@ class HSAILInst<dag outs, dag ins,
   bit InstSourceType = 0;
 
   // FIXME: Remove these
-  bit isLoad = 0;
-  bit isStore = 0;
   bit isConv = 0;
   bit isImageInst = 0;
 
@@ -78,8 +76,6 @@ class HSAILInst<dag outs, dag ins,
   let TSFlags{19} = InstSignal;
   let TSFlags{20} = InstSourceType;
 
-  let TSFlags{21} = isLoad;
-  let TSFlags{22} = isStore;
   let TSFlags{23} = isConv;
   let TSFlags{24} = isImageInst;
 }
@@ -391,8 +387,6 @@ class LD<string opName, bits<16> BrigVal, dag outs> :
        BrigWidth:$width,
        BrigMemoryModifierMask:$mask),
     opName#"$segment$align$width$mask$TypeLength\t$dest, $address"> {
-  let isLoad = 1;
-  let isStore = 0;
   let mayStore = 0;
   let hasSideEffects = 0;
 }
@@ -401,9 +395,7 @@ class ST<string opName, bits<16> BrigVal, dag ins> :
   HSAILInstMem<BrigVal, (outs),
     ins,
     opName#"$segment$align$TypeLength\t$src, $address"> {
-  let isLoad = 0;
   let mayLoad = 0;
-  let isStore = 1;
   let hasSideEffects = 0;
 }
 
