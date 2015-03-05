@@ -19,6 +19,8 @@
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/MC/MCAsmBackend.h"
 
+#include "MCTargetDesc/HSAILMCTargetDesc.h"
+
 #define HSAIL_MAJOR_VERSION 3
 #define HSAIL_MINOR_VERSION 1
 #define HSAIL_REVISION_NUMBER 104
@@ -177,17 +179,6 @@ createHSAILFuncArgScopeEmitter(TargetMachine &tm, CodeGenOpt::Level OL);
 extern Target TheHSAIL_32Target, TheHSAIL_64Target;
 
 } // End llvm namespace
-
-/*
-// Defines symbolic names for HSAIL registers.  This defines a mapping from
-// register name to register number.
-//
-#include "HSAILGenRegisterNames.inc"
-
-// Defines symbolic names for the HSAIL instructions.
-//
-#include "HSAILGenInstrNames.inc"
-*/
 
 namespace llvm {
   namespace HSAILAS {

@@ -54,6 +54,7 @@ MCAsmBackend *createHSAIL_64AsmBackendForLLVM32(const Target &T,
 #include "HSAILGenRegisterInfo.inc"
 
 #define GET_INSTRINFO_ENUM
+#define GET_INSTRINFO_OPERAND_ENUM
 #include "HSAILGenInstrInfo.inc"
 
 #define GET_SUBTARGETINFO_ENUM
