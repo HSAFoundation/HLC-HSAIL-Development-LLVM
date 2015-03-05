@@ -11,6 +11,7 @@
 #include "HSAILInstPrinter.h"
 #include "HSAIL.h"
 #include "HSAILBrig.h"
+#include "HSAILInstrInfo.h"
 
 #include "MCTargetDesc/HSAILMCTargetDesc.h"
 #include "llvm/MC/MCExpr.h"
@@ -1198,6 +1199,28 @@ void HSAILInstPrinter::printBrigWidth(const MCInst *MI, unsigned OpNo,
   }
 }
 
+// We need to handle the integer types as well. Sometimes we can end up with an
+// FP immediate in an integer instruction. e.g. an FP select uses a bit HSAIL
+// type but will still have FP operands.
+static void printFPImm(raw_ostream &O, double Imm, Brig::BrigTypeX BT) {
+  switch (BT) {
+  case Brig::BRIG_TYPE_F32:
+  case Brig::BRIG_TYPE_B32:
+  case Brig::BRIG_TYPE_U32:
+    O << format("0F%08" PRIx32, FloatToBits(static_cast<float>(Imm)));
+    break;
+
+  case Brig::BRIG_TYPE_F64:
+  case Brig::BRIG_TYPE_B64:
+  case Brig::BRIG_TYPE_U64:
+    O << format("0D%016" PRIx64, DoubleToBits(Imm));
+    break;
+
+  default:
+    llvm_unreachable("Unsupported FP imm type");
+  }
+}
+
 void HSAILInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
                                     raw_ostream &O) {
 
@@ -1207,30 +1230,64 @@ void HSAILInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
   } else if (Op.isImm()) {
     printImmediate(Op.getImm(), O);
   } else if (Op.isFPImm()) {
+    // This is tricky since we need to print it with a different format
+    // depending on whether it is a float or double, but MCOperand does not
+    // preserve that information.
     const MCInstrDesc &Desc = MII.get(MI->getOpcode());
     const MCOperandInfo &OpInfo = Desc.OpInfo[OpNo];
 
-    // FIXME: Need to find out if this is an f32 imm.
-    O << format("0D%016" PRIx64, DoubleToBits(Op.getFPImm()));
 
-#if 0
-    double Imm = Op.getFPImm();
-    const MCRegisterClass &ImmRC = MRI.getRegClass(OpInfo.RegClass);
-    unsigned Size = ImmRC.getSize();
+    // See if we have a special case instruction which has a fixed register
+    // class operand. If so, we know what size we need to print this operand.
+    if (OpInfo.RegClass != -1) {
+      const MCRegisterClass &ImmRC = MRI.getRegClass(OpInfo.RegClass);
 
-    if (Size == 4) {
-      float FImm = static_cast<float>(Imm);
-      O << "0F" << formatHex(static_cast<uint64_t>(FloatToBits(FImm)));
-    } else if (Size == 8) {
-      O << "0D" << formatHex(DoubleToBits(Imm));
-    } else
-      llvm_unreachable("unhandled fpimm size");
-#endif
+      if (ImmRC.getSize() == 4)
+        printFPImm(O, Op.getFPImm(), Brig::BRIG_TYPE_F32);
+      else if (ImmRC.getSize() == 8)
+        printFPImm(O, Op.getFPImm(), Brig::BRIG_TYPE_F64);
+      else
+        llvm_unreachable("Unsupported FP imm type");
 
+      return;
+    }
 
+    // Some instructions have different source and destination types, and call
+    // their type operands different things. We are never going to be printing
+    // an immediate for a destination, so we assume this has the type of the
+    // source type.
 
+    int SrcTypeIdx = HSAIL::getNamedOperandIdx(MI->getOpcode(),
+                                               HSAIL::OpName::srcTypesrcLength);
+    if (SrcTypeIdx == -1) {
+      // Some instructions have a different name for this.
+      // FIXME: Should change them all to be consistent.
+      SrcTypeIdx = HSAIL::getNamedOperandIdx(MI->getOpcode(),
+                                             HSAIL::OpName::sourceType);
+    }
 
+    if (SrcTypeIdx != -1) {
+      Brig::BrigTypeX BT
+        = static_cast<Brig::BrigTypeX>(MI->getOperand(SrcTypeIdx).getImm());
+      printFPImm(O, Op.getFPImm(), BT);
+      return;
+    }
 
+    // If we can't tell the size by looking at the operand's required register
+    // class (as is true for most instruction operands), we need to check the
+    // type of the instruction. For most instructions, all operands are the same
+    // FP type so we know how big they are.
+
+    int TypeLengthIdx = HSAIL::getNamedOperandIdx(MI->getOpcode(),
+                                                  HSAIL::OpName::TypeLength);
+    if (TypeLengthIdx != -1) {
+      Brig::BrigTypeX BT
+        = static_cast<Brig::BrigTypeX>(MI->getOperand(TypeLengthIdx).getImm());
+      printFPImm(O, Op.getFPImm(), BT);
+      return;
+    }
+
+    llvm_unreachable("Unhandled FP imm for instruction type");
   } else if (Op.isExpr()) {
     const MCExpr *Exp = Op.getExpr();
     Exp->print(O);
