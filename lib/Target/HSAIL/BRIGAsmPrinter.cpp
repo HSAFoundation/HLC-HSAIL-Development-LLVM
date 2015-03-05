@@ -2052,7 +2052,7 @@ HSAIL_ASM::InstCmp BRIGAsmPrinter::BrigEmitInstCmp(const MachineInstr &MI,
   inst.type()
     = TII->getNamedOperand(MI, HSAIL::OpName::destTypedestLength)->getImm();
   inst.sourceType()
-    = TII->getNamedOperand(MI, HSAIL::OpName::srcTypesrcLength)->getImm();
+    = TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
 
 
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
@@ -2072,9 +2072,9 @@ HSAIL_ASM::InstCvt BRIGAsmPrinter::BrigEmitInstCvt(const MachineInstr &MI,
   inst.type()
     = TII->getNamedOperand(MI, HSAIL::OpName::destTypedestLength)->getImm();
   inst.sourceType()
-    = TII->getNamedOperand(MI, HSAIL::OpName::srcTypesrcLength)->getImm();
+    = TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
 
-  // XXX - srcTypesrcLength, destTypedestLength - These names are awful
+  // XXX - sourceType, destTypedestLength - These names are awful
   inst.modifier().ftz()
     = TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
   inst.modifier().round()
@@ -2209,7 +2209,7 @@ HSAIL_ASM::InstSegCvt BRIGAsmPrinter::BrigEmitInstSegCvt(const MachineInstr &MI,
   inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::destTypedestLength)->getImm();
 
   inst.sourceType()
-    = TII->getNamedOperand(MI, HSAIL::OpName::srcTypesrcLength)->getImm();
+    = TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
 
   unsigned Segment = TII->getNamedOperand(MI, HSAIL::OpName::segment)->getImm();
   inst.segment() = getHSAILSegment(Segment);

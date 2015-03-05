@@ -176,9 +176,9 @@ class InstCvt<string opName> : HSAILInst<
     (ins ftz:$ftz,
          BrigRound:$round,
          BrigTypeX:$destTypedestLength,
-         BrigTypeX:$srcTypesrcLength,
+         BrigTypeX:$sourceType,
          unknown:$src),
-    opName#"$ftz$round$destTypedestLength$srcTypesrcLength\t$dest, $src",
+    opName#"$ftz$round$destTypedestLength$sourceType\t$dest, $src",
    []
 > {
   let isConv = 1;
@@ -346,8 +346,8 @@ class HSAILInstSegCvt_1Op<string opName, bits<16> BrigVal> :
                       nonull:$nonull,
                       unknown:$src0,
                       BrigTypeX:$destTypedestLength,
-                      BrigTypeX:$srcTypesrcLength),
-  opName#"$segment$nonull$destTypedestLength$srcTypesrcLength\t$dest, $src0"
+                      BrigTypeX:$sourceType),
+  opName#"$segment$nonull$destTypedestLength$sourceType\t$dest, $src0"
 >;
 
 // InstMemFence
@@ -468,8 +468,8 @@ class InstCmp<string opName, bits<16> BrigVal> :
          unknown:$src0,
          unknown:$src1,
          BrigTypeX:$destTypedestLength,
-         BrigTypeX:$srcTypesrcLength),
-    opName#"$op$ftz$destTypedestLength$srcTypesrcLength\t$dest, $src0, $src1"
+         BrigTypeX:$sourceType),
+    opName#"$op$ftz$destTypedestLength$sourceType\t$dest, $src0, $src1"
 >;
 
 // InstAddr

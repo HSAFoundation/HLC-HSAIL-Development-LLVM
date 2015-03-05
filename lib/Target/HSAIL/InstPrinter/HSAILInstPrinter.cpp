@@ -1258,14 +1258,7 @@ void HSAILInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
     // source type.
 
     int SrcTypeIdx = HSAIL::getNamedOperandIdx(MI->getOpcode(),
-                                               HSAIL::OpName::srcTypesrcLength);
-    if (SrcTypeIdx == -1) {
-      // Some instructions have a different name for this.
-      // FIXME: Should change them all to be consistent.
-      SrcTypeIdx = HSAIL::getNamedOperandIdx(MI->getOpcode(),
-                                             HSAIL::OpName::sourceType);
-    }
-
+                                               HSAIL::OpName::sourceType);
     if (SrcTypeIdx != -1) {
       Brig::BrigTypeX BT
         = static_cast<Brig::BrigTypeX>(MI->getOperand(SrcTypeIdx).getImm());

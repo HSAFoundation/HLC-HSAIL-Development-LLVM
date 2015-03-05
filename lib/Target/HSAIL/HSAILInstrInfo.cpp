@@ -528,7 +528,7 @@ static unsigned GenerateBranchCondReversion(
     Brig::BrigTypeX CmpType
       = static_cast<Brig::BrigTypeX>(
         TII->getNamedOperand(*cond_expr,
-                             HSAIL::OpName::srcTypesrcLength)->getImm());
+                             HSAIL::OpName::sourceType)->getImm());
 
     Brig::BrigCompareOperation OrigOp
       = static_cast<Brig::BrigCompareOperation>(CmpOp->getImm());
