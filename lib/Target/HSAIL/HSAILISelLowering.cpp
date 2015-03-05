@@ -932,8 +932,8 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     SDValue SDBrigType =  DAG.getTargetConstant(BrigType, MVT::i32);
     SDValue arrSize = DAG.getTargetConstant(
       HSAIL::getNumElementsInHSAILType(retType, *DL), MVT::i32);
-    unsigned alignment = HSAIL::HSAILgetAlignTypeQualifier(retType, *DL, false);
 
+    unsigned alignment = HSAIL::getAlignTypeQualifier(retType, *DL, false);
     SDValue Align = DAG.getTargetConstant(alignment, MVT::i32);
     SDValue ArgDeclOps[] = { RetValue, SDBrigType, arrSize, Align,
                              Chain, InFlag };
@@ -987,8 +987,8 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     SDValue SDBrigType =  DAG.getTargetConstant(BrigType, MVT::i32);
     SDValue arrSize =  DAG.getTargetConstant(
       HSAIL::getNumElementsInHSAILType(type, *DL), MVT::i32);
-    unsigned alignment = HSAIL::HSAILgetAlignTypeQualifier(type, *DL, false);
 
+    unsigned alignment = HSAIL::getAlignTypeQualifier(type, *DL, false);
     SDValue Align = DAG.getTargetConstant(alignment, MVT::i32);
     SDValue ArgDeclOps[] = { StParamValue, SDBrigType, arrSize, Align,
                              Chain, InFlag };

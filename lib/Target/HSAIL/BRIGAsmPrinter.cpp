@@ -360,7 +360,7 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   // Align arrays at least by 4 bytes
   unsigned align_value = std::max((globalVar.dim() > 1) ? 4U : 0U,
     std::max(GV->getAlignment(),
-             HSAIL::HSAILgetAlignTypeQualifier(InitTy, DL, true)));
+             HSAIL::getAlignTypeQualifier(InitTy, DL, true)));
   globalVar.align() = getBrigAlignment(align_value);
 
   globalVariableOffsets[GV] = globalVar.brigOffset();
@@ -1260,12 +1260,12 @@ HSAIL_ASM::DirectiveVariable BRIGAsmPrinter::EmitLocalVariable(
     // Align arrays at least by 4 bytes
     var.align() = getBrigAlignment(std::max((var.dim() > 1) ? 4U : 0U,
                                             std::max(GV->getAlignment(),
-                                                     HSAIL::HSAILgetAlignTypeQualifier(type, getDataLayout(), true))));
+                                                     HSAIL::getAlignTypeQualifier(type, getDataLayout(), true))));
   } else {
     var = brigantine.addVariable(("%" + GV->getName()).str(),
                                  segment,
                                  HSAIL::getBrigType(type, getDataLayout()));
-    var.align() = getBrigAlignment(HSAIL::HSAILgetAlignTypeQualifier(type,
+    var.align() = getBrigAlignment(HSAIL::getAlignTypeQualifier(type,
                                      getDataLayout(), true));
   }
   var.allocation() = Brig::BRIG_ALLOCATION_AUTOMATIC;
@@ -1468,8 +1468,8 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
       HSAIL::getBrigType(memType, getDataLayout(), isSExt));
   }
   retParam.align() = getBrigAlignment(std::max(
-    HSAIL::HSAILgetAlignTypeQualifier(memType, getDataLayout(), false),
-    HSAIL::HSAILgetAlignTypeQualifier(type, getDataLayout(), false)));
+    HSAIL::getAlignTypeQualifier(memType, getDataLayout(), false),
+    HSAIL::getAlignTypeQualifier(type, getDataLayout(), false)));
   brigantine.addOutputParameter(retParam);
 }
 
@@ -1530,8 +1530,8 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
                           HSAIL::getBrigType(memType, getDataLayout(), isSExt));
     }
     sym.align() = getBrigAlignment(
-      std::max(HSAIL::HSAILgetAlignTypeQualifier(type, getDataLayout(), false),
-               HSAIL::HSAILgetAlignTypeQualifier(memType, getDataLayout(), false)));
+      std::max(HSAIL::getAlignTypeQualifier(type, getDataLayout(), false),
+               HSAIL::getAlignTypeQualifier(memType, getDataLayout(), false)));
   }
 
   uint64_t rv = sym.brigOffset();

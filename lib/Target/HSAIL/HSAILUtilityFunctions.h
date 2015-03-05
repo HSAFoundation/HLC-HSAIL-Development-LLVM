@@ -90,14 +90,13 @@ bool HSAILrequiresArray(llvm::Type* type);
 Brig::BrigType16_t getBrigType(Type* Ty, const DataLayout &DL,
                                bool Signed = false);
 
-unsigned HSAILgetAlignTypeQualifier(llvm::Type *ty, const llvm::DataLayout& DL,
-                                    bool isPreferred);
+unsigned getAlignTypeQualifier(llvm::Type *ty, const llvm::DataLayout& DL,
+                               bool isPreferred);
 
-const char *
-HSAILgetTypeName(llvm::Type *ptr,
-                 const char *symTab,
-                 llvm::HSAILMachineFunctionInfo *mMFI,
-                 bool signedType);
+const char *getTypeName(llvm::Type *ptr,
+                        const char *symTab,
+                        llvm::HSAILMachineFunctionInfo *mMFI,
+                        bool signedType);
 
 // Helper functions that check the opcode for status information
 llvm::MachineOperand &getBase(llvm::MachineInstr *MI);
@@ -127,7 +126,7 @@ static inline bool isImageInst(const llvm::MachineInstr *MI) {
   return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_IMAGEINST;
 }
 
-bool HSAILisArgInst(const llvm::TargetMachine &TM, const llvm::MachineInstr *MI);
+bool isArgInst(const llvm::TargetMachine &TM, const llvm::MachineInstr *MI);
 
 bool isKernelFunc(const llvm::Function *F);
 bool isSPIRModule(const llvm::Module &M);

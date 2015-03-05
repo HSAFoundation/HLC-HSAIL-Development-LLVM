@@ -154,9 +154,9 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
     Align = mTM->getSubtarget<HSAILSubtarget>().getDataLayout()->getTypeAllocSize(PT->getElementType());
     if ((Align & (Align - 1))) Align = NextPowerOf2(Align);
   }
-  ptrArg += Ip->getName().str() + ":" + 
-    HSAIL::HSAILgetTypeName(PT, symTab, mMFI, 
-                     mMFI->isSignedIntType(Ip)) + ":1:1:" +
+  ptrArg += Ip->getName().str() + ":" +
+    HSAIL::getTypeName(PT, symTab, mMFI,
+                       mMFI->isSignedIntType(Ip)) + ":1:1:" +
     itostr(counter * 16) + ":";
   switch (PT->getAddressSpace()) {
   case HSAILAS::ADDRESS_NONE:
@@ -289,7 +289,7 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
     Type *cType = Ip->getType();
     if (cType->isIntOrIntVectorTy() || cType->isFPOrFPVectorTy()) {
       std::string argMeta("value:");
-      argMeta += Ip->getName().str() + ":" + HSAIL::HSAILgetTypeName(cType, symTab, mMFI
+      argMeta += Ip->getName().str() + ":" + HSAIL::getTypeName(cType, symTab, mMFI
           , mMFI->isSignedIntType(Ip)) + ":";
       int bitsize = cType->getPrimitiveSizeInBits();
       int numEle = 1;
@@ -376,7 +376,7 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
             MemType = "hp\0";
           }
           queueArg += Ip->getName().str() + ":"
-            + HSAIL::HSAILgetTypeName(PT, symTab, mMFI, mMFI->isSignedIntType(Ip))
+            + HSAIL::getTypeName(PT, symTab, mMFI, mMFI->isSignedIntType(Ip))
             + ":1:1:" + itostr(mCBSize * 16) + ":" + MemType;
           mMFI->addMetadata(queueArg, true);
           ++mCBSize;

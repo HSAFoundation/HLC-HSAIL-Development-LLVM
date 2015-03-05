@@ -158,8 +158,8 @@ Brig::BrigType16_t getBrigType(Type* type, const DataLayout &DL, bool Signed) {
   }
 }
 
-unsigned HSAILgetAlignTypeQualifier(Type *ty, const DataLayout& DL,
-                                    bool isPreferred) {
+unsigned getAlignTypeQualifier(Type *ty, const DataLayout& DL,
+                               bool isPreferred) {
   unsigned align = 0;
 
   if (ArrayType *ATy = dyn_cast<ArrayType>(ty))
@@ -231,8 +231,7 @@ const llvm::MachineOperand &getLoadModifierMask(const llvm::MachineInstr *MI)
   return getLoadModifierMask(const_cast<llvm::MachineInstr*>(MI));
 }
 
-bool HSAILisArgInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
-{
+bool isArgInst(const TargetMachine &TM, const llvm::MachineInstr *MI) {
   unsigned op = MI->getOpcode();
   const TargetInstrInfo *TII = TM.getSubtarget<HSAILSubtarget>().getInstrInfo();
   const MCInstrDesc &MCID = TII->get(op);
@@ -243,10 +242,8 @@ bool HSAILisArgInst(const TargetMachine &TM, const llvm::MachineInstr *MI)
 }
 
 
-const char *
-HSAILgetTypeName(Type *ptr, const char *symTab,
-                 HSAILMachineFunctionInfo *mfi, bool signedType)
-{
+const char *getTypeName(Type *ptr, const char *symTab,
+                        HSAILMachineFunctionInfo *mfi, bool signedType) {
   switch (ptr->getTypeID()) {
   case Type::StructTyID:
     {
@@ -301,28 +298,28 @@ HSAILgetTypeName(Type *ptr, const char *symTab,
       {
         const ArrayType *AT = cast<ArrayType>(ptr);
         ptr = AT->getElementType();
-        return HSAILgetTypeName(ptr, symTab, mfi, signedType);
+        return getTypeName(ptr, symTab, mfi, signedType);
         break;
       }
     case Type::VectorTyID:
       {
         const VectorType *VT = cast<VectorType>(ptr);
         ptr = VT->getElementType();
-        return HSAILgetTypeName(ptr, symTab, mfi, signedType);
+        return getTypeName(ptr, symTab, mfi, signedType);
         break;
       }
     case Type::PointerTyID:
       {
         const PointerType *PT = cast<PointerType>(ptr);
         ptr = PT->getElementType();
-        return HSAILgetTypeName(ptr, symTab, mfi, signedType);
+        return getTypeName(ptr, symTab, mfi, signedType);
         break;
       }
     case Type::FunctionTyID:
       {
         const FunctionType *FT = cast<FunctionType>(ptr);
         ptr = FT->getReturnType();
-        return HSAILgetTypeName(ptr, symTab, mfi, signedType);
+        return getTypeName(ptr, symTab, mfi, signedType);
         break;
       }
   }
