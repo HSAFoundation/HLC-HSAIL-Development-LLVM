@@ -10,6 +10,8 @@
 
 #include "HSAILInstPrinter.h"
 #include "HSAIL.h"
+#include "HSAILBrig.h"
+
 #include "MCTargetDesc/HSAILMCTargetDesc.h"
 #include "llvm/MC/MCExpr.h"
 #include "llvm/MC/MCInst.h"
@@ -18,8 +20,6 @@
 #include "llvm/MC/MCRegisterInfo.h"
 #include "llvm/Support/MathExtras.h"
 #include "llvm/Support/raw_ostream.h"
-
-#include "Brig_new.hpp"
 
 using namespace llvm;
 
@@ -159,16 +159,16 @@ void HSAILInstPrinter::printEquiv(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigAllocation(const MCInst *MI, unsigned OpNo,
                                            raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_ALLOCATION_NONE:
+  case Brig::BRIG_ALLOCATION_NONE:
     O << "NONE";
     break;
-  case BRIG_ALLOCATION_PROGRAM:
+  case Brig::BRIG_ALLOCATION_PROGRAM:
     O << "PROGRAM";
     break;
-  case BRIG_ALLOCATION_AGENT:
+  case Brig::BRIG_ALLOCATION_AGENT:
     O << "AGENT";
     break;
-  case BRIG_ALLOCATION_AUTOMATIC:
+  case Brig::BRIG_ALLOCATION_AUTOMATIC:
     O << "AUTOMATIC";
     break;
   }
@@ -177,10 +177,10 @@ void HSAILInstPrinter::printBrigAllocation(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigAluModifierMask(const MCInst *MI, unsigned OpNo,
                                                 raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_ALU_ROUND:
+  case Brig::BRIG_ALU_ROUND:
     O << "ROUND";
     break;
-  case BRIG_ALU_FTZ:
+  case Brig::BRIG_ALU_FTZ:
     O << "FTZ";
     break;
   }
@@ -189,67 +189,67 @@ void HSAILInstPrinter::printBrigAluModifierMask(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigAtomicOperation(const MCInst *MI, unsigned OpNo,
                                                 raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_ATOMIC_ADD:
+  case Brig::BRIG_ATOMIC_ADD:
     O << "_add";
     break;
-  case BRIG_ATOMIC_AND:
+  case Brig::BRIG_ATOMIC_AND:
     O << "_and";
     break;
-  case BRIG_ATOMIC_CAS:
+  case Brig::BRIG_ATOMIC_CAS:
     O << "_cas";
     break;
-  case BRIG_ATOMIC_EXCH:
+  case Brig::BRIG_ATOMIC_EXCH:
     O << "_exch";
     break;
-  case BRIG_ATOMIC_LD:
+  case Brig::BRIG_ATOMIC_LD:
     O << "_ld";
     break;
-  case BRIG_ATOMIC_MAX:
+  case Brig::BRIG_ATOMIC_MAX:
     O << "_max";
     break;
-  case BRIG_ATOMIC_MIN:
+  case Brig::BRIG_ATOMIC_MIN:
     O << "_min";
     break;
-  case BRIG_ATOMIC_OR:
+  case Brig::BRIG_ATOMIC_OR:
     O << "_or";
     break;
-  case BRIG_ATOMIC_ST:
+  case Brig::BRIG_ATOMIC_ST:
     O << "_st";
     break;
-  case BRIG_ATOMIC_SUB:
+  case Brig::BRIG_ATOMIC_SUB:
     O << "_sub";
     break;
-  case BRIG_ATOMIC_WRAPDEC:
+  case Brig::BRIG_ATOMIC_WRAPDEC:
     O << "_wrapdec";
     break;
-  case BRIG_ATOMIC_WRAPINC:
+  case Brig::BRIG_ATOMIC_WRAPINC:
     O << "_wrapinc";
     break;
-  case BRIG_ATOMIC_XOR:
+  case Brig::BRIG_ATOMIC_XOR:
     O << "_xor";
     break;
-  case BRIG_ATOMIC_WAIT_EQ:
+  case Brig::BRIG_ATOMIC_WAIT_EQ:
     O << "_wait_eq";
     break;
-  case BRIG_ATOMIC_WAIT_NE:
+  case Brig::BRIG_ATOMIC_WAIT_NE:
     O << "_wait_ne";
     break;
-  case BRIG_ATOMIC_WAIT_LT:
+  case Brig::BRIG_ATOMIC_WAIT_LT:
     O << "_wait_lt";
     break;
-  case BRIG_ATOMIC_WAIT_GTE:
+  case Brig::BRIG_ATOMIC_WAIT_GTE:
     O << "_wait_gte";
     break;
-  case BRIG_ATOMIC_WAITTIMEOUT_EQ:
+  case Brig::BRIG_ATOMIC_WAITTIMEOUT_EQ:
     O << "_waittimeout_eq";
     break;
-  case BRIG_ATOMIC_WAITTIMEOUT_NE:
+  case Brig::BRIG_ATOMIC_WAITTIMEOUT_NE:
     O << "_waittimeout_ne";
     break;
-  case BRIG_ATOMIC_WAITTIMEOUT_LT:
+  case Brig::BRIG_ATOMIC_WAITTIMEOUT_LT:
     O << "_waittimeout_lt";
     break;
-  case BRIG_ATOMIC_WAITTIMEOUT_GTE:
+  case Brig::BRIG_ATOMIC_WAITTIMEOUT_GTE:
     O << "_waittimeout_gte";
     break;
   }
@@ -259,88 +259,88 @@ void HSAILInstPrinter::printBrigCompareOperation(const MCInst *MI,
                                                  unsigned OpNo,
                                                  raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_COMPARE_EQ:
+  case Brig::BRIG_COMPARE_EQ:
     O << "_eq";
     break;
-  case BRIG_COMPARE_NE:
+  case Brig::BRIG_COMPARE_NE:
     O << "_ne";
     break;
-  case BRIG_COMPARE_LT:
+  case Brig::BRIG_COMPARE_LT:
     O << "_lt";
     break;
-  case BRIG_COMPARE_LE:
+  case Brig::BRIG_COMPARE_LE:
     O << "_le";
     break;
-  case BRIG_COMPARE_GT:
+  case Brig::BRIG_COMPARE_GT:
     O << "_gt";
     break;
-  case BRIG_COMPARE_GE:
+  case Brig::BRIG_COMPARE_GE:
     O << "_ge";
     break;
-  case BRIG_COMPARE_EQU:
+  case Brig::BRIG_COMPARE_EQU:
     O << "_equ";
     break;
-  case BRIG_COMPARE_NEU:
+  case Brig::BRIG_COMPARE_NEU:
     O << "_neu";
     break;
-  case BRIG_COMPARE_LTU:
+  case Brig::BRIG_COMPARE_LTU:
     O << "_ltu";
     break;
-  case BRIG_COMPARE_LEU:
+  case Brig::BRIG_COMPARE_LEU:
     O << "_leu";
     break;
-  case BRIG_COMPARE_GTU:
+  case Brig::BRIG_COMPARE_GTU:
     O << "_gtu";
     break;
-  case BRIG_COMPARE_GEU:
+  case Brig::BRIG_COMPARE_GEU:
     O << "_geu";
     break;
-  case BRIG_COMPARE_NUM:
+  case Brig::BRIG_COMPARE_NUM:
     O << "_num";
     break;
-  case BRIG_COMPARE_NAN:
+  case Brig::BRIG_COMPARE_NAN:
     O << "_nan";
     break;
-  case BRIG_COMPARE_SEQ:
+  case Brig::BRIG_COMPARE_SEQ:
     O << "_seq";
     break;
-  case BRIG_COMPARE_SNE:
+  case Brig::BRIG_COMPARE_SNE:
     O << "_sne";
     break;
-  case BRIG_COMPARE_SLT:
+  case Brig::BRIG_COMPARE_SLT:
     O << "_slt";
     break;
-  case BRIG_COMPARE_SLE:
+  case Brig::BRIG_COMPARE_SLE:
     O << "_sle";
     break;
-  case BRIG_COMPARE_SGT:
+  case Brig::BRIG_COMPARE_SGT:
     O << "_sgt";
     break;
-  case BRIG_COMPARE_SGE:
+  case Brig::BRIG_COMPARE_SGE:
     O << "_sge";
     break;
-  case BRIG_COMPARE_SGEU:
+  case Brig::BRIG_COMPARE_SGEU:
     O << "_sgeu";
     break;
-  case BRIG_COMPARE_SEQU:
+  case Brig::BRIG_COMPARE_SEQU:
     O << "_sequ";
     break;
-  case BRIG_COMPARE_SNEU:
+  case Brig::BRIG_COMPARE_SNEU:
     O << "_sneu";
     break;
-  case BRIG_COMPARE_SLTU:
+  case Brig::BRIG_COMPARE_SLTU:
     O << "_sltu";
     break;
-  case BRIG_COMPARE_SLEU:
+  case Brig::BRIG_COMPARE_SLEU:
     O << "_sleu";
     break;
-  case BRIG_COMPARE_SNUM:
+  case Brig::BRIG_COMPARE_SNUM:
     O << "_snum";
     break;
-  case BRIG_COMPARE_SNAN:
+  case Brig::BRIG_COMPARE_SNAN:
     O << "_snan";
     break;
-  case BRIG_COMPARE_SGTU:
+  case Brig::BRIG_COMPARE_SGTU:
     O << "_sgtu";
     break;
   }
@@ -350,34 +350,34 @@ void HSAILInstPrinter::printBrigControlDirective(const MCInst *MI,
                                                  unsigned OpNo,
                                                  raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_CONTROL_ENABLEBREAKEXCEPTIONS:
+  case Brig::BRIG_CONTROL_ENABLEBREAKEXCEPTIONS:
     O << "enablebreakexceptions";
     break;
-  case BRIG_CONTROL_ENABLEDETECTEXCEPTIONS:
+  case Brig::BRIG_CONTROL_ENABLEDETECTEXCEPTIONS:
     O << "enabledetectexceptions";
     break;
-  case BRIG_CONTROL_MAXDYNAMICGROUPSIZE:
+  case Brig::BRIG_CONTROL_MAXDYNAMICGROUPSIZE:
     O << "maxdynamicgroupsize";
     break;
-  case BRIG_CONTROL_MAXFLATGRIDSIZE:
+  case Brig::BRIG_CONTROL_MAXFLATGRIDSIZE:
     O << "maxflatgridsize";
     break;
-  case BRIG_CONTROL_MAXFLATWORKGROUPSIZE:
+  case Brig::BRIG_CONTROL_MAXFLATWORKGROUPSIZE:
     O << "maxflatworkgroupsize";
     break;
-  case BRIG_CONTROL_REQUESTEDWORKGROUPSPERCU:
+  case Brig::BRIG_CONTROL_REQUESTEDWORKGROUPSPERCU:
     O << "requestedworkgroupspercu";
     break;
-  case BRIG_CONTROL_REQUIREDDIM:
+  case Brig::BRIG_CONTROL_REQUIREDDIM:
     O << "requireddim";
     break;
-  case BRIG_CONTROL_REQUIREDGRIDSIZE:
+  case Brig::BRIG_CONTROL_REQUIREDGRIDSIZE:
     O << "requiredgridsize";
     break;
-  case BRIG_CONTROL_REQUIREDWORKGROUPSIZE:
+  case Brig::BRIG_CONTROL_REQUIREDWORKGROUPSIZE:
     O << "requiredworkgroupsize";
     break;
-  case BRIG_CONTROL_REQUIRENOPARTIALWORKGROUPS:
+  case Brig::BRIG_CONTROL_REQUIRENOPARTIALWORKGROUPS:
     O << "requirenopartialworkgroups";
     break;
   }
@@ -387,7 +387,7 @@ void HSAILInstPrinter::printBrigExecutableModifierMask(const MCInst *MI,
                                                        unsigned OpNo,
                                                        raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_EXECUTABLE_DEFINITION:
+  case Brig::BRIG_EXECUTABLE_DEFINITION:
     O << "DEFINITION";
     break;
   }
@@ -397,64 +397,64 @@ void HSAILInstPrinter::printBrigImageChannelOrder(const MCInst *MI,
                                                   unsigned OpNo,
                                                   raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_CHANNEL_ORDER_A:
+  case Brig::BRIG_CHANNEL_ORDER_A:
     O << "a";
     break;
-  case BRIG_CHANNEL_ORDER_R:
+  case Brig::BRIG_CHANNEL_ORDER_R:
     O << "r";
     break;
-  case BRIG_CHANNEL_ORDER_RX:
+  case Brig::BRIG_CHANNEL_ORDER_RX:
     O << "rx";
     break;
-  case BRIG_CHANNEL_ORDER_RG:
+  case Brig::BRIG_CHANNEL_ORDER_RG:
     O << "rg";
     break;
-  case BRIG_CHANNEL_ORDER_RGX:
+  case Brig::BRIG_CHANNEL_ORDER_RGX:
     O << "rgx";
     break;
-  case BRIG_CHANNEL_ORDER_RA:
+  case Brig::BRIG_CHANNEL_ORDER_RA:
     O << "ra";
     break;
-  case BRIG_CHANNEL_ORDER_RGB:
+  case Brig::BRIG_CHANNEL_ORDER_RGB:
     O << "rgb";
     break;
-  case BRIG_CHANNEL_ORDER_RGBX:
+  case Brig::BRIG_CHANNEL_ORDER_RGBX:
     O << "rgbx";
     break;
-  case BRIG_CHANNEL_ORDER_RGBA:
+  case Brig::BRIG_CHANNEL_ORDER_RGBA:
     O << "rgba";
     break;
-  case BRIG_CHANNEL_ORDER_BGRA:
+  case Brig::BRIG_CHANNEL_ORDER_BGRA:
     O << "bgra";
     break;
-  case BRIG_CHANNEL_ORDER_ARGB:
+  case Brig::BRIG_CHANNEL_ORDER_ARGB:
     O << "argb";
     break;
-  case BRIG_CHANNEL_ORDER_ABGR:
+  case Brig::BRIG_CHANNEL_ORDER_ABGR:
     O << "abgr";
     break;
-  case BRIG_CHANNEL_ORDER_SRGB:
+  case Brig::BRIG_CHANNEL_ORDER_SRGB:
     O << "srgb";
     break;
-  case BRIG_CHANNEL_ORDER_SRGBX:
+  case Brig::BRIG_CHANNEL_ORDER_SRGBX:
     O << "srgbx";
     break;
-  case BRIG_CHANNEL_ORDER_SRGBA:
+  case Brig::BRIG_CHANNEL_ORDER_SRGBA:
     O << "srgba";
     break;
-  case BRIG_CHANNEL_ORDER_SBGRA:
+  case Brig::BRIG_CHANNEL_ORDER_SBGRA:
     O << "sbgra";
     break;
-  case BRIG_CHANNEL_ORDER_INTENSITY:
+  case Brig::BRIG_CHANNEL_ORDER_INTENSITY:
     O << "intensity";
     break;
-  case BRIG_CHANNEL_ORDER_LUMINANCE:
+  case Brig::BRIG_CHANNEL_ORDER_LUMINANCE:
     O << "luminance";
     break;
-  case BRIG_CHANNEL_ORDER_DEPTH:
+  case Brig::BRIG_CHANNEL_ORDER_DEPTH:
     O << "depth";
     break;
-  case BRIG_CHANNEL_ORDER_DEPTH_STENCIL:
+  case Brig::BRIG_CHANNEL_ORDER_DEPTH_STENCIL:
     O << "depth_stencil";
     break;
   }
@@ -464,52 +464,52 @@ void HSAILInstPrinter::printBrigImageChannelType(const MCInst *MI,
                                                  unsigned OpNo,
                                                  raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_CHANNEL_TYPE_SNORM_INT8:
+  case Brig::BRIG_CHANNEL_TYPE_SNORM_INT8:
     O << "snorm_int8";
     break;
-  case BRIG_CHANNEL_TYPE_SNORM_INT16:
+  case Brig::BRIG_CHANNEL_TYPE_SNORM_INT16:
     O << "snorm_int16";
     break;
-  case BRIG_CHANNEL_TYPE_UNORM_INT8:
+  case Brig::BRIG_CHANNEL_TYPE_UNORM_INT8:
     O << "unorm_int8";
     break;
-  case BRIG_CHANNEL_TYPE_UNORM_INT16:
+  case Brig::BRIG_CHANNEL_TYPE_UNORM_INT16:
     O << "unorm_int16";
     break;
-  case BRIG_CHANNEL_TYPE_UNORM_INT24:
+  case Brig::BRIG_CHANNEL_TYPE_UNORM_INT24:
     O << "unorm_int24";
     break;
-  case BRIG_CHANNEL_TYPE_UNORM_SHORT_555:
+  case Brig::BRIG_CHANNEL_TYPE_UNORM_SHORT_555:
     O << "unorm_short_555";
     break;
-  case BRIG_CHANNEL_TYPE_UNORM_SHORT_565:
+  case Brig::BRIG_CHANNEL_TYPE_UNORM_SHORT_565:
     O << "unorm_short_565";
     break;
-  case BRIG_CHANNEL_TYPE_UNORM_INT_101010:
+  case Brig::BRIG_CHANNEL_TYPE_UNORM_INT_101010:
     O << "unorm_int_101010";
     break;
-  case BRIG_CHANNEL_TYPE_SIGNED_INT8:
+  case Brig::BRIG_CHANNEL_TYPE_SIGNED_INT8:
     O << "signed_int8";
     break;
-  case BRIG_CHANNEL_TYPE_SIGNED_INT16:
+  case Brig::BRIG_CHANNEL_TYPE_SIGNED_INT16:
     O << "signed_int16";
     break;
-  case BRIG_CHANNEL_TYPE_SIGNED_INT32:
+  case Brig::BRIG_CHANNEL_TYPE_SIGNED_INT32:
     O << "signed_int32";
     break;
-  case BRIG_CHANNEL_TYPE_UNSIGNED_INT8:
+  case Brig::BRIG_CHANNEL_TYPE_UNSIGNED_INT8:
     O << "unsigned_int8";
     break;
-  case BRIG_CHANNEL_TYPE_UNSIGNED_INT16:
+  case Brig::BRIG_CHANNEL_TYPE_UNSIGNED_INT16:
     O << "unsigned_int16";
     break;
-  case BRIG_CHANNEL_TYPE_UNSIGNED_INT32:
+  case Brig::BRIG_CHANNEL_TYPE_UNSIGNED_INT32:
     O << "unsigned_int32";
     break;
-  case BRIG_CHANNEL_TYPE_HALF_FLOAT:
+  case Brig::BRIG_CHANNEL_TYPE_HALF_FLOAT:
     O << "half_float";
     break;
-  case BRIG_CHANNEL_TYPE_FLOAT:
+  case Brig::BRIG_CHANNEL_TYPE_FLOAT:
     O << "float";
     break;
   }
@@ -518,31 +518,31 @@ void HSAILInstPrinter::printBrigImageChannelType(const MCInst *MI,
 void HSAILInstPrinter::printBrigImageGeometry(const MCInst *MI, unsigned OpNo,
                                               raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_GEOMETRY_1D:
+  case Brig::BRIG_GEOMETRY_1D:
     O << "_1D";
     break;
-  case BRIG_GEOMETRY_2D:
+  case Brig::BRIG_GEOMETRY_2D:
     O << "_2D";
     break;
-  case BRIG_GEOMETRY_3D:
+  case Brig::BRIG_GEOMETRY_3D:
     O << "_3D";
     break;
-  case BRIG_GEOMETRY_1DA:
+  case Brig::BRIG_GEOMETRY_1DA:
     O << "_1DA";
     break;
-  case BRIG_GEOMETRY_2DA:
+  case Brig::BRIG_GEOMETRY_2DA:
     O << "_2DA";
     break;
-  case BRIG_GEOMETRY_1DB:
+  case Brig::BRIG_GEOMETRY_1DB:
     O << "_1DB";
     break;
-  case BRIG_GEOMETRY_2DDEPTH:
+  case Brig::BRIG_GEOMETRY_2DDEPTH:
     O << "_2DDEPTH";
     break;
-  case BRIG_GEOMETRY_2DADEPTH:
+  case Brig::BRIG_GEOMETRY_2DADEPTH:
     O << "_2DADEPTH";
     break;
-  case BRIG_GEOMETRY_UNKNOWN:
+  case Brig::BRIG_GEOMETRY_UNKNOWN:
     O << "_UNKNOWN";
     break;
   }
@@ -551,22 +551,22 @@ void HSAILInstPrinter::printBrigImageGeometry(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigImageQuery(const MCInst *MI, unsigned OpNo,
                                            raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_IMAGE_QUERY_WIDTH:
+  case Brig::BRIG_IMAGE_QUERY_WIDTH:
     O << "width";
     break;
-  case BRIG_IMAGE_QUERY_HEIGHT:
+  case Brig::BRIG_IMAGE_QUERY_HEIGHT:
     O << "height";
     break;
-  case BRIG_IMAGE_QUERY_DEPTH:
+  case Brig::BRIG_IMAGE_QUERY_DEPTH:
     O << "depth";
     break;
-  case BRIG_IMAGE_QUERY_ARRAY:
+  case Brig::BRIG_IMAGE_QUERY_ARRAY:
     O << "array";
     break;
-  case BRIG_IMAGE_QUERY_CHANNELORDER:
+  case Brig::BRIG_IMAGE_QUERY_CHANNELORDER:
     O << "channelorder";
     break;
-  case BRIG_IMAGE_QUERY_CHANNELTYPE:
+  case Brig::BRIG_IMAGE_QUERY_CHANNELTYPE:
     O << "channeltype";
     break;
   }
@@ -575,19 +575,19 @@ void HSAILInstPrinter::printBrigImageQuery(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigLinkage(const MCInst *MI, unsigned OpNo,
                                         raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_LINKAGE_NONE:
+  case Brig::BRIG_LINKAGE_NONE:
     O << "NONE";
     break;
-  case BRIG_LINKAGE_PROGRAM:
+  case Brig::BRIG_LINKAGE_PROGRAM:
     O << "PROGRAM";
     break;
-  case BRIG_LINKAGE_MODULE:
+  case Brig::BRIG_LINKAGE_MODULE:
     O << "MODULE";
     break;
-  case BRIG_LINKAGE_FUNCTION:
+  case Brig::BRIG_LINKAGE_FUNCTION:
     O << "FUNCTION";
     break;
-  case BRIG_LINKAGE_ARG:
+  case Brig::BRIG_LINKAGE_ARG:
     O << "ARG";
     break;
   }
@@ -596,10 +596,10 @@ void HSAILInstPrinter::printBrigLinkage(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigMachineModel(const MCInst *MI, unsigned OpNo,
                                              raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_MACHINE_SMALL:
+  case Brig::BRIG_MACHINE_SMALL:
     O << "$small";
     break;
-  case BRIG_MACHINE_LARGE:
+  case Brig::BRIG_MACHINE_LARGE:
     O << "$large";
     break;
   }
@@ -609,7 +609,7 @@ void HSAILInstPrinter::printBrigMemoryModifierMask(const MCInst *MI,
                                                    unsigned OpNo,
                                                    raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_MEMORY_CONST:
+  case Brig::BRIG_MEMORY_CONST:
     O << "CONST";
     break;
   }
@@ -618,19 +618,19 @@ void HSAILInstPrinter::printBrigMemoryModifierMask(const MCInst *MI,
 void HSAILInstPrinter::printBrigMemoryOrder(const MCInst *MI, unsigned OpNo,
                                             raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_MEMORY_ORDER_NONE:
+  case Brig::BRIG_MEMORY_ORDER_NONE:
     O << "_";
     break;
-  case BRIG_MEMORY_ORDER_RELAXED:
+  case Brig::BRIG_MEMORY_ORDER_RELAXED:
     O << "_rlx";
     break;
-  case BRIG_MEMORY_ORDER_SC_ACQUIRE:
+  case Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE:
     O << "_scacq";
     break;
-  case BRIG_MEMORY_ORDER_SC_RELEASE:
+  case Brig::BRIG_MEMORY_ORDER_SC_RELEASE:
     O << "_screl";
     break;
-  case BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE:
+  case Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE:
     O << "_scar";
     break;
   }
@@ -639,19 +639,19 @@ void HSAILInstPrinter::printBrigMemoryOrder(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigMemoryScope(const MCInst *MI, unsigned OpNo,
                                             raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_MEMORY_SCOPE_WORKITEM:
+  case Brig::BRIG_MEMORY_SCOPE_WORKITEM:
     O << "wi";
     break;
-  case BRIG_MEMORY_SCOPE_WAVEFRONT:
+  case Brig::BRIG_MEMORY_SCOPE_WAVEFRONT:
     O << "wv";
     break;
-  case BRIG_MEMORY_SCOPE_WORKGROUP:
+  case Brig::BRIG_MEMORY_SCOPE_WORKGROUP:
     O << "wg";
     break;
-  case BRIG_MEMORY_SCOPE_COMPONENT:
+  case Brig::BRIG_MEMORY_SCOPE_COMPONENT:
     O << "cmp";
     break;
-  case BRIG_MEMORY_SCOPE_SYSTEM:
+  case Brig::BRIG_MEMORY_SCOPE_SYSTEM:
     O << "sys";
     break;
   }
@@ -660,43 +660,43 @@ void HSAILInstPrinter::printBrigMemoryScope(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigPack(const MCInst *MI, unsigned OpNo,
                                      raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_PACK_NONE:
+  case Brig::BRIG_PACK_NONE:
     O << "_";
     break;
-  case BRIG_PACK_PP:
+  case Brig::BRIG_PACK_PP:
     O << "_pp";
     break;
-  case BRIG_PACK_PS:
+  case Brig::BRIG_PACK_PS:
     O << "_ps";
     break;
-  case BRIG_PACK_SP:
+  case Brig::BRIG_PACK_SP:
     O << "_sp";
     break;
-  case BRIG_PACK_SS:
+  case Brig::BRIG_PACK_SS:
     O << "_ss";
     break;
-  case BRIG_PACK_S:
+  case Brig::BRIG_PACK_S:
     O << "_s";
     break;
-  case BRIG_PACK_P:
+  case Brig::BRIG_PACK_P:
     O << "_p";
     break;
-  case BRIG_PACK_PPSAT:
+  case Brig::BRIG_PACK_PPSAT:
     O << "_pp_sat";
     break;
-  case BRIG_PACK_PSSAT:
+  case Brig::BRIG_PACK_PSSAT:
     O << "_ps_sat";
     break;
-  case BRIG_PACK_SPSAT:
+  case Brig::BRIG_PACK_SPSAT:
     O << "_sp_sat";
     break;
-  case BRIG_PACK_SSSAT:
+  case Brig::BRIG_PACK_SSSAT:
     O << "_ss_sat";
     break;
-  case BRIG_PACK_SSAT:
+  case Brig::BRIG_PACK_SSAT:
     O << "_s_sat";
     break;
-  case BRIG_PACK_PSAT:
+  case Brig::BRIG_PACK_PSAT:
     O << "_p_sat";
     break;
   }
@@ -705,10 +705,10 @@ void HSAILInstPrinter::printBrigPack(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigProfile(const MCInst *MI, unsigned OpNo,
                                         raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_PROFILE_BASE:
+  case Brig::BRIG_PROFILE_BASE:
     O << "$base";
     break;
-  case BRIG_PROFILE_FULL:
+  case Brig::BRIG_PROFILE_FULL:
     O << "$full";
     break;
   }
@@ -717,66 +717,66 @@ void HSAILInstPrinter::printBrigProfile(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigRound(const MCInst *MI, unsigned OpNo,
                                       raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_ROUND_NONE:
+  case Brig::BRIG_ROUND_NONE:
     break;
-  case BRIG_ROUND_FLOAT_NEAR_EVEN:
+  case Brig::BRIG_ROUND_FLOAT_NEAR_EVEN:
     // This is the default for FP ops, omit it.
     break;
-  case BRIG_ROUND_FLOAT_ZERO:
+  case Brig::BRIG_ROUND_FLOAT_ZERO:
     O << "_zero";
     break;
-  case BRIG_ROUND_FLOAT_PLUS_INFINITY:
+  case Brig::BRIG_ROUND_FLOAT_PLUS_INFINITY:
     O << "_up";
     break;
-  case BRIG_ROUND_FLOAT_MINUS_INFINITY:
+  case Brig::BRIG_ROUND_FLOAT_MINUS_INFINITY:
     O << "_down";
     break;
-  case BRIG_ROUND_INTEGER_NEAR_EVEN:
+  case Brig::BRIG_ROUND_INTEGER_NEAR_EVEN:
     O << "_neari";
     break;
-  case BRIG_ROUND_INTEGER_ZERO:
+  case Brig::BRIG_ROUND_INTEGER_ZERO:
     // This is the default for integer ops, omit it.
     break;
-  case BRIG_ROUND_INTEGER_PLUS_INFINITY:
+  case Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY:
     O << "_upi";
     break;
-  case BRIG_ROUND_INTEGER_MINUS_INFINITY:
+  case Brig::BRIG_ROUND_INTEGER_MINUS_INFINITY:
     O << "_downi";
     break;
-  case BRIG_ROUND_INTEGER_NEAR_EVEN_SAT:
+  case Brig::BRIG_ROUND_INTEGER_NEAR_EVEN_SAT:
     O << "_neari_sat";
     break;
-  case BRIG_ROUND_INTEGER_ZERO_SAT:
+  case Brig::BRIG_ROUND_INTEGER_ZERO_SAT:
     O << "_zeroi_sat";
     break;
-  case BRIG_ROUND_INTEGER_PLUS_INFINITY_SAT:
+  case Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY_SAT:
     O << "_upi_sat";
     break;
-  case BRIG_ROUND_INTEGER_MINUS_INFINITY_SAT:
+  case Brig::BRIG_ROUND_INTEGER_MINUS_INFINITY_SAT:
     O << "_downi_sat";
     break;
-  case BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN:
     O << "_sneari";
     break;
-  case BRIG_ROUND_INTEGER_SIGNALLING_ZERO:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_ZERO:
     O << "_szeroi";
     break;
-  case BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY:
     O << "_supi";
     break;
-  case BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY:
     O << "_sdowni";
     break;
-  case BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN_SAT:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_NEAR_EVEN_SAT:
     O << "_sneari_sat";
     break;
-  case BRIG_ROUND_INTEGER_SIGNALLING_ZERO_SAT:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_ZERO_SAT:
     O << "_szeroi_sat";
     break;
-  case BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY_SAT:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_PLUS_INFINITY_SAT:
     O << "_supi_sat";
     break;
-  case BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY_SAT:
+  case Brig::BRIG_ROUND_INTEGER_SIGNALLING_MINUS_INFINITY_SAT:
     O << "_sdowni_sat";
     break;
   }
@@ -786,19 +786,19 @@ void HSAILInstPrinter::printBrigSamplerAddressing(const MCInst *MI,
                                                   unsigned OpNo,
                                                   raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_ADDRESSING_UNDEFINED:
+  case Brig::BRIG_ADDRESSING_UNDEFINED:
     O << "UNDEFINED";
     break;
-  case BRIG_ADDRESSING_CLAMP_TO_EDGE:
+  case Brig::BRIG_ADDRESSING_CLAMP_TO_EDGE:
     O << "CLAMP_TO_EDGE";
     break;
-  case BRIG_ADDRESSING_CLAMP_TO_BORDER:
+  case Brig::BRIG_ADDRESSING_CLAMP_TO_BORDER:
     O << "CLAMP_TO_BORDER";
     break;
-  case BRIG_ADDRESSING_REPEAT:
+  case Brig::BRIG_ADDRESSING_REPEAT:
     O << "REPEAT";
     break;
-  case BRIG_ADDRESSING_MIRRORED_REPEAT:
+  case Brig::BRIG_ADDRESSING_MIRRORED_REPEAT:
     O << "MIRRORED_REPEAT";
     break;
   }
@@ -808,10 +808,10 @@ void HSAILInstPrinter::printBrigSamplerCoordNormalization(const MCInst *MI,
                                                           unsigned OpNo,
                                                           raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_COORD_UNNORMALIZED:
+  case Brig::BRIG_COORD_UNNORMALIZED:
     O << "unnormalized";
     break;
-  case BRIG_COORD_NORMALIZED:
+  case Brig::BRIG_COORD_NORMALIZED:
     O << "normalized";
     break;
   }
@@ -820,10 +820,10 @@ void HSAILInstPrinter::printBrigSamplerCoordNormalization(const MCInst *MI,
 void HSAILInstPrinter::printBrigSamplerFilter(const MCInst *MI, unsigned OpNo,
                                               raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_FILTER_NEAREST:
+  case Brig::BRIG_FILTER_NEAREST:
     O << "nearest";
     break;
-  case BRIG_FILTER_LINEAR:
+  case Brig::BRIG_FILTER_LINEAR:
     O << "linear";
     break;
   }
@@ -832,13 +832,13 @@ void HSAILInstPrinter::printBrigSamplerFilter(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigSamplerQuery(const MCInst *MI, unsigned OpNo,
                                              raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_SAMPLER_QUERY_ADDRESSING:
+  case Brig::BRIG_SAMPLER_QUERY_ADDRESSING:
     O << "addressing";
     break;
-  case BRIG_SAMPLER_QUERY_COORD:
+  case Brig::BRIG_SAMPLER_QUERY_COORD:
     O << "coord";
     break;
-  case BRIG_SAMPLER_QUERY_FILTER:
+  case Brig::BRIG_SAMPLER_QUERY_FILTER:
     O << "filter";
     break;
   }
@@ -848,7 +848,7 @@ void HSAILInstPrinter::printBrigSegCvtModifierMask(const MCInst *MI,
                                                    unsigned OpNo,
                                                    raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_SEG_CVT_NONULL:
+  case Brig::BRIG_SEG_CVT_NONULL:
     O << "_nonull";
     break;
   }
@@ -890,28 +890,28 @@ void HSAILInstPrinter::printBrigSegment(const MCInst *MI, unsigned OpNo,
 
 #if 0
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_SEGMENT_GLOBAL:
+  case Brig::BRIG_SEGMENT_GLOBAL:
     O << "_global";
     break;
-  case BRIG_SEGMENT_READONLY:
+  case Brig::BRIG_SEGMENT_READONLY:
     O << "_readonly";
     break;
-  case BRIG_SEGMENT_KERNARG:
+  case Brig::BRIG_SEGMENT_KERNARG:
     O << "_kernarg";
     break;
-  case BRIG_SEGMENT_GROUP:
+  case Brig::BRIG_SEGMENT_GROUP:
     O << "_group";
     break;
-  case BRIG_SEGMENT_PRIVATE:
+  case Brig::BRIG_SEGMENT_PRIVATE:
     O << "_private";
     break;
-  case BRIG_SEGMENT_SPILL:
+  case Brig::BRIG_SEGMENT_SPILL:
     O << "_spill";
     break;
-  case BRIG_SEGMENT_ARG:
+  case Brig::BRIG_SEGMENT_ARG:
     O << "_arg";
     break;
-  case BRIG_SEGMENT_EXTSPACE0:
+  case Brig::BRIG_SEGMENT_EXTSPACE0:
     O << "_region";
     break;
   default:
@@ -923,145 +923,145 @@ void HSAILInstPrinter::printBrigSegment(const MCInst *MI, unsigned OpNo,
 void HSAILInstPrinter::printBrigTypeX(const MCInst *MI, unsigned OpNo,
                                       raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_TYPE_U8:
+  case Brig::BRIG_TYPE_U8:
     O << "_u8";
     break;
-  case BRIG_TYPE_U16:
+  case Brig::BRIG_TYPE_U16:
     O << "_u16";
     break;
-  case BRIG_TYPE_U32:
+  case Brig::BRIG_TYPE_U32:
     O << "_u32";
     break;
-  case BRIG_TYPE_U64:
+  case Brig::BRIG_TYPE_U64:
     O << "_u64";
     break;
-  case BRIG_TYPE_S8:
+  case Brig::BRIG_TYPE_S8:
     O << "_s8";
     break;
-  case BRIG_TYPE_S16:
+  case Brig::BRIG_TYPE_S16:
     O << "_s16";
     break;
-  case BRIG_TYPE_S32:
+  case Brig::BRIG_TYPE_S32:
     O << "_s32";
     break;
-  case BRIG_TYPE_S64:
+  case Brig::BRIG_TYPE_S64:
     O << "_s64";
     break;
-  case BRIG_TYPE_F16:
+  case Brig::BRIG_TYPE_F16:
     O << "_f16";
     break;
-  case BRIG_TYPE_F32:
+  case Brig::BRIG_TYPE_F32:
     O << "_f32";
     break;
-  case BRIG_TYPE_F64:
+  case Brig::BRIG_TYPE_F64:
     O << "_f64";
     break;
-  case BRIG_TYPE_B1:
+  case Brig::BRIG_TYPE_B1:
     O << "_b1";
     break;
-  case BRIG_TYPE_B8:
+  case Brig::BRIG_TYPE_B8:
     O << "_b8";
     break;
-  case BRIG_TYPE_B16:
+  case Brig::BRIG_TYPE_B16:
     O << "_b16";
     break;
-  case BRIG_TYPE_B32:
+  case Brig::BRIG_TYPE_B32:
     O << "_b32";
     break;
-  case BRIG_TYPE_B64:
+  case Brig::BRIG_TYPE_B64:
     O << "_b64";
     break;
-  case BRIG_TYPE_B128:
+  case Brig::BRIG_TYPE_B128:
     O << "_b128";
     break;
-  case BRIG_TYPE_SAMP:
+  case Brig::BRIG_TYPE_SAMP:
     O << "_samp";
     break;
-  case BRIG_TYPE_ROIMG:
+  case Brig::BRIG_TYPE_ROIMG:
     O << "_roimg";
     break;
-  case BRIG_TYPE_WOIMG:
+  case Brig::BRIG_TYPE_WOIMG:
     O << "_woimg";
     break;
-  case BRIG_TYPE_RWIMG:
+  case Brig::BRIG_TYPE_RWIMG:
     O << "_rwimg";
     break;
-  case BRIG_TYPE_SIG32:
+  case Brig::BRIG_TYPE_SIG32:
     O << "_sig32";
     break;
-  case BRIG_TYPE_SIG64:
+  case Brig::BRIG_TYPE_SIG64:
     O << "_sig64";
     break;
-  case BRIG_TYPE_U8X4:
+  case Brig::BRIG_TYPE_U8X4:
     O << "_u8x4";
     break;
-  case BRIG_TYPE_U8X8:
+  case Brig::BRIG_TYPE_U8X8:
     O << "_u8x8";
     break;
-  case BRIG_TYPE_U8X16:
+  case Brig::BRIG_TYPE_U8X16:
     O << "_u8x16";
     break;
-  case BRIG_TYPE_U16X2:
+  case Brig::BRIG_TYPE_U16X2:
     O << "_u16x2";
     break;
-  case BRIG_TYPE_U16X4:
+  case Brig::BRIG_TYPE_U16X4:
     O << "_u16x4";
     break;
-  case BRIG_TYPE_U16X8:
+  case Brig::BRIG_TYPE_U16X8:
     O << "_u16x8";
     break;
-  case BRIG_TYPE_U32X2:
+  case Brig::BRIG_TYPE_U32X2:
     O << "_u32x2";
     break;
-  case BRIG_TYPE_U32X4:
+  case Brig::BRIG_TYPE_U32X4:
     O << "_u32x4";
     break;
-  case BRIG_TYPE_U64X2:
+  case Brig::BRIG_TYPE_U64X2:
     O << "_u64x2";
     break;
-  case BRIG_TYPE_S8X4:
+  case Brig::BRIG_TYPE_S8X4:
     O << "_s8x4";
     break;
-  case BRIG_TYPE_S8X8:
+  case Brig::BRIG_TYPE_S8X8:
     O << "_s8x8";
     break;
-  case BRIG_TYPE_S8X16:
+  case Brig::BRIG_TYPE_S8X16:
     O << "_s8x16";
     break;
-  case BRIG_TYPE_S16X2:
+  case Brig::BRIG_TYPE_S16X2:
     O << "_s16x2";
     break;
-  case BRIG_TYPE_S16X4:
+  case Brig::BRIG_TYPE_S16X4:
     O << "_s16x4";
     break;
-  case BRIG_TYPE_S16X8:
+  case Brig::BRIG_TYPE_S16X8:
     O << "_s16x8";
     break;
-  case BRIG_TYPE_S32X2:
+  case Brig::BRIG_TYPE_S32X2:
     O << "_s32x2";
     break;
-  case BRIG_TYPE_S32X4:
+  case Brig::BRIG_TYPE_S32X4:
     O << "_s32x4";
     break;
-  case BRIG_TYPE_S64X2:
+  case Brig::BRIG_TYPE_S64X2:
     O << "_s64x2";
     break;
-  case BRIG_TYPE_F16X2:
+  case Brig::BRIG_TYPE_F16X2:
     O << "_f16x2";
     break;
-  case BRIG_TYPE_F16X4:
+  case Brig::BRIG_TYPE_F16X4:
     O << "_f16x4";
     break;
-  case BRIG_TYPE_F16X8:
+  case Brig::BRIG_TYPE_F16X8:
     O << "_f16x8";
     break;
-  case BRIG_TYPE_F32X2:
+  case Brig::BRIG_TYPE_F32X2:
     O << "_f32x2";
     break;
-  case BRIG_TYPE_F32X4:
+  case Brig::BRIG_TYPE_F32X4:
     O << "_f32x4";
     break;
-  case BRIG_TYPE_F64X2:
+  case Brig::BRIG_TYPE_F64X2:
     O << "_f64x2";
     break;
   }
@@ -1071,16 +1071,16 @@ void HSAILInstPrinter::printBrigVariableModifierMask(const MCInst *MI,
                                                      unsigned OpNo,
                                                      raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_SYMBOL_DEFINITION:
+  case Brig::BRIG_SYMBOL_DEFINITION:
     O << "DEFINITION";
     break;
-  case BRIG_SYMBOL_CONST:
+  case Brig::BRIG_SYMBOL_CONST:
     O << "CONST";
     break;
-  case BRIG_SYMBOL_ARRAY:
+  case Brig::BRIG_SYMBOL_ARRAY:
     O << "ARRAY";
     break;
-  case BRIG_SYMBOL_FLEX_ARRAY:
+  case Brig::BRIG_SYMBOL_FLEX_ARRAY:
     O << "FLEX_ARRAY";
     break;
   }
@@ -1089,110 +1089,110 @@ void HSAILInstPrinter::printBrigVariableModifierMask(const MCInst *MI,
 void HSAILInstPrinter::printBrigWidth(const MCInst *MI, unsigned OpNo,
                                       raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
-  case BRIG_WIDTH_NONE:
+  case Brig::BRIG_WIDTH_NONE:
     O << "_width(NONE)";
     break;
-  case BRIG_WIDTH_1:
+  case Brig::BRIG_WIDTH_1:
     // This is the default. If omitted, this is interpreted as 1.
     //O << "_width(1)";
     break;
-  case BRIG_WIDTH_2:
+  case Brig::BRIG_WIDTH_2:
     O << "_width(2)";
     break;
-  case BRIG_WIDTH_4:
+  case Brig::BRIG_WIDTH_4:
     O << "_width(4)";
     break;
-  case BRIG_WIDTH_8:
+  case Brig::BRIG_WIDTH_8:
     O << "_width(8)";
     break;
-  case BRIG_WIDTH_16:
+  case Brig::BRIG_WIDTH_16:
     O << "_width(16)";
     break;
-  case BRIG_WIDTH_32:
+  case Brig::BRIG_WIDTH_32:
     O << "_width(32)";
     break;
-  case BRIG_WIDTH_64:
+  case Brig::BRIG_WIDTH_64:
     O << "_width(64)";
     break;
-  case BRIG_WIDTH_128:
+  case Brig::BRIG_WIDTH_128:
     O << "_width(128)";
     break;
-  case BRIG_WIDTH_256:
+  case Brig::BRIG_WIDTH_256:
     O << "_width(256)";
     break;
-  case BRIG_WIDTH_512:
+  case Brig::BRIG_WIDTH_512:
     O << "_width(512)";
     break;
-  case BRIG_WIDTH_1024:
+  case Brig::BRIG_WIDTH_1024:
     O << "_width(1024)";
     break;
-  case BRIG_WIDTH_2048:
+  case Brig::BRIG_WIDTH_2048:
     O << "_width(2048)";
     break;
-  case BRIG_WIDTH_4096:
+  case Brig::BRIG_WIDTH_4096:
     O << "_width(4096)";
     break;
-  case BRIG_WIDTH_8192:
+  case Brig::BRIG_WIDTH_8192:
     O << "_width(8192)";
     break;
-  case BRIG_WIDTH_16384:
+  case Brig::BRIG_WIDTH_16384:
     O << "_width(16384)";
     break;
-  case BRIG_WIDTH_32768:
+  case Brig::BRIG_WIDTH_32768:
     O << "_width(32768)";
     break;
-  case BRIG_WIDTH_65536:
+  case Brig::BRIG_WIDTH_65536:
     O << "_width(65536)";
     break;
-  case BRIG_WIDTH_131072:
+  case Brig::BRIG_WIDTH_131072:
     O << "_width(131072)";
     break;
-  case BRIG_WIDTH_262144:
+  case Brig::BRIG_WIDTH_262144:
     O << "_width(262144)";
     break;
-  case BRIG_WIDTH_524288:
+  case Brig::BRIG_WIDTH_524288:
     O << "_width(524288)";
     break;
-  case BRIG_WIDTH_1048576:
+  case Brig::BRIG_WIDTH_1048576:
     O << "_width(1048576)";
     break;
-  case BRIG_WIDTH_2097152:
+  case Brig::BRIG_WIDTH_2097152:
     O << "_width(2097152)";
     break;
-  case BRIG_WIDTH_4194304:
+  case Brig::BRIG_WIDTH_4194304:
     O << "_width(4194304)";
     break;
-  case BRIG_WIDTH_8388608:
+  case Brig::BRIG_WIDTH_8388608:
     O << "_width(8388608)";
     break;
-  case BRIG_WIDTH_16777216:
+  case Brig::BRIG_WIDTH_16777216:
     O << "_width(16777216)";
     break;
-  case BRIG_WIDTH_33554432:
+  case Brig::BRIG_WIDTH_33554432:
     O << "_width(33554432)";
     break;
-  case BRIG_WIDTH_67108864:
+  case Brig::BRIG_WIDTH_67108864:
     O << "_width(67108864)";
     break;
-  case BRIG_WIDTH_134217728:
+  case Brig::BRIG_WIDTH_134217728:
     O << "_width(134217728)";
     break;
-  case BRIG_WIDTH_268435456:
+  case Brig::BRIG_WIDTH_268435456:
     O << "_width(268435456)";
     break;
-  case BRIG_WIDTH_536870912:
+  case Brig::BRIG_WIDTH_536870912:
     O << "_width(536870912)";
     break;
-  case BRIG_WIDTH_1073741824:
+  case Brig::BRIG_WIDTH_1073741824:
     O << "_width(1073741824)";
     break;
-  case BRIG_WIDTH_2147483648:
+  case Brig::BRIG_WIDTH_2147483648:
     O << "_width(2147483648)";
     break;
-  case BRIG_WIDTH_WAVESIZE:
+  case Brig::BRIG_WIDTH_WAVESIZE:
     O << "_width(WAVESIZE)";
     break;
-  case BRIG_WIDTH_ALL:
+  case Brig::BRIG_WIDTH_ALL:
     O << "_width(all)";
     break;
   }
