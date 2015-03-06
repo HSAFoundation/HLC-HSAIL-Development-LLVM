@@ -98,18 +98,6 @@ const char *getTypeName(llvm::Type *ptr,
                         llvm::HSAILMachineFunctionInfo *mMFI,
                         bool signedType);
 
-// Helper functions that check the opcode for status information
-llvm::MachineOperand &getBase(llvm::MachineInstr *MI);
-const llvm::MachineOperand &getBase(const llvm::MachineInstr *MI);
-llvm::MachineOperand &getIndex(llvm::MachineInstr *MI);
-const llvm::MachineOperand &getIndex(const llvm::MachineInstr *MI);
-llvm::MachineOperand &getOffset(llvm::MachineInstr *MI);
-const llvm::MachineOperand &getOffset(const llvm::MachineInstr *MI);
-llvm::MachineOperand &getWidth(llvm::MachineInstr *MI);
-const llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI);
-llvm::MachineOperand &getLoadModifierMask(llvm::MachineInstr *MI);
-const llvm::MachineOperand &getLoadModifierMask(const llvm::MachineInstr *MI);
-
 static inline bool isConv(const llvm::MachineInstr *MI) {
   return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_CONV;
 }

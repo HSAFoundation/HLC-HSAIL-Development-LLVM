@@ -96,7 +96,10 @@ HSAILInstrInfo::isLoadFromStackSlot(const MachineInstr *MI,
   if (!Segment || Segment->getImm() != HSAILAS::SPILL_ADDRESS)
     return HSAIL::NoRegister;
 
-  const MachineOperand &Base = HSAIL::getBase(MI);
+  int AddressIdx = HSAIL::getNamedOperandIdx(MI->getOpcode(),
+                                             HSAIL::OpName::address);
+  const MachineOperand &Base = MI->getOperand(AddressIdx + HSAILADDRESS::BASE);
+
   if (Base.isFI()) {
     FrameIndex = Base.getIndex();
     return MI->getOperand(0).getReg();
@@ -124,7 +127,9 @@ HSAILInstrInfo::isStoreToStackSlot(const MachineInstr *MI,
   if (!Segment || Segment->getImm() != HSAILAS::SPILL_ADDRESS)
     return HSAIL::NoRegister;
 
-  const MachineOperand &Base = HSAIL::getBase(MI);
+  int AddressIdx = HSAIL::getNamedOperandIdx(MI->getOpcode(),
+                                             HSAIL::OpName::address);
+  const MachineOperand &Base = MI->getOperand(AddressIdx + HSAILADDRESS::BASE);
   if (Base.isFI()) {
     FrameIndex = Base.getIndex();
     return MI->getOperand(0).getReg();

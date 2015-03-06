@@ -180,57 +180,6 @@ unsigned getAlignTypeQualifier(Type *ty, const DataLayout& DL,
   return align;
 }
 
-llvm::MachineOperand &getBase(llvm::MachineInstr *MI) {
-  int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address);
-  return MI->getOperand(Idx + HSAILADDRESS::BASE);
-}
-
-const llvm::MachineOperand &getBase(const llvm::MachineInstr *MI) {
-  return getBase(const_cast<llvm::MachineInstr*>(MI));
-}
-
-llvm::MachineOperand &getIndex(llvm::MachineInstr *MI) {
-  int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address);
-  return MI->getOperand(Idx + HSAILADDRESS::REG);
-}
-
-const llvm::MachineOperand &getIndex(const llvm::MachineInstr *MI) {
-  return getIndex(const_cast<llvm::MachineInstr*>(MI));
-}
-
-llvm::MachineOperand &getOffset(llvm::MachineInstr *MI) {
-  int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address);
-  return MI->getOperand(Idx + HSAILADDRESS::OFFSET);
-}
-
-const llvm::MachineOperand &getOffset(const llvm::MachineInstr *MI) {
-  return getOffset(const_cast<MachineInstr*>(MI));
-}
-
-// FIXME: Remove this
-llvm::MachineOperand &getWidth(llvm::MachineInstr *MI) {
-  int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::width);
-  assert(Idx != -1);
-  return MI->getOperand(Idx);
-}
-
-const llvm::MachineOperand &getWidth(const llvm::MachineInstr *MI)
-{
-  return getWidth(const_cast<llvm::MachineInstr*>(MI));
-}
-
-// FIXME: Remove this
-llvm::MachineOperand &getLoadModifierMask(llvm::MachineInstr *MI) {
-  int Idx = HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::mask);
-  assert(Idx != -1);
-  return MI->getOperand(Idx);
-}
-
-const llvm::MachineOperand &getLoadModifierMask(const llvm::MachineInstr *MI)
-{
-  return getLoadModifierMask(const_cast<llvm::MachineInstr*>(MI));
-}
-
 bool isArgInst(const TargetMachine &TM, const llvm::MachineInstr *MI) {
   unsigned op = MI->getOpcode();
   const TargetInstrInfo *TII = TM.getSubtarget<HSAILSubtarget>().getInstrInfo();
