@@ -357,11 +357,20 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   globalVar.modifier().isArray() = (NElts != 0);
   globalVar.dim() = NElts;
 
+  unsigned Alignment = GV->getAlignment();
+  if (Alignment == 0)
+    Alignment = DL.getPrefTypeAlignment(InitTy);
+  else {
+    // If an alignment is specified, it must be equal to or greater than the
+    // variable's natural alignment.
+    Alignment = std::max(Alignment, DL.getABITypeAlignment(EltTy));
+  }
+
   // Align arrays at least by 4 bytes
-  unsigned align_value = std::max((globalVar.dim() > 1) ? 4U : 0U,
-    std::max(GV->getAlignment(),
-             HSAIL::getAlignTypeQualifier(InitTy, DL, true)));
-  globalVar.align() = getBrigAlignment(align_value);
+  if (Alignment == 1 && NElts != 0)
+    Alignment = 4;
+
+  globalVar.align() = getBrigAlignment(Alignment);
 
   globalVariableOffsets[GV] = globalVar.brigOffset();
 
