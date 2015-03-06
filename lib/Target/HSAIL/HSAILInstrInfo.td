@@ -26,6 +26,19 @@ def EnableOpt    : Predicate<"CodeGenOpt::None != TM.getOptLevel()">;
 def HSAILisKernel         : Predicate<"isKernelFunc()">;
 def HSAILisNotKernel      : Predicate<"!isKernelFunc()">;
 
+
+// Mark the default value for a width modifier. This only effects how
+// the instruction is printed in the non-BRIG path.
+class WidthAttrValues_ {
+  bits<2> NONE = 0;
+  bits<2> ALL = 1;
+  bits<2> WAVESIZE = 2;
+  bits<2> ONE = 3;
+}
+
+def WidthAttrValues : WidthAttrValues_;
+
+
 //===----------------------------------------------------------------------===//
 // Custom Operands
 //===----------------------------------------------------------------------===//

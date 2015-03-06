@@ -1087,15 +1087,13 @@ void HSAILInstPrinter::printBrigVariableModifierMask(const MCInst *MI,
   }
 }
 
-void HSAILInstPrinter::printBrigWidth(const MCInst *MI, unsigned OpNo,
-                                      raw_ostream &O) {
-  switch (MI->getOperand(OpNo).getImm()) {
+static void printBrigWidthImpl(raw_ostream &O, unsigned Width) {
+  switch (Width) {
   case Brig::BRIG_WIDTH_NONE:
     O << "_width(NONE)";
     break;
   case Brig::BRIG_WIDTH_1:
-    // This is the default. If omitted, this is interpreted as 1.
-    //O << "_width(1)";
+    O << "_width(1)";
     break;
   case Brig::BRIG_WIDTH_2:
     O << "_width(2)";
@@ -1196,6 +1194,37 @@ void HSAILInstPrinter::printBrigWidth(const MCInst *MI, unsigned OpNo,
   case Brig::BRIG_WIDTH_ALL:
     O << "_width(all)";
     break;
+  }
+}
+
+void HSAILInstPrinter::printBrigWidth(const MCInst *MI, unsigned OpNo,
+                                      raw_ostream &O) {
+  unsigned Width = MI->getOperand(OpNo).getImm();
+
+  const MCInstrDesc &Desc = MII.get(MI->getOpcode());
+  uint32_t DefaultWidth = (Desc.TSFlags & HSAILInstrFlags::WidthAttr)
+    >> Log2_32(HSAILInstrFlags::WidthAttrLo);
+
+  // Don't print the width modifier if it is the default for the instruction.
+  switch (DefaultWidth) {
+  case HSAILWidthAttrFlags::WidthAttrOne:
+    if (Width != Brig::BRIG_WIDTH_1)
+      printBrigWidthImpl(O, Width);
+    return;
+
+  case HSAILWidthAttrFlags::WidthAttrAll:
+    if (Width != Brig::BRIG_WIDTH_ALL)
+      printBrigWidthImpl(O, Width);
+    return;
+
+  case HSAILWidthAttrFlags::WidthAttrWaveSize:
+    if (Width != Brig::BRIG_WIDTH_WAVESIZE)
+      printBrigWidthImpl(O, Width);
+    return;
+
+  case HSAILWidthAttrFlags::WidthAttrNone:
+    printBrigWidthImpl(O, Width);
+    return;
   }
 }
 

@@ -223,7 +223,26 @@ namespace llvm {
 
       // Others.
       IS_CONV         = 1 << 23,
-      IS_IMAGEINST    = 1 << 24
+      IS_IMAGEINST    = 1 << 24,
+
+      // Default modifier attributes. Used for marking default values of a
+      // modifier for an instruction to skip printing it.
+      RoundAttrLo = 1 << 25, // 2 bits
+      RoundAttrHi = 1 << 26,
+      RoundAttr = RoundAttrLo | RoundAttrHi,
+
+      WidthAttrLo = 1 << 27,  // 2 bits
+      WidthAttrHi = 1 << 28,
+      WidthAttr = WidthAttrLo | WidthAttrHi
+    };
+  }
+
+  namespace HSAILWidthAttrFlags {
+    enum {
+      WidthAttrNone = 0,
+      WidthAttrAll = 1,
+      WidthAttrWaveSize = 2,
+      WidthAttrOne = 3
     };
   }
 

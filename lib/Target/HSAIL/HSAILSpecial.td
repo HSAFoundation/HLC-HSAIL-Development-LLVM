@@ -44,11 +44,11 @@ def : InstBasic_0Op_Pat<MAXWAVEID, int_HSAIL_get_maxdynwave_id, i32, BrigTypeX.U
 def : InstBasic_0Op_Pat<CLOCK, int_HSAIL_get_clock, i64, BrigTypeX.U64>;
 def : InstBasic_0Op_Pat<CUID, int_HSAIL_get_cu, i32, BrigTypeX.U32>;
 
-
-
 let isNotDuplicable = 1, isBarrier = 1 in {
   def BARRIER : HSAILInstBr_0Op_NoRet<"barrier", BrigOpcode.BARRIER>;
-  def WAVEBARRIER : HSAILInstBr_0Op_NoRet<"wavebarrier", BrigOpcode.WAVEBARRIER>;
+  def WAVEBARRIER : HSAILInstBr_0Op_NoRet<"wavebarrier", BrigOpcode.WAVEBARRIER> {
+    let WidthAttr = WidthAttrValues.WAVESIZE;
+  }
 }
 
 def : InstBr_0Op_NoRet_Pat<BARRIER, int_HSAIL_barrier, BrigWidth._ALL>;

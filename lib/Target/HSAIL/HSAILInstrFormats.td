@@ -56,6 +56,8 @@ class HSAILInst<dag outs, dag ins,
   bit isConv = 0;
   bit isImageInst = 0;
 
+  bits<2> RoundAttr = 0;
+  bits<2> WidthAttr = 0;
 
   let TSFlags{3} = InstAddr;
   let TSFlags{4} = InstAtomic;
@@ -78,6 +80,9 @@ class HSAILInst<dag outs, dag ins,
 
   let TSFlags{23} = isConv;
   let TSFlags{24} = isImageInst;
+
+  let TSFlags{26-25} = RoundAttr;
+  let TSFlags{28-27} = WidthAttr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
