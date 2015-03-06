@@ -317,7 +317,8 @@ define void @v16i16_arg(<16 x i16> addrspace(1)* %out, <16 x i16> %in) {
   ret void
 }
 
-; FUNC-LABEL: {{^}}prog function &v16i32_arg
+; FUNC-LABEL: {{^}}prog function &v16i32_arg(
+; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%out];
 ; HSAIL: ld_arg_align(64)_u32 {{\$s[0-9]+}}, [%in];
 ; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%in][4];
 ; HSAIL: ld_arg_align(8)_u32 {{\$s[0-9]+}}, [%in][8];
@@ -334,12 +335,13 @@ define void @v16i16_arg(<16 x i16> addrspace(1)* %out, <16 x i16> %in) {
 ; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%in][52];
 ; HSAIL: ld_arg_align(8)_u32 {{\$s[0-9]+}}, [%in][56];
 ; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%in][60];
-; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%out];
+; HSAIL: ret;
 define void @v16i32_arg(<16 x i32> addrspace(1)* nocapture %out, <16 x i32> %in) nounwind {
   store <16 x i32> %in, <16 x i32> addrspace(1)* %out, align 4
   ret void
 }
 
+; FUNC-LABEL: {{^}}prog function &v16f32_arg(
 define void @v16f32_arg(<16 x float> addrspace(1)* nocapture %out, <16 x float> %in) nounwind {
   store <16 x float> %in, <16 x float> addrspace(1)* %out, align 4
   ret void
