@@ -1472,9 +1472,7 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
       HSAIL::getBrigType(EmitTy, DL, isSExt));
   }
 
-  retParam.align() = getBrigAlignment(std::max(
-    HSAIL::getAlignTypeQualifier(EmitTy, DL, false),
-    HSAIL::getAlignTypeQualifier(type, DL, false)));
+  retParam.align() = getBrigAlignment(DL.getABITypeAlignment(type));
   brigantine.addOutputParameter(retParam);
 }
 
