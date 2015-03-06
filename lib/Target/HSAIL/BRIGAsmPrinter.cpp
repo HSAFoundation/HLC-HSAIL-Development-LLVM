@@ -1526,9 +1526,8 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
       sym = brigantine.addVariable(name, symSegment,
                           HSAIL::getBrigType(EmitTy, DL, isSExt));
     }
-    sym.align() = getBrigAlignment(
-      std::max(HSAIL::getAlignTypeQualifier(type, DL, false),
-               HSAIL::getAlignTypeQualifier(EmitTy, DL, false)));
+
+    sym.align() = getBrigAlignment(DL.getABITypeAlignment(type));
   }
 
   uint64_t rv = sym.brigOffset();
