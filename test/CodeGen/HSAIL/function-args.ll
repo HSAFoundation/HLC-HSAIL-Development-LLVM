@@ -345,10 +345,55 @@ define void @v16f32_arg(<16 x float> addrspace(1)* nocapture %out, <16 x float> 
   ret void
 }
 
-; FUNC-LABEL: {{^}}prog function &kernel_arg_i64
+; FUNC-LABEL: {{^}}prog function &i64_arg(
 ; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%out];
 ; HSAIL: ld_arg_align(8)_u64 {{\$d[0-9]+}}, [%a];
-define void @kernel_arg_i64(i64 addrspace(1)* %out, i64 %a) nounwind {
+define void @i64_arg(i64 addrspace(1)* %out, i64 %a) nounwind {
   store i64 %a, i64 addrspace(1)* %out, align 8
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &v2i64_arg(
+; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%out];
+; HSAIL: ld_arg_align(16)_u64 {{\$d[0-9]+}}, [%in];
+; HSAIL: ld_arg_align(8)_u64 {{\$d[0-9]+}}, [%in][8];
+define void @v2i64_arg(<2 x i64> addrspace(1)* nocapture %out, <2 x i64> %in) nounwind {
+  store <2 x i64> %in, <2 x i64> addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &v3i64_arg(
+; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%out];
+; HSAIL: ld_arg_align(32)_u64 {{\$d[0-9]+}}, [%in];
+; HSAIL: ld_arg_align(8)_u64 {{\$d[0-9]+}}, [%in][8];
+; HSAIL: ld_arg_align(16)_u64 {{\$d[0-9]+}}, [%in][16];
+define void @v3i64_arg(<3 x i64> addrspace(1)* nocapture %out, <3 x i64> %in) nounwind {
+  store <3 x i64> %in, <3 x i64> addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &v4i64_arg(
+; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%out];
+; HSAIL: ld_arg_align(32)_u64 {{\$d[0-9]+}}, [%in];
+; HSAIL: ld_arg_align(8)_u64 {{\$d[0-9]+}}, [%in][8];
+; HSAIL: ld_arg_align(16)_u64 {{\$d[0-9]+}}, [%in][16];
+; HSAIL: ld_arg_align(8)_u64 {{\$d[0-9]+}}, [%in][24];
+define void @v4i64_arg(<4 x i64> addrspace(1)* nocapture %out, <4 x i64> %in) nounwind {
+  store <4 x i64> %in, <4 x i64> addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &v8i64_arg(
+; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%out];
+; HSAIL: ld_arg_align(64)_u64 {{\$d[0-9]+}}, [%in];
+; HSAIL: ld_arg_align(8)_u64 {{\$d[0-9]+}}, [%in][8];
+; HSAIL: ld_arg_align(16)_u64 {{\$d[0-9]+}}, [%in][16];
+; HSAIL: ld_arg_align(8)_u64 {{\$d[0-9]+}}, [%in][24];
+; HSAIL: ld_arg_align(32)_u64 {{\$d[0-9]+}}, [%in][32];
+; HSAIL: ld_arg_align(8)_u64 {{\$d[0-9]+}}, [%in][40];
+; HSAIL: ld_arg_align(16)_u64 {{\$d[0-9]+}}, [%in][48];
+; HSAIL: ld_arg_align(8)_u64 {{\$d[0-9]+}}, [%in][56];
+define void @v8i64_arg(<8 x i64> addrspace(1)* nocapture %out, <8 x i64> %in) nounwind {
+  store <8 x i64> %in, <8 x i64> addrspace(1)* %out
   ret void
 }

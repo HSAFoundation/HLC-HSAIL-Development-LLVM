@@ -345,10 +345,55 @@ define spir_kernel void @v16f32_kernarg(<16 x float> addrspace(1)* nocapture %ou
   ret void
 }
 
-; FUNC-LABEL: {{^}}prog kernel &kernel_arg_i64(
+; FUNC-LABEL: {{^}}prog kernel &i64_kernarg(
 ; HSAIL: ld_kernarg_align(4)_width(all)_u32 {{\$s[0-9]+}}, [%out];
 ; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%a];
-define spir_kernel void @kernel_arg_i64(i64 addrspace(1)* %out, i64 %a) nounwind {
+define spir_kernel void @i64_kernarg(i64 addrspace(1)* %out, i64 %a) nounwind {
   store i64 %a, i64 addrspace(1)* %out, align 8
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog kernel &v2i64_kernarg(
+; HSAIL: ld_kernarg_align(4)_width(all)_u32 {{\$s[0-9]+}}, [%out];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][8];
+define spir_kernel void @v2i64_kernarg(<2 x i64> addrspace(1)* nocapture %out, <2 x i64> %in) nounwind {
+  store <2 x i64> %in, <2 x i64> addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog kernel &v3i64_kernarg(
+; HSAIL: ld_kernarg_align(4)_width(all)_u32 {{\$s[0-9]+}}, [%out];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][8];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][16];
+define spir_kernel void @v3i64_kernarg(<3 x i64> addrspace(1)* nocapture %out, <3 x i64> %in) nounwind {
+  store <3 x i64> %in, <3 x i64> addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog kernel &v4i64_kernarg(
+; HSAIL: ld_kernarg_align(4)_width(all)_u32 {{\$s[0-9]+}}, [%out];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][8];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][16];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][24];
+define spir_kernel void @v4i64_kernarg(<4 x i64> addrspace(1)* nocapture %out, <4 x i64> %in) nounwind {
+  store <4 x i64> %in, <4 x i64> addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog kernel &v8i64_kernarg(
+; HSAIL: ld_kernarg_align(4)_width(all)_u32 {{\$s[0-9]+}}, [%out];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][8];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][16];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][24];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][32];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][40];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][48];
+; HSAIL: ld_kernarg_align(8)_width(all)_u64 {{\$d[0-9]+}}, [%in][56];
+define spir_kernel void @v8i64_kernarg(<8 x i64> addrspace(1)* nocapture %out, <8 x i64> %in) nounwind {
+  store <8 x i64> %in, <8 x i64> addrspace(1)* %out
   ret void
 }
