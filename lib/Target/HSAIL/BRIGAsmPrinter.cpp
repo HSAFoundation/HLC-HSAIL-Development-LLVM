@@ -1449,27 +1449,32 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
   reg64Counter = 0;
 
   // Handle bit return as DWORD
-  Type* memType = type->getScalarType();
-  if (memType->isIntegerTy(1))
-    memType = Type::getInt32Ty(type->getContext());
+  if (type->getScalarType()->isIntegerTy(1)) {
+    assert(!type->isVectorTy() && "i1 vectors do not work");
+    type = Type::getInt32Ty(type->getContext());
+  }
+
+  const DataLayout &DL = getDataLayout();
+
+  unsigned NElts = ~0u;
+  Type *EmitTy = analyzeType(type, NElts, DL, type->getContext());
 
   // construct return symbol
   HSAIL_ASM::DirectiveVariable retParam;
-  if (HSAIL::HSAILrequiresArray(type)) {
+  if (NElts != 0) {
     retParam = brigantine.addArrayVariable(
-      ret,
-      HSAIL::getNumElementsInHSAILType(type, getDataLayout()),
-      Brig::BRIG_SEGMENT_ARG,
-      HSAIL::getBrigType(memType, getDataLayout(), isSExt));
+      ret, NElts, Brig::BRIG_SEGMENT_ARG,
+      HSAIL::getBrigType(EmitTy, DL, isSExt));
   } else {
     retParam = brigantine.addVariable(
       ret,
       Brig::BRIG_SEGMENT_ARG,
-      HSAIL::getBrigType(memType, getDataLayout(), isSExt));
+      HSAIL::getBrigType(EmitTy, DL, isSExt));
   }
+
   retParam.align() = getBrigAlignment(std::max(
-    HSAIL::getAlignTypeQualifier(memType, getDataLayout(), false),
-    HSAIL::getAlignTypeQualifier(type, getDataLayout(), false)));
+    HSAIL::getAlignTypeQualifier(EmitTy, DL, false),
+    HSAIL::getAlignTypeQualifier(type, DL, false)));
   brigantine.addOutputParameter(retParam);
 }
 
@@ -1504,34 +1509,28 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
     sym = brigantine.addSampler(name, symSegment);
     sym.align() = Brig::BRIG_ALIGNMENT_8;
   } else {
-    // Handle bit argument as DWORD
-    Type* memType = type->getScalarType();
-    if (memType->isIntegerTy(1))
-      memType = Type::getInt32Ty(type->getContext());
-    if (HSAIL::HSAILrequiresArray(type)) {
-      uint64_t num_elem = HSAIL::getNumElementsInHSAILType(type, getDataLayout());
-      // TODO_HSA: w/a for RT bug, remove when RT is fixed.
-      // RT passes vec3 as 3 elements, not vec4 as required by OpenCL spec.
-      if (isKernel && type->isVectorTy())
-        num_elem = type->getVectorNumElements();
+    const DataLayout &DL = getDataLayout();
 
+    // Handle bit argument as DWORD
+    // FIXME: This is incorrect.
+    if (type->getScalarType()->isIntegerTy(1)) {
+      assert(!type->isVectorTy() && "i1 vectors are broken");
+      type = Type::getInt32Ty(type->getContext());
+    }
+
+    unsigned NElts = ~0u;
+    Type *EmitTy = analyzeType(type, NElts, DL, type->getContext());
+
+    if (NElts != 0) {
       sym = brigantine.addArrayVariable(
-        name, num_elem, symSegment,
-        HSAIL::getBrigType(memType, getDataLayout(), isSExt));
-      // TODO_HSA: workaround for RT bug.
-      // RT does not read argument alignment from BRIG, so if we align vectors
-      // on a full vector size that will cause mismatch between kernarg offsets
-      // in RT and finalizer.
-      // The line below has to be removed as soon as RT is fixed.
-      if (isKernel && type->isVectorTy())
-        type = type->getVectorElementType();
+        name, NElts, symSegment, HSAIL::getBrigType(EmitTy, DL, isSExt));
     } else {
       sym = brigantine.addVariable(name, symSegment,
-                          HSAIL::getBrigType(memType, getDataLayout(), isSExt));
+                          HSAIL::getBrigType(EmitTy, DL, isSExt));
     }
     sym.align() = getBrigAlignment(
-      std::max(HSAIL::getAlignTypeQualifier(type, getDataLayout(), false),
-               HSAIL::getAlignTypeQualifier(memType, getDataLayout(), false)));
+      std::max(HSAIL::getAlignTypeQualifier(type, DL, false),
+               HSAIL::getAlignTypeQualifier(EmitTy, DL, false)));
   }
 
   uint64_t rv = sym.brigOffset();

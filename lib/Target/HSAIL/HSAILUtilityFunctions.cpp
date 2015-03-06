@@ -104,17 +104,6 @@ uint64_t getNumElementsInHSAILType(Type* type, const DataLayout& dataLayout) {
   return 0;
 }
 
-bool HSAILrequiresArray(Type* type) {
-  switch(type->getTypeID()) {
-  case Type::VectorTyID:
-  case Type::ArrayTyID:
-  case Type::StructTyID:
-    return true;
-  default:
-    return false;
-  }
-}
-
 Brig::BrigType16_t getBrigType(Type* type, const DataLayout &DL, bool Signed) {
   switch (type->getTypeID()) {
   case Type::VoidTyID:
