@@ -272,7 +272,7 @@ class HSAILInstLane_ActiveLaneMask<string opName, bits<16> BrigVal> :
     (ins BrigWidth:$width,
          unknown:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
 //  opName#"$width$TypeLength$sourceType\t$dest, $src0"
-  opName#"$width$TypeLength$sourceType\t($dest0, $dest1, $dest2, $dest3), $src0"
+  opName#"_v4$width$TypeLength$sourceType\t($dest0, $dest1, $dest2, $dest3), $src0"
 >;
 
 // InstBr
