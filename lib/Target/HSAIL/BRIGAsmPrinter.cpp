@@ -413,7 +413,7 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &rF,
 
   paramCounter = 0;
   if (!retType->isVoidTy()) {
-    EmitFunctionReturn(retType, false, StringRef(), F->getAttributes().getRetAttributes()
+    EmitFunctionReturn(retType, false, "ret", F->getAttributes().getRetAttributes()
                        .hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt));
   }
   if (funcType) {
@@ -1449,10 +1449,11 @@ void BRIGAsmPrinter::EmitFunctionBodyEnd() {
 }
 
 void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
-                                        const StringRef RetName, bool isSExt) {
+                                        StringRef RetName, bool isSExt) {
   std::string SymName("%");
-  SymName += RetName.empty() ? "ret" : RetName;
-  HSAIL_ASM::SRef ret = SymName;
+  SymName += RetName;
+
+  HSAIL_ASM::SRef ret(SymName);
   reg1Counter = 0;
   reg32Counter = 0;
   reg64Counter = 0;
