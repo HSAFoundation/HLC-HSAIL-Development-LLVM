@@ -87,7 +87,7 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
                                            const Argument &A,
                                            bool IsKernel,
                                            raw_ostream &O) const {
-  bool IsVector = false;
+  bool IsArray = false;
   Type *Ty = A.getType();
   unsigned NElts = 0;
 
@@ -105,10 +105,13 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
         EmitFunctionArgument(ParamIndex, A, IsKernel, O);
       }
     } else
-      IsVector = true;
+      IsArray = true;
 
     unsigned EltABIAlign = DL.getABITypeAlignment(Ty);
     NElts = ABIAlign / EltABIAlign;
+  } else if (const ArrayType *AT = dyn_cast<ArrayType>(Ty)) {
+    NElts = AT->getNumElements();
+    IsArray = true;
   }
 
   // TODO_HSA: Need to emit alignment information.
@@ -120,7 +123,7 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
 
 
   // For vector args, we ll use an HSAIL array.
-  if (!IsKernel && IsVector)
+  if (!IsKernel && IsArray)
     O << '[' << NElts << ']';
 }
 
@@ -128,9 +131,10 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
                                          StringRef Name,
                                          bool IsKernel,
                                          raw_ostream &O) const {
+  const DataLayout &DL = getDataLayout();
+
   unsigned NElts = 0;
   if (const VectorType *VT = dyn_cast<VectorType>(Ty)) {
-    const DataLayout &DL = getDataLayout();
     unsigned ABIAlign = DL.getABITypeAlignment(Ty);
     O << "align(" << ABIAlign << ") ";
 
@@ -138,7 +142,8 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
 
     unsigned EltABIAlign = DL.getABITypeAlignment(Ty);
     NElts = ABIAlign / EltABIAlign;
-  }
+  } else if (const ArrayType *AT = dyn_cast<ArrayType>(Ty))
+    NElts = AT->getNumElements();
 
   O << (IsKernel ? "kernarg" : "arg")
     << '_'
