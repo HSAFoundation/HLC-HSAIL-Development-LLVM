@@ -641,19 +641,19 @@ void HSAILInstPrinter::printBrigMemoryScope(const MCInst *MI, unsigned OpNo,
                                             raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
   case Brig::BRIG_MEMORY_SCOPE_WORKITEM:
-    O << "wi";
+    O << "_wi";
     break;
   case Brig::BRIG_MEMORY_SCOPE_WAVEFRONT:
-    O << "wv";
+    O << "_wv";
     break;
   case Brig::BRIG_MEMORY_SCOPE_WORKGROUP:
-    O << "wg";
+    O << "_wg";
     break;
   case Brig::BRIG_MEMORY_SCOPE_COMPONENT:
-    O << "cmp";
+    O << "_cmp";
     break;
   case Brig::BRIG_MEMORY_SCOPE_SYSTEM:
-    O << "sys";
+    O << "_sys";
     break;
   }
 }
