@@ -413,6 +413,8 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   PointerType *Ty = GV->getType();
   unsigned AS = Ty->getAddressSpace();
 
+  if (GlobalValue::isExternalLinkage(GV->getLinkage()))
+    O << "prog ";
 
   printAlignTypeQualifier(*GV, DL, O);
 
