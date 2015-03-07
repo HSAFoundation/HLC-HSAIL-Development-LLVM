@@ -125,6 +125,7 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
 }
 
 void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
+                                         StringRef Name,
                                          bool IsKernel,
                                          raw_ostream &O) const {
   unsigned NElts = 0;
@@ -142,12 +143,16 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
   O << (IsKernel ? "kernarg" : "arg")
     << '_'
     << getArgTypeName(Ty)
-    << " %ret";
+    << ' '
+    << '%'
+    << Name;
   if (NElts != 0)
     O << '[' << NElts << ']';
 }
 
-void HSAILAsmPrinter::EmitFunctionLabel(const Function &F, raw_ostream &O) const {
+void HSAILAsmPrinter::EmitFunctionLabel(const Function &F,
+                                        raw_ostream &O,
+                                        bool IsDecl) const {
   Type *RetTy = F.getReturnType();
 
   // FIXME: Should define HSA calling conventions.
@@ -162,7 +167,7 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F, raw_ostream &O) const
     // TODO_HSA: Need "good" names for the formal arguments and returned value.
     // TODO_HSA: Need to emit alignment information..
     if (!RetTy->isVoidTy())
-      EmitFunctionReturn(RetTy, IsKernel, O);
+      EmitFunctionReturn(RetTy, IsDecl ? "ret" : F.getName(), IsKernel, O);
 
     O << ")(";
   }
@@ -500,7 +505,7 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
       O.resync();
 
       O << "decl prog ";
-      EmitFunctionLabel(F, O);
+      EmitFunctionLabel(F, O, true);
       O << ";\n\n";
       OutStreamer.EmitRawText(O.str());
     }
@@ -576,7 +581,7 @@ void HSAILAsmPrinter::EmitFunctionEntryLabel() {
   raw_string_ostream O(FunStr);
 
   O << "prog ";
-  EmitFunctionLabel(*MF->getFunction(), O);
+  EmitFunctionLabel(*MF->getFunction(), O, false);
   O << "\n{";
 
   OutStreamer.EmitRawText(O.str());

@@ -287,7 +287,7 @@ private:
   // returns an offset of corresponding DirectiveVariable
   uint64_t EmitFunctionArgument(Type* type, bool isKernel,
                                 const StringRef argName, bool isSExt);
-  void EmitFunctionReturn(Type* type, bool isKernel, const StringRef RetName,
+  void EmitFunctionReturn(Type* type, bool isKernel, StringRef RetName,
                           bool isSExt);
 
   bool usesGCNAtomicCounter(void);

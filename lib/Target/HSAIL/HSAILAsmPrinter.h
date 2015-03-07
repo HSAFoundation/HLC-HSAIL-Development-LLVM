@@ -33,9 +33,10 @@ private:
                             bool IsKernel,
                             raw_ostream &O) const;
   void EmitFunctionReturn(Type *Ty,
+                          StringRef Name,
                           bool IsKernel,
                           raw_ostream &O) const;
-  void EmitFunctionLabel(const Function &F, raw_ostream &O) const;
+  void EmitFunctionLabel(const Function &F, raw_ostream &O, bool IsDecl) const;
 
   static char getSymbolPrefixForAddressSpace(unsigned AS);
   char getSymbolPrefix(const MCSymbol &S) const;
