@@ -30,7 +30,8 @@ public:
   void printInst(const MCInst *MI, raw_ostream &O, StringRef Annot) override;
 
 private:
-  void printImmediate(uint64_t Imm, raw_ostream &O);
+  void printUImmediate(uint64_t Imm, raw_ostream &O);
+  void printSImmediate(int64_t Imm, raw_ostream &O);
   void printAddrMode3Op(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printVec2Op(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printVec3Op(const MCInst *MI, unsigned OpNo, raw_ostream &O);

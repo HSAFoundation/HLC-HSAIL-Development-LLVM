@@ -36,8 +36,12 @@ void HSAILInstPrinter::printInst(const MCInst *MI, raw_ostream &OS,
   printAnnotation(OS, Annot);
 }
 
-void HSAILInstPrinter::printImmediate(uint64_t Imm, raw_ostream &O) {
+void HSAILInstPrinter::printUImmediate(uint64_t Imm, raw_ostream &O) {
   O << format("%" PRIu64, Imm);
+}
+
+void HSAILInstPrinter::printSImmediate(int64_t Imm, raw_ostream &O) {
+  O << format("%" PRId64, Imm);
 }
 
 void HSAILInstPrinter::printAddrMode3Op(const MCInst *MI,
@@ -1228,6 +1232,36 @@ void HSAILInstPrinter::printBrigWidth(const MCInst *MI, unsigned OpNo,
   }
 }
 
+static bool brigTypeIsSigned(Brig::BrigTypeX BT) {
+  switch (BT) {
+  // Check common false cases first.
+  case Brig::BRIG_TYPE_NONE:
+  case Brig::BRIG_TYPE_U32:
+  case Brig::BRIG_TYPE_U64:
+  case Brig::BRIG_TYPE_B32:
+  case Brig::BRIG_TYPE_B64:
+    return false;
+
+  case Brig::BRIG_TYPE_S32:
+  case Brig::BRIG_TYPE_S64:
+  case Brig::BRIG_TYPE_S8:
+  case Brig::BRIG_TYPE_S16:
+  case Brig::BRIG_TYPE_S8X4:
+  case Brig::BRIG_TYPE_S8X8:
+  case Brig::BRIG_TYPE_S8X16:
+  case Brig::BRIG_TYPE_S16X2:
+  case Brig::BRIG_TYPE_S16X4:
+  case Brig::BRIG_TYPE_S16X8:
+  case Brig::BRIG_TYPE_S32X2:
+  case Brig::BRIG_TYPE_S32X4:
+  case Brig::BRIG_TYPE_S64X2:
+    return true;
+
+  default:
+    return false;
+  }
+}
+
 // We need to handle the integer types as well. Sometimes we can end up with an
 // FP immediate in an integer instruction. e.g. an FP select uses a bit HSAIL
 // type but will still have FP operands.
@@ -1257,7 +1291,18 @@ void HSAILInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
   if (Op.isReg()) {
     O << getRegisterName(Op.getReg());
   } else if (Op.isImm()) {
-    printImmediate(Op.getImm(), O);
+    Brig::BrigTypeX BT = Brig::BRIG_TYPE_NONE;
+
+    int TypeLengthIdx = HSAIL::getNamedOperandIdx(MI->getOpcode(),
+                                                  HSAIL::OpName::TypeLength);
+    if (TypeLengthIdx != -1)
+      BT = static_cast<Brig::BrigTypeX>(MI->getOperand(TypeLengthIdx).getImm());
+
+    if (brigTypeIsSigned(BT))
+      printSImmediate(Op.getImm(), O);
+    else
+      printUImmediate(Op.getImm(), O);
+
   } else if (Op.isFPImm()) {
     // This is tricky since we need to print it with a different format
     // depending on whether it is a float or double, but MCOperand does not
