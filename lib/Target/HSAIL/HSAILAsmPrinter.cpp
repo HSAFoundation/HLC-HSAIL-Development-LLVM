@@ -123,6 +123,9 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
                                          raw_ostream &O) const {
   unsigned NElts = 0;
   if (const VectorType *VT = dyn_cast<VectorType>(Ty)) {
+    const DataLayout &DL = getDataLayout();
+    O << "align(" << DL.getABITypeAlignment(Ty) << ") ";
+
     Ty = VT->getElementType();
     NElts = VT->getNumElements();
   }
