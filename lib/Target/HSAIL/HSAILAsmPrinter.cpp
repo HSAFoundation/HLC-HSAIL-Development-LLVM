@@ -130,7 +130,7 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
   O << (IsKernel ? "kernarg" : "arg")
     << '_'
     << getArgTypeName(Ty)
-    << " %ret_r0";
+    << " %ret";
   if (NElts != 0)
     O << '[' << NElts << ']';
 }
