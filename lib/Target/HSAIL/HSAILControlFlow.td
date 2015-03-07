@@ -45,7 +45,7 @@ def : Pat<
 
 
 let isBranch = 1, isTerminator = 1, hasCtrlDep = 1 in {
-  let isBarrier = 1 in {
+  let isBarrier = 1, WidthAttr = WidthAttrValues.ALL in {
     def BR : HSAILInstBr_1Op_NoRet<"br", BrigOpcode.BR>;
   }
 
