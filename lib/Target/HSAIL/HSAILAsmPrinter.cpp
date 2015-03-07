@@ -92,6 +92,9 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
   unsigned NElts = 0;
 
   if (const VectorType *VT = dyn_cast<VectorType>(Ty)) {
+    const DataLayout &DL = getDataLayout();
+    O << "align(" << DL.getABITypeAlignment(Ty) << ") ";
+
     Ty = VT->getElementType();
     if (IsKernel) {
       for (unsigned I = 0, E = VT->getNumElements(); I < E; ++I) {
