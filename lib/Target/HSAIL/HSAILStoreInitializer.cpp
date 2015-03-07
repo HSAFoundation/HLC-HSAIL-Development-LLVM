@@ -186,11 +186,11 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
 
 // FIXME: Duplicated in HSAILAsmPrinter
 void StoreInitializer::printFloat(uint32_t Val, raw_ostream &O) {
-  O << format("0F%" PRIx32, Val);
+  O << format("0F%08" PRIx32, Val);
 }
 
 void StoreInitializer::printDouble(uint64_t Val, raw_ostream &O) {
-  O << format("0F%" PRIx64, Val);
+  O << format("0D%016" PRIx64, Val);
 }
 
 void StoreInitializer::print(raw_ostream &O) {
