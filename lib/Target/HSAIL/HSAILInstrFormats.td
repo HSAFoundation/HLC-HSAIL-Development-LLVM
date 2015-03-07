@@ -57,7 +57,9 @@ class HSAILInst<dag outs, dag ins,
   bit isImageInst = 0;
 
   bits<2> RoundAttr = 0;
-  bits<2> WidthAttr = 0;
+
+  // Most instructions with a width modifier default to 1.
+  bits<2> WidthAttr = WidthAttrValues.ONE;
 
   let TSFlags{3} = InstAddr;
   let TSFlags{4} = InstAtomic;
