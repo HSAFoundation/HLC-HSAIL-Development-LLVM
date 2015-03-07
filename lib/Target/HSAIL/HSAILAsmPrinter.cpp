@@ -93,7 +93,9 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
 
   if (const VectorType *VT = dyn_cast<VectorType>(Ty)) {
     const DataLayout &DL = getDataLayout();
-    O << "align(" << DL.getABITypeAlignment(Ty) << ") ";
+
+    unsigned ABIAlign = DL.getABITypeAlignment(Ty);
+    O << "align(" << ABIAlign << ") ";
 
     Ty = VT->getElementType();
     if (IsKernel) {
@@ -105,7 +107,8 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
     } else
       IsVector = true;
 
-    NElts = VT->getNumElements();
+    unsigned EltABIAlign = DL.getABITypeAlignment(Ty);
+    NElts = ABIAlign / EltABIAlign;
   }
 
   // TODO_HSA: Need to emit alignment information.
@@ -127,10 +130,13 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
   unsigned NElts = 0;
   if (const VectorType *VT = dyn_cast<VectorType>(Ty)) {
     const DataLayout &DL = getDataLayout();
-    O << "align(" << DL.getABITypeAlignment(Ty) << ") ";
+    unsigned ABIAlign = DL.getABITypeAlignment(Ty);
+    O << "align(" << ABIAlign << ") ";
 
     Ty = VT->getElementType();
-    NElts = VT->getNumElements();
+
+    unsigned EltABIAlign = DL.getABITypeAlignment(Ty);
+    NElts = ABIAlign / EltABIAlign;
   }
 
   O << (IsKernel ? "kernarg" : "arg")
