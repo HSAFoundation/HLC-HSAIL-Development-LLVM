@@ -396,7 +396,7 @@ static void printAlignTypeQualifier(const GlobalValue &GV,
 
   unsigned Align = GV.getAlignment();
   if (Align == 0)
-    Align = DL.getABITypeAlignment(GV.getType());
+    Align = DL.getABITypeAlignment(GV.getType()->getElementType());
 
   O << "align(" << Align << ") ";
 }
