@@ -437,7 +437,8 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
 
       // Emit trivial zero initializers as a single 0.
       if (Init->isNullValue()) {
-        if (Init->getType()->isAggregateType())
+        Type *Ty = Init->getType();
+        if (Ty->isAggregateType() || Ty->isVectorTy())
           O << "{0}";
         else
           O << '0';
