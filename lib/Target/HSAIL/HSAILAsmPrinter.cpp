@@ -484,7 +484,10 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
     if (F.isIntrinsic())
       continue;
 
-    if (!F.isDeclaration() || F.getLinkage() == GlobalValue::ExternalLinkage) {
+    if (F.isDeclaration() && F.getLinkage() != GlobalValue::ExternalLinkage)
+      continue;
+
+    if (!HSAIL::isKernelFunc(&F)) {
       Str.clear();
       O.resync();
 
