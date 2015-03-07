@@ -317,7 +317,7 @@ static Brig::BrigLinkage findGlobalBrigLinkage(const GlobalValue &GV) {
   if (GV.isExternalLinkage(GV.getLinkage()))
     return Brig::BRIG_LINKAGE_PROGRAM;
 
-  return  Brig::BRIG_LINKAGE_NONE;
+  return Brig::BRIG_LINKAGE_NONE;
 }
 
 static HSAIL_ASM::SRef makeSRef(const SmallVectorImpl<char> &Str) {
