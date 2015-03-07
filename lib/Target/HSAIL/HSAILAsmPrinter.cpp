@@ -87,43 +87,26 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
                                            const Argument &A,
                                            bool IsKernel,
                                            raw_ostream &O) const {
-  bool IsArray = false;
+  const DataLayout &DL = getDataLayout();
   Type *Ty = A.getType();
-  unsigned NElts = 0;
 
-  if (const VectorType *VT = dyn_cast<VectorType>(Ty)) {
-    const DataLayout &DL = getDataLayout();
+  unsigned NElts = ~0u;
+  Type *EltTy = analyzeType(Ty, NElts, DL, Ty->getContext());
 
+  if (NElts > 1) {
     unsigned ABIAlign = DL.getABITypeAlignment(Ty);
     O << "align(" << ABIAlign << ") ";
-
-    Ty = VT->getElementType();
-    if (IsKernel) {
-      for (unsigned I = 0, E = VT->getNumElements(); I < E; ++I) {
-        if (I != 0)
-          O << ", ";
-        EmitFunctionArgument(ParamIndex, A, IsKernel, O);
-      }
-    } else
-      IsArray = true;
-
-    unsigned EltABIAlign = DL.getABITypeAlignment(Ty);
-    NElts = ABIAlign / EltABIAlign;
-  } else if (const ArrayType *AT = dyn_cast<ArrayType>(Ty)) {
-    NElts = AT->getNumElements();
-    IsArray = true;
   }
 
   // TODO_HSA: Need to emit alignment information.
   O << (IsKernel ? "kernarg" : "arg")
     << '_'
-    << getArgTypeName(Ty)
+    << getArgTypeName(EltTy)
     << ' '
     << '%' << A.getName();
 
-
-  // For vector args, we ll use an HSAIL array.
-  if (!IsKernel && IsArray)
+  // For vector args, we'll use an HSAIL array.
+  if (NElts != 0)
     O << '[' << NElts << ']';
 }
 
@@ -133,21 +116,17 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
                                          raw_ostream &O) const {
   const DataLayout &DL = getDataLayout();
 
-  unsigned NElts = 0;
-  if (const VectorType *VT = dyn_cast<VectorType>(Ty)) {
+  unsigned NElts = ~0u;
+  Type *EltTy = analyzeType(Ty, NElts, DL, Ty->getContext());
+
+  if (NElts > 1) {
     unsigned ABIAlign = DL.getABITypeAlignment(Ty);
     O << "align(" << ABIAlign << ") ";
-
-    Ty = VT->getElementType();
-
-    unsigned EltABIAlign = DL.getABITypeAlignment(Ty);
-    NElts = ABIAlign / EltABIAlign;
-  } else if (const ArrayType *AT = dyn_cast<ArrayType>(Ty))
-    NElts = AT->getNumElements();
+  }
 
   O << (IsKernel ? "kernarg" : "arg")
     << '_'
-    << getArgTypeName(Ty)
+    << getArgTypeName(EltTy)
     << ' '
     << '%'
     << Name;
