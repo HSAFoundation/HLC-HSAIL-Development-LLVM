@@ -7165,7 +7165,7 @@ template<class T> bool InstValidator::req_gcn_bfm(T inst)
 //  Req gcn_div_relaxed = {
 //      type = f32;
 //      pack = none;
-//      round = float;
+//      round = none;
 //      ftz = any;
 //      d0_s1_s2;
 //  }
@@ -7177,7 +7177,7 @@ template<class T> bool InstValidator::req_gcn_div_relaxed(T inst)
     if (!check_pack_values_none(getPackEx<T>(inst))) {
         brigPropError(inst, PROP_PACK, getPackEx<T>(inst), PACK_VALUES_NONE, sizeof(PACK_VALUES_NONE) / sizeof(unsigned));
     }
-    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_FLOAT, sizeof(ROUND_VALUES_FLOAT) / sizeof(unsigned));
+    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_NONE, sizeof(ROUND_VALUES_NONE) / sizeof(unsigned));
     validateFtz(inst, PROP_FTZ, getFtzEx<T>(inst), FTZ_VALUES_ANY, sizeof(FTZ_VALUES_ANY) / sizeof(unsigned));
     req_d0_s1_s2(inst);
     return true;
@@ -7201,7 +7201,7 @@ template<class T> bool InstValidator::req_gcn_div_relaxed_narrow(T inst)
 //  Req gcn_fldexp = {
 //      type = f32, f64;
 //      pack = none;
-//      round = float;
+//      round = none;
 //      ftz = any;
 //      d0 = reg;
 //      s1 = reg, imm;
@@ -7217,7 +7217,7 @@ template<class T> bool InstValidator::req_gcn_fldexp(T inst)
     if (!check_pack_values_none(getPackEx<T>(inst))) {
         brigPropError(inst, PROP_PACK, getPackEx<T>(inst), PACK_VALUES_NONE, sizeof(PACK_VALUES_NONE) / sizeof(unsigned));
     }
-    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_FLOAT, sizeof(ROUND_VALUES_FLOAT) / sizeof(unsigned));
+    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_NONE, sizeof(ROUND_VALUES_NONE) / sizeof(unsigned));
     validateFtz(inst, PROP_FTZ, getFtzEx<T>(inst), FTZ_VALUES_ANY, sizeof(FTZ_VALUES_ANY) / sizeof(unsigned));
     validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
     validateOperand(inst, PROP_S1, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
@@ -7231,7 +7231,7 @@ template<class T> bool InstValidator::req_gcn_fldexp(T inst)
 //  Req gcn_frexp_exp = {
 //      type = f32, f64;
 //      pack = none;
-//      round = float;
+//      round = none;
 //      ftz = any;
 //      d0 = reg_s32;
 //      s1 = reg, imm;
@@ -7247,7 +7247,7 @@ template<class T> bool InstValidator::req_gcn_frexp_exp(T inst)
     if (!check_pack_values_none(getPackEx<T>(inst))) {
         brigPropError(inst, PROP_PACK, getPackEx<T>(inst), PACK_VALUES_NONE, sizeof(PACK_VALUES_NONE) / sizeof(unsigned));
     }
-    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_FLOAT, sizeof(ROUND_VALUES_FLOAT) / sizeof(unsigned));
+    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_NONE, sizeof(ROUND_VALUES_NONE) / sizeof(unsigned));
     validateFtz(inst, PROP_FTZ, getFtzEx<T>(inst), FTZ_VALUES_ANY, sizeof(FTZ_VALUES_ANY) / sizeof(unsigned));
     validateOperand(inst, PROP_D0, OPERAND_ATTR_S32, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
     validateOperand(inst, PROP_S1, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
@@ -7261,7 +7261,7 @@ template<class T> bool InstValidator::req_gcn_frexp_exp(T inst)
 //  Req gcn_frexp_mant = {
 //      type = f32, f64;
 //      pack = none;
-//      round = float;
+//      round = none;
 //      ftz = any;
 //      d0 = reg;
 //      s1 = reg, imm;
@@ -7277,7 +7277,7 @@ template<class T> bool InstValidator::req_gcn_frexp_mant(T inst)
     if (!check_pack_values_none(getPackEx<T>(inst))) {
         brigPropError(inst, PROP_PACK, getPackEx<T>(inst), PACK_VALUES_NONE, sizeof(PACK_VALUES_NONE) / sizeof(unsigned));
     }
-    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_FLOAT, sizeof(ROUND_VALUES_FLOAT) / sizeof(unsigned));
+    validateRound(inst, PROP_ROUND, getRoundEx<T>(inst), ROUND_VALUES_NONE, sizeof(ROUND_VALUES_NONE) / sizeof(unsigned));
     validateFtz(inst, PROP_FTZ, getFtzEx<T>(inst), FTZ_VALUES_ANY, sizeof(FTZ_VALUES_ANY) / sizeof(unsigned));
     validateOperand(inst, PROP_D0, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REG, sizeof(OPERAND_VALUES_REG) / sizeof(unsigned));
     validateOperand(inst, PROP_S1, OPERAND_ATTR_DTYPE, OPERAND_VALUES_REGSTYPE_IMMSTYPE, sizeof(OPERAND_VALUES_REGSTYPE_IMMSTYPE) / sizeof(unsigned));
@@ -12558,10 +12558,10 @@ unsigned InstValidator::getRoundAttr(Inst inst)
         case (Brig::BRIG_OPCODE_FLOOR): return ROUND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_FMA): return ROUND_ATTR_DEFAULT;
         case (Brig::BRIG_OPCODE_FRACT): return ROUND_ATTR_DEFAULT;
-        case (Brig::BRIG_OPCODE_GCNDIVRELAXED): return ROUND_ATTR_DEFAULT;
-        case (Brig::BRIG_OPCODE_GCNFLDEXP): return ROUND_ATTR_DEFAULT;
-        case (Brig::BRIG_OPCODE_GCNFREXP_EXP): return ROUND_ATTR_DEFAULT;
-        case (Brig::BRIG_OPCODE_GCNFREXP_MANT): return ROUND_ATTR_DEFAULT;
+        case (Brig::BRIG_OPCODE_GCNDIVRELAXED): return ROUND_ATTR_NONE;
+        case (Brig::BRIG_OPCODE_GCNFLDEXP): return ROUND_ATTR_NONE;
+        case (Brig::BRIG_OPCODE_GCNFREXP_EXP): return ROUND_ATTR_NONE;
+        case (Brig::BRIG_OPCODE_GCNFREXP_MANT): return ROUND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_GCNTRIG_PREOP): return ROUND_ATTR_NONE;
         case (Brig::BRIG_OPCODE_MAD):
         {

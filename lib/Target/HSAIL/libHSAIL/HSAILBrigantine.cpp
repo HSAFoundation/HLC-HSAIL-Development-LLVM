@@ -118,6 +118,8 @@ DirectiveModule Brigantine::module(
     module.defaultFloatRound() = defaultRound;
     m_profile = profile;
     m_machine = machineModel;
+
+    addSymbolToGlobalScope(module);
     return module;
 }
 
@@ -168,7 +170,6 @@ void Brigantine::addOutputParameter(DirectiveVariable sym)
     sym.linkage() = Brig::BRIG_LINKAGE_NONE;
     sym.allocation() = Brig::BRIG_ALLOCATION_AUTOMATIC;
     sym.modifier().isDefinition() = 1;
-    if (sym.isArray() && sym.dim() == 0) sym.modifier().isFlexArray() = true;
 
     DirectiveExecutable func = m_func;
     assert(func);
@@ -184,7 +185,6 @@ void Brigantine::addInputParameter(DirectiveVariable sym)
     sym.linkage() = Brig::BRIG_LINKAGE_NONE;
     sym.allocation() = Brig::BRIG_ALLOCATION_AUTOMATIC;
     sym.modifier().isDefinition() = 1;
-    if (sym.isArray() && sym.dim() == 0) sym.modifier().isFlexArray() = true;
 
     DirectiveExecutable func = m_func;
     func.inArgCount() = func.inArgCount() + 1;
@@ -607,6 +607,12 @@ void Brigantine::addSymbolToGlobalScope(DirectiveExecutable sym) {
 }
 
 void Brigantine::addSymbolToGlobalScope(DirectiveVariable sym) {
+    assert(isGlobalName(sym.name()));
+    assert(m_globalScope.get()!=NULL);
+    m_globalScope->add(sym.name(), sym);
+}
+
+void Brigantine::addSymbolToGlobalScope(DirectiveModule sym) {
     assert(isGlobalName(sym.name()));
     assert(m_globalScope.get()!=NULL);
     m_globalScope->add(sym.name(), sym);

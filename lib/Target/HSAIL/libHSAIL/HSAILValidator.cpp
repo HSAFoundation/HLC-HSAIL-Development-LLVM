@@ -419,7 +419,7 @@ public: // Brig Object Properties
         return getSymLinkage(d) == Brig::BRIG_LINKAGE_NONE;
     }
 
-    static uint64_t getArraySize(Code d)
+    static uint64_t getArraySize(Code d) //F1.0 rename
     {
         if (DirectiveVariable sym = d) return sym.dim();
         assert(false);
@@ -451,13 +451,6 @@ public: // Brig Object Properties
     static bool isArray(Code d)
     {
         if (DirectiveVariable sym = d) return sym.isArray();
-        assert(false);
-        return false;
-    }
-
-    static bool isFlex(Code d)
-    {
-        if (DirectiveVariable sym = d) return sym.modifier().isFlexArray();
         assert(false);
         return false;
     }
@@ -915,7 +908,7 @@ public:
         {
             validate(d, isProgLinkage(d) || isModuleLinkage(d), "Module scope variables and fbarriers must have program or module linkage");
             
-            if (isVar(d) && isFlex(d)) // Formal arguments and scoped definitions are validated elsewhere
+            if (isVar(d) && isArray(d) && getArraySize(d) == 0) // Formal arguments and scoped definitions are validated elsewhere
             {
                 validate(d, isDecl(d), "Module scope array without specified size may only be a declaration");
             }
@@ -1339,7 +1332,7 @@ private:
             getSegment(var1)   != getSegment(var2)  ||
             getAlignment(var1) != getAlignment(var2)) return false;
 
-        if (isArg && isFlex(var1) != isFlex(var2)) return false;
+        if (isArg && getArraySize(var1) != getArraySize(var2)) return false; //F1.0 could it be removed?
 
         if (isConst(var1) != isConst(var2) ||
             isArray(var1) != isArray(var2))
@@ -1871,6 +1864,11 @@ private:
         {
             context.checkLabelUse(owner, sym);
         }
+        else if (DirectiveModule(sym))
+        {
+            assert(DirectivePragma(owner));
+            //F1.0
+        }
         else
         {
             assert(false);
@@ -1945,16 +1943,14 @@ private:
 
     void validateModule() const
     {
-        const Brig::BrigModule* module = getBrigModule();
-
-        if (module->sectionCount < 3) throw BrigFormatError("Module must include at least 3 sections");
+        if (brig.getNumSections() < 3) throw BrigFormatError("Module must include at least 3 sections");
     }
 
     void validateSection(int section)
     {
         const Brig::BrigSectionHeader* header = getSectionHeader(section);
 
-        uint32_t secSize = header->byteCount;
+        uint32_t secSize = (uint32_t)header->byteCount; //F1.0 validate that section size does not exceed 32 bit
         uint32_t hdrSize = header->headerByteCount;
         uint32_t nameLength = header->nameLength;
 
@@ -2093,7 +2089,8 @@ private:
             case BRIG_KIND_OPERAND_CODE_REF: {
                 OperandCodeRef ref = opr;
                 Code sym = ref.ref();
-                validate(d, DirectiveVariable(sym) ||
+                validate(d, DirectiveModule(sym) ||
+                            DirectiveVariable(sym) ||
                             DirectiveFbarrier(sym) ||
                             DirectiveLabel(sym) ||
                             DirectiveExecutable(sym), "Invalid operand of pragma directive");
@@ -2169,12 +2166,15 @@ private:
             validatePragma(d);
             break;
 
+        case BRIG_KIND_DIRECTIVE_MODULE: //F1.0
+            validateName(d, "&");
+            break;
+
         // Need no additional checks
         case BRIG_KIND_DIRECTIVE_ARG_BLOCK_START:   break;
         case BRIG_KIND_DIRECTIVE_ARG_BLOCK_END:     break;
         case BRIG_KIND_DIRECTIVE_EXTENSION:         break;
         case BRIG_KIND_DIRECTIVE_LOC:               break;
-        case BRIG_KIND_DIRECTIVE_MODULE:            break;
 
         default:
             // should not get here!
@@ -2268,7 +2268,6 @@ private:
         DirectiveVariable var = addr.symbol();
 
         if (!var || addr.reg()) return;
-        if (var.modifier().isFlexArray()) return;
         if (var.isArray() && var.dim() == 0) return;  // var is defined in another module
         if (var.segment() == Brig::BRIG_SEGMENT_KERNARG) return; // kernarg is a special case
 
@@ -2517,19 +2516,14 @@ private:
         // definition but can be omitted in the declaration.
         if (isArray(d))
         {
-            if (isFlex(d))
-            {
-                validate(d, getArraySize(d) == 0, "Array without specified size must have dim = 0");
-            }
-            else if (isDef(d))
-            {
-                validate(d, getArraySize(d) > 0, "Array definitions must have dim > 0");
-            }
+        ///F1.0    if (isDef(d))
+        ///F1.0    {
+        ///F1.0        validate(d, getArraySize(d) > 0, "Array definitions must have dim > 0");
+        ///F1.0    }
         }
         else
         {
             validate(d, getArraySize(d) == 0, "Scalars must have dim = 0");
-            validate(d, !isFlex(d), "Non-array variables cannot have flex attribute");
         }
 
         if (isConst(d))
@@ -2650,8 +2644,10 @@ private:
 
         uint64_t dim           = getArraySize(sym);        
         unsigned elemSize      = getBrigTypeNumBytes(sym.elementType());
-        uint64_t aggregateSize = getAggregateNumBytes(sym.init());
+        uint64_t aggregateSize = getAggregateNumBytes(init);
 
+        validate(init, init.elementCount() != 0, "An aggregate constant must include at least one element");
+        validate(init, aggregateSize != 0, "An aggregate constant cannot consist of only alignment request elements");
         validate(init, (aggregateSize % elemSize) == 0, "Invalid initializer size, must be a multiple of array element type size");
         validate(init, sym.dim() * elemSize == aggregateSize, "Initializer size does not match array size"); //F1.0 "sym.dim() * elemSize" may cause overflow; add positive tests
     }
@@ -2670,7 +2666,7 @@ private:
                 s << "an aggregate constant";
                 if (init) s << " (OperandConstantOperandList with type 'none')";
             } else if (isArrayType(expectedType)) {
-                s << typeX2str(arrayType2elementType(expectedType)) << " array constant";
+                s << typeX2str(arrayType2elementType(expectedType)) << " array constant"; //F1.0 "array" -> "[]"
             } else {
                 s << typeX2str(expectedType) << " constant";
             }
@@ -2719,7 +2715,7 @@ private:
                 validate(arg, getSegment(Directive(arg)) == seg, "Function/signature arguments must be declared in arg segment");
             }
 
-            if (isFlex(arg))
+            if (isArray(arg) && getArraySize(arg) == 0)
             {
                 validate(arg, !isKernel(sbr),    "Kernel array arguments must have fixed size");
                 validate(arg, isInputArgs,       "Output array argument must have fixed size");
@@ -2762,7 +2758,7 @@ private:
             if (isDirective(it.kind()))
             {
                 validate(it, isBodyStatement(it), "Directive is not allowed inside kernel or function");
-                validate(it, !isVar(it) || !isFlex(it), "Only last input argument of function may be an array with no specified size");
+                validate(it, !isVar(it) || !isArray(it) || getArraySize(it) > 0, "Only last input argument of function may be an array with no specified size"); //F1.0 could it be removed?
             }
         }
 
@@ -2808,7 +2804,7 @@ private:
     // - The two have identical properties, type, size, and alignment.
     // - Both are arrays with the same size and alignment and the elements have identical properties.
     // - Both are arrays with elements that have identical properties, both arrays have
-    //   the same alignment, and the formal is a flexible array (of no specified size).
+    //   the same alignment, and the formal has dim=0.
     void validateCallArg(OperandCodeList list, Code var, DirectiveVariable formal) const
     {
         DirectiveVariable actual = var;
@@ -2818,10 +2814,10 @@ private:
         validate(list, formal.elementType() == actual.elementType(), "Incompatible types of formal and actual arguments");
         validate(list, formal.align()       == actual.align(),       "Incompatible alignment of formal and actual arguments");
 
-        if (isArray(formal))  // may be either array or flexible array
+        if (isArray(formal))  // may be an array with or without a specified size
         {
             validate(list, isArray(actual), "Actual parameter must be an array");
-            validate(list, !isFlex(actual), "Actual array parameter must have fixed size");
+            validate(list, getArraySize(actual) > 0, "Actual array parameter must have fixed size");
             validate(list, getArraySize(formal) == 0 || getArraySize(formal) == getArraySize(actual), "Incompatible formal and actual arguments: arrays must have the same size");
         }
         else
@@ -2966,7 +2962,7 @@ private:
         using namespace Brig;
 
         unsigned mod = val.allBits;
-        unsigned mask = BRIG_VARIABLE_DEFINITION | BRIG_VARIABLE_CONST | BRIG_VARIABLE_FLEX_ARRAY;
+        unsigned mask = BRIG_VARIABLE_DEFINITION | BRIG_VARIABLE_CONST;
 
         validate(item, (mod & ~mask) == 0, "Invalid variable modifier value", mod);
     }
@@ -3198,8 +3194,7 @@ private:
 
     //-------------------------------------------------------------------------
     // Access to Brig module
-
-    const Brig::BrigModule* getBrigModule() const { return brig.getBrigModule(); }
+    // const BrigModule_t getBrigModule() const { return brig.getBrigModule(); }
 
     //-------------------------------------------------------------------------
     // Access to Brig sections
@@ -3207,7 +3202,7 @@ private:
     const Brig::BrigSectionHeader* getSectionHeader(int section) const
     {
         assert(0 <= section && section < BRIG_NUM_SECTIONS);
-        return getBrigModule()->section[section];
+        return brig.sectionById(section).secHeader();
     }
 
     const char* getSectionAddr(int section, unsigned offset) const
@@ -3229,7 +3224,7 @@ private:
 
     unsigned getSectionSize(int section) const
     {
-        return getSectionHeader(section)->byteCount;
+        return (Offset)getSectionHeader(section)->byteCount;
     }
 
     string getSectionName(int section) const

@@ -16,7 +16,7 @@ typedef uint8_t BrigAlignment8_t;                           //.defValue=Brig::BR
 
 typedef uint8_t BrigAllocation8_t;                          //.defValue=Brig::BRIG_ALLOCATION_NONE
 
-typedef uint16_t BrigAluModifier16_t;
+typedef uint8_t BrigAluModifier8_t;
 
 typedef uint8_t BrigAtomicOperation8_t;
 
@@ -92,7 +92,7 @@ typedef uint8_t BrigWidth8_t;
 
 typedef uint32_t BrigExceptions32_t;
 
-enum BrigKinds {
+enum BrigKind {
 
     //.nollvm
     //
@@ -1050,8 +1050,7 @@ enum BrigVariableModifierMask {
     //.nodump
 
     BRIG_VARIABLE_DEFINITION = 1,
-    BRIG_VARIABLE_CONST = 2,
-    BRIG_VARIABLE_FLEX_ARRAY = 4
+    BRIG_VARIABLE_CONST = 2
 };
 
 enum BrigWidth { 
@@ -1110,7 +1109,7 @@ struct BrigUInt64 { //.isroot //.standalone
 };
 
 struct BrigAluModifier { //.isroot //.standalone
-    BrigAluModifier16_t allBits; //.defValue=0
+    BrigAluModifier8_t allBits; //.defValue=0
     //^^ bool ftz; //.wtype=BitValRef<0>
 };
 
@@ -1149,7 +1148,6 @@ struct BrigVariableModifier { //.isroot //.standalone
 
     //^^ bool isDefinition;     //.wtype=BitValRef<0>
     //^^ bool isConst;          //.wtype=BitValRef<1>
-    //^^ bool isFlexArray;      //.wtype=BitValRef<2>
 };
 
 struct BrigDirectiveArgBlockEnd {
@@ -1503,21 +1501,16 @@ enum BrigExceptionsMask {
 };
 
 struct BrigSectionHeader {
-//  uint64_t byteCount; 
-    uint32_t byteCount; // FIXME1.0: replace with uint64_t
+    uint64_t byteCount; 
     uint32_t headerByteCount;
     uint32_t nameLength;
     uint8_t name[1];
 };
 
-// FIXME1.0 remove
-struct BrigModule {
-    uint32_t sectionCount;
-    BrigSectionHeader* section[1];
-};
+#define MODULE_IDENTIFICATION_LENGTH (8)
 
 struct BrigModuleHeader {
-    char identification[8];
+    char identification[MODULE_IDENTIFICATION_LENGTH];
     BrigVersion32_t brigMajor;
     BrigVersion32_t brigMinor;
     uint64_t byteCount;

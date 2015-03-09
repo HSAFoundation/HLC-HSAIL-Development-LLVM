@@ -649,7 +649,6 @@ def BrigVariableModifierMask : Operand<i32> {
   let PrintMethod = "printBrigVariableModifierMask";
   int DEFINITION = 1;
   int CONST = 2;
-  int FLEX_ARRAY = 4;
 }
 
 def BrigWidth : Operand<i32> {

@@ -53,7 +53,7 @@ const char* imageGeometry2str(unsigned arg);
 const char* imageQuery2str(unsigned arg);
 bool isBodyOnly(Directive d);
 bool isToplevelOnly(Directive d);
-const char* kinds2str(unsigned arg);
+const char* kind2str(unsigned arg);
 int size_of_brig_record(unsigned arg);
 const char* linkage2str(unsigned arg);
 const char* machineModel2str(unsigned arg);
@@ -94,7 +94,7 @@ const char* anyEnum2str( Brig::BrigImageChannelOrder arg );
 const char* anyEnum2str( Brig::BrigImageChannelType arg );
 const char* anyEnum2str( Brig::BrigImageGeometry arg );
 const char* anyEnum2str( Brig::BrigImageQuery arg );
-const char* anyEnum2str( Brig::BrigKinds arg );
+const char* anyEnum2str( Brig::BrigKind arg );
 const char* anyEnum2str( Brig::BrigLinkage arg );
 const char* anyEnum2str( Brig::BrigMachineModel arg );
 const char* anyEnum2str( Brig::BrigMemoryModifierMask arg );
@@ -114,7 +114,7 @@ const char* anyEnum2str( Brig::BrigSegCvtModifierMask arg );
 const char* anyEnum2str( Brig::BrigSegment arg );
 const char* anyEnum2str( Brig::BrigTypeX arg );
 const char* anyEnum2str( Brig::BrigWidth arg );
-inline ValRef<uint16_t> AluModifier::allBits() { return valRef(&brig()->allBits); }
+inline ValRef<uint8_t> AluModifier::allBits() { return valRef(&brig()->allBits); }
 inline BitValRef<0> AluModifier::ftz() { return bitValRef<0>(&brig()->allBits); }
 inline StrRef DirectiveComment::name() { return strRef(&brig()->name); }
 inline EnumValRef<Brig::BrigControlDirective,uint16_t> DirectiveControl::control() { return enumValRef<Brig::BrigControlDirective,uint16_t>(&brig()->control); }
@@ -248,4 +248,3 @@ inline UInt64::operator uint64_t() { return ((uint64_t)hi()) << 32 | lo(); }
 inline ValRef<uint8_t> VariableModifier::allBits() { return valRef(&brig()->allBits); }
 inline BitValRef<0> VariableModifier::isDefinition() { return bitValRef<0>(&brig()->allBits); }
 inline BitValRef<1> VariableModifier::isConst() { return bitValRef<1>(&brig()->allBits); }
-inline BitValRef<2> VariableModifier::isFlexArray() { return bitValRef<2>(&brig()->allBits); }

@@ -101,7 +101,7 @@ class AluModifier : public ItemBase {
 public:
 
 	/// accessors
-	ValRef<uint16_t>                                   allBits();
+	ValRef<uint8_t>                                    allBits();
 	BitValRef<0>                                       ftz();
 
 
@@ -1858,7 +1858,6 @@ public:
 	ValRef<uint8_t>                                    allBits();
 	BitValRef<0>                                       isDefinition();
 	BitValRef<1>                                       isConst();
-	BitValRef<2>                                       isFlexArray();
 
 
 	/// constructors

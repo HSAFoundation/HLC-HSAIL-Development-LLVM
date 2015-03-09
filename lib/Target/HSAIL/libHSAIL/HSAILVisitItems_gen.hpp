@@ -508,6 +508,5 @@ template <typename Visitor> void enumerateFields_gen(VariableModifier obj,  Visi
   vis(obj.allBits(),"allBits");
   vis(obj.isDefinition(),"isDefinition");
   vis(obj.isConst(),"isConst");
-  vis(obj.isFlexArray(),"isFlexArray");
 }
 

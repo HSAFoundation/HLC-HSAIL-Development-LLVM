@@ -1085,9 +1085,6 @@ void HSAILInstPrinter::printBrigVariableModifierMask(const MCInst *MI,
   case Brig::BRIG_VARIABLE_CONST:
     O << "CONST";
     break;
-  case Brig::BRIG_VARIABLE_FLEX_ARRAY:
-    O << "FLEX_ARRAY";
-    break;
   }
 }
 

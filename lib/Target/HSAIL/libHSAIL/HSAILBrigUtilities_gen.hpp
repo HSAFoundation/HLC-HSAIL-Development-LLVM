@@ -385,7 +385,7 @@ bool isToplevelOnly(Directive d) {
     }
 }
 
-const char* kinds2str(unsigned arg) {
+const char* kind2str(unsigned arg) {
   using namespace Brig;
   switch( arg ) {
     case BRIG_KIND_DIRECTIVE_ARG_BLOCK_END : return "DirectiveArgBlockEnd";
@@ -1641,7 +1641,7 @@ const char* anyEnum2str( Brig::BrigImageQuery arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigKinds arg ) {
+const char* anyEnum2str( Brig::BrigKind arg ) {
   using namespace Brig;
   switch( arg ) {
     case BRIG_KIND_DIRECTIVE_ARG_BLOCK_END : return "BRIG_KIND_DIRECTIVE_ARG_BLOCK_END";
