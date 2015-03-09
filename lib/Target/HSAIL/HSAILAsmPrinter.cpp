@@ -31,7 +31,7 @@
 #include "llvm/Support/TargetRegistry.h"
 #include "llvm/Target/TargetLoweringObjectFile.h"
 
-#include "Brig_new.hpp"
+#include "libHSAIL/Brig_new.hpp"
 
 using namespace llvm;
 

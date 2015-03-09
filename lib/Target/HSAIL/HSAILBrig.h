@@ -44,7 +44,7 @@
 #include "llvm/Support/DataTypes.h"
 
 namespace Brig {
-#include "Brig_new.hpp"
+#include "libHSAIL/Brig_new.hpp"
 }
 
 #endif // defined(INCLUDED_BRIG_H)

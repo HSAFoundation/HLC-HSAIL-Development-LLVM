@@ -22,6 +22,8 @@
 #include "llvm/Support/MathExtras.h"
 #include "llvm/Support/raw_ostream.h"
 
+#include "libHSAIL/Brig_new.hpp"
+
 using namespace llvm;
 
 HSAILInstPrinter::HSAILInstPrinter(const MCAsmInfo &MAI, const MCInstrInfo &MII,
