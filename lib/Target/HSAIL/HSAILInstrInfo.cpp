@@ -26,7 +26,6 @@
 #include <queue>
 
 #define GET_INSTRINFO_CTOR_DTOR
-#define GET_INSTRINFO_NAMED_OPS
 #define GET_INSTRMAP_INFO
 #include "HSAILGenInstrInfo.inc"
 using namespace llvm;

@@ -13,6 +13,7 @@ tablegen(LLVM HSAILGenMnemonicMapper.inc -gen-mnemonic-mapper)
 add_public_tablegen_target(HSAILCommonTableGen)
 
 add_subdirectory(libHSAIL)
+add_subdirectory(HSAILUtil)
 
 set(sources
   HSAILAsmPrinter.cpp
@@ -53,7 +54,7 @@ endif()
 
 add_llvm_target(HSAILCodeGen ${sources})
 
-target_link_libraries(LLVMHSAILCodeGen PRIVATE HSAIL)
+target_link_libraries(LLVMHSAILCodeGen PRIVATE HSAIL LLVMHSAILUtil)
 
 # add_dependencies(LLVMHSAILCodeGen
 #   LLVMAnalysis
