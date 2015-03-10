@@ -1144,14 +1144,12 @@ void BRIGAsmPrinter::EmitStartOfAsmFile(Module &M) {
     M.dump();
   }
 
-  HSAIL_ASM::SRef ModuleName;
-
   // Clear global variable map
   globalVariableOffsets.clear();
 
   brigantine.startProgram();
   brigantine.module(
-    ModuleName,
+    "&__llvm_hsail_module",
     Brig::BRIG_VERSION_HSAIL_MAJOR,
     Brig::BRIG_VERSION_HSAIL_MINOR,
     Subtarget->is64Bit() ? Brig::BRIG_MACHINE_LARGE : Brig::BRIG_MACHINE_SMALL,
