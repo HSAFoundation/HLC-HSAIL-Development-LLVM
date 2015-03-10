@@ -28,5 +28,5 @@ has_asmprinter = 1
 type = Library
 name = HSAILCodeGen
 parent = HSAIL
-required_libraries = AsmPrinter CodeGen Core HSAILAsmPrinter HSAILDesc MC SelectionDAG Support Target
+required_libraries = AsmPrinter CodeGen Core IPO HSAILAsmPrinter HSAILDesc MC SelectionDAG Support Target
 add_to_library_groups = HSAIL
