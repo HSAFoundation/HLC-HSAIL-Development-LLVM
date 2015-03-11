@@ -548,7 +548,8 @@ StringRef HSAILAsmPrinter::getArgTypeName(Type *Ty) const {
         llvm_unreachable("unhandled struct type argument");
       }
     } else {
-      return Subtarget->is64Bit() ? "u64" : "u32";
+      unsigned AS = PT->getAddressSpace();
+      return getDataLayout().getPointerSize(AS) == 4 ? "u32" : "u64";
     }
   }
   case Type::StructTyID: // Treat struct as array of bytes.
