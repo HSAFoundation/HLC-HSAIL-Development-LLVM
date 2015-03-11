@@ -319,9 +319,17 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
 
   store.append(CV, GV.getName());
 
-  O << '{';
+  // Make sure this is actually an array. For the special case of a single
+  // pointer initializer, we don't want the braces.
+  if (NElts != 0)
+    O << '{';
+
   store.print(O);
-  O << "};\n";
+
+  if (NElts != 0)
+    O << '}';
+
+  O << ";\n";
 
   for (const auto &VarInit : store.varInitAddresses()) {
     printInitVarWithAddressPragma(GV.getName(), VarInit.BaseOffset,
