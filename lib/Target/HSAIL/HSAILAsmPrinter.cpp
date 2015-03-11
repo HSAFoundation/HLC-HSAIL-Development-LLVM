@@ -521,19 +521,20 @@ StringRef HSAILAsmPrinter::getArgTypeName(Type *Ty) const {
   case Type::DoubleTyID:
     return "f64";
   case Type::IntegerTyID: {
-    unsigned BitWidth = Ty->getIntegerBitWidth();
-    if (BitWidth == 8)
-      return "u8";
-    else if (BitWidth == 16)
-      return "u16";
-    else if (BitWidth == 32)
+    switch (Ty->getIntegerBitWidth()) {
+    case 32:
       return "u32";
-    else if (BitWidth == 64)
+    case 64:
       return "u64";
-    else if (BitWidth == 1)
+    case 1:
       return "b1";
-    else
+    case 8:
+      return "u8";
+    case 16:
+      return "u16";
+    default:
       llvm_unreachable("unhandled integer width argument");
+    }
   }
   case Type::PointerTyID: {
     const PointerType *PT = cast<PointerType>(Ty);
