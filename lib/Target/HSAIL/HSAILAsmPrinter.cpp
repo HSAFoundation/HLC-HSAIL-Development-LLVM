@@ -208,11 +208,13 @@ void HSAILAsmPrinter::printInitVarWithAddressPragma(StringRef VarName,
 
   const MCSymbol &Sym = Val.getSymA()->getSymbol();
 
-  O << "initvarwithaddress:" << VarName
+  O << "pragma \"initvarwithaddress:"
+    << VarName
     << ':' << BaseOffset // Offset into the destination.
     << ':' << EltSize
     << ':' << getSymbolPrefix(Sym) << Sym.getName()
     << ':' << Val.getConstant() // Offset of the symbol being written.
+    << '\"'
     << ';'
     << '\n';
 }
