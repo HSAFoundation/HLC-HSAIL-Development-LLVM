@@ -507,7 +507,7 @@ class HSAILInstImage_Ld_1D<string opName, bits<16> BrigVal> :
                      GPR64:$sampler,
                      GPR32:$coordWidth,
                      BrigTypeX:$destType),
-  opName#"$v4$geometry$equiv$destType$imageType$coordType\t($destR, $destG, $destB, $destA), $image, $coordWidth"> {
+  opName#"$v4$geometry$equiv$destType$imageType$coordType\t($destR, $destG, $destB, $destA), $image, $sampler, $coordWidth"> {
   let mayStore = 0;
 }
 
