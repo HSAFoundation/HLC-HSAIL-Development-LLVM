@@ -424,46 +424,58 @@ multiclass minmax<Instruction inst, ValueType Ty, SDNode ImmTy,
                   int bt,
                   int ftz = 0,
                   int round = BrigRound.NONE> {
-  def _rr12 : Pat<
+  def : Pat<
     (select (i1 (setcc_su Ty:$src0, Ty:$src1, cc12)), Ty:$src0, Ty:$src1),
     (inst ftz, round, $src0, $src1, bt)
   >;
 
-  def _ri12 : Pat<
+  def : Pat<
     (select (i1 (setcc_su Ty:$src0, ImmTy:$src1, cc12)), Ty:$src0, ImmTy:$src1),
     (inst ftz, round, $src0, ImmTy:$src1, bt)
   >;
 
-  def _ir12 : Pat<
+  def : Pat<
     (select (i1 (setcc_su ImmTy:$src0, Ty:$src1, cc12)), ImmTy:$src0, Ty:$src1),
     (inst ftz, round, ImmTy:$src0, $src1, bt)
   >;
 
-  def _rr21 : Pat<
+  def : Pat<
     (select (i1 (setcc_su Ty:$src0, Ty:$src1, cc21)), Ty:$src1, Ty:$src0),
     (inst ftz, round, $src0, $src1, bt)
   >;
 
-  def _ri21 : Pat<
+  def : Pat<
     (select (i1 (setcc_su Ty:$src0, ImmTy:$src1, cc21)), ImmTy:$src1, Ty:$src0),
     (inst ftz, round, $src0, ImmTy:$src1, bt)
   >;
 
-  def _ir21 : Pat<
+  def : Pat<
     (select (i1 (setcc_su ImmTy:$src0, Ty:$src1, cc21)), Ty:$src1, ImmTy:$src0),
     (inst ftz, round, ImmTy:$src0, $src1, bt)
   >;
 }
 
+// TODO: This should be moved to a DAG combine. This currently gets
+// confused by canonicalizations of a compare with a constant. le/ge
+// comparisons with a constant are canonicalized to lt/gt with the
+// constant incremented, which breaks the simple pattern.
 let Predicates = [EnableOpt] in {
-defm min_s32  : minmax<MIN, i32, imm, SETLT,  SETGT, BrigTypeX.S32>;
-defm min_u32  : minmax<MIN, i32, imm, SETULT, SETUGT, BrigTypeX.U32>;
-defm max_s32  : minmax<MAX, i32, imm, SETGT,  SETLT, BrigTypeX.S32>;
-defm max_u32  : minmax<MAX, i32, imm, SETUGT, SETULT, BrigTypeX.U32>;
-defm min_s64  : minmax<MIN, i64, imm, SETLT,  SETGT, BrigTypeX.S64>;
-defm min_u64  : minmax<MIN, i64, imm, SETULT, SETUGT, BrigTypeX.U64>;
-defm max_s64  : minmax<MAX, i64, imm, SETGT,  SETLT, BrigTypeX.S64>;
-defm max_u64  : minmax<MAX, i64, imm, SETUGT, SETULT, BrigTypeX.U64>;
+  defm : minmax<MIN, i32, imm, SETLT,  SETGT, BrigTypeX.S32>;
+  defm : minmax<MIN, i32, imm, SETLE,  SETGE, BrigTypeX.S32>;
+  defm : minmax<MIN, i32, imm, SETULT, SETUGT, BrigTypeX.U32>;
+  defm : minmax<MIN, i32, imm, SETULE, SETUGE, BrigTypeX.U32>;
+  defm : minmax<MAX, i32, imm, SETGT,  SETLT, BrigTypeX.S32>;
+  defm : minmax<MAX, i32, imm, SETGE,  SETLE, BrigTypeX.S32>;
+  defm : minmax<MAX, i32, imm, SETUGT, SETULT, BrigTypeX.U32>;
+  defm : minmax<MAX, i32, imm, SETUGE, SETULE, BrigTypeX.U32>;
+  defm : minmax<MIN, i64, imm, SETLT,  SETGT, BrigTypeX.S64>;
+  defm : minmax<MIN, i64, imm, SETLE,  SETGE, BrigTypeX.S64>;
+  defm : minmax<MIN, i64, imm, SETULT, SETUGT, BrigTypeX.U64>;
+  defm : minmax<MIN, i64, imm, SETULE, SETUGE, BrigTypeX.U64>;
+  defm : minmax<MAX, i64, imm, SETGT,  SETLT, BrigTypeX.S64>;
+  defm : minmax<MAX, i64, imm, SETGE,  SETLE, BrigTypeX.S64>;
+  defm : minmax<MAX, i64, imm, SETUGT, SETULT, BrigTypeX.U64>;
+  defm : minmax<MAX, i64, imm, SETUGE, SETULE, BrigTypeX.U64>;
 }
 
 // Abs
