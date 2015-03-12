@@ -133,6 +133,12 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   setOperationAction(ISD::SELECT_CC, MVT::f64, Expand);
   setOperationAction(ISD::SELECT_CC, MVT::i1, Expand);
 
+  setOperationAction(ISD::SELECT, MVT::f64, Promote);
+  AddPromotedToType(ISD::SELECT, MVT::f64, MVT::i64);
+
+  setOperationAction(ISD::SELECT, MVT::f32, Promote);
+  AddPromotedToType(ISD::SELECT, MVT::f32, MVT::i32);
+
   setOperationAction(ISD::GlobalAddress, MVT::i32, Legal);
   setOperationAction(ISD::GlobalAddress, MVT::i64, Legal);
 

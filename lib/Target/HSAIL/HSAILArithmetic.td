@@ -231,9 +231,7 @@ def CMOV : HSAILInstBasic_3Op<"cmov", BrigOpcode.CMOV>;
 let AddedComplexity = -10 in {
   def : InstBasic_CMov_Pat<CMOV, i1, BrigTypeX.B1>;
   def : InstBasic_CMov_Pat<CMOV, i32, BrigTypeX.B32>;
-  def : InstBasic_CMov_Pat<CMOV, f32, BrigTypeX.B32>;
   def : InstBasic_CMov_Pat<CMOV, i64, BrigTypeX.B64>;
-  def : InstBasic_CMov_Pat<CMOV, f64, BrigTypeX.B64>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
