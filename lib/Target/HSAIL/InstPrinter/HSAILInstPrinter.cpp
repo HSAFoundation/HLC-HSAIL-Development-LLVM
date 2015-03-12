@@ -524,31 +524,31 @@ void HSAILInstPrinter::printBrigImageGeometry(const MCInst *MI, unsigned OpNo,
                                               raw_ostream &O) {
   switch (MI->getOperand(OpNo).getImm()) {
   case Brig::BRIG_GEOMETRY_1D:
-    O << "_1D";
+    O << "_1d";
     break;
   case Brig::BRIG_GEOMETRY_2D:
-    O << "_2D";
+    O << "_2d";
     break;
   case Brig::BRIG_GEOMETRY_3D:
-    O << "_3D";
+    O << "_3d";
     break;
   case Brig::BRIG_GEOMETRY_1DA:
-    O << "_1DA";
+    O << "_1da";
     break;
   case Brig::BRIG_GEOMETRY_2DA:
-    O << "_2DA";
+    O << "_2da";
     break;
   case Brig::BRIG_GEOMETRY_1DB:
-    O << "_1DB";
+    O << "_1db";
     break;
   case Brig::BRIG_GEOMETRY_2DDEPTH:
-    O << "_2DDEPTH";
+    O << "_2ddepth";
     break;
   case Brig::BRIG_GEOMETRY_2DADEPTH:
-    O << "_2DADEPTH";
+    O << "_2dadepth";
     break;
   case Brig::BRIG_GEOMETRY_UNKNOWN:
-    O << "_UNKNOWN";
+    O << "_unknown";
     break;
   }
 }
