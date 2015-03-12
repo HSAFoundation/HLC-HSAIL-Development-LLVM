@@ -27,7 +27,7 @@ def getAtomicPtr32Version : InstrMapping {
   let ValueCols = [["1"]];
 }
 
-let mayLoad = 1, mayStore = 1, hasSideEffects = 1 in {
+let mayLoad = 1, mayStore = 1, hasSideEffects = 1, HasDefaultSegment = 1 in {
   def GCN_ATOMIC_APPEND : HSAILInstAddr_1Op<"gcn_atomic_append", BrigOpcode.GCNAPPEND>;
   def GCN_ATOMIC_CONSUME : HSAILInstAddr_1Op<"gcn_atomic_consume", BrigOpcode.GCNCONSUME>;
 }

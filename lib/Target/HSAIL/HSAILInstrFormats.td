@@ -61,6 +61,8 @@ class HSAILInst<dag outs, dag ins,
   // Most instructions with a width modifier default to 1.
   bits<2> WidthAttr = WidthAttrValues.ONE;
 
+  bit HasDefaultSegment = 0;
+
   let TSFlags{3} = InstAddr;
   let TSFlags{4} = InstAtomic;
   let TSFlags{5} = InstBasic;
@@ -85,6 +87,8 @@ class HSAILInst<dag outs, dag ins,
 
   let TSFlags{26-25} = RoundAttr;
   let TSFlags{28-27} = WidthAttr;
+
+  let TSFlags{29} = HasDefaultSegment;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

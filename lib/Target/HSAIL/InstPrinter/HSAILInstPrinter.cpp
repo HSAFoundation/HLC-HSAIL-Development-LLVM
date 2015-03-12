@@ -886,9 +886,15 @@ void HSAILInstPrinter::printBrigSegment(const MCInst *MI, unsigned OpNo,
   case HSAILAS::ARG_ADDRESS:
     O << "_arg";
     break;
-  case HSAILAS::REGION_ADDRESS:
+  case HSAILAS::REGION_ADDRESS: {
+    // For now, the only non-flat implied segment appears to be region.
+    const MCInstrDesc &Desc = MII.get(MI->getOpcode());
+    if (Desc.TSFlags & HSAILInstrFlags::HasDefaultSegment)
+      break;
+
     O << "_region";
     break;
+  }
   default:
     llvm_unreachable("bad segment value");
   }

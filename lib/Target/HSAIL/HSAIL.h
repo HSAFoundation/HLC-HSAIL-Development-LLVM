@@ -233,7 +233,9 @@ namespace llvm {
 
       WidthAttrLo = 1 << 27,  // 2 bits
       WidthAttrHi = 1 << 28,
-      WidthAttr = WidthAttrLo | WidthAttrHi
+      WidthAttr = WidthAttrLo | WidthAttrHi,
+
+      HasDefaultSegment = 1 << 29
     };
   }
 
