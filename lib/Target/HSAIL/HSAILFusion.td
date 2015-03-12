@@ -412,38 +412,45 @@ let Predicates = [UnsafeFPMath] in {
 
 ////////////////////////////////////////////////////////////////////////////////
 // Min/Max
+
+// A 'setcc' node with a single use.
+def setcc_su : PatFrag<(ops node:$lhs, node:$rhs, node:$cc),
+  (setcc node:$lhs, node:$rhs, node:$cc), [{
+  return N->hasOneUse();
+}]>;
+
 multiclass minmax<Instruction inst, ValueType Ty, SDNode ImmTy,
                   CondCode cc12, CondCode cc21,
                   int bt,
                   int ftz = 0,
                   int round = BrigRound.NONE> {
   def _rr12 : Pat<
-    (select (i1 (setcc Ty:$src0, Ty:$src1, cc12)), Ty:$src0, Ty:$src1),
+    (select (i1 (setcc_su Ty:$src0, Ty:$src1, cc12)), Ty:$src0, Ty:$src1),
     (inst ftz, round, $src0, $src1, bt)
   >;
 
   def _ri12 : Pat<
-    (select (i1 (setcc Ty:$src0, ImmTy:$src1, cc12)), Ty:$src0, ImmTy:$src1),
+    (select (i1 (setcc_su Ty:$src0, ImmTy:$src1, cc12)), Ty:$src0, ImmTy:$src1),
     (inst ftz, round, $src0, ImmTy:$src1, bt)
   >;
 
   def _ir12 : Pat<
-    (select (i1 (setcc ImmTy:$src0, Ty:$src1, cc12)), ImmTy:$src0, Ty:$src1),
+    (select (i1 (setcc_su ImmTy:$src0, Ty:$src1, cc12)), ImmTy:$src0, Ty:$src1),
     (inst ftz, round, ImmTy:$src0, $src1, bt)
   >;
 
   def _rr21 : Pat<
-    (select (i1 (setcc Ty:$src0, Ty:$src1, cc21)), Ty:$src1, Ty:$src0),
+    (select (i1 (setcc_su Ty:$src0, Ty:$src1, cc21)), Ty:$src1, Ty:$src0),
     (inst ftz, round, $src0, $src1, bt)
   >;
 
   def _ri21 : Pat<
-    (select (i1 (setcc Ty:$src0, ImmTy:$src1, cc21)), ImmTy:$src1, Ty:$src0),
+    (select (i1 (setcc_su Ty:$src0, ImmTy:$src1, cc21)), ImmTy:$src1, Ty:$src0),
     (inst ftz, round, $src0, ImmTy:$src1, bt)
   >;
 
   def _ir21 : Pat<
-    (select (i1 (setcc ImmTy:$src0, Ty:$src1, cc21)), Ty:$src1, ImmTy:$src0),
+    (select (i1 (setcc_su ImmTy:$src0, Ty:$src1, cc21)), Ty:$src1, ImmTy:$src0),
     (inst ftz, round, ImmTy:$src0, $src1, bt)
   >;
 }
