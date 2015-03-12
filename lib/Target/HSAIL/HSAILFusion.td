@@ -416,7 +416,7 @@ multiclass minmax<Instruction inst, ValueType Ty, SDNode ImmTy,
                   CondCode cc12, CondCode cc21,
                   int bt,
                   int ftz = 0,
-                  int round = BrigRound.FLOAT_NEAR_EVEN> {
+                  int round = BrigRound.NONE> {
   def _rr12 : Pat<
     (select (i1 (setcc Ty:$src0, Ty:$src1, cc12)), Ty:$src0, Ty:$src1),
     (inst ftz, round, $src0, $src1, bt)
