@@ -1083,6 +1083,7 @@ static Brig::BrigMemoryOrder getBrigMemoryOrder(AtomicOrdering Order) {
     return Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE;
   case Release:
     return Brig::BRIG_MEMORY_ORDER_SC_RELEASE;
+  case AcquireRelease:
   case SequentiallyConsistent:
     return Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE;
   default:
