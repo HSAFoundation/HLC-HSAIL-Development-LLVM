@@ -996,6 +996,8 @@ static Brig::BrigTypeX getBrigType(MVT::SimpleValueType VT, bool Signed) {
     return Signed ? Brig::BRIG_TYPE_S64 : Brig::BRIG_TYPE_U64;
   case MVT::f64:
     return Brig::BRIG_TYPE_F64;
+  case MVT::i1:
+    return Brig::BRIG_TYPE_B1;
   default:
     llvm_unreachable("Unhandled type for MVT -> BRIG");
   }
