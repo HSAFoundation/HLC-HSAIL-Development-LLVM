@@ -1087,6 +1087,7 @@ static Brig::BrigMemoryOrder getBrigMemoryOrder(AtomicOrdering Order) {
     return Brig::BRIG_MEMORY_ORDER_SC_RELEASE;
   case AcquireRelease:
   case SequentiallyConsistent:
+  case Monotonic:
     return Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE;
   default:
     llvm_unreachable("unhandled memory order");

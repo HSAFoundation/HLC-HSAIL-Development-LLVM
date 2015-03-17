@@ -8,6 +8,29 @@ define void @group_atomic_xchg_ret_i32(i32 addrspace(1)* %out, i32 addrspace(3)*
   ret void
 }
 
+; HSAIL-LABEL: {{^}}prog function &group_atomic_xchg_monotonic_ret_i32(
+; HSAIL: atomic_exch_group_scar_wg_b32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 4;
+define void @group_atomic_xchg_monotonic_ret_i32(i32 addrspace(1)* %out, i32 addrspace(3)* %ptr) nounwind {
+  %result = atomicrmw xchg i32 addrspace(3)* %ptr, i32 4 monotonic
+  store i32 %result, i32 addrspace(1)* %out, align 4
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &group_atomic_xchg_acquire_ret_i32(
+; HSAIL: atomic_exch_group_scacq_wg_b32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 4;
+define void @group_atomic_xchg_acquire_ret_i32(i32 addrspace(1)* %out, i32 addrspace(3)* %ptr) nounwind {
+  %result = atomicrmw xchg i32 addrspace(3)* %ptr, i32 4 acquire
+  store i32 %result, i32 addrspace(1)* %out, align 4
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &group_atomic_xchg_release_ret_i32(
+; HSAIL: atomic_exch_group_screl_wg_b32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 4;
+define void @group_atomic_xchg_release_ret_i32(i32 addrspace(1)* %out, i32 addrspace(3)* %ptr) nounwind {
+  %result = atomicrmw xchg i32 addrspace(3)* %ptr, i32 4 release
+  store i32 %result, i32 addrspace(1)* %out, align 4
+  ret void
+}
 
 ; HSAIL-LABEL: {{^}}prog function &group_atomic_xchg_acq_rel_ret_i32(
 ; HSAIL: atomic_exch_group_scar_wg_b32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 4;
