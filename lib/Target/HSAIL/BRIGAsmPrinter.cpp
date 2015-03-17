@@ -1643,14 +1643,6 @@ std::string BRIGAsmPrinter::getHSAILReg(Type* type) {
   return stream.str();
 }
 
-/// isBlockOnlyReachableByFallthough - Return true if the basic block has
-/// exactly one predecessor and the control transfer mechanism between
-/// the predecessor and this block is a fall-through.
-bool BRIGAsmPrinter::isBlockOnlyReachableByFallthrough(
-     const MachineBasicBlock *MBB) const {
-  return AsmPrinter::isBlockOnlyReachableByFallthrough(MBB);
-}
-
 //===------------------------------------------------------------------===//
 // Dwarf Emission Helper Routines
 //===------------------------------------------------------------------===//

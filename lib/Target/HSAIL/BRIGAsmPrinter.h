@@ -107,12 +107,6 @@ public:
 
   virtual void EmitFunctionEntryLabel();
 
-  /// isBlockOnlyReachableByFallthough - Return true if the basic block has
-  /// exactly one predecessor and the control transfer mechanism between
-  /// the predecessor and this block is a fall-through.
-  virtual bool isBlockOnlyReachableByFallthrough(
-    const MachineBasicBlock *MBB) const;
-
   bool doFinalization(Module &M);
 
   //===------------------------------------------------------------------===//
