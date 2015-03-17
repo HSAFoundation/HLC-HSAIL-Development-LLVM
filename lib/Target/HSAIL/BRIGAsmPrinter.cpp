@@ -58,18 +58,11 @@
 #include <memory>
 
 using namespace llvm;
-using std::string;
 
 #include "HSAILGenMnemonicMapper.inc"
 #define GET_LLVM_INTRINSIC_FOR_GCC_BUILTIN
 #include "HSAILGenIntrinsics.inc"
 #undef GET_LLVM_INTRINSIC_FOR_GCC_BUILTIN
-
-namespace llvm {
-  inline std::ostream& operator<<(std::ostream& s, StringRef arg) {
-    s.write(arg.data(), arg.size()); return s;
-  }
-}
 
 static cl::opt<std::string> DebugInfoFilename("odebug",
   cl::desc("Debug Info filename"), cl::value_desc("filename"), cl::init(""));
