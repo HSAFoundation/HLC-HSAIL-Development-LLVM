@@ -1081,13 +1081,14 @@ bool HSAILDAGToDAGISel::SelectStoreAddr(SDNode *ParentStore,
 
 static Brig::BrigMemoryOrder getBrigMemoryOrder(AtomicOrdering Order) {
   switch (Order) {
+  case Monotonic:
+    return Brig::BRIG_MEMORY_ORDER_RELAXED;
   case Acquire:
     return Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE;
   case Release:
     return Brig::BRIG_MEMORY_ORDER_SC_RELEASE;
   case AcquireRelease:
   case SequentiallyConsistent:
-  case Monotonic:
     return Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE;
   default:
     llvm_unreachable("unhandled memory order");
