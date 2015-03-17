@@ -86,6 +86,14 @@ static cl::opt<bool> PrintBeforeBRIG("print-before-brig",
   llvm::cl::desc("Print LLVM IR just before emitting BRIG"), cl::Hidden);
 
 
+static HSAIL_ASM::SRef makeSRef(const SmallVectorImpl<char> &Str) {
+  return HSAIL_ASM::SRef(Str.begin(), Str.end());
+}
+
+static HSAIL_ASM::SRef makeSRef(StringRef Str) {
+  return HSAIL_ASM::SRef(Str.begin(), Str.end());
+}
+
 Brig::BrigAtomicOperation
 BRIGAsmPrinter::getAtomicOpcode(const MachineInstr *MI) const {
   int64_t Val = TII->getNamedModifierOperand(*MI, HSAIL::OpName::op);
@@ -167,11 +175,9 @@ void BRIGAsmPrinter::BrigEmitInitVarWithAddressPragma(StringRef VarName,
   HSAIL_ASM::DirectivePragma pgm
     = brigantine.append<HSAIL_ASM::DirectivePragma>();
 
-  StringRef Str(O.str());
-  HSAIL_ASM::SRef BrigStr(Str.begin(), Str.end());
   HSAIL_ASM::ItemList opnds;
 
-  opnds.push_back(brigantine.createOperandString(BrigStr));
+  opnds.push_back(brigantine.createOperandString(makeSRef(O.str())));
   pgm.operands() = opnds;
 }
 
@@ -203,8 +209,7 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
     store.append(CV, Name);
 
     if (store.elementCount() > 0) {
-      StringRef S = store.str();
-      init = HSAIL_ASM::SRef(S.begin(), S.end());
+      init = makeSRef(store.str());
     } else {
       memset(zeroes, 0, typeBytes);
       init = HSAIL_ASM::SRef(zeroes, zeroes + typeBytes);
@@ -319,10 +324,6 @@ static Brig::BrigLinkage findGlobalBrigLinkage(const GlobalValue &GV) {
     return Brig::BRIG_LINKAGE_PROGRAM;
 
   return Brig::BRIG_LINKAGE_NONE;
-}
-
-static HSAIL_ASM::SRef makeSRef(const SmallVectorImpl<char> &Str) {
-  return HSAIL_ASM::SRef(Str.begin(), Str.end());
 }
 
 /// EmitGlobalVariable - Emit the specified global variable to the .s file.
@@ -558,7 +559,7 @@ void BRIGAsmPrinter::EmitBasicBlockStart(const MachineBasicBlock &MBB) {
     insert_spaces = true;
   } else {
     StringRef name = MBB.getSymbol()->getName();
-    brigantine.addLabel(HSAIL_ASM::SRef(name.begin(), name.end()));
+    brigantine.addLabel(makeSRef(name));
   }
 
   if (const BasicBlock *BB = MBB.getBasicBlock()) {
