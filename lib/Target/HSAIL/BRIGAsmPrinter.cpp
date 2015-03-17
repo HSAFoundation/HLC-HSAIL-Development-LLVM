@@ -1208,7 +1208,7 @@ void BRIGAsmPrinter::EmitEndOfAsmFile(Module &M) {
   }
 
   if (!isValid) {
-    std::cerr << vld.getErrorMsg(NULL) << '\n';
+    errs() << vld.getErrorMsg(NULL) << '\n';
 //    HSAIL_ASM::dump(bc);
     if(DumpOnFailFilename.size() > 0) {
       std::string info;
