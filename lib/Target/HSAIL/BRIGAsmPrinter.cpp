@@ -193,6 +193,7 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
   if (CV->isNullValue()) {
     memset(zeroes, 0, typeBytes);
     init = HSAIL_ASM::SRef(zeroes, zeroes + typeBytes);
+    globalVar.init() = brigantine.createOperandData(init);
   } else {
     unsigned EltSize = HSAIL_ASM::getBrigTypeNumBytes(EltBrigType);
 
@@ -215,15 +216,15 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
                                        VarInit.Expr,
                                        EltSize);
     }
-  }
 
-  if (globalVar.modifier().isArray()) {
-    assert(globalVar.dim() * typeBytes  >= init.length());
-  } else {
-    assert(globalVar.dim() == 0 && typeBytes == init.length());
-  }
+    if (globalVar.modifier().isArray()) {
+      assert(globalVar.dim() * typeBytes  >= init.length());
+    } else {
+      assert(globalVar.dim() == 0 && typeBytes == init.length());
+    }
 
-  globalVar.init() = brigantine.createOperandData(init);
+    globalVar.init() = brigantine.createOperandData(init);
+  }
 }
 
 BRIGAsmPrinter::BRIGAsmPrinter(TargetMachine& TM, MCStreamer &Streamer)
