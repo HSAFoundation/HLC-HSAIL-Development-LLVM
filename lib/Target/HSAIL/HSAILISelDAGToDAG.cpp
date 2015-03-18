@@ -1095,13 +1095,21 @@ static Brig::BrigMemoryOrder getBrigMemoryOrder(AtomicOrdering Order) {
   }
 }
 
-static Brig::BrigMemoryScope getBrigMemoryScope(SynchronizationScope Scope) {
+static Brig::BrigMemoryScope getBrigMemoryScope(SynchronizationScope Scope,
+                                                unsigned AS) {
   switch (Scope) {
   case SingleThread:
     return Brig::BRIG_MEMORY_SCOPE_WORKITEM;
   case CrossThread:
     // FIXME: This needs to be fixed when LLVM support other scope values.
-    return Brig::BRIG_MEMORY_SCOPE_WORKGROUP;
+    switch (AS) {
+    case HSAILAS::GROUP_ADDRESS:
+      return Brig::BRIG_MEMORY_SCOPE_WORKGROUP;
+    case HSAILAS::REGION_ADDRESS:
+      return Brig::BRIG_MEMORY_SCOPE_COMPONENT;
+    default:
+      return Brig::BRIG_MEMORY_SCOPE_SYSTEM;
+    }
   }
 }
 
@@ -1128,7 +1136,7 @@ bool HSAILDAGToDAGISel::SelectAtomicAddr(SDNode *ParentAtomic,
 
   Segment = CurDAG->getTargetConstant(AS, MVT::i32);
   Order = CurDAG->getTargetConstant(getBrigMemoryOrder(SuccOrder), MVT::i32);
-  Scope = CurDAG->getTargetConstant(getBrigMemoryScope(SyncScope), MVT::i32);
+  Scope = CurDAG->getTargetConstant(getBrigMemoryScope(SyncScope, AS), MVT::i32);
   Equiv = CurDAG->getTargetConstant(0, MVT::i32);
 
   return true;
