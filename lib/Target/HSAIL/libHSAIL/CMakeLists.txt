@@ -9,7 +9,6 @@ set(libhsail_srcs
   HSAILBrigantine.h
   HSAILBrigContainer.cpp
   HSAILBrigContainer.h
-  HSAILBrigInstr.hdl
   HSAILBrigObjectFile.cpp
   HSAILBrigObjectFile.h
   hsail_c.cpp
