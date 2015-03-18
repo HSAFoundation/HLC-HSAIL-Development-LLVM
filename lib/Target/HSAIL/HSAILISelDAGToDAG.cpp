@@ -1106,7 +1106,7 @@ static Brig::BrigMemoryScope getBrigMemoryScope(SynchronizationScope Scope,
     case HSAILAS::GROUP_ADDRESS:
       return Brig::BRIG_MEMORY_SCOPE_WORKGROUP;
     case HSAILAS::REGION_ADDRESS:
-      return Brig::BRIG_MEMORY_SCOPE_COMPONENT;
+      return Brig::BRIG_MEMORY_SCOPE_AGENT;
     default:
       return Brig::BRIG_MEMORY_SCOPE_SYSTEM;
     }
