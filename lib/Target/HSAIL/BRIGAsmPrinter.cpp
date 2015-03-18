@@ -183,7 +183,6 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
   Brig::BrigTypeX EltBT
     = static_cast<Brig::BrigTypeX>(globalVar.type() & ~Brig::BRIG_TYPE_ARRAY);
 
-  unsigned EltBrigType = HSAIL_ASM::type2bitType(EltBT);
   size_t typeBytes = HSAIL_ASM::getBrigTypeNumBytes(EltBT);
 
   bool isArray = globalVar.type() & Brig::BRIG_TYPE_ARRAY;
@@ -198,11 +197,11 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
 
     // FIXME: Should not have to allocate a zero array for this.
     HSAIL_ASM::SRef init(Zeros.get(), Zeros.get() + Size);
-    globalVar.init() = brigantine.createOperandConstantBytes(init, EltBrigType, isArray);
+    globalVar.init() = brigantine.createOperandConstantBytes(init, EltBT, isArray);
     return;
   }
 
-  unsigned EltSize = HSAIL_ASM::getBrigTypeNumBytes(EltBrigType);
+  unsigned EltSize = HSAIL_ASM::getBrigTypeNumBytes(EltBT);
 
   auto Name = globalVar.name().str();
 
@@ -212,14 +211,14 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
   if (store.elementCount() > 0) {
     globalVar.init()
       = brigantine.createOperandConstantBytes(makeSRef(store.str()),
-                                              EltBrigType,
+                                              EltBT,
                                               isArray);
   } else {
     uint64_t Size = globalVar.dim() * typeBytes;
     std::unique_ptr<char[]> Zeros(new char[Size]());
 
     HSAIL_ASM::SRef init(Zeros.get(), Zeros.get() + Size);
-    globalVar.init() = brigantine.createOperandConstantBytes(init, EltBrigType, isArray);
+    globalVar.init() = brigantine.createOperandConstantBytes(init, EltBT, isArray);
   }
 
   for (const auto &VarInit : store.varInitAddresses()) {
