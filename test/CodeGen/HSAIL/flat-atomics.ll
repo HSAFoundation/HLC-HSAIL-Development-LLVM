@@ -9,7 +9,7 @@ define void @flat_atomic_xchg_ret_i32(i32 addrspace(4)* %out, i32 addrspace(4)* 
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_xchg_monotonic_ret_i32(
-; HSAIL: atomic_exch_scar_sys_b32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 4;
+; HSAIL: atomic_exch_rlx_sys_b32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 4;
 define void @flat_atomic_xchg_monotonic_ret_i32(i32 addrspace(4)* %out, i32 addrspace(4)* %ptr) nounwind {
   %result = atomicrmw xchg i32 addrspace(4)* %ptr, i32 4 monotonic
   store i32 %result, i32 addrspace(4)* %out, align 4
