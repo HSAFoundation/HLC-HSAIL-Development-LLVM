@@ -1,6 +1,6 @@
 ; RUN: llc -march=hsail64 < %s | FileCheck -check-prefix=HSAIL %s
 
-; HSAIL: {{^}}readonly_u32 &gv[1] = {1};
+; HSAIL: {{^}}readonly_u32 &gv[1] = u32[](1);
 
 @gv = private addrspace(2) constant [1 x i32] [i32 1], align 4
 
