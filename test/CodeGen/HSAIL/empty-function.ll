@@ -1,3 +1,4 @@
+; XFAIL: *
 ; RUN: llc -march=hsail < %s
 ; XUN: llc -disable-validator -march=hsail < %s | FileCheck -check-prefix=HSAIL %s
 
