@@ -310,7 +310,8 @@ bool BRIGAsmPrinter::canInitHSAILAddressSpace(const GlobalVariable* gv) const {
 }
 
 static Brig::BrigLinkage findGlobalBrigLinkage(const GlobalValue &GV) {
-  if (GV.isInternalLinkage(GV.getLinkage()))
+  if (GV.isInternalLinkage(GV.getLinkage()) ||
+      GV.isPrivateLinkage(GV.getLinkage()))
     return Brig::BRIG_LINKAGE_MODULE;
 
   if (GV.isExternalLinkage(GV.getLinkage()))
