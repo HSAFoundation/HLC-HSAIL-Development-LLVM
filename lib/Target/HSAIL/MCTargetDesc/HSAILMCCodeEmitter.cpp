@@ -50,7 +50,7 @@ void HSAILMCCodeEmitter::EmitSIBByte(unsigned SS, unsigned Index, unsigned Base,
 MCCodeEmitter *llvm::createHSAIL_32MCCodeEmitter(const Target &,
                                                  TargetMachine &TM,
                                                  MCContext &Ctx) {
-  return new HSAILMCCodeEmitter(TM, Ctx, false);
+  return new HSAILMCCodeEmitter(TM, Ctx);
 }
 
 namespace {
@@ -100,7 +100,7 @@ MCCodeEmitter *llvm::createHSAIL_64MCCodeEmitterForLLVM32(
 MCCodeEmitter *llvm::createHSAIL_64MCCodeEmitter(const Target &,
                                                  TargetMachine &TM,
                                                  MCContext &Ctx) {
-  return new HSAILMCCodeEmitter(TM, Ctx, true);
+  return new HSAILMCCodeEmitter(TM, Ctx);
 }
 
 void HSAILMCCodeEmitter::EmitImmediate(const MCOperand &DispOp, unsigned Size,

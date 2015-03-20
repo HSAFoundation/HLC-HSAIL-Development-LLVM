@@ -31,13 +31,12 @@ class HSAILMCCodeEmitter : public MCCodeEmitter {
   const TargetMachine &TM;
   const TargetInstrInfo &TII;
   MCContext &Ctx;
-  bool Is64BitMode;
 
 public:
-  HSAILMCCodeEmitter(TargetMachine &tm, MCContext &ctx, bool is64Bit)
+  HSAILMCCodeEmitter(TargetMachine &tm, MCContext &ctx)
       : TM(tm), TII(*TM.getSubtarget<HSAILSubtarget>().getInstrInfo()),
         Ctx(ctx) {
-    Is64BitMode = is64Bit;
+
   }
 
   ~HSAILMCCodeEmitter() {}
