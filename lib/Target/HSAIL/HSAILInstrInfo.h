@@ -885,6 +885,11 @@ private:
   getTempGPR32PostRA(MachineBasicBlock::iterator MBBI) const;
 };
 
+namespace HSAIL {
+  int getAtomicRetOp(uint16_t Opcode);
+  int getAtomicNoRetOp(uint16_t Opcode);
+}
+
 } // End llvm namespace
 
 #endif // _HSAIL_INSTR_INFO_H_

@@ -1925,12 +1925,10 @@ void HSAILTargetLowering::AdjustInstrPostInstrSelection(MachineInstr *MI,
   const HSAILInstrInfo *TII =
     static_cast<const HSAILInstrInfo *>(Subtarget->getInstrInfo());
 
-  if (MI->getOpcode() == HSAIL::ATOMIC && !Node->hasAnyUseOfValue(0)) {
-    const MachineOperand *OpOp = TII->getNamedOperand(*MI, HSAIL::OpName::op);
-    auto Op = static_cast<Brig::BrigAtomicOperation>(OpOp->getImm());
-
-    if (Op != Brig::BRIG_ATOMIC_EXCH) {
-      MI->setDesc(TII->get(HSAIL::ATOMICNORET));
+  if (TII->isInstAtomic(MI->getOpcode()) && !Node->hasAnyUseOfValue(0)) {
+    int NoRetAtomicOp = HSAIL::getAtomicNoRetOp(MI->getOpcode());
+    if (NoRetAtomicOp != -1) {
+      MI->setDesc(TII->get(NoRetAtomicOp));
       MI->RemoveOperand(0);
     }
 

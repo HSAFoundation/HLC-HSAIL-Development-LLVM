@@ -864,9 +864,34 @@ static Brig::BrigOpcode getInstMemFenceBrigOpcode(unsigned Opc) {
 
 static Brig::BrigOpcode getInstAtomicBrigOpcode(unsigned Opc) {
   switch (Opc) {
-  case HSAIL::ATOMIC:
+  case HSAIL::ATOMIC_ADD:
+  case HSAIL::ATOMIC_AND:
+  case HSAIL::ATOMIC_CAS:
+  case HSAIL::ATOMIC_EXCH:
+  case HSAIL::ATOMIC_LD:
+  case HSAIL::ATOMIC_MAX:
+  case HSAIL::ATOMIC_MIN:
+  case HSAIL::ATOMIC_OR:
+  case HSAIL::ATOMIC_ST:
+  case HSAIL::ATOMIC_SUB:
+  case HSAIL::ATOMIC_WRAPDEC:
+  case HSAIL::ATOMIC_WRAPINC:
+  case HSAIL::ATOMIC_XOR:
     return Brig::BRIG_OPCODE_ATOMIC;
-  case HSAIL::ATOMICNORET:
+
+  case HSAIL::ATOMICNORET_ADD:
+  case HSAIL::ATOMICNORET_AND:
+  case HSAIL::ATOMICNORET_CAS:
+  case HSAIL::ATOMICNORET_EXCH:
+  case HSAIL::ATOMICNORET_LD:
+  case HSAIL::ATOMICNORET_MAX:
+  case HSAIL::ATOMICNORET_MIN:
+  case HSAIL::ATOMICNORET_OR:
+  case HSAIL::ATOMICNORET_ST:
+  case HSAIL::ATOMICNORET_SUB:
+  case HSAIL::ATOMICNORET_WRAPDEC:
+  case HSAIL::ATOMICNORET_WRAPINC:
+  case HSAIL::ATOMICNORET_XOR:
     return Brig::BRIG_OPCODE_ATOMICNORET;
   default:
     llvm_unreachable("unhandled opcode");

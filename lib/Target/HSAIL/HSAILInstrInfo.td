@@ -39,6 +39,29 @@ class WidthAttrValues_ {
 def WidthAttrValues : WidthAttrValues_;
 
 
+class AtomicNoRet <string noRetOp, bit isRet> {
+  string NoRetOp = noRetOp;
+  bit IsRet = isRet;
+}
+
+// Maps an atomic opcode to its version with a return value.
+def getAtomicRetOp : InstrMapping {
+  let FilterClass = "AtomicNoRet";
+  let RowFields = ["NoRetOp"];
+  let ColFields = ["IsRet"];
+  let KeyCol = ["0"];
+  let ValueCols = [["1"]];
+}
+
+// Maps an atomic opcode to its returnless version.
+def getAtomicNoRetOp : InstrMapping {
+  let FilterClass = "AtomicNoRet";
+  let RowFields = ["NoRetOp"];
+  let ColFields = ["IsRet"];
+  let KeyCol = ["1"];
+  let ValueCols = [["0"]];
+}
+
 //===----------------------------------------------------------------------===//
 // Custom Operands
 //===----------------------------------------------------------------------===//
