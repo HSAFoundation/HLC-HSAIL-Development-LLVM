@@ -21,7 +21,7 @@ class Triple;
 
 struct HSAILELFMCAsmInfo : public MCAsmInfo {
   explicit HSAILELFMCAsmInfo(StringRef &Triple);
-  virtual const MCSection *getNonexecutableStackSection(MCContext &Ctx) const;
+  const MCSection *getNonexecutableStackSection(MCContext &Ctx) const override;
 };
 } // namespace llvm
 

@@ -11,10 +11,7 @@
 #include "HSAILAsmBackend.h"
 using namespace llvm;
 
-HSAILAsmBackend::HSAILAsmBackend(const MCAsmBackend &T) {}
-
-// hack to enable construction of old-style HSAILAsmBackend
-HSAILAsmBackend::HSAILAsmBackend(int dummy) {}
+HSAILAsmBackend::HSAILAsmBackend(const Target &T) {}
 
 /// createObjectWriter - Create a new MCObjectWriter instance for use by the
 /// assembler backend to emit the final object file.
@@ -101,28 +98,16 @@ bool HSAILAsmBackend::writeNopData(uint64_t Count, MCObjectWriter *OW) const {
   return true;
 }
 
-MCAsmBackend *llvm::createHSAIL_32AsmBackend(const MCAsmBackend &T,
-                                             const std::string &TT) {
-  return new ELFHSAIL_32AsmBackend(T, Triple(TT).getOS());
+MCAsmBackend *llvm::createHSAIL32AsmBackend(const Target &T,
+                                            const MCRegisterInfo &MRI,
+                                            StringRef TT,
+                                            StringRef CPU) {
+  return new ELFHSAIL_32AsmBackend(T);
 }
 
-MCAsmBackend *llvm::createHSAIL_64AsmBackend(const MCAsmBackend &T,
-                                             const std::string &TT) {
-  return new ELFHSAIL_64AsmBackend(T, Triple(TT).getOS());
-}
-
-MCAsmBackend *llvm::createHSAIL_32AsmBackendForLLVM32(const Target &T,
-                                                      const MCRegisterInfo &MRI,
-                                                      StringRef TT,
-                                                      StringRef CPU) {
-  HSAILAsmBackend dummy(0);
-  return new ELFHSAIL_32AsmBackend(dummy, Triple(TT).getOS());
-}
-
-MCAsmBackend *llvm::createHSAIL_64AsmBackendForLLVM32(const Target &T,
-                                                      const MCRegisterInfo &MRI,
-                                                      StringRef TT,
-                                                      StringRef CPU) {
-  HSAILAsmBackend dummy(0);
-  return new ELFHSAIL_64AsmBackend(dummy, Triple(TT).getOS());
+MCAsmBackend *llvm::createHSAIL64AsmBackend(const Target &T,
+                                            const MCRegisterInfo &MRI,
+                                            StringRef TT,
+                                            StringRef CPU) {
+  return new ELFHSAIL_64AsmBackend(T);
 }

@@ -10,7 +10,7 @@
 #include "HSAILELFObjectWriter.h"
 using namespace llvm;
 
-HSAILELFObjectWriter::HSAILELFObjectWriter(bool is64Bit, Triple::OSType OSType,
+HSAILELFObjectWriter::HSAILELFObjectWriter(bool is64Bit,
                                            uint16_t EMachine,
                                            bool HasRelocationAddend)
-    : MCELFObjectTargetWriter(is64Bit, OSType, EMachine, HasRelocationAddend) {}
+  : MCELFObjectTargetWriter(is64Bit, 0, EMachine, HasRelocationAddend) {}

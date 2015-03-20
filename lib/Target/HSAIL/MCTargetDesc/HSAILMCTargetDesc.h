@@ -30,23 +30,18 @@ class raw_ostream;
 
 extern Target TheHSAIL_32Target, TheHSAIL_64Target;
 
-MCCodeEmitter *createHSAIL_32MCCodeEmitterForLLVM32(const MCInstrInfo &II,
-                                                    const MCRegisterInfo &MRI,
-                                                    const MCSubtargetInfo &STI,
-                                                    MCContext &Ctx);
+MCCodeEmitter *createHSAILMCCodeEmitter(const MCInstrInfo &MCII,
+                                        const MCRegisterInfo &MRI,
+                                        const MCSubtargetInfo &STI,
+                                        MCContext &Ctx);
 
-MCCodeEmitter *createHSAIL_64MCCodeEmitterForLLVM32(const MCInstrInfo &II,
-                                                    const MCRegisterInfo &MRI,
-                                                    const MCSubtargetInfo &STI,
-                                                    MCContext &Ctx);
+MCAsmBackend *createHSAIL32AsmBackend(const Target &T,
+                                      const MCRegisterInfo &MRI,
+                                      StringRef TT, StringRef CPU);
 
-MCAsmBackend *createHSAIL_32AsmBackendForLLVM32(const Target &T,
-                                                const MCRegisterInfo &MRI,
-                                                StringRef TT, StringRef CPU);
-
-MCAsmBackend *createHSAIL_64AsmBackendForLLVM32(const Target &T,
-                                                const MCRegisterInfo &MRI,
-                                                StringRef TT, StringRef CPU);
+MCAsmBackend *createHSAIL64AsmBackend(const Target &T,
+                                      const MCRegisterInfo &MRI,
+                                      StringRef TT, StringRef CPU);
 
 } // End llvm namespace
 

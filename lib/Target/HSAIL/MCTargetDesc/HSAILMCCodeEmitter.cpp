@@ -11,46 +11,31 @@
 //
 //===----------------------------------------------------------------------===//
 
-#define DEBUG_TYPE "mccodeemitter"
-#include "HSAIL.h"
-#include "HSAILInstrInfo.h"
 #include "HSAILMCCodeEmitter.h"
-#include "llvm/MC/MCCodeEmitter.h"
-#include "llvm/MC/MCExpr.h"
-#include "llvm/MC/MCInst.h"
-#include "llvm/MC/MCSymbol.h"
-#include "llvm/MC/MCSubtargetInfo.h"
-#include "llvm/Support/raw_ostream.h"
-#include <cstdio>
+
 using namespace llvm;
 
 void HSAILMCCodeEmitter::EmitByte(unsigned char C, unsigned &CurByte,
                                   raw_ostream &OS) const {
-  assert(!"When do we hit this?");
+  llvm_unreachable("When do we hit this?");
 }
 
 void HSAILMCCodeEmitter::EmitConstant(uint64_t Val, unsigned Size,
                                       unsigned &CurByte,
                                       raw_ostream &OS) const {
-  assert(!"When do we hit this?");
+  llvm_unreachable("When do we hit this?");
 }
 
 void HSAILMCCodeEmitter::EmitRegModRMByte(const MCOperand &ModRMReg,
                                           unsigned RegOpcodeFld,
                                           unsigned &CurByte,
                                           raw_ostream &OS) const {
-  assert(!"When do we hit this?");
+  llvm_unreachable("When do we hit this?");
 }
 
 void HSAILMCCodeEmitter::EmitSIBByte(unsigned SS, unsigned Index, unsigned Base,
                                      unsigned &CurByte, raw_ostream &OS) const {
-  assert(!"When do we hit this?");
-}
-
-MCCodeEmitter *llvm::createHSAIL_32MCCodeEmitter(const Target &,
-                                                 TargetMachine &TM,
-                                                 MCContext &Ctx) {
-  return new HSAILMCCodeEmitter(TM, Ctx);
+  llvm_unreachable("When do we hit this?");
 }
 
 namespace {
@@ -68,39 +53,26 @@ protected:                                        // Can only create subclasses.
 public:
   DummyMCCodeEmitter(const MCInstrInfo &II, const MCSubtargetInfo &STI,
                      MCContext &Ctx)
-      : m_ii(II), m_sti(STI), m_ctx(Ctx) {}
+    : m_ii(II), m_sti(STI), m_ctx(Ctx) {}
   DummyMCCodeEmitter(const MCInstrInfo &II, const MCRegisterInfo &MRI,
                      const MCSubtargetInfo &STI, MCContext &Ctx)
-      : m_ii(II), m_sti(STI), m_ctx(Ctx) {}
+    : m_ii(II), m_sti(STI), m_ctx(Ctx) {}
 
-  virtual ~DummyMCCodeEmitter() {}
+  ~DummyMCCodeEmitter() override {}
 
-  /// EncodeInstruction - Encode the given \arg Inst to bytes on the output
-  /// stream \arg OS.
-  virtual void EncodeInstruction(const MCInst &Inst, raw_ostream &OS,
-                                 SmallVectorImpl<MCFixup> &Fixups,
-                                 const MCSubtargetInfo &STI) const override {
-    printf("DummyMCCodeEmitter::EncodeInstruction called...\n");
+  void EncodeInstruction(const MCInst &Inst, raw_ostream &OS,
+                         SmallVectorImpl<MCFixup> &Fixups,
+                         const MCSubtargetInfo &STI) const override {
+    llvm_unreachable("DummyMCCodeEmitter::EncodeInstruction called...");
   }
 };
 }
 
-MCCodeEmitter *llvm::createHSAIL_32MCCodeEmitterForLLVM32(
-    const MCInstrInfo &II, const MCRegisterInfo &MRI,
-    const MCSubtargetInfo &STI, MCContext &Ctx) {
-  return new DummyMCCodeEmitter(II, STI, Ctx);
-}
-
-MCCodeEmitter *llvm::createHSAIL_64MCCodeEmitterForLLVM32(
-    const MCInstrInfo &II, const MCRegisterInfo &MRI,
-    const MCSubtargetInfo &STI, MCContext &Ctx) {
-  return new DummyMCCodeEmitter(II, STI, Ctx);
-}
-
-MCCodeEmitter *llvm::createHSAIL_64MCCodeEmitter(const Target &,
-                                                 TargetMachine &TM,
-                                                 MCContext &Ctx) {
-  return new HSAILMCCodeEmitter(TM, Ctx);
+MCCodeEmitter *llvm::createHSAILMCCodeEmitter(const MCInstrInfo &MCII,
+                                              const MCRegisterInfo &MRI,
+                                              const MCSubtargetInfo &STI,
+                                              MCContext &Ctx) {
+  return new HSAILMCCodeEmitter(MCII, MRI, Ctx);
 }
 
 void HSAILMCCodeEmitter::EmitImmediate(const MCOperand &DispOp, unsigned Size,
@@ -108,28 +80,27 @@ void HSAILMCCodeEmitter::EmitImmediate(const MCOperand &DispOp, unsigned Size,
                                        raw_ostream &OS,
                                        SmallVectorImpl<MCFixup> &Fixups,
                                        int ImmOffset) const {
-  assert(!"When do we hit this?");
+  llvm_unreachable("When do we hit this?");
 }
 
-void
-HSAILMCCodeEmitter::EmitMemModRMByte(const MCInst &MI, unsigned Op,
-                                     unsigned RegOpcodeField, uint64_t TSFlags,
-                                     unsigned &CurByte, raw_ostream &OS,
-                                     SmallVectorImpl<MCFixup> &Fixups) const {
-  assert(!"When do we hit this?");
+void HSAILMCCodeEmitter::EmitMemModRMByte(const MCInst &MI, unsigned Op,
+                                          unsigned RegOpcodeField,
+                                          uint64_t TSFlags,
+                                          unsigned &CurByte, raw_ostream &OS,
+                                          SmallVectorImpl<MCFixup> &Fixups) const {
+  llvm_unreachable("When do we hit this?");
 }
 
-/// EmitSegmentOverridePrefix - Emit segment override opcode prefix as needed
 void HSAILMCCodeEmitter::EmitSegmentOverridePrefix(uint64_t TSFlags,
                                                    unsigned &CurByte,
                                                    int MemOperand,
                                                    const MCInst &MI,
                                                    raw_ostream &OS) const {
-  assert(!"When do we hit this?");
+  llvm_unreachable("When do we hit this?");
 }
 
 void HSAILMCCodeEmitter::EncodeInstruction(const MCInst &MI, raw_ostream &OS,
                                            SmallVectorImpl<MCFixup> &Fixups,
                                            const MCSubtargetInfo &STI) const {
-  assert(!"When do we hit this?");
+  llvm_unreachable("When do we hit this?");
 }

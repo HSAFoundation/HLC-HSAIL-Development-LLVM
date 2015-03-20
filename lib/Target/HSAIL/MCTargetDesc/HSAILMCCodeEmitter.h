@@ -28,16 +28,14 @@ namespace llvm {
 class HSAILMCCodeEmitter : public MCCodeEmitter {
   HSAILMCCodeEmitter(const HSAILMCCodeEmitter &); // DO NOT IMPLEMENT
   void operator=(const HSAILMCCodeEmitter &);     // DO NOT IMPLEMENT
-  const TargetMachine &TM;
-  const TargetInstrInfo &TII;
+  const MCInstrInfo &MCII;
+  const MCRegisterInfo &MRI;
   MCContext &Ctx;
 
 public:
-  HSAILMCCodeEmitter(TargetMachine &tm, MCContext &ctx)
-      : TM(tm), TII(*TM.getSubtarget<HSAILSubtarget>().getInstrInfo()),
-        Ctx(ctx) {
-
-  }
+    HSAILMCCodeEmitter(const MCInstrInfo &mcii, const MCRegisterInfo &mri,
+                       MCContext &ctx)
+      : MCII(mcii), MRI(mri), Ctx(ctx) { }
 
   ~HSAILMCCodeEmitter() {}
 

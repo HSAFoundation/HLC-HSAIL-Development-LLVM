@@ -129,37 +129,6 @@ createHSAILFloatingPointStackifierPass();
 FunctionPass*
 createSSEDomainFixPass();
 
-MCCodeEmitter*
-createHSAIL_32MCCodeEmitter(const Target &T,
-                            TargetMachine &TM,
-                            MCContext &Ctx);
-
-MCStreamer* createHSAILMCStreamer(const Target &T, StringRef TT, MCContext &Ctx, MCAsmBackend &TAB,
-                                  raw_ostream &_OS, MCCodeEmitter *_Emitter,
-                                  const MCSubtargetInfo &MSI,
-                                  bool RelaxAll, bool NoExecStack);
-
-MCCodeEmitter*
-createHSAIL_64MCCodeEmitter(const Target &T,
-                            TargetMachine &TM,
-                            MCContext &Ctx);
-
-MCCodeEmitter* createHSAIL_32MCCodeEmitterForLLVM32(const MCInstrInfo &II,
-		                 const MCRegisterInfo &MRI,
-                                 const MCSubtargetInfo &STI, MCContext &Ctx);
-MCCodeEmitter* createHSAIL_64MCCodeEmitterForLLVM32(const MCInstrInfo &II,
-		                 const MCRegisterInfo &MRI,
-                                 const MCSubtargetInfo &STI, MCContext &Ctx);
-
-MCAsmBackend* createHSAIL_32AsmBackendForLLVM32(const Target &T, const MCRegisterInfo &MRI, StringRef TT, StringRef CPU);
-MCAsmBackend* createHSAIL_64AsmBackendForLLVM32(const Target &T, const MCRegisterInfo &MRI, StringRef TT, StringRef CPU);
-
-MCAsmBackend*
-createHSAIL_32AsmBackend(const MCAsmBackend &T, const std::string &s);
-
-MCAsmBackend*
-createHSAIL_64AsmBackend(const MCAsmBackend &T, const std::string &s);
-
 /// createHSAILEmitCodeToMemory - Returns a pass that converts a register
 /// allocated function into raw machine code in a dynamically
 /// allocated chunk of memory.

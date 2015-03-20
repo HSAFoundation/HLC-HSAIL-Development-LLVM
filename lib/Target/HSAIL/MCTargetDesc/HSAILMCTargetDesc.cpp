@@ -14,6 +14,7 @@
 
 #include "HSAILMCTargetDesc.h"
 #include "HSAILMCAsmInfo.h"
+#include "HSAILMCCodeEmitter.h"
 #include "InstPrinter/HSAILInstPrinter.h"
 #include "llvm/MC/MCCodeGenInfo.h"
 #include "llvm/MC/MCInstrInfo.h"
@@ -87,21 +88,21 @@ extern "C" void LLVMInitializeHSAILTargetMC() {
   RegisterMCCodeGenInfoFn D(TheHSAIL_64Target, createHSAILMCCodeGenInfo);
 
   TargetRegistry::RegisterMCCodeEmitter(TheHSAIL_32Target,
-                                        createHSAIL_32MCCodeEmitterForLLVM32);
+                                        createHSAILMCCodeEmitter);
   TargetRegistry::RegisterMCInstPrinter(TheHSAIL_32Target,
                                         createHSAILMCInstPrinter);
   TargetRegistry::RegisterMCAsmBackend(TheHSAIL_32Target,
-                                       createHSAIL_32AsmBackendForLLVM32);
+                                       createHSAIL32AsmBackend);
   TargetRegistry::RegisterMCObjectStreamer(TheHSAIL_32Target,
                                            createBRIGStreamer);
 
 
   TargetRegistry::RegisterMCCodeEmitter(TheHSAIL_64Target,
-                                        createHSAIL_64MCCodeEmitterForLLVM32);
+                                        createHSAILMCCodeEmitter);
   TargetRegistry::RegisterMCInstPrinter(TheHSAIL_64Target,
                                         createHSAILMCInstPrinter);
   TargetRegistry::RegisterMCAsmBackend(TheHSAIL_64Target,
-                                       createHSAIL_64AsmBackendForLLVM32);
+                                       createHSAIL64AsmBackend);
   TargetRegistry::RegisterMCObjectStreamer(TheHSAIL_64Target,
                                            createBRIGStreamer);
 }
