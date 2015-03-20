@@ -242,6 +242,11 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   setOperationAction(ISD::STORE, MVT::i1, Custom);
   setOperationAction(ISD::LOAD,  MVT::i1, Custom);
 
+  setOperationAction(ISD::ATOMIC_LOAD, MVT::i32, Custom);
+  setOperationAction(ISD::ATOMIC_LOAD, MVT::i64, Custom);
+  setOperationAction(ISD::ATOMIC_STORE, MVT::i32, Custom);
+  setOperationAction(ISD::ATOMIC_STORE, MVT::i64, Custom);
+
   setTargetDAGCombine(ISD::INTRINSIC_WO_CHAIN);
 
   setJumpIsExpensive(true);
@@ -1086,6 +1091,8 @@ HSAILTargetLowering::LowerOperation(SDValue Op,
     LOWER(ADD);
     LOWER(LOAD);
     LOWER(STORE);
+    LOWER(ATOMIC_LOAD);
+    LOWER(ATOMIC_STORE);
     break;
   default:
     Op.getNode()->dump();
@@ -1822,6 +1829,118 @@ SDValue HSAILTargetLowering::LowerSTORE(SDValue Op, SelectionDAG &DAG) const {
 
   Value = DAG.getNode(ISD::SIGN_EXTEND, dl, MVT::i32, Value);
   return DAG.getTruncStore(Chain, dl, Value, BasePtr, MVT::i8, MMO);
+}
+
+static SDValue getMemFenceImpl(SDValue Chain, SDLoc SL,
+                               unsigned MemoryOrder,
+                               unsigned GlobalMemoryScope,
+                               unsigned GroupMemoryScope,
+                               unsigned ImageMemoryScope,
+                               SelectionDAG &CurDAG) {
+  const SDValue Ops[] = {
+    Chain,
+    CurDAG.getTargetConstant(HSAILIntrinsic::HSAIL_memfence, MVT::i64),
+    CurDAG.getConstant(MemoryOrder, MVT::i32),
+    CurDAG.getConstant(GlobalMemoryScope, MVT::i32),
+    CurDAG.getConstant(GroupMemoryScope, MVT::i32),
+    CurDAG.getConstant(ImageMemoryScope, MVT::i32)
+  };
+
+  return CurDAG.getNode(ISD::INTRINSIC_VOID, SL, MVT::Other, Ops);
+}
+
+static SDValue getMemFence(SDValue Chain, SDLoc SL, unsigned AS,
+                           unsigned MemoryOrder,
+                           unsigned MemoryScope,
+                           SelectionDAG &CurDAG) {
+  switch (AS) {
+  case HSAILAS::GLOBAL_ADDRESS:
+    return getMemFenceImpl(Chain, SL,
+                           MemoryOrder,
+                           MemoryScope,
+                           Brig::BRIG_MEMORY_SCOPE_NONE,
+                           Brig::BRIG_MEMORY_SCOPE_NONE,
+                           CurDAG);
+
+  case HSAILAS::GROUP_ADDRESS:
+    return getMemFenceImpl(Chain, SL,
+                           MemoryOrder,
+                           Brig::BRIG_MEMORY_SCOPE_NONE,
+                           MemoryScope,
+                           Brig::BRIG_MEMORY_SCOPE_NONE,
+                           CurDAG);
+
+  case HSAILAS::FLAT_ADDRESS:
+    return getMemFenceImpl(Chain, SL,
+                           MemoryOrder,
+                           MemoryScope,
+                           Brig::BRIG_MEMORY_SCOPE_WORKGROUP,
+                           Brig::BRIG_MEMORY_SCOPE_NONE,
+                           CurDAG);
+
+  default:
+    llvm_unreachable("unexpected memory segment");
+  }
+}
+
+SDValue HSAILTargetLowering::LowerATOMIC_LOAD(SDValue Op,
+                                              SelectionDAG &DAG) const {
+  // HSAIL doesnt support SequentiallyConsistent,
+  // lower an atomic load with SequentiallyConsistent memory order
+  // to a Release memfence and Acquire atomic load
+  AtomicSDNode *Node = cast<AtomicSDNode>(Op);
+
+  if (Node->getOrdering() != SequentiallyConsistent)
+    return Op;
+
+  unsigned brigMemoryOrder = Brig::BRIG_MEMORY_ORDER_SC_RELEASE;
+  unsigned brigMemoryScope = Node->getAddressSpace() == HSAILAS::GROUP_ADDRESS ?
+    Brig::BRIG_MEMORY_SCOPE_WORKGROUP : Brig::BRIG_MEMORY_SCOPE_SYSTEM;
+
+  SDLoc SL(Op);
+
+  SDValue Chain = getMemFence(Op.getOperand(0), Op,
+                              Node->getAddressSpace(),
+                              brigMemoryOrder,
+                              brigMemoryScope,
+                              DAG);
+
+  return DAG.getAtomic(ISD::ATOMIC_LOAD, SL,
+                       Node->getMemoryVT(),
+                       Op.getValueType(),
+                       Chain,
+                       Node->getBasePtr(),
+                       Node->getMemOperand(),
+                       Acquire,
+                       Node->getSynchScope());
+}
+
+SDValue HSAILTargetLowering::LowerATOMIC_STORE(SDValue Op,
+                                               SelectionDAG &DAG) const {
+  // HSAIL doesnt support SequentiallyConsistent,
+  // lower an atomic store with SequentiallyConsistent memory order
+  // to Release atomic store and Acquire memfence
+  AtomicSDNode *Node = cast<AtomicSDNode>(Op);
+
+  if (Node->getOrdering() != SequentiallyConsistent)
+    return Op;
+
+  unsigned MemoryOrder = Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE;
+  unsigned MemoryScope = Node->getAddressSpace() == HSAILAS::GROUP_ADDRESS ?
+    Brig::BRIG_MEMORY_SCOPE_WORKGROUP : Brig::BRIG_MEMORY_SCOPE_SYSTEM;
+
+  SDLoc SL(Op);
+
+  SDValue ResNode = DAG.getAtomic(ISD::ATOMIC_STORE, SL,
+                                  Node->getMemoryVT(),
+                                  Node->getOperand(0), // Chain
+                                  Node->getBasePtr(),
+                                  Node->getVal(),
+                                  Node->getMemOperand(),
+                                  Release,
+                                  Node->getSynchScope());
+  return getMemFence(ResNode, Op, Node->getAddressSpace(),
+                     MemoryOrder, MemoryScope, DAG);
 }
 
 //===--------------------------------------------------------------------===//

@@ -436,32 +436,49 @@ define void @flat_atomic_umax_noret_i32_offset(i32 addrspace(4)* %ptr) nounwind 
   ret void
 }
 
-; HSAIL-LABEL: {{^}}prog function &group_atomic_load_acquire_ret_i32(
+; HSAIL-LABEL: {{^}}prog function &flat_atomic_load_acquire_ret_i32(
 ; HSAIL: atomic_ld_scacq_sys_b32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}];
-define void @group_atomic_load_acquire_ret_i32(i32 addrspace(1)* %out, i32 addrspace(4)* %ptr) nounwind {
+define void @flat_atomic_load_acquire_ret_i32(i32 addrspace(1)* %out, i32 addrspace(4)* %ptr) nounwind {
   %result = load atomic i32 addrspace(4)* %ptr acquire, align 4
   store i32 %result, i32 addrspace(1)* %out, align 4
   ret void
 }
 
-; HSAIL-LABEL: {{^}}prog function &group_atomic_load_monotonic_ret_i32(
+; HSAIL-LABEL: {{^}}prog function &flat_atomic_load_seq_cst_ret_i32(
+; HSAIL: memfence_screl_global(sys)_group(wg);
+; HSAIL: atomic_ld_scacq_sys_b32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}];
+define void @flat_atomic_load_seq_cst_ret_i32(i32 addrspace(1)* %out, i32 addrspace(4)* %ptr) nounwind {
+  %result = load atomic i32 addrspace(4)* %ptr seq_cst, align 4
+  store i32 %result, i32 addrspace(1)* %out, align 4
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &flat_atomic_load_monotonic_ret_i32(
 ; HSAIL: atomic_ld_rlx_sys_b32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}];
-define void @group_atomic_load_monotonic_ret_i32(i32 addrspace(1)* %out, i32 addrspace(4)* %ptr) nounwind {
+define void @flat_atomic_load_monotonic_ret_i32(i32 addrspace(1)* %out, i32 addrspace(4)* %ptr) nounwind {
   %result = load atomic i32 addrspace(4)* %ptr monotonic, align 4
   store i32 %result, i32 addrspace(1)* %out, align 4
   ret void
 }
 
-; HSAIL-LABEL: {{^}}prog function &group_atomic_store_release_i32(
+; HSAIL-LABEL: {{^}}prog function &flat_atomic_store_release_i32(
 ; HSAIL: atomicnoret_st_screl_sys_b32 [{{\$s[0-9]+}}], 9;
-define void @group_atomic_store_release_i32(i32 addrspace(4)* %ptr) nounwind {
+define void @flat_atomic_store_release_i32(i32 addrspace(4)* %ptr) nounwind {
   store atomic i32 9, i32 addrspace(4)* %ptr release, align 4
   ret void
 }
 
-; HSAIL-LABEL: {{^}}prog function &group_atomic_store_monotonic_i32(
+; HSAIL-LABEL: {{^}}prog function &flat_atomic_store_seq_cst_i32(
+; HSAIL: atomicnoret_st_screl_sys_b32 [{{\$s[0-9]+}}], 9;
+; HSAIL: memfence_scacq_global(sys)_group(wg);
+define void @flat_atomic_store_seq_cst_i32(i32 addrspace(4)* %ptr) nounwind {
+  store atomic i32 9, i32 addrspace(4)* %ptr seq_cst, align 4
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &flat_atomic_store_monotonic_i32(
 ; HSAIL: atomicnoret_st_rlx_sys_b32 [{{\$s[0-9]+}}], {{\$s[0-9]+}};
-define void @group_atomic_store_monotonic_i32(i32 addrspace(4)* %ptr, i32 %foo) nounwind {
+define void @flat_atomic_store_monotonic_i32(i32 addrspace(4)* %ptr, i32 %foo) nounwind {
   store atomic i32 %foo, i32 addrspace(4)* %ptr monotonic, align 4
   ret void
 }
