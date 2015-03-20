@@ -94,8 +94,8 @@ defm : AtomicPat_0Op_BitTypes<ATOMIC_LD, atomic_load>;
 defm : AtomicPat_1Op_NoRet_BitTypes<ATOMICNORET_ST, atomic_store>;
 
 defm : AtomicPat_1Op_BitTypes<ATOMIC_EXCH, atomic_swap>;
-defm : AtomicPat_1Op_IntTypes<ATOMIC_ADD, atomic_load_add>;
-defm : AtomicPat_1Op_IntTypes<ATOMIC_SUB, atomic_load_sub>;
+defm : AtomicPat_1Op_IntTypes<ATOMIC_ADD, atomic_load_add, 1>;
+defm : AtomicPat_1Op_IntTypes<ATOMIC_SUB, atomic_load_sub, 1>;
 defm : AtomicPat_1Op_BitTypes<ATOMIC_AND, atomic_load_and>;
 defm : AtomicPat_1Op_BitTypes<ATOMIC_OR, atomic_load_or>;
 defm : AtomicPat_1Op_BitTypes<ATOMIC_XOR, atomic_load_xor>;

@@ -50,7 +50,7 @@ define void @flat_atomic_xchg_ret_i32_offset(i32 addrspace(4)* %out, i32 addrspa
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_add_ret_i32(
-; HSAIL: atomic_add_scar_sys_u32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 4;
+; HSAIL: atomic_add_scar_sys_s32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 4;
 define void @flat_atomic_add_ret_i32(i32 addrspace(4)* %out, i32 addrspace(4)* %ptr) nounwind {
   %result = atomicrmw add i32 addrspace(4)* %ptr, i32 4 seq_cst
   store i32 %result, i32 addrspace(4)* %out, align 4
@@ -58,7 +58,7 @@ define void @flat_atomic_add_ret_i32(i32 addrspace(4)* %out, i32 addrspace(4)* %
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_add_ret_i32_offset(
-; HSAIL: atomic_add_scar_sys_u32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}+16], 4;
+; HSAIL: atomic_add_scar_sys_s32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}+16], 4;
 define void @flat_atomic_add_ret_i32_offset(i32 addrspace(4)* %out, i32 addrspace(4)* %ptr) nounwind {
   %gep = getelementptr i32 addrspace(4)* %ptr, i32 4
   %result = atomicrmw add i32 addrspace(4)* %gep, i32 4 seq_cst
@@ -67,7 +67,7 @@ define void @flat_atomic_add_ret_i32_offset(i32 addrspace(4)* %out, i32 addrspac
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_inc_ret_i32(
-; HSAIL: atomic_add_scar_sys_u32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 1;
+; HSAIL: atomic_add_scar_sys_s32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 1;
 define void @flat_atomic_inc_ret_i32(i32 addrspace(4)* %out, i32 addrspace(4)* %ptr) nounwind {
   %result = atomicrmw add i32 addrspace(4)* %ptr, i32 1 seq_cst
   store i32 %result, i32 addrspace(4)* %out, align 4
@@ -75,7 +75,7 @@ define void @flat_atomic_inc_ret_i32(i32 addrspace(4)* %out, i32 addrspace(4)* %
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_inc_ret_i32_offset(
-; HSAIL: atomic_add_scar_sys_u32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}+16], 1;
+; HSAIL: atomic_add_scar_sys_s32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}+16], 1;
 define void @flat_atomic_inc_ret_i32_offset(i32 addrspace(4)* %out, i32 addrspace(4)* %ptr) nounwind {
   %gep = getelementptr i32 addrspace(4)* %ptr, i32 4
   %result = atomicrmw add i32 addrspace(4)* %gep, i32 1 seq_cst
@@ -84,7 +84,7 @@ define void @flat_atomic_inc_ret_i32_offset(i32 addrspace(4)* %out, i32 addrspac
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_sub_ret_i32(
-; HSAIL: atomic_sub_scar_sys_u32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 4;
+; HSAIL: atomic_sub_scar_sys_s32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 4;
 define void @flat_atomic_sub_ret_i32(i32 addrspace(4)* %out, i32 addrspace(4)* %ptr) nounwind {
   %result = atomicrmw sub i32 addrspace(4)* %ptr, i32 4 seq_cst
   store i32 %result, i32 addrspace(4)* %out, align 4
@@ -92,7 +92,7 @@ define void @flat_atomic_sub_ret_i32(i32 addrspace(4)* %out, i32 addrspace(4)* %
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_sub_ret_i32_offset(
-; HSAIL: atomic_sub_scar_sys_u32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}+16], 4;
+; HSAIL: atomic_sub_scar_sys_s32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}+16], 4;
 define void @flat_atomic_sub_ret_i32_offset(i32 addrspace(4)* %out, i32 addrspace(4)* %ptr) nounwind {
   %gep = getelementptr i32 addrspace(4)* %ptr, i32 4
   %result = atomicrmw sub i32 addrspace(4)* %gep, i32 4 seq_cst
@@ -101,7 +101,7 @@ define void @flat_atomic_sub_ret_i32_offset(i32 addrspace(4)* %out, i32 addrspac
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_dec_ret_i32(
-; HSAIL: atomic_sub_scar_sys_u32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 1;
+; HSAIL: atomic_sub_scar_sys_s32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}], 1;
 define void @flat_atomic_dec_ret_i32(i32 addrspace(4)* %out, i32 addrspace(4)* %ptr) nounwind {
   %result = atomicrmw sub i32 addrspace(4)* %ptr, i32 1 seq_cst
   store i32 %result, i32 addrspace(4)* %out, align 4
@@ -109,7 +109,7 @@ define void @flat_atomic_dec_ret_i32(i32 addrspace(4)* %out, i32 addrspace(4)* %
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_dec_ret_i32_offset(
-; HSAIL: atomic_sub_scar_sys_u32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}+16], 1;
+; HSAIL: atomic_sub_scar_sys_s32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}+16], 1;
 define void @flat_atomic_dec_ret_i32_offset(i32 addrspace(4)* %out, i32 addrspace(4)* %ptr) nounwind {
   %gep = getelementptr i32 addrspace(4)* %ptr, i32 4
   %result = atomicrmw sub i32 addrspace(4)* %gep, i32 1 seq_cst
@@ -260,14 +260,14 @@ define void @flat_atomic_xchg_noret_i32_offset(i32 addrspace(4)* %ptr) nounwind 
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_add_noret_i32(
-; HSAIL: atomicnoret_add_scar_sys_u32 [{{\$s[0-9]+}}], 4;
+; HSAIL: atomicnoret_add_scar_sys_s32 [{{\$s[0-9]+}}], 4;
 define void @flat_atomic_add_noret_i32(i32 addrspace(4)* %ptr) nounwind {
   %result = atomicrmw add i32 addrspace(4)* %ptr, i32 4 seq_cst
   ret void
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_add_noret_i32_offset(
-; HSAIL: atomicnoret_add_scar_sys_u32 [{{\$s[0-9]+}}+16], 4;
+; HSAIL: atomicnoret_add_scar_sys_s32 [{{\$s[0-9]+}}+16], 4;
 define void @flat_atomic_add_noret_i32_offset(i32 addrspace(4)* %ptr) nounwind {
   %gep = getelementptr i32 addrspace(4)* %ptr, i32 4
   %result = atomicrmw add i32 addrspace(4)* %gep, i32 4 seq_cst
@@ -297,14 +297,14 @@ define void @flat_atomic_inc_noret_i32_bad_si_offset(i32 addrspace(4)* %ptr, i32
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_sub_noret_i32(
-; HSAIL: atomicnoret_sub_scar_sys_u32 [{{\$s[0-9]+}}], 4;
+; HSAIL: atomicnoret_sub_scar_sys_s32 [{{\$s[0-9]+}}], 4;
 define void @flat_atomic_sub_noret_i32(i32 addrspace(4)* %ptr) nounwind {
   %result = atomicrmw sub i32 addrspace(4)* %ptr, i32 4 seq_cst
   ret void
 }
 
 ; HSAIL-LABEL: {{^}}prog function &flat_atomic_sub_noret_i32_offset(
-; HSAIL: atomicnoret_sub_scar_sys_u32 [{{\$s[0-9]+}}+16], 4;
+; HSAIL: atomicnoret_sub_scar_sys_s32 [{{\$s[0-9]+}}+16], 4;
 define void @flat_atomic_sub_noret_i32_offset(i32 addrspace(4)* %ptr) nounwind {
   %gep = getelementptr i32 addrspace(4)* %ptr, i32 4
   %result = atomicrmw sub i32 addrspace(4)* %gep, i32 4 seq_cst
