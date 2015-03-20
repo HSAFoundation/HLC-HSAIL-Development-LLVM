@@ -29,11 +29,15 @@ multiclass InstAtomicOp<string opName, bits<16> brigVal> {
   def _AND : InstAtomic<opName#"_and", brigVal, BrigAtomicOperation.AND, "atomicnoret_and">;
   def _CAS : InstAtomic<opName#"_cas", brigVal, BrigAtomicOperation.CAS, "atomicnoret_cas">;
   def _EXCH : InstAtomic<opName#"_exch", brigVal, BrigAtomicOperation.EXCH>;
-  def _LD : InstAtomic<opName#"_ld", brigVal, BrigAtomicOperation.LD>;
+
+  let mayStore = 0 in {
+    def _LD : InstAtomic<opName#"_ld", brigVal, BrigAtomicOperation.LD>;
+  }
+
   def _MAX : InstAtomic<opName#"_max", brigVal, BrigAtomicOperation.MAX, "atomicnoret_max">;
   def _MIN : InstAtomic<opName#"_min", brigVal, BrigAtomicOperation.MIN, "atomicnoret_min">;
   def _OR : InstAtomic<opName#"_or", brigVal, BrigAtomicOperation.OR, "atomicnoret_or">;
-  def _ST : InstAtomic<opName#"_st", brigVal, BrigAtomicOperation.ST>;
+
   def _SUB : InstAtomic<opName#"_sub", brigVal, BrigAtomicOperation.SUB, "atomicnoret_sub">;
   def _WRAPDEC : InstAtomic<opName#"_wrapdec", brigVal, BrigAtomicOperation.WRAPDEC, "atomicnoret_wrapdec">;
   def _WRAPINC : InstAtomic<opName#"_wrapinc", brigVal, BrigAtomicOperation.WRAPINC, "atomicnoret_wrapinc">;
@@ -53,7 +57,11 @@ multiclass InstAtomicOp_NoRet<string opName, bits<16> brigVal> {
   def _MAX : InstAtomic_NoRet<opName#"_max", brigVal, BrigAtomicOperation.MAX>;
   def _MIN : InstAtomic_NoRet<opName#"_min", brigVal, BrigAtomicOperation.MIN>;
   def _OR : InstAtomic_NoRet<opName#"_or", brigVal, BrigAtomicOperation.OR>;
-  def _ST : InstAtomic_NoRet<opName#"_st", brigVal, BrigAtomicOperation.ST>;
+
+  let mayLoad = 0 in {
+    def _ST : InstAtomic_NoRet<opName#"_st", brigVal, BrigAtomicOperation.ST>;
+  }
+
   def _SUB : InstAtomic_NoRet<opName#"_sub", brigVal, BrigAtomicOperation.SUB>;
   def _WRAPDEC : InstAtomic_NoRet<opName#"_wrapdec", brigVal, BrigAtomicOperation.WRAPDEC>;
   def _WRAPINC : InstAtomic_NoRet<opName#"_wrapinc", brigVal, BrigAtomicOperation.WRAPINC>;
@@ -77,17 +85,13 @@ defm ATOMICNORET : InstAtomicOp_NoRet<"atomicnoret", BrigOpcode.ATOMICNORET>;
 // >;
 
 
-// FIXME: We may need to define a separate opcode for each atomic
-// operation. The mayLoad / mayStore flags conflict for atomic_load
-// and atomic_store.
-
-// defm : AtomicPat_0Op_IntTypes<atomic_inst, atomic_load, BrigAtomicOperation.LD>;
-// defm : AtomicPat_1Op_IntTypes<atomic_inst, atomic_store, BrigAtomicOperation.ST>;
-
 // let AddedComplexity = 1 in {
 //   defm : AtomicPat_0Op_IntTypes<atomic_inst, atomic_load_inc, BrigAtomicOperation.WRAPINC>;
 //   defm : AtomicPat_0Op_IntTypes<atomic_inst, atomic_load_dec, BrigAtomicOperation.WRAPDEC>;
 // }
+
+defm : AtomicPat_0Op_BitTypes<ATOMIC_LD, atomic_load>;
+defm : AtomicPat_1Op_NoRet_BitTypes<ATOMICNORET_ST, atomic_store>;
 
 defm : AtomicPat_1Op_BitTypes<ATOMIC_EXCH, atomic_swap>;
 defm : AtomicPat_1Op_IntTypes<ATOMIC_ADD, atomic_load_add>;

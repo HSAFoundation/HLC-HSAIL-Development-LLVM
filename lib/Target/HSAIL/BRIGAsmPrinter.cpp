@@ -872,7 +872,6 @@ static Brig::BrigOpcode getInstAtomicBrigOpcode(unsigned Opc) {
   case HSAIL::ATOMIC_MAX:
   case HSAIL::ATOMIC_MIN:
   case HSAIL::ATOMIC_OR:
-  case HSAIL::ATOMIC_ST:
   case HSAIL::ATOMIC_SUB:
   case HSAIL::ATOMIC_WRAPDEC:
   case HSAIL::ATOMIC_WRAPINC:

@@ -913,15 +913,33 @@ class AtomicPat_2Op_Pat<HSAILInstAtomic inst, SDPatternOperator node,
             bt))
 >;
 
-multiclass AtomicPat_0Op_IntTypes<HSAILInstAtomic inst,
-                                  SDPatternOperator node,
-                                  bit signed = 0> {
+class AtomicPat_1Op_NoRet_Pat<HSAILInstAtomic inst, SDPatternOperator node,
+                              ValueType vt, int bt> : Pat<
+  (node (AtomicAddr AddressSpace:$segment,
+                    BrigMemoryOrder:$order,
+                    BrigMemoryScope:$scope,
+                    equiv:$equiv,
+                    MEMOP:$address),
+        (vt (GPROrImm vt:$src0))),
+  (inst inst.atomicOperation,
+        $segment,
+        $order,
+        $scope,
+        $equiv,
+        MEMOP:$address,
+        vt:$src0,
+        (vt zero_reg),
+        bt)
+>;
+
+multiclass AtomicPat_0Op_BitTypes<HSAILInstAtomic inst,
+                                  SDPatternOperator node> {
   def : AtomicPat_0Op_Pat<
-    inst, node, i32, !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+    inst, node, i32, BrigTypeX.B32
   >;
 
   def : AtomicPat_0Op_Pat<
-    inst, node, i64, !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+    inst, node, i64, BrigTypeX.B64
   >;
 }
 
@@ -944,6 +962,17 @@ multiclass AtomicPat_1Op_BitTypes<HSAILInstAtomic inst,
   >;
 
   def : AtomicPat_1Op_Pat<
+    inst, node, i64, BrigTypeX.B64
+  >;
+}
+
+multiclass AtomicPat_1Op_NoRet_BitTypes<HSAILInstAtomic inst,
+                                        SDPatternOperator node> {
+  def : AtomicPat_1Op_NoRet_Pat<
+    inst, node, i32, BrigTypeX.B32
+  >;
+
+  def : AtomicPat_1Op_NoRet_Pat<
     inst, node, i64, BrigTypeX.B64
   >;
 }

@@ -435,3 +435,33 @@ define void @group_atomic_umax_noret_i32_offset(i32 addrspace(3)* %ptr) nounwind
   %result = atomicrmw umax i32 addrspace(3)* %gep, i32 4 seq_cst
   ret void
 }
+
+; HSAIL-LABEL: {{^}}prog function &group_atomic_load_acquire_ret_i32(
+; HSAIL: atomic_ld_group_scacq_wg_b32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}];
+define void @group_atomic_load_acquire_ret_i32(i32 addrspace(1)* %out, i32 addrspace(3)* %ptr) nounwind {
+  %result = load atomic i32 addrspace(3)* %ptr acquire, align 4
+  store i32 %result, i32 addrspace(1)* %out, align 4
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &group_atomic_load_monotonic_ret_i32(
+; HSAIL: atomic_ld_group_rlx_wg_b32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}];
+define void @group_atomic_load_monotonic_ret_i32(i32 addrspace(1)* %out, i32 addrspace(3)* %ptr) nounwind {
+  %result = load atomic i32 addrspace(3)* %ptr monotonic, align 4
+  store i32 %result, i32 addrspace(1)* %out, align 4
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &group_atomic_store_release_i32(
+; HSAIL: atomicnoret_st_group_screl_wg_b32 [{{\$s[0-9]+}}], 9;
+define void @group_atomic_store_release_i32(i32 addrspace(3)* %ptr) nounwind {
+  store atomic i32 9, i32 addrspace(3)* %ptr release, align 4
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &group_atomic_store_monotonic_i32(
+; HSAIL: atomicnoret_st_group_rlx_wg_b32 [{{\$s[0-9]+}}], {{\$s[0-9]+}};
+define void @group_atomic_store_monotonic_i32(i32 addrspace(3)* %ptr, i32 %foo) nounwind {
+  store atomic i32 %foo, i32 addrspace(3)* %ptr monotonic, align 4
+  ret void
+}
