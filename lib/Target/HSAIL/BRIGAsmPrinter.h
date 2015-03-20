@@ -9,8 +9,6 @@
 #ifndef _BRIG_ASM_PRINTER_H_
 #define _BRIG_ASM_PRINTER_H_
 
-#include "BRIGAsmPrinter.h"
-
 #include "HSAIL.h"
 #include "HSAILAsmPrinter.h"
 #include "HSAILInstrInfo.h"
