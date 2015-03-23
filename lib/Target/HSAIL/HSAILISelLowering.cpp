@@ -1865,7 +1865,7 @@ static SDValue getMemFence(SDValue Chain, SDLoc SL, unsigned AS,
   case HSAILAS::GROUP_ADDRESS:
     return getMemFenceImpl(Chain, SL,
                            MemoryOrder,
-                           Brig::BRIG_MEMORY_SCOPE_NONE,
+                           MemoryScope,
                            MemoryScope,
                            Brig::BRIG_MEMORY_SCOPE_NONE,
                            CurDAG);
