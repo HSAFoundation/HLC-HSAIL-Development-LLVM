@@ -314,14 +314,17 @@ bool BRIGAsmPrinter::canInitHSAILAddressSpace(const GlobalVariable* gv) const {
 }
 
 static Brig::BrigLinkage findGlobalBrigLinkage(const GlobalValue &GV) {
-  if (GV.isInternalLinkage(GV.getLinkage()) ||
-      GV.isPrivateLinkage(GV.getLinkage()))
+  switch (GV.getLinkage()) {
+  case GlobalValue::InternalLinkage:
+  case GlobalValue::PrivateLinkage:
+  case GlobalValue::LinkOnceODRLinkage:
+  case GlobalValue::LinkOnceAnyLinkage:
     return Brig::BRIG_LINKAGE_MODULE;
-
-  if (GV.isExternalLinkage(GV.getLinkage()))
+  case GlobalValue::ExternalLinkage:
     return Brig::BRIG_LINKAGE_PROGRAM;
-
-  return Brig::BRIG_LINKAGE_NONE;
+  default:
+    return Brig::BRIG_LINKAGE_NONE;
+  }
 }
 
 /// EmitGlobalVariable - Emit the specified global variable to the .s file.
