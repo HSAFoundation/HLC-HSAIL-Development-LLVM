@@ -1448,9 +1448,12 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
                        Op.getOperand(1), Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_class_f32:
-  case HSAILIntrinsic::HSAIL_class_f64:
-    return DAG.getNode(HSAILISD::CLASS, SL, MVT::i1,
-                       Op.getOperand(1), Op.getOperand(2));
+  case HSAILIntrinsic::HSAIL_class_f64: {
+    // FIXME: The intrinsic should be i1 to begin with.
+    SDValue Class = DAG.getNode(HSAILISD::CLASS, SL, MVT::i1,
+                                Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(ISD::SIGN_EXTEND, SL, MVT::i32, Class);
+  }
 
   case HSAILIntrinsic::HSAIL_segmentp_global: {
     return DAG.getNode(HSAILISD::SEGMENTP, SL, MVT::i1,
