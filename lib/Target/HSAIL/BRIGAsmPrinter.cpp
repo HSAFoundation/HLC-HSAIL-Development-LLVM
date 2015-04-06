@@ -319,9 +319,17 @@ static Brig::BrigLinkage findGlobalBrigLinkage(const GlobalValue &GV) {
   case GlobalValue::PrivateLinkage:
   case GlobalValue::LinkOnceODRLinkage:
   case GlobalValue::LinkOnceAnyLinkage:
+  case GlobalValue::CommonLinkage:
     return Brig::BRIG_LINKAGE_MODULE;
+
   case GlobalValue::ExternalLinkage:
+  case GlobalValue::WeakAnyLinkage:
+  case GlobalValue::WeakODRLinkage:
+  case GlobalValue::AvailableExternallyLinkage:
+  case GlobalValue::ExternalWeakLinkage:
+  case GlobalValue::AppendingLinkage:
     return Brig::BRIG_LINKAGE_PROGRAM;
+
   default:
     return Brig::BRIG_LINKAGE_NONE;
   }
