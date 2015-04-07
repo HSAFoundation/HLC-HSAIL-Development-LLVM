@@ -27,7 +27,7 @@ public:
     }
 
     Position getPos() const override {
-      llvm_unreachable("Unimplemented");
+      return os.tell();
     }
 
     void setPos(Position) override {
