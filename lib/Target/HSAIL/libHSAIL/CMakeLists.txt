@@ -66,6 +66,7 @@ set(generated_srcs
 
 #include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #include_directories(${generated_dir})
+add_definitions("-DLIBDWARF_USE_INIT_C")
 
 add_llvm_library(HSAIL ${libhsail_srcs} ${generated_sources})
 

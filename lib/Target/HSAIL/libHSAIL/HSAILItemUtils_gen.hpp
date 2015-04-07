@@ -1,7 +1,7 @@
 // University of Illinois/NCSA
 // Open Source License
 //
-// Copyright (c) 2013, Advanced Micro Devices, Inc.
+// Copyright (c) 2013-2015, Advanced Micro Devices, Inc.
 // All rights reserved.
 //
 // Developed by:
@@ -38,8 +38,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 // SOFTWARE.
-inline bool instSupportsFtz(Brig::BrigOpcode16_t arg) {
-  using namespace Brig;
+inline bool instSupportsFtz(BrigOpcode16_t arg) {
   switch( arg ) {
     case BRIG_OPCODE_ABS                : return true;
     case BRIG_OPCODE_ADD                : return true;
@@ -71,7 +70,6 @@ inline bool instSupportsFtz(Brig::BrigOpcode16_t arg) {
 }
 
 template <typename RetType, typename Visitor> RetType visitOpcode_gen(HSAIL_ASM::Inst inst, Visitor& vis) {
-  using namespace Brig;
   switch( inst.opcode() ) {
     case BRIG_OPCODE_ABS                : return vis.visitOpcode_ABS                            (inst);
     case BRIG_OPCODE_ACTIVELANECOUNT    : return vis.visitOpcode_ACTIVELANECOUNT                (HSAIL_ASM::InstLane(inst));

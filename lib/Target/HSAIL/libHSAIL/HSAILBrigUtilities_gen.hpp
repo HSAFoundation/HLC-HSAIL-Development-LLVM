@@ -1,7 +1,7 @@
 // University of Illinois/NCSA
 // Open Source License
 //
-// Copyright (c) 2013, Advanced Micro Devices, Inc.
+// Copyright (c) 2013-2015, Advanced Micro Devices, Inc.
 // All rights reserved.
 //
 // Developed by:
@@ -39,7 +39,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 // SOFTWARE.
 unsigned align2num(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_ALIGNMENT_1               : return 1;
     case BRIG_ALIGNMENT_128             : return 128;
@@ -55,7 +54,6 @@ unsigned align2num(unsigned arg) {
 }
 
 const char* align2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_ALIGNMENT_1               : return "";
     case BRIG_ALIGNMENT_128             : return "128";
@@ -70,8 +68,7 @@ const char* align2str(unsigned arg) {
     }
 }
 
-Brig::BrigAlignment num2align(uint64_t arg) {
-  using namespace Brig;
+BrigAlignment num2align(uint64_t arg) {
   switch( arg ) {
     case 1                              : return BRIG_ALIGNMENT_1;
     case 128                            : return BRIG_ALIGNMENT_128;
@@ -87,7 +84,6 @@ Brig::BrigAlignment num2align(uint64_t arg) {
 }
 
 const char* allocation2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_ALLOCATION_AGENT          : return "agent";
     case BRIG_ALLOCATION_AUTOMATIC      : return "automatic";
@@ -98,7 +94,6 @@ const char* allocation2str(unsigned arg) {
 }
 
 const char* atomicOperation2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_ATOMIC_ADD                : return "add";
     case BRIG_ATOMIC_AND                : return "and";
@@ -126,7 +121,6 @@ const char* atomicOperation2str(unsigned arg) {
 }
 
 const char* compareOperation2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_COMPARE_EQ                : return "eq";
     case BRIG_COMPARE_EQU               : return "equ";
@@ -161,7 +155,6 @@ const char* compareOperation2str(unsigned arg) {
 }
 
 const char* controlDirective2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_CONTROL_ENABLEBREAKEXCEPTIONS : return "enablebreakexceptions";
     case BRIG_CONTROL_ENABLEDETECTEXCEPTIONS : return "enabledetectexceptions";
@@ -177,7 +170,6 @@ const char* controlDirective2str(unsigned arg) {
 }
 
 const char* imageChannelOrder2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_CHANNEL_ORDER_A           : return "a";
     case BRIG_CHANNEL_ORDER_ABGR        : return "abgr";
@@ -205,7 +197,6 @@ const char* imageChannelOrder2str(unsigned arg) {
 }
 
 const char* imageChannelType2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_CHANNEL_TYPE_FLOAT        : return "float";
     case BRIG_CHANNEL_TYPE_HALF_FLOAT   : return "half_float";
@@ -229,7 +220,6 @@ const char* imageChannelType2str(unsigned arg) {
 }
 
 bool isBrigGeometryDepth(unsigned geo) {
-  using namespace Brig;
   switch( geo ) {
     case BRIG_GEOMETRY_2DADEPTH         : return true;
     case BRIG_GEOMETRY_2DDEPTH          : return true;
@@ -238,7 +228,6 @@ bool isBrigGeometryDepth(unsigned geo) {
 }
 
 unsigned getBrigGeometryDim(unsigned geo) {
-  using namespace Brig;
   switch( geo ) {
     case BRIG_GEOMETRY_1D               : return 1;
     case BRIG_GEOMETRY_1DA              : return 2;
@@ -253,7 +242,6 @@ unsigned getBrigGeometryDim(unsigned geo) {
 }
 
 const char* imageGeometry2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_GEOMETRY_1D               : return "1d";
     case BRIG_GEOMETRY_1DA              : return "1da";
@@ -269,7 +257,6 @@ const char* imageGeometry2str(unsigned arg) {
 }
 
 const char* imageQuery2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_IMAGE_QUERY_ARRAY         : return "array";
     case BRIG_IMAGE_QUERY_CHANNELORDER  : return "channelorder";
@@ -282,7 +269,6 @@ const char* imageQuery2str(unsigned arg) {
 }
 
 bool isBodyOnly(Directive d) {
-  using namespace Brig;
   switch( d.kind() ) {
     case BRIG_KIND_DIRECTIVE_ARG_BLOCK_END : return true;
     case BRIG_KIND_DIRECTIVE_ARG_BLOCK_START : return true;
@@ -334,7 +320,6 @@ bool isBodyOnly(Directive d) {
 }
 
 bool isToplevelOnly(Directive d) {
-  using namespace Brig;
   switch( d.kind() ) {
     case BRIG_KIND_DIRECTIVE_ARG_BLOCK_END : return false;
     case BRIG_KIND_DIRECTIVE_ARG_BLOCK_START : return false;
@@ -386,7 +371,6 @@ bool isToplevelOnly(Directive d) {
 }
 
 const char* kind2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_KIND_DIRECTIVE_ARG_BLOCK_END : return "DirectiveArgBlockEnd";
     case BRIG_KIND_DIRECTIVE_ARG_BLOCK_START : return "DirectiveArgBlockStart";
@@ -438,7 +422,6 @@ const char* kind2str(unsigned arg) {
 }
 
 int size_of_brig_record(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_KIND_DIRECTIVE_ARG_BLOCK_END : return sizeof(BrigDirectiveArgBlockEnd);
     case BRIG_KIND_DIRECTIVE_ARG_BLOCK_START : return sizeof(BrigDirectiveArgBlockStart);
@@ -490,7 +473,6 @@ int size_of_brig_record(unsigned arg) {
 }
 
 const char* linkage2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_LINKAGE_ARG               : return "arg";
     case BRIG_LINKAGE_FUNCTION          : return "function";
@@ -502,7 +484,6 @@ const char* linkage2str(unsigned arg) {
 }
 
 const char* machineModel2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_MACHINE_LARGE             : return "$large";
     case BRIG_MACHINE_SMALL             : return "$small";
@@ -511,7 +492,6 @@ const char* machineModel2str(unsigned arg) {
 }
 
 const char* memoryOrder2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_MEMORY_ORDER_NONE         : return "";
     case BRIG_MEMORY_ORDER_RELAXED      : return "rlx";
@@ -523,7 +503,6 @@ const char* memoryOrder2str(unsigned arg) {
 }
 
 const char* memoryScope2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_MEMORY_SCOPE_AGENT        : return "agent";
     case BRIG_MEMORY_SCOPE_NONE         : return "";
@@ -535,8 +514,7 @@ const char* memoryScope2str(unsigned arg) {
     }
 }
 
-bool instHasType(Brig::BrigOpcode16_t arg) {
-  using namespace Brig;
+bool instHasType(BrigOpcode16_t arg) {
   switch( arg ) {
     case BRIG_OPCODE_ARRIVEFBAR         : return false;
     case BRIG_OPCODE_BARRIER            : return false;
@@ -560,7 +538,6 @@ bool instHasType(Brig::BrigOpcode16_t arg) {
 }
 
 const char* opcode2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_OPCODE_ABS                : return "abs";
     case BRIG_OPCODE_ACTIVELANECOUNT    : return "activelanecount";
@@ -734,8 +711,7 @@ const char* opcode2str(unsigned arg) {
     }
 }
 
-int instNumDstOperands(Brig::BrigOpcode16_t arg) {
-  using namespace Brig;
+int instNumDstOperands(BrigOpcode16_t arg) {
   switch( arg ) {
     case BRIG_OPCODE_ARRIVEFBAR         : return 0;
     case BRIG_OPCODE_ATOMICNORET        : return 0;
@@ -766,7 +742,6 @@ int instNumDstOperands(Brig::BrigOpcode16_t arg) {
 }
 
 const char* pack2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_PACK_NONE                 : return "";
     case BRIG_PACK_P                    : return "p";
@@ -786,7 +761,6 @@ const char* pack2str(unsigned arg) {
 }
 
 const char* profile2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_PROFILE_BASE              : return "$base";
     case BRIG_PROFILE_FULL              : return "$full";
@@ -794,8 +768,7 @@ const char* profile2str(unsigned arg) {
     }
 }
 
-unsigned getRegBits(Brig::BrigRegisterKind16_t arg) {
-  using namespace Brig;
+unsigned getRegBits(BrigRegisterKind16_t arg) {
   switch( arg ) {
     case BRIG_REGISTER_KIND_CONTROL     : return 1;
     case BRIG_REGISTER_KIND_DOUBLE      : return 64;
@@ -806,7 +779,6 @@ unsigned getRegBits(Brig::BrigRegisterKind16_t arg) {
 }
 
 const char* registerKind2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_REGISTER_KIND_CONTROL     : return "$c";
     case BRIG_REGISTER_KIND_DOUBLE      : return "$d";
@@ -817,7 +789,6 @@ const char* registerKind2str(unsigned arg) {
 }
 
 bool isFloatRounding(unsigned rounding) {
-  using namespace Brig;
   switch( rounding ) {
     case BRIG_ROUND_FLOAT_DEFAULT       : return true;
     case BRIG_ROUND_FLOAT_MINUS_INFINITY : return true;
@@ -829,7 +800,6 @@ bool isFloatRounding(unsigned rounding) {
 }
 
 bool isIntRounding(unsigned rounding) {
-  using namespace Brig;
   switch( rounding ) {
     case BRIG_ROUND_INTEGER_MINUS_INFINITY : return true;
     case BRIG_ROUND_INTEGER_MINUS_INFINITY_SAT : return true;
@@ -852,7 +822,6 @@ bool isIntRounding(unsigned rounding) {
 }
 
 const char* round2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_ROUND_FLOAT_MINUS_INFINITY : return "down";
     case BRIG_ROUND_FLOAT_NEAR_EVEN     : return "near";
@@ -879,7 +848,6 @@ const char* round2str(unsigned arg) {
 }
 
 bool isSatRounding(unsigned rounding) {
-  using namespace Brig;
   switch( rounding ) {
     case BRIG_ROUND_INTEGER_MINUS_INFINITY_SAT : return true;
     case BRIG_ROUND_INTEGER_NEAR_EVEN_SAT : return true;
@@ -894,7 +862,6 @@ bool isSatRounding(unsigned rounding) {
 }
 
 bool isSignalingRounding(unsigned rounding) {
-  using namespace Brig;
   switch( rounding ) {
     case BRIG_ROUND_INTEGER_SIGNALING_MINUS_INFINITY : return true;
     case BRIG_ROUND_INTEGER_SIGNALING_MINUS_INFINITY_SAT : return true;
@@ -909,7 +876,6 @@ bool isSignalingRounding(unsigned rounding) {
 }
 
 const char* samplerAddressing2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_ADDRESSING_CLAMP_TO_BORDER : return "clamp_to_border";
     case BRIG_ADDRESSING_CLAMP_TO_EDGE  : return "clamp_to_edge";
@@ -921,7 +887,6 @@ const char* samplerAddressing2str(unsigned arg) {
 }
 
 const char* samplerCoordNormalization2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_COORD_NORMALIZED          : return "normalized";
     case BRIG_COORD_UNNORMALIZED        : return "unnormalized";
@@ -930,7 +895,6 @@ const char* samplerCoordNormalization2str(unsigned arg) {
 }
 
 const char* samplerFilter2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_FILTER_LINEAR             : return "linear";
     case BRIG_FILTER_NEAREST            : return "nearest";
@@ -939,7 +903,6 @@ const char* samplerFilter2str(unsigned arg) {
 }
 
 const char* samplerQuery2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_SAMPLER_QUERY_ADDRESSING  : return "addressing";
     case BRIG_SAMPLER_QUERY_COORD       : return "coord";
@@ -949,7 +912,6 @@ const char* samplerQuery2str(unsigned arg) {
 }
 
 const char* sectionIndex2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_SECTION_INDEX_BEGIN_IMPLEMENTATION_DEFINED : return "hsa_begin_implementation_defined";
     case BRIG_SECTION_INDEX_CODE        : return "hsa_code";
@@ -960,7 +922,6 @@ const char* sectionIndex2str(unsigned arg) {
 }
 
 const char* segment2str(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_SEGMENT_AMD_GCN           : return "region";
     case BRIG_SEGMENT_ARG               : return "arg";
@@ -977,7 +938,6 @@ const char* segment2str(unsigned arg) {
 }
 
 unsigned arrayType2elementType(unsigned type) {
-  using namespace Brig;
   switch( type ) {
     case BRIG_TYPE_B128_ARRAY           : return BRIG_TYPE_B128;
     case BRIG_TYPE_B16_ARRAY            : return BRIG_TYPE_B16;
@@ -1030,7 +990,6 @@ unsigned arrayType2elementType(unsigned type) {
 }
 
 bool isArrayType(unsigned type) {
-  using namespace Brig;
   switch( type ) {
     case BRIG_TYPE_B128_ARRAY           : return true;
     case BRIG_TYPE_B16_ARRAY            : return true;
@@ -1083,7 +1042,6 @@ bool isArrayType(unsigned type) {
 }
 
 unsigned elementType2arrayType(unsigned type) {
-  using namespace Brig;
   switch( type ) {
     case BRIG_TYPE_B128                 : return BRIG_TYPE_B128_ARRAY;
     case BRIG_TYPE_B16                  : return BRIG_TYPE_B16_ARRAY;
@@ -1135,8 +1093,7 @@ unsigned elementType2arrayType(unsigned type) {
     }
 }
 
-const char* typeX2str(unsigned arg) {
-  using namespace Brig;
+const char* type2str(unsigned arg) {
   switch( arg ) {
     case BRIG_TYPE_B1                   : return "b1";
     case BRIG_TYPE_B128                 : return "b128";
@@ -1237,7 +1194,6 @@ const char* typeX2str(unsigned arg) {
 }
 
 unsigned getBrigTypeNumBits(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_TYPE_B1                   : return 1;
     case BRIG_TYPE_B128                 : return 128;
@@ -1291,7 +1247,6 @@ unsigned getBrigTypeNumBits(unsigned arg) {
 }
 
 unsigned getBrigTypeNumBytes(unsigned arg) {
-  using namespace Brig;
   switch( arg ) {
     case BRIG_TYPE_B1                   : return 1;
     case BRIG_TYPE_B128                 : return 16;
@@ -1344,8 +1299,7 @@ unsigned getBrigTypeNumBytes(unsigned arg) {
     }
 }
 
-const char* type2str(unsigned type) {
-  using namespace Brig;
+const char* type2name(unsigned type) {
   switch( type ) {
     case BRIG_TYPE_B1                   : return "b1";
     case BRIG_TYPE_B128                 : return "b128";
@@ -1445,8 +1399,7 @@ const char* type2str(unsigned type) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigAlignment arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigAlignment arg ) {
   switch( arg ) {
     case BRIG_ALIGNMENT_1               : return "BRIG_ALIGNMENT_1";
     case BRIG_ALIGNMENT_128             : return "BRIG_ALIGNMENT_128";
@@ -1462,8 +1415,7 @@ const char* anyEnum2str( Brig::BrigAlignment arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigAllocation arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigAllocation arg ) {
   switch( arg ) {
     case BRIG_ALLOCATION_AGENT          : return "BRIG_ALLOCATION_AGENT";
     case BRIG_ALLOCATION_AUTOMATIC      : return "BRIG_ALLOCATION_AUTOMATIC";
@@ -1473,16 +1425,14 @@ const char* anyEnum2str( Brig::BrigAllocation arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigAluModifierMask arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigAluModifierMask arg ) {
   switch( arg ) {
     case BRIG_ALU_FTZ                   : return "BRIG_ALU_FTZ";
     default : return "??";
     }
 }
 
-const char* anyEnum2str( Brig::BrigAtomicOperation arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigAtomicOperation arg ) {
   switch( arg ) {
     case BRIG_ATOMIC_ADD                : return "BRIG_ATOMIC_ADD";
     case BRIG_ATOMIC_AND                : return "BRIG_ATOMIC_AND";
@@ -1509,8 +1459,7 @@ const char* anyEnum2str( Brig::BrigAtomicOperation arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigCompareOperation arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigCompareOperation arg ) {
   switch( arg ) {
     case BRIG_COMPARE_EQ                : return "BRIG_COMPARE_EQ";
     case BRIG_COMPARE_EQU               : return "BRIG_COMPARE_EQU";
@@ -1544,8 +1493,7 @@ const char* anyEnum2str( Brig::BrigCompareOperation arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigControlDirective arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigControlDirective arg ) {
   switch( arg ) {
     case BRIG_CONTROL_ENABLEBREAKEXCEPTIONS : return "BRIG_CONTROL_ENABLEBREAKEXCEPTIONS";
     case BRIG_CONTROL_ENABLEDETECTEXCEPTIONS : return "BRIG_CONTROL_ENABLEDETECTEXCEPTIONS";
@@ -1560,8 +1508,7 @@ const char* anyEnum2str( Brig::BrigControlDirective arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigImageChannelOrder arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigImageChannelOrder arg ) {
   switch( arg ) {
     case BRIG_CHANNEL_ORDER_A           : return "BRIG_CHANNEL_ORDER_A";
     case BRIG_CHANNEL_ORDER_ABGR        : return "BRIG_CHANNEL_ORDER_ABGR";
@@ -1588,8 +1535,7 @@ const char* anyEnum2str( Brig::BrigImageChannelOrder arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigImageChannelType arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigImageChannelType arg ) {
   switch( arg ) {
     case BRIG_CHANNEL_TYPE_FLOAT        : return "BRIG_CHANNEL_TYPE_FLOAT";
     case BRIG_CHANNEL_TYPE_HALF_FLOAT   : return "BRIG_CHANNEL_TYPE_HALF_FLOAT";
@@ -1612,8 +1558,7 @@ const char* anyEnum2str( Brig::BrigImageChannelType arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigImageGeometry arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigImageGeometry arg ) {
   switch( arg ) {
     case BRIG_GEOMETRY_1D               : return "BRIG_GEOMETRY_1D";
     case BRIG_GEOMETRY_1DA              : return "BRIG_GEOMETRY_1DA";
@@ -1628,8 +1573,7 @@ const char* anyEnum2str( Brig::BrigImageGeometry arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigImageQuery arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigImageQuery arg ) {
   switch( arg ) {
     case BRIG_IMAGE_QUERY_ARRAY         : return "BRIG_IMAGE_QUERY_ARRAY";
     case BRIG_IMAGE_QUERY_CHANNELORDER  : return "BRIG_IMAGE_QUERY_CHANNELORDER";
@@ -1641,8 +1585,7 @@ const char* anyEnum2str( Brig::BrigImageQuery arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigKind arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigKind arg ) {
   switch( arg ) {
     case BRIG_KIND_DIRECTIVE_ARG_BLOCK_END : return "BRIG_KIND_DIRECTIVE_ARG_BLOCK_END";
     case BRIG_KIND_DIRECTIVE_ARG_BLOCK_START : return "BRIG_KIND_DIRECTIVE_ARG_BLOCK_START";
@@ -1693,8 +1636,7 @@ const char* anyEnum2str( Brig::BrigKind arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigLinkage arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigLinkage arg ) {
   switch( arg ) {
     case BRIG_LINKAGE_ARG               : return "BRIG_LINKAGE_ARG";
     case BRIG_LINKAGE_FUNCTION          : return "BRIG_LINKAGE_FUNCTION";
@@ -1705,8 +1647,7 @@ const char* anyEnum2str( Brig::BrigLinkage arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigMachineModel arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigMachineModel arg ) {
   switch( arg ) {
     case BRIG_MACHINE_LARGE             : return "BRIG_MACHINE_LARGE";
     case BRIG_MACHINE_SMALL             : return "BRIG_MACHINE_SMALL";
@@ -1714,16 +1655,14 @@ const char* anyEnum2str( Brig::BrigMachineModel arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigMemoryModifierMask arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigMemoryModifierMask arg ) {
   switch( arg ) {
     case BRIG_MEMORY_CONST              : return "BRIG_MEMORY_CONST";
     default : return "??";
     }
 }
 
-const char* anyEnum2str( Brig::BrigMemoryOrder arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigMemoryOrder arg ) {
   switch( arg ) {
     case BRIG_MEMORY_ORDER_NONE         : return "BRIG_MEMORY_ORDER_NONE";
     case BRIG_MEMORY_ORDER_RELAXED      : return "BRIG_MEMORY_ORDER_RELAXED";
@@ -1734,8 +1673,7 @@ const char* anyEnum2str( Brig::BrigMemoryOrder arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigMemoryScope arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigMemoryScope arg ) {
   switch( arg ) {
     case BRIG_MEMORY_SCOPE_AGENT        : return "BRIG_MEMORY_SCOPE_AGENT";
     case BRIG_MEMORY_SCOPE_NONE         : return "BRIG_MEMORY_SCOPE_NONE";
@@ -1747,8 +1685,7 @@ const char* anyEnum2str( Brig::BrigMemoryScope arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigOpcode arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigOpcode arg ) {
   switch( arg ) {
     case BRIG_OPCODE_ABS                : return "BRIG_OPCODE_ABS";
     case BRIG_OPCODE_ACTIVELANECOUNT    : return "BRIG_OPCODE_ACTIVELANECOUNT";
@@ -1922,8 +1859,7 @@ const char* anyEnum2str( Brig::BrigOpcode arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigPack arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigPack arg ) {
   switch( arg ) {
     case BRIG_PACK_NONE                 : return "BRIG_PACK_NONE";
     case BRIG_PACK_P                    : return "BRIG_PACK_P";
@@ -1942,8 +1878,7 @@ const char* anyEnum2str( Brig::BrigPack arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigProfile arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigProfile arg ) {
   switch( arg ) {
     case BRIG_PROFILE_BASE              : return "BRIG_PROFILE_BASE";
     case BRIG_PROFILE_FULL              : return "BRIG_PROFILE_FULL";
@@ -1951,8 +1886,7 @@ const char* anyEnum2str( Brig::BrigProfile arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigRegisterKind arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigRegisterKind arg ) {
   switch( arg ) {
     case BRIG_REGISTER_KIND_CONTROL     : return "BRIG_REGISTER_KIND_CONTROL";
     case BRIG_REGISTER_KIND_DOUBLE      : return "BRIG_REGISTER_KIND_DOUBLE";
@@ -1962,8 +1896,7 @@ const char* anyEnum2str( Brig::BrigRegisterKind arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigRound arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigRound arg ) {
   switch( arg ) {
     case BRIG_ROUND_FLOAT_DEFAULT       : return "BRIG_ROUND_FLOAT_DEFAULT";
     case BRIG_ROUND_FLOAT_MINUS_INFINITY : return "BRIG_ROUND_FLOAT_MINUS_INFINITY";
@@ -1991,8 +1924,7 @@ const char* anyEnum2str( Brig::BrigRound arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigSamplerAddressing arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigSamplerAddressing arg ) {
   switch( arg ) {
     case BRIG_ADDRESSING_CLAMP_TO_BORDER : return "BRIG_ADDRESSING_CLAMP_TO_BORDER";
     case BRIG_ADDRESSING_CLAMP_TO_EDGE  : return "BRIG_ADDRESSING_CLAMP_TO_EDGE";
@@ -2003,8 +1935,7 @@ const char* anyEnum2str( Brig::BrigSamplerAddressing arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigSamplerCoordNormalization arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigSamplerCoordNormalization arg ) {
   switch( arg ) {
     case BRIG_COORD_NORMALIZED          : return "BRIG_COORD_NORMALIZED";
     case BRIG_COORD_UNNORMALIZED        : return "BRIG_COORD_UNNORMALIZED";
@@ -2012,8 +1943,7 @@ const char* anyEnum2str( Brig::BrigSamplerCoordNormalization arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigSamplerFilter arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigSamplerFilter arg ) {
   switch( arg ) {
     case BRIG_FILTER_LINEAR             : return "BRIG_FILTER_LINEAR";
     case BRIG_FILTER_NEAREST            : return "BRIG_FILTER_NEAREST";
@@ -2021,8 +1951,7 @@ const char* anyEnum2str( Brig::BrigSamplerFilter arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigSamplerQuery arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigSamplerQuery arg ) {
   switch( arg ) {
     case BRIG_SAMPLER_QUERY_ADDRESSING  : return "BRIG_SAMPLER_QUERY_ADDRESSING";
     case BRIG_SAMPLER_QUERY_COORD       : return "BRIG_SAMPLER_QUERY_COORD";
@@ -2031,8 +1960,7 @@ const char* anyEnum2str( Brig::BrigSamplerQuery arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigSectionIndex arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigSectionIndex arg ) {
   switch( arg ) {
     case BRIG_SECTION_INDEX_BEGIN_IMPLEMENTATION_DEFINED : return "BRIG_SECTION_INDEX_BEGIN_IMPLEMENTATION_DEFINED";
     case BRIG_SECTION_INDEX_CODE        : return "BRIG_SECTION_INDEX_CODE";
@@ -2042,16 +1970,14 @@ const char* anyEnum2str( Brig::BrigSectionIndex arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigSegCvtModifierMask arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigSegCvtModifierMask arg ) {
   switch( arg ) {
     case BRIG_SEG_CVT_NONULL            : return "BRIG_SEG_CVT_NONULL";
     default : return "??";
     }
 }
 
-const char* anyEnum2str( Brig::BrigSegment arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigSegment arg ) {
   switch( arg ) {
     case BRIG_SEGMENT_AMD_GCN           : return "BRIG_SEGMENT_AMD_GCN";
     case BRIG_SEGMENT_ARG               : return "BRIG_SEGMENT_ARG";
@@ -2067,8 +1993,7 @@ const char* anyEnum2str( Brig::BrigSegment arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigTypeX arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigType arg ) {
   switch( arg ) {
     case BRIG_TYPE_B1                   : return "BRIG_TYPE_B1";
     case BRIG_TYPE_B128                 : return "BRIG_TYPE_B128";
@@ -2168,8 +2093,7 @@ const char* anyEnum2str( Brig::BrigTypeX arg ) {
     }
 }
 
-const char* anyEnum2str( Brig::BrigWidth arg ) {
-  using namespace Brig;
+const char* anyEnum2str( BrigWidth arg ) {
   switch( arg ) {
     case BRIG_WIDTH_1                   : return "BRIG_WIDTH_1";
     case BRIG_WIDTH_1024                : return "BRIG_WIDTH_1024";

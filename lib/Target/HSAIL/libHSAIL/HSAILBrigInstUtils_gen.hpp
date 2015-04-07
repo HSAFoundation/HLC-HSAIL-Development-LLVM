@@ -1,7 +1,7 @@
 // University of Illinois/NCSA
 // Open Source License
 //
-// Copyright (c) 2013, Advanced Micro Devices, Inc.
+// Copyright (c) 2013-2015, Advanced Micro Devices, Inc.
 // All rights reserved.
 //
 // Developed by:
@@ -41,8 +41,6 @@
 
 Inst appendInst(BrigContainer &container, unsigned instFormat)
 {
-    using namespace Brig;
-
     switch(instFormat)
     {
     case BRIG_KIND_INST_ADDR: return container.append<InstAddr>();

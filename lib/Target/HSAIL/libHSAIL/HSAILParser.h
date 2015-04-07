@@ -1,7 +1,7 @@
 // University of Illinois/NCSA
 // Open Source License
 //
-// Copyright (c) 2013, Advanced Micro Devices, Inc.
+// Copyright (c) 2013-2015, Advanced Micro Devices, Inc.
 // All rights reserved.
 //
 // Developed by:
@@ -124,7 +124,7 @@ private:
     void parseControl();
 
     typedef ItemList (Parser::*OperandParser)(Inst);
-    static OperandParser getOperandParser(Brig::BrigOpcode16_t opcode);
+    static OperandParser getOperandParser(BrigOpcode16_t opcode);
 
     Inst parseInstLdSt();
     Inst parseInstLane();

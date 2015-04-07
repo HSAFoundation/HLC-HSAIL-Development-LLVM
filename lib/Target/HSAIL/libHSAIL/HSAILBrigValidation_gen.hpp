@@ -1,7 +1,7 @@
 // University of Illinois/NCSA
 // Open Source License
 //
-// Copyright (c) 2013, Advanced Micro Devices, Inc.
+// Copyright (c) 2013-2015, Advanced Micro Devices, Inc.
 // All rights reserved.
 //
 // Developed by:
@@ -42,8 +42,6 @@
 
 bool ValidatorImpl::ValidateBrigDirectiveFields(Directive item) const
 {
-    using namespace Brig;
-
     unsigned kind = item.kind();
 
     switch (kind)
@@ -238,8 +236,6 @@ bool ValidatorImpl::ValidateBrigDirectiveFields(Directive item) const
 
 bool ValidatorImpl::ValidateBrigInstFields(Inst item) const
 {
-    using namespace Brig;
-
     unsigned kind = item.kind();
 
     switch (kind)
@@ -507,8 +503,6 @@ bool ValidatorImpl::ValidateBrigInstFields(Inst item) const
 
 bool ValidatorImpl::ValidateBrigOperandFields(Operand item) const
 {
-    using namespace Brig;
-
     unsigned kind = item.kind();
 
     switch (kind)

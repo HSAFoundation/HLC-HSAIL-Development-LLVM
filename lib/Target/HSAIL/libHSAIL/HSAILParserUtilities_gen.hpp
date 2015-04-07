@@ -1,7 +1,7 @@
 // University of Illinois/NCSA
 // Open Source License
 //
-// Copyright (c) 2013, Advanced Micro Devices, Inc.
+// Copyright (c) 2013-2015, Advanced Micro Devices, Inc.
 // All rights reserved.
 //
 // Developed by:
@@ -38,8 +38,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 // SOFTWARE.
-OpcodeParser getOpcodeParser(Brig::BrigOpcode16_t arg) {
-  using namespace Brig;
+OpcodeParser getOpcodeParser(BrigOpcode16_t arg) {
   switch( arg ) {
     case BRIG_OPCODE_ABS                : return parseMnemoBasicOrMod;
     case BRIG_OPCODE_ACTIVELANECOUNT    : return parseMnemoLane;
@@ -137,8 +136,7 @@ OpcodeParser getOpcodeParser(Brig::BrigOpcode16_t arg) {
     }
 }
 
-Parser::OperandParser Parser::getOperandParser(Brig::BrigOpcode16_t arg) {
-  using namespace Brig;
+Parser::OperandParser Parser::getOperandParser(BrigOpcode16_t arg) {
   switch( arg ) {
     case BRIG_OPCODE_CALL               : return &Parser::parseCallOperands;
     case BRIG_OPCODE_ICALL              : return &Parser::parseCallOperands;
@@ -148,8 +146,7 @@ Parser::OperandParser Parser::getOperandParser(Brig::BrigOpcode16_t arg) {
     }
 }
 
-int vecOpndIndex(Brig::BrigOpcode16_t arg) {
-  using namespace Brig;
+int vecOpndIndex(BrigOpcode16_t arg) {
   switch( arg ) {
     case BRIG_OPCODE_ACTIVELANEMASK     : return 0;
     case BRIG_OPCODE_COMBINE            : return 1;

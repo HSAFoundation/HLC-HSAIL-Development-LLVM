@@ -1,7 +1,7 @@
 // University of Illinois/NCSA
 // Open Source License
 //
-// Copyright (c) 2013, Advanced Micro Devices, Inc.
+// Copyright (c) 2013-2015, Advanced Micro Devices, Inc.
 // All rights reserved.
 //
 // Developed by:
@@ -201,7 +201,9 @@ struct Elf64Policy : public ElfPolicyBase<uint64_t> {
 enum {
     ELF_SECTION_STRTAB = -1,
     ELF_SECTION_SYMTAB = -2,
-    ELF_SECTION_SHSTRTAB = -3
+    ELF_SECTION_SHSTRTAB = -3,
+    BRIG_SECTION_INDEX_DEBUG = BRIG_SECTION_INDEX_IMPLEMENTATION_DEFINED,
+    BRIG_SECTION_INDEX_BLOB = BRIG_SECTION_INDEX_IMPLEMENTATION_DEFINED + 1
 };
 
 struct BrigIoImpl;
@@ -215,13 +217,14 @@ struct SectionDesc {
     unsigned    flags;
     unsigned    align;
 } sectionDescs[] = {
-    { Brig::BRIG_SECTION_INDEX_DATA,                   "hsa_data",    ".brig_strtab",   "__BRIG__strtab",   SHT_PROGBITS, 0,           4 },
-    { Brig::BRIG_SECTION_INDEX_CODE,                   "hsa_code",    ".brig_code",     "__BRIG__code",     SHT_PROGBITS, 0,           4 },
-    { Brig::BRIG_SECTION_INDEX_OPERAND,                "hsa_operand", ".brig_operands", "__BRIG__operands", SHT_PROGBITS, 0,           4 },
-    { Brig::BRIG_SECTION_INDEX_IMPLEMENTATION_DEFINED, "hsa_debug",   ".debug_hsa",     "__debug_brig__",   SHT_PROGBITS, 0,           4 },
+    { BRIG_SECTION_INDEX_DATA,                   "hsa_data",    ".brig_strtab",   "__BRIG__strtab",   SHT_PROGBITS, 0,           4 },
+    { BRIG_SECTION_INDEX_CODE,                   "hsa_code",    ".brig_code",     "__BRIG__code",     SHT_PROGBITS, 0,           4 },
+    { BRIG_SECTION_INDEX_OPERAND,                "hsa_operand", ".brig_operands", "__BRIG__operands", SHT_PROGBITS, 0,           4 },
+    { BRIG_SECTION_INDEX_DEBUG,                  "hsa_debug",   ".debug_hsa",     "__debug_brig__",   SHT_PROGBITS, 0,           4 },
     { ELF_SECTION_STRTAB,                              0,             ".strtab",        0,                  SHT_STRTAB,   SHF_STRINGS, 1 },
     { ELF_SECTION_SYMTAB,                              0,             ".symtab",        0,                  SHT_SYMTAB,   0,           8 },
     { ELF_SECTION_SHSTRTAB,                            ".shstrtab",   ".shstrtab",      0,                  SHT_STRTAB,   SHF_STRINGS, 1 },
+    { BRIG_SECTION_INDEX_BLOB,                   "hsa_brig",    ".brig",          "__BRIG__",         SHT_PROGBITS, 0,           16 },
 };
 
 const int NUM_PREDEFINED_ELF_SECTIONS = sizeof(sectionDescs)/sizeof(const SectionDesc*);
@@ -278,6 +281,8 @@ class BrigIOImpl {
     typedef typename Policy::Sym Sym;
     typedef typename Policy::Word ElfWord;
     typedef typename Policy::Half ElfHalf;
+    typedef typename Policy::Off  Off;
+
     Ehdr elfHeader;
     std::vector<Shdr> sectionHeaders;
     std::vector<char> sectionNameTable;
@@ -288,7 +293,7 @@ class BrigIOImpl {
 
 public:
     BrigIOImpl(int fmt_)
-        : fmt(fmt_)
+        : fmt(fmt_ & FILE_FORMAT_MASK)
     {
     }
 
@@ -326,14 +331,23 @@ public:
             if (!name) continue;
 
             const SectionDesc* desc = descByKey(predefinedSectionName(), name);
-            if (!desc) continue;
-            if (desc->sectionId < 0) continue;
+            if (!desc || desc->sectionId < 0) continue;
+
+            if (desc->sectionId == BRIG_SECTION_INDEX_BLOB) {
+                const Shdr &h = sectionHeaders[i];
+                if (!HSAIL_ASM::readContainer(
+                    *BrigIO::fragmentReadingAdapter(s, h.sh_size,
+                                                       h.sh_offset), c)) {
+                    return 1;
+                }
+                break;
+            }
 
             std::vector<char> data;
             if (readSection(data, s, i)) return 1;
             
             bool includesHeader =
-                  desc->sectionId < Brig::BRIG_SECTION_INDEX_IMPLEMENTATION_DEFINED;
+                  desc->sectionId < BRIG_SECTION_INDEX_IMPLEMENTATION_DEFINED;
             if (c.loadSection(desc->sectionId, data, includesHeader, s->errs)) {
                 return 1;
             }
@@ -395,9 +409,13 @@ public:
 
     int writeContainer(WriteAdapter *s, const BrigContainer& c) {
         reset();
-        for(int i = 0; i < c.getNumSections(); ++i) {
-            addSection(descById(i), c.sectionById(i).data());
-        }
+
+        std::vector<char> buf;
+        if (!c.write(*BrigIO::vectorWritingAdapter(buf)))
+           return 1;
+
+        addSection(descById(BRIG_SECTION_INDEX_BLOB), buf, true);
+
         unsigned strTabNdx = 0;
         unsigned symTabNdx = 0;
         if (fmt == FILE_FORMAT_BIF) {
@@ -436,10 +454,11 @@ private:
         return pos;
     }
 
-    int alignFilePos(WriteAdapter *s, unsigned &pos, unsigned align) {
-        const char *zeropad = "\0\0\0\0\0\0\0\0";
+    int alignFilePos(WriteAdapter *s, Off &pos, unsigned align) {
+        const char zeropad[] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
         assert(align > 0 && (0 == (align&(align-1))));
-        int n = ((~pos+1) & (align-1));
+        unsigned n = static_cast<unsigned>((~pos+1) & (align-1));
+        assert(n < sizeof zeropad);
         if (n == 0) { return 0; }
         if (s && s->write(zeropad, n)) {
             return 1;
@@ -461,6 +480,13 @@ private:
     }
 
     unsigned addSection(const SectionDesc& desc, SRef data) {
+        bool const includesHeader =
+            desc.sectionId >= 0 &&
+            desc.sectionId < BRIG_SECTION_INDEX_IMPLEMENTATION_DEFINED;
+        return addSection(desc, data, includesHeader);
+    }
+
+    unsigned addSection(const SectionDesc& desc, SRef data, bool includesHeader) {
         Shdr thisSec;
         memset(&thisSec, 0, sizeof(thisSec));
         if (sectionHeaders.empty()) {
@@ -468,11 +494,8 @@ private:
             sectionData.push_back("");
         }
         assert(data.length() < INT_MAX);
-        bool includesHeader =
-            desc.sectionId >= 0 &&
-            desc.sectionId < Brig::BRIG_SECTION_INDEX_IMPLEMENTATION_DEFINED;
         if (!includesHeader) {
-            Brig::BrigSectionHeader *header = (Brig::BrigSectionHeader*)data.begin;
+            BrigSectionHeader *header = (BrigSectionHeader*)data.begin;
             data.begin += header->headerByteCount;
         }
         unsigned shndx = (unsigned)sectionHeaders.size();
@@ -501,7 +524,7 @@ private:
     }
 
     int writeContents(WriteAdapter *s) {
-        unsigned filePos = sizeof(Ehdr);
+        Off filePos = sizeof(Ehdr);
         if (s && s->write((char*)&elfHeader, sizeof(Ehdr))) {
             return 1;
         }
@@ -510,11 +533,12 @@ private:
         }
         for(unsigned secIndex = 1; secIndex < sectionHeaders.size(); ++secIndex) {
             Shdr &shdr = sectionHeaders[secIndex];
-            if (alignFilePos(s, filePos, shdr.sh_addralign)) {
+            if (alignFilePos(s, filePos, static_cast<unsigned>(shdr.sh_addralign))) {
                 return 1;
             }
             shdr.sh_offset = filePos;
-            if (s && s->write(sectionData[secIndex].begin, shdr.sh_size)) {
+            if (s && s->write(sectionData[secIndex].begin, 
+                              static_cast<unsigned>(shdr.sh_size))) {
                 return 1;
             }
             filePos += shdr.sh_size;
@@ -716,7 +740,36 @@ struct FileAdapter : public ReadWriteAdapter {
 };
 #endif
 
-// MEMORY ADAPTER
+struct FragmentReadAdapter : ReadAdapter {
+    ReadAdapter& r;
+    Position const size;
+    Position const offset;
+
+    FragmentReadAdapter(ReadAdapter& r_,
+                        Position size_,
+                        Position offset_ = 0)
+        : IOAdapter(r_.errs)
+        , ReadAdapter(r_.errs)
+        , r(r_), size(size_), offset(offset_) {}
+
+    virtual Position getPos() const {
+        return r.getPos() - offset;
+    }
+
+    virtual void setPos(Position p) {
+        r.setPos(p + offset);
+    }
+
+    virtual int pread(char* data, size_t numBytes, uint64_t ofs) const {
+        if (numBytes > size) {
+            errs << "reading beyond fragment end" << std::endl;
+            return 1;
+        }
+        return r.pread(data, numBytes, ofs + this->offset);
+    }
+
+    virtual Position getSize() const { return size; };
+};
 
 struct VectorAdapter : public ReadWriteAdapter {
     std::vector<char> &buf;
@@ -727,6 +780,9 @@ struct VectorAdapter : public ReadWriteAdapter {
         , buf(buf_)
         , pos(0)
     {
+    }
+    virtual Position getSize() const {
+      return buf.size();
     }
     virtual Position getPos() const { 
         return pos;
@@ -756,6 +812,8 @@ struct VectorAdapter : public ReadWriteAdapter {
     }
 };
 
+// MEMORY ADAPTER
+
 struct MemoryAdapter : public ReadWriteAdapter {
     char           *buf;
     size_t          bufSize;
@@ -768,6 +826,10 @@ struct MemoryAdapter : public ReadWriteAdapter {
         , pos(0)
     {
     }
+    virtual Position getSize() const {
+      return bufSize;
+    }
+
     virtual Position getPos() const { 
         return pos;
     }
@@ -893,12 +955,19 @@ std::unique_ptr<WriteAdapter> BrigIO::vectorWritingAdapter(
             new VectorAdapter(v, errs));
 }
 
+std::unique_ptr<ReadAdapter> BrigIO::fragmentReadingAdapter(
+                    ReadAdapter *r,
+                    IOAdapter::Position size,
+                    IOAdapter::Position offset) {
+    return std::unique_ptr<ReadAdapter>(
+            new FragmentReadAdapter(*r, size, offset));
+}
+
+
 int BrigIO::load(BrigContainer &dst,
                  int           fmt,
                  ReadAdapter&  src)
 {
-    if (validate(fmt, src)) return 1;
-
     unsigned char ident[16];
     if (0 != src.pread((char*)ident, 16, 0)) {
         return 1;
@@ -925,11 +994,24 @@ int BrigIO::save(BrigContainer &src,
                  int           fmt,
                  WriteAdapter& dst)
 {
-    if (fmt == FILE_FORMAT_BRIG) {
+    switch (fmt & FILE_FORMAT_MASK) {
+    case FILE_FORMAT_BRIG:
         return src.write(dst) ? 0 : 1;
-    } 
+    case FILE_FORMAT_BIF:
+        switch (fmt & ~FILE_FORMAT_MASK) {
+        case FILE_FORMAT_ELF32: {
     BrigIOImpl<Elf32Policy> impl(fmt);
     return impl.writeContainer(&dst, src);
+        }
+        case FILE_FORMAT_ELF64: {
+            BrigIOImpl<Elf64Policy> impl(fmt);
+            return impl.writeContainer(&dst, src);
+        }
+        default:;
+        }
+    default: assert(false && "unsupported format");
+    }
+    return 0;
 }
 
 // --------------------------------------------------------------------------------
@@ -945,23 +1027,18 @@ int BrigIO::save(BrigContainer &src,
 
 typedef map<uint64_t, uint64_t> ModuleMap;
 
-int BrigIO::validate(int            fmt,
-                     ReadAdapter&   fd)
+int BrigIO::validateBrigBlob(ReadAdapter&   fd)
 {
-    using namespace Brig;
-    Brig::BrigModuleHeader moduleHdr;
+    BrigModuleHeader moduleHdr;
     ModuleMap map;
-
-    if (fmt != FILE_FORMAT_AUTO && fmt != FILE_FORMAT_BRIG) return 0;
 
     uint64_t fileSize = (uint64_t)fd.getSize();
     VALIDATE(fileSize != (uint64_t)-1, "Filed to read file size");
 
-    VALIDATE(fileSize > sizeof(Brig::BrigModuleHeader), "File is too small for BRIG or ELF");
-    VALIDATE(fd.pread((char*)&moduleHdr, sizeof(Brig::BrigModuleHeader), 0) == 0, "Failed to read BrigModuleHeader");
+    VALIDATE(fileSize > sizeof(BrigModuleHeader), "File is too small for BRIG or ELF");
+    VALIDATE(fd.pread((char*)&moduleHdr, sizeof(BrigModuleHeader), 0) == 0, "Failed to read BrigModuleHeader");
 
-    if (memcmp("HSA BRIG", moduleHdr.identification, MODULE_IDENTIFICATION_LENGTH) != 0) {
-        if (fmt == FILE_FORMAT_AUTO) return 0;
+    if (memcmp("HSA BRIG", moduleHdr.identification, sizeof(moduleHdr.identification)) != 0) {
         VALIDATE(false, "Unsupported file format");
     }
 
@@ -972,13 +1049,14 @@ int BrigIO::validate(int            fmt,
     VALIDATE(moduleHdr.byteCount == fileSize,                       "Invalid BrigModuleHeader.size: must be equal to BRIG size");
     VALIDATE(moduleHdr.byteCount % MODULE_SIZE_ALIGNMENT == 0,      "Invalid BRIG module size: must be a multiple of " << MODULE_SIZE_ALIGNMENT);
     VALIDATE(moduleHdr.reserved == 0,                               "Invalid BrigModuleHeader.reserved: must be zero");
+    VALIDATE(secIdxSize > moduleHdr.sectionCount,                   "Invalid BrigModuleHeader.sectionCount: too large value"); // overflow
     VALIDATE(moduleHdr.sectionCount >= 3,                           "Invalid BrigModuleHeader.sectionCount: must be greater than or equal to 3");
     VALIDATE(moduleHdr.sectionIndex % MODULE_INDEX_ALIGNMENT == 0,  "Invalid BrigModuleHeader.sectionIndex: must be a multiple of " << MODULE_INDEX_ALIGNMENT);
     VALIDATE(moduleHdr.sectionIndex < fileSize,                     "Invalid BrigModuleHeader.sectionIndex: position of section index is outside of BRIG module");
     VALIDATE(secIdxSize <= fileSize - moduleHdr.sectionIndex,       "Invalid BrigModuleHeader.sectionIndex: section index does not fit into BRIG module");
 
-    map[0]                      = sizeof(Brig::BrigModuleHeader);
-    map[moduleHdr.sectionIndex] = moduleHdr.sectionCount * sizeof(uint64_t);
+    map[0]                      = sizeof(BrigModuleHeader);
+    map[moduleHdr.sectionIndex] = secIdxSize;
 
     uint64_t sectionSize;
     uint64_t sectionOffset;
@@ -1029,33 +1107,33 @@ uint64_t BrigIO::validateSection(ReadAdapter&    fd,
                                  uint64_t        sectionOffset,
                                  uint64_t        fileSize)
 {
-    Brig::BrigSectionHeader sectionHeader;
+    BrigSectionHeader sectionHeader;
 
     VALIDATE(sectionOffset % MODULE_SECTION_ALIGNMENT == 0,                                         "Invalid section offset: must be a multiple of " << MODULE_SECTION_ALIGNMENT);
     VALIDATE(sectionOffset < fileSize,                                                              "Invalid section offset: section offset is outside of BRIG module");
-    VALIDATE(fileSize - sectionOffset > sizeof(Brig::BrigSectionHeader),                            "Invalid section offset: section header does not fit into BRIG module");
-    VALIDATE(fd.pread((char*)&sectionHeader, sizeof(Brig::BrigSectionHeader), sectionOffset) == 0,  "Failed to read section header");
+    VALIDATE(fileSize - sectionOffset > sizeof(BrigSectionHeader),                            "Invalid section offset: section header does not fit into BRIG module");
+    VALIDATE(fd.pread((char*)&sectionHeader, sizeof(BrigSectionHeader), sectionOffset) == 0,  "Failed to read section header");
     VALIDATE(sectionHeader.byteCount % MODULE_SECTION_SIZE_ALIGNMENT == 0,                          "Invalid section size: must be a multiple of " << MODULE_SECTION_SIZE_ALIGNMENT);
     VALIDATE(fileSize - sectionOffset >= sectionHeader.byteCount,                                   "Invalid section size: section does not fit into BRIG module");
 
     VALIDATE(sectionHeader.headerByteCount % MODULE_SECTION_SIZE_ALIGNMENT == 0,                    "Invalid section header size: must be a multiple of " << MODULE_SECTION_SIZE_ALIGNMENT);
     VALIDATE(sectionHeader.headerByteCount <= sectionHeader.byteCount,                              "Invalid section header size: header size must not exceed section size");
 
-    VALIDATE(sectionHeader.headerByteCount - sizeof(Brig::BrigSectionHeader) >= sectionHeader.nameLength - 1, "Invalid section name: name does not fit into section header");
+    VALIDATE(sectionHeader.headerByteCount - sizeof(BrigSectionHeader) >= sectionHeader.nameLength - 1, "Invalid section name: name does not fit into section header");
 
     const char* name = 0;
     switch (sectionIndex)
     {
-    case Brig::BRIG_SECTION_INDEX_DATA:     name = "hsa_data";    break;
-    case Brig::BRIG_SECTION_INDEX_CODE:     name = "hsa_code";    break;
-    case Brig::BRIG_SECTION_INDEX_OPERAND:  name = "hsa_operand"; break;
+    case BRIG_SECTION_INDEX_DATA:     name = "hsa_data";    break;
+    case BRIG_SECTION_INDEX_CODE:     name = "hsa_code";    break;
+    case BRIG_SECTION_INDEX_OPERAND:  name = "hsa_operand"; break;
     }
 
-    if (strlen(name) > 0)
+    if (name && strlen(name) > 0)
     {
         assert(strlen(name) < MAX_PREDEFINED_SECTION_NAME_LENGTH);
         char buf[MAX_PREDEFINED_SECTION_NAME_LENGTH];
-        VALIDATE(fd.pread((char*)&buf, strlen(name), sectionOffset + offsetof(Brig::BrigSectionHeader, name)) == 0, "Failed to read section name");
+        VALIDATE(fd.pread((char*)&buf, strlen(name), sectionOffset + offsetof(BrigSectionHeader, name)) == 0, "Failed to read section name");
         VALIDATE(sectionHeader.nameLength == strlen(name) && memcmp(name, buf, strlen(name)) == 0, "Invalid name of a standard section");
     }
 

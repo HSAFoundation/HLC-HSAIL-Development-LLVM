@@ -1,7 +1,7 @@
 // University of Illinois/NCSA
 // Open Source License
 //
-// Copyright (c) 2013, Advanced Micro Devices, Inc.
+// Copyright (c) 2013-2015, Advanced Micro Devices, Inc.
 // All rights reserved.
 //
 // Developed by:
@@ -201,23 +201,23 @@ struct LosslessConvert {
         return static_cast<DstType>(static_cast<SgnDstType>(src));
     }
 
-    DstType visit(BrigTypeNF*, BrigType<Brig::BRIG_TYPE_B128>*) const {
+    DstType visit(BrigTypeNF*, BrigTypeTraits<BRIG_TYPE_B128>*) const {
         throw ConversionError("conversion of b128 not supported yet");
     }
 
-    DstType visit(BrigTypeNF*, BrigType<Brig::BRIG_TYPE_B1>*) const {
+    DstType visit(BrigTypeNF*, BrigTypeTraits<BRIG_TYPE_B1>*) const {
         return src!=0 ? 1 : 0;
     }
 
-    DstType visit(BrigTypeF*, BrigType<Brig::BRIG_TYPE_B128>*) const {
+    DstType visit(BrigTypeF*, BrigTypeTraits<BRIG_TYPE_B128>*) const {
         throw ConversionError("conversion not supported");
     }
-    DstType visit(BrigTypeF*, BrigType<Brig::BRIG_TYPE_B1>*) const {
+    DstType visit(BrigTypeF*, BrigTypeTraits<BRIG_TYPE_B1>*) const {
         throw ConversionError("conversion not supported");
     }
 
-    DstType visit(BrigType<Brig::BRIG_TYPE_B128>*, BrigTypeNF*) const { return convert<DstBrigType,SrcBrigType,StaticCastConvert>(src); }
-    DstType visit(BrigType<Brig::BRIG_TYPE_B128>*, BrigTypeS*)  const { return convert<DstBrigType,SrcBrigType,StaticCastConvert>(src); }
+    DstType visit(BrigTypeTraits<BRIG_TYPE_B128>*, BrigTypeNF*) const { return convert<DstBrigType,SrcBrigType,StaticCastConvert>(src); }
+    DstType visit(BrigTypeTraits<BRIG_TYPE_B128>*, BrigTypeS*)  const { return convert<DstBrigType,SrcBrigType,StaticCastConvert>(src); }
 
     DstType visit(...) const { // error for all the rest combinations of types
         throw ConversionError("invalid operand type");
@@ -250,13 +250,13 @@ struct ConvertImmediate {
     DstType visit(BrigTypeB*, BrigTypeNF*) const { return use<TruncateRuleConvert>(); }
 
     // b1 = int
-    DstType visit(BrigType<Brig::BRIG_TYPE_B1>*, BrigTypeNF*) const { return src!=0; }
+    DstType visit(BrigTypeTraits<BRIG_TYPE_B1>*, BrigTypeNF*) const { return src!=0; }
 
 
     // float = float
-    DstType visit(BrigType<Brig::BRIG_TYPE_F32>*, BrigType<Brig::BRIG_TYPE_F32>*) const { return src; }
-    DstType visit(BrigType<Brig::BRIG_TYPE_F64>*, BrigType<Brig::BRIG_TYPE_F64>*) const { return src; }
-    DstType visit(BrigType<Brig::BRIG_TYPE_F16>*, BrigType<Brig::BRIG_TYPE_F16>*) const { return src; }
+    DstType visit(BrigTypeTraits<BRIG_TYPE_F32>*, BrigTypeTraits<BRIG_TYPE_F32>*) const { return src; }
+    DstType visit(BrigTypeTraits<BRIG_TYPE_F64>*, BrigTypeTraits<BRIG_TYPE_F64>*) const { return src; }
+    DstType visit(BrigTypeTraits<BRIG_TYPE_F16>*, BrigTypeTraits<BRIG_TYPE_F16>*) const { return src; }
     DstType visit(BrigTypeF*, BrigTypeF*) const {
         // \todo this needs special handling of QNAN/SNAN during conversion
         typedef typename ::HSAIL_ASM::IEEE754Traits<DstType>::NativeType NativeType;

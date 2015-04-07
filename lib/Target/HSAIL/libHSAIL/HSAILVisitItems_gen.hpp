@@ -1,7 +1,7 @@
 // University of Illinois/NCSA
 // Open Source License
 //
-// Copyright (c) 2013, Advanced Micro Devices, Inc.
+// Copyright (c) 2013-2015, Advanced Micro Devices, Inc.
 // All rights reserved.
 //
 // Developed by:
@@ -40,7 +40,6 @@
 // SOFTWARE.
 template <typename RetType, typename Visitor>
 RetType dispatchByItemKind_gen(Code item,Visitor& vis) {
-	using namespace Brig;
 	switch(item.kind()) {
 	case BRIG_KIND_DIRECTIVE_ARG_BLOCK_END: return vis(DirectiveArgBlockEnd(item));
 	case BRIG_KIND_DIRECTIVE_ARG_BLOCK_START: return vis(DirectiveArgBlockStart(item));
@@ -83,7 +82,6 @@ RetType dispatchByItemKind_gen(Code item,Visitor& vis) {
 
 template <typename RetType, typename Visitor>
 RetType dispatchByItemKind_gen(Directive item,Visitor& vis) {
-	using namespace Brig;
 	switch(item.kind()) {
 	case BRIG_KIND_DIRECTIVE_ARG_BLOCK_END: return vis(DirectiveArgBlockEnd(item));
 	case BRIG_KIND_DIRECTIVE_ARG_BLOCK_START: return vis(DirectiveArgBlockStart(item));
@@ -108,7 +106,6 @@ RetType dispatchByItemKind_gen(Directive item,Visitor& vis) {
 
 template <typename RetType, typename Visitor>
 RetType dispatchByItemKind_gen(DirectiveExecutable item,Visitor& vis) {
-	using namespace Brig;
 	switch(item.kind()) {
 	case BRIG_KIND_DIRECTIVE_FUNCTION: return vis(DirectiveFunction(item));
 	case BRIG_KIND_DIRECTIVE_INDIRECT_FUNCTION: return vis(DirectiveIndirectFunction(item));
@@ -121,7 +118,6 @@ RetType dispatchByItemKind_gen(DirectiveExecutable item,Visitor& vis) {
 
 template <typename RetType, typename Visitor>
 RetType dispatchByItemKind_gen(Inst item,Visitor& vis) {
-	using namespace Brig;
 	switch(item.kind()) {
 	case BRIG_KIND_INST_ADDR: return vis(InstAddr(item));
 	case BRIG_KIND_INST_ATOMIC: return vis(InstAtomic(item));
@@ -148,7 +144,6 @@ RetType dispatchByItemKind_gen(Inst item,Visitor& vis) {
 
 template <typename RetType, typename Visitor>
 RetType dispatchByItemKind_gen(Operand item,Visitor& vis) {
-	using namespace Brig;
 	switch(item.kind()) {
 	case BRIG_KIND_OPERAND_ADDRESS: return vis(OperandAddress(item));
 	case BRIG_KIND_OPERAND_ALIGN: return vis(OperandAlign(item));

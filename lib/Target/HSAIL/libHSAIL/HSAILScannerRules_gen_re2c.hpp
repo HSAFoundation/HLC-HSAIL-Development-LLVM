@@ -2,7 +2,7 @@
 // University of Illinois/NCSA
 // Open Source License
 //
-// Copyright (c) 2013, Advanced Micro Devices, Inc.
+// Copyright (c) 2013-2015, Advanced Micro Devices, Inc.
 // All rights reserved.
 //
 // Developed by:
@@ -789,7 +789,7 @@ yy74:
 yy75:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_B8; return EMType; }
+    { brigId = BRIG_TYPE_B8; return EMType;    }
 yy77:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -861,7 +861,7 @@ yy77:
 yy78:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_B64; return EMType; }
+    { brigId = BRIG_TYPE_B64; return EMType;   }
 yy80:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -933,7 +933,7 @@ yy80:
 yy81:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_B32; return EMType; }
+    { brigId = BRIG_TYPE_B32; return EMType;   }
 yy83:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -1011,7 +1011,7 @@ yy84:
 yy85:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_B1; return EMType; }
+    { brigId = BRIG_TYPE_B1; return EMType;    }
 yy87:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -1083,11 +1083,11 @@ yy87:
 yy88:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_B128; return EMType; }
+    { brigId = BRIG_TYPE_B128; return EMType;  }
 yy90:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_B16; return EMType; }
+    { brigId = BRIG_TYPE_B16; return EMType;   }
 yy92:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -1307,11 +1307,11 @@ yy96:
 yy97:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_GT; return EMCompare; }
+    { brigId = BRIG_COMPARE_GT; return EMCompare; }
 yy99:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_GTU; return EMCompare; }
+    { brigId = BRIG_COMPARE_GTU; return EMCompare; }
 yy101:
     yych = *++curPos;
     switch (yych) {
@@ -1396,7 +1396,7 @@ yy104:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_GROUP; return EMSegment;
+	case EInstModifierContext: brigId = BRIG_SEGMENT_GROUP; return EMSegment;
 	default: return EEmpty; } }
 yy106:
     yych = *++curPos;
@@ -1488,7 +1488,7 @@ yy110:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_GLOBAL; return EMSegment;
+	case EInstModifierContext: brigId = BRIG_SEGMENT_GLOBAL; return EMSegment;
 	default: return EEmpty; } }
 yy112:
     ctxMarker = curPos + 1;
@@ -1561,11 +1561,11 @@ yy112:
 yy113:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_GE; return EMCompare; }
+    { brigId = BRIG_COMPARE_GE; return EMCompare; }
 yy115:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_GEU; return EMCompare; }
+    { brigId = BRIG_COMPARE_GEU; return EMCompare; }
 yy117:
     yych = *++curPos;
     switch (yych) {
@@ -1668,7 +1668,7 @@ yy123:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_KERNARG; return EMSegment;
+	case EInstModifierContext: brigId = BRIG_SEGMENT_KERNARG; return EMSegment;
 	default: return EEmpty; } }
 yy125:
     ctxMarker = curPos + 1;
@@ -1945,11 +1945,11 @@ yy128:
 yy129:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_LT; return EMCompare; }
+    { brigId = BRIG_COMPARE_LT; return EMCompare; }
 yy131:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_LTU; return EMCompare; }
+    { brigId = BRIG_COMPARE_LTU; return EMCompare; }
 yy133:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -2021,16 +2021,16 @@ yy133:
 yy134:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_LE; return EMCompare; }
+    { brigId = BRIG_COMPARE_LE; return EMCompare; }
 yy136:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_LEU; return EMCompare; }
+    { brigId = BRIG_COMPARE_LEU; return EMCompare; }
 yy138:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_LD; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_LD; return EMAtomicOp;
 	default: return EEmpty; } }
 yy140:
     yych = *++curPos;
@@ -2116,7 +2116,7 @@ yy143:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_MIN; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_MIN; return EMAtomicOp;
 	default: return EEmpty; } }
 yy145:
     ctxMarker = curPos + 1;
@@ -2190,7 +2190,7 @@ yy146:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_MAX; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_MAX; return EMAtomicOp;
 	default: return EEmpty; } }
 yy148:
     ctxMarker = curPos + 1;
@@ -2264,13 +2264,13 @@ yy149:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_OR; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_OR; return EMAtomicOp;
 	default: return EEmpty; } }
 yy151:
     ++curPos;
 yy152:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_P; return EMPacking; }
+    { brigId = BRIG_PACK_P; return EMPacking;  }
 yy153:
     yyaccept = 1;
     yych = *(marker = ++curPos);
@@ -2431,7 +2431,7 @@ yy157:
     }
 yy158:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_PS; return EMPacking; }
+    { brigId = BRIG_PACK_PS; return EMPacking; }
 yy159:
     yych = *++curPos;
     goto yy158;
@@ -2518,7 +2518,7 @@ yy162:
 yy163:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_PSSAT; return EMPacking; }
+    { brigId = BRIG_PACK_PSSAT; return EMPacking; }
 yy165:
     yych = *++curPos;
     switch (yych) {
@@ -2615,7 +2615,7 @@ yy170:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_PRIVATE; return EMSegment;
+	case EInstModifierContext: brigId = BRIG_SEGMENT_PRIVATE; return EMSegment;
 	default: return EEmpty; } }
 yy172:
     yyaccept = 3;
@@ -2626,7 +2626,7 @@ yy172:
     }
 yy173:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_PP; return EMPacking; }
+    { brigId = BRIG_PACK_PP; return EMPacking; }
 yy174:
     yych = *++curPos;
     goto yy173;
@@ -2713,7 +2713,7 @@ yy177:
 yy178:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_PPSAT; return EMPacking; }
+    { brigId = BRIG_PACK_PPSAT; return EMPacking; }
 yy180:
     yych = *++curPos;
     switch (yych) {
@@ -2797,12 +2797,12 @@ yy182:
 yy183:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_PSAT; return EMPacking; }
+    { brigId = BRIG_PACK_PSAT; return EMPacking; }
 yy185:
     ++curPos;
 yy186:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_S; return EMPacking; }
+    { brigId = BRIG_PACK_S; return EMPacking;  }
 yy187:
     yyaccept = 4;
     yych = *(marker = ++curPos);
@@ -3270,7 +3270,7 @@ yy210:
     }
 yy211:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALING_ZERO; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_SIGNALING_ZERO; return EMRound; }
 yy212:
     yych = *++curPos;
     goto yy211;
@@ -3357,7 +3357,7 @@ yy215:
 yy216:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALING_ZERO_SAT; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_SIGNALING_ZERO_SAT; return EMRound; }
 yy218:
     yych = *++curPos;
     switch (yych) {
@@ -3447,7 +3447,7 @@ yy221:
 yy222:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_SCOPE_SYSTEM; return EMMemoryScope; }
+    { brigId = BRIG_MEMORY_SCOPE_SYSTEM; return EMMemoryScope; }
 yy224:
     yych = *++curPos;
     switch (yych) {
@@ -3526,7 +3526,7 @@ yy226:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_SUB; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_SUB; return EMAtomicOp;
 	default: return EEmpty; } }
 yy228:
     ctxMarker = curPos + 1;
@@ -3606,7 +3606,7 @@ yy229:
     }
 yy230:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALING_PLUS_INFINITY; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_SIGNALING_PLUS_INFINITY; return EMRound; }
 yy231:
     yych = *++curPos;
     goto yy230;
@@ -3693,12 +3693,12 @@ yy234:
 yy235:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALING_PLUS_INFINITY_SAT; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_SIGNALING_PLUS_INFINITY_SAT; return EMRound; }
 yy237:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_ST; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_ST; return EMAtomicOp;
 	default: return EEmpty; } }
 yy239:
     yyaccept = 7;
@@ -3709,7 +3709,7 @@ yy239:
     }
 yy240:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_SS; return EMPacking; }
+    { brigId = BRIG_PACK_SS; return EMPacking; }
 yy241:
     yych = *++curPos;
     goto yy240;
@@ -3796,7 +3796,7 @@ yy244:
 yy245:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_SSSAT; return EMPacking; }
+    { brigId = BRIG_PACK_SSSAT; return EMPacking; }
 yy247:
     yych = *++curPos;
     switch (yych) {
@@ -3812,7 +3812,7 @@ yy248:
     }
 yy249:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_SP; return EMPacking; }
+    { brigId = BRIG_PACK_SP; return EMPacking; }
 yy250:
     yych = *++curPos;
     goto yy249;
@@ -3899,7 +3899,7 @@ yy253:
 yy254:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_SPSAT; return EMPacking; }
+    { brigId = BRIG_PACK_SPSAT; return EMPacking; }
 yy256:
     yych = *++curPos;
     switch (yych) {
@@ -3978,7 +3978,7 @@ yy258:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_SPILL; return EMSegment;
+	case EInstModifierContext: brigId = BRIG_SEGMENT_SPILL; return EMSegment;
 	default: return EEmpty; } }
 yy260:
     yych = *++curPos;
@@ -4131,11 +4131,11 @@ yy263:
 yy264:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SNAN; return EMCompare; }
+    { brigId = BRIG_COMPARE_SNAN; return EMCompare; }
 yy266:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SNE; return EMCompare; }
+    { brigId = BRIG_COMPARE_SNE; return EMCompare; }
 yy268:
     yych = *++curPos;
     switch (yych) {
@@ -4213,7 +4213,7 @@ yy269:
 yy270:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SNEU; return EMCompare; }
+    { brigId = BRIG_COMPARE_SNEU; return EMCompare; }
 yy272:
     yych = *++curPos;
     switch (yych) {
@@ -4298,7 +4298,7 @@ yy274:
     }
 yy275:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALING_NEAR_EVEN; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_SIGNALING_NEAR_EVEN; return EMRound; }
 yy276:
     yych = *++curPos;
     goto yy275;
@@ -4385,7 +4385,7 @@ yy279:
 yy280:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALING_NEAR_EVEN_SAT; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_SIGNALING_NEAR_EVEN_SAT; return EMRound; }
 yy282:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -4457,7 +4457,7 @@ yy282:
 yy283:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SNUM; return EMCompare; }
+    { brigId = BRIG_COMPARE_SNUM; return EMCompare; }
 yy285:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -4597,7 +4597,7 @@ yy286:
 yy287:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SLE; return EMCompare; }
+    { brigId = BRIG_COMPARE_SLE; return EMCompare; }
 yy289:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -4669,11 +4669,11 @@ yy289:
 yy290:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SLEU; return EMCompare; }
+    { brigId = BRIG_COMPARE_SLEU; return EMCompare; }
 yy292:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SLT; return EMCompare; }
+    { brigId = BRIG_COMPARE_SLT; return EMCompare; }
 yy294:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -4745,7 +4745,7 @@ yy294:
 yy295:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SLTU; return EMCompare; }
+    { brigId = BRIG_COMPARE_SLTU; return EMCompare; }
 yy297:
     yych = *++curPos;
     switch (yych) {
@@ -4836,7 +4836,7 @@ yy300:
 yy301:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_SIG64; return EMType; }
+    { brigId = BRIG_TYPE_SIG64; return EMType; }
 yy303:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -4908,7 +4908,7 @@ yy303:
 yy304:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_SIG32; return EMType; }
+    { brigId = BRIG_TYPE_SIG32; return EMType; }
 yy306:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -5048,7 +5048,7 @@ yy307:
 yy308:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SGE; return EMCompare; }
+    { brigId = BRIG_COMPARE_SGE; return EMCompare; }
 yy310:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -5120,11 +5120,11 @@ yy310:
 yy311:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SGEU; return EMCompare; }
+    { brigId = BRIG_COMPARE_SGEU; return EMCompare; }
 yy313:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SGT; return EMCompare; }
+    { brigId = BRIG_COMPARE_SGT; return EMCompare; }
 yy315:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -5196,7 +5196,7 @@ yy315:
 yy316:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SGTU; return EMCompare; }
+    { brigId = BRIG_COMPARE_SGTU; return EMCompare; }
 yy318:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -5268,7 +5268,7 @@ yy318:
 yy319:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SEQ; return EMCompare; }
+    { brigId = BRIG_COMPARE_SEQ; return EMCompare; }
 yy321:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -5340,7 +5340,7 @@ yy321:
 yy322:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_SEQU; return EMCompare; }
+    { brigId = BRIG_COMPARE_SEQU; return EMCompare; }
 yy324:
     yych = *++curPos;
     switch (yych) {
@@ -5437,7 +5437,7 @@ yy328:
     }
 yy329:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALING_MINUS_INFINITY; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_SIGNALING_MINUS_INFINITY; return EMRound; }
 yy330:
     yych = *++curPos;
     goto yy329;
@@ -5524,7 +5524,7 @@ yy333:
 yy334:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_SIGNALING_MINUS_INFINITY_SAT; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_SIGNALING_MINUS_INFINITY_SAT; return EMRound; }
 yy336:
     yych = *++curPos;
     switch (yych) {
@@ -5615,7 +5615,7 @@ yy339:
 yy340:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE; return EMMemoryOrder; }
+    { brigId = BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE; return EMMemoryOrder; }
 yy342:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -5687,7 +5687,7 @@ yy342:
 yy343:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE; return EMMemoryOrder; }
+    { brigId = BRIG_MEMORY_ORDER_SC_ACQUIRE; return EMMemoryOrder; }
 yy345:
     yych = *++curPos;
     switch (yych) {
@@ -5765,7 +5765,7 @@ yy346:
 yy347:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_ORDER_SC_RELEASE; return EMMemoryOrder; }
+    { brigId = BRIG_MEMORY_ORDER_SC_RELEASE; return EMMemoryOrder; }
 yy349:
     yych = *++curPos;
     switch (yych) {
@@ -5843,7 +5843,7 @@ yy350:
 yy351:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_SAMP; return EMType; }
+    { brigId = BRIG_TYPE_SAMP; return EMType;  }
 yy353:
     yych = *++curPos;
     switch (yych) {
@@ -5855,7 +5855,7 @@ yy353:
 yy354:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S8; return EMType; }
+    { brigId = BRIG_TYPE_S8; return EMType;    }
 yy356:
     yych = *++curPos;
     switch (yych) {
@@ -6001,11 +6001,11 @@ yy358:
 yy359:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S8X8; return EMType; }
+    { brigId = BRIG_TYPE_S8X8; return EMType;  }
 yy361:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S8X4; return EMType; }
+    { brigId = BRIG_TYPE_S8X4; return EMType;  }
 yy363:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -6077,7 +6077,7 @@ yy363:
 yy364:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S8X16; return EMType; }
+    { brigId = BRIG_TYPE_S8X16; return EMType; }
 yy366:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -6149,7 +6149,7 @@ yy366:
 yy367:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S64; return EMType; }
+    { brigId = BRIG_TYPE_S64; return EMType;   }
 yy369:
     yych = *++curPos;
     switch (yych) {
@@ -6227,7 +6227,7 @@ yy370:
 yy371:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S64X2; return EMType; }
+    { brigId = BRIG_TYPE_S64X2; return EMType; }
 yy373:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -6299,7 +6299,7 @@ yy373:
 yy374:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S32; return EMType; }
+    { brigId = BRIG_TYPE_S32; return EMType;   }
 yy376:
     yych = *++curPos;
     switch (yych) {
@@ -6446,11 +6446,11 @@ yy378:
 yy379:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S32X2; return EMType; }
+    { brigId = BRIG_TYPE_S32X2; return EMType; }
 yy381:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S32X4; return EMType; }
+    { brigId = BRIG_TYPE_S32X4; return EMType; }
 yy383:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -6522,7 +6522,7 @@ yy383:
 yy384:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S16; return EMType; }
+    { brigId = BRIG_TYPE_S16; return EMType;   }
 yy386:
     yych = *++curPos;
     switch (yych) {
@@ -6738,15 +6738,15 @@ yy389:
 yy390:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S16X2; return EMType; }
+    { brigId = BRIG_TYPE_S16X2; return EMType; }
 yy392:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S16X4; return EMType; }
+    { brigId = BRIG_TYPE_S16X4; return EMType; }
 yy394:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_S16X8; return EMType; }
+    { brigId = BRIG_TYPE_S16X8; return EMType; }
 yy396:
     yych = *++curPos;
     switch (yych) {
@@ -6830,7 +6830,7 @@ yy398:
 yy399:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_PACK_SSAT; return EMPacking; }
+    { brigId = BRIG_PACK_SSAT; return EMPacking; }
 yy401:
     yych = *++curPos;
     switch (yych) {
@@ -7057,12 +7057,12 @@ yy406:
 yy407:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_FLOAT_PLUS_INFINITY; return EMRound; }
+    { brigId = BRIG_ROUND_FLOAT_PLUS_INFINITY; return EMRound; }
 yy409:
     ++curPos;
 yy410:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_PLUS_INFINITY; return EMRound; }
 yy411:
     yyaccept = 11;
     yych = *(marker = ++curPos);
@@ -7153,7 +7153,7 @@ yy414:
 yy415:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_PLUS_INFINITY_SAT; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_PLUS_INFINITY_SAT; return EMRound; }
 yy417:
     yych = *++curPos;
     switch (yych) {
@@ -7165,7 +7165,7 @@ yy417:
 yy418:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U8; return EMType; }
+    { brigId = BRIG_TYPE_U8; return EMType;    }
 yy420:
     yych = *++curPos;
     switch (yych) {
@@ -7311,11 +7311,11 @@ yy422:
 yy423:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U8X8; return EMType; }
+    { brigId = BRIG_TYPE_U8X8; return EMType;  }
 yy425:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U8X4; return EMType; }
+    { brigId = BRIG_TYPE_U8X4; return EMType;  }
 yy427:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -7387,7 +7387,7 @@ yy427:
 yy428:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U8X16; return EMType; }
+    { brigId = BRIG_TYPE_U8X16; return EMType; }
 yy430:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -7459,7 +7459,7 @@ yy430:
 yy431:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U64; return EMType; }
+    { brigId = BRIG_TYPE_U64; return EMType;   }
 yy433:
     yych = *++curPos;
     switch (yych) {
@@ -7537,7 +7537,7 @@ yy434:
 yy435:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U64X2; return EMType; }
+    { brigId = BRIG_TYPE_U64X2; return EMType; }
 yy437:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -7609,7 +7609,7 @@ yy437:
 yy438:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U32; return EMType; }
+    { brigId = BRIG_TYPE_U32; return EMType;   }
 yy440:
     yych = *++curPos;
     switch (yych) {
@@ -7756,11 +7756,11 @@ yy442:
 yy443:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U32X2; return EMType; }
+    { brigId = BRIG_TYPE_U32X2; return EMType; }
 yy445:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U32X4; return EMType; }
+    { brigId = BRIG_TYPE_U32X4; return EMType; }
 yy447:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -7832,7 +7832,7 @@ yy447:
 yy448:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U16; return EMType; }
+    { brigId = BRIG_TYPE_U16; return EMType;   }
 yy450:
     yych = *++curPos;
     switch (yych) {
@@ -8048,15 +8048,15 @@ yy453:
 yy454:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U16X2; return EMType; }
+    { brigId = BRIG_TYPE_U16X2; return EMType; }
 yy456:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U16X4; return EMType; }
+    { brigId = BRIG_TYPE_U16X4; return EMType; }
 yy458:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_U16X8; return EMType; }
+    { brigId = BRIG_TYPE_U16X8; return EMType; }
 yy460:
     yych = *++curPos;
     switch (yych) {
@@ -8135,7 +8135,7 @@ yy462:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_XOR; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_XOR; return EMAtomicOp;
 	default: return EEmpty; } }
 yy464:
     yych = *++curPos;
@@ -8289,12 +8289,12 @@ yy467:
 yy468:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_FLOAT_ZERO; return EMRound; }
+    { brigId = BRIG_ROUND_FLOAT_ZERO; return EMRound; }
 yy470:
     ++curPos;
 yy471:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_ZERO; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_ZERO; return EMRound; }
 yy472:
     yyaccept = 12;
     yych = *(marker = ++curPos);
@@ -8385,7 +8385,7 @@ yy475:
 yy476:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_ZERO_SAT; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_ZERO_SAT; return EMRound; }
 yy478:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -8593,15 +8593,15 @@ yy480:
 yy481:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_GEOMETRY_1D;  return EMGeom; }
+    { brigId = BRIG_GEOMETRY_1D;  return EMGeom; }
 yy483:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_GEOMETRY_1DB; return EMGeom; }
+    { brigId = BRIG_GEOMETRY_1DB; return EMGeom; }
 yy485:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_GEOMETRY_1DA; return EMGeom; }
+    { brigId = BRIG_GEOMETRY_1DA; return EMGeom; }
 yy487:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -8673,7 +8673,7 @@ yy487:
 yy488:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_GEOMETRY_3D;  return EMGeom; }
+    { brigId = BRIG_GEOMETRY_3D;  return EMGeom; }
 yy490:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -8819,7 +8819,7 @@ yy492:
 yy493:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_GEOMETRY_2D;  return EMGeom; }
+    { brigId = BRIG_GEOMETRY_2D;  return EMGeom; }
 yy495:
     yych = *++curPos;
     switch (yych) {
@@ -8909,11 +8909,11 @@ yy498:
 yy499:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_GEOMETRY_2DDEPTH; return EMGeom; }
+    { brigId = BRIG_GEOMETRY_2DDEPTH; return EMGeom; }
 yy501:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_GEOMETRY_2DA; return EMGeom; }
+    { brigId = BRIG_GEOMETRY_2DA; return EMGeom; }
 yy503:
     yych = *++curPos;
     switch (yych) {
@@ -9009,7 +9009,7 @@ yy507:
 yy508:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_GEOMETRY_2DADEPTH; return EMGeom; }
+    { brigId = BRIG_GEOMETRY_2DADEPTH; return EMGeom; }
 yy510:
     yych = *++curPos;
     switch (yych) {
@@ -9105,7 +9105,7 @@ yy514:
 yy515:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_IMAGE_QUERY_HEIGHT;       return EMImageQuery; }
+    { brigId = BRIG_IMAGE_QUERY_HEIGHT;       return EMImageQuery; }
 yy517:
     yych = *++curPos;
     switch (yych) {
@@ -9201,7 +9201,7 @@ yy521:
 yy522:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_IMAGE_QUERY_DEPTH;        return EMImageQuery; }
+    { brigId = BRIG_IMAGE_QUERY_DEPTH;        return EMImageQuery; }
 yy524:
     yych = *++curPos;
     switch (yych) {
@@ -9348,12 +9348,12 @@ yy526:
 yy527:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_FLOAT_MINUS_INFINITY; return EMRound; }
+    { brigId = BRIG_ROUND_FLOAT_MINUS_INFINITY; return EMRound; }
 yy529:
     ++curPos;
 yy530:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_MINUS_INFINITY; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_MINUS_INFINITY; return EMRound; }
 yy531:
     yyaccept = 13;
     yych = *(marker = ++curPos);
@@ -9444,7 +9444,7 @@ yy534:
 yy535:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_MINUS_INFINITY_SAT; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_MINUS_INFINITY_SAT; return EMRound; }
 yy537:
     yych = *++curPos;
     switch (yych) {
@@ -9622,7 +9622,7 @@ yy545:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-                      case EInstModifierInstQueryContext: brigId = Brig::BRIG_IMAGE_QUERY_WIDTH; return EMImageQuery;
+                      case EInstModifierInstQueryContext: brigId = BRIG_IMAGE_QUERY_WIDTH; return EMImageQuery;
                       default:                            brigId = 0;                            return EMWidth;
                       }
                     }
@@ -9729,7 +9729,7 @@ yy553:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WRAPDEC; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_WRAPDEC; return EMAtomicOp;
 	default: return EEmpty; } }
 yy555:
     yych = *++curPos;
@@ -9809,7 +9809,7 @@ yy557:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WRAPINC; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_WRAPINC; return EMAtomicOp;
 	default: return EEmpty; } }
 yy559:
     yych = *++curPos;
@@ -9894,11 +9894,11 @@ yy561:
 yy562:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_WOIMG; return EMType; }
+    { brigId = BRIG_TYPE_WOIMG; return EMType; }
 yy564:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_SCOPE_WORKGROUP; return EMMemoryScope; }
+    { brigId = BRIG_MEMORY_SCOPE_WORKGROUP; return EMMemoryScope; }
 yy566:
     yych = *++curPos;
     switch (yych) {
@@ -10029,7 +10029,7 @@ yy576:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAIT_NE; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_WAIT_NE; return EMAtomicOp;
 	default: return EEmpty; } }
 yy578:
     ctxMarker = curPos + 1;
@@ -10103,7 +10103,7 @@ yy579:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAIT_LT; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_WAIT_LT; return EMAtomicOp;
 	default: return EEmpty; } }
 yy581:
     yych = *++curPos;
@@ -10183,7 +10183,7 @@ yy583:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAIT_GTE; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_WAIT_GTE; return EMAtomicOp;
 	default: return EEmpty; } }
 yy585:
     ctxMarker = curPos + 1;
@@ -10257,7 +10257,7 @@ yy586:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAIT_EQ; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_WAIT_EQ; return EMAtomicOp;
 	default: return EEmpty; } }
 yy588:
     yych = *++curPos;
@@ -10400,7 +10400,7 @@ yy600:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAITTIMEOUT_EQ; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_WAITTIMEOUT_EQ; return EMAtomicOp;
 	default: return EEmpty; } }
 yy602:
     yych = *++curPos;
@@ -10480,7 +10480,7 @@ yy604:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAITTIMEOUT_GTE; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_WAITTIMEOUT_GTE; return EMAtomicOp;
 	default: return EEmpty; } }
 yy606:
     ctxMarker = curPos + 1;
@@ -10554,7 +10554,7 @@ yy607:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAITTIMEOUT_LT; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_WAITTIMEOUT_LT; return EMAtomicOp;
 	default: return EEmpty; } }
 yy609:
     ctxMarker = curPos + 1;
@@ -10628,7 +10628,7 @@ yy610:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_WAITTIMEOUT_NE; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_WAITTIMEOUT_NE; return EMAtomicOp;
 	default: return EEmpty; } }
 yy612:
     ctxMarker = curPos + 1;
@@ -10701,7 +10701,7 @@ yy612:
 yy613:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_SCOPE_WAVEFRONT; return EMMemoryScope; }
+    { brigId = BRIG_MEMORY_SCOPE_WAVEFRONT; return EMMemoryScope; }
 yy615:
     yych = *++curPos;
     switch (yych) {
@@ -10895,7 +10895,7 @@ yy627:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_ARG; return EMSegment;
+	case EInstModifierContext: brigId = BRIG_SEGMENT_ARG; return EMSegment;
 	default: return EEmpty; } }
 yy629:
     yych = *++curPos;
@@ -10974,7 +10974,7 @@ yy630:
 yy631:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_IMAGE_QUERY_ARRAY;        return EMImageQuery; }
+    { brigId = BRIG_IMAGE_QUERY_ARRAY;        return EMImageQuery; }
 yy633:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -11047,7 +11047,7 @@ yy634:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_AND; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_AND; return EMAtomicOp;
 	default: return EEmpty; } }
 yy636:
     yych = *++curPos;
@@ -11132,7 +11132,7 @@ yy638:
 yy639:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_SCOPE_AGENT; return EMMemoryScope; }
+    { brigId = BRIG_MEMORY_SCOPE_AGENT; return EMMemoryScope; }
 yy641:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -11205,7 +11205,7 @@ yy642:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_ADD; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_ADD; return EMAtomicOp;
 	default: return EEmpty; } }
 yy644:
     yych = *++curPos;
@@ -11314,7 +11314,7 @@ yy650:
 yy651:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_SAMPLER_QUERY_ADDRESSING; return EMSamplerQuery; }
+    { brigId = BRIG_SAMPLER_QUERY_ADDRESSING; return EMSamplerQuery; }
 yy653:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -11683,7 +11683,7 @@ yy666:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_EXCH; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_EXCH; return EMAtomicOp;
 	default: return EEmpty; } }
 yy668:
     ctxMarker = curPos + 1;
@@ -11756,11 +11756,11 @@ yy668:
 yy669:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_EQ; return EMCompare; }
+    { brigId = BRIG_COMPARE_EQ; return EMCompare; }
 yy671:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_EQU; return EMCompare; }
+    { brigId = BRIG_COMPARE_EQU; return EMCompare; }
 yy673:
     yych = *++curPos;
     switch (yych) {
@@ -12030,7 +12030,7 @@ yy688:
 yy689:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_SAMPLER_QUERY_FILTER; return EMSamplerQuery; }
+    { brigId = BRIG_SAMPLER_QUERY_FILTER; return EMSamplerQuery; }
 yy691:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -12102,7 +12102,7 @@ yy691:
 yy692:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F64; return EMType; }
+    { brigId = BRIG_TYPE_F64; return EMType;   }
 yy694:
     yych = *++curPos;
     switch (yych) {
@@ -12180,7 +12180,7 @@ yy695:
 yy696:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F64X2; return EMType; }
+    { brigId = BRIG_TYPE_F64X2; return EMType; }
 yy698:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -12252,7 +12252,7 @@ yy698:
 yy699:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F32; return EMType; }
+    { brigId = BRIG_TYPE_F32; return EMType;   }
 yy701:
     yych = *++curPos;
     switch (yych) {
@@ -12399,11 +12399,11 @@ yy703:
 yy704:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F32X2; return EMType; }
+    { brigId = BRIG_TYPE_F32X2; return EMType; }
 yy706:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F32X4; return EMType; }
+    { brigId = BRIG_TYPE_F32X4; return EMType; }
 yy708:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -12475,7 +12475,7 @@ yy708:
 yy709:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F16; return EMType; }
+    { brigId = BRIG_TYPE_F16; return EMType;   }
 yy711:
     yych = *++curPos;
     switch (yych) {
@@ -12691,15 +12691,15 @@ yy714:
 yy715:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F16X2; return EMType; }
+    { brigId = BRIG_TYPE_F16X2; return EMType; }
 yy717:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F16X4; return EMType; }
+    { brigId = BRIG_TYPE_F16X4; return EMType; }
 yy719:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_F16X8; return EMType; }
+    { brigId = BRIG_TYPE_F16X8; return EMType; }
 yy721:
     yych = *++curPos;
     switch (yych) {
@@ -12808,7 +12808,7 @@ yy727:
 yy728:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_RWIMG; return EMType; }
+    { brigId = BRIG_TYPE_RWIMG; return EMType; }
 yy730:
     yych = *++curPos;
     switch (yych) {
@@ -12892,7 +12892,7 @@ yy732:
 yy733:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_TYPE_ROIMG; return EMType; }
+    { brigId = BRIG_TYPE_ROIMG; return EMType; }
 yy735:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -12964,7 +12964,7 @@ yy735:
 yy736:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_ORDER_RELAXED; return EMMemoryOrder; }
+    { brigId = BRIG_MEMORY_ORDER_RELAXED; return EMMemoryOrder; }
 yy738:
     yych = *++curPos;
     switch (yych) {
@@ -13073,7 +13073,7 @@ yy745:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_READONLY; return EMSegment;
+	case EInstModifierContext: brigId = BRIG_SEGMENT_READONLY; return EMSegment;
 	default: return EEmpty; } }
 yy747:
     yych = *++curPos;
@@ -13159,7 +13159,7 @@ yy750:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierContext: brigId = Brig::BRIG_SEGMENT_AMD_GCN; return EMSegment;
+	case EInstModifierContext: brigId = BRIG_SEGMENT_AMD_GCN; return EMSegment;
 	default: return EEmpty; } }
 yy752:
     yych = *++curPos;
@@ -13306,7 +13306,7 @@ yy764:
 yy765:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_IMAGE_QUERY_CHANNELTYPE;  return EMImageQuery; }
+    { brigId = BRIG_IMAGE_QUERY_CHANNELTYPE;  return EMImageQuery; }
 yy767:
     yych = *++curPos;
     switch (yych) {
@@ -13396,7 +13396,7 @@ yy770:
 yy771:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_IMAGE_QUERY_CHANNELORDER; return EMImageQuery; }
+    { brigId = BRIG_IMAGE_QUERY_CHANNELORDER; return EMImageQuery; }
 yy773:
     yych = *++curPos;
     switch (yych) {
@@ -13486,7 +13486,7 @@ yy776:
 yy777:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_SAMPLER_QUERY_COORD; return EMSamplerQuery; }
+    { brigId = BRIG_SAMPLER_QUERY_COORD; return EMSamplerQuery; }
 yy779:
     yych = *++curPos;
     switch (yych) {
@@ -13564,7 +13564,7 @@ yy780:
 yy781:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_MEMORY_CONST;      return EMConst;   }
+    { brigId = BRIG_MEMORY_CONST;      return EMConst;   }
 yy783:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -13637,7 +13637,7 @@ yy784:
     ++curPos;
     curPos = ctxMarker;
     { switch(ctx) {
-	case EInstModifierInstAtomicContext: brigId = Brig::BRIG_ATOMIC_CAS; return EMAtomicOp;
+	case EInstModifierInstAtomicContext: brigId = BRIG_ATOMIC_CAS; return EMAtomicOp;
 	default: return EEmpty; } }
 yy786:
     yych = *++curPos;
@@ -13814,7 +13814,7 @@ yy793:
 yy794:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_SEG_CVT_NONULL;    return EMNoNull;  }
+    { brigId = BRIG_SEG_CVT_NONULL;    return EMNoNull;  }
 yy796:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -13886,7 +13886,7 @@ yy796:
 yy797:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_NUM; return EMCompare; }
+    { brigId = BRIG_COMPARE_NUM; return EMCompare; }
 yy799:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -13964,7 +13964,7 @@ yy800:
 yy801:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_NE; return EMCompare; }
+    { brigId = BRIG_COMPARE_NE; return EMCompare; }
 yy803:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -14105,12 +14105,12 @@ yy804:
 yy805:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_FLOAT_NEAR_EVEN; return EMRound; }
+    { brigId = BRIG_ROUND_FLOAT_NEAR_EVEN; return EMRound; }
 yy807:
     ++curPos;
 yy808:
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_NEAR_EVEN; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_NEAR_EVEN; return EMRound; }
 yy809:
     yyaccept = 14;
     yych = *(marker = ++curPos);
@@ -14201,11 +14201,11 @@ yy812:
 yy813:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_ROUND_INTEGER_NEAR_EVEN_SAT; return EMRound; }
+    { brigId = BRIG_ROUND_INTEGER_NEAR_EVEN_SAT; return EMRound; }
 yy815:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_NEU; return EMCompare; }
+    { brigId = BRIG_COMPARE_NEU; return EMCompare; }
 yy817:
     ctxMarker = curPos + 1;
     yych = *++curPos;
@@ -14277,7 +14277,7 @@ yy817:
 yy818:
     ++curPos;
     curPos = ctxMarker;
-    { brigId = Brig::BRIG_COMPARE_NAN; return EMCompare; }
+    { brigId = BRIG_COMPARE_NAN; return EMCompare; }
 }
 
 }
@@ -16578,7 +16578,7 @@ yy995:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_XOR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_XOR; return EInstruction;
 	default: return EEmpty; } }
 yy997:
         yych = *++curPos;
@@ -16670,7 +16670,7 @@ yy1001:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_TRUNC; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_TRUNC; return EInstruction;
 	default: return EEmpty; } }
 yy1003:
         yych = *++curPos;
@@ -16799,7 +16799,7 @@ yy1013:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_QUERYIMAGE; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_QUERYIMAGE; return EInstruction;
 	default: return EEmpty; } }
 yy1015:
         yych = *++curPos;
@@ -16903,7 +16903,7 @@ yy1021:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_QUERYSAMPLER; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_QUERYSAMPLER; return EInstruction;
 	default: return EEmpty; } }
 yy1023:
         ctxMarker = curPos + 1;
@@ -16977,7 +16977,7 @@ yy1024:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_OR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_OR; return EInstruction;
 	default: return EEmpty; } }
 yy1026:
         yych = *++curPos;
@@ -17087,7 +17087,7 @@ yy1033:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_JOINFBAR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_JOINFBAR; return EInstruction;
 	default: return EEmpty; } }
 yy1035:
         ctxMarker = curPos + 1;
@@ -17161,7 +17161,7 @@ yy1035:
 yy1036:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_3D; return EImageGeometry; }
+        { brigId = BRIG_GEOMETRY_3D; return EImageGeometry; }
 yy1038:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -17234,7 +17234,7 @@ yy1038:
 yy1039:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_2D; return EImageGeometry; }
+        { brigId = BRIG_GEOMETRY_2D; return EImageGeometry; }
 yy1041:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -17400,7 +17400,7 @@ yy1046:
 yy1047:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_2DDEPTH; return EImageGeometry; }
+        { brigId = BRIG_GEOMETRY_2DDEPTH; return EImageGeometry; }
 yy1049:
         yych = *++curPos;
         switch (yych) {
@@ -17410,7 +17410,7 @@ yy1049:
 yy1050:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_2DA; return EImageGeometry; }
+        { brigId = BRIG_GEOMETRY_2DA; return EImageGeometry; }
 yy1052:
         yych = *++curPos;
         switch (yych) {
@@ -17501,7 +17501,7 @@ yy1055:
 yy1056:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_2DADEPTH; return EImageGeometry; }
+        { brigId = BRIG_GEOMETRY_2DADEPTH; return EImageGeometry; }
 yy1058:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -17574,7 +17574,7 @@ yy1058:
 yy1059:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_1D; return EImageGeometry; }
+        { brigId = BRIG_GEOMETRY_1D; return EImageGeometry; }
 yy1061:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -17716,11 +17716,11 @@ yy1062:
 yy1063:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_1DB; return EImageGeometry; }
+        { brigId = BRIG_GEOMETRY_1DB; return EImageGeometry; }
 yy1065:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_GEOMETRY_1DA; return EImageGeometry; }
+        { brigId = BRIG_GEOMETRY_1DA; return EImageGeometry; }
 yy1067:
         yych = *++curPos;
         switch (yych) {
@@ -17898,7 +17898,7 @@ yy1075:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_BGRA; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_BGRA; return EImageOrder;
 	default: return EEmpty; } }
 yy1077:
         yych = *++curPos;
@@ -17996,7 +17996,7 @@ yy1082:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BARRIER; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_BARRIER; return EInstruction;
 	default: return EEmpty; } }
 yy1084:
         yych = *++curPos;
@@ -18135,7 +18135,7 @@ yy1095:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITALIGN; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_BITALIGN; return EInstruction;
 	default: return EEmpty; } }
 yy1097:
         yych = *++curPos;
@@ -18239,7 +18239,7 @@ yy1103:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITEXTRACT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_BITEXTRACT; return EInstruction;
 	default: return EEmpty; } }
 yy1105:
         yych = *++curPos;
@@ -18337,7 +18337,7 @@ yy1110:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITINSERT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_BITINSERT; return EInstruction;
 	default: return EEmpty; } }
 yy1112:
         yych = *++curPos;
@@ -18423,7 +18423,7 @@ yy1115:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITMASK; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_BITMASK; return EInstruction;
 	default: return EEmpty; } }
 yy1117:
         yych = *++curPos;
@@ -18503,7 +18503,7 @@ yy1119:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITREV; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_BITREV; return EInstruction;
 	default: return EEmpty; } }
 yy1121:
         yych = *++curPos;
@@ -18601,7 +18601,7 @@ yy1126:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BITSELECT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_BITSELECT; return EInstruction;
 	default: return EEmpty; } }
 yy1128:
         yych = *++curPos;
@@ -18693,13 +18693,13 @@ yy1132:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BORROW; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_BORROW; return EInstruction;
 	default: return EEmpty; } }
 yy1134:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_BR; return EInstruction;
 	default: return EEmpty; } }
 yy1136:
         yych = *++curPos;
@@ -18809,7 +18809,7 @@ yy1143:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_BYTEALIGN; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_BYTEALIGN; return EInstruction;
 	default: return EEmpty; } }
 yy1145:
         yych = *++curPos;
@@ -18972,7 +18972,7 @@ yy1155:
 yy1156:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_ROUND_FLOAT_NEAR_EVEN; return EDefaultRound; }
+        { brigId = BRIG_ROUND_FLOAT_NEAR_EVEN; return EDefaultRound; }
 yy1158:
         yych = *++curPos;
         switch (yych) {
@@ -19057,7 +19057,7 @@ yy1160:
 yy1161:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_ROUND_FLOAT_ZERO;      return EDefaultRound; }
+        { brigId = BRIG_ROUND_FLOAT_ZERO;      return EDefaultRound; }
 yy1163:
         yych = *++curPos;
         switch (yych) {
@@ -19148,7 +19148,7 @@ yy1166:
 yy1167:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_MACHINE_LARGE; return ETargetMachine; }
+        { brigId = BRIG_MACHINE_LARGE; return ETargetMachine; }
 yy1169:
         yych = *++curPos;
         switch (yych) {
@@ -19233,7 +19233,7 @@ yy1171:
 yy1172:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_PROFILE_BASE; return ETargetProfile; }
+        { brigId = BRIG_PROFILE_BASE; return ETargetProfile; }
 yy1174:
         yych = *++curPos;
         switch (yych) {
@@ -19318,7 +19318,7 @@ yy1176:
 yy1177:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_PROFILE_FULL; return ETargetProfile; }
+        { brigId = BRIG_PROFILE_FULL; return ETargetProfile; }
 yy1179:
         yych = *++curPos;
         switch (yych) {
@@ -19429,7 +19429,7 @@ yy1186:
 yy1187:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_MACHINE_SMALL; return ETargetMachine; }
+        { brigId = BRIG_MACHINE_SMALL; return ETargetMachine; }
 yy1189:
         yych = *++curPos;
         switch (yych) {
@@ -19532,7 +19532,7 @@ yy1194:
 yy1195:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_ROUND_FLOAT_DEFAULT;   return EDefaultRound; }
+        { brigId = BRIG_ROUND_FLOAT_DEFAULT;   return EDefaultRound; }
 yy1197:
         yych = *++curPos;
         switch (yych) {
@@ -19633,7 +19633,7 @@ yy1201:
 yy1202:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U8;  return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U8;  return ETypedLiteral; }
 yy1204:
         yych = *++curPos;
         switch (yych) {
@@ -19789,11 +19789,11 @@ yy1207:
 yy1208:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U8X4;  return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U8X4;  return ETypedLiteral; }
 yy1210:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U8X8;  return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U8X8;  return ETypedLiteral; }
 yy1212:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -19866,7 +19866,7 @@ yy1212:
 yy1213:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U8X16; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U8X16; return ETypedLiteral; }
 yy1215:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -19947,7 +19947,7 @@ yy1216:
 yy1217:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U16; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U16; return ETypedLiteral; }
 yy1219:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -20158,15 +20158,15 @@ yy1221:
 yy1222:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U16X8; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U16X8; return ETypedLiteral; }
 yy1224:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U16X4; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U16X4; return ETypedLiteral; }
 yy1226:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U16X2; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U16X2; return ETypedLiteral; }
 yy1228:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -20246,7 +20246,7 @@ yy1229:
 yy1230:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U32; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U32; return ETypedLiteral; }
 yy1232:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -20388,11 +20388,11 @@ yy1233:
 yy1234:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U32X4; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U32X4; return ETypedLiteral; }
 yy1236:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U32X2; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U32X2; return ETypedLiteral; }
 yy1238:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -20471,7 +20471,7 @@ yy1239:
 yy1240:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U64; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U64; return ETypedLiteral; }
 yy1242:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -20544,7 +20544,7 @@ yy1242:
 yy1243:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_U64X2; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_U64X2; return ETypedLiteral; }
 yy1245:
         yych = *++curPos;
         switch (yych) {
@@ -20659,7 +20659,7 @@ yy1253:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_UNPACK; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_UNPACK; return EInstruction;
 	default: return EEmpty; } }
 yy1255:
         yych = *++curPos;
@@ -20751,7 +20751,7 @@ yy1259:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_UNPACKLO; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_UNPACKLO; return EInstruction;
 	default: return EEmpty; } }
 yy1261:
         ctxMarker = curPos + 1;
@@ -20825,7 +20825,7 @@ yy1262:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_UNPACKHI; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_UNPACKHI; return EInstruction;
 	default: return EEmpty; } }
 yy1264:
         yych = *++curPos;
@@ -20905,7 +20905,7 @@ yy1266:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_UNPACKCVT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_UNPACKCVT; return EInstruction;
 	default: return EEmpty; } }
 yy1268:
         yych = *++curPos;
@@ -21027,7 +21027,7 @@ yy1276:
 yy1277:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_COORD_UNNORMALIZED; return ESamplerCoord; }
+        { brigId = BRIG_COORD_UNNORMALIZED; return ESamplerCoord; }
 yy1279:
         yych = *++curPos;
         switch (yych) {
@@ -21130,7 +21130,7 @@ yy1284:
 yy1285:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_ADDRESSING_UNDEFINED; return ESamplerAddressingMode; }
+        { brigId = BRIG_ADDRESSING_UNDEFINED; return ESamplerAddressingMode; }
 yy1287:
         yych = *++curPos;
         switch (yych) {
@@ -21271,7 +21271,7 @@ yy1298:
 yy1299:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNSIGNED_INT8; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_UNSIGNED_INT8; return EImageFormat; }
 yy1301:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -21344,7 +21344,7 @@ yy1301:
 yy1302:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNSIGNED_INT32; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_UNSIGNED_INT32; return EImageFormat; }
 yy1304:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -21417,7 +21417,7 @@ yy1304:
 yy1305:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNSIGNED_INT16; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_UNSIGNED_INT16; return EImageFormat; }
 yy1307:
         yych = *++curPos;
         switch (yych) {
@@ -21570,7 +21570,7 @@ yy1320:
 yy1321:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_SHORT_555; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_UNORM_SHORT_555; return EImageFormat; }
 yy1323:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -21643,7 +21643,7 @@ yy1323:
 yy1324:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_SHORT_565; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_UNORM_SHORT_565; return EImageFormat; }
 yy1326:
         yych = *++curPos;
         switch (yych) {
@@ -21818,7 +21818,7 @@ yy1332:
 yy1333:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_INT16; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_UNORM_INT16; return EImageFormat; }
 yy1335:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -21891,11 +21891,11 @@ yy1335:
 yy1336:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_INT24; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_UNORM_INT24; return EImageFormat; }
 yy1338:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_INT8; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_UNORM_INT8; return EImageFormat; }
 yy1340:
         yych = *++curPos;
         switch (yych) {
@@ -21998,7 +21998,7 @@ yy1345:
 yy1346:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_UNORM_INT_101010; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_UNORM_INT_101010; return EImageFormat; }
 yy1348:
         yych = *++curPos;
         switch (yych) {
@@ -22131,7 +22131,7 @@ yy1358:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NCOS; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_NCOS; return EInstruction;
 	default: return EEmpty; } }
 yy1360:
         yych = *++curPos;
@@ -22291,13 +22291,13 @@ yy1365:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NEXP2; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_NEXP2; return EInstruction;
 	default: return EEmpty; } }
 yy1367:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NEG; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_NEG; return EInstruction;
 	default: return EEmpty; } }
 yy1369:
         yych = *++curPos;
@@ -22389,7 +22389,7 @@ yy1372:
 yy1373:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_FILTER_NEAREST;    return ESamplerFilter; }
+        { brigId = BRIG_FILTER_NEAREST;    return ESamplerFilter; }
 yy1375:
         yych = *++curPos;
         switch (yych) {
@@ -22468,7 +22468,7 @@ yy1377:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NFMA; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_NFMA; return EInstruction;
 	default: return EEmpty; } }
 yy1379:
         yych = *++curPos;
@@ -22554,7 +22554,7 @@ yy1382:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NLOG2; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_NLOG2; return EInstruction;
 	default: return EEmpty; } }
 yy1384:
         yych = *++curPos;
@@ -22702,13 +22702,13 @@ yy1387:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NOT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_NOT; return EInstruction;
 	default: return EEmpty; } }
 yy1389:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NOP; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_NOP; return EInstruction;
 	default: return EEmpty; } }
 yy1391:
         yych = *++curPos;
@@ -22818,7 +22818,7 @@ yy1397:
 yy1398:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_COORD_NORMALIZED; return ESamplerCoord; }
+        { brigId = BRIG_COORD_NORMALIZED; return ESamplerCoord; }
 yy1400:
         yych = *++curPos;
         switch (yych) {
@@ -22915,7 +22915,7 @@ yy1405:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NRSQRT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_NRSQRT; return EInstruction;
 	default: return EEmpty; } }
 yy1407:
         ctxMarker = curPos + 1;
@@ -22989,7 +22989,7 @@ yy1408:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NRCP; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_NRCP; return EInstruction;
 	default: return EEmpty; } }
 yy1410:
         yych = *++curPos;
@@ -23081,7 +23081,7 @@ yy1414:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NSQRT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_NSQRT; return EInstruction;
 	default: return EEmpty; } }
 yy1416:
         ctxMarker = curPos + 1;
@@ -23155,7 +23155,7 @@ yy1417:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NSIN; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_NSIN; return EInstruction;
 	default: return EEmpty; } }
 yy1419:
         yych = *++curPos;
@@ -23253,7 +23253,7 @@ yy1424:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_NULLPTR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_NULLPTR; return EInstruction;
 	default: return EEmpty; } }
 yy1426:
         yych = *++curPos;
@@ -23479,7 +23479,7 @@ yy1442:
 yy1443:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_GLOBAL;    return ESegment; }
+        { brigId = BRIG_SEGMENT_GLOBAL;    return ESegment; }
 yy1445:
         yych = *++curPos;
         switch (yych) {
@@ -23697,7 +23697,7 @@ yy1467:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNTRIG_PREOP; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNTRIG_PREOP; return EInstruction;
 	default: return EEmpty; } }
 yy1469:
         ctxMarker = curPos + 1;
@@ -23926,13 +23926,13 @@ yy1475:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNSADD; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNSADD; return EInstruction;
 	default: return EEmpty; } }
 yy1477:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNSADW; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNSADW; return EInstruction;
 	default: return EEmpty; } }
 yy1479:
         yych = *++curPos;
@@ -24018,13 +24018,13 @@ yy1482:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNSLEEP; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNSLEEP; return EInstruction;
 	default: return EEmpty; } }
 yy1484:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNST; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNST; return EInstruction;
 	default: return EEmpty; } }
 yy1486:
         yych = *++curPos;
@@ -24158,7 +24158,7 @@ yy1497:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNREGIONALLOC; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNREGIONALLOC; return EInstruction;
 	default: return EEmpty; } }
 yy1499:
         yych = *++curPos;
@@ -24244,7 +24244,7 @@ yy1502:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNQSAD; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNQSAD; return EInstruction;
 	default: return EEmpty; } }
 yy1504:
         yych = *++curPos;
@@ -24354,7 +24354,7 @@ yy1511:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNPRIORITY; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNPRIORITY; return EInstruction;
 	default: return EEmpty; } }
 yy1513:
         yych = *++curPos;
@@ -24534,13 +24534,13 @@ yy1521:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMAX; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNMAX; return EInstruction;
 	default: return EEmpty; } }
 yy1523:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMAX3; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNMAX3; return EInstruction;
 	default: return EEmpty; } }
 yy1525:
         ctxMarker = curPos + 1;
@@ -24682,13 +24682,13 @@ yy1527:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMADS; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNMADS; return EInstruction;
 	default: return EEmpty; } }
 yy1529:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMADU; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNMADU; return EInstruction;
 	default: return EEmpty; } }
 yy1531:
         yych = *++curPos;
@@ -24768,7 +24768,7 @@ yy1533:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMED3; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNMED3; return EInstruction;
 	default: return EEmpty; } }
 yy1535:
         ctxMarker = curPos + 1;
@@ -24910,13 +24910,13 @@ yy1537:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMIN; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNMIN; return EInstruction;
 	default: return EEmpty; } }
 yy1539:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMIN3; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNMIN3; return EInstruction;
 	default: return EEmpty; } }
 yy1541:
         yych = *++curPos;
@@ -25070,13 +25070,13 @@ yy1545:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMQSAD; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNMQSAD; return EInstruction;
 	default: return EEmpty; } }
 yy1547:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMQSAD4; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNMQSAD4; return EInstruction;
 	default: return EEmpty; } }
 yy1549:
         yych = *++curPos;
@@ -25156,7 +25156,7 @@ yy1551:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNMSAD; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNMSAD; return EInstruction;
 	default: return EEmpty; } }
 yy1553:
         ctxMarker = curPos + 1;
@@ -25230,7 +25230,7 @@ yy1554:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNLD; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNLD; return EInstruction;
 	default: return EEmpty; } }
 yy1556:
         yych = *++curPos;
@@ -25334,7 +25334,7 @@ yy1562:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNFLDEXP; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNFLDEXP; return EInstruction;
 	default: return EEmpty; } }
 yy1564:
         yych = *++curPos;
@@ -25457,7 +25457,7 @@ yy1573:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNFREXP_MANT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNFREXP_MANT; return EInstruction;
 	default: return EEmpty; } }
 yy1575:
         yych = *++curPos;
@@ -25537,7 +25537,7 @@ yy1577:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNFREXP_EXP; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNFREXP_EXP; return EInstruction;
 	default: return EEmpty; } }
 yy1579:
         yych = *++curPos;
@@ -25659,7 +25659,7 @@ yy1588:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNDIVRELAXED; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNDIVRELAXED; return EInstruction;
 	default: return EEmpty; } }
 yy1590:
         yych = *++curPos;
@@ -25763,7 +25763,7 @@ yy1596:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNDIVRELAXEDNARROW; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNDIVRELAXEDNARROW; return EInstruction;
 	default: return EEmpty; } }
 yy1598:
         yych = *++curPos;
@@ -25879,7 +25879,7 @@ yy1606:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNB32XCHG; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNB32XCHG; return EInstruction;
 	default: return EEmpty; } }
 yy1608:
         yych = *++curPos;
@@ -25971,7 +25971,7 @@ yy1612:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNB4XCHG; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNB4XCHG; return EInstruction;
 	default: return EEmpty; } }
 yy1614:
         ctxMarker = curPos + 1;
@@ -26045,7 +26045,7 @@ yy1615:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNBFM; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNBFM; return EInstruction;
 	default: return EEmpty; } }
 yy1617:
         yych = *++curPos;
@@ -26145,7 +26145,7 @@ yy1622:
 yy1623:
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNATOMIC; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNATOMIC; return EInstruction;
 	default: return EEmpty; } }
 yy1624:
         yyaccept = 7;
@@ -26251,7 +26251,7 @@ yy1630:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNATOMICNORET; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNATOMICNORET; return EInstruction;
 	default: return EEmpty; } }
 yy1632:
         yych = *++curPos;
@@ -26361,7 +26361,7 @@ yy1639:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNAPPEND; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNAPPEND; return EInstruction;
 	default: return EEmpty; } }
 yy1641:
         yych = *++curPos;
@@ -26465,7 +26465,7 @@ yy1647:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GCNCONSUME; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GCNCONSUME; return EInstruction;
 	default: return EEmpty; } }
 yy1649:
         yych = *++curPos;
@@ -26617,7 +26617,7 @@ yy1663:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GETDETECTEXCEPT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GETDETECTEXCEPT; return EInstruction;
 	default: return EEmpty; } }
 yy1665:
         yych = *++curPos;
@@ -26831,7 +26831,7 @@ yy1680:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GRIDSIZE; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GRIDSIZE; return EInstruction;
 	default: return EEmpty; } }
 yy1682:
         yych = *++curPos;
@@ -26929,7 +26929,7 @@ yy1687:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GRIDGROUPS; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GRIDGROUPS; return EInstruction;
 	default: return EEmpty; } }
 yy1689:
         yych = *++curPos;
@@ -27014,7 +27014,7 @@ yy1691:
 yy1692:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_GROUP;     return ESegment; }
+        { brigId = BRIG_SEGMENT_GROUP;     return ESegment; }
 yy1694:
         yych = *++curPos;
         switch (yych) {
@@ -27117,7 +27117,7 @@ yy1700:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_GROUPBASEPTR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_GROUPBASEPTR; return EInstruction;
 	default: return EEmpty; } }
 yy1702:
         yych = *++curPos;
@@ -27581,7 +27581,7 @@ yy1748:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CASQUEUEWRITEINDEX; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CASQUEUEWRITEINDEX; return EInstruction;
 	default: return EEmpty; } }
 yy1750:
         yych = *++curPos;
@@ -27661,7 +27661,7 @@ yy1752:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CARRY; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CARRY; return EInstruction;
 	default: return EEmpty; } }
 yy1754:
         ctxMarker = curPos + 1;
@@ -27735,7 +27735,7 @@ yy1755:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CALL; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CALL; return EInstruction;
 	default: return EEmpty; } }
 yy1757:
         ctxMarker = curPos + 1;
@@ -27809,7 +27809,7 @@ yy1758:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CBR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CBR; return EInstruction;
 	default: return EEmpty; } }
 yy1760:
         yych = *++curPos;
@@ -27889,7 +27889,7 @@ yy1762:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CEIL; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CEIL; return EInstruction;
 	default: return EEmpty; } }
 yy1764:
         yych = *++curPos;
@@ -27988,7 +27988,7 @@ yy1769:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CLOCK; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CLOCK; return EInstruction;
 	default: return EEmpty; } }
 yy1771:
         yych = *++curPos;
@@ -28140,7 +28140,7 @@ yy1785:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CLEARDETECTEXCEPT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CLEARDETECTEXCEPT; return EInstruction;
 	default: return EEmpty; } }
 yy1787:
         yych = *++curPos;
@@ -28293,7 +28293,7 @@ yy1800:
 yy1801:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_ADDRESSING_CLAMP_TO_BORDER; return ESamplerAddressingMode; }
+        { brigId = BRIG_ADDRESSING_CLAMP_TO_BORDER; return ESamplerAddressingMode; }
 yy1803:
         yych = *++curPos;
         switch (yych) {
@@ -28378,7 +28378,7 @@ yy1805:
 yy1806:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_ADDRESSING_CLAMP_TO_EDGE; return ESamplerAddressingMode; }
+        { brigId = BRIG_ADDRESSING_CLAMP_TO_EDGE; return ESamplerAddressingMode; }
 yy1808:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -28451,7 +28451,7 @@ yy1809:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CLASS; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CLASS; return EInstruction;
 	default: return EEmpty; } }
 yy1811:
         yych = *++curPos;
@@ -28531,7 +28531,7 @@ yy1813:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CMP; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CMP; return EInstruction;
 	default: return EEmpty; } }
 yy1815:
         ctxMarker = curPos + 1;
@@ -28605,7 +28605,7 @@ yy1816:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CMOV; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CMOV; return EInstruction;
 	default: return EEmpty; } }
 yy1818:
         yych = *++curPos;
@@ -28727,7 +28727,7 @@ yy1827:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_COPYSIGN; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_COPYSIGN; return EInstruction;
 	default: return EEmpty; } }
 yy1829:
         yych = *++curPos;
@@ -28819,7 +28819,7 @@ yy1833:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_COMBINE; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_COMBINE; return EInstruction;
 	default: return EEmpty; } }
 yy1835:
         yych = *++curPos;
@@ -29166,7 +29166,7 @@ yy1863:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CURRENTWORKGROUPSIZE; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CURRENTWORKGROUPSIZE; return EInstruction;
 	default: return EEmpty; } }
 yy1865:
         yych = *++curPos;
@@ -29288,7 +29288,7 @@ yy1874:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CURRENTWORKITEMFLATID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CURRENTWORKITEMFLATID; return EInstruction;
 	default: return EEmpty; } }
 yy1876:
         ctxMarker = curPos + 1;
@@ -29362,7 +29362,7 @@ yy1877:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CUID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CUID; return EInstruction;
 	default: return EEmpty; } }
 yy1879:
         ctxMarker = curPos + 1;
@@ -29436,7 +29436,7 @@ yy1880:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_CVT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_CVT; return EInstruction;
 	default: return EEmpty; } }
 yy1882:
         yych = *++curPos;
@@ -29655,7 +29655,7 @@ yy1897:
 yy1898:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_HALF_FLOAT; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_HALF_FLOAT; return EImageFormat; }
 yy1900:
         yych = *++curPos;
         switch (yych) {
@@ -29864,7 +29864,7 @@ yy1914:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WAVEID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_WAVEID; return EInstruction;
 	default: return EEmpty; } }
 yy1916:
         yych = *++curPos;
@@ -29968,7 +29968,7 @@ yy1922:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WAVEBARRIER; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_WAVEBARRIER; return EInstruction;
 	default: return EEmpty; } }
 yy1924:
         yych = *++curPos;
@@ -30066,7 +30066,7 @@ yy1929:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WAITFBAR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_WAITFBAR; return EInstruction;
 	default: return EEmpty; } }
 yy1931:
         yych = *++curPos;
@@ -30209,7 +30209,7 @@ yy1943:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKITEMID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_WORKITEMID; return EInstruction;
 	default: return EEmpty; } }
 yy1945:
         yych = *++curPos;
@@ -30314,7 +30314,7 @@ yy1951:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKITEMFLATID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_WORKITEMFLATID; return EInstruction;
 	default: return EEmpty; } }
 yy1953:
         yych = *++curPos;
@@ -30406,7 +30406,7 @@ yy1957:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKITEMFLATABSID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_WORKITEMFLATABSID; return EInstruction;
 	default: return EEmpty; } }
 yy1959:
         yych = *++curPos;
@@ -30498,7 +30498,7 @@ yy1963:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKITEMABSID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_WORKITEMABSID; return EInstruction;
 	default: return EEmpty; } }
 yy1965:
         yych = *++curPos;
@@ -30609,7 +30609,7 @@ yy1972:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKGROUPID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_WORKGROUPID; return EInstruction;
 	default: return EEmpty; } }
 yy1974:
         yych = *++curPos;
@@ -30695,7 +30695,7 @@ yy1977:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_WORKGROUPSIZE; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_WORKGROUPSIZE; return EInstruction;
 	default: return EEmpty; } }
 yy1979:
         yych = *++curPos;
@@ -30775,7 +30775,7 @@ yy1980:
 yy1981:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_WOIMG; return EKWImage; }
+        { brigId = BRIG_TYPE_WOIMG; return EKWImage; }
 yy1983:
         yych = *++curPos;
         switch (yych) {
@@ -30880,7 +30880,7 @@ yy1989:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ICALL; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ICALL; return EInstruction;
 	default: return EEmpty; } }
 yy1991:
         yych = *++curPos;
@@ -30996,7 +30996,7 @@ yy1999:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_IMAGEFENCE; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_IMAGEFENCE; return EInstruction;
 	default: return EEmpty; } }
 yy2001:
         yych = *++curPos;
@@ -31112,7 +31112,7 @@ yy2009:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_INITFBAR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_INITFBAR; return EInstruction;
 	default: return EEmpty; } }
 yy2011:
         yych = *++curPos;
@@ -31217,7 +31217,7 @@ yy2017:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_INTENSITY; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_INTENSITY; return EImageOrder;
 	default: return EEmpty; } }
 yy2019:
         yych = *++curPos;
@@ -31451,7 +31451,7 @@ yy2037:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_DEBUGTRAP; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_DEBUGTRAP; return EInstruction;
 	default: return EEmpty; } }
 yy2039:
         yych = *++curPos;
@@ -31538,7 +31538,7 @@ yy2042:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-                           case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_DEPTH; return EImageOrder;
+                           case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_DEPTH; return EImageOrder;
                            default: return EKWImageDepth;
                            } }
 yy2044:
@@ -31650,7 +31650,7 @@ yy2051:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_DEPTH_STENCIL; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_DEPTH_STENCIL; return EImageOrder;
 	default: return EEmpty; } }
 yy2053:
         ctxMarker = curPos + 1;
@@ -31865,13 +31865,13 @@ yy2058:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_DIV; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_DIV; return EInstruction;
 	default: return EEmpty; } }
 yy2060:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_DIM; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_DIM; return EInstruction;
 	default: return EEmpty; } }
 yy2062:
         yych = *++curPos;
@@ -31922,7 +31922,7 @@ yy2069:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_A; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_A; return EImageOrder;
 	default: return EEmpty; } }
 yy2071:
         yych = *++curPos;
@@ -32014,7 +32014,7 @@ yy2074:
 yy2075:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_ALLOCATION_AGENT; return EAllocKind; }
+        { brigId = BRIG_ALLOCATION_AGENT; return EAllocKind; }
 yy2077:
         yych = *++curPos;
         switch (yych) {
@@ -32093,7 +32093,7 @@ yy2079:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ABS; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ABS; return EInstruction;
 	default: return EEmpty; } }
 yy2081:
         ctxMarker = curPos + 1;
@@ -32168,7 +32168,7 @@ yy2082:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_ABGR; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_ABGR; return EImageOrder;
 	default: return EEmpty; } }
 yy2084:
         yych = *++curPos;
@@ -32347,7 +32347,7 @@ yy2102:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ACTIVELANEPERMUTE; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ACTIVELANEPERMUTE; return EInstruction;
 	default: return EEmpty; } }
 yy2104:
         yych = *++curPos;
@@ -32433,7 +32433,7 @@ yy2107:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ACTIVELANEMASK; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ACTIVELANEMASK; return EInstruction;
 	default: return EEmpty; } }
 yy2109:
         ctxMarker = curPos + 1;
@@ -32507,7 +32507,7 @@ yy2110:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ACTIVELANEID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ACTIVELANEID; return EInstruction;
 	default: return EEmpty; } }
 yy2112:
         yych = *++curPos;
@@ -32599,7 +32599,7 @@ yy2116:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ACTIVELANECOUNT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ACTIVELANECOUNT; return EInstruction;
 	default: return EEmpty; } }
 yy2118:
         ctxMarker = curPos + 1;
@@ -32679,7 +32679,7 @@ yy2120:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ADD; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ADD; return EInstruction;
 	default: return EEmpty; } }
 yy2122:
         yych = *++curPos;
@@ -32940,7 +32940,7 @@ yy2145:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ADDQUEUEWRITEINDEX; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ADDQUEUEWRITEINDEX; return EInstruction;
 	default: return EEmpty; } }
 yy2147:
         ctxMarker = curPos + 1;
@@ -33251,7 +33251,7 @@ yy2160:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ALLOCA; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ALLOCA; return EInstruction;
 	default: return EEmpty; } }
 yy2162:
         ctxMarker = curPos + 1;
@@ -33325,7 +33325,7 @@ yy2163:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_AND; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_AND; return EInstruction;
 	default: return EEmpty; } }
 yy2165:
         yych = *++curPos;
@@ -33474,12 +33474,12 @@ yy2167:
 yy2168:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_ARG;       return ESegment; }
+        { brigId = BRIG_SEGMENT_ARG;       return ESegment; }
 yy2170:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_ARGB; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_ARGB; return EImageOrder;
 	default: return EEmpty; } }
 yy2172:
         yych = *++curPos;
@@ -33668,7 +33668,7 @@ yy2183:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ARRIVEFBAR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ARRIVEFBAR; return EInstruction;
 	default: return EEmpty; } }
 yy2185:
         yych = *++curPos;
@@ -33760,7 +33760,7 @@ yy2189:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ATOMIC; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ATOMIC; return EInstruction;
 	default: return EEmpty; } }
 yy2191:
         yych = *++curPos;
@@ -33858,7 +33858,7 @@ yy2196:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ATOMICNORET; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ATOMICNORET; return EInstruction;
 	default: return EEmpty; } }
 yy2198:
         yych = *++curPos;
@@ -34066,7 +34066,7 @@ yy2220:
 yy2221:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_ENABLEDETECTEXCEPTIONS; return EControl; }
+        { brigId = BRIG_CONTROL_ENABLEDETECTEXCEPTIONS; return EControl; }
 yy2223:
         yych = *++curPos;
         switch (yych) {
@@ -34217,7 +34217,7 @@ yy2236:
 yy2237:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_ENABLEBREAKEXCEPTIONS; return EControl; }
+        { brigId = BRIG_CONTROL_ENABLEBREAKEXCEPTIONS; return EControl; }
 yy2239:
         yych = *++curPos;
         switch (yych) {
@@ -34314,7 +34314,7 @@ yy2244:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_EXPAND; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_EXPAND; return EInstruction;
 	default: return EEmpty; } }
 yy2246:
         yych = *++curPos;
@@ -34682,7 +34682,7 @@ yy2266:
 yy2267:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_FILTER_LINEAR;     return ESamplerFilter; }
+        { brigId = BRIG_FILTER_LINEAR;     return ESamplerFilter; }
 yy2269:
         yych = *++curPos;
         switch (yych) {
@@ -34792,7 +34792,7 @@ yy2276:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_LUMINANCE; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_LUMINANCE; return EImageOrder;
 	default: return EEmpty; } }
 yy2278:
         yych = *++curPos;
@@ -34896,7 +34896,7 @@ yy2284:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LASTBIT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_LASTBIT; return EInstruction;
 	default: return EEmpty; } }
 yy2286:
         yych = *++curPos;
@@ -34982,13 +34982,13 @@ yy2289:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LANEID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_LANEID; return EInstruction;
 	default: return EEmpty; } }
 yy2291:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LD; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_LD; return EInstruction;
 	default: return EEmpty; } }
 yy2293:
         ctxMarker = curPos + 1;
@@ -35289,7 +35289,7 @@ yy2311:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDQUEUEREADINDEX; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_LDQUEUEREADINDEX; return EInstruction;
 	default: return EEmpty; } }
 yy2313:
         yych = *++curPos;
@@ -35411,7 +35411,7 @@ yy2322:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDQUEUEWRITEINDEX; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_LDQUEUEWRITEINDEX; return EInstruction;
 	default: return EEmpty; } }
 yy2324:
         yych = *++curPos;
@@ -35503,19 +35503,19 @@ yy2328:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDIMAGE; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_LDIMAGE; return EInstruction;
 	default: return EEmpty; } }
 yy2330:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDF; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_LDF; return EInstruction;
 	default: return EEmpty; } }
 yy2332:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LDA; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_LDA; return EInstruction;
 	default: return EEmpty; } }
 yy2334:
         yych = *++curPos;
@@ -35601,7 +35601,7 @@ yy2337:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LERP; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_LERP; return EInstruction;
 	default: return EEmpty; } }
 yy2339:
         yych = *++curPos;
@@ -35705,7 +35705,7 @@ yy2345:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_LEAVEFBAR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_LEAVEFBAR; return EInstruction;
 	default: return EEmpty; } }
 yy2347:
         yych = *++curPos;
@@ -35941,7 +35941,7 @@ yy2353:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_R; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_R; return EImageOrder;
 	default: return EEmpty; } }
 yy2355:
         yych = *++curPos;
@@ -36118,7 +36118,7 @@ yy2363:
 yy2364:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_RWIMG; return EKWImage; }
+        { brigId = BRIG_TYPE_RWIMG; return EKWImage; }
 yy2366:
         yych = *++curPos;
         switch (yych) {
@@ -36203,18 +36203,18 @@ yy2368:
 yy2369:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_ROIMG; return EKWImage; }
+        { brigId = BRIG_TYPE_ROIMG; return EKWImage; }
 yy2371:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RA; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_RA; return EImageOrder;
 	default: return EEmpty; } }
 yy2373:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RG; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_RG; return EImageOrder;
 	default: return EEmpty; } }
 yy2375:
         ctxMarker = curPos + 1;
@@ -36358,7 +36358,7 @@ yy2377:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RGX; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_RGX; return EImageOrder;
 	default: return EEmpty; } }
 yy2379:
         ctxMarker = curPos + 1;
@@ -36502,25 +36502,25 @@ yy2381:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RGB; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_RGB; return EImageOrder;
 	default: return EEmpty; } }
 yy2383:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RGBA; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_RGBA; return EImageOrder;
 	default: return EEmpty; } }
 yy2385:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RGBX; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_RGBX; return EImageOrder;
 	default: return EEmpty; } }
 yy2387:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_RX; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_RX; return EImageOrder;
 	default: return EEmpty; } }
 yy2389:
         yych = *++curPos;
@@ -36618,7 +36618,7 @@ yy2394:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_RDIMAGE; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_RDIMAGE; return EInstruction;
 	default: return EEmpty; } }
 yy2396:
         yych = *++curPos;
@@ -36784,13 +36784,13 @@ yy2402:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_RET; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_RET; return EInstruction;
 	default: return EEmpty; } }
 yy2404:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_REM; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_REM; return EInstruction;
 	default: return EEmpty; } }
 yy2406:
         yych = *++curPos;
@@ -36906,7 +36906,7 @@ yy2414:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_RELEASEFBAR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_RELEASEFBAR; return EInstruction;
 	default: return EEmpty; } }
 yy2416:
         yych = *++curPos;
@@ -36992,7 +36992,7 @@ yy2418:
 yy2419:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_ADDRESSING_REPEAT; return ESamplerAddressingMode; }
+        { brigId = BRIG_ADDRESSING_REPEAT; return ESamplerAddressingMode; }
 yy2421:
         yych = *++curPos;
         switch (yych) {
@@ -37188,7 +37188,7 @@ yy2441:
 yy2442:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_REQUIREDWORKGROUPSIZE; return EControl; }
+        { brigId = BRIG_CONTROL_REQUIREDWORKGROUPSIZE; return EControl; }
 yy2444:
         yych = *++curPos;
         switch (yych) {
@@ -37297,7 +37297,7 @@ yy2450:
 yy2451:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_REQUIREDGRIDSIZE; return EControl; }
+        { brigId = BRIG_CONTROL_REQUIREDGRIDSIZE; return EControl; }
 yy2453:
         yych = *++curPos;
         switch (yych) {
@@ -37376,7 +37376,7 @@ yy2454:
 yy2455:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_REQUIREDDIM; return EControl; }
+        { brigId = BRIG_CONTROL_REQUIREDDIM; return EControl; }
 yy2457:
         yych = *++curPos;
         switch (yych) {
@@ -37551,7 +37551,7 @@ yy2474:
 yy2475:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_REQUIRENOPARTIALWORKGROUPS; return EControl; }
+        { brigId = BRIG_CONTROL_REQUIRENOPARTIALWORKGROUPS; return EControl; }
 yy2477:
         yych = *++curPos;
         switch (yych) {
@@ -37647,7 +37647,7 @@ yy2481:
 yy2482:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_READONLY;  return ESegment; }
+        { brigId = BRIG_SEGMENT_READONLY;  return ESegment; }
 yy2484:
         yych = *++curPos;
         switch (yych) {
@@ -37726,7 +37726,7 @@ yy2486:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_RINT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_RINT; return EInstruction;
 	default: return EEmpty; } }
 yy2488:
         yych = *++curPos;
@@ -38038,11 +38038,11 @@ yy2506:
 yy2507:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_SPILL;     return ESegment; }
+        { brigId = BRIG_SEGMENT_SPILL;     return ESegment; }
 yy2509:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S8;  return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S8;  return ETypedLiteral; }
 yy2511:
         yych = *++curPos;
         switch (yych) {
@@ -38198,11 +38198,11 @@ yy2514:
 yy2515:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S8X4;  return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S8X4;  return ETypedLiteral; }
 yy2517:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S8X8;  return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S8X8;  return ETypedLiteral; }
 yy2519:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -38275,7 +38275,7 @@ yy2519:
 yy2520:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S8X16; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S8X16; return ETypedLiteral; }
 yy2522:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -38356,7 +38356,7 @@ yy2523:
 yy2524:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S16; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S16; return ETypedLiteral; }
 yy2526:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -38567,15 +38567,15 @@ yy2528:
 yy2529:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S16X8; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S16X8; return ETypedLiteral; }
 yy2531:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S16X4; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S16X4; return ETypedLiteral; }
 yy2533:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S16X2; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S16X2; return ETypedLiteral; }
 yy2535:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -38655,7 +38655,7 @@ yy2536:
 yy2537:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S32; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S32; return ETypedLiteral; }
 yy2539:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -38797,11 +38797,11 @@ yy2540:
 yy2541:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S32X4; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S32X4; return ETypedLiteral; }
 yy2543:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S32X2; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S32X2; return ETypedLiteral; }
 yy2545:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -38880,7 +38880,7 @@ yy2546:
 yy2547:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S64; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S64; return ETypedLiteral; }
 yy2549:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -38953,7 +38953,7 @@ yy2549:
 yy2550:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_S64X2; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_S64X2; return ETypedLiteral; }
 yy2552:
         yych = *++curPos;
         switch (yych) {
@@ -39144,11 +39144,11 @@ yy2561:
 yy2562:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_SNORM_INT16; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_SNORM_INT16; return EImageFormat; }
 yy2564:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_SNORM_INT8; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_SNORM_INT8; return EImageFormat; }
 yy2566:
         yych = *++curPos;
         switch (yych) {
@@ -39228,7 +39228,7 @@ yy2568:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_SRGB; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_SRGB; return EImageOrder;
 	default: return EEmpty; } }
 yy2570:
         ctxMarker = curPos + 1;
@@ -39372,13 +39372,13 @@ yy2572:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_SRGBX; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_SRGBX; return EImageOrder;
 	default: return EEmpty; } }
 yy2574:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_SRGBA; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_SRGBA; return EImageOrder;
 	default: return EEmpty; } }
 yy2576:
         yych = *++curPos;
@@ -39464,7 +39464,7 @@ yy2579:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SAD; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SAD; return EInstruction;
 	default: return EEmpty; } }
 yy2581:
         ctxMarker = curPos + 1;
@@ -39538,7 +39538,7 @@ yy2582:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SADHI; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SADHI; return EInstruction;
 	default: return EEmpty; } }
 yy2584:
         ctxMarker = curPos + 1;
@@ -39612,7 +39612,7 @@ yy2584:
 yy2585:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_SAMP;  return EKWSampler; }
+        { brigId = BRIG_TYPE_SAMP;  return EKWSampler; }
 yy2587:
         yych = *++curPos;
         switch (yych) {
@@ -39691,7 +39691,7 @@ yy2589:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SBR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SBR; return EInstruction;
 	default: return EEmpty; } }
 yy2591:
         yych = *++curPos;
@@ -39772,7 +39772,7 @@ yy2593:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EImageOrderContext: brigId = Brig::BRIG_CHANNEL_ORDER_SBGRA; return EImageOrder;
+	case EImageOrderContext: brigId = BRIG_CHANNEL_ORDER_SBGRA; return EImageOrder;
 	default: return EEmpty; } }
 yy2595:
         yych = *++curPos;
@@ -39858,7 +39858,7 @@ yy2598:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SCALL; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SCALL; return EInstruction;
 	default: return EEmpty; } }
 yy2600:
         yych = *++curPos;
@@ -40016,7 +40016,7 @@ yy2615:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SETDETECTEXCEPT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SETDETECTEXCEPT; return EInstruction;
 	default: return EEmpty; } }
 yy2617:
         yych = *++curPos;
@@ -40114,7 +40114,7 @@ yy2622:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SEGMENTP; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SEGMENTP; return EInstruction;
 	default: return EEmpty; } }
 yy2624:
         yych = *++curPos;
@@ -40439,19 +40439,19 @@ yy2637:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SHUFFLE; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SHUFFLE; return EInstruction;
 	default: return EEmpty; } }
 yy2639:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SHR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SHR; return EInstruction;
 	default: return EEmpty; } }
 yy2641:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SHL; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SHL; return EInstruction;
 	default: return EEmpty; } }
 yy2643:
         yych = *++curPos;
@@ -40552,7 +40552,7 @@ yy2647:
 yy2648:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_SIG32; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_SIG32; return ETypedLiteral; }
 yy2650:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -40625,7 +40625,7 @@ yy2650:
 yy2651:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_SIG64; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_SIG64; return ETypedLiteral; }
 yy2653:
         yych = *++curPos;
         switch (yych) {
@@ -40755,7 +40755,7 @@ yy2662:
 yy2663:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_SIGNED_INT8; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_SIGNED_INT8; return EImageFormat; }
 yy2665:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -40828,7 +40828,7 @@ yy2665:
 yy2666:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_SIGNED_INT32; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_SIGNED_INT32; return EImageFormat; }
 yy2668:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -40901,7 +40901,7 @@ yy2668:
 yy2669:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_SIGNED_INT16; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_SIGNED_INT16; return EImageFormat; }
 yy2671:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -41065,7 +41065,7 @@ yy2678:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SIGNAL; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SIGNAL; return EInstruction;
 	default: return EEmpty; } }
 yy2680:
         yych = *++curPos;
@@ -41163,7 +41163,7 @@ yy2685:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SIGNALNORET; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SIGNALNORET; return EInstruction;
 	default: return EEmpty; } }
 yy2687:
         yych = *++curPos;
@@ -41243,13 +41243,13 @@ yy2689:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SQRT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SQRT; return EInstruction;
 	default: return EEmpty; } }
 yy2691:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_ST; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_ST; return EInstruction;
 	default: return EEmpty; } }
 yy2693:
         yych = *++curPos;
@@ -41420,7 +41420,7 @@ yy2710:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_STQUEUEREADINDEX; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_STQUEUEREADINDEX; return EInstruction;
 	default: return EEmpty; } }
 yy2712:
         yych = *++curPos;
@@ -41542,7 +41542,7 @@ yy2721:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_STQUEUEWRITEINDEX; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_STQUEUEWRITEINDEX; return EInstruction;
 	default: return EEmpty; } }
 yy2723:
         ctxMarker = curPos + 1;
@@ -41616,7 +41616,7 @@ yy2724:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_STOF; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_STOF; return EInstruction;
 	default: return EEmpty; } }
 yy2726:
         yych = *++curPos;
@@ -41708,7 +41708,7 @@ yy2730:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_STIMAGE; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_STIMAGE; return EInstruction;
 	default: return EEmpty; } }
 yy2732:
         ctxMarker = curPos + 1;
@@ -41782,7 +41782,7 @@ yy2733:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_SUB; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_SUB; return EInstruction;
 	default: return EEmpty; } }
 yy2735:
         yych = *++curPos;
@@ -41911,7 +41911,7 @@ yy2744:
 yy2745:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_PRIVATE;   return ESegment; }
+        { brigId = BRIG_SEGMENT_PRIVATE;   return ESegment; }
 yy2747:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -41984,7 +41984,7 @@ yy2747:
 yy2748:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_LINKAGE_PROGRAM; return ELinkage; }
+        { brigId = BRIG_LINKAGE_PROGRAM; return ELinkage; }
 yy2750:
         yych = *++curPos;
         switch (yych) {
@@ -42148,7 +42148,7 @@ yy2757:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_PACK; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_PACK; return EInstruction;
 	default: return EEmpty; } }
 yy2759:
         yych = *++curPos;
@@ -42253,7 +42253,7 @@ yy2765:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_PACKETID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_PACKETID; return EInstruction;
 	default: return EEmpty; } }
 yy2767:
         yych = *++curPos;
@@ -42393,7 +42393,7 @@ yy2779:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_PACKETCOMPLETIONSIG; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_PACKETCOMPLETIONSIG; return EInstruction;
 	default: return EEmpty; } }
 yy2781:
         yych = *++curPos;
@@ -42473,7 +42473,7 @@ yy2783:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_PACKCVT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_PACKCVT; return EInstruction;
 	default: return EEmpty; } }
 yy2785:
         yych = *++curPos;
@@ -42577,7 +42577,7 @@ yy2791:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_POPCOUNT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_POPCOUNT; return EInstruction;
 	default: return EEmpty; } }
 yy2793:
         yych = *++curPos;
@@ -42927,7 +42927,7 @@ yy2820:
 yy2821:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_F16; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_F16; return ETypedLiteral; }
 yy2823:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -43138,15 +43138,15 @@ yy2825:
 yy2826:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_F16X8; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_F16X8; return ETypedLiteral; }
 yy2828:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_F16X4; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_F16X4; return ETypedLiteral; }
 yy2830:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_F16X2; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_F16X2; return ETypedLiteral; }
 yy2832:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -43226,7 +43226,7 @@ yy2833:
 yy2834:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_F32; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_F32; return ETypedLiteral; }
 yy2836:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -43368,11 +43368,11 @@ yy2837:
 yy2838:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_F32X4; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_F32X4; return ETypedLiteral; }
 yy2840:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_F32X2; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_F32X2; return ETypedLiteral; }
 yy2842:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -43451,7 +43451,7 @@ yy2843:
 yy2844:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_F64; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_F64; return ETypedLiteral; }
 yy2846:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -43524,7 +43524,7 @@ yy2846:
 yy2847:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_TYPE_F64X2; return ETypedLiteral; }
+        { brigId = BRIG_TYPE_F64X2; return ETypedLiteral; }
 yy2849:
         yych = *++curPos;
         switch (yych) {
@@ -43633,7 +43633,7 @@ yy2856:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FIRSTBIT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_FIRSTBIT; return EInstruction;
 	default: return EEmpty; } }
 yy2858:
         yych = *++curPos;
@@ -43817,7 +43817,7 @@ yy2867:
 yy2868:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CHANNEL_TYPE_FLOAT; return EImageFormat; }
+        { brigId = BRIG_CHANNEL_TYPE_FLOAT; return EImageFormat; }
 yy2870:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -43890,7 +43890,7 @@ yy2871:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FLOOR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_FLOOR; return EInstruction;
 	default: return EEmpty; } }
 yy2873:
         ctxMarker = curPos + 1;
@@ -43963,7 +43963,7 @@ yy2873:
 yy2874:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_FLAT;      return ESegment; }
+        { brigId = BRIG_SEGMENT_FLAT;      return ESegment; }
 yy2876:
         ctxMarker = curPos + 1;
         yych = *++curPos;
@@ -44036,7 +44036,7 @@ yy2877:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FMA; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_FMA; return EInstruction;
 	default: return EEmpty; } }
 yy2879:
         yych = *++curPos;
@@ -44122,7 +44122,7 @@ yy2882:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FRACT; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_FRACT; return EInstruction;
 	default: return EEmpty; } }
 yy2884:
         yych = *++curPos;
@@ -44202,7 +44202,7 @@ yy2886:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_FTOS; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_FTOS; return EInstruction;
 	default: return EEmpty; } }
 yy2888:
         yych = *++curPos;
@@ -44318,7 +44318,7 @@ yy2895:
 yy2896:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_SEGMENT_KERNARG;   return ESegment; }
+        { brigId = BRIG_SEGMENT_KERNARG;   return ESegment; }
 yy2898:
         yych = *++curPos;
         switch (yych) {
@@ -44421,7 +44421,7 @@ yy2904:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_KERNARGBASEPTR; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_KERNARGBASEPTR; return EInstruction;
 	default: return EEmpty; } }
 yy2906:
         ctxMarker = curPos + 1;
@@ -44675,7 +44675,7 @@ yy2917:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAD; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MAD; return EInstruction;
 	default: return EEmpty; } }
 yy2919:
         ctxMarker = curPos + 1;
@@ -44755,7 +44755,7 @@ yy2921:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAD24; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MAD24; return EInstruction;
 	default: return EEmpty; } }
 yy2923:
         ctxMarker = curPos + 1;
@@ -44829,7 +44829,7 @@ yy2924:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAD24HI; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MAD24HI; return EInstruction;
 	default: return EEmpty; } }
 yy2926:
         yych = *++curPos;
@@ -44847,7 +44847,7 @@ yy2928:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAX; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MAX; return EInstruction;
 	default: return EEmpty; } }
 yy2930:
         yych = *++curPos;
@@ -45017,7 +45017,7 @@ yy2946:
 yy2947:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_MAXDYNAMICGROUPSIZE; return EControl; }
+        { brigId = BRIG_CONTROL_MAXDYNAMICGROUPSIZE; return EControl; }
 yy2949:
         yych = *++curPos;
         switch (yych) {
@@ -45157,7 +45157,7 @@ yy2960:
 yy2961:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_MAXFLATGRIDSIZE; return EControl; }
+        { brigId = BRIG_CONTROL_MAXFLATGRIDSIZE; return EControl; }
 yy2963:
         yych = *++curPos;
         switch (yych) {
@@ -45296,7 +45296,7 @@ yy2974:
 yy2975:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_CONTROL_MAXFLATWORKGROUPSIZE; return EControl; }
+        { brigId = BRIG_CONTROL_MAXFLATWORKGROUPSIZE; return EControl; }
 yy2977:
         yych = *++curPos;
         switch (yych) {
@@ -45381,7 +45381,7 @@ yy2980:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAXCUID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MAXCUID; return EInstruction;
 	default: return EEmpty; } }
 yy2982:
         yych = *++curPos;
@@ -45479,7 +45479,7 @@ yy2987:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MAXWAVEID; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MAXWAVEID; return EInstruction;
 	default: return EEmpty; } }
 yy2989:
         yych = *++curPos;
@@ -45583,7 +45583,7 @@ yy2995:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MEMFENCE; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MEMFENCE; return EInstruction;
 	default: return EEmpty; } }
 yy2997:
         yych = *++curPos;
@@ -45663,7 +45663,7 @@ yy2999:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MIN; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MIN; return EInstruction;
 	default: return EEmpty; } }
 yy3001:
         yych = *++curPos;
@@ -45803,7 +45803,7 @@ yy3012:
 yy3013:
         ++curPos;
         curPos = ctxMarker;
-        { brigId = Brig::BRIG_ADDRESSING_MIRRORED_REPEAT; return ESamplerAddressingMode; }
+        { brigId = BRIG_ADDRESSING_MIRRORED_REPEAT; return ESamplerAddressingMode; }
 yy3015:
         yych = *++curPos;
         switch (yych) {
@@ -45882,7 +45882,7 @@ yy3017:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MOV; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MOV; return EInstruction;
 	default: return EEmpty; } }
 yy3019:
         yych = *++curPos;
@@ -46053,7 +46053,7 @@ yy3027:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MUL; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MUL; return EInstruction;
 	default: return EEmpty; } }
 yy3029:
         ctxMarker = curPos + 1;
@@ -46133,7 +46133,7 @@ yy3031:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MUL24; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MUL24; return EInstruction;
 	default: return EEmpty; } }
 yy3033:
         ctxMarker = curPos + 1;
@@ -46207,7 +46207,7 @@ yy3034:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MUL24HI; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MUL24HI; return EInstruction;
 	default: return EEmpty; } }
 yy3036:
         ctxMarker = curPos + 1;
@@ -46281,7 +46281,7 @@ yy3037:
         ++curPos;
         curPos = ctxMarker;
         { switch(ctx) {
-	case EDefaultContext: brigId = Brig::BRIG_OPCODE_MULHI; return EInstruction;
+	case EDefaultContext: brigId = BRIG_OPCODE_MULHI; return EInstruction;
 	default: return EEmpty; } }
 yy3039:
         yych = *++curPos;
