@@ -13,19 +13,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-//
-// TODO_HSA: llc option -enable-experimental should be cleaned from llc itself
-//           and this file as soon as all features are supported.
-//
-def EnableExperimental : Predicate<"llvm::EnableExperimentalFeatures">;
 def In32BitMode  : Predicate<"!Subtarget->is64Bit()">;
 def In64BitMode  : Predicate<"Subtarget->is64Bit()">;
 def EnableOpt    : Predicate<"CodeGenOpt::None != TM.getOptLevel()">;
-
-// Predicate defs
-def HSAILisKernel         : Predicate<"isKernelFunc()">;
-def HSAILisNotKernel      : Predicate<"!isKernelFunc()">;
-
 
 // Mark the default value for a width modifier. This only effects how
 // the instruction is printed in the non-BRIG path.
