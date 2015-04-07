@@ -1,7 +1,6 @@
 
 set(libhsail_srcs
   Brig.h
-  Brig_new.hpp
   BrigDwarfGenerator.cpp
   BrigDwarfGenerator.h
   HSAILb128_t.h
