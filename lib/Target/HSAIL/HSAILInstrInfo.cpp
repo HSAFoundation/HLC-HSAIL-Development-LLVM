@@ -50,11 +50,11 @@ enum CondReverseFlag {
 static unsigned getBrigTypeFromRCID(unsigned ID) {
   switch (ID) {
   case HSAIL::CRRegClassID:
-    return Brig::BRIG_TYPE_B1;
+    return BRIG_TYPE_B1;
   case HSAIL::GPR32RegClassID:
-    return Brig::BRIG_TYPE_B32;
+    return BRIG_TYPE_B32;
   case HSAIL::GPR64RegClassID:
-    return Brig::BRIG_TYPE_B64;
+    return BRIG_TYPE_B64;
   default:
     llvm_unreachable("unhandled register class ID");
   }
@@ -426,65 +426,65 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
   return false;
 }
 
-static Brig::BrigCompareOperation invIntCondOp(Brig::BrigCompareOperation Op) {
+static BrigCompareOperation invIntCondOp(BrigCompareOperation Op) {
   switch (Op) {
-  case Brig::BRIG_COMPARE_EQ:
-    return Brig::BRIG_COMPARE_NE;
-  case Brig::BRIG_COMPARE_GE:
-    return Brig::BRIG_COMPARE_LT;
-  case Brig::BRIG_COMPARE_GT:
-    return Brig::BRIG_COMPARE_LE;
-  case Brig::BRIG_COMPARE_LE:
-    return Brig::BRIG_COMPARE_GT;
-  case Brig::BRIG_COMPARE_LT:
-    return Brig::BRIG_COMPARE_GE;
-  case Brig::BRIG_COMPARE_NE:
-    return Brig::BRIG_COMPARE_EQ;
+  case BRIG_COMPARE_EQ:
+    return BRIG_COMPARE_NE;
+  case BRIG_COMPARE_GE:
+    return BRIG_COMPARE_LT;
+  case BRIG_COMPARE_GT:
+    return BRIG_COMPARE_LE;
+  case BRIG_COMPARE_LE:
+    return BRIG_COMPARE_GT;
+  case BRIG_COMPARE_LT:
+    return BRIG_COMPARE_GE;
+  case BRIG_COMPARE_NE:
+    return BRIG_COMPARE_EQ;
   default:
     return Op;
   }
 }
 
-static Brig::BrigCompareOperation invFPCondOp(Brig::BrigCompareOperation Op) {
+static BrigCompareOperation invFPCondOp(BrigCompareOperation Op) {
   switch (Op) {
-  case Brig::BRIG_COMPARE_NUM:
-    return Brig::BRIG_COMPARE_NAN;
-  case Brig::BRIG_COMPARE_EQ:
-    return Brig::BRIG_COMPARE_NEU;
-  case Brig::BRIG_COMPARE_GE:
-    return Brig::BRIG_COMPARE_LTU;
-  case Brig::BRIG_COMPARE_GT:
-    return Brig::BRIG_COMPARE_LEU;
-  case Brig::BRIG_COMPARE_LE:
-    return Brig::BRIG_COMPARE_GTU;
-  case Brig::BRIG_COMPARE_LT:
-    return Brig::BRIG_COMPARE_GEU;
-  case Brig::BRIG_COMPARE_NE:
-    return Brig::BRIG_COMPARE_EQU;
-  case Brig::BRIG_COMPARE_EQU:
-    return Brig::BRIG_COMPARE_NE;
-  case Brig::BRIG_COMPARE_GEU:
-    return Brig::BRIG_COMPARE_LT;
-  case Brig::BRIG_COMPARE_GTU:
-    return Brig::BRIG_COMPARE_LE;
-  case Brig::BRIG_COMPARE_LEU:
-    return Brig::BRIG_COMPARE_GT;
-  case Brig::BRIG_COMPARE_LTU:
-    return Brig::BRIG_COMPARE_GE;
-  case Brig::BRIG_COMPARE_NEU:
-    return Brig::BRIG_COMPARE_EQ;
-  case Brig::BRIG_COMPARE_NAN:
-    return Brig::BRIG_COMPARE_NUM;
+  case BRIG_COMPARE_NUM:
+    return BRIG_COMPARE_NAN;
+  case BRIG_COMPARE_EQ:
+    return BRIG_COMPARE_NEU;
+  case BRIG_COMPARE_GE:
+    return BRIG_COMPARE_LTU;
+  case BRIG_COMPARE_GT:
+    return BRIG_COMPARE_LEU;
+  case BRIG_COMPARE_LE:
+    return BRIG_COMPARE_GTU;
+  case BRIG_COMPARE_LT:
+    return BRIG_COMPARE_GEU;
+  case BRIG_COMPARE_NE:
+    return BRIG_COMPARE_EQU;
+  case BRIG_COMPARE_EQU:
+    return BRIG_COMPARE_NE;
+  case BRIG_COMPARE_GEU:
+    return BRIG_COMPARE_LT;
+  case BRIG_COMPARE_GTU:
+    return BRIG_COMPARE_LE;
+  case BRIG_COMPARE_LEU:
+    return BRIG_COMPARE_GT;
+  case BRIG_COMPARE_LTU:
+    return BRIG_COMPARE_GE;
+  case BRIG_COMPARE_NEU:
+    return BRIG_COMPARE_EQ;
+  case BRIG_COMPARE_NAN:
+    return BRIG_COMPARE_NUM;
   default:
     return Op;
   }
 }
 
-static bool isFPBrigType(Brig::BrigTypeX BT) {
+static bool isFPBrigType(BrigType BT) {
   switch (BT) {
-  case Brig::BRIG_TYPE_F32:
-  case Brig::BRIG_TYPE_F64:
-  case Brig::BRIG_TYPE_F16:
+  case BRIG_TYPE_F32:
+  case BRIG_TYPE_F64:
+  case BRIG_TYPE_F16:
     return true;
   default:
     return false;
@@ -529,15 +529,15 @@ static unsigned GenerateBranchCondReversion(
     MachineOperand *CmpOp
       = TII->getNamedOperand(*cond_expr, HSAIL::OpName::op);
 
-    Brig::BrigTypeX CmpType
-      = static_cast<Brig::BrigTypeX>(
+    BrigType CmpType
+      = static_cast<BrigType>(
         TII->getNamedOperand(*cond_expr,
                              HSAIL::OpName::sourceType)->getImm());
 
-    Brig::BrigCompareOperation OrigOp
-      = static_cast<Brig::BrigCompareOperation>(CmpOp->getImm());
+    BrigCompareOperation OrigOp
+      = static_cast<BrigCompareOperation>(CmpOp->getImm());
 
-    Brig::BrigCompareOperation RevOp = isFPBrigType(CmpType) ?
+    BrigCompareOperation RevOp = isFPBrigType(CmpType) ?
       invFPCondOp(OrigOp) :
       invIntCondOp(OrigOp);
 
@@ -565,7 +565,7 @@ static unsigned GenerateBranchCondReversion(
     BuildMI(&MBB, DL, TII->get(HSAIL::NOT))
       .addReg(cond_reg, RegState::Define)
       .addReg(CondOp.getReg())
-      .addImm(Brig::BRIG_TYPE_B1);
+      .addImm(BRIG_TYPE_B1);
   }
 
   return cond_reg;
@@ -585,9 +585,9 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
     // Unconditional branch?
     assert(!FBB && "Unconditional branch with multiple successors!");
     BuildMI(&MBB, DL, get(HSAIL::BR))
-      .addImm(Brig::BRIG_WIDTH_ALL)
+      .addImm(BRIG_WIDTH_ALL)
       .addMBB(TBB)
-      .addImm(Brig::BRIG_TYPE_NONE);
+      .addImm(BRIG_TYPE_NONE);
     return 1;
   }
 
@@ -618,7 +618,7 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
       BuildMI(&MBB, DL, get(HSAIL::NOT))
         .addReg(cond_reg, RegState::Define)
         .addReg(Cond[0].getReg())
-        .addImm(Brig::BRIG_TYPE_B1);
+        .addImm(BRIG_TYPE_B1);
     }
 
     break;
@@ -637,19 +637,19 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
   unsigned Count = 0;
 
   BuildMI(&MBB, DL, get(HSAIL::CBR))
-    .addImm(Brig::BRIG_WIDTH_1)
+    .addImm(BRIG_WIDTH_1)
     .addReg(cond_reg)
     .addMBB(TBB)
-    .addImm(Brig::BRIG_TYPE_B1);
+    .addImm(BRIG_TYPE_B1);
 
   ++Count;
 
   if (FBB) {
     // Two-way Conditional branch. Insert the second branch.
     BuildMI(&MBB, DL, get(HSAIL::BR))
-      .addImm(Brig::BRIG_WIDTH_ALL)
+      .addImm(BRIG_WIDTH_ALL)
       .addMBB(FBB)
-      .addImm(Brig::BRIG_TYPE_NONE);
+      .addImm(BRIG_TYPE_NONE);
 
     ++Count;
   }
@@ -731,15 +731,15 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
       break;
     case HSAIL::GPR32RegClassID:
       Opc = HSAIL::ST_V1;
-      BT = Brig::BRIG_TYPE_U32;
+      BT = BRIG_TYPE_U32;
       break;
     case HSAIL::GPR64RegClassID:
       Opc = HSAIL::ST_V1;
-      BT = Brig::BRIG_TYPE_U64;
+      BT = BRIG_TYPE_U64;
       break;
     case HSAIL::CRRegClassID:
       Opc = HSAIL::SPILL_B1;
-      BT = Brig::BRIG_TYPE_B1;
+      BT = BRIG_TYPE_B1;
       break;
   }
   if (MI != MBB.end()) {
@@ -802,15 +802,15 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
       break;
     case HSAIL::GPR32RegClassID:
       Opc = HSAIL::LD_V1;
-      BT = Brig::BRIG_TYPE_U32;
+      BT = BRIG_TYPE_U32;
       break;
     case HSAIL::GPR64RegClassID:
       Opc = HSAIL::LD_V1;
-      BT = Brig::BRIG_TYPE_U64;
+      BT = BRIG_TYPE_U64;
       break;
     case HSAIL::CRRegClassID:
       Opc = HSAIL::RESTORE_B1;
-      BT = Brig::BRIG_TYPE_B1;
+      BT = BRIG_TYPE_B1;
       break;
   }
   if (MI != MBB.end()) {
@@ -837,7 +837,7 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
       .addImm(BT)                        // TypeLength
       .addImm(HSAILAS::SPILL_ADDRESS)    // segment
       .addImm(MMO->getAlignment())       // align
-      .addImm(Brig::BRIG_WIDTH_1)        // width
+      .addImm(BRIG_WIDTH_1)              // width
       .addImm(0)                         // mask
       .addMemOperand(MMO);
     break;
@@ -975,21 +975,21 @@ void HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
   if (HSAIL::GPR32RegClass.contains(DestReg, SrcReg)) {
     BuildMI(MBB, MI, DL, get(HSAIL::MOV), DestReg)
       .addReg(SrcReg, getKillRegState(KillSrc))
-      .addImm(Brig::BRIG_TYPE_B32);
+      .addImm(BRIG_TYPE_B32);
       return;
   }
 
   if (HSAIL::GPR64RegClass.contains(DestReg, SrcReg)) {
     BuildMI(MBB, MI, DL, get(HSAIL::MOV), DestReg)
       .addReg(SrcReg, getKillRegState(KillSrc))
-      .addImm(Brig::BRIG_TYPE_B64);
+      .addImm(BRIG_TYPE_B64);
       return;
   }
 
   if (HSAIL::CRRegClass.contains(DestReg, SrcReg)) {
     BuildMI(MBB, MI, DL, get(HSAIL::MOV), DestReg)
       .addReg(SrcReg, getKillRegState(KillSrc))
-      .addImm(Brig::BRIG_TYPE_B1);
+      .addImm(BRIG_TYPE_B1);
       return;
   }
 
@@ -998,22 +998,22 @@ void HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
 
   if (HSAIL::GPR32RegClass.contains(DestReg) &&
       HSAIL::CRRegClass.contains(SrcReg)) {
-    DestBT = Brig::BRIG_TYPE_B1;
-    SrcBT = Brig::BRIG_TYPE_U32;
+    DestBT = BRIG_TYPE_B1;
+    SrcBT = BRIG_TYPE_U32;
   } else if (HSAIL::CRRegClass.contains(DestReg) &&
              HSAIL::GPR32RegClass.contains(SrcReg)) {
-    SrcBT = Brig::BRIG_TYPE_B1;
-    DestBT = Brig::BRIG_TYPE_U32;
+    SrcBT = BRIG_TYPE_B1;
+    DestBT = BRIG_TYPE_U32;
   } else if (HSAIL::GPR64RegClass.contains(DestReg) &&
              HSAIL::GPR32RegClass.contains(SrcReg)) {
-    SrcBT = Brig::BRIG_TYPE_U64;
-    DestBT = Brig::BRIG_TYPE_U32;
+    SrcBT = BRIG_TYPE_U64;
+    DestBT = BRIG_TYPE_U32;
   } else if (HSAIL::GPR32RegClass.contains(DestReg) &&
              HSAIL::GPR64RegClass.contains(SrcReg)) {
     // Truncation can occur if a function was defined with different return
     // types in different places.
-    SrcBT = Brig::BRIG_TYPE_U32;
-    DestBT = Brig::BRIG_TYPE_U64;
+    SrcBT = BRIG_TYPE_U32;
+    DestBT = BRIG_TYPE_U64;
   } else {
     assert(!"When do we hit this?");
     return TargetInstrInfo::copyPhysReg(MBB, MI, DL, DestReg, SrcReg, KillSrc);
@@ -1076,10 +1076,10 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
       unsigned tempU32 = getTempGPR32PostRA(MBBI);
       DebugLoc DL = MI.getDebugLoc();
       BuildMI(*MBB, MBBI, DL, get(HSAIL::CVT), tempU32)
-        .addImm(0)                   // ftz
-        .addImm(0)                   // round
-        .addImm(Brig::BRIG_TYPE_U32) // destTypedestLength
-        .addImm(Brig::BRIG_TYPE_B1)  // srcTypesrcLength
+        .addImm(0)             // ftz
+        .addImm(0)             // round
+        .addImm(BRIG_TYPE_U32) // destTypedestLength
+        .addImm(BRIG_TYPE_B1)  // srcTypesrcLength
         .addOperand(MI.getOperand(0));
 
       MI.setDesc(get(HSAIL::ST_V1));
@@ -1087,7 +1087,7 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
       MI.getOperand(0).setIsKill();
 
       MachineOperand *TypeOp = getNamedOperand(MI, HSAIL::OpName::TypeLength);
-      TypeOp->setImm(Brig::BRIG_TYPE_U32);
+      TypeOp->setImm(BRIG_TYPE_U32);
       RS->setRegUsed(tempU32);
     }
     return true;
@@ -1096,10 +1096,10 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
       DebugLoc DL = MI.getDebugLoc();
 
       BuildMI(*MBB, ++MBBI, DL, get(HSAIL::CVT), MI.getOperand(0).getReg())
-        .addImm(0)                   // ftz
-        .addImm(0)                   // round
-        .addImm(Brig::BRIG_TYPE_B1)  // destTypedestLength
-        .addImm(Brig::BRIG_TYPE_U32) // srcTypesrcLength
+        .addImm(0)             // ftz
+        .addImm(0)             // round
+        .addImm(BRIG_TYPE_B1)  // destTypedestLength
+        .addImm(BRIG_TYPE_U32) // srcTypesrcLength
         .addReg(tempU32, RegState::Kill);
 
       MI.setDesc(get(HSAIL::LD_V1));
@@ -1107,7 +1107,7 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
       MI.getOperand(0).setIsDef();
 
       MachineOperand *TypeOp = getNamedOperand(MI, HSAIL::OpName::TypeLength);
-      TypeOp->setImm(Brig::BRIG_TYPE_U32);
+      TypeOp->setImm(BRIG_TYPE_U32);
 
       RS->setRegUsed(tempU32);
     }

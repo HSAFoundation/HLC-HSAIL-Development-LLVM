@@ -47,7 +47,6 @@
 // Industry and Securitys website at http://www.bis.doc.gov/.
 //
 //==-----------------------------------------------------------------------===//
-#include "libHSAIL/HSAILBrigantine.h"
 #include "HSAILKernelManager.h"
 #include "AMDOpenCLKernenv.h"
 #include "HSAILCompilerErrors.h"
@@ -58,7 +57,6 @@
 #include "HSAILTargetMachine.h"
 #include "HSAILUtilityFunctions.h"
 #include "HSAILOpaqueTypes.h"
-#include "libHSAIL/HSAILBrigantine.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Function.h"
@@ -67,6 +65,11 @@
 #include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/Support/FormattedStream.h"
 #include "llvm/Support/MathExtras.h"
+
+#include "libHSAIL/HSAILBrigantine.h"
+#include "libHSAIL/HSAILItems.h"
+
+
 #include <cstdio>
 #include <ostream>
 #include <sstream>
@@ -517,11 +520,11 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
     if (kernel && isKernel && kernel->sgv) {
       if (kernel->sgv->mHasRWG) {
           HSAIL_ASM::DirectiveControl dc = brig.append< HSAIL_ASM::DirectiveControl>();
-          dc.control() = Brig::BRIG_CONTROL_REQUIREDWORKGROUPSIZE;
+          dc.control() = BRIG_CONTROL_REQUIREDWORKGROUPSIZE;
 
           HSAIL_ASM::ItemList opnds;
           for(int i=0; i<3; ++i) {
-            opnds.push_back(brig.createImmed(kernel->sgv->reqGroupSize[i],Brig::BRIG_TYPE_U32));
+            opnds.push_back(brig.createImmed(kernel->sgv->reqGroupSize[i], BRIG_TYPE_U32));
           }
           dc.operands() = opnds;
       }

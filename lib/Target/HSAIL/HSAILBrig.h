@@ -1,3 +1,4 @@
+//===------------------------------------------------------------*- C++ -*-===//
 // University of Illinois/NCSA
 // Open Source License
 //
@@ -38,13 +39,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
 // SOFTWARE.
-#ifndef INCLUDED_BRIG_H
-#define INCLUDED_BRIG_H
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILBRIG_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILBRIG_H
 
 #include "llvm/Support/DataTypes.h"
+#include "libHSAIL/Brig.h"
 
-namespace Brig {
-#include "libHSAIL/Brig_new.hpp"
-}
-
-#endif // defined(INCLUDED_BRIG_H)
+#endif

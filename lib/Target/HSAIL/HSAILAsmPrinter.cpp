@@ -31,8 +31,6 @@
 #include "llvm/Support/TargetRegistry.h"
 #include "llvm/Target/TargetLoweringObjectFile.h"
 
-#include "libHSAIL/Brig_new.hpp"
-
 using namespace llvm;
 
 static AsmPrinter *createHSAILAsmPrinterPass(TargetMachine &tm,

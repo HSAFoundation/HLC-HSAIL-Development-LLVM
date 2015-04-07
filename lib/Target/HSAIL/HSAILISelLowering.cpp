@@ -711,8 +711,8 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     if (isLoad) {
       // Width qualifier.
         Ops[opNo++] = DAG.getTargetConstant((AddressSpace ==
-          HSAILAS::KERNARG_ADDRESS) ? Brig::BRIG_WIDTH_ALL
-                                    : Brig::BRIG_WIDTH_1, MVT::i32);
+          HSAILAS::KERNARG_ADDRESS) ? BRIG_WIDTH_ALL
+                                    : BRIG_WIDTH_1, MVT::i32);
 
       // Const qualifier.
         Ops[opNo++] = DAG.getTargetConstant(0, MVT::i1);
@@ -938,8 +938,8 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
       getPointerTy(HSAILAS::ARG_ADDRESS));
 
     unsigned BrigType = (unsigned) HSAIL::getBrigType(retType, *DL, CLI.RetSExt);
-    if (BrigType == Brig::BRIG_TYPE_B1)
-      BrigType = Brig::BRIG_TYPE_U32; // Store bit as DWORD
+    if (BrigType == BRIG_TYPE_B1)
+      BrigType = BRIG_TYPE_U32; // Store bit as DWORD
     SDValue SDBrigType =  DAG.getTargetConstant(BrigType, MVT::i32);
     SDValue arrSize = DAG.getTargetConstant(
       HSAIL::getNumElementsInHSAILType(retType, *DL), MVT::i32);
@@ -993,8 +993,8 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     // START array parameter declaration
     unsigned BrigType
       = (unsigned) HSAIL::getBrigType(type, *DL, Outs[j].Flags.isSExt());
-    if (BrigType == Brig::BRIG_TYPE_B1)
-      BrigType = Brig::BRIG_TYPE_U32; // Store bit as DWORD
+    if (BrigType == BRIG_TYPE_B1)
+      BrigType = BRIG_TYPE_U32; // Store bit as DWORD
     SDValue SDBrigType =  DAG.getTargetConstant(BrigType, MVT::i32);
     SDValue arrSize =  DAG.getTargetConstant(
       HSAIL::getNumElementsInHSAILType(type, *DL), MVT::i32);
@@ -1492,7 +1492,7 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
 
     const SDValue Ops[] = {
       Op.getOperand(0), // Chain
-      DAG.getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32), // width
+      DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32), // width
       Op.getOperand(2), // src0
       Op.getOperand(3), // src1
       Op.getOperand(4), // src2
@@ -1507,7 +1507,7 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
 
     const SDValue Ops[] = {
       Op.getOperand(0), // Chain
-      DAG.getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32), // width
+      DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32), // width
       Op.getOperand(2), // src0
       Op.getOperand(3), // src1
       Op.getOperand(4), // src2
@@ -1522,7 +1522,7 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
 
     const SDValue Ops[] = {
       Op.getOperand(0), // Chain
-      DAG.getTargetConstant(Brig::BRIG_WIDTH_WAVESIZE, MVT::i32), // width
+      DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32), // width
       Op.getOperand(2), // src0
       Op.getOperand(3), // src1
       Op.getOperand(4), // src2
@@ -1537,7 +1537,7 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
 
     const SDValue Ops[] = {
       Op.getOperand(0), // Chain
-      DAG.getTargetConstant(Brig::BRIG_WIDTH_WAVESIZE, MVT::i32), // width
+      DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32), // width
       Op.getOperand(2), // src0
       Op.getOperand(3), // src1
       Op.getOperand(4), // src2
@@ -1552,7 +1552,7 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
 
     const SDValue Ops[] = {
       Op.getOperand(0), // Chain
-      DAG.getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32) // width
+      DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32) // width
     };
 
     return DAG.getNode(HSAILISD::ACTIVELANEID, SL, VTs, Ops);
@@ -1563,7 +1563,7 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
 
     const SDValue Ops[] = {
       Op.getOperand(0), // Chain
-      DAG.getTargetConstant(Brig::BRIG_WIDTH_WAVESIZE, MVT::i32) // width
+      DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32) // width
     };
 
     return DAG.getNode(HSAILISD::ACTIVELANEID, SL, VTs, Ops);
@@ -1574,7 +1574,7 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
 
     const SDValue Ops[] = {
       Op.getOperand(0), // Chain
-      DAG.getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32), // width
+      DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32), // width
       Op.getOperand(2)
     };
 
@@ -1586,7 +1586,7 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
 
     const SDValue Ops[] = {
       Op.getOperand(0), // Chain
-      DAG.getTargetConstant(Brig::BRIG_WIDTH_WAVESIZE, MVT::i32), // width
+      DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32), // width
       Op.getOperand(2)
     };
 
@@ -1596,7 +1596,7 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
   case HSAILIntrinsic::HSAIL_activelanemask_v4_b64_b1: {
     const SDValue Ops[] = {
       Op.getOperand(0), // Chain
-      DAG.getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32), // width
+      DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32), // width
       Op.getOperand(2)
     };
 
@@ -1606,7 +1606,7 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
   case HSAILIntrinsic::HSAIL_activelanemask_v4_width_b64_b1: {
     const SDValue Ops[] = {
       Op.getOperand(0), // Chain
-      DAG.getTargetConstant(Brig::BRIG_WIDTH_WAVESIZE, MVT::i32), // width
+      DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32), // width
       Op.getOperand(2)
     };
 
@@ -1654,8 +1654,8 @@ HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
         SDValue Ops[] = {
           DAG.getTargetConstant(samplerHandleIndex, MVT::i32),
           DAG.getRegister(0, getPointerTy()), DAG.getTargetConstant(0, MVT::i32),
-          DAG.getTargetConstant(Brig::BRIG_TYPE_SAMP, MVT::i32),
-          DAG.getTargetConstant(Brig::BRIG_WIDTH_ALL, MVT::i32),
+          DAG.getTargetConstant(BRIG_TYPE_SAMP, MVT::i32),
+          DAG.getTargetConstant(BRIG_WIDTH_ALL, MVT::i32),
           DAG.getTargetConstant(1, MVT::i1), // Const
           DAG.getEntryNode() // Chain
         };
@@ -1861,8 +1861,8 @@ static SDValue getMemFence(SDValue Chain, SDLoc SL, unsigned AS,
     return getMemFenceImpl(Chain, SL,
                            MemoryOrder,
                            MemoryScope,
-                           Brig::BRIG_MEMORY_SCOPE_NONE,
-                           Brig::BRIG_MEMORY_SCOPE_NONE,
+                           BRIG_MEMORY_SCOPE_NONE,
+                           BRIG_MEMORY_SCOPE_NONE,
                            CurDAG);
 
   case HSAILAS::GROUP_ADDRESS:
@@ -1870,15 +1870,15 @@ static SDValue getMemFence(SDValue Chain, SDLoc SL, unsigned AS,
                            MemoryOrder,
                            MemoryScope,
                            MemoryScope,
-                           Brig::BRIG_MEMORY_SCOPE_NONE,
+                           BRIG_MEMORY_SCOPE_NONE,
                            CurDAG);
 
   case HSAILAS::FLAT_ADDRESS:
     return getMemFenceImpl(Chain, SL,
                            MemoryOrder,
                            MemoryScope,
-                           Brig::BRIG_MEMORY_SCOPE_WORKGROUP,
-                           Brig::BRIG_MEMORY_SCOPE_NONE,
+                           BRIG_MEMORY_SCOPE_WORKGROUP,
+                           BRIG_MEMORY_SCOPE_NONE,
                            CurDAG);
 
   default:
@@ -1896,9 +1896,9 @@ SDValue HSAILTargetLowering::LowerATOMIC_LOAD(SDValue Op,
   if (Node->getOrdering() != SequentiallyConsistent)
     return Op;
 
-  unsigned brigMemoryOrder = Brig::BRIG_MEMORY_ORDER_SC_RELEASE;
+  unsigned brigMemoryOrder = BRIG_MEMORY_ORDER_SC_RELEASE;
   unsigned brigMemoryScope = Node->getAddressSpace() == HSAILAS::GROUP_ADDRESS ?
-    Brig::BRIG_MEMORY_SCOPE_WORKGROUP : Brig::BRIG_MEMORY_SCOPE_SYSTEM;
+    BRIG_MEMORY_SCOPE_WORKGROUP : BRIG_MEMORY_SCOPE_SYSTEM;
 
   SDLoc SL(Op);
 
@@ -1928,9 +1928,9 @@ SDValue HSAILTargetLowering::LowerATOMIC_STORE(SDValue Op,
   if (Node->getOrdering() != SequentiallyConsistent)
     return Op;
 
-  unsigned MemoryOrder = Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE;
+  unsigned MemoryOrder = BRIG_MEMORY_ORDER_SC_ACQUIRE;
   unsigned MemoryScope = Node->getAddressSpace() == HSAILAS::GROUP_ADDRESS ?
-    Brig::BRIG_MEMORY_SCOPE_WORKGROUP : Brig::BRIG_MEMORY_SCOPE_SYSTEM;
+    BRIG_MEMORY_SCOPE_WORKGROUP : BRIG_MEMORY_SCOPE_SYSTEM;
 
   SDLoc SL(Op);
 

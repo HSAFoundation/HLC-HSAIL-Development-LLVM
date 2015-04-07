@@ -547,7 +547,7 @@ def AddressSpace : Operand<i32> {
 }
 
 def BrigTypeX : Operand<i32> {
-  let PrintMethod = "printBrigTypeX";
+  let PrintMethod = "printBrigType";
   int NONE = 0;
   int U8 = 1;
   int U16 = 2;

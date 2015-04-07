@@ -302,15 +302,15 @@ SDNode* HSAILDAGToDAGISel::SelectImageIntrinsic(SDNode *Node)
 
   if (IntNo == HSAILIntrinsic::HSAIL_rd_imgf_1d_s32) {
     const SDValue Ops[] = {
-      CurDAG->getTargetConstant(1, MVT::i1),                       // v4
-      CurDAG->getTargetConstant(Brig::BRIG_TYPE_ROIMG, MVT::i32),  // imageType
-      CurDAG->getTargetConstant(Brig::BRIG_TYPE_S32, MVT::i32),    // coordType
-      CurDAG->getTargetConstant(Brig::BRIG_GEOMETRY_1D, MVT::i32), // geometry
-      CurDAG->getTargetConstant(0, MVT::i32),                      // equiv
-      Node->getOperand(2),                                         // image
-      Node->getOperand(3),                                         // sampler
-      Node->getOperand(4),                                         // coordWidth
-      CurDAG->getTargetConstant(Brig::BRIG_TYPE_F32, MVT::i32),    // destType
+      CurDAG->getTargetConstant(1, MVT::i1),                 // v4
+      CurDAG->getTargetConstant(BRIG_TYPE_ROIMG, MVT::i32),  // imageType
+      CurDAG->getTargetConstant(BRIG_TYPE_S32, MVT::i32),    // coordType
+      CurDAG->getTargetConstant(BRIG_GEOMETRY_1D, MVT::i32), // geometry
+      CurDAG->getTargetConstant(0, MVT::i32),                // equiv
+      Node->getOperand(2),                                   // image
+      Node->getOperand(3),                                   // sampler
+      Node->getOperand(4),                                   // coordWidth
+      CurDAG->getTargetConstant(BRIG_TYPE_F32, MVT::i32),    // destType
       Chain
     };
 
@@ -365,8 +365,8 @@ SDNode *HSAILDAGToDAGISel::SelectActiveLaneMask(SDNode *Node) {
   SDValue Ops[] = {
     Node->getOperand(1), // width
     Node->getOperand(2), // src0
-    CurDAG->getTargetConstant(Brig::BRIG_TYPE_B64, MVT::i32), // TypeLength
-    CurDAG->getTargetConstant(Brig::BRIG_TYPE_B1, MVT::i32),  // sourceType
+    CurDAG->getTargetConstant(BRIG_TYPE_B64, MVT::i32), // TypeLength
+    CurDAG->getTargetConstant(BRIG_TYPE_B1, MVT::i32),  // sourceType
     Node->getOperand(0) // Chain
   };
 
@@ -421,11 +421,11 @@ static SDValue getBRIGMemorySegment(SelectionDAG *CurDAG,
   unsigned BRIGMemSegment;
   switch(memSeg) {
     case llvm::HSAILAS::GLOBAL_ADDRESS:
-        BRIGMemSegment = Brig::BRIG_SEGMENT_GLOBAL; break;
+        BRIGMemSegment = BRIG_SEGMENT_GLOBAL; break;
     case llvm::HSAILAS::GROUP_ADDRESS:
-        BRIGMemSegment = Brig::BRIG_SEGMENT_GROUP; break;
+        BRIGMemSegment = BRIG_SEGMENT_GROUP; break;
     case llvm::HSAILAS::FLAT_ADDRESS:
-        BRIGMemSegment = Brig::BRIG_SEGMENT_FLAT; break;
+        BRIGMemSegment = BRIG_SEGMENT_FLAT; break;
     default: llvm_unreachable("unexpected memory segment ");
   }
   SDValue memSegSD = CurDAG->getTargetConstant(BRIGMemSegment,
@@ -438,13 +438,13 @@ static SDValue getBRIGMemoryOrder(SelectionDAG *CurDAG,
                                   AtomicOrdering memOrder) {
   unsigned BRIGMemOrder;
   switch(memOrder) {
-    case Monotonic: BRIGMemOrder = Brig::BRIG_MEMORY_ORDER_RELAXED;break;
-    case Acquire: BRIGMemOrder = Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE;break;
-    case Release: BRIGMemOrder = Brig::BRIG_MEMORY_ORDER_SC_RELEASE;break;
+    case Monotonic: BRIGMemOrder = BRIG_MEMORY_ORDER_RELAXED;break;
+    case Acquire: BRIGMemOrder = BRIG_MEMORY_ORDER_SC_ACQUIRE;break;
+    case Release: BRIGMemOrder = BRIG_MEMORY_ORDER_SC_RELEASE;break;
     case AcquireRelease:
     case SequentiallyConsistent: // atomic_load and atomic_store with SC
                                  // are custom lowered
-                  BRIGMemOrder = Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE; break;
+                  BRIGMemOrder = BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE; break;
     default: llvm_unreachable("unexpected memory order");
   }
   SDValue memOrderSD = CurDAG->getTargetConstant(BRIGMemOrder,
@@ -456,21 +456,21 @@ static SDValue getBRIGAtomicOpcode(SelectionDAG *CurDAG,
                                    unsigned atomicOp) {
   unsigned BRIGAtomicOp;
   switch(atomicOp) {
-    case ISD::ATOMIC_LOAD_ADD: BRIGAtomicOp = Brig::BRIG_ATOMIC_ADD; break;
-    case ISD::ATOMIC_LOAD_SUB: BRIGAtomicOp = Brig::BRIG_ATOMIC_SUB; break;
-    case ISD::ATOMIC_LOAD_OR:  BRIGAtomicOp = Brig::BRIG_ATOMIC_OR; break;
-    case ISD::ATOMIC_LOAD_XOR: BRIGAtomicOp = Brig::BRIG_ATOMIC_XOR; break;
-    case ISD::ATOMIC_LOAD_AND: BRIGAtomicOp = Brig::BRIG_ATOMIC_AND; break;
+    case ISD::ATOMIC_LOAD_ADD: BRIGAtomicOp = BRIG_ATOMIC_ADD; break;
+    case ISD::ATOMIC_LOAD_SUB: BRIGAtomicOp = BRIG_ATOMIC_SUB; break;
+    case ISD::ATOMIC_LOAD_OR:  BRIGAtomicOp = BRIG_ATOMIC_OR; break;
+    case ISD::ATOMIC_LOAD_XOR: BRIGAtomicOp = BRIG_ATOMIC_XOR; break;
+    case ISD::ATOMIC_LOAD_AND: BRIGAtomicOp = BRIG_ATOMIC_AND; break;
     case ISD::ATOMIC_LOAD_MAX:
     case ISD::ATOMIC_LOAD_UMAX:
-                               BRIGAtomicOp = Brig::BRIG_ATOMIC_MAX; break;
+                               BRIGAtomicOp = BRIG_ATOMIC_MAX; break;
     case ISD::ATOMIC_LOAD_MIN:
     case ISD::ATOMIC_LOAD_UMIN:
-                               BRIGAtomicOp = Brig::BRIG_ATOMIC_MIN; break;
-    case ISD::ATOMIC_LOAD:     BRIGAtomicOp = Brig::BRIG_ATOMIC_LD; break;
-    case ISD::ATOMIC_STORE:    BRIGAtomicOp = Brig::BRIG_ATOMIC_ST; break;
-    case ISD::ATOMIC_SWAP:     BRIGAtomicOp = Brig::BRIG_ATOMIC_EXCH; break;
-    case ISD::ATOMIC_CMP_SWAP: BRIGAtomicOp = Brig::BRIG_ATOMIC_CAS; break;
+                               BRIGAtomicOp = BRIG_ATOMIC_MIN; break;
+    case ISD::ATOMIC_LOAD:     BRIGAtomicOp = BRIG_ATOMIC_LD; break;
+    case ISD::ATOMIC_STORE:    BRIGAtomicOp = BRIG_ATOMIC_ST; break;
+    case ISD::ATOMIC_SWAP:     BRIGAtomicOp = BRIG_ATOMIC_EXCH; break;
+    case ISD::ATOMIC_CMP_SWAP: BRIGAtomicOp = BRIG_ATOMIC_CAS; break;
     default: llvm_unreachable("unexpected atomic op");
   }
   SDValue atomicOpSD = CurDAG->getTargetConstant(BRIGAtomicOp,
@@ -574,13 +574,13 @@ static SDValue getBRIGTypeForAtomic(SelectionDAG *CurDAG,
                                     bool isSigned) {
   unsigned BrigType;
   if (is32bit) {
-    if (bitwise) BrigType = Brig::BRIG_TYPE_B32;
-    else if (isSigned) BrigType = Brig::BRIG_TYPE_S32;
-    else BrigType = Brig::BRIG_TYPE_U32;
+    if (bitwise) BrigType = BRIG_TYPE_B32;
+    else if (isSigned) BrigType = BRIG_TYPE_S32;
+    else BrigType = BRIG_TYPE_U32;
   } else {
-    if (bitwise) BrigType = Brig::BRIG_TYPE_B64;
-    else if (isSigned) BrigType = Brig::BRIG_TYPE_S64;
-    else BrigType = Brig::BRIG_TYPE_U64;
+    if (bitwise) BrigType = BRIG_TYPE_B64;
+    else if (isSigned) BrigType = BRIG_TYPE_S64;
+    else BrigType = BRIG_TYPE_U64;
   }
 
   return CurDAG->getTargetConstant(BrigType, MVT::getIntegerVT(32));
@@ -588,7 +588,7 @@ static SDValue getBRIGTypeForAtomic(SelectionDAG *CurDAG,
 
 static SDValue getBRIGMemoryScope(SelectionDAG *CurDAG,
                                   MemSDNode *Mn) {
-  unsigned brigMemScopeVal = Brig::BRIG_MEMORY_SCOPE_WORKGROUP;
+  unsigned brigMemScopeVal = BRIG_MEMORY_SCOPE_WORKGROUP;
   if (Mn->getAddressSpace() != HSAILAS::GROUP_ADDRESS)
     brigMemScopeVal = Mn->getMemoryScope();
 
@@ -689,7 +689,7 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
         CurDAG->getTargetFrameIndex(FIN->getIndex(), MVT::i32),
         CurDAG->getRegister(0, NVT),
         CurDAG->getTargetConstant(0, NVT),
-        CurDAG->getTargetConstant(Brig::BRIG_TYPE_U32, MVT::i32)
+        CurDAG->getTargetConstant(BRIG_TYPE_U32, MVT::i32)
       };
 
       ResNode = CurDAG->SelectNodeTo(Node, HSAIL::LDA, NVT, Ops);
@@ -705,8 +705,8 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
     unsigned AS = GSDN->getAddressSpace();
     SDLoc SL(Node);
 
-    Brig::BrigTypeX BT
-      = (PtrVT == MVT::i32) ? Brig::BRIG_TYPE_U32 : Brig::BRIG_TYPE_U64;
+    BrigType BT
+      = (PtrVT == MVT::i32) ? BRIG_TYPE_U32 : BRIG_TYPE_U64;
 
     const SDValue Ops[] = {
       CurDAG->getTargetConstant(AS, MVT::i32),
@@ -982,41 +982,41 @@ HSAILDAGToDAGISel::SelectAddr(SDValue Addr,
   return true;
 }
 
-static Brig::BrigTypeX getBrigType(MVT::SimpleValueType VT, bool Signed) {
+static BrigType getBrigType(MVT::SimpleValueType VT, bool Signed) {
   switch (VT) {
   case MVT::i32:
-    return Signed ? Brig::BRIG_TYPE_S32 : Brig::BRIG_TYPE_U32;
+    return Signed ? BRIG_TYPE_S32 : BRIG_TYPE_U32;
   case MVT::f32:
-    return Brig::BRIG_TYPE_F32;
+    return BRIG_TYPE_F32;
   case MVT::i8:
-    return Signed ? Brig::BRIG_TYPE_S8 : Brig::BRIG_TYPE_U8;
+    return Signed ? BRIG_TYPE_S8 : BRIG_TYPE_U8;
   case MVT::i16:
-    return Signed ? Brig::BRIG_TYPE_S16 : Brig::BRIG_TYPE_U16;
+    return Signed ? BRIG_TYPE_S16 : BRIG_TYPE_U16;
   case MVT::i64:
-    return Signed ? Brig::BRIG_TYPE_S64 : Brig::BRIG_TYPE_U64;
+    return Signed ? BRIG_TYPE_S64 : BRIG_TYPE_U64;
   case MVT::f64:
-    return Brig::BRIG_TYPE_F64;
+    return BRIG_TYPE_F64;
   case MVT::i1:
-    return Brig::BRIG_TYPE_B1;
+    return BRIG_TYPE_B1;
   default:
     llvm_unreachable("Unhandled type for MVT -> BRIG");
   }
 }
 
-static Brig::BrigTypeX getBrigTypeFromStoreType(MVT::SimpleValueType VT) {
+static BrigType getBrigTypeFromStoreType(MVT::SimpleValueType VT) {
   switch (VT) {
   case MVT::i32:
-    return Brig::BRIG_TYPE_U32;
+    return BRIG_TYPE_U32;
   case MVT::f32:
-    return Brig::BRIG_TYPE_F32;
+    return BRIG_TYPE_F32;
   case MVT::i8:
-    return Brig::BRIG_TYPE_U8;
+    return BRIG_TYPE_U8;
   case MVT::i16:
-    return Brig::BRIG_TYPE_U16;
+    return BRIG_TYPE_U16;
   case MVT::i64:
-    return Brig::BRIG_TYPE_U64;
+    return BRIG_TYPE_U64;
   case MVT::f64:
-    return Brig::BRIG_TYPE_F64;
+    return BRIG_TYPE_F64;
   default:
     llvm_unreachable("Unhandled type for MVT -> BRIG");
   }
@@ -1047,7 +1047,7 @@ bool HSAILDAGToDAGISel::SelectLoadAddr(SDNode *ParentLoad,
   Segment = CurDAG->getTargetConstant(AS, MVT::i32);
   Align = CurDAG->getTargetConstant(Load->getAlignment(), MVT::i32);
   Type = CurDAG->getTargetConstant(BrigType, MVT::i32);
-  Width = CurDAG->getTargetConstant(Brig::BRIG_WIDTH_1, MVT::i32);
+  Width = CurDAG->getTargetConstant(BRIG_WIDTH_1, MVT::i32);
   ModifierMask = CurDAG->getTargetConstant(0, MVT::i32); // TODO: Set if invariant
   return true;
 }
@@ -1079,36 +1079,36 @@ bool HSAILDAGToDAGISel::SelectStoreAddr(SDNode *ParentStore,
   return true;
 }
 
-static Brig::BrigMemoryOrder getBrigMemoryOrder(AtomicOrdering Order) {
+static BrigMemoryOrder getBrigMemoryOrder(AtomicOrdering Order) {
   switch (Order) {
   case Monotonic:
-    return Brig::BRIG_MEMORY_ORDER_RELAXED;
+    return BRIG_MEMORY_ORDER_RELAXED;
   case Acquire:
-    return Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE;
+    return BRIG_MEMORY_ORDER_SC_ACQUIRE;
   case Release:
-    return Brig::BRIG_MEMORY_ORDER_SC_RELEASE;
+    return BRIG_MEMORY_ORDER_SC_RELEASE;
   case AcquireRelease:
   case SequentiallyConsistent:
-    return Brig::BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE;
+    return BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE;
   default:
     llvm_unreachable("unhandled memory order");
   }
 }
 
-static Brig::BrigMemoryScope getBrigMemoryScope(SynchronizationScope Scope,
-                                                unsigned AS) {
+static BrigMemoryScope getBrigMemoryScope(SynchronizationScope Scope,
+                                          unsigned AS) {
   switch (Scope) {
   case SingleThread:
-    return Brig::BRIG_MEMORY_SCOPE_WORKITEM;
+    return BRIG_MEMORY_SCOPE_WORKITEM;
   case CrossThread:
     // FIXME: This needs to be fixed when LLVM support other scope values.
     switch (AS) {
     case HSAILAS::GROUP_ADDRESS:
-      return Brig::BRIG_MEMORY_SCOPE_WORKGROUP;
+      return BRIG_MEMORY_SCOPE_WORKGROUP;
     case HSAILAS::REGION_ADDRESS:
-      return Brig::BRIG_MEMORY_SCOPE_AGENT;
+      return BRIG_MEMORY_SCOPE_AGENT;
     default:
-      return Brig::BRIG_MEMORY_SCOPE_SYSTEM;
+      return BRIG_MEMORY_SCOPE_SYSTEM;
     }
   }
 }
@@ -1150,9 +1150,9 @@ void HSAILDAGToDAGISel::SelectAddrSpaceCastCommon(const AddrSpaceCastSDNode &ASC
   SelectGPROrImm(ASC.getOperand(0), Ptr);
   NoNull = CurDAG->getTargetConstant(0, MVT::i1);
 
-  Brig::BrigTypeX DestBT
+  BrigType DestBT
     = getBrigType(ASC.getValueType(0).getSimpleVT().SimpleTy, false);
-  Brig::BrigTypeX SrcBT
+  BrigType SrcBT
     = getBrigType(Ptr.getValueType().getSimpleVT().SimpleTy, false);
 
   DestType = CurDAG->getTargetConstant(DestBT, MVT::i32);
@@ -1191,82 +1191,82 @@ bool HSAILDAGToDAGISel::SelectFTOS(SDValue Cast,
   return true;
 }
 
-static Brig::BrigCompareOperation getBrigIntCompare(ISD::CondCode CC,
-                                                    bool &Signed) {
+static BrigCompareOperation getBrigIntCompare(ISD::CondCode CC,
+                                              bool &Signed) {
   switch (CC) {
   case ISD::SETUEQ:
     Signed = true; // Sign is irrelevant, use to be consistent.
-    return Brig::BRIG_COMPARE_EQ;
+    return BRIG_COMPARE_EQ;
   case ISD::SETUGT:
-    return Brig::BRIG_COMPARE_GT;
+    return BRIG_COMPARE_GT;
   case ISD::SETUGE:
-    return Brig::BRIG_COMPARE_GE;
+    return BRIG_COMPARE_GE;
   case ISD::SETULT:
-    return Brig::BRIG_COMPARE_LT;
+    return BRIG_COMPARE_LT;
   case ISD::SETULE:
-    return Brig::BRIG_COMPARE_LE;
+    return BRIG_COMPARE_LE;
   case ISD::SETUNE:
     Signed = true; // Sign is irrelevant, use to be consistent.
-    return Brig::BRIG_COMPARE_NE;
+    return BRIG_COMPARE_NE;
   case ISD::SETEQ:
     Signed = true;
-    return Brig::BRIG_COMPARE_EQ;
+    return BRIG_COMPARE_EQ;
   case ISD::SETGT:
     Signed = true;
-    return Brig::BRIG_COMPARE_GT;
+    return BRIG_COMPARE_GT;
   case ISD::SETGE:
     Signed = true;
-    return Brig::BRIG_COMPARE_GE;
+    return BRIG_COMPARE_GE;
   case ISD::SETLT:
     Signed = true;
-    return Brig::BRIG_COMPARE_LT;
+    return BRIG_COMPARE_LT;
   case ISD::SETLE:
     Signed = true;
-    return Brig::BRIG_COMPARE_LE;
+    return BRIG_COMPARE_LE;
   case ISD::SETNE:
     Signed = true;
-    return Brig::BRIG_COMPARE_NE;
+    return BRIG_COMPARE_NE;
   default:
     llvm_unreachable("unhandled cond code");
   }
 }
 
-static Brig::BrigCompareOperation getBrigFPCompare(ISD::CondCode CC) {
+static BrigCompareOperation getBrigFPCompare(ISD::CondCode CC) {
   switch (CC) {
   case ISD::SETOEQ:
   case ISD::SETEQ:
-    return Brig::BRIG_COMPARE_EQ;
+    return BRIG_COMPARE_EQ;
   case ISD::SETOGT:
   case ISD::SETGT:
-    return Brig::BRIG_COMPARE_GT;
+    return BRIG_COMPARE_GT;
   case ISD::SETOGE:
   case ISD::SETGE:
-    return Brig::BRIG_COMPARE_GE;
+    return BRIG_COMPARE_GE;
   case ISD::SETOLT:
   case ISD::SETLT:
-    return Brig::BRIG_COMPARE_LT;
+    return BRIG_COMPARE_LT;
   case ISD::SETOLE:
   case ISD::SETLE:
-    return Brig::BRIG_COMPARE_LE;
+    return BRIG_COMPARE_LE;
   case ISD::SETONE:
   case ISD::SETNE:
-    return Brig::BRIG_COMPARE_NE;
+    return BRIG_COMPARE_NE;
   case ISD::SETO:
-    return Brig::BRIG_COMPARE_NUM;
+    return BRIG_COMPARE_NUM;
   case ISD::SETUO:
-    return Brig::BRIG_COMPARE_NAN;
+    return BRIG_COMPARE_NAN;
   case ISD::SETUEQ:
-    return Brig::BRIG_COMPARE_EQU;
+    return BRIG_COMPARE_EQU;
   case ISD::SETUGT:
-    return Brig::BRIG_COMPARE_GTU;
+    return BRIG_COMPARE_GTU;
   case ISD::SETUGE:
-    return Brig::BRIG_COMPARE_GEU;
+    return BRIG_COMPARE_GEU;
   case ISD::SETULT:
-    return Brig::BRIG_COMPARE_LTU;
+    return BRIG_COMPARE_LTU;
   case ISD::SETULE:
-    return Brig::BRIG_COMPARE_LEU;
+    return BRIG_COMPARE_LEU;
   case ISD::SETUNE:
-    return Brig::BRIG_COMPARE_NEU;
+    return BRIG_COMPARE_NEU;
   default:
     llvm_unreachable("unhandled cond code");
   }
@@ -1288,7 +1288,7 @@ bool HSAILDAGToDAGISel::SelectSetCC(SDValue SetCC,
   MVT VT = LHS.getValueType().getSimpleVT();
   ISD::CondCode CC = cast<CondCodeSDNode>(SetCC.getOperand(2))->get();
   bool Signed = false;
-  Brig::BrigCompareOperation BrigCmp;
+  BrigCompareOperation BrigCmp;
 
   if (VT.isFloatingPoint())
     BrigCmp = getBrigFPCompare(CC);
@@ -1300,10 +1300,10 @@ bool HSAILDAGToDAGISel::SelectSetCC(SDValue SetCC,
 
 
   // TODO: Should be able to fold conversions into this instead.
-  DestType = CurDAG->getTargetConstant(Brig::BRIG_TYPE_B1, MVT::i32);
+  DestType = CurDAG->getTargetConstant(BRIG_TYPE_B1, MVT::i32);
 
 
-  Brig::BrigTypeX SrcBT = getBrigType(VT.SimpleTy, Signed);
+  BrigType SrcBT = getBrigType(VT.SimpleTy, Signed);
   SrcType = CurDAG->getTargetConstant(SrcBT, MVT::i32);
 
   return true;

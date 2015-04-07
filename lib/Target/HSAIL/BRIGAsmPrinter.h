@@ -22,13 +22,10 @@
 #include "llvm/Support/Compiler.h"
 #include "llvm/Support/TargetRegistry.h"
 
-// below all are in assembler/libHSAIL
-//
 #include "MCTargetDesc/RawVectorOstream.h"
-#include "libHSAIL/HSAILItemBase.h"
-#include "libHSAIL/HSAILItems.h"
-#include "libHSAIL/HSAILParser.h"
+
 #include "libHSAIL/HSAILBrigantine.h"
+
 
 namespace llvm {
 
@@ -266,14 +263,14 @@ private:
                               HSAIL_ARG_TYPE arg_type = ARG_TYPE_NONE);
   std::string getHSAILReg(Type* type);
 
-  Brig::BrigSegment8_t getHSAILSegment(unsigned AddressSpace) const;
-  Brig::BrigSegment8_t getHSAILSegment(const GlobalVariable* gv) const;
+  BrigSegment8_t getHSAILSegment(unsigned AddressSpace) const;
+  BrigSegment8_t getHSAILSegment(const GlobalVariable* gv) const;
 
-  Brig::BrigAtomicOperation getAtomicOpcode(const MachineInstr *MI) const;
-  Brig::BrigSegment getAtomicSegment(const MachineInstr *MI) const;
-  Brig::BrigMemoryOrder getAtomicOrder(const MachineInstr *MI) const;
-  Brig::BrigMemoryScope getAtomicScope(const MachineInstr *MI) const;
-  Brig::BrigTypeX getAtomicType(const MachineInstr *MI) const;
+  BrigAtomicOperation getAtomicOpcode(const MachineInstr *MI) const;
+  BrigSegment getAtomicSegment(const MachineInstr *MI) const;
+  BrigMemoryOrder getAtomicOrder(const MachineInstr *MI) const;
+  BrigMemoryScope getAtomicScope(const MachineInstr *MI) const;
+  BrigType getAtomicType(const MachineInstr *MI) const;
 
   bool canInitHSAILAddressSpace(const GlobalVariable* gv) const;
   void EmitBasicBlockStart(const MachineBasicBlock &MBB);
@@ -287,9 +284,9 @@ private:
 
   HSAIL_ASM::OperandRegister getBrigReg(MachineOperand s);
 
-  HSAIL_ASM::DirectiveVariable EmitLocalVariable(const GlobalVariable *GV, Brig::BrigSegment8_t segment);
+  HSAIL_ASM::DirectiveVariable EmitLocalVariable(const GlobalVariable *GV, BrigSegment8_t segment);
 
-  Brig::BrigAlignment8_t getBrigAlignment(unsigned align_value);
+  BrigAlignment8_t getBrigAlignment(unsigned align_value);
 
   HSAIL_ASM::Inst EmitInstructionImpl(const MachineInstr *);
 };

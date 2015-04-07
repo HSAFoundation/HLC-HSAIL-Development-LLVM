@@ -67,11 +67,9 @@
 #include <set>
 #include <map>
 
-// Brig lowering
-#include "libHSAIL/HSAILBrigantine.h"
-#include "libHSAIL/HSAILItemBase.h"
-#include "libHSAIL/HSAILItems.h"
-
+namespace HSAIL_ASM {
+class Brigantine;
+}
 
 namespace llvm {
 class HSAILSubtarget;

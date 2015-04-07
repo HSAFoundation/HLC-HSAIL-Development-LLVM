@@ -104,43 +104,43 @@ uint64_t getNumElementsInHSAILType(Type* type, const DataLayout& dataLayout) {
   return 0;
 }
 
-Brig::BrigTypeX getBrigType(Type* type, const DataLayout &DL, bool Signed) {
+BrigType getBrigType(Type* type, const DataLayout &DL, bool Signed) {
   switch (type->getTypeID()) {
   case Type::VoidTyID:
-    return Brig::BRIG_TYPE_NONE; // TODO_HSA: FIXME: void
+    return BRIG_TYPE_NONE; // TODO_HSA: FIXME: void
   case Type::FloatTyID:
-    return Brig::BRIG_TYPE_F32;
+    return BRIG_TYPE_F32;
   case Type::DoubleTyID:
-    return Brig::BRIG_TYPE_F64;
+    return BRIG_TYPE_F64;
   case Type::IntegerTyID:
     if (type->isIntegerTy(8)) {
-      return Signed ? Brig::BRIG_TYPE_S8 : Brig::BRIG_TYPE_U8;
+      return Signed ? BRIG_TYPE_S8 : BRIG_TYPE_U8;
     } else if (type->isIntegerTy(16)) {
-      return Signed ? Brig::BRIG_TYPE_S16 : Brig::BRIG_TYPE_U16;
+      return Signed ? BRIG_TYPE_S16 : BRIG_TYPE_U16;
     } else if (type->isIntegerTy(32)) {
-      return Signed ? Brig::BRIG_TYPE_S32 : Brig::BRIG_TYPE_U32;
+      return Signed ? BRIG_TYPE_S32 : BRIG_TYPE_U32;
     } else if (type->isIntegerTy(64)) {
-      return Signed ? Brig::BRIG_TYPE_S64 : Brig::BRIG_TYPE_U64;
+      return Signed ? BRIG_TYPE_S64 : BRIG_TYPE_U64;
     } else if (type->isIntegerTy(1)) {
-      return Brig::BRIG_TYPE_B1;
+      return BRIG_TYPE_B1;
     } else
       llvm_unreachable("Unhandled type");
     break;
   case Type::PointerTyID: {
     if (OpaqueType OT = GetOpaqueType(type)) {
-      if (IsImage(OT)) return Brig::BRIG_TYPE_RWIMG;
-      if (OT == Sampler) return Brig::BRIG_TYPE_SAMP;
+      if (IsImage(OT)) return BRIG_TYPE_RWIMG;
+      if (OT == Sampler) return BRIG_TYPE_SAMP;
     }
     unsigned AS = cast<PointerType>(type)->getAddressSpace();
-    return DL.getPointerSize(AS) == 8 ? Brig::BRIG_TYPE_U64 : Brig::BRIG_TYPE_U32;
+    return DL.getPointerSize(AS) == 8 ? BRIG_TYPE_U64 : BRIG_TYPE_U32;
   }
   case Type::StructTyID:
     // Treat struct as array of bytes.
-    return Brig::BRIG_TYPE_U8_ARRAY;
+    return BRIG_TYPE_U8_ARRAY;
   case Type::VectorTyID:
-    return static_cast<Brig::BrigTypeX>(getBrigType(type->getScalarType(), DL, Signed) | Brig::BRIG_TYPE_ARRAY);
+    return static_cast<BrigType>(getBrigType(type->getScalarType(), DL, Signed) | BRIG_TYPE_ARRAY);
   case Type::ArrayTyID:
-    return static_cast<Brig::BrigTypeX>(getBrigType(cast<ArrayType>(type)->getElementType(), DL, Signed) | Brig::BRIG_TYPE_ARRAY);
+    return static_cast<BrigType>(getBrigType(cast<ArrayType>(type)->getElementType(), DL, Signed) | BRIG_TYPE_ARRAY);
   default:
     type->dump();
     llvm_unreachable("Unhandled type");
@@ -160,8 +160,8 @@ unsigned getAlignTypeQualifier(Type *ty, const DataLayout& DL,
   align = isPreferred ? DL.getPrefTypeAlignment(ty)
                       : DL.getABITypeAlignment(ty);
 
-  unsigned max_align = (1 << (Brig::BRIG_ALIGNMENT_MAX -
-                              Brig::BRIG_ALIGNMENT_1));
+  unsigned max_align = (1 << (BRIG_ALIGNMENT_MAX -
+                              BRIG_ALIGNMENT_1));
   if (align > max_align) align = max_align;
 
   assert(align && (align & (align - 1)) == 0);
