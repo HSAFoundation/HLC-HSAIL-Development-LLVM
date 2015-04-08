@@ -33,6 +33,11 @@
 ; HSAIL: {{^}}prog readonly_u32 &external_gv[1];
 @external_gv = external addrspace(2) global [1 x i32], align 4
 
+; HSAIL: {{^}}decl function &linkonce_odr_func(
+; HSAIL: {{^}}function &linkonce_odr_func
+define linkonce_odr i32 @linkonce_odr_func(i32) {
+  ret i32 undef
+}
 
 define i32 @private_gv_user() #0 {
   %tmp = getelementptr inbounds [1 x i32] addrspace(2)* @private_gv, i64 0, i64 undef

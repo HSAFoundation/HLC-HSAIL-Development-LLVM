@@ -1615,10 +1615,7 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
   else
     fx = brigantine.declFunc(NameWithPrefix);
 
-  fx.linkage() = F->isExternalLinkage(F->getLinkage()) ?
-    BRIG_LINKAGE_PROGRAM :
-    ( F->isInternalLinkage(F->getLinkage()) ? BRIG_LINKAGE_MODULE
-                                            : BRIG_LINKAGE_NONE);
+  fx.linkage() = findGlobalBrigLinkage(*F);
 
   // Functions with kernel linkage cannot have output args
   if (!isKernel) {
