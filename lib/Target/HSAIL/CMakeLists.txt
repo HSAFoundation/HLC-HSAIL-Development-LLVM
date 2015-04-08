@@ -12,7 +12,14 @@ tablegen(LLVM HSAILGenMnemonicMapper.inc -gen-mnemonic-mapper)
 
 add_public_tablegen_target(HSAILCommonTableGen)
 
-add_subdirectory(libHSAIL)
+find_path(LIBHSAIL_INCLUDE_DIR
+  NAMES
+  libHSAIL/Brig.h)
+
+find_library(LIBHSAIL_LIBRARIES hsail)
+
+include_directories(${LIBHSAIL_INCLUDE_DIR})
+
 add_subdirectory(HSAILUtil)
 
 set(sources
@@ -58,7 +65,7 @@ endif()
 
 add_llvm_target(HSAILCodeGen ${sources})
 
-target_link_libraries(LLVMHSAILCodeGen PRIVATE HSAIL LLVMHSAILUtil)
+target_link_libraries(LLVMHSAILCodeGen PRIVATE ${LIBHSAIL_LIBRARIES} LLVMHSAILUtil)
 
 # add_dependencies(LLVMHSAILCodeGen
 #   LLVMAnalysis
