@@ -202,41 +202,6 @@ HSAILRegisterInfo::requiresFrameIndexScavenging(const MachineFunction &MF) const
   return true;
 }
 
-/// eliminateCallFramePseudoInstr - This method is called during prolog/epilog
-/// code insertion to eliminate call frame setup and destroy pseudo
-/// instructions (but only if the Target is using them).  It is responsible
-/// for eliminating these instructions, replacing them with concrete
-/// instructions.  This method need only be implemented if using call frame
-/// setup/destroy pseudo instructions.
-///
-void
-HSAILRegisterInfo::eliminateCallFramePseudoInstr(MachineFunction &MF,
-                                                 MachineBasicBlock &MBB,
-                                                 MachineBasicBlock::iterator MI) const
-{
-  MBB.erase(MI);
-}
-
-
-/// saveScavengerRegister - Spill the register so it can be used by the
-/// register scavenger. Return true if the register was spilled, false
-/// otherwise. If this function does not spill the register, the scavenger
-/// will instead spill it to the emergency spill slot.
-///
-bool
-HSAILRegisterInfo::saveScavengerRegister(MachineBasicBlock &MBB,
-                                         MachineBasicBlock::iterator I,
-                                         MachineBasicBlock::iterator &UseMI,
-                                         const TargetRegisterClass *RC,
-                                         unsigned Reg) const
-{
-  MachineFunction *MF = MBB.getParent();
-  MachineFrameInfo *MFI = MF->getFrameInfo();
-
-  return saveScavengerRegisterToFI(MBB, I, UseMI, RC, Reg,
-    MFI->CreateSpillStackObject(RC->getSize(), RC->getAlignment()));
-}
-
 static int getScavengingFrameIndex(RegScavenger *RS) {
 
   SmallVector<int, 8> FI;
