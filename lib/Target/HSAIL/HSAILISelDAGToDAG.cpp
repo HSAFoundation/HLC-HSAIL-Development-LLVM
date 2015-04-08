@@ -69,19 +69,15 @@ public:
   // Default constructor required for Initiallizing PASS
   explicit HSAILDAGToDAGISel()
 	: SelectionDAGISel(TM, OptLevel) {}
-	 
-  virtual const char*
-  getPassName() const
-  {
+
+  const char* getPassName() const override {
     return "HSAIL DAG->DAG Instruction Selection";
   }
 
-  virtual bool
-  IsProfitableToFold(SDValue N, SDNode *U, SDNode *Root) const;
+  bool IsProfitableToFold(SDValue N, SDNode *U, SDNode *Root) const override;
 
 private:
-  SDNode*
-  Select(SDNode *N);
+  SDNode *Select(SDNode *N) override;
 
   SDNode* SelectINTRINSIC_W_CHAIN(SDNode *Node);
   SDNode* SelectINTRINSIC_WO_CHAIN(SDNode *Node);
