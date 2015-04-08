@@ -278,13 +278,11 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
                               MachineBasicBlock *&TBB,
                               MachineBasicBlock *&FBB,
                               SmallVectorImpl<MachineOperand> &Cond,
-                              bool AllowModify,
-                              bool IgnoreDependencies) const
-{
+                              bool AllowModify) const {
   const MachineRegisterInfo &MRI = MBB.getParent()->getRegInfo();
   if (DisableBranchAnalysis)
     return true;
-  
+
   // Start from the bottom of the block and work up, examining the
   // terminator instructions.
   MachineBasicBlock::iterator I = MBB.end();

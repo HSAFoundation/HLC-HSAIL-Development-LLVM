@@ -583,200 +583,78 @@ public:
 
   ~HSAILInstrInfo();
 
-  /// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
-  /// such, whenever a client has an instance of instruction info, it should
-  /// always be able to get register info as well (through this method).
-  virtual const HSAILRegisterInfo&
-  getRegisterInfo() const
-  {
+  const HSAILRegisterInfo &getRegisterInfo() const {
     return RI;
   }
 
-  /// isCoalescableExtInstr - Return true if the instruction is a "coalescable"
-  /// extension instruction. That is, it's like a copy where it's legal for the
-  /// source to overlap the destination. e.g. X86::MOVSX64rr32. If this returns
-  /// true, then it's expected the pre-extension value is available as a subreg
-  /// of the result register. This also returns the sub-register index in
-  /// SubIdx.
-  virtual bool
-  isCoalescableExtInstr(const MachineInstr &MI,
-                        unsigned &SrcReg, unsigned &DstReg,
-                        unsigned &SubIdx) const;
+  bool isCoalescableExtInstr(const MachineInstr &MI,
+                             unsigned &SrcReg, unsigned &DstReg,
+                             unsigned &SubIdx) const override;
 
+  unsigned isLoadFromStackSlot(const MachineInstr *MI,
+                               int &FrameIndex) const override;
 
-   /// isLoadFromStackSlot - If the specified machine instruction is a direct
-  /// load from a stack slot, return the virtual or physical register number of
-  /// the destination along with the FrameIndex of the loaded stack slot.  If
-  /// not, return 0.  This predicate must return 0 if the instruction has
-  /// any side effects other than loading from the stack slot.
-  virtual unsigned
-  isLoadFromStackSlot(const MachineInstr *MI,
-                      int &FrameIndex) const;
+  unsigned isLoadFromStackSlotPostFE(const MachineInstr *MI,
+                                     int &FrameIndex) const override;
 
+  unsigned isStoreToStackSlot(const MachineInstr *MI,
+                              int &FrameIndex) const override;
 
-  /// isLoadFromStackSlotPostFE - Check for post-frame ptr elimination
-  /// stack locations as well.  This uses a heuristic so it isn't
-  /// reliable for correctness.
-  virtual unsigned
-  isLoadFromStackSlotPostFE(const MachineInstr *MI,
-                            int &FrameIndex) const;
+  unsigned isStoreToStackSlotPostFE(const MachineInstr *MI,
+                                    int &FrameIndex) const override;
 
+  bool AnalyzeBranch(MachineBasicBlock &MBB,
+                     MachineBasicBlock *&TBB,
+                     MachineBasicBlock *&FBB,
+                     SmallVectorImpl<MachineOperand> &Cond,
+                     bool AllowModify = false) const override;
 
-  /// isStoreToStackSlot - If the specified machine instruction is a direct
-  /// store to a stack slot, return the virtual or physical register number of
-  /// the source reg along with the FrameIndex of the loaded stack slot.  If
-  /// not, return 0.  This predicate must return 0 if the instruction has
-  /// any side effects other than storing to the stack slot.
-  virtual unsigned
-  isStoreToStackSlot(const MachineInstr *MI,
-                     int &FrameIndex) const;
+  unsigned RemoveBranch(MachineBasicBlock &MBB) const override;
 
+  unsigned InsertBranch(MachineBasicBlock &MBB,
+                        MachineBasicBlock *TBB,
+                        MachineBasicBlock *FBB,
+                        const SmallVectorImpl<MachineOperand> &Cond,
+                        DebugLoc DL) const override;
 
-  /// isStoreToStackSlotPostFE - Check for post-frame ptr elimination
-  /// stack locations as well.  This uses a heuristic so it isn't
-  /// reliable for correctness.
-  virtual unsigned
-  isStoreToStackSlotPostFE(const MachineInstr *MI,
-                           int &FrameIndex) const;
+  void copyPhysReg(MachineBasicBlock &MBB,
+                   MachineBasicBlock::iterator MI,
+                   DebugLoc DL,
+                   unsigned DestReg,
+                   unsigned SrcReg,
+                   bool KillSrc) const override;
 
-  /// AnalyzeBranch - Analyze the branching code at the end of MBB, returning
-  /// true if it cannot be understood (e.g. it's a switch dispatch or isn't
-  /// implemented for a target).  Upon success, this returns false and returns
-  /// with the following information in various cases:
-  ///
-  /// 1. If this block ends with no branches (it just falls through to its succ)
-  ///    just return false, leaving TBB/FBB null.
-  /// 2. If this block ends with only an unconditional branch, it sets TBB to be
-  ///    the destination block.
-  /// 3. If this block ends with a conditional branch and it falls through to a
-  ///    successor block, it sets TBB to be the branch destination block and a
-  ///    list of operands that evaluate the condition. These operands can be
-  ///    passed to other TargetInstrInfo methods to create new branches.
-  /// 4. If this block ends with a conditional branch followed by an
-  ///    unconditional branch, it returns the 'true' destination in TBB, the
-  ///    'false' destination in FBB, and a list of operands that evaluate the
-  ///    condition.  These operands can be passed to other TargetInstrInfo
-  ///    methods to create new branches.
-  ///
-  /// Note that RemoveBranch and InsertBranch must be implemented to support
-  /// cases where this method returns success.
-  ///
-  /// If AllowModify is true, then this routine is allowed to modify the basic
-  /// block (e.g. delete instructions after the unconditional branch).
-  ///
-  virtual bool
-  AnalyzeBranch(MachineBasicBlock &MBB,
-                MachineBasicBlock *&TBB,
-                MachineBasicBlock *&FBB,
-                SmallVectorImpl<MachineOperand> &Cond,
-                bool AllowModify = false) const
-  {
-    return AnalyzeBranch(MBB, TBB, FBB, Cond, AllowModify, false);
-  }
+  void storeRegToStackSlot(MachineBasicBlock &MBB,
+                           MachineBasicBlock::iterator MI,
+                           unsigned SrcReg,
+                           bool isKill,
+                           int FrameIndex,
+                           const TargetRegisterClass *RC,
+                           const TargetRegisterInfo *TRI) const override;
 
-  bool
-  AnalyzeBranch(MachineBasicBlock &MBB,
-                MachineBasicBlock *&TBB,
-                MachineBasicBlock *&FBB,
-                SmallVectorImpl<MachineOperand> &Cond,
-                bool AllowModify = false,
-                bool IgnoreDependencies = false) const;
-
-  /// RemoveBranch - Remove the branching code at the end of the specific MBB.
-  /// This is only invoked in cases where AnalyzeBranch returns success. It
-  /// returns the number of instructions that were removed.
-  virtual unsigned
-  RemoveBranch(MachineBasicBlock &MBB) const;
-
-  /// InsertBranch - Insert branch code into the end of the specified
-  /// MachineBasicBlock.  The operands to this method are the same as those
-  /// returned by AnalyzeBranch.  This is only invoked in cases where
-  /// AnalyzeBranch returns success. It returns the number of instructions
-  /// inserted.
-  ///
-  /// It is also invoked by tail merging to add unconditional branches in
-  /// cases where AnalyzeBranch doesn't apply because there was no original
-  /// branch to analyze.  At least this much must be implemented, else tail
-  /// merging needs to be disabled.
-  virtual unsigned
-  InsertBranch(MachineBasicBlock &MBB,
-               MachineBasicBlock *TBB,
-               MachineBasicBlock *FBB,
-               const SmallVectorImpl<MachineOperand> &Cond,
-               DebugLoc DL) const;
-
-  /// copyPhysReg - Emit instructions to copy a pair of physical registers.
-  virtual void
-  copyPhysReg(MachineBasicBlock &MBB,
-              MachineBasicBlock::iterator MI,
-              DebugLoc DL,
-              unsigned DestReg,
-              unsigned SrcReg,
-              bool KillSrc) const;
-
-  /// storeRegToStackSlot - Store the specified register of the given register
-  /// class to the specified stack frame index. The store instruction is to be
-  /// added to the given machine basic block before the specified machine
-  /// instruction. If isKill is true, the register operand is the last use and
-  /// must be marked kill.
-  virtual void
-  storeRegToStackSlot(MachineBasicBlock &MBB,
-                      MachineBasicBlock::iterator MI,
-                      unsigned SrcReg,
-                      bool isKill,
-                      int FrameIndex,
-                      const TargetRegisterClass *RC,
-                      const TargetRegisterInfo *TRI) const;
-
-  /// loadRegFromStackSlot - Load the specified register of the given register
-  /// class from the specified stack frame index. The load instruction is to be
-  /// added to the given machine basic block before the specified machine
-  /// instruction.
-  virtual void
-  loadRegFromStackSlot(MachineBasicBlock &MBB,
-                       MachineBasicBlock::iterator MI,
-                       unsigned DestReg,
-                       int FrameIndex,
-                       const TargetRegisterClass *RC,
-                       const TargetRegisterInfo *TRI) const;
+  void loadRegFromStackSlot(MachineBasicBlock &MBB,
+                            MachineBasicBlock::iterator MI,
+                            unsigned DestReg,
+                            int FrameIndex,
+                            const TargetRegisterClass *RC,
+                            const TargetRegisterInfo *TRI) const override;
 
 public:
-  /// areLoadsFromSameBasePtr - This is used by the pre-regalloc scheduler
-  /// to determine if two loads are loading from the same base address. It
-  /// should only return true if the base pointers are the same and the
-  /// only differences between the two addresses are the offset. It also returns
-  /// the offsets by reference.
-  virtual bool
-  areLoadsFromSameBasePtr(SDNode *Node1,
-                          SDNode *Node2,
-                          int64_t &Offset1,
-                          int64_t &Offset2) const;
+  bool areLoadsFromSameBasePtr(SDNode *Node1,
+                               SDNode *Node2,
+                               int64_t &Offset1,
+                               int64_t &Offset2) const override;
 
-  /// shouldScheduleLoadsNear - This is a used by the pre-regalloc scheduler to
-  /// determine (in conjuction with areLoadsFromSameBasePtr) if two loads should
-  /// be scheduled togther. On some targets if two loads are loading from
-  /// addresses in the same cache line, it's better if they are scheduled
-  /// together. This function takes two integers that represent the load offsets
-  /// from the common base address. It returns true if it decides it's desirable
-  /// to schedule the two loads together. "NumLoads" is the number of loads that
-  /// have already been scheduled after Load1.
-  virtual bool
-  shouldScheduleLoadsNear(SDNode *Node1,
-                          SDNode *Node2,
-                          int64_t Offset1,
-                          int64_t Offset2,
-                          unsigned NumLoads) const;
+  bool shouldScheduleLoadsNear(SDNode *Node1,
+                               SDNode *Node2,
+                               int64_t Offset1,
+                               int64_t Offset2,
+                               unsigned NumLoads) const override;
 
-  /// ReverseBranchCondition - Reverses the branch condition of the specified
-  /// condition list, returning false on success and true if it cannot be
-  /// reversed.
-  virtual bool
-  ReverseBranchCondition(SmallVectorImpl<MachineOperand> &Cond) const;
+  bool ReverseBranchCondition(
+    SmallVectorImpl<MachineOperand> &Cond) const override;
 
-  /// isSafeToMoveRegClassDefs - Return true if it's safe to move a machine
-  /// instruction that defines the specified register class.
-  virtual bool
-  isSafeToMoveRegClassDefs(const TargetRegisterClass *RC) const;
+  bool isSafeToMoveRegClassDefs(const TargetRegisterClass *RC) const override;
 
   bool
   copyRegToReg(MachineBasicBlock &MBB,
@@ -791,8 +669,7 @@ public:
     return RS;
   }
 
-  bool
-  expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const;
+  bool expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const override;
 
   const TargetRegisterClass *getOpRegClass(const MachineRegisterInfo &MRI,
                                            const MachineInstr &MI,
