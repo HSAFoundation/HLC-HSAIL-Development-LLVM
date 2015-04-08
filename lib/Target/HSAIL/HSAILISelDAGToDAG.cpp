@@ -62,13 +62,11 @@ class HSAILDAGToDAGISel : public SelectionDAGISel {
   const HSAILSubtarget *Subtarget;
 
 public:
-  explicit HSAILDAGToDAGISel(HSAILTargetMachine &tm, CodeGenOpt::Level OptLevel)
-    : SelectionDAGISel(tm, OptLevel),
-      Subtarget(&tm.getSubtarget<HSAILSubtarget>()) {}
+  explicit HSAILDAGToDAGISel(TargetMachine &TM)
+    : SelectionDAGISel(TM),
+      Subtarget(&TM.getSubtarget<HSAILSubtarget>()) {}
 
-  // Default constructor required for Initiallizing PASS
-  explicit HSAILDAGToDAGISel()
-	: SelectionDAGISel(TM, OptLevel) {}
+  virtual ~HSAILDAGToDAGISel() {}
 
   const char* getPassName() const override {
     return "HSAIL DAG->DAG Instruction Selection";
@@ -173,9 +171,6 @@ private:
 
 }
 
-  // Register pass in passRegistry so that the pass info gets populated for printing debug info 
-  INITIALIZE_PASS(HSAILDAGToDAGISel, "hsail-isel",
-                "HSAIL DAG->DAG Instruction Selection", false, false)			
 bool
 HSAILDAGToDAGISel::IsProfitableToFold(SDValue N,
                                       SDNode *U,
@@ -1305,11 +1300,6 @@ bool HSAILDAGToDAGISel::SelectSetCC(SDValue SetCC,
   return true;
 }
 
-/// createHSAILISelDag - This pass converts a legalized DAG into a
-/// HSAIL-specific DAG, ready for instruction scheduling.
-FunctionPass*
-llvm::createHSAILISelDag(HSAILTargetMachine &TM,
-    llvm::CodeGenOpt::Level OptLevel)
-{
-  return new HSAILDAGToDAGISel(TM, OptLevel);
+FunctionPass *llvm::createHSAILISelDag(TargetMachine &TM) {
+  return new HSAILDAGToDAGISel(TM);
 }

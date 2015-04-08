@@ -108,9 +108,7 @@ createHSAILEarlyCFGOpts();
 
 /// createHSAILISelDag - This pass converts a legalized DAG into a
 /// HSAIL-specific DAG, ready for instruction scheduling.
-FunctionPass*
-createHSAILISelDag(HSAILTargetMachine &TM,
-                   CodeGenOpt::Level OptLevel);
+FunctionPass *createHSAILISelDag(TargetMachine &TM);
 
 /// createGlobalBaseRegPass - This pass initializes a global base
 /// register for PIC on x86-32.

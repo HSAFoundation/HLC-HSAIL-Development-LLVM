@@ -128,7 +128,7 @@ bool HSAILPassConfig::addInstSelector() {
     //mOptLevel = OptLevel;
   // Install an instruction selector.
 
-  addPass(createHSAILISelDag(HSATM, HSATM.getOptLevel()));
+  addPass(createHSAILISelDag(HSATM));
 
 #if 0
   addPass(&DeadMachineInstructionElimID);
