@@ -69,8 +69,10 @@ public:
 
   unsigned getByValTypeAlignment(Type *Ty) const override;
 
-  virtual bool
-  allowsUnalignedMemoryAccesses(EVT VT) const;
+  bool allowsMisalignedMemoryAccesses(EVT,
+                                      unsigned AddrSpace = 0,
+                                      unsigned Align = 1,
+                                      bool * /*Fast*/ = nullptr) const override;
 
   unsigned getJumpTableEncoding() const override;
 

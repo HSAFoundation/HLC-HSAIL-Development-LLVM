@@ -136,9 +136,8 @@ define void @v3i16_arg(<3 x i16> addrspace(1)* nocapture %out, <3 x i16> %in) no
 ; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%in][4];
 ; HSAIL: ld_arg_align(8)_u32 {{\$s[0-9]+}}, [%in][8];
 
-; HSAIL: st_global_align(4)_u32 {{\$s[0-9]+}}, {{\[}}[[OUT]]+4];
-; HSAIL: st_global_align(4)_u32 {{\$s[0-9]+}}, {{\[}}[[OUT]]{{\]}};
-; HSAIL: st_global_align(4)_u32 {{\$s[0-9]+}}, {{\[}}[[OUT]]+8];
+; HSAIL-DAG: st_global_align(4)_u64 {{\$d[0-9]+}}, {{\[}}[[OUT]]{{\]}};
+; HSAIL-DAG: st_global_align(4)_u32 {{\$s[0-9]+}}, {{\[}}[[OUT]]+8];
 
 ; XHSAIL: pack_u32x2_u32 {{\$d[0-9]+}}, _u32x2(0,0), {{\$s[0-9]+}}, 1;
 ; XHSAIL: ld_arg_align(16)_u32 {{\$s[0-9]+}}, [%in];

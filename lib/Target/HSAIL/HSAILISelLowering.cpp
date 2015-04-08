@@ -363,17 +363,13 @@ HSAILTargetLowering::getByValTypeAlignment(Type *Ty) const
   return TargetLowering::getByValTypeAlignment(Ty);
 }
 
-/// This function returns true if the target allows unaligned memory accesses.
-/// of the specified type. This is used, for example, in situations where an
-/// array copy/move/set is  converted to a sequence of store operations. It's
-/// use helps to ensure that such replacements don't generate code that causes
-/// an alignment error  (trap) on the target machine.
-/// @brief Determine if the target supports unaligned memory accesses.
-bool
-HSAILTargetLowering::allowsUnalignedMemoryAccesses(EVT VT) const
-{
+bool HSAILTargetLowering::allowsMisalignedMemoryAccesses(EVT,
+                                                         unsigned AddrSpace,
+                                                         unsigned Align,
+                                                         bool *Fast) const {
   return true;
 }
+
 
 /// getJumpTableEncoding - Return the entry encoding for a jump table in the
 /// current function.  The returned value is a member of the
