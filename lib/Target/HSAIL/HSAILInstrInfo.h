@@ -656,14 +656,6 @@ public:
 
   bool isSafeToMoveRegClassDefs(const TargetRegisterClass *RC) const override;
 
-  bool
-  copyRegToReg(MachineBasicBlock &MBB,
-               MachineBasicBlock::iterator I,
-               unsigned DestReg, unsigned SrcReg,
-               const TargetRegisterClass *DestRC,
-               const TargetRegisterClass *SrcRC,
-               DebugLoc DL) const;
-
   RegScavenger *
   getRS() const {
     return RS;

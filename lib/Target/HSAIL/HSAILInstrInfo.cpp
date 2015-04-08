@@ -679,20 +679,6 @@ HSAILInstrInfo::RemoveBranch(MachineBasicBlock &MBB) const
   return Count;
 }
 
-bool HSAILInstrInfo::copyRegToReg(MachineBasicBlock &MBB,
-                                  MachineBasicBlock::iterator I,
-                                  unsigned DestReg, unsigned SrcReg,
-                                  const TargetRegisterClass *DestRC,
-                                  const TargetRegisterClass *SrcRC,
-                                  DebugLoc DL) const {
-  assert(DestRC == SrcRC);
-
-  BuildMI(MBB, I, DL, get(HSAIL::MOV), DestReg)
-    .addReg(SrcReg)
-    .addImm(getBrigTypeFromRCID(DestRC->getID()));
-  return true;
-}
-
 // Emergency spill frame indexes for functions
 static DenseMap<const MachineFunction*, int> emergencyStackSlot;
 
