@@ -394,13 +394,6 @@ HSAILTargetLowering::isOffsetFoldingLegal(const GlobalAddressSDNode *GA) const
   return true;
 }
 
-/// getFunctionAlignment - Return the Log2 alignment of this function.
-unsigned
-HSAILTargetLowering::getFunctionAlignment(const Function *) const
-{
-  return 0;
-}
-
 /// ComputeNumSignBitsForTargetNode - This method can be implemented by
 /// targets that want to expose additional information about sign bits to the
 /// DAG Combiner.

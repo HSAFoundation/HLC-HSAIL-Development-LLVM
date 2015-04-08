@@ -53,141 +53,48 @@ public:
   explicit HSAILTargetLowering(HSAILTargetMachine &TM);
   virtual ~HSAILTargetLowering();
 
-  /// getSetCCResultType - Return the ValueType of the result of SETCC
-  /// operations.  Also used to obtain the target's preferred type for
-  /// the condition operand of SELECT and BRCOND nodes.  In the case of
-  /// BRCOND the argument passed is MVT::Other since there are no other
-  /// operands to get a type hint from.
-  virtual EVT
-  getSetCCResultType(LLVMContext &Context, EVT VT) const;
+  EVT getSetCCResultType(LLVMContext &Context, EVT VT) const override;
 
-  /// getSchedulingPreference - Some scheduler, e.g. hybrid, can switch to
-  /// different scheduling heuristics for different nodes. This function returns
-  /// the preference (or none) for the given node.
-  virtual Sched::Preference
-  getSchedulingPreference(SDNode *N) const;
+  Sched::Preference getSchedulingPreference(SDNode *N) const override;
 
-  /// getRepRegClassFor - Return the 'representative' register class for the
-  /// specified value type. The 'representative' register class is the largest
-  /// legal super-reg register class for the register class of the value type.
-  /// For example, on i386 the rep register class for i8, i16, and i32 are GR32;
-  /// while the rep register class is GR64 on x86_64.
   const TargetRegisterClass *getRepRegClassFor(MVT VT) const override;
 
-  /// getRepRegClassCostFor - Return the cost of the 'representative' register
-  /// class for the specified value type.
   uint8_t getRepRegClassCostFor(MVT VT) const override;
 
-  /// getTgtMemIntrinsic: Given an intrinsic, checks if on the target the
-  /// intrinsic will need to map to a MemIntrinsicNode (touches memory). If
-  /// this is the case, it returns true and store the intrinsic
-  /// information into the IntrinsicInfo that was passed to the function.
-  virtual bool
-  getTgtMemIntrinsic(IntrinsicInfo &Info,
-                     const CallInst &I,
-                     unsigned Intrinsic) const;
+  bool getTgtMemIntrinsic(IntrinsicInfo &Info,
+                          const CallInst &I,
+                          unsigned Intrinsic) const override;
 
-  /// isFPImmLegal - Returns true if the target can instruction select the
-  /// specified FP immediate natively. If false, the legalizer will materialize
-  /// the FP immediate as a load from a constant pool.
-  virtual bool
-  isFPImmLegal(const APFloat &Imm, EVT VT) const;
+  bool isFPImmLegal(const APFloat &Imm, EVT VT) const override;
 
-  /// getByValTypeAlignment - Return the desired alignment for ByVal aggregate
-  /// function arguments in the caller parameter area.  This is the actual
-  /// alignment, not its logarithm.
-  virtual unsigned
-  getByValTypeAlignment(Type *Ty) const;
+  unsigned getByValTypeAlignment(Type *Ty) const override;
 
-  /// This function returns true if the target allows unaligned memory accesses.
-  /// of the specified type. This is used, for example, in situations where an
-  /// array copy/move/set is  converted to a sequence of store operations. It's
-  /// use helps to ensure that such replacements don't generate code that causes
-  /// an alignment error  (trap) on the target machine.
-  /// @brief Determine if the target supports unaligned memory accesses.
   virtual bool
   allowsUnalignedMemoryAccesses(EVT VT) const;
 
-  /// getJumpTableEncoding - Return the entry encoding for a jump table in the
-  /// current function.  The returned value is a member of the
-  /// MachineJumpTableInfo::JTEntryKind enum.
-  virtual unsigned
-  getJumpTableEncoding() const;
+  unsigned getJumpTableEncoding() const override;
 
-  /// isOffsetFoldingLegal - Return true if folding a constant offset
-  /// with the given GlobalAddress is legal.  It is frequently not legal in
-  /// PIC relocation models.
-  virtual bool
-  isOffsetFoldingLegal(const GlobalAddressSDNode *GA) const;
+  bool isOffsetFoldingLegal(const GlobalAddressSDNode *GA) const override;
 
-  /// getFunctionAlignment - Return the Log2 alignment of this function.
-  virtual unsigned
-  getFunctionAlignment(const Function *) const;
-
-  /// ComputeNumSignBitsForTargetNode - This method can be implemented by
-  /// targets that want to expose additional information about sign bits to the
-  /// DAG Combiner.
   unsigned ComputeNumSignBitsForTargetNode(SDValue Op,
                                            const SelectionDAG &DAG,
                                            unsigned Depth = 0) const override;
 
-  /// isGAPlusOffset - Returns true (and the GlobalValue and the offset) if the
-  /// node is a GlobalAddress + offset.
-  virtual bool
-  isGAPlusOffset(SDNode *N, const GlobalValue* &GA, int64_t &Offset) const;
+  bool isGAPlusOffset(SDNode *N, const GlobalValue* &GA,
+                      int64_t &Offset) const override;
 
-  /// PerformDAGCombine - This method will be invoked for all target nodes and
-  /// for any target-independent nodes that the target has registered with
-  /// invoke it for.
-  ///
-  /// The semantics are as follows:
-  /// Return Value:
-  ///   SDValue.Val == 0   - No change was made
-  ///   SDValue.Val == N   - N was replaced, is dead, and is already handled.
-  ///   otherwise          - N should be replaced by the returned Operand.
-  ///
-  /// In addition, methods provided by DAGCombinerInfo may be used to perform
-  /// more complex transformations.
-  ///
-  virtual SDValue
-  PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const;
+  SDValue PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const override;
 
-  /// isTypeDesirableForOp - Return true if the target has native support for
-  /// the specified value type and it is 'desirable' to use the type for the
-  /// given node type. e.g. On x86 i16 is legal, but undesirable since i16
-  /// instruction encodings are longer and some i16 instructions are slow.
-  virtual bool
-  isTypeDesirableForOp(unsigned Opc, EVT VT) const;
+  bool isTypeDesirableForOp(unsigned Opc, EVT VT) const override;
 
-  /// isDesirableToPromoteOp - Return true if it is profitable for dag combiner
-  /// to transform a floating point op of specified opcode to a equivalent op of
-  /// an integer type. e.g. f32 load -> i32 load can be profitable on ARM.
-  virtual bool
-  isDesirableToTransformToIntegerOp(unsigned Opc, EVT VT) const;
+  bool isDesirableToTransformToIntegerOp(unsigned Opc, EVT VT) const override;
 
-  /// IsDesirableToPromoteOp - This method query the target whether it is
-  /// beneficial for dag combiner to promote the specified node. If true, it
-  /// should return the desired promotion type by reference.
-  virtual bool
-  IsDesirableToPromoteOp(SDValue Op, EVT &PVT) const;
+  bool IsDesirableToPromoteOp(SDValue Op, EVT &PVT) const override;
 
-  /// Return true if the load uses larger data types than 
-  /// the bitcast and false otherwise.
-  /// This should disable optimizing:
-  /// (char16)((int4*)ptr)[idx] => (char16*)ptr[idx]
-  /// but not disable:
-  /// (int4)((char16*)ptr)[idx] => (int4*)ptr[idx]
-  bool
-    isLoadBitCastBeneficial(EVT load, EVT bitcast) const;
+  bool isLoadBitCastBeneficial(EVT load, EVT bitcast) const override;
 
-  /// isVectorToScalarLoadStoreWidenBeneficial() - Return true if the vector
-  /// load or store packing into a larger scalar type is beneficial.
-  /// Width:     Width to load/store.
-  /// WidenVT:   The widen vector type to load to/store from.
-  /// N:         Load or store SDNode.
-  virtual bool
-  isVectorToScalarLoadStoreWidenBeneficial(unsigned Width, EVT WidenVT,
-                                           const MemSDNode *N) const;
+  virtual bool isVectorToScalarLoadStoreWidenBeneficial(unsigned Width, EVT WidenVT,
+                                                        const MemSDNode *N) const;
 
 protected:
 
@@ -249,75 +156,35 @@ public:
                            const CCValAssign &VA,  MachineFrameInfo *MFI,
                            unsigned i) const;
 
-  /// LowerFormalArguments - This hook must be implemented to lower the
-  /// incoming (formal) arguments, described by the Ins array, into the
-  /// specified DAG. The implementation should fill in the InVals array
-  /// with legal-type argument values, and return the resulting token
-  /// chain value.
-  ///
-  virtual SDValue
-  LowerFormalArguments(SDValue Chain,
-                       CallingConv::ID CallConv,
-                       bool isVarArg,
-                       const SmallVectorImpl<ISD::InputArg> &Ins,
-                       SDLoc dl,
-                       SelectionDAG &DAG,
-                       SmallVectorImpl<SDValue> &InVals) const;
+  SDValue LowerFormalArguments(SDValue Chain,
+                               CallingConv::ID CallConv,
+                               bool isVarArg,
+                               const SmallVectorImpl<ISD::InputArg> &Ins,
+                               SDLoc dl,
+                               SelectionDAG &DAG,
+                               SmallVectorImpl<SDValue> &InVals) const override;
 
-  /// LowerCall - This hook must be implemented to lower calls into the
-  /// the specified DAG. The outgoing arguments to the call are described
-  /// by the Outs array, and the values to be returned by the call are
-  /// described by the Ins array. The implementation should fill in the
-  /// InVals array with legal-type return values from the call, and return
-  /// the resulting token chain value.
-  virtual SDValue
-  LowerCall(CallLoweringInfo &CLI,
-                SmallVectorImpl<SDValue> &InVals) const override;
+  SDValue LowerCall(CallLoweringInfo &CLI,
+                    SmallVectorImpl<SDValue> &InVals) const override;
 
-  /// LowerReturn - This hook must be implemented to lower outgoing
-  /// return values, described by the Outs array, into the specified
-  /// DAG. The implementation should return the resulting token chain
-  /// value.
-  ///
-  virtual SDValue
-  LowerReturn(SDValue Chain,
-              CallingConv::ID CallConv,
-              bool isVarArg,
-              const SmallVectorImpl<ISD::OutputArg> &Outs,
-              const SmallVectorImpl<SDValue> &OutVals,
-              SDLoc dl,
-              SelectionDAG &DAG) const;
+  SDValue LowerReturn(SDValue Chain,
+                      CallingConv::ID CallConv,
+                      bool isVarArg,
+                      const SmallVectorImpl<ISD::OutputArg> &Outs,
+                      const SmallVectorImpl<SDValue> &OutVals,
+                      SDLoc dl,
+                      SelectionDAG &DAG) const override;
 
-  /// getTypeForExtArgOrReturn - Return the type that should be used to zero or
-  /// sign extend a zeroext/signext integer argument or return value.
-  virtual EVT getTypeForExtArgOrReturn(LLVMContext &Context, EVT VT,
-                                       ISD::NodeType ExtendKind) const;
-  /// LowerOperation - This callback is invoked for operations that are
-  /// unsupported by the target, which are registered to use 'custom' lowering,
-  /// and whose defined values are all legal.
-  /// If the target has no operations that require custom lowering, it need not
-  /// implement this.  The default implementation of this aborts.
-  virtual SDValue
-  LowerOperation(SDValue Op, SelectionDAG &DAG) const;
+  EVT getTypeForExtArgOrReturn(LLVMContext &Context, EVT VT,
+                               ISD::NodeType ExtendKind) const override;
 
-  /// ReplaceNodeResults - This callback is invoked when a node result type is
-  /// illegal for the target, and the operation was registered to use 'custom'
-  /// lowering for that result type.  The target places new result values for
-  /// the node in Results (their number and types must exactly match those of
-  /// the original return values of the node), or leaves Results empty, which
-  /// indicates that the node is not to be custom lowered after all.
-  ///
-  /// If the target has no operations that require custom lowering, it need not
-  /// implement this.  The default implementation aborts.
-  virtual void
-  ReplaceNodeResults(SDNode *N,
-                     SmallVectorImpl<SDValue> &Results,
-                     SelectionDAG &DAG) const;
+  SDValue LowerOperation(SDValue Op, SelectionDAG &DAG) const override;
 
-  /// getTargetNodeName() - This method returns the name of a target specific
-  /// DAG node.
-  virtual const char*
-  getTargetNodeName(unsigned Opcode) const;
+  void ReplaceNodeResults(SDNode *N,
+                          SmallVectorImpl<SDValue> &Results,
+                          SelectionDAG &DAG) const override;
+
+  const char *getTargetNodeName(unsigned Opcode) const override;
 
   /// Custom lowering methods
  SDValue
