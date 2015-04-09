@@ -283,6 +283,11 @@ def : Pat <
   (ADD 1, BrigRound.FLOAT_PLUS_INFINITY, $src0, (i32 0), BrigTypeX.F32)
 >;
 
+def : Pat <
+  (f32 (int_HSAIL_mul_ftz_f32 f32:$src0)),
+  (MUL 1, BrigRound.FLOAT_PLUS_INFINITY, $src0, (i32 0), BrigTypeX.F32)
+>;
+
 def BITSELECT : HSAILInstBasic_3Op<"bitselect", BrigOpcode.BITSELECT>;
 defm : InstBasic_3Op_BitIntTypes<BITSELECT, HSAILbitselect>;
 
