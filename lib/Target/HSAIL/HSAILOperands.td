@@ -31,6 +31,71 @@ def Vec4Op : Operand<untyped> {
   let PrintMethod = "printVec4Op";
 }
 
+
+def Vec2DestOp32 : Operand<untyped> {
+  let MIOperandInfo = (ops HSAILDest32Operand, HSAILDest32Operand);
+  let PrintMethod = "printVec2Op";
+}
+
+def Vec3DestOp32 : Operand<untyped> {
+  let MIOperandInfo = (ops HSAILDest32Operand, HSAILDest32Operand, HSAILDest32Operand);
+  let PrintMethod = "printVec3Op";
+}
+
+def Vec4DestOp32 : Operand<untyped> {
+  let MIOperandInfo = (ops HSAILDest32Operand, HSAILDest32Operand, HSAILDest32Operand, HSAILDest32Operand);
+  let PrintMethod = "printVec4Op";
+}
+
+
+def Vec2DestOp64 : Operand<untyped> {
+  let MIOperandInfo = (ops HSAILDest64Operand, HSAILDest64Operand);
+  let PrintMethod = "printVec2Op";
+}
+
+def Vec3DestOp64 : Operand<untyped> {
+  let MIOperandInfo = (ops HSAILDest64Operand, HSAILDest64Operand, HSAILDest64Operand);
+  let PrintMethod = "printVec3Op";
+}
+
+def Vec4DestOp64 : Operand<untyped> {
+  let MIOperandInfo = (ops HSAILDest64Operand, HSAILDest64Operand, HSAILDest64Operand, HSAILDest64Operand);
+  let PrintMethod = "printVec4Op";
+}
+
+
+def Vec2SrcOp32 : Operand<untyped> {
+  let MIOperandInfo = (ops HSAILSrc32Operand, HSAILSrc32Operand);
+  let PrintMethod = "printVec2Op";
+}
+
+def Vec3SrcOp32 : Operand<untyped> {
+  let MIOperandInfo = (ops HSAILSrc32Operand, HSAILSrc32Operand, HSAILSrc32Operand);
+  let PrintMethod = "printVec3Op";
+}
+
+def Vec4SrcOp32 : Operand<untyped> {
+  let MIOperandInfo = (ops HSAILSrc32Operand, HSAILSrc32Operand, HSAILSrc32Operand, HSAILSrc32Operand);
+  let PrintMethod = "printVec4Op";
+}
+
+
+def Vec2SrcOp64 : Operand<untyped> {
+  let MIOperandInfo = (ops HSAILSrc64Operand, HSAILSrc64Operand);
+  let PrintMethod = "printVec2Op";
+}
+
+def Vec3SrcOp64 : Operand<untyped> {
+  let MIOperandInfo = (ops HSAILSrc64Operand, HSAILSrc64Operand, HSAILSrc64Operand);
+  let PrintMethod = "printVec3Op";
+}
+
+def Vec4SrcOp64 : Operand<untyped> {
+  let MIOperandInfo = (ops HSAILSrc64Operand, HSAILSrc64Operand, HSAILSrc64Operand, HSAILSrc64Operand);
+  let PrintMethod = "printVec4Op";
+}
+
+
 def calltarget : Operand<iPTR>;
 
 def GPROrImm : ComplexPattern<untyped, 1, "SelectGPROrImm">;

@@ -1449,9 +1449,7 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI,
     int64_t addr = base.getImm();
     assert(isInt<32>(addr));
 
-    if ((MI->getOpcode() == HSAIL::LD_V1) &&
-        TII->getNamedOperand(*MI, HSAIL::OpName::TypeLength)->getImm() ==
-        BRIG_TYPE_SAMP) {
+    if (MI->getOpcode() == HSAIL::LD_SAMP) {
       BrigEmitOperandImage(MI, opNum); // Constant sampler.
       return;
     }
@@ -1870,19 +1868,66 @@ HSAIL_ASM::InstMem BRIGAsmPrinter::BrigEmitInstMem(const MachineInstr &MI,
 
   unsigned VecSize = 1; // FIXME: Stop special casing this.
   switch (MI.getOpcode()) {
-  case HSAIL::LD_V2:
-  case HSAIL::ST_V2:
-  case HSAIL::RARG_LD_V2:
+  case HSAIL::LD_V2_S32:
+  case HSAIL::LD_V2_U32:
+  case HSAIL::LD_V2_F32:
+  case HSAIL::LD_V2_S64:
+  case HSAIL::LD_V2_U64:
+  case HSAIL::LD_V2_F64:
+
+  case HSAIL::ST_V2_U32:
+  case HSAIL::ST_V2_F32:
+  case HSAIL::ST_V2_U64:
+  case HSAIL::ST_V2_F64:
+
+  case HSAIL::RARG_LD_V2_S32:
+  case HSAIL::RARG_LD_V2_U32:
+  case HSAIL::RARG_LD_V2_F32:
+  case HSAIL::RARG_LD_V2_S64:
+  case HSAIL::RARG_LD_V2_U64:
+  case HSAIL::RARG_LD_V2_F64:
     VecSize = 2;
     break;
-  case HSAIL::LD_V3:
-  case HSAIL::ST_V3:
-  case HSAIL::RARG_LD_V3:
+
+  case HSAIL::LD_V3_S32:
+  case HSAIL::LD_V3_U32:
+  case HSAIL::LD_V3_F32:
+  case HSAIL::LD_V3_S64:
+  case HSAIL::LD_V3_U64:
+  case HSAIL::LD_V3_F64:
+
+  case HSAIL::ST_V3_U32:
+  case HSAIL::ST_V3_F32:
+  case HSAIL::ST_V3_U64:
+  case HSAIL::ST_V3_F64:
+
+  case HSAIL::RARG_LD_V3_S32:
+  case HSAIL::RARG_LD_V3_U32:
+  case HSAIL::RARG_LD_V3_F32:
+  case HSAIL::RARG_LD_V3_S64:
+  case HSAIL::RARG_LD_V3_U64:
+  case HSAIL::RARG_LD_V3_F64:
     VecSize = 3;
     break;
-  case HSAIL::LD_V4:
-  case HSAIL::ST_V4:
-  case HSAIL::RARG_LD_V4:
+
+  case HSAIL::LD_V4_S32:
+  case HSAIL::LD_V4_U32:
+  case HSAIL::LD_V4_F32:
+  case HSAIL::LD_V4_S64:
+  case HSAIL::LD_V4_U64:
+  case HSAIL::LD_V4_F64:
+
+  case HSAIL::ST_V4_U32:
+  case HSAIL::ST_V4_F32:
+  case HSAIL::ST_V4_U64:
+  case HSAIL::ST_V4_F64:
+
+  case HSAIL::RARG_LD_V4_S32:
+  case HSAIL::RARG_LD_V4_U32:
+  case HSAIL::RARG_LD_V4_F32:
+  case HSAIL::RARG_LD_V4_S64:
+  case HSAIL::RARG_LD_V4_U64:
+  case HSAIL::RARG_LD_V4_F64:
     VecSize = 4;
     break;
   }
@@ -2015,8 +2060,8 @@ bool BRIGAsmPrinter::usesGCNAtomicCounter(void) {
       switch (II->getOpcode()) {
       default:
         continue;
-      case HSAIL::GCN_ATOMIC_APPEND:
-      case HSAIL::GCN_ATOMIC_CONSUME:
+      case HSAIL::GCN_ATOMIC_APPEND_U32:
+      case HSAIL::GCN_ATOMIC_CONSUME_U32:
         return true;
       }
     }

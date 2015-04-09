@@ -2,53 +2,26 @@
 // stof, ftos -- not matched, inserted in MachineInstr lowering
 // 32 bit
 
-def STOF : HSAILInstSegCvt_1Op<"stof", BrigOpcode.STOF>;
-def FTOS : HSAILInstSegCvt_1Op<"ftos", BrigOpcode.FTOS>;
-
-class STOFPat<ValueType destvt> : Pat<
-  (STOFComplexPat BrigSegment:$segment,
-                  i1:$nonull,
-                  untyped:$src0,
-                  BrigTypeX:$destType,
-                  BrigTypeX:$srcType),
-  (destvt (STOF $segment, $nonull, $src0, $destType, $srcType))
->;
-
-class FTOSPat<ValueType destvt> : Pat<
-  (FTOSComplexPat BrigSegment:$segment,
-                  i1:$nonull,
-                  untyped:$src0,
-                  BrigTypeX:$destType,
-                  BrigTypeX:$srcType),
-  (destvt (FTOS $segment, $nonull, $src0, $destType, $srcType))
->;
-
-// TODO: Should probably just select these in HSAILISelDAGToDAG. We
-// aren't really saving effort with this.
-def : STOFPat<i32>;
-def : STOFPat<i64>;
-
-def : FTOSPat<i32>;
-def : FTOSPat<i64>;
 
 
+defm STOF : InstSegCvt_1Op_PtrTypes<"stof", BrigOpcode.STOF>;
+defm FTOS : InstSegCvt_1Op_PtrTypes<"ftos", BrigOpcode.FTOS>;
+defm SEGMENTP : InstSegCvt_1Op_Segmentp_Types<"segmentp", BrigOpcode.SEGMENTP>;
 
-def SEGMENTP : HSAILInstSegCvt_1Op<"segmentp", BrigOpcode.SEGMENTP>;
-
-class SegmentPPat<ValueType srcvt, int srcbt> : Pat<
+class SegmentPPat<BRIGType srcTy> : Pat<
   (HSAILsegmentp (i32 timm:$segment),
                  (i1 timm:$nonull),
-                 (srcvt (GPROrImm srcvt:$src0))),
-  (SEGMENTP $segment, $nonull, $src0, BrigTypeX.B1, srcbt)
+                 (srcTy.VT (GPROrImm srcTy.VT:$src0))),
+  (!cast<HSAILInst>("SEGMENTP_B1"#srcTy.InstName) $segment, $nonull, $src0, BrigTypeX.B1, srcTy.BT)
 >;
 
 
 let Predicates = [In64BitMode] in {
-  def : SegmentPPat<i64, BrigTypeX.U64>;
+  def : SegmentPPat<U64Ty>;
 }
 
 let Predicates = [In32BitMode] in {
-  def : SegmentPPat<i32, BrigTypeX.U32>;
+  def : SegmentPPat<U32Ty>;
 }
 
 let isNotDuplicable = 1, hasCtrlDep = 1, hasSideEffects = 1 in {
@@ -57,62 +30,40 @@ let isNotDuplicable = 1, hasCtrlDep = 1, hasSideEffects = 1 in {
                                     "\t${alignment}arg$TypeLength $symbol$size", []>;
 }
 
-class LdStVectorMap<string op, int size> {
-  string opcode   = op;
-  int    vec_size = size;
-}
-
-def getLdStVectorOpcode : InstrMapping {
-  let FilterClass = "LdStVectorMap";
-  let RowFields   = ["opcode"];
-  let ColFields   = ["vec_size"];
-  let KeyCol      = ["1"];
-  let ValueCols   = [["1"], ["2"], ["3"], ["4"]];
-}
-
 // FIXME: If the MEMOP isn't explicitly typed in output, counts as
 // wrong number of operands.
-class LDPat<Instruction inst, ValueType vt> : Pat <
-  (vt (unindexedload (LoadAddr MEMOP:$address,
-                               BrigSegment:$segment,
-                               BrigAlignment:$align,
-                               BrigTypeX:$TypeLength,
-                               BrigWidth:$width,
-                               BrigMemoryModifierMask:$mask))),
+class LDPat<Instruction inst, SDPatternOperator ldnode, ValueType vt> : Pat <
+  (vt (ldnode (LoadAddr MEMOP:$address,
+                        BrigSegment:$segment,
+                        BrigAlignment:$align,
+                        BrigTypeX:$TypeLength,
+                        BrigWidth:$width,
+                        BrigMemoryModifierMask:$mask))),
   (inst MEMOP:$address, $TypeLength, $segment, $align, $width, $mask)
 >;
 
 
-// XXX - Dummy argument since something is required for a multiclass.
-multiclass HSAIL_LD<int Dummy> {
-  // TODO: We should define a single ld opcode with all 4 output
-  // registers. We will then just set the ones that are actually used.
-
-  // We define the output registers to be unknown. The used register
-  // class will be selected based on the used type.
-  def _V1 : LD<"ld", BrigOpcode.LD, (outs unknown:$dest)>, LdStVectorMap<NAME, 1>;
-  def _V2 : LD<"ld_v2", BrigOpcode.LD, (outs Vec2Op:$dest)>, LdStVectorMap<NAME, 2>;
-  def _V3 : LD<"ld_v3", BrigOpcode.LD, (outs Vec3Op:$dest)>, LdStVectorMap<NAME, 3>;
-  def _V4 : LD<"ld_v4", BrigOpcode.LD, (outs Vec4Op:$dest)>, LdStVectorMap<NAME, 4>;
-}
-
-defm LD : HSAIL_LD<0>;
-
-// TODO: Promote float loads to integers.
-def : LDPat<LD_V1, i32>;
-def : LDPat<LD_V1, f32>;
-def : LDPat<LD_V1, i64>;
-def : LDPat<LD_V1, f64>;
+defm LD : LD_Types<"ld", BrigOpcode.LD>;
 
 
+def : LDPat<LD_S8, sextloadi8, i32>;
+def : LDPat<LD_S16, sextloadi16, i32>;
+def : LDPat<LD_U8, zextloadi8, i32>;
+def : LDPat<LD_U16, zextloadi16, i32>;
+def : LDPat<LD_U8, extloadi8, i32>;
+def : LDPat<LD_U16, extloadi16, i32>;
+def : LDPat<LD_U32, load, i32>;
+def : LDPat<LD_F32, load, f32>;
+def : LDPat<LD_U64, load, i64>;
+def : LDPat<LD_F64, load, f64>;
 
 let hasSideEffects = 1, hasCtrlDep = 1 in {
   // It is not safe to move ld_arg as it can be in an argscope
-  defm RARG_LD : HSAIL_LD<0>;
+  defm RARG_LD : LD_Types<"ld", BrigOpcode.LD>;
 }
 
-class STPat<Instruction inst, ValueType vt> : Pat <
-  (st (vt (GPROrImm vt:$src)),
+class STPat<Instruction inst, SDPatternOperator node, ValueType vt> : Pat <
+  (node (vt (GPROrImm vt:$src)),
       (StoreAddr MEMOP:$address,
                  BrigSegment:$segment,
                  BrigAlignment:$alignment,
@@ -120,32 +71,15 @@ class STPat<Instruction inst, ValueType vt> : Pat <
   (inst $src, MEMOP:$address, $TypeLength, $segment, $alignment)
 >;
 
-multiclass HSAIL_ST<int dummy> {
-  def _V1 : ST<"st", BrigOpcode.ST,
-    (ins unknown:$src, MEMOP:$address, BrigTypeX:$TypeLength,
-         BrigSegment:$segment, BrigAlignment:$align)>,
-    LdStVectorMap<NAME, 1>;
-  def _V2 : ST<"st_v2", BrigOpcode.ST,
-    (ins Vec2Op:$src, MEMOP:$address, BrigTypeX:$TypeLength,
-         BrigSegment:$segment, BrigAlignment:$align)>,
-    LdStVectorMap<NAME, 2>;
-  def _V3 : ST<"st_v3", BrigOpcode.ST,
-    (ins Vec3Op:$src, MEMOP:$address, BrigTypeX:$TypeLength,
-         BrigSegment:$segment, BrigAlignment:$align)>,
-    LdStVectorMap<NAME, 3>;
-  def _V4 : ST<"st_v4", BrigOpcode.ST,
-    (ins Vec4Op:$src, MEMOP:$address, BrigTypeX:$TypeLength,
-      BrigSegment:$segment, BrigAlignment:$align)>,
-    LdStVectorMap<NAME, 4>;
-}
-
-defm ST : HSAIL_ST<0>;
+defm ST : ST_Types<"st", BrigOpcode.ST>;
 
 // TODO: Promote float stores to integers.
-def : STPat<ST_V1, i32>;
-def : STPat<ST_V1, f32>;
-def : STPat<ST_V1, i64>;
-def : STPat<ST_V1, f64>;
+def : STPat<ST_U32, store, i32>;
+def : STPat<ST_F32, store, f32>;
+def : STPat<ST_U64, store, i64>;
+def : STPat<ST_F64, store, f64>;
+def : STPat<ST_U8, truncstorei8, i32>;
+def : STPat<ST_U16, truncstorei16, i32>;
 
 
 // We need pseudos to implement condition register spilling due to a
@@ -166,4 +100,4 @@ let isPseudo = 1 in {
 ////////////////////////////////////////////////////////////////////////////////
 // load memory address
 
-def LDA : HSAILInstAddr_1Op<"lda", BrigOpcode.LDA>;
+defm LDA : InstAddr_1Op_PtrTypes<"lda", BrigOpcode.LDA>;

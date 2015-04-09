@@ -108,7 +108,7 @@ class HSAILInstBasic<bits<16> BrigVal,
   let InstBasic = 1;
 }
 
-class HSAILInstBasic_0Op_NoRet<string opName, bits<16> BrigVal> :
+class HSAILInstBasic_0Op_NoRet<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstBasic<BrigVal,
                  (outs),
                  (ins BrigTypeX:$TypeLength),
@@ -117,35 +117,162 @@ class HSAILInstBasic_0Op_NoRet<string opName, bits<16> BrigVal> :
   let hasSideEffects = 1;
 }
 
-class HSAILInstBasic_0Op<string opName, bits<16> BrigVal> :
+class HSAILInstBasic_0Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstBasic<BrigVal,
-                 (outs unknown:$dest),
+                 (outs P.DestRC:$dest),
                  (ins BrigTypeX:$TypeLength),
   opName#"$TypeLength\t$dest"
 >;
 
-class HSAILInstBasic_1Op<string opName, bits<16> BrigVal> :
+multiclass InstBasic_0Op_UnsignedIntTypes<string opName, bits<16> BrigVal> {
+  def _U32 : HSAILInstBasic_0Op<opName, BrigVal, Inst_U32>;
+  def _U64 : HSAILInstBasic_0Op<opName, BrigVal, Inst_U64>;
+}
+
+class HSAILInstBasic_1Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstBasic<BrigVal,
-                 (outs unknown:$dest),
-                 (ins unknown:$src0, BrigTypeX:$TypeLength),
+                 (outs P.DestRC:$dest),
+                 (ins P.Src0RC:$src0, BrigTypeX:$TypeLength),
   opName#"$TypeLength\t$dest, $src0"
 >;
 
-class HSAILInstBasic_2Op<string opName, bits<16> BrigVal> :
+multiclass InstBasic_1Op_FPTypes<string opName, bits<16> BrigVal> {
+  def _F32 : HSAILInstBasic_1Op<opName, BrigVal, Inst_F32_F32>;
+  def _F64 : HSAILInstBasic_1Op<opName, BrigVal, Inst_F64_F64>;
+}
+
+multiclass InstBasic_1Op_SignedIntTypes<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstBasic_1Op<opName, BrigVal, Inst_S32_S32>;
+  def _S64 : HSAILInstBasic_1Op<opName, BrigVal, Inst_S64_S64>;
+}
+
+multiclass InstBasic_1Op_UnsignedIntTypes<string opName, bits<16> BrigVal> {
+  def _U32 : HSAILInstBasic_1Op<opName, BrigVal, Inst_U32_U32>;
+  def _U64 : HSAILInstBasic_1Op<opName, BrigVal, Inst_U64_U64>;
+}
+
+multiclass InstBasic_1Op_BitTypes<string opName, bits<16> BrigVal> {
+  def _B1 : HSAILInstBasic_1Op<opName, BrigVal, Inst_B1_B1>;
+  def _B32 : HSAILInstBasic_1Op<opName, BrigVal, Inst_B32_B32>;
+  def _B64 : HSAILInstBasic_1Op<opName, BrigVal, Inst_B64_B64>;
+}
+
+multiclass InstBasic_1Op_SF<string opName, bits<16> BrigVal> {
+  def _F32 : HSAILInstBasic_1Op<opName, BrigVal, Inst_F32_F32>;
+  def _F64 : HSAILInstBasic_1Op<opName, BrigVal, Inst_F64_F64>;
+
+  def _S32 : HSAILInstBasic_1Op<opName, BrigVal, Inst_S32_S32>;
+  def _S64 : HSAILInstBasic_1Op<opName, BrigVal, Inst_S64_S64>;
+}
+
+multiclass InstBasic_1Op_BF<string opName, bits<16> BrigVal> {
+  def _F32 : HSAILInstBasic_1Op<opName, BrigVal, Inst_F32_F32>;
+  def _F64 : HSAILInstBasic_1Op<opName, BrigVal, Inst_F64_F64>;
+
+  def _B1 : HSAILInstBasic_1Op<opName, BrigVal, Inst_B1_B1>;
+  def _B32 : HSAILInstBasic_1Op<opName, BrigVal, Inst_B32_B32>;
+  def _B64 : HSAILInstBasic_1Op<opName, BrigVal, Inst_B64_B64>;
+}
+
+class HSAILInstBasic_2Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstBasic<BrigVal,
-                 (outs unknown:$dest),
-                 (ins unknown:$src0, unknown:$src1,
+                 (outs P.DestRC:$dest),
+                 (ins P.Src0RC:$src0, P.Src1RC:$src1,
                       BrigTypeX:$TypeLength),
   opName#"$TypeLength\t$dest, $src0, $src1"
 >;
 
-class HSAILInstBasic_3Op<string opName, bits<16> BrigVal> :
+multiclass InstBasic_2Op_FPTypes<string opName, bits<16> BrigVal> {
+  def _F32 : HSAILInstBasic_2Op<opName, BrigVal, Inst_F32_F32_F32>;
+  def _F64 : HSAILInstBasic_2Op<opName, BrigVal, Inst_F64_F64_F64>;
+}
+
+multiclass InstBasic_2Op_SignedIntTypes<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstBasic_2Op<opName, BrigVal, Inst_S32_S32_S32>;
+  def _S64 : HSAILInstBasic_2Op<opName, BrigVal, Inst_S64_S64_S64>;
+}
+
+multiclass InstBasic_2Op_UnsignedIntTypes<string opName, bits<16> BrigVal> {
+  def _U32 : HSAILInstBasic_2Op<opName, BrigVal, Inst_U32_U32_U32>;
+  def _U64 : HSAILInstBasic_2Op<opName, BrigVal, Inst_U64_U64_U64>;
+}
+
+multiclass InstBasic_2Op_BitTypes<string opName, bits<16> BrigVal> {
+  def _B1 : HSAILInstBasic_2Op<opName, BrigVal, Inst_B1_B1_B1>;
+  def _B32 : HSAILInstBasic_2Op<opName, BrigVal, Inst_B32_B32_B32>;
+  def _B64 : HSAILInstBasic_2Op<opName, BrigVal, Inst_B64_B64_B64>;
+}
+
+multiclass InstBasic_2Op_IntTypes<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstBasic_2Op<opName, BrigVal, Inst_S32_S32_S32>;
+  def _S64 : HSAILInstBasic_2Op<opName, BrigVal, Inst_S64_S64_S64>;
+  def _U32 : HSAILInstBasic_2Op<opName, BrigVal, Inst_U32_U32_U32>;
+  def _U64 : HSAILInstBasic_2Op<opName, BrigVal, Inst_U64_U64_U64>;
+}
+
+multiclass InstBasic_2Op_ShiftTypes<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstBasic_2Op<opName, BrigVal, Inst_S32_S32_S32>;
+  def _S64 : HSAILInstBasic_2Op<opName, BrigVal, Inst_S64_S64_U32>;
+  def _U32 : HSAILInstBasic_2Op<opName, BrigVal, Inst_U32_U32_U32>;
+  def _U64 : HSAILInstBasic_2Op<opName, BrigVal, Inst_U64_U64_U32>;
+}
+
+multiclass InstBasic_2Op_LdExp<string opName, bits<16> BrigVal> {
+  def _F32 : HSAILInstBasic_2Op<opName, BrigVal, Inst_F32_F32_U32>;
+  def _F64 : HSAILInstBasic_2Op<opName, BrigVal, Inst_F64_F64_U32>;
+}
+
+
+class HSAILInstBasic_3Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstBasic<BrigVal,
-                 (outs unknown:$dest),
-                 (ins unknown:$src0, unknown:$src1, unknown:$src2,
+                 (outs P.DestRC:$dest),
+                 (ins P.Src0RC:$src0, P.Src1RC:$src1, P.Src2RC:$src2,
                       BrigTypeX:$TypeLength),
   opName#"$TypeLength\t$dest, $src0, $src1, $src2"
 >;
+
+multiclass InstBasic_3Op_FPTypes<string opName, bits<16> BrigVal> {
+  def _F32 : HSAILInstBasic_3Op<opName, BrigVal, Inst_F32_F32_F32_F32>;
+  def _F64 : HSAILInstBasic_3Op<opName, BrigVal, Inst_F64_F64_F64_F64>;
+}
+
+multiclass InstBasic_3Op_IntTypes<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstBasic_3Op<opName, BrigVal, Inst_S32_S32_S32_S32>;
+  def _S64 : HSAILInstBasic_3Op<opName, BrigVal, Inst_S64_S64_S64_S64>;
+  def _U32 : HSAILInstBasic_3Op<opName, BrigVal, Inst_U32_U32_U32_U32>;
+  def _U64 : HSAILInstBasic_3Op<opName, BrigVal, Inst_U64_U64_U64_U64>;
+}
+
+multiclass InstBasic_3Op_BitTypes<string opName, bits<16> BrigVal> {
+  def _B1 : HSAILInstBasic_3Op<opName, BrigVal, Inst_B1_B1_B1_B1>;
+  def _B32 : HSAILInstBasic_3Op<opName, BrigVal, Inst_B32_B32_B32_B32>;
+  def _B64 : HSAILInstBasic_3Op<opName, BrigVal, Inst_B64_B64_B64_B64>;
+}
+
+multiclass InstBasic_3Op_CMov<string opName, bits<16> BrigVal> {
+  def _B1 : HSAILInstBasic_3Op<opName, BrigVal, Inst_B1_B1_B1_B1>;
+  def _B32 : HSAILInstBasic_3Op<opName, BrigVal, Inst_B32_B1_B32_B32>;
+  def _B64 : HSAILInstBasic_3Op<opName, BrigVal, Inst_B64_B1_B64_B64>;
+}
+
+multiclass InstBasic_3Op_BitExtract<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstBasic_3Op<opName, BrigVal, Inst_S32_S32_U32_U32>;
+  def _S64 : HSAILInstBasic_3Op<opName, BrigVal, Inst_S64_S64_U32_U32>;
+
+  def _U32 : HSAILInstBasic_3Op<opName, BrigVal, Inst_U32_U32_U32_U32>;
+  def _U64 : HSAILInstBasic_3Op<opName, BrigVal, Inst_U64_U64_U32_U32>;
+}
+
+multiclass InstBasic_3Op_SUF<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstBasic_3Op<opName, BrigVal, Inst_S32_S32_S32_S32>;
+  def _S64 : HSAILInstBasic_3Op<opName, BrigVal, Inst_S64_S64_S64_S64>;
+
+  def _U32 : HSAILInstBasic_3Op<opName, BrigVal, Inst_U32_U32_U32_U32>;
+  def _U64 : HSAILInstBasic_3Op<opName, BrigVal, Inst_U64_U64_U64_U64>;
+
+  def _F32 : HSAILInstBasic_3Op<opName, BrigVal, Inst_F32_F32_F32_F32>;
+  def _F64 : HSAILInstBasic_3Op<opName, BrigVal, Inst_F64_F64_F64_F64>;
+}
 
 
 // InstMod
@@ -157,47 +284,151 @@ class HSAILInstMod<bits<16> BrigVal,
 }
 
 // TODO: Needs pack operand?
-class HSAILInstMod_1Op<string opName, bits<16> BrigVal> :
+class HSAILInstMod_1Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstMod<BrigVal,
-               (outs unknown:$dest),
+               (outs P.DestRC:$dest),
                (ins ftz:$ftz, BrigRound:$round,
-                    unknown:$src0,
+                    P.Src0RC:$src0,
                     BrigTypeX:$TypeLength),
   opName#"$ftz$round$TypeLength\t$dest, $src0"
 >;
 
-class HSAILInstMod_2Op<string opName, bits<16> BrigVal> :
+multiclass InstMod_1Op_FPTypes<string opName, bits<16> BrigVal> {
+  def _F32 : HSAILInstMod_1Op<opName, BrigVal, Inst_F32_F32>;
+  def _F64 : HSAILInstMod_1Op<opName, BrigVal, Inst_F64_F64>;
+}
+
+multiclass InstMod_1Op_SignedIntTypes<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstMod_1Op<opName, BrigVal, Inst_S32_S32>;
+  def _S64 : HSAILInstMod_1Op<opName, BrigVal, Inst_S64_S64>;
+}
+
+multiclass InstMod_1Op_UnsignedIntTypes<string opName, bits<16> BrigVal> {
+  def _U32 : HSAILInstMod_1Op<opName, BrigVal, Inst_U32_U32>;
+  def _U64 : HSAILInstMod_1Op<opName, BrigVal, Inst_U64_U64>;
+}
+
+multiclass InstMod_1Op_1BitTypes<string opName, bits<16> BrigVal> {
+  def _B32 : HSAILInstMod_1Op<opName, BrigVal, Inst_B32_B32>;
+  def _B64 : HSAILInstMod_1Op<opName, BrigVal, Inst_B64_B64>;
+}
+
+multiclass InstMod_1Op_IntTypes<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstMod_1Op<opName, BrigVal, Inst_S32_S32>;
+  def _S64 : HSAILInstMod_1Op<opName, BrigVal, Inst_S64_S64>;
+  def _U32 : HSAILInstMod_1Op<opName, BrigVal, Inst_U32_U32>;
+  def _U64 : HSAILInstMod_1Op<opName, BrigVal, Inst_U64_U64>;
+}
+
+class HSAILInstMod_2Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstMod<BrigVal,
-               (outs unknown:$dest),
+               (outs P.DestRC:$dest),
                (ins ftz:$ftz, BrigRound:$round,
-                    unknown:$src0, unknown:$src1,
+                    P.Src0RC:$src0, P.Src1RC:$src1,
                     BrigTypeX:$TypeLength),
   opName#"$ftz$round$TypeLength\t$dest, $src0, $src1"
 >;
 
-class HSAILInstMod_3Op<string opName, bits<16> BrigVal> :
+multiclass InstMod_2Op_FPTypes<string opName, bits<16> BrigVal> {
+  def _F32 : HSAILInstMod_2Op<opName, BrigVal, Inst_F32_F32_F32>;
+  def _F64 : HSAILInstMod_2Op<opName, BrigVal, Inst_F64_F64_F64>;
+}
+
+multiclass InstMod_2Op_SignedIntTypes<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstMod_2Op<opName, BrigVal, Inst_S32_S32_S32>;
+  def _S64 : HSAILInstMod_2Op<opName, BrigVal, Inst_S64_S64_S64>;
+}
+
+multiclass InstMod_2Op_UnsignedIntTypes<string opName, bits<16> BrigVal> {
+  def _U32 : HSAILInstMod_2Op<opName, BrigVal, Inst_U32_U32_U32>;
+  def _U64 : HSAILInstMod_2Op<opName, BrigVal, Inst_U64_U64_U64>;
+}
+
+multiclass InstMod_2Op_BitTypes<string opName, bits<16> BrigVal> {
+  def _B32 : HSAILInstMod_2Op<opName, BrigVal, Inst_B32_B32_B32>;
+  def _B64 : HSAILInstMod_2Op<opName, BrigVal, Inst_B64_B64_B64>;
+}
+
+multiclass InstMod_2Op_IntTypes<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstMod_2Op<opName, BrigVal, Inst_S32_S32_S32>;
+  def _S64 : HSAILInstMod_2Op<opName, BrigVal, Inst_S64_S64_S64>;
+  def _U32 : HSAILInstMod_2Op<opName, BrigVal, Inst_U32_U32_U32>;
+  def _U64 : HSAILInstMod_2Op<opName, BrigVal, Inst_U64_U64_U64>;
+}
+
+multiclass InstMod_2Op_SUF<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstMod_2Op<opName, BrigVal, Inst_S32_S32_S32>;
+  def _S64 : HSAILInstMod_2Op<opName, BrigVal, Inst_S64_S64_S64>;
+
+  def _U32 : HSAILInstMod_2Op<opName, BrigVal, Inst_U32_U32_U32>;
+  def _U64 : HSAILInstMod_2Op<opName, BrigVal, Inst_U64_U64_U64>;
+
+  def _F32 : HSAILInstMod_2Op<opName, BrigVal, Inst_F32_F32_F32>;
+  def _F64 : HSAILInstMod_2Op<opName, BrigVal, Inst_F64_F64_F64>;
+}
+
+
+class HSAILInstMod_3Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstMod<BrigVal,
-               (outs unknown:$dest),
+               (outs P.DestRC:$dest),
                (ins ftz:$ftz, BrigRound:$round,
-                    unknown:$src0, unknown:$src1, unknown:$src2,
+                    P.Src0RC:$src0, P.Src1RC:$src1, P.Src2RC:$src2,
                     BrigTypeX:$TypeLength),
   opName#"$ftz$round$TypeLength\t$dest, $src0, $src1, $src2"
 >;
 
+multiclass InstMod_3Op_FPTypes<string opName, bits<16> BrigVal> {
+  def _F32 : HSAILInstMod_3Op<opName, BrigVal, Inst_F32_F32_F32_F32>;
+  def _F64 : HSAILInstMod_3Op<opName, BrigVal, Inst_F64_F64_F64_F64>;
+}
+
 
 // InstCvt
-class InstCvt<string opName, bits<16> BrigVal> : HSAILInst<
-    (outs unknown:$dest),
+class InstCvt<string opName, bits<16> BrigVal,
+              RegisterClass DestRC,
+              ValueType SrcVT> : HSAILInst<
+    (outs DestRC:$dest),
     (ins ftz:$ftz,
          BrigRound:$round,
          BrigTypeX:$destTypedestLength,
          BrigTypeX:$sourceType,
-         unknown:$src),
+         getRegClassForVT<SrcVT>.ret:$src),
     opName#"$ftz$round$destTypedestLength$sourceType\t$dest, $src",
    [], BrigVal
 > {
   let isConv = 1;
   let InstCvt = 1;
+}
+
+// This also generates the illegal type to same type cvts, which
+// hopefully will never be used.
+multiclass InstCvt_SrcTypes<string opName, bits<16> BrigVal,
+                         RegisterClass DestRC> {
+  def _B1 : InstCvt<opName, BrigVal, DestRC, i1>;
+
+  def _U32 : InstCvt<opName, BrigVal, DestRC, i32>;
+  def _U64 : InstCvt<opName, BrigVal, DestRC, i64>;
+
+  def _S32 : InstCvt<opName, BrigVal, DestRC, i32>;
+  def _S64 : InstCvt<opName, BrigVal, DestRC, i64>;
+
+  def _F16 : InstCvt<opName, BrigVal, DestRC, i32>;
+  def _F32 : InstCvt<opName, BrigVal, DestRC, f32>;
+  def _F64 : InstCvt<opName, BrigVal, DestRC, f64>;
+}
+
+multiclass InstCvt_DestTypes<string opName, bits<16> BrigVal> {
+  defm _B1 : InstCvt_SrcTypes<opName, BrigVal, CR>;
+
+  defm _U32 : InstCvt_SrcTypes<opName, BrigVal, GPR32>;
+  defm _U64 : InstCvt_SrcTypes<opName, BrigVal, GPR64>;
+
+  defm _S32 : InstCvt_SrcTypes<opName, BrigVal, GPR32>;
+  defm _S64 : InstCvt_SrcTypes<opName, BrigVal, GPR64>;
+
+  defm _F16 : InstCvt_SrcTypes<opName, BrigVal, GPR32>;
+  defm _F32 : InstCvt_SrcTypes<opName, BrigVal, GPR32>;
+  defm _F64 : InstCvt_SrcTypes<opName, BrigVal, GPR64>;
 }
 
 // InstSourceType
@@ -208,33 +439,75 @@ class HSAILInstSourceType<bits<16> BrigVal,
   let InstSourceType = 1;
 }
 
-class HSAILInstSourceType_1Op<string opName, bits<16> BrigVal> :
+class HSAILInstSourceType_1Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstSourceType<BrigVal,
-                 (outs unknown:$dest),
-                 (ins unknown:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+                 (outs P.DestRC:$dest),
+                 (ins P.Src0RC:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
   opName#"$TypeLength$sourceType\t$dest, $src0"
 >;
 
-class HSAILInstSourceType_2Op<string opName, bits<16> BrigVal> :
+multiclass InstSourceType_1Op_U32_BitTypes<string opName, bits<16> BrigVal> {
+  def _U32_B32 : HSAILInstSourceType_1Op<opName, BrigVal, Inst_U32_B32>;
+  def _U32_B64 : HSAILInstSourceType_1Op<opName, BrigVal, Inst_U32_B64>;
+}
+
+multiclass InstSourceType_1Op_U32_IntTypes<string opName, bits<16> BrigVal> {
+  def _U32_S32 : HSAILInstSourceType_1Op<opName, BrigVal, Inst_U32_S32>;
+  def _U32_S64 : HSAILInstSourceType_1Op<opName, BrigVal, Inst_U32_S64>;
+
+  def _U32_U32 : HSAILInstSourceType_1Op<opName, BrigVal, Inst_U32_U32>;
+  def _U32_U64 : HSAILInstSourceType_1Op<opName, BrigVal, Inst_U32_U64>;
+}
+
+class HSAILInstSourceType_2Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstSourceType<BrigVal,
-                 (outs unknown:$dest),
-                 (ins unknown:$src0, unknown:$src1,
+                 (outs P.DestRC:$dest),
+                 (ins P.Src0RC:$src0, P.Src1RC:$src1,
                       BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
   opName#"$TypeLength$sourceType\t$dest, $src0, $src1"
 >;
 
-class HSAILInstSourceType_3Op<string opName, bits<16> BrigVal> :
+multiclass InstSourceType_2Op_Class_Types<string opName, bits<16> BrigVal> {
+  def _F32 : HSAILInstSourceType_2Op<opName, BrigVal, Inst_B1_F32_U32>;
+  def _F64 : HSAILInstSourceType_2Op<opName, BrigVal, Inst_B1_F64_U32>;
+}
+
+class HSAILInstSourceType_3Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstSourceType<BrigVal,
-                 (outs unknown:$dest),
-                 (ins unknown:$src0, unknown:$src1, unknown:$src2,
+                 (outs P.DestRC:$dest),
+                 (ins P.Src0RC:$src0, P.Src1RC:$src1, P.Src2RC:$src2,
                       BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
   opName#"$TypeLength$sourceType\t$dest, $src0, $src1, $src2"
 >;
 
-class HSAILInstSourceType_4Op<string opName, bits<16> BrigVal> :
+// Missing types that require q registers.
+multiclass InstSourceType_3Op_Pack_Types<string opName, bits<16> BrigVal> {
+  def _U8X4_U32 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_U8X4_U8X4_U32_U32>;
+  def _S8X4_S32 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_S8X4_S8X4_S32_U32>;
+
+  def _U8X8_U32 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_U8X8_U8X8_U32_U32>;
+  def _S8X8_S32 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_S8X8_S8X8_S32_U32>;
+
+  def _U16X4_U32 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_U16X4_U16X4_U32_U32>;
+  def _S16X4_S32 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_S16X4_S16X4_S32_U32>;
+
+  def _U32X2_U32 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_U32X2_U32X2_U32_U32>;
+  def _S32X2_S32 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_S32X2_S32X2_S32_U32>;
+
+  def _F16X2_F16 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_F16X2_F16X2_F16_U32>;
+  def _F16X4_F16 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_F16X4_F16X4_F16_U32>;
+}
+
+multiclass InstSourceType_3Op_Sad_Types<string opName, bits<16> BrigVal> {
+  def _U32_U32 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_U32_U32_U32_U32>;
+  def _U32_U16X2 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_U32_U16X2_U16X2_U32>;
+  def _U32_U8X4 : HSAILInstSourceType_3Op<opName, BrigVal, Inst_U32_U8X4_U8X4_U32>;
+}
+
+class HSAILInstSourceType_4Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstSourceType<BrigVal,
-                 (outs unknown:$dest),
-                 (ins unknown:$src0, unknown:$src1, unknown:$src2, unknown:$src3,
+                 (outs P.DestRC:$dest),
+                 (ins P.Src0RC:$src0, P.Src1RC:$src1, P.Src2RC:$src2, P.Src3RC:$src3,
                       BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
   opName#"$TypeLength$sourceType\t$dest, $src0, $src1, $src2, $src3"
 >;
@@ -249,31 +522,37 @@ class HSAILInstLane<bits<16> BrigVal,
   let InstLane = 1;
 }
 
-class HSAILInstLane_0Op<string opName, bits<16> BrigVal> :
+class HSAILInstLane_0Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstLane<
     BrigVal,
-    (outs unknown:$dest),
+    (outs P.DestRC:$dest),
     (ins BrigWidth:$width, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
   opName#"$width$TypeLength$sourceType\t$dest"
 >;
 
-class HSAILInstLane_1Op<string opName, bits<16> BrigVal> :
+class HSAILInstLane_1Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstLane<
     BrigVal,
-    (outs unknown:$dest),
-    (ins BrigWidth:$width, unknown:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+    (outs P.DestRC:$dest),
+    (ins BrigWidth:$width, P.Src0RC:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
   opName#"$width$TypeLength$sourceType\t$dest, $src0"
 >;
 
-class HSAILInstLane_ActiveLanePermute<string opName, bits<16> BrigVal> :
+class HSAILInstLane_ActiveLanePermute<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstLane<
     BrigVal,
-    (outs unknown:$dest),
+    (outs P.DestRC:$dest),
     (ins BrigWidth:$width,
-         unknown:$src0, unknown:$src1, unknown:$src2, unknown:$src3,
+         P.Src0RC:$src0, P.Src1RC:$src1, P.Src2RC:$src2, P.Src3RC:$src3,
          BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
   opName#"$width$TypeLength$sourceType\t$dest, $src0, $src1, $src2, $src3"
 >;
+
+multiclass InstLane_ActiveLanePermute_Types<string opName, bits<16> BrigVal> {
+  def _B1 : HSAILInstLane_ActiveLanePermute<opName, BrigVal, Inst_B1_B1_U32_B1_B1>;
+  def _B32 : HSAILInstLane_ActiveLanePermute<opName, BrigVal, Inst_B32_B32_U32_B32_B1>;
+  def _B64 : HSAILInstLane_ActiveLanePermute<opName, BrigVal, Inst_B64_B64_U32_B64_B1>;
+}
 
 class HSAILInstLane_ActiveLaneMask<string opName, bits<16> BrigVal> :
   HSAILInstLane<
@@ -282,7 +561,7 @@ class HSAILInstLane_ActiveLaneMask<string opName, bits<16> BrigVal> :
   //(outs Vec4Op:$dest),
     (outs GPR64:$dest0, GPR64:$dest1,  GPR64:$dest2,  GPR64:$dest3),
     (ins BrigWidth:$width,
-         unknown:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+         CR:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
 //  opName#"$width$TypeLength$sourceType\t$dest, $src0"
   opName#"_v4$width$TypeLength$sourceType\t($dest0, $dest1, $dest2, $dest3), $src0"
 >;
@@ -302,21 +581,6 @@ class HSAILInstBr_0Op_NoRet<string opName, bits<16> BrigVal> :
   opName#"$width$TypeLength"
 >;
 
-class HSAILInstBr_0Op<string opName, bits<16> BrigVal> :
-  HSAILInstBr<BrigVal,
-              (outs unknown:$dest),
-              (ins BrigWidth:$width, BrigTypeX:$TypeLength),
-  opName#"$width$TypeLength\t$dest"
->;
-
-class HSAILInstBr_1Op<string opName, bits<16> BrigVal> :
-  HSAILInstBr<BrigVal,
-              (outs unknown:$dest),
-              (ins BrigWidth:$width, unknown:$src0, BrigTypeX:$TypeLength),
-  opName#"$width$TypeLength\t$dest, $src0"
->;
-
-
 class HSAILInstBr_1Op_NoRet<string opName, bits<16> BrigVal> :
   HSAILInstBr<BrigVal,
               (outs),
@@ -327,7 +591,7 @@ class HSAILInstBr_1Op_NoRet<string opName, bits<16> BrigVal> :
 class HSAILInstBr_2Op_NoRet<string opName, bits<16> BrigVal> :
   HSAILInstBr<BrigVal,
               (outs),
-              (ins BrigWidth:$width, unknown:$src0, unknown:$src1, BrigTypeX:$TypeLength),
+              (ins BrigWidth:$width, HSAILSrc1Operand:$src0, unknown:$src1, BrigTypeX:$TypeLength),
   opName#"$width$TypeLength\t$src0, $src1"
 >;
 
@@ -339,12 +603,17 @@ class HSAILInstSeg<bits<16> BrigVal,
   let InstSeg = 1;
 }
 
-class HSAILInstSeg_0Op<string opName, bits<16> BrigVal> :
+class HSAILInstSeg_0Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstSeg<BrigVal,
-               (outs unknown:$dest),
+               (outs P.DestRC:$dest),
                (ins BrigSegment:$segment, BrigTypeX:$TypeLength),
   opName#"$segment$TypeLength\t$dest"
 >;
+
+multiclass InstSeg_0Op_PtrTypes<string opName, bits<16> BrigVal> {
+  def _U32 : HSAILInstSeg_0Op<opName, BrigVal, Inst_U32>;
+  def _U64 : HSAILInstSeg_0Op<opName, BrigVal, Inst_U64>;
+}
 
 // InstSegCvt
 class HSAILInstSegCvt<bits<16> BrigVal,
@@ -354,16 +623,28 @@ class HSAILInstSegCvt<bits<16> BrigVal,
   let InstSegCvt = 1;
 }
 
-class HSAILInstSegCvt_1Op<string opName, bits<16> BrigVal> :
+class HSAILInstSegCvt_1Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstSegCvt<BrigVal,
-                 (outs unknown:$dest),
+                 (outs P.DestRC:$dest),
                  (ins BrigSegment:$segment,
                       nonull:$nonull,
-                      unknown:$src0,
+                      P.Src0RC:$src0,
                       BrigTypeX:$destTypedestLength,
                       BrigTypeX:$sourceType),
   opName#"$segment$nonull$destTypedestLength$sourceType\t$dest, $src0"
 >;
+
+multiclass InstSegCvt_1Op_PtrTypes<string opName, bits<16> BrigVal> {
+  def _U32_U32 : HSAILInstSegCvt_1Op<opName, BrigVal, Inst_U32_U32>;
+  def _U32_U64 : HSAILInstSegCvt_1Op<opName, BrigVal, Inst_U32_U64>;
+  def _U64_U32 : HSAILInstSegCvt_1Op<opName, BrigVal, Inst_U64_U32>;
+  def _U64_U64 : HSAILInstSegCvt_1Op<opName, BrigVal, Inst_U64_U64>;
+}
+
+multiclass InstSegCvt_1Op_Segmentp_Types<string opName, bits<16> BrigVal> {
+  def _B1_U32 : HSAILInstSegCvt_1Op<opName, BrigVal, Inst_B1_U32>;
+  def _B1_U64 : HSAILInstSegCvt_1Op<opName, BrigVal, Inst_B1_U64>;
+}
 
 // InstMemFence
 class HSAILInstMemFence<bits<16> BrigVal,
@@ -408,12 +689,123 @@ class LD<string opName, bits<16> BrigVal, dag outs> :
   let hasSideEffects = 0;
 }
 
+class StoreOperands<DAGOperand srcOp> {
+  field dag op_ins = (ins srcOp:$src, MEMOP:$address, BrigTypeX:$TypeLength,
+                    BrigSegment:$segment, BrigAlignment:$align);
+}
+
+def store_32 : StoreOperands<HSAILSrc32Operand>;
+def store_64 : StoreOperands<HSAILSrc64Operand>;
+
+def store_v2_32 : StoreOperands<Vec2SrcOp32>;
+def store_v2_64 : StoreOperands<Vec2SrcOp64>;
+
+def store_v3_32 : StoreOperands<Vec3SrcOp32>;
+def store_v3_64 : StoreOperands<Vec3SrcOp64>;
+
+def store_v4_32 : StoreOperands<Vec4SrcOp32>;
+def store_v4_64 : StoreOperands<Vec4SrcOp64>;
+
+
+multiclass LD_Types<string opName, bits<16> BrigVal> {
+  def _S8 : LD<opName, BrigVal, (outs GPR32:$dest)>;
+  def _U8 : LD<opName, BrigVal, (outs GPR32:$dest)>;
+
+  def _S16 : LD<opName, BrigVal, (outs GPR32:$dest)>;
+  def _U16 : LD<opName, BrigVal, (outs GPR32:$dest)>;
+
+  def _S32 : LD<opName, BrigVal, (outs GPR32:$dest)>,
+             LdStVectorMap<NAME#"_S32", 1>;
+  def _U32 : LD<opName, BrigVal, (outs GPR32:$dest)>,
+             LdStVectorMap<NAME#"_U32", 1>;
+  def _F32 : LD<opName, BrigVal, (outs GPR32:$dest)>,
+             LdStVectorMap<NAME#"_F32", 1>;
+
+  def _SAMP : LD<opName, BrigVal, (outs GPR32:$dest)>,
+               LdStVectorMap<NAME#"_SAMP", 1>;
+
+  def _S64 : LD<opName, BrigVal, (outs GPR64:$dest)>,
+             LdStVectorMap<NAME#"_S64", 1>;
+  def _U64 : LD<opName, BrigVal, (outs GPR64:$dest)>,
+             LdStVectorMap<NAME#"_U64", 1>;
+  def _F64 : LD<opName, BrigVal, (outs GPR64:$dest)>,
+             LdStVectorMap<NAME#"_F64", 1>;
+
+  def _V2_S32 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_S32", 2>;
+  def _V2_U32 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_U32", 2>;
+  def _V2_F32 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_F32", 2>;
+
+  def _V2_S64 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp64:$dest)>,
+                LdStVectorMap<NAME#"_S64", 2>;
+  def _V2_U64 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp64:$dest)>,
+                LdStVectorMap<NAME#"_U64", 2>;
+  def _V2_F64 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp64:$dest)>,
+                LdStVectorMap<NAME#"_F64", 2>;
+
+  def _V3_S32 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_S32", 3>;
+  def _V3_U32 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_U32", 3>;
+  def _V3_F32 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_F32", 3>;
+
+  def _V3_S64 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp64:$dest)>,
+                LdStVectorMap<NAME#"_S64", 3>;
+  def _V3_U64 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp64:$dest)>,
+                LdStVectorMap<NAME#"_U64", 3>;
+  def _V3_F64 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp64:$dest)>,
+                LdStVectorMap<NAME#"_F64", 3>;
+
+  def _V4_S32 : LD<opName#"_v4", BrigVal, (outs Vec4DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_S32", 4>;
+  def _V4_U32 : LD<opName#"_v4", BrigVal, (outs Vec4DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_U32", 4>;
+  def _V4_F32 : LD<opName#"_v4", BrigVal, (outs Vec4DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_F32", 4>;
+
+  def _V4_S64 : LD<opName#"_v4", BrigVal, (outs Vec4DestOp64:$dest)>,
+                LdStVectorMap<NAME#"_S64", 4>;
+  def _V4_U64 : LD<opName#"_v4", BrigVal, (outs Vec4DestOp64:$dest)>,
+                LdStVectorMap<NAME#"_U64", 4>;
+  def _V4_F64 : LD<opName#"_v4", BrigVal, (outs Vec4DestOp64:$dest)>,
+                LdStVectorMap<NAME#"_F64", 4>;
+}
+
 class ST<string opName, bits<16> BrigVal, dag ins> :
   HSAILInstMem<BrigVal, (outs),
     ins,
     opName#"$segment$align$TypeLength\t$src, $address"> {
   let mayLoad = 0;
   let hasSideEffects = 0;
+}
+
+multiclass ST_Types<string opName, bits<16> BrigVal> {
+  def _U8 : ST<opName, BrigVal, store_32.op_ins>;
+  def _U16 : ST<opName, BrigVal, store_32.op_ins>;
+
+  def _U32 : ST<opName, BrigVal, store_32.op_ins>;
+  def _F32 : ST<opName, BrigVal, store_32.op_ins>;
+
+  def _U64 : ST<opName, BrigVal, store_64.op_ins>;
+  def _F64 : ST<opName, BrigVal, store_64.op_ins>;
+
+  def _V2_U32 : ST<opName, BrigVal, store_v2_32.op_ins>;
+  def _V2_F32 : ST<opName, BrigVal, store_v2_32.op_ins>;
+  def _V2_U64 : ST<opName, BrigVal, store_v2_64.op_ins>;
+  def _V2_F64 : ST<opName, BrigVal, store_v2_64.op_ins>;
+
+  def _V3_U32 : ST<opName, BrigVal, store_v3_32.op_ins>;
+  def _V3_F32 : ST<opName, BrigVal, store_v3_32.op_ins>;
+  def _V3_U64 : ST<opName, BrigVal, store_v3_64.op_ins>;
+  def _V3_F64 : ST<opName, BrigVal, store_v3_64.op_ins>;
+
+  def _V4_U32 : ST<opName, BrigVal, store_v4_32.op_ins>;
+  def _V4_F32 : ST<opName, BrigVal, store_v4_32.op_ins>;
+  def _V4_U64 : ST<opName, BrigVal, store_v4_64.op_ins>;
+  def _V4_F64 : ST<opName, BrigVal, store_v4_64.op_ins>;
 }
 
 // InstAtomic
@@ -431,25 +823,38 @@ class HSAILInstAtomic<bits<16> BrigVal,
 // FIXME: We need to not print src0 / src1 depending on the specific
 // atomic op instead of noreg.
 class InstAtomic<string opName, bits<16> BrigVal,
-                 int opVal, string noRetOp = ""> :
+                 int opVal, HSAILProfile P, string noRetOp = ""> :
   HSAILInstAtomic<
     BrigVal,
-    (outs unknown:$dest),
+    (outs P.DestRC:$dest),
     (ins BrigAtomicOperation:$op,
          AddressSpace:$segment,
          BrigMemoryOrder:$order,
          BrigMemoryScope:$scope,
          equiv:$equiv,
          MEMOP:$address,
-         unknown:$src0,
-         unknown:$src1,
+         P.Src0RC:$src0,
+         P.Src1RC:$src1,
          BrigTypeX:$TypeLength),
     opName#"$segment$order$scope$equiv$TypeLength\t$dest, $address, $src0, $src1"
 >, AtomicNoRet<noRetOp, 1> {
   let atomicOperation = opVal;
 }
 
-class InstAtomic_NoRet<string opName, bits<16> BrigVal, int opVal> :
+multiclass InstAtomic_BitTypes<string opName, bits<16> BrigVal, int opVal, string noRetOp = ""> {
+  def _B32 : InstAtomic<opName, BrigVal, opVal, Inst_B32_B32_B32, noRetOp#"_b32">;
+  def _B64 : InstAtomic<opName, BrigVal, opVal, Inst_B64_B64_B64, noRetOp#"_b64">;
+}
+
+multiclass InstAtomic_IntTypes<string opName, bits<16> BrigVal, int opVal, string noRetOp = ""> {
+  def _S32 : InstAtomic<opName, BrigVal, opVal, Inst_S32_S32_S32, noRetOp#"_s32">;
+  def _S64 : InstAtomic<opName, BrigVal, opVal, Inst_S64_S64_S64, noRetOp#"_s64">;
+
+  def _U32 : InstAtomic<opName, BrigVal, opVal, Inst_U32_U32_U32, noRetOp#"_u32">;
+  def _U64 : InstAtomic<opName, BrigVal, opVal, Inst_U64_U64_U64, noRetOp#"_u64">;
+}
+
+class InstAtomic_NoRet<string opName, bits<16> BrigVal, int opVal, HSAILProfile P, string typeSuffix> :
   HSAILInstAtomic<
     BrigVal,
     (outs),
@@ -459,12 +864,25 @@ class InstAtomic_NoRet<string opName, bits<16> BrigVal, int opVal> :
          BrigMemoryScope:$scope,
          equiv:$equiv,
          MEMOP:$address,
-         unknown:$src0,
-         unknown:$src1,
+         P.Src0RC:$src0,
+         P.Src1RC:$src1,
          BrigTypeX:$TypeLength),
     opName#"$segment$order$scope$equiv$TypeLength\t$address, $src0, $src1"
->, AtomicNoRet<opName, 0> {
+>, AtomicNoRet<opName#typeSuffix, 0> {
   let atomicOperation = opVal;
+}
+
+multiclass InstAtomic_NoRet_BitTypes<string opName, bits<16> BrigVal, int opVal> {
+  def _B32 : InstAtomic_NoRet<opName, BrigVal, opVal, Inst_Void_B32_B32, "_b32">;
+  def _B64 : InstAtomic_NoRet<opName, BrigVal, opVal, Inst_Void_B64_B64, "_b64">;
+}
+
+multiclass InstAtomic_NoRet_IntTypes<string opName, bits<16> BrigVal, int opVal> {
+  def _S32 : InstAtomic_NoRet<opName, BrigVal, opVal, Inst_Void_S32_S32, "_s32">;
+  def _S64 : InstAtomic_NoRet<opName, BrigVal, opVal, Inst_Void_S64_S64, "_s64">;
+
+  def _U32 : InstAtomic_NoRet<opName, BrigVal, opVal, Inst_Void_U32_U32, "_u32">;
+  def _U64 : InstAtomic_NoRet<opName, BrigVal, opVal, Inst_Void_U64_U64, "_u64">;
 }
 
 // InstCmp
@@ -476,17 +894,39 @@ class HSAILInstCmp<bits<16> BrigVal,
   let isCompare = 1;
 }
 
-class InstCmp<string opName, bits<16> BrigVal> :
+class InstCmp<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstCmp<BrigVal,
-    (outs unknown:$dest),
+    (outs P.DestRC:$dest),
     (ins BrigCompareOperation:$op,
          ftz:$ftz,
-         unknown:$src0,
-         unknown:$src1,
+         P.Src0RC:$src0,
+         P.Src1RC:$src1,
          BrigTypeX:$destTypedestLength,
          BrigTypeX:$sourceType),
     opName#"$op$ftz$destTypedestLength$sourceType\t$dest, $src0, $src1"
 >;
+
+multiclass InstCmp_CmpTypes<string opName, bits<16> BrigVal, BRIGType destTy> {
+  def _B1 : InstCmp<opName, BrigVal, !cast<HSAILProfile>("Inst"#destTy.InstName#"_B1_B1")>;
+  def _S32 : InstCmp<opName, BrigVal, !cast<HSAILProfile>("Inst"#destTy.InstName#"_S32_S32")>;
+  def _S64 : InstCmp<opName, BrigVal, !cast<HSAILProfile>("Inst"#destTy.InstName#"_S64_S64")>;
+  def _U32 : InstCmp<opName, BrigVal, !cast<HSAILProfile>("Inst"#destTy.InstName#"_U32_U32")>;
+  def _U64 : InstCmp<opName, BrigVal, !cast<HSAILProfile>("Inst"#destTy.InstName#"_U64_U64")>;
+  def _F32 : InstCmp<opName, BrigVal, !cast<HSAILProfile>("Inst"#destTy.InstName#"_F32_F32")>;
+  def _F64 : InstCmp<opName, BrigVal, !cast<HSAILProfile>("Inst"#destTy.InstName#"_F64_F64")>;
+}
+
+// TODO: Support for other return types.
+multiclass InstCmp_RetTypes<string opName, bits<16> BrigVal> {
+  defm _B1 : InstCmp_CmpTypes<opName, BrigVal, B1Ty>;
+  // defm _S32 : InstCmp_CmpTypes<opName, BrigVal, S32Ty>;
+  // defm _U32 : InstCmp_CmpTypes<opName, BrigVal, U32Ty>;
+  // defm _S64 : InstCmp_CmpTypes<opName, BrigVal, S64Ty>;
+  // defm _U64 : InstCmp_CmpTypes<opName, BrigVal, U64Ty>;
+  // defm _F32 : InstCmp_CmpTypes<opName, BrigVal, F32Ty>;
+  // defm _F64 : InstCmp_CmpTypes<opName, BrigVal, F64Ty>;
+}
+
 
 // InstAddr
 class HSAILInstAddr<bits<16> BrigVal,
@@ -496,12 +936,17 @@ class HSAILInstAddr<bits<16> BrigVal,
   let InstAddr = 1;
 }
 
-class HSAILInstAddr_1Op<string opName, bits<16> BrigVal> :
+class HSAILInstAddr_1Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstAddr<BrigVal,
-                (outs unknown:$dest),
+                (outs P.DestRC:$dest),
                 (ins BrigSegment:$segment, MEMOP:$address, BrigTypeX:$TypeLength),
   opName#"$segment$TypeLength\t$dest, $address"
 >;
+
+multiclass InstAddr_1Op_PtrTypes<string opName, bits<16> BrigVal> {
+  def _U32 : HSAILInstAddr_1Op<opName, BrigVal, Inst_U32_U32>;
+  def _U64 : HSAILInstAddr_1Op<opName, BrigVal, Inst_U64_U64>;
+}
 
 // InstImage
 class HSAILInstImage<bits<16> BrigVal,
@@ -554,38 +999,38 @@ class InstBasic_1Op_Pat<HSAILInst inst,
   (inst $src0, bt)
 >;
 
-multiclass InstBasic_1Op_IntTypes<HSAILInst inst,
-                                  SDPatternOperator node,
-                                  bit signed = 0> {
-  def : InstBasic_1Op_Pat<inst, node, i32,
+multiclass InstBasic_1Op_IntTypes_Pat<string inst,
+                                      SDPatternOperator node,
+                                      bit signed = 0> {
+  def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#!if(signed, "_S32", "_U32")), node, i32,
     !if(signed, BrigTypeX.S32, BrigTypeX.U32)
   >;
 
-  def : InstBasic_1Op_Pat<inst, node, i64,
+  def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#!if(signed, "_S64", "_U64")), node, i64,
     !if(signed, BrigTypeX.S64, BrigTypeX.U64)
   >;
 }
 
-multiclass InstBasic_1Op_BitIntTypes<HSAILInst inst,
-                                     SDPatternOperator node,
-                                     bit signed = 0> {
-  def : InstBasic_1Op_Pat<inst, node, i32,
+multiclass InstBasic_1Op_BitTypes_Pat<string inst,
+                                      SDPatternOperator node,
+                                      bit signed = 0> {
+  def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#"_B32"), node, i32,
     BrigTypeX.B32
   >;
 
-  def : InstBasic_1Op_Pat<inst, node, i64,
+  def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#"_B64"), node, i64,
     BrigTypeX.B64
   >;
 
-  def : InstBasic_1Op_Pat<inst, node, i1,
+  def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#"_B1"), node, i1,
     BrigTypeX.B1
   >;
 }
 
-multiclass InstBasic_1Op_FPTypes<HSAILInst inst,
-                                SDPatternOperator node> {
-  def : InstBasic_1Op_Pat<inst, node, f32, BrigTypeX.F32>;
-  def : InstBasic_1Op_Pat<inst, node, f64, BrigTypeX.F64>;
+multiclass InstBasic_1Op_FPTypes_Pat<string inst,
+                                     SDPatternOperator node> {
+  def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigTypeX.F32>;
+  def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigTypeX.F64>;
 }
 
 class InstBasic_2Op_Pat<HSAILInst inst,
@@ -597,35 +1042,35 @@ class InstBasic_2Op_Pat<HSAILInst inst,
   (inst $src0, $src1, bt)
 >;
 
-multiclass InstBasic_2Op_IntTypes<HSAILInst inst,
-                                  SDPatternOperator node,
-                                  bit signed = 0> {
-  def : InstBasic_2Op_Pat<inst, node, i32, i32,
+multiclass InstBasic_2Op_IntTypes_Pat<string inst,
+                                      SDPatternOperator node,
+                                      bit signed = 0> {
+  def : InstBasic_2Op_Pat<!cast<HSAILInst>(inst#!if(signed, "_S32", "_U32")), node, i32, i32,
     !if(signed, BrigTypeX.S32, BrigTypeX.U32)
   >;
 
-  def : InstBasic_2Op_Pat<inst, node, i64, i64,
+  def : InstBasic_2Op_Pat<!cast<HSAILInst>(inst#!if(signed, "_S64", "_U64")), node, i64, i64,
     !if(signed, BrigTypeX.S64, BrigTypeX.U64)
   >;
 }
 
-multiclass InstBasic_2Op_BitIntTypes<HSAILInst inst,
-                                     SDPatternOperator node> {
-  def : InstBasic_2Op_Pat<inst, node, i32, i32,
+multiclass InstBasic_2Op_BitIntTypes_Pat<string inst,
+                                         SDPatternOperator node> {
+  def : InstBasic_2Op_Pat<!cast<HSAILInst>(inst#"_B32"), node, i32, i32,
     BrigTypeX.B32
   >;
 
-  def : InstBasic_2Op_Pat<inst, node, i64, i64,
+  def : InstBasic_2Op_Pat<!cast<HSAILInst>(inst#"_B64"), node, i64, i64,
     BrigTypeX.B64
   >;
 
-  def : InstBasic_2Op_Pat<inst, node, i1, i1,
+  def : InstBasic_2Op_Pat<!cast<HSAILInst>(inst#"_B1"), node, i1, i1,
     BrigTypeX.B1
   >;
 }
 
-multiclass InstBasic_2Op_FPTypes<HSAILInst inst,
-                                SDPatternOperator node> {
+multiclass InstBasic_2Op_FPTypes_Pat<HSAILInst inst,
+                                     SDPatternOperator node> {
   def : InstBasic_2Op_Pat<inst, node, f32, f32, BrigTypeX.F32>;
   def : InstBasic_2Op_Pat<inst, node, f64, f64, BrigTypeX.F64>;
 }
@@ -637,24 +1082,29 @@ class InstBasic_3Op_Pat<HSAILInst inst,
   (node (vt (GPROrImm vt:$src0)), (vt (GPROrImm vt:$src1)), (vt (GPROrImm vt:$src2))),
   (inst $src0, $src1, $src2, bt)
 >;
-
-multiclass InstBasic_3Op_IntTypes<HSAILInst inst,
-                                  SDPatternOperator node,
-                                  bit signed = 0> {
-  def : InstBasic_3Op_Pat<inst, node, i32,
+multiclass InstBasic_3Op_IntTypes_Pat<string inst,
+                                      SDPatternOperator node,
+                                      bit signed = 0> {
+  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst# !if(signed, "_S32", "_U32")), node, i32,
     !if(signed, BrigTypeX.S32, BrigTypeX.U32)
   >;
 
-  def : InstBasic_3Op_Pat<inst, node, i64,
+  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst# !if(signed, "_S64", "_U64")), node, i64,
     !if(signed, BrigTypeX.S64, BrigTypeX.U64)
   >;
 }
 
 // XXX - b1 missing intentionally with current set of instructions.
-multiclass InstBasic_3Op_BitIntTypes<HSAILInst inst,
-                                    SDPatternOperator node> {
-  def : InstBasic_3Op_Pat<inst, node, i32, BrigTypeX.B32>;
-  def : InstBasic_3Op_Pat<inst, node, i64, BrigTypeX.B64>;
+multiclass InstBasic_3Op_BitTypes_Pat<string inst,
+                                      SDPatternOperator node> {
+  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst#"_B32"), node, i32, BrigTypeX.B32>;
+  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst#"_B64"), node, i64, BrigTypeX.B64>;
+}
+
+multiclass InstBasic_3Op_FPTypes_Pat<string inst,
+                                     SDPatternOperator node> {
+  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigTypeX.F32>;
+  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigTypeX.F64>;
 }
 
 class InstBasic_CMov_Pat<HSAILInst inst,
@@ -664,10 +1114,23 @@ class InstBasic_CMov_Pat<HSAILInst inst,
   (vt (inst $src0, $src1, $src2, bt))
 >;
 
-multiclass InstBasic_3Op_FPTypes<HSAILInst inst,
-                                SDPatternOperator node> {
-  def : InstBasic_3Op_Pat<inst, node, f32, BrigTypeX.F32>;
-  def : InstBasic_3Op_Pat<inst, node, f64, BrigTypeX.F64>;
+class InstBasic_3Op_BitExtract_Pat<HSAILInst inst,
+                                   SDPatternOperator node,
+                                   ValueType vt,
+                                   int bt> : Pat <
+  (node (vt (GPROrImm vt:$src0)), (i32 (GPROrImm i32:$src1)), (i32 (GPROrImm i32:$src2))),
+  (inst $src0, $src1, $src2, bt)
+>;
+
+multiclass InstBasic_3Op_BitExtract_IntTypes_Pat<string inst, SDPatternOperator node, bit signed> {
+  def : InstBasic_3Op_BitExtract_Pat<!cast<HSAILInst>(inst# !if(signed, "_S32", "_U32")), node, i32,
+    !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+  >;
+
+  def : InstBasic_3Op_BitExtract_Pat<!cast<HSAILInst>(inst# !if(signed, "_S64", "_U64")), node, i64,
+    !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+  >;
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -704,36 +1167,36 @@ class InstMod_3Op_Pat<HSAILInst inst,
   (inst ftz, round, $src0, $src1, $src2, bt)
 >;
 
-multiclass InstMod_1Op_FPTypes<HSAILInst inst,
-                              SDPatternOperator node,
-                              int round = BrigRound.FLOAT_DEFAULT> {
-  def : InstMod_1Op_Pat<inst, node, f32, BrigTypeX.F32, round, 1>;
-  def : InstMod_1Op_Pat<inst, node, f64, BrigTypeX.F64, round, 0>;
+multiclass InstMod_1Op_FPTypes_Pat<string inst,
+                                   SDPatternOperator node,
+                                   int round = BrigRound.FLOAT_DEFAULT> {
+  def : InstMod_1Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigTypeX.F32, round, 1>;
+  def : InstMod_1Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigTypeX.F64, round, 0>;
 }
 
-multiclass InstMod_2Op_IntTypes<HSAILInst inst,
-                                SDPatternOperator node,
-                                bit signed = 0> {
-  def : InstMod_2Op_Pat<inst, node, i32,
+multiclass InstMod_2Op_IntTypes_Pat<string inst,
+                                   SDPatternOperator node,
+                                   bit signed = 0> {
+  def : InstMod_2Op_Pat<!cast<HSAILInst>(inst# !if(signed, "_S32", "_U32")), node, i32,
     !if(signed, BrigTypeX.S32, BrigTypeX.U32)
   >;
 
-  def : InstMod_2Op_Pat<inst, node, i64,
+  def : InstMod_2Op_Pat<!cast<HSAILInst>(inst# !if(signed, "_S64", "_U64")), node, i64,
     !if(signed, BrigTypeX.S64, BrigTypeX.U64)
   >;
 }
 
-multiclass InstMod_2Op_FPTypes<HSAILInst inst,
-                               SDPatternOperator node,
-                               int round = BrigRound.FLOAT_DEFAULT> {
-  def : InstMod_2Op_Pat<inst, node, f32, BrigTypeX.F32, round, 1>;
-  def : InstMod_2Op_Pat<inst, node, f64, BrigTypeX.F64, round, 0>;
+multiclass InstMod_2Op_FPTypes_Pat<string inst,
+                                   SDPatternOperator node,
+                                   int round = BrigRound.FLOAT_DEFAULT> {
+  def : InstMod_2Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigTypeX.F32, round, 1>;
+  def : InstMod_2Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigTypeX.F64, round, 0>;
 }
 
-multiclass InstMod_3Op_FPTypes<HSAILInst inst,
-                               SDPatternOperator node> {
-  def : InstMod_3Op_Pat<inst, node, f32, BrigTypeX.F32, BrigRound.FLOAT_DEFAULT, 1>;
-  def : InstMod_3Op_Pat<inst, node, f64, BrigTypeX.F64, BrigRound.FLOAT_DEFAULT, 0>;
+multiclass InstMod_3Op_FPTypes_Pat<string inst,
+                                   SDPatternOperator node> {
+  def : InstMod_3Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigTypeX.F32, BrigRound.FLOAT_DEFAULT, 1>;
+  def : InstMod_3Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigTypeX.F64, BrigRound.FLOAT_DEFAULT, 0>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -868,6 +1331,7 @@ class InstAddr_1Op_Pat<HSAILInst inst,
 // Atomic instruction patterns
 ////////////////////////////////////////////////////////////////////////////////
 
+// FIXME: Remove zero_reg usage
 class AtomicPat_0Op_Pat<HSAILInstAtomic inst, SDPatternOperator node,
                         ValueType vt, int bt> : Pat<
   (node (AtomicAddr AddressSpace:$segment,
@@ -944,59 +1408,61 @@ class AtomicPat_1Op_NoRet_Pat<HSAILInstAtomic inst, SDPatternOperator node,
         bt)
 >;
 
-multiclass AtomicPat_0Op_BitTypes<HSAILInstAtomic inst,
+multiclass AtomicPat_0Op_BitTypes<string inst,
                                   SDPatternOperator node> {
   def : AtomicPat_0Op_Pat<
-    inst, node, i32, BrigTypeX.B32
+    !cast<HSAILInstAtomic>(inst#"_B32"), node, i32, BrigTypeX.B32
   >;
 
   def : AtomicPat_0Op_Pat<
-    inst, node, i64, BrigTypeX.B64
+    !cast<HSAILInstAtomic>(inst#"_B64"), node, i64, BrigTypeX.B64
   >;
 }
 
-multiclass AtomicPat_1Op_IntTypes<HSAILInstAtomic inst,
+multiclass AtomicPat_1Op_IntTypes<string inst,
                                   SDPatternOperator node,
                                   bit signed = 0> {
   def : AtomicPat_1Op_Pat<
-    inst, node, i32, !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+    !cast<HSAILInstAtomic>(inst#!if(signed, "_S32", "_U32")), node, i32,
+    !if(signed, BrigTypeX.S32, BrigTypeX.U32)
   >;
 
   def : AtomicPat_1Op_Pat<
-    inst, node, i64, !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+    !cast<HSAILInstAtomic>(inst#!if(signed, "_S64", "_U64")), node, i64,
+    !if(signed, BrigTypeX.S64, BrigTypeX.U64)
   >;
 }
 
-multiclass AtomicPat_1Op_BitTypes<HSAILInstAtomic inst,
+multiclass AtomicPat_1Op_BitTypes<string inst,
                                   SDPatternOperator node> {
   def : AtomicPat_1Op_Pat<
-    inst, node, i32, BrigTypeX.B32
+    !cast<HSAILInstAtomic>(inst#"_B32"), node, i32, BrigTypeX.B32
   >;
 
   def : AtomicPat_1Op_Pat<
-    inst, node, i64, BrigTypeX.B64
+    !cast<HSAILInstAtomic>(inst#"_B64"), node, i64, BrigTypeX.B64
   >;
 }
 
-multiclass AtomicPat_1Op_NoRet_BitTypes<HSAILInstAtomic inst,
+multiclass AtomicPat_1Op_NoRet_BitTypes<string inst,
                                         SDPatternOperator node> {
   def : AtomicPat_1Op_NoRet_Pat<
-    inst, node, i32, BrigTypeX.B32
+    !cast<HSAILInstAtomic>(inst#"_B32"), node, i32, BrigTypeX.B32
   >;
 
   def : AtomicPat_1Op_NoRet_Pat<
-    inst, node, i64, BrigTypeX.B64
+    !cast<HSAILInstAtomic>(inst#"_B64"), node, i64, BrigTypeX.B64
   >;
 }
 
-multiclass AtomicPat_2Op_BitTypes<HSAILInstAtomic inst,
+multiclass AtomicPat_2Op_BitTypes<string inst,
                                   SDPatternOperator node> {
   def : AtomicPat_2Op_Pat<
-    inst, node, i32, BrigTypeX.B32
+    !cast<HSAILInstAtomic>(inst#"_B32"), node, i32, BrigTypeX.B32
   >;
 
   def : AtomicPat_2Op_Pat<
-    inst, node, i64, BrigTypeX.B64
+    !cast<HSAILInstAtomic>(inst#"_B64"), node, i64, BrigTypeX.B64
   >;
 }
 

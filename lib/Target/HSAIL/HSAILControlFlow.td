@@ -40,7 +40,7 @@ let isNotDuplicable = 1, hasSideEffects = 1 in {
 
 let isTerminator = 1, isReturn = 1, isBarrier = 1, hasCtrlDep = 1,
     isNotDuplicable = 1, hasSideEffects = 1 in {
-  def RET : HSAILInstBasic_0Op_NoRet<"ret", BrigOpcode.RET>;
+  def RET : HSAILInstBasic_0Op_NoRet<"ret", BrigOpcode.RET, Inst_Void>;
 }
 
 def : InstBasic_0Op_NoRet_Pat<RET, HSAILret>;

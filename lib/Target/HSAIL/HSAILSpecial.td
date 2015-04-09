@@ -3,46 +3,46 @@
 
 let isAsCheapAsAMove = 1 in {
   let isReMaterializable = 1 in {
-    def WORKITEMABSID : HSAILInstBasic_1Op<"workitemabsid", BrigOpcode.WORKITEMABSID>;
-    def WORKGROUPID : HSAILInstBasic_1Op<"workgroupid", BrigOpcode.WORKGROUPID>;
-    def WORKITEMID : HSAILInstBasic_1Op<"workitemid", BrigOpcode.WORKITEMID>;
-    def WORKGROUPSIZE : HSAILInstBasic_1Op<"workgroupsize", BrigOpcode.WORKGROUPSIZE>;
-    def CURRENTWORKGROUPSIZE : HSAILInstBasic_1Op<"currentworkgroupsize", BrigOpcode.CURRENTWORKGROUPSIZE>;
-    def GRIDGROUPS : HSAILInstBasic_1Op<"gridgroups", BrigOpcode.GRIDGROUPS>;
-    def GRIDSIZE : HSAILInstBasic_1Op<"gridsize", BrigOpcode.GRIDSIZE>;
+    defm WORKITEMABSID : InstBasic_1Op_UnsignedIntTypes<"workitemabsid", BrigOpcode.WORKITEMABSID>;
+    def WORKGROUPID_U32 : HSAILInstBasic_1Op<"workgroupid", BrigOpcode.WORKGROUPID, Inst_U32_U32>;
+    def WORKITEMID_U32 : HSAILInstBasic_1Op<"workitemid", BrigOpcode.WORKITEMID, Inst_U32_U32>;
+    def WORKGROUPSIZE_U32 : HSAILInstBasic_1Op<"workgroupsize", BrigOpcode.WORKGROUPSIZE, Inst_U32_U32>;
+    def CURRENTWORKGROUPSIZE_U32 : HSAILInstBasic_1Op<"currentworkgroupsize", BrigOpcode.CURRENTWORKGROUPSIZE, Inst_U32_U32>;
+    def GRIDGROUPS_U32 : HSAILInstBasic_1Op<"gridgroups", BrigOpcode.GRIDGROUPS, Inst_U32_U32>;
+    def GRIDSIZE_U32 : HSAILInstBasic_1Op<"gridsize", BrigOpcode.GRIDSIZE, Inst_U32_U32>;
   }
 
-  def DIM : HSAILInstBasic_0Op<"dim", BrigOpcode.DIM>;
-  def WORKITEMFLATID : HSAILInstBasic_0Op<"workitemflatid", BrigOpcode.WORKITEMFLATID>;
-  def WORKITEMFLATABSID : HSAILInstBasic_0Op<"workitemflatabsid", BrigOpcode.WORKITEMFLATABSID>;
-  def LANEID : HSAILInstBasic_0Op<"laneid", BrigOpcode.LANEID>;
-  def WAVEID : HSAILInstBasic_0Op<"waveid", BrigOpcode.WAVEID>;
-  def MAXWAVEID : HSAILInstBasic_0Op<"maxwaveid", BrigOpcode.MAXWAVEID>;
+  def DIM_U32 : HSAILInstBasic_0Op<"dim", BrigOpcode.DIM, Inst_U32>;
+  def WORKITEMFLATID_U32 : HSAILInstBasic_0Op<"workitemflatid", BrigOpcode.WORKITEMFLATID, Inst_U32>;
+  defm WORKITEMFLATABSID : InstBasic_0Op_UnsignedIntTypes<"workitemflatabsid", BrigOpcode.WORKITEMFLATABSID>;
+  def LANEID_U32 : HSAILInstBasic_0Op<"laneid", BrigOpcode.LANEID, Inst_U32>;
+  def WAVEID_U32 : HSAILInstBasic_0Op<"waveid", BrigOpcode.WAVEID, Inst_U32>;
+  def MAXWAVEID_U32 : HSAILInstBasic_0Op<"maxwaveid", BrigOpcode.MAXWAVEID, Inst_U32>;
 
   let hasSideEffects = 1 in {
-    def CLOCK : HSAILInstBasic_0Op<"clock", BrigOpcode.CLOCK>;
-    def CUID : HSAILInstBasic_0Op<"cuid", BrigOpcode.CUID>;
+    def CLOCK_U64 : HSAILInstBasic_0Op<"clock", BrigOpcode.CLOCK, Inst_U64>;
+    def CUID_U32 : HSAILInstBasic_0Op<"cuid", BrigOpcode.CUID, Inst_U32>;
   }
 }
 
-def : InstBasic_1Op_Pat<WORKITEMABSID, int_HSAIL_get_global_id, i32, BrigTypeX.U32>;
-def : InstBasic_1Op_Pat<WORKGROUPID, int_HSAIL_get_group_id, i32, BrigTypeX.U32>;
-def : InstBasic_1Op_Pat<WORKITEMID, int_HSAIL_get_local_id, i32, BrigTypeX.U32>;
-def : InstBasic_1Op_Pat<WORKGROUPSIZE, int_HSAIL_workgroup_size, i32, BrigTypeX.U32>;
-def : InstBasic_1Op_Pat<CURRENTWORKGROUPSIZE, int_HSAIL_currentworkgroup_size, i32, BrigTypeX.U32>;
-def : InstBasic_1Op_Pat<GRIDGROUPS, int_HSAIL_get_num_groups, i32, BrigTypeX.U32>;
-def : InstBasic_1Op_Pat<GRIDSIZE, int_HSAIL_get_global_size, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<WORKITEMABSID_U32, int_HSAIL_get_global_id, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<WORKGROUPID_U32, int_HSAIL_get_group_id, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<WORKITEMID_U32, int_HSAIL_get_local_id, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<WORKGROUPSIZE_U32, int_HSAIL_workgroup_size, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<CURRENTWORKGROUPSIZE_U32, int_HSAIL_currentworkgroup_size, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<GRIDGROUPS_U32, int_HSAIL_get_num_groups, i32, BrigTypeX.U32>;
+def : InstBasic_1Op_Pat<GRIDSIZE_U32, int_HSAIL_get_global_size, i32, BrigTypeX.U32>;
 
-def : InstBasic_0Op_Pat<DIM, int_HSAIL_get_work_dim, i32, BrigTypeX.U32>;
-def : InstBasic_0Op_Pat<WORKITEMFLATID, int_HSAIL_workitemid_flat, i32, BrigTypeX.U32>;
-def : InstBasic_0Op_Pat<WORKITEMFLATABSID, int_HSAIL_workitemid_flatabs, i32, BrigTypeX.U32>;
-def : InstBasic_0Op_Pat<LANEID, int_HSAIL_get_lane_id, i32, BrigTypeX.U32>;
-def : InstBasic_0Op_Pat<WAVEID, int_HSAIL_get_dynwave_id, i32, BrigTypeX.U32>;
-def : InstBasic_0Op_Pat<MAXWAVEID, int_HSAIL_get_maxdynwave_id, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<DIM_U32, int_HSAIL_get_work_dim, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<WORKITEMFLATID_U32, int_HSAIL_workitemid_flat, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<WORKITEMFLATABSID_U32, int_HSAIL_workitemid_flatabs, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<LANEID_U32, int_HSAIL_get_lane_id, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<WAVEID_U32, int_HSAIL_get_dynwave_id, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<MAXWAVEID_U32, int_HSAIL_get_maxdynwave_id, i32, BrigTypeX.U32>;
 
 
-def : InstBasic_0Op_Pat<CLOCK, int_HSAIL_get_clock, i64, BrigTypeX.U64>;
-def : InstBasic_0Op_Pat<CUID, int_HSAIL_get_cu, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<CLOCK_U64, int_HSAIL_get_clock, i64, BrigTypeX.U64>;
+def : InstBasic_0Op_Pat<CUID_U32, int_HSAIL_get_cu, i32, BrigTypeX.U32>;
 
 let isNotDuplicable = 1, isBarrier = 1 in {
   def BARRIER : HSAILInstBr_0Op_NoRet<"barrier", BrigOpcode.BARRIER> {
@@ -67,53 +67,53 @@ def : Pat<
   (MEMFENCE imm:$order, imm:$scope)
 >;
 
-def IMAGEFENCE : HSAILInstBasic_0Op_NoRet<"imagefence", BrigOpcode.IMAGEFENCE>;
+def IMAGEFENCE : HSAILInstBasic_0Op_NoRet<"imagefence", BrigOpcode.IMAGEFENCE, Inst_Void>;
 def : InstBasic_0Op_NoRet_Pat<IMAGEFENCE, int_HSAIL_imagefence>;
 
 
-def ACTIVELANEPERMUTE :
-  HSAILInstLane_ActiveLanePermute<"activelanepermute",
+defm ACTIVELANEPERMUTE :
+  InstLane_ActiveLanePermute_Types<"activelanepermute",
                                    BrigOpcode.ACTIVELANEPERMUTE>;
 
-def : ActiveLanePermutePat<ACTIVELANEPERMUTE,
+def : ActiveLanePermutePat<ACTIVELANEPERMUTE_B32,
                            HSAILactivelanepermute, i32, BrigTypeX.B32>;
-def : ActiveLanePermutePat<ACTIVELANEPERMUTE,
+def : ActiveLanePermutePat<ACTIVELANEPERMUTE_B64,
                            HSAILactivelanepermute, i64, BrigTypeX.B64>;
 
-def ACTIVELANEID : HSAILInstLane_0Op<"activelaneid", BrigOpcode.ACTIVELANEID>;
-def : ActiveLaneIdPat<ACTIVELANEID, HSAILactivelaneid, i32, BrigTypeX.U32>;
+def ACTIVELANEID_U32 : HSAILInstLane_0Op<"activelaneid", BrigOpcode.ACTIVELANEID, Inst_U32>;
+def : ActiveLaneIdPat<ACTIVELANEID_U32, HSAILactivelaneid, i32, BrigTypeX.U32>;
 
-def ACTIVELANECOUNT : HSAILInstLane_1Op<"activelanecount", BrigOpcode.ACTIVELANECOUNT>;
-def : ActiveLaneCountPat<ACTIVELANECOUNT, HSAILactivelanecount, i32, BrigTypeX.U32>;
+def ACTIVELANECOUNT_U32_B1 : HSAILInstLane_1Op<"activelanecount", BrigOpcode.ACTIVELANECOUNT, Inst_U32_B1>;
+def : ActiveLaneCountPat<ACTIVELANECOUNT_U32_B1, HSAILactivelanecount, i32, BrigTypeX.U32>;
 
 let isAsCheapAsAMove = 1, isReMaterializable = 1 in {
-  def NULLPTR : HSAILInstSeg_0Op<"nullptr", BrigOpcode.NULLPTR>;
+  defm NULLPTR : InstSeg_0Op_PtrTypes<"nullptr", BrigOpcode.NULLPTR>;
 }
 
-def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_group, i32, BrigTypeX.U32, AddressSpace.GROUP>;
-def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_private, i32, BrigTypeX.U32, AddressSpace.PRIVATE>;
+def : InstSeg_0Op_Pat<NULLPTR_U32, int_HSAIL_nullptr_group, i32, BrigTypeX.U32, AddressSpace.GROUP>;
+def : InstSeg_0Op_Pat<NULLPTR_U32, int_HSAIL_nullptr_private, i32, BrigTypeX.U32, AddressSpace.PRIVATE>;
 
 let Predicates = [In64BitMode] in {
-  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_global, i64, BrigTypeX.U64, AddressSpace.FLAT>; // Same as flat.
-  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_flat, i64, BrigTypeX.U64, AddressSpace.FLAT>;
-  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_readonly, i64, BrigTypeX.U64, AddressSpace.FLAT>; // Same as flat.
-  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_kernarg, i64, BrigTypeX.U64, AddressSpace.KERNARG>;
+  def : InstSeg_0Op_Pat<NULLPTR_U64, int_HSAIL_nullptr_global, i64, BrigTypeX.U64, AddressSpace.FLAT>; // Same as flat.
+  def : InstSeg_0Op_Pat<NULLPTR_U64, int_HSAIL_nullptr_flat, i64, BrigTypeX.U64, AddressSpace.FLAT>;
+  def : InstSeg_0Op_Pat<NULLPTR_U64, int_HSAIL_nullptr_readonly, i64, BrigTypeX.U64, AddressSpace.FLAT>; // Same as flat.
+  def : InstSeg_0Op_Pat<NULLPTR_U64, int_HSAIL_nullptr_kernarg, i64, BrigTypeX.U64, AddressSpace.KERNARG>;
 }
 
 let Predicates = [In32BitMode] in {
-  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_global, i32, BrigTypeX.U32, AddressSpace.FLAT>; // Same as flat.
-  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_flat, i32, BrigTypeX.U32, AddressSpace.FLAT>;
-  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_readonly, i32, BrigTypeX.U32, AddressSpace.FLAT>; // Same as flat.
-  def : InstSeg_0Op_Pat<NULLPTR, int_HSAIL_nullptr_kernarg, i32, BrigTypeX.U32, AddressSpace.KERNARG>;
+  def : InstSeg_0Op_Pat<NULLPTR_U32, int_HSAIL_nullptr_global, i32, BrigTypeX.U32, AddressSpace.FLAT>; // Same as flat.
+  def : InstSeg_0Op_Pat<NULLPTR_U32, int_HSAIL_nullptr_flat, i32, BrigTypeX.U32, AddressSpace.FLAT>;
+  def : InstSeg_0Op_Pat<NULLPTR_U32, int_HSAIL_nullptr_readonly, i32, BrigTypeX.U32, AddressSpace.FLAT>; // Same as flat.
+  def : InstSeg_0Op_Pat<NULLPTR_U32, int_HSAIL_nullptr_kernarg, i32, BrigTypeX.U32, AddressSpace.KERNARG>;
 }
 
 let isAsCheapAsAMove = 1, isReMaterializable = 1 in {
-  def KERNARGBASEPTR : HSAILInstBasic_0Op<"kernargbaseptr", BrigOpcode.KERNARGBASEPTR>;
+  defm KERNARGBASEPTR : InstBasic_0Op_UnsignedIntTypes<"kernargbaseptr", BrigOpcode.KERNARGBASEPTR>;
 }
 
-def : InstBasic_0Op_Pat<KERNARGBASEPTR, HSAILkernargbaseptr, i64, BrigTypeX.U64>;
-def : InstBasic_0Op_Pat<KERNARGBASEPTR, HSAILkernargbaseptr, i32, BrigTypeX.U32>;
+def : InstBasic_0Op_Pat<KERNARGBASEPTR_U64, HSAILkernargbaseptr, i64, BrigTypeX.U64>;
+def : InstBasic_0Op_Pat<KERNARGBASEPTR_U32, HSAILkernargbaseptr, i32, BrigTypeX.U32>;
 
 // Cross-Lane Operations
-def ACTIVELANEMASK : HSAILInstLane_ActiveLaneMask<"activelanemask", BrigOpcode.ACTIVELANEMASK>;
+def ACTIVELANEMASK_V4_B64_B1 : HSAILInstLane_ActiveLaneMask<"activelanemask", BrigOpcode.ACTIVELANEMASK>;
 

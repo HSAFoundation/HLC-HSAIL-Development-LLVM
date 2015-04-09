@@ -137,27 +137,9 @@ private:
                                  SDValue &DestType,
                                  SDValue &SrcType) const;
 
-  bool SelectSTOF(SDValue Cast,
-                  SDValue &Segment,
-                  SDValue &NoNull,
-                  SDValue &Ptr,
-                  SDValue &DestType,
-                  SDValue &SrcType) const;
+  SDNode *SelectAddrSpaceCast(AddrSpaceCastSDNode *ASC) const;
 
-  bool SelectFTOS(SDValue Cast,
-                  SDValue &Segment,
-                  SDValue &NoNull,
-                  SDValue &Ptr,
-                  SDValue &DestType,
-                  SDValue &SrcType) const;
-
-  bool SelectSetCC(SDValue SetCC,
-                   SDValue &LHS,
-                   SDValue &RHS,
-                   SDValue &CmpOp,
-                   SDValue &FTZ,
-                   SDValue &DestType,
-                   SDValue &SrcType) const;
+  SDNode *SelectSetCC(SDNode *SetCC) const;
 
   SDNode *SelectArgLd(MemSDNode *SetCC) const;
   SDNode *SelectArgSt(MemSDNode *SetCC) const;
@@ -392,7 +374,8 @@ SDNode *HSAILDAGToDAGISel::SelectActiveLaneMask(SDNode *Node) {
 
   SelectGPROrImm(Ops[1], Ops[1]);
 
-  return CurDAG->SelectNodeTo(Node, HSAIL::ACTIVELANEMASK, Node->getVTList(), Ops);
+  return CurDAG->SelectNodeTo(Node, HSAIL::ACTIVELANEMASK_V4_B64_B1,
+                              Node->getVTList(), Ops);
 }
 
 static SDValue getBRIGMemorySegment(SelectionDAG *CurDAG,
@@ -661,6 +644,9 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
   default:
     ResNode = SelectCode(Node);
     break;
+  case ISD::SETCC:
+    ResNode = SelectSetCC(Node);
+    break;
   case ISD::FrameIndex: {
     if (FrameIndexSDNode *FIN = dyn_cast<FrameIndexSDNode>(Node)) {
       SDValue Ops[] = {
@@ -671,7 +657,7 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
         CurDAG->getTargetConstant(BRIG_TYPE_U32, MVT::i32)
       };
 
-      ResNode = CurDAG->SelectNodeTo(Node, HSAIL::LDA, NVT, Ops);
+      ResNode = CurDAG->SelectNodeTo(Node, HSAIL::LDA_U32, NVT, Ops);
     } else {
       ResNode = Node;
     }
@@ -686,6 +672,7 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
 
     BrigType BT
       = (PtrVT == MVT::i32) ? BRIG_TYPE_U32 : BRIG_TYPE_U64;
+    unsigned Opcode = (PtrVT == MVT::i32) ? HSAIL::LDA_U32 : HSAIL::LDA_U64;
 
     const SDValue Ops[] = {
       CurDAG->getTargetConstant(AS, MVT::i32),
@@ -695,7 +682,7 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
       CurDAG->getTargetConstant(BT, MVT::i32)
     };
 
-    ResNode = CurDAG->SelectNodeTo(Node, HSAIL::LDA, PtrVT, Ops);
+    ResNode = CurDAG->SelectNodeTo(Node, Opcode, PtrVT, Ops);
     break;
   }
   case ISD::INTRINSIC_W_CHAIN:
@@ -730,6 +717,10 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
   }
   case HSAILISD::ARG_ST: {
     ResNode = SelectArgSt(cast<MemSDNode>(Node));
+    break;
+  }
+  case ISD::ADDRSPACECAST: {
+    ResNode = SelectAddrSpaceCast(cast<AddrSpaceCastSDNode>(Node));
     break;
   }
 
@@ -1103,36 +1094,55 @@ void HSAILDAGToDAGISel::SelectAddrSpaceCastCommon(const AddrSpaceCastSDNode &ASC
   SrcType = CurDAG->getTargetConstant(SrcBT, MVT::i32);
 }
 
+SDNode *HSAILDAGToDAGISel::SelectAddrSpaceCast(AddrSpaceCastSDNode *ASC) const {
+  SDValue Cast(ASC, 0);
+  unsigned DstAS = ASC->getDestAddressSpace();
+  unsigned SrcAS = ASC->getSrcAddressSpace();
 
-bool HSAILDAGToDAGISel::SelectSTOF(SDValue Cast,
-                                   SDValue &Segment,
-                                   SDValue &NoNull,
-                                   SDValue &Ptr,
-                                   SDValue &DestType,
-                                   SDValue &SrcType) const {
-  const AddrSpaceCastSDNode *ASC = cast<AddrSpaceCastSDNode>(Cast);
-  if (ASC->getDestAddressSpace() != HSAILAS::FLAT_ADDRESS)
-    return false;
+  EVT DestVT = ASC->getValueType(0);
+  EVT SrcVT = ASC->getOperand(0).getValueType();
+  bool Src32 = (SrcVT == MVT::i32);
+  bool Dst32 = (DestVT == MVT::i32);
 
-  Segment = CurDAG->getTargetConstant(ASC->getSrcAddressSpace(), MVT::i32);
+  unsigned Opcode;
+  SDValue Segment, NoNull, Ptr, DestType, SrcType;
 
-  SelectAddrSpaceCastCommon(*ASC, NoNull, Ptr, DestType, SrcType);
-  return true;
-}
+  if (SrcAS == HSAILAS::FLAT_ADDRESS) {
+    if (Src32 && Dst32)
+      Opcode = HSAIL::FTOS_U32_U32;
+    else if (Src32 && !Dst32)
+      llvm_unreachable("Pointer size combination should not happen");
+    else if (!Src32 && Dst32)
+      Opcode = HSAIL::FTOS_U32_U64;
+    else
+      Opcode = HSAIL::FTOS_U64_U64;
 
-bool HSAILDAGToDAGISel::SelectFTOS(SDValue Cast,
-                                   SDValue &Segment,
-                                   SDValue &NoNull,
-                                   SDValue &Ptr,
-                                   SDValue &DestType,
-                                   SDValue &SrcType) const {
-  const AddrSpaceCastSDNode *ASC = cast<AddrSpaceCastSDNode>(Cast);
-  if (ASC->getSrcAddressSpace() != HSAILAS::FLAT_ADDRESS)
-    return false;
+    Segment = CurDAG->getTargetConstant(DstAS, MVT::i32);
+    SelectAddrSpaceCastCommon(*ASC, NoNull, Ptr, DestType, SrcType);
+  } else if (DstAS == HSAILAS::FLAT_ADDRESS) {
+    if (Src32 && Dst32)
+      Opcode = HSAIL::STOF_U32_U32;
+    else if (Src32 && !Dst32)
+      Opcode = HSAIL::STOF_U64_U32;
+    else if (!Src32 && Dst32)
+      llvm_unreachable("Pointer size combination should not happen");
+    else
+      Opcode = HSAIL::STOF_U64_U64;
 
-  Segment = CurDAG->getTargetConstant(ASC->getDestAddressSpace(), MVT::i32);
-  SelectAddrSpaceCastCommon(*ASC, NoNull, Ptr, DestType, SrcType);
-  return true;
+    Segment = CurDAG->getTargetConstant(SrcAS, MVT::i32);
+    SelectAddrSpaceCastCommon(*ASC, NoNull, Ptr, DestType, SrcType);
+  } else
+    return nullptr;
+
+  const SDValue Ops[] = {
+    Segment,
+    NoNull,
+    Ptr,
+    DestType,
+    SrcType
+  };
+
+  return CurDAG->SelectNodeTo(ASC, Opcode, DestVT, Ops);
 }
 
 static BrigCompareOperation getBrigIntCompare(ISD::CondCode CC,
@@ -1216,21 +1226,39 @@ static BrigCompareOperation getBrigFPCompare(ISD::CondCode CC) {
   }
 }
 
-bool HSAILDAGToDAGISel::SelectSetCC(SDValue SetCC,
-                                    SDValue &LHS,
-                                    SDValue &RHS,
-                                    SDValue &CmpOp,
-                                    SDValue &FTZ,
-                                    SDValue &DestType,
-                                    SDValue &SrcType) const {
-  if (!SelectGPROrImm(SetCC.getOperand(0), LHS))
-    return false;
+static unsigned getCmpOpcode(BrigType SrcBT) {
+  switch (SrcBT) {
+  case BRIG_TYPE_B1:
+    return HSAIL::CMP_B1_B1;
+  case BRIG_TYPE_S32:
+    return HSAIL::CMP_B1_S32;
+  case BRIG_TYPE_U32:
+    return HSAIL::CMP_B1_U32;
+  case BRIG_TYPE_S64:
+    return HSAIL::CMP_B1_S64;
+  case BRIG_TYPE_U64:
+    return HSAIL::CMP_B1_U64;
+  case BRIG_TYPE_F32:
+    return HSAIL::CMP_B1_F32;
+  case BRIG_TYPE_F64:
+    return HSAIL::CMP_B1_F64;
+  default:
+    llvm_unreachable("Compare of type not supported");
+  }
+}
 
-  if (!SelectGPROrImm(SetCC.getOperand(1), RHS))
-    return false;
+SDNode *HSAILDAGToDAGISel::SelectSetCC(SDNode *SetCC) const {
+  SDValue LHS, RHS;
+
+  if (!SelectGPROrImm(SetCC->getOperand(0), LHS))
+    return nullptr;
+
+  if (!SelectGPROrImm(SetCC->getOperand(1), RHS))
+    return nullptr;
 
   MVT VT = LHS.getValueType().getSimpleVT();
-  ISD::CondCode CC = cast<CondCodeSDNode>(SetCC.getOperand(2))->get();
+  ISD::CondCode CC = cast<CondCodeSDNode>(SetCC->getOperand(2))->get();
+
   bool Signed = false;
   BrigCompareOperation BrigCmp;
 
@@ -1239,18 +1267,98 @@ bool HSAILDAGToDAGISel::SelectSetCC(SDValue SetCC,
   else
     BrigCmp = getBrigIntCompare(CC, Signed);
 
-  CmpOp = CurDAG->getTargetConstant(BrigCmp, MVT::i32);
-  FTZ = CurDAG->getTargetConstant(VT == MVT::f32, MVT::i1);
-
+  SDValue CmpOp = CurDAG->getTargetConstant(BrigCmp, MVT::i32);
+  SDValue FTZ = CurDAG->getTargetConstant(VT == MVT::f32, MVT::i1);
 
   // TODO: Should be able to fold conversions into this instead.
-  DestType = CurDAG->getTargetConstant(BRIG_TYPE_B1, MVT::i32);
-
+  SDValue DestType = CurDAG->getTargetConstant(BRIG_TYPE_B1, MVT::i32);
 
   BrigType SrcBT = getBrigType(VT.SimpleTy, Signed);
-  SrcType = CurDAG->getTargetConstant(SrcBT, MVT::i32);
+  SDValue SrcType = CurDAG->getTargetConstant(SrcBT, MVT::i32);
 
-  return true;
+  const SDValue Ops[] = {
+    CmpOp,
+    FTZ,
+    LHS,
+    RHS,
+    DestType,
+    SrcType
+  };
+
+  return CurDAG->SelectNodeTo(SetCC, getCmpOpcode(SrcBT), MVT::i1, Ops);
+}
+
+static unsigned getLoadBrigOpcode(BrigType BT) {
+  switch (BT) {
+  case BRIG_TYPE_U32:
+    return HSAIL::LD_U32;
+  case BRIG_TYPE_S32:
+    return HSAIL::LD_S32;
+  case BRIG_TYPE_F32:
+    return HSAIL::LD_F32;
+  case BRIG_TYPE_U64:
+    return HSAIL::LD_U64;
+  case BRIG_TYPE_S64:
+    return HSAIL::LD_S64;
+  case BRIG_TYPE_F64:
+    return HSAIL::LD_F64;
+  case BRIG_TYPE_U8:
+    return HSAIL::LD_U8;
+  case BRIG_TYPE_S8:
+    return HSAIL::LD_S8;
+  case BRIG_TYPE_U16:
+    return HSAIL::LD_U16;
+  case BRIG_TYPE_S16:
+    return HSAIL::LD_S16;
+  default:
+    llvm_unreachable("Unhandled load type");
+  }
+}
+
+static unsigned getRArgLoadBrigOpcode(BrigType BT) {
+  switch (BT) {
+  case BRIG_TYPE_U32:
+    return HSAIL::RARG_LD_U32;
+  case BRIG_TYPE_S32:
+    return HSAIL::RARG_LD_S32;
+  case BRIG_TYPE_F32:
+    return HSAIL::RARG_LD_F32;
+  case BRIG_TYPE_U64:
+    return HSAIL::RARG_LD_U64;
+  case BRIG_TYPE_S64:
+    return HSAIL::RARG_LD_S64;
+  case BRIG_TYPE_F64:
+    return HSAIL::RARG_LD_F64;
+  case BRIG_TYPE_U8:
+    return HSAIL::RARG_LD_U8;
+  case BRIG_TYPE_S8:
+    return HSAIL::RARG_LD_S8;
+  case BRIG_TYPE_U16:
+    return HSAIL::RARG_LD_U16;
+  case BRIG_TYPE_S16:
+    return HSAIL::RARG_LD_S16;
+  default:
+    llvm_unreachable("Unhandled load type");
+  }
+}
+
+static unsigned getStoreBrigOpcode(BrigType BT) {
+  switch (BT) {
+  case BRIG_TYPE_U32:
+    return HSAIL::ST_U32;
+  case BRIG_TYPE_F32:
+    return HSAIL::ST_F32;
+  case BRIG_TYPE_U64:
+    return HSAIL::ST_U64;
+  case BRIG_TYPE_F64:
+    return HSAIL::ST_F64;
+  case BRIG_TYPE_U8:
+    return HSAIL::ST_U8;
+  case BRIG_TYPE_U16:
+    return HSAIL::ST_U16;
+  default:
+    llvm_unreachable("Unhandled load type");
+  }
 }
 
 SDNode *HSAILDAGToDAGISel::SelectArgLd(MemSDNode *Node) const {
@@ -1262,13 +1370,13 @@ SDNode *HSAILDAGToDAGISel::SelectArgLd(MemSDNode *Node) const {
     return nullptr;
 
   MVT MemVT = Node->getMemoryVT().getSimpleVT();
-  unsigned BrigType = getBrigType(MemVT.SimpleTy, IsSext);
+  BrigType BT = getBrigType(MemVT.SimpleTy, IsSext);
 
   SDValue Ops[10] = {
     Base,
     Reg,
     Offset,
-    CurDAG->getTargetConstant(BrigType, MVT::i32), // TypeLength
+    CurDAG->getTargetConstant(BT, MVT::i32), // TypeLength
     CurDAG->getTargetConstant(Node->getAddressSpace(), MVT::i32), // segment
     CurDAG->getTargetConstant(Node->getAlignment(), MVT::i32), // align
     Node->getOperand(2), // width
@@ -1284,7 +1392,8 @@ SDNode *HSAILDAGToDAGISel::SelectArgLd(MemSDNode *Node) const {
   else
     OpsArr = OpsArr.drop_back(1);
 
-  unsigned Opcode = IsRetLd ? HSAIL::RARG_LD_V1 : HSAIL::LD_V1;
+  unsigned Opcode
+    = IsRetLd ? getRArgLoadBrigOpcode(BT) : getLoadBrigOpcode(BT);
 
   return CurDAG->SelectNodeTo(Node, Opcode, Node->getVTList(), OpsArr);
 }
@@ -1295,14 +1404,14 @@ SDNode *HSAILDAGToDAGISel::SelectArgSt(MemSDNode *Node) const {
     return nullptr;
 
   MVT MemVT = Node->getMemoryVT().getSimpleVT();
-  unsigned BrigType = getBrigType(MemVT.SimpleTy, false);
+  BrigType BT = getBrigType(MemVT.SimpleTy, false);
 
   SDValue Ops[9] = {
     Node->getOperand(1),
     Base,
     Reg,
     Offset,
-    CurDAG->getTargetConstant(BrigType, MVT::i32),                // TypeLength
+    CurDAG->getTargetConstant(BT, MVT::i32),                      // TypeLength
     CurDAG->getTargetConstant(Node->getAddressSpace(), MVT::i32), // segment
     CurDAG->getTargetConstant(Node->getAlignment(), MVT::i32),    // align
     Node->getOperand(0),                                          // Chain
@@ -1316,7 +1425,7 @@ SDNode *HSAILDAGToDAGISel::SelectArgSt(MemSDNode *Node) const {
   else
     OpsArr = OpsArr.drop_back(1);
 
-  return CurDAG->SelectNodeTo(Node, HSAIL::ST_V1,
+  return CurDAG->SelectNodeTo(Node, getStoreBrigOpcode(BT),
                               Node->getVTList(), OpsArr);
 }
 

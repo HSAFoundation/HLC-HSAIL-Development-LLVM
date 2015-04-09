@@ -188,9 +188,7 @@ IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg,
             // Which will require to insert or remove not
             if (instr->getParent() == &MBB &&
                 (instr->isBranch() ||
-                 (instr->getOpcode() == HSAIL::NOT
-                  // XXX - & b1?
-                   )))
+                 (instr->getOpcode() == HSAIL::NOT_B1)))
             {
               CanReverse = false;
             }
@@ -545,7 +543,7 @@ static unsigned GenerateBranchCondReversion(
       need_insert_not = true;
   }
   // If condition is logical not - just remove it
-  else if (cond_expr && cond_expr->getOpcode() == HSAIL::NOT)
+  else if (cond_expr && cond_expr->getOpcode() == HSAIL::NOT_B1)
   {
     cond_reg = cond_expr->getOperand(1).getReg();
     cond_expr->eraseFromParent();
@@ -560,7 +558,7 @@ static unsigned GenerateBranchCondReversion(
     if (TargetRegisterInfo::isVirtualRegister(CondOp.getReg()))
       cond_reg = MRI.createVirtualRegister(MRI.getRegClass(CondOp.getReg()));
 
-    BuildMI(&MBB, DL, TII->get(HSAIL::NOT))
+    BuildMI(&MBB, DL, TII->get(HSAIL::NOT_B1))
       .addReg(cond_reg, RegState::Define)
       .addReg(CondOp.getReg())
       .addImm(BRIG_TYPE_B1);
@@ -613,7 +611,7 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
       else
         cond_reg = Cond[2].getImm();
 
-      BuildMI(&MBB, DL, get(HSAIL::NOT))
+      BuildMI(&MBB, DL, get(HSAIL::NOT_B1))
         .addReg(cond_reg, RegState::Define)
         .addReg(Cond[0].getReg())
         .addImm(BRIG_TYPE_B1);
@@ -714,11 +712,11 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
       llvm_unreachable("unrecognized TargetRegisterClass");
       break;
     case HSAIL::GPR32RegClassID:
-      Opc = HSAIL::ST_V1;
+      Opc = HSAIL::ST_U32;
       BT = BRIG_TYPE_U32;
       break;
     case HSAIL::GPR64RegClassID:
-      Opc = HSAIL::ST_V1;
+      Opc = HSAIL::ST_U64;
       BT = BRIG_TYPE_U64;
       break;
     case HSAIL::CRRegClassID:
@@ -785,11 +783,11 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
       llvm_unreachable("unrecognized TargetRegisterClass");
       break;
     case HSAIL::GPR32RegClassID:
-      Opc = HSAIL::LD_V1;
+      Opc = HSAIL::LD_U32;
       BT = BRIG_TYPE_U32;
       break;
     case HSAIL::GPR64RegClassID:
-      Opc = HSAIL::LD_V1;
+      Opc = HSAIL::LD_U64;
       BT = BRIG_TYPE_U64;
       break;
     case HSAIL::CRRegClassID:
@@ -957,21 +955,21 @@ void HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
                                  unsigned SrcReg,
                                  bool KillSrc) const {
   if (HSAIL::GPR32RegClass.contains(DestReg, SrcReg)) {
-    BuildMI(MBB, MI, DL, get(HSAIL::MOV), DestReg)
+    BuildMI(MBB, MI, DL, get(HSAIL::MOV_B32), DestReg)
       .addReg(SrcReg, getKillRegState(KillSrc))
       .addImm(BRIG_TYPE_B32);
       return;
   }
 
   if (HSAIL::GPR64RegClass.contains(DestReg, SrcReg)) {
-    BuildMI(MBB, MI, DL, get(HSAIL::MOV), DestReg)
+    BuildMI(MBB, MI, DL, get(HSAIL::MOV_B64), DestReg)
       .addReg(SrcReg, getKillRegState(KillSrc))
       .addImm(BRIG_TYPE_B64);
       return;
   }
 
   if (HSAIL::CRRegClass.contains(DestReg, SrcReg)) {
-    BuildMI(MBB, MI, DL, get(HSAIL::MOV), DestReg)
+    BuildMI(MBB, MI, DL, get(HSAIL::MOV_B1), DestReg)
       .addReg(SrcReg, getKillRegState(KillSrc))
       .addImm(BRIG_TYPE_B1);
       return;
@@ -979,31 +977,36 @@ void HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
 
   unsigned SrcBT = -1;
   unsigned DestBT = -1;
+  unsigned CvtOpc = -1;
 
   if (HSAIL::GPR32RegClass.contains(DestReg) &&
       HSAIL::CRRegClass.contains(SrcReg)) {
     DestBT = BRIG_TYPE_B1;
     SrcBT = BRIG_TYPE_U32;
+    CvtOpc = HSAIL::CVT_B1_U32;
   } else if (HSAIL::CRRegClass.contains(DestReg) &&
              HSAIL::GPR32RegClass.contains(SrcReg)) {
-    SrcBT = BRIG_TYPE_B1;
     DestBT = BRIG_TYPE_U32;
+    SrcBT = BRIG_TYPE_B1;
+    CvtOpc = HSAIL::CVT_U32_B1;
   } else if (HSAIL::GPR64RegClass.contains(DestReg) &&
              HSAIL::GPR32RegClass.contains(SrcReg)) {
-    SrcBT = BRIG_TYPE_U64;
     DestBT = BRIG_TYPE_U32;
+    SrcBT = BRIG_TYPE_U64;
+    CvtOpc = HSAIL::CVT_U32_U64;
   } else if (HSAIL::GPR32RegClass.contains(DestReg) &&
              HSAIL::GPR64RegClass.contains(SrcReg)) {
     // Truncation can occur if a function was defined with different return
     // types in different places.
-    SrcBT = BRIG_TYPE_U32;
     DestBT = BRIG_TYPE_U64;
+    SrcBT = BRIG_TYPE_U32;
+    CvtOpc = HSAIL::CVT_U64_U32;
   } else {
     assert(!"When do we hit this?");
     return TargetInstrInfo::copyPhysReg(MBB, MI, DL, DestReg, SrcReg, KillSrc);
   }
 
-  BuildMI(MBB, MI, DL, get(HSAIL::CVT), DestReg)
+  BuildMI(MBB, MI, DL, get(CvtOpc), DestReg)
     .addImm(0)      // ftz
     .addImm(0)      // round
     .addImm(DestBT) // destTypedestLength
@@ -1059,14 +1062,14 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
     {
       unsigned tempU32 = getTempGPR32PostRA(MBBI);
       DebugLoc DL = MI.getDebugLoc();
-      BuildMI(*MBB, MBBI, DL, get(HSAIL::CVT), tempU32)
+      BuildMI(*MBB, MBBI, DL, get(HSAIL::CVT_U32_B1), tempU32)
         .addImm(0)             // ftz
         .addImm(0)             // round
         .addImm(BRIG_TYPE_U32) // destTypedestLength
         .addImm(BRIG_TYPE_B1)  // srcTypesrcLength
         .addOperand(MI.getOperand(0));
 
-      MI.setDesc(get(HSAIL::ST_V1));
+      MI.setDesc(get(HSAIL::ST_U32));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsKill();
 
@@ -1078,15 +1081,16 @@ HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
   case HSAIL::RESTORE_B1: {
       unsigned tempU32 = getTempGPR32PostRA(MBBI);
       DebugLoc DL = MI.getDebugLoc();
+      unsigned DestReg = MI.getOperand(0).getReg();
 
-      BuildMI(*MBB, ++MBBI, DL, get(HSAIL::CVT), MI.getOperand(0).getReg())
+      BuildMI(*MBB, ++MBBI, DL, get(HSAIL::CVT_B1_U32), DestReg)
         .addImm(0)             // ftz
         .addImm(0)             // round
         .addImm(BRIG_TYPE_B1)  // destTypedestLength
         .addImm(BRIG_TYPE_U32) // srcTypesrcLength
         .addReg(tempU32, RegState::Kill);
 
-      MI.setDesc(get(HSAIL::LD_V1));
+      MI.setDesc(get(HSAIL::LD_U32));
       MI.getOperand(0).setReg(tempU32);
       MI.getOperand(0).setIsDef();
 
@@ -1116,70 +1120,8 @@ const TargetRegisterClass *HSAILInstrInfo::getOpRegClass(
   return RI.getPhysRegClass(Reg);
 }
 
-static unsigned numStComponents(unsigned Opc) {
-  switch (Opc) {
-  case HSAIL::ST_V1:
-    return 1;
-  case HSAIL::ST_V2:
-    return 2;
-  case HSAIL::ST_V3:
-    return 3;
-  case HSAIL::ST_V4:
-    return 4;
-  }
-
-  llvm_unreachable("Not a store");
-}
-
 bool HSAILInstrInfo::verifyInstruction(const MachineInstr *MI,
                                        StringRef &ErrInfo) const {
-  unsigned Opc = MI->getOpcode();
-  const MCInstrDesc &Desc = get(Opc);
-
-  const MachineRegisterInfo &MRI = MI->getParent()->getParent()->getRegInfo();
-
-  // Verify that all the load destinations are registers with the same size.
-  if (Opc == HSAIL::LD_V1 ||
-      Opc == HSAIL::LD_V2 ||
-      Opc == HSAIL::LD_V3 ||
-      Opc == HSAIL::LD_V4) {
-    const TargetRegisterClass *DestRC = getOpRegClass(MRI, *MI, 0);
-    if (!DestRC) {
-      ErrInfo = "Load into non-register";
-      return false;
-    }
-
-    for (unsigned I = 0, E = Desc.getNumDefs(); I != E; ++I) {
-      const TargetRegisterClass *RC = getOpRegClass(MRI, *MI, I);
-      if (RC != DestRC) {
-        ErrInfo = "Inconsistent dest register operand";
-        return false;
-      }
-    }
-  }
-
-  // Verify that all store sources are registers with the same size.
-  if (Opc == HSAIL::ST_V1 ||
-      Opc == HSAIL::ST_V2 ||
-      Opc == HSAIL::ST_V3 ||
-      Opc == HSAIL::ST_V4) {
-    int NSrc = numStComponents(Opc);
-    int BaseSrcIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src);
-
-    // FIXME: Verify bounds of immediate src operands.
-    const TargetRegisterClass *SrcRC = nullptr;
-    for (int SrcIdx = BaseSrcIdx; SrcIdx < BaseSrcIdx + NSrc; ++SrcIdx) {
-      const TargetRegisterClass *RC = getOpRegClass(MRI, *MI, SrcIdx);
-      if (!SrcRC)
-        SrcRC = RC;
-
-      if (RC && RC != SrcRC) {
-        ErrInfo = "Inconsistent src register operand";
-        return false;
-      }
-    }
-  }
-
   return true;
 }
 

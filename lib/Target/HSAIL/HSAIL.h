@@ -18,6 +18,7 @@
 #include "llvm/Support/DataTypes.h"
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/MC/MCAsmBackend.h"
+#include "llvm/MC/MCInstrDesc.h"
 
 #include "MCTargetDesc/HSAILMCTargetDesc.h"
 
@@ -236,6 +237,13 @@ namespace llvm {
     GENERIC, // No target specific flavor
     SI       // Optimize fot Southern Islands family
   };
+
+  namespace HSAIL {
+    enum OperandType {
+      /// Operand with register or immediate.
+      OPERAND_REG_IMM = llvm::MCOI::OPERAND_FIRST_TARGET
+    };
+  }
 }
 
 #define IMAGE_ARG_BIAS  (1 << 16)

@@ -1730,7 +1730,7 @@ HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
 
     // Don't use ptr32 since this is the readonly segment.
         MachineSDNode *LDSamp = DAG
-          .getMachineNode(HSAIL::LD_V1, SDLoc(Op), VT, MVT::Other, Ops);
+          .getMachineNode(HSAIL::LD_SAMP, SDLoc(Op), VT, MVT::Other, Ops);
 
         MachineFunction &MF = DAG.getMachineFunction();
         MachineSDNode::mmo_iterator MemOp = MF.allocateMemRefsArray(1);
