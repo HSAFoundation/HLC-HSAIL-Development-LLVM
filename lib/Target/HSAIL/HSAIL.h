@@ -205,7 +205,10 @@ namespace llvm {
       WidthAttrHi = 1 << 28,
       WidthAttr = WidthAttrLo | WidthAttrHi,
 
-      HasDefaultSegment = 1 << 29
+      HasDefaultSegment = 1 << 29,
+
+      InstBrigOpcodeLo = UINT64_C(1) << 48,
+      InstBrigOpcode = UINT64_C(0xffff) << 48
     };
   }
 

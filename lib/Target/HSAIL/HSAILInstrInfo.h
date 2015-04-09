@@ -745,6 +745,11 @@ public:
     return get(Opcode).TSFlags & HSAILInstrFlags::InstAddr;
   }
 
+  uint16_t getBrigOpcode(uint16_t Opcode) const {
+    return (get(Opcode).TSFlags & HSAILInstrFlags::InstBrigOpcode)
+      >> Log2_64(HSAILInstrFlags::InstBrigOpcodeLo);
+  }
+
 private:
   RegScavenger *RS;
 

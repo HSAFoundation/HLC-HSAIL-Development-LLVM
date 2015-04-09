@@ -89,6 +89,11 @@ class HSAILInst<dag outs, dag ins,
   let TSFlags{28-27} = WidthAttr;
 
   let TSFlags{29} = HasDefaultSegment;
+
+  // Store the opcode here because we want access to it in
+  // BRIGAsmPrinter, but can't really use the normal MC binary
+  // encoding method to do so.
+  let TSFlags{63-48} = BrigVal;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
