@@ -419,15 +419,32 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   const DataLayout &DL = getDataLayout();
 
   PointerType *Ty = GV->getType();
+  Type *InitTy = Ty->getElementType();
   unsigned AS = Ty->getAddressSpace();
 
   if (GlobalValue::isExternalLinkage(GV->getLinkage()))
     O << "prog ";
 
-  printAlignTypeQualifier(*GV, DL, O);
-
   unsigned NElts = ~0u;
-  Type *EmitTy = analyzeType(Ty->getElementType(), NElts, DL, GV->getContext());
+  Type *EmitTy = analyzeType(InitTy, NElts, DL, GV->getContext());
+
+  // FIXME: Duplicated in BRIGAsmPrinter
+  unsigned Alignment = GV->getAlignment();
+  if (Alignment == 0)
+    Alignment = DL.getPrefTypeAlignment(InitTy);
+  else {
+    // If an alignment is specified, it must be equal to or greater than the
+    // variable's natural alignment.
+    Alignment = std::max(Alignment, DL.getABITypeAlignment(EmitTy));
+  }
+
+  // Align arrays at least by 4 bytes
+  if (Alignment == 1 && NElts != 0)
+    Alignment = 4;
+
+  if (Alignment != DL.getABITypeAlignment(EmitTy))
+    O << "align(" << Alignment << ") ";
+
 
   O << getSegmentName(AS) << '_' << getArgTypeName(EmitTy) << " &" << GVname;
   if (NElts != 0)
