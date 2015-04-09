@@ -180,7 +180,7 @@ class HSAILInstMod_3Op<string opName, bits<16> BrigVal> :
 
 
 // InstCvt
-class InstCvt<string opName> : HSAILInst<
+class InstCvt<string opName, bits<16> BrigVal> : HSAILInst<
     (outs unknown:$dest),
     (ins ftz:$ftz,
          BrigRound:$round,
@@ -188,7 +188,7 @@ class InstCvt<string opName> : HSAILInst<
          BrigTypeX:$sourceType,
          unknown:$src),
     opName#"$ftz$round$destTypedestLength$sourceType\t$dest, $src",
-   []
+   [], BrigVal
 > {
   let isConv = 1;
   let InstCvt = 1;
