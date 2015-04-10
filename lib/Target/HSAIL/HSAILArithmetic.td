@@ -285,7 +285,7 @@ def : Pat <
 
 def : Pat <
   (f32 (int_HSAIL_mul_ftz_f32 f32:$src0)),
-  (MUL 1, BrigRound.FLOAT_DEFAULT, $src0, (i32 0), BrigTypeX.F32)
+  (MUL 1, BrigRound.FLOAT_DEFAULT, $src0, (i32 0x3f800000), BrigTypeX.F32)
 >;
 
 def BITSELECT : HSAILInstBasic_3Op<"bitselect", BrigOpcode.BITSELECT>;
