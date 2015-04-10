@@ -645,12 +645,10 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   unsigned Opc = II->getOpcode();
   uint16_t BrigOpc = TII->getBrigOpcode(Opc);
 
-  // FIXME: We should be able to get the encoding / Brig value from MC.
   if (TII->isInstBasic(Opc))
     return BrigEmitInstBasic(*II, BrigOpc);
 
   if (TII->isInstMod(Opc)) {
-    // FIXME: We should be able to get the encoding / Brig value from MC.
     // FIXME: Some instructions are available as InstBasic if they don't use
     // modifiers.
     return BrigEmitInstMod(*II, BrigOpc);
