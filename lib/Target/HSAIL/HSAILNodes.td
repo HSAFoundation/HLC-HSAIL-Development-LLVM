@@ -4,6 +4,10 @@ def HSAILDTIntTernaryOp : SDTypeProfile<1, 3, [
   SDTCisSameAs<0, 1>, SDTCisSameAs<0, 2>, SDTCisInt<0>, SDTCisInt<3>
 ]>;
 
+def HSAILDTBitExtractOp : SDTypeProfile<1, 3, [
+  SDTCisSameAs<0, 1>, SDTCisInt<0>, SDTCisSameAs<2, 3>, SDTCisInt<2>
+]>;
+
 def HSAILLdExpOp : SDTypeProfile<1, 2,
   [SDTCisSameAs<0, 1>, SDTCisFP<0>, SDTCisInt<2>]
 >;
@@ -77,8 +81,8 @@ def HSAILnfma : SDNode<"HSAILISD::NFMA", SDTFPTernaryOp>;
 def HSAILumad : SDNode<"HSAILISD::UMAD", HSAILDTIntTernaryOp>;
 def HSAILsmad : SDNode<"HSAILISD::SMAD", HSAILDTIntTernaryOp>;
 def HSAILbitselect : SDNode<"HSAILISD::BITSELECT", HSAILDTIntTernaryOp>;
-def HSAILsbitextract : SDNode<"HSAILISD::SBITEXTRACT", HSAILDTIntTernaryOp>;
-def HSAILubitextract : SDNode<"HSAILISD::UBITEXTRACT", HSAILDTIntTernaryOp>;
+def HSAILsbitextract : SDNode<"HSAILISD::SBITEXTRACT", HSAILDTBitExtractOp>;
+def HSAILubitextract : SDNode<"HSAILISD::UBITEXTRACT", HSAILDTBitExtractOp>;
 
 // out = max(a, b) a and b are signed ints
 def HSAILsmax : SDNode<"HSAILISD::SMAX", SDTIntBinOp,
