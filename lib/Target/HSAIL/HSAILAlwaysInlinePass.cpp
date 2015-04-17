@@ -28,7 +28,9 @@ class HSAILAlwaysInline : public ModulePass {
 public:
   HSAILAlwaysInline() : ModulePass(ID) { }
   bool runOnModule(Module &M) override;
-  const char *getPassName() const override { return "AMDGPU Always Inline Pass"; }
+  const char *getPassName() const override {
+    return "HSAIL Always Inline Pass";
+  }
 };
 
 } // End anonymous namespace
