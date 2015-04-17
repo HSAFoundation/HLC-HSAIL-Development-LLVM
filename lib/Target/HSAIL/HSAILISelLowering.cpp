@@ -640,7 +640,7 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     unsigned opShift = isLoad ? 1 : 0;
     unsigned opNo = 7; // Value and pointer operands
     SDValue Zero = DAG.getTargetConstant(0, MVT::i32);
-    SDValue Reg = DAG.getRegister(0, PtrTy); // %noreg
+    SDValue Reg = DAG.getRegister(HSAIL::NoRegister, PtrTy);
     if (!Ptr.getNode()) {
       // %noreg [%noreg + offset]
       alignment = ArgVT.getStoreSize(); // Assume base pointer zero.
@@ -658,7 +658,7 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
       alignment = 1; // %reg is unknown, alignment as well.
     }
     if (!Ptr.getNode())
-      Ptr = DAG.getRegister(0, PtrTy);
+      Ptr = DAG.getRegister(HSAIL::NoRegister, PtrTy);
     SDValue Ops[] = {
       ParamValue,
       /* Address */ Ptr, Reg, DAG.getTargetConstant(offset, MVT::i32),
@@ -1614,7 +1614,8 @@ HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
   // FIXME: Get correct address space pointer type.
         SDValue Ops[] = {
           DAG.getTargetConstant(samplerHandleIndex, MVT::i32),
-          DAG.getRegister(0, getPointerTy()), DAG.getTargetConstant(0, MVT::i32),
+          DAG.getRegister(HSAIL::NoRegister, getPointerTy()),
+          DAG.getTargetConstant(0, MVT::i32),
           DAG.getTargetConstant(BRIG_TYPE_SAMP, MVT::i32),
           DAG.getTargetConstant(BRIG_WIDTH_ALL, MVT::i32),
           DAG.getTargetConstant(1, MVT::i1), // Const
