@@ -121,6 +121,7 @@ protected:
                         const char *ParamName,
                         SDValue ParamPtr,
                         const SmallVectorImpl<SDValue> *OutVals = nullptr,
+                        bool isRetArgLoad = false,
                         const AAMDNodes & = AAMDNodes(),
                         uint64_t offset = 0) const;
 
@@ -144,6 +145,7 @@ public:
                             SDValue Ptr, SDValue ParamValue,
                             unsigned index, SDLoc dl, SDValue Chain,
                             SDValue InFlag,
+                            bool isRetArgLoad = false,
                             const AAMDNodes &AAInfo = AAMDNodes(),
                             uint64_t offset = 0) const;
 

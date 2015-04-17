@@ -404,7 +404,7 @@ SDNode* HSAILDAGToDAGISel::SelectLdKernargIntrinsic(SDNode *Node) {
   return TL->getArgLoadOrStore(*CurDAG, VT, Ty, true, false,
                                HSAILAS::KERNARG_ADDRESS, Addr,
                                SDValue(), 0, SDLoc(Node),
-                               Chain, SDValue(), ArgMD, offset).getNode();
+                               Chain, SDValue(), false, ArgMD, offset).getNode();
 }
 
 static SDValue getBRIGMemorySegment(SelectionDAG *CurDAG,

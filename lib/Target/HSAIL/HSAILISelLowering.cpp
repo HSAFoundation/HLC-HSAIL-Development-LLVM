@@ -561,7 +561,7 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
 
     unsigned ArgNo = 0;
     LowerArgument(Chain, SDValue(), false, NULL, &Outs, dl, DAG, &RetOps, ArgNo,
-                  type, HSAILAS::ARG_ADDRESS, NULL, RetVariable, &OutVals, MD);
+                  type, HSAILAS::ARG_ADDRESS, NULL, RetVariable, &OutVals, false, MD);
     Chain = DAG.getNode(ISD::TokenFactor, dl, MVT::Other, RetOps);
   }
 
@@ -600,6 +600,7 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
                                                unsigned index,
                                                SDLoc dl, SDValue Chain,
                                                SDValue InFlag,
+                                               bool isRetArgLoad,
                                                const AAMDNodes &AAInfo,
                                                uint64_t offset) const
 {
@@ -631,13 +632,9 @@ SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
     unsigned BrigType = HSAIL::getBrigType(EltTy, *DL, isSExt);
 
     // Change opcode for load of return value
-    if (isLoad && AddressSpace == HSAILAS::ARG_ADDRESS &&
-        AAInfo.TBAA && AAInfo.TBAA->getNumOperands() >= 1) {
-      if (const MDString *MDS = dyn_cast<MDString>(AAInfo.TBAA->getOperand(0))) {
-        if (MDS->getString().equals("retarg")) {
-          op = HSAIL::RARG_LD_V1;
-        }
-      }
+    if (isRetArgLoad) {
+      assert(isLoad && AddressSpace == HSAILAS::ARG_ADDRESS);
+      op = HSAIL::RARG_LD_V1;
     }
 
     unsigned opShift = isLoad ? 1 : 0;
@@ -736,6 +733,7 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
                                            const char *ParamName,
                                            SDValue ParamPtr,
                                            const SmallVectorImpl<SDValue> *OutVals,
+                                           bool isRetArgLoad,
                                            const AAMDNodes & AAInfo,
                                            uint64_t offset) const {
   assert((Ins == NULL && Outs != NULL) || (Ins != NULL && Outs == NULL));
@@ -760,7 +758,7 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
                            : (*Outs)[ArgNo].Flags.isSExt();
       ArgValue = getArgLoadOrStore(DAG, argVT, type, isLoad, isSExt, AS, ParamPtr,
                                    isLoad ? SDValue() : (*OutVals)[ArgNo],
-                                   i, dl, Chain, InFlag, AAInfo, offset);
+                                   i, dl, Chain, InFlag, isRetArgLoad, AAInfo, offset);
 
       if (ChainLink) Chain  = ArgValue.getValue(isLoad ? 1 : 0);
       // Glue next vector loads regardless of input flag to favor vectorization.
@@ -777,7 +775,7 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
     for (unsigned i = 0; i < num_elem; ++i) {
       ArgValue = LowerArgument(Chain, InFlag, ChainLink, Ins, Outs, dl, DAG,
                                InVals, ArgNo, STy->getElementType(i), AS,
-                               ParamName, ParamPtr, OutVals, AAInfo,
+                               ParamName, ParamPtr, OutVals, isRetArgLoad, AAInfo,
                                offset + SL->getElementOffset(i));
       if (ChainLink) Chain  = ArgValue.getValue(isLoad ? 1 : 0);
       if (hasFlag) InFlag = ArgValue.getValue(isLoad ? 2 : 1);
@@ -790,7 +788,7 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
                        : (*Outs)[ArgNo].Flags.isSExt();
   ArgValue = getArgLoadOrStore(DAG, argVT, type, isLoad, isSExt, AS, ParamPtr,
                                isLoad ? SDValue() : (*OutVals)[ArgNo], 0, dl,
-                               Chain, InFlag, AAInfo, offset);
+                               Chain, InFlag, isRetArgLoad, AAInfo, offset);
   if (InVals) InVals->push_back(ArgValue);
   ArgNo++;
 
@@ -991,10 +989,9 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     if (type->isIntegerTy(1)) // Handle bit as DWORD
       type = Type::getInt32Ty(type->getContext());
 
-    AAMDNodes AA(MDB.createAnonymousTBAARoot());
     Chain = LowerArgument(Chain, InFlag, true, NULL, &Outs, dl, DAG, NULL, j,
                           type, HSAILAS::ARG_ADDRESS, NULL,
-                          VarOps[FirstArg + k], &OutVals, AA);
+                          VarOps[FirstArg + k], &OutVals);
       InFlag = Chain.getValue(1);
   }
 
@@ -1019,10 +1016,8 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   // Read return value.
   if(Ins.size() > 0) {
     j = 0;
-    AAMDNodes AA(MDB.createTBAANode("retarg", MDB.createAnonymousTBAARoot()));
     Chain = LowerArgument(Chain, InFlag, true, &Ins, NULL, dl, DAG, &InVals, j,
-                          retType, HSAILAS::ARG_ADDRESS, NULL, RetValue, NULL,
-                          AA);
+                          retType, HSAILAS::ARG_ADDRESS, NULL, RetValue, NULL, true);
     InFlag = Chain.getValue(2);
     Chain  = Chain.getValue(1);
   }
