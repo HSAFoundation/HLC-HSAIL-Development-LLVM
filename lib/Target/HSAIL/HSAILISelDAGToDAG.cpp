@@ -80,7 +80,6 @@ private:
   SDNode* SelectINTRINSIC_W_CHAIN(SDNode *Node);
   SDNode* SelectINTRINSIC_WO_CHAIN(SDNode *Node);
   SDNode* SelectAtomic(SDNode *Node, bool bitwise, bool isSigned);
-  SDNode* SelectLdKernargIntrinsic(SDNode *Node);
   SDNode* SelectImageIntrinsic(SDNode *Node);
   SDNode *SelectActiveLaneMask(SDNode *Node);
   // Helper for SelectAddrCommon
@@ -169,6 +168,46 @@ private:
 
 };
 
+}
+
+static BrigType getBrigType(MVT::SimpleValueType VT, bool Signed) {
+  switch (VT) {
+  case MVT::i32:
+    return Signed ? BRIG_TYPE_S32 : BRIG_TYPE_U32;
+  case MVT::f32:
+    return BRIG_TYPE_F32;
+  case MVT::i8:
+    return Signed ? BRIG_TYPE_S8 : BRIG_TYPE_U8;
+  case MVT::i16:
+    return Signed ? BRIG_TYPE_S16 : BRIG_TYPE_U16;
+  case MVT::i64:
+    return Signed ? BRIG_TYPE_S64 : BRIG_TYPE_U64;
+  case MVT::f64:
+    return BRIG_TYPE_F64;
+  case MVT::i1:
+    return BRIG_TYPE_B1;
+  default:
+    llvm_unreachable("Unhandled type for MVT -> BRIG");
+  }
+}
+
+static BrigType getBrigTypeFromStoreType(MVT::SimpleValueType VT) {
+  switch (VT) {
+  case MVT::i32:
+    return BRIG_TYPE_U32;
+  case MVT::f32:
+    return BRIG_TYPE_F32;
+  case MVT::i8:
+    return BRIG_TYPE_U8;
+  case MVT::i16:
+    return BRIG_TYPE_U16;
+  case MVT::i64:
+    return BRIG_TYPE_U64;
+  case MVT::f64:
+    return BRIG_TYPE_F64;
+  default:
+    llvm_unreachable("Unhandled type for MVT -> BRIG");
+  }
 }
 
 bool
@@ -266,19 +305,6 @@ SDNode* HSAILDAGToDAGISel::SelectINTRINSIC_W_CHAIN(SDNode *Node)
   if (HSAILIntrinsicInfo::isReadImage((HSAILIntrinsic::ID)IntNo) ||
       HSAILIntrinsicInfo::isLoadImage((HSAILIntrinsic::ID)IntNo ))
     return SelectImageIntrinsic(Node);
-  if (IntNo == HSAILIntrinsic::HSAIL_ld_kernarg_u32 ||
-      IntNo == HSAILIntrinsic::HSAIL_ld_kernarg_u64)
-    return SelectLdKernargIntrinsic(Node);
-
-  return SelectCode(Node);
-}
-
-SDNode* HSAILDAGToDAGISel::SelectINTRINSIC_WO_CHAIN(SDNode *Node)
-{
-  unsigned IntNo = cast<ConstantSDNode>(Node->getOperand(0))->getZExtValue();
-  if (IntNo == HSAILIntrinsic::HSAIL_ld_kernarg_u32 ||
-      IntNo == HSAILIntrinsic::HSAIL_ld_kernarg_u64)
-    return SelectLdKernargIntrinsic(Node);
 
   return SelectCode(Node);
 }
@@ -364,47 +390,6 @@ SDNode *HSAILDAGToDAGISel::SelectActiveLaneMask(SDNode *Node) {
   SelectGPROrImm(Ops[1], Ops[1]);
 
   return CurDAG->SelectNodeTo(Node, HSAIL::ACTIVELANEMASK, Node->getVTList(), Ops);
-}
-
-SDNode* HSAILDAGToDAGISel::SelectLdKernargIntrinsic(SDNode *Node) {
-  MachineFunction &MF = CurDAG->getMachineFunction();
-  HSAILMachineFunctionInfo *FuncInfo = MF.getInfo<HSAILMachineFunctionInfo>();
-  HSAILParamManager &PM = FuncInfo->getParamManager();
-  bool hasChain = Node->getNumOperands() > 2;
-  unsigned opShift = hasChain ? 1 : 0;
-  const HSAILTargetLowering *TL
-    = static_cast<const HSAILTargetLowering *>(getTargetLowering());
-
-  EVT VT = Node->getValueType(0);
-  Type *Ty = Type::getIntNTy(*CurDAG->getContext(), VT.getSizeInBits());
-  SDValue Addr = Node->getOperand(1 + opShift);
-  int64_t offset = 0;
-  MVT PtrTy = TL->getPointerTy(HSAILAS::KERNARG_ADDRESS);
-  AAMDNodes ArgMD; // FIXME: What is this for?
-  if (isa<ConstantSDNode>(Addr)) {
-    offset = Node->getConstantOperandVal(1 + opShift);
-    // Match a constant address argument to the parameter through functions's
-    // argument map (taking argument alignment into account).
-    // Match is not possible if we are accesing beyond a known kernel argument
-    // space, if we accessing from a non-inlined function, or if there is an
-    // opaque argument with unknwon size before requested offset.
-    unsigned param = UINT_MAX;
-    if (isKernelFunc())
-      param = PM.getParamByOffset(offset);
-    if (param != UINT_MAX) {
-      Addr = CurDAG->getTargetExternalSymbol(PM.getParamName(param), PtrTy);
-      //Value *mdops[] = { const_cast<Argument*>(PM.getParamArg(param)) };
-      //ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
-    } else {
-      Addr = SDValue();
-    }
-  }
-
-  SDValue Chain = hasChain ? Node->getOperand(0) : CurDAG->getEntryNode();
-  return TL->getArgLoadOrStore(*CurDAG, VT, Ty, true, false,
-                               HSAILAS::KERNARG_ADDRESS, Addr,
-                               SDValue(), 0, SDLoc(Node),
-                               Chain, SDValue(), false, ArgMD, offset).getNode();
 }
 
 static SDValue getBRIGMemorySegment(SelectionDAG *CurDAG,
@@ -710,9 +695,6 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
     ResNode = CurDAG->SelectNodeTo(Node, HSAIL::LDA, PtrVT, Ops);
     break;
   }
-  case ISD::INTRINSIC_WO_CHAIN:
-    ResNode = SelectINTRINSIC_WO_CHAIN(Node);
-    break;
   case ISD::INTRINSIC_W_CHAIN:
     ResNode = SelectINTRINSIC_W_CHAIN(Node);
     break;
@@ -971,46 +953,6 @@ HSAILDAGToDAGISel::SelectAddr(SDValue Addr,
   if (Reg.getNode() == 0)
     Reg = CurDAG->getRegister(0, VT);
   return true;
-}
-
-static BrigType getBrigType(MVT::SimpleValueType VT, bool Signed) {
-  switch (VT) {
-  case MVT::i32:
-    return Signed ? BRIG_TYPE_S32 : BRIG_TYPE_U32;
-  case MVT::f32:
-    return BRIG_TYPE_F32;
-  case MVT::i8:
-    return Signed ? BRIG_TYPE_S8 : BRIG_TYPE_U8;
-  case MVT::i16:
-    return Signed ? BRIG_TYPE_S16 : BRIG_TYPE_U16;
-  case MVT::i64:
-    return Signed ? BRIG_TYPE_S64 : BRIG_TYPE_U64;
-  case MVT::f64:
-    return BRIG_TYPE_F64;
-  case MVT::i1:
-    return BRIG_TYPE_B1;
-  default:
-    llvm_unreachable("Unhandled type for MVT -> BRIG");
-  }
-}
-
-static BrigType getBrigTypeFromStoreType(MVT::SimpleValueType VT) {
-  switch (VT) {
-  case MVT::i32:
-    return BRIG_TYPE_U32;
-  case MVT::f32:
-    return BRIG_TYPE_F32;
-  case MVT::i8:
-    return BRIG_TYPE_U8;
-  case MVT::i16:
-    return BRIG_TYPE_U16;
-  case MVT::i64:
-    return BRIG_TYPE_U64;
-  case MVT::f64:
-    return BRIG_TYPE_F64;
-  default:
-    llvm_unreachable("Unhandled type for MVT -> BRIG");
-  }
 }
 
 bool HSAILDAGToDAGISel::SelectLoadAddr(SDNode *ParentLoad,

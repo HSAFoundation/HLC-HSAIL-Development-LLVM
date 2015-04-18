@@ -1217,6 +1217,45 @@ static bool isRdimage(unsigned IntNo) {
   return false;
 }
 
+SDValue HSAILTargetLowering::LowerLdKernargIntrinsic(SDValue Op,
+                                                     SelectionDAG &DAG) const {
+  MachineFunction &MF = DAG.getMachineFunction();
+  HSAILMachineFunctionInfo *FuncInfo = MF.getInfo<HSAILMachineFunctionInfo>();
+  HSAILParamManager &PM = FuncInfo->getParamManager();
+
+  EVT VT = Op.getValueType();
+  Type *Ty = Type::getIntNTy(*DAG.getContext(), VT.getSizeInBits());
+  SDValue Addr = Op.getOperand(1);
+  int64_t Offset = 0;
+  MVT PtrTy = getPointerTy(HSAILAS::KERNARG_ADDRESS);
+  AAMDNodes ArgMD; // FIXME: What is this for?
+  if (ConstantSDNode *CAddr = dyn_cast<ConstantSDNode>(Addr)) {
+    Offset = CAddr->getSExtValue();
+    // Match a constant address argument to the parameter through functions's
+    // argument map (taking argument alignment into account).
+    // Match is not possible if we are accesing beyond a known kernel argument
+    // space, if we accessing from a non-inlined function, or if there is an
+    // opaque argument with unknwon size before requested offset.
+    unsigned Param = UINT_MAX;
+    if (HSAIL::isKernelFunc(MF.getFunction()))
+      Param = PM.getParamByOffset(Offset);
+
+    if (Param != UINT_MAX) {
+      Addr = DAG.getTargetExternalSymbol(PM.getParamName(Param), PtrTy);
+      //Value *mdops[] = { const_cast<Argument*>(PM.getParamArg(param)) };
+      //ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
+    } else {
+      Addr = SDValue();
+    }
+  }
+
+  SDValue Chain = DAG.getEntryNode();
+  return getArgLoadOrStore(DAG, VT, Ty, true, false,
+                           HSAILAS::KERNARG_ADDRESS, Addr,
+                           SDValue(), 0, SDLoc(Op),
+                           Chain, SDValue(), false, ArgMD, Offset);
+}
+
 SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
                                                      SelectionDAG &DAG) const {
   unsigned IntrID = cast<ConstantSDNode>(Op->getOperand(0))->getZExtValue();
@@ -1433,6 +1472,10 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
                        DAG.getTargetConstant(HSAILAS::PRIVATE_ADDRESS, MVT::i32),
                        DAG.getTargetConstant(0, MVT::i1),
                        Op.getOperand(1));
+  }
+  case HSAILIntrinsic::HSAIL_ld_kernarg_u32:
+  case HSAILIntrinsic::HSAIL_ld_kernarg_u64: {
+    return LowerLdKernargIntrinsic(Op, DAG);
   }
   default:
     return Op;

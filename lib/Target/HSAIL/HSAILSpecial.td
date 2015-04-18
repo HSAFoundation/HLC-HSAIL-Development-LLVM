@@ -111,14 +111,8 @@ let isAsCheapAsAMove = 1, isReMaterializable = 1 in {
   def KERNARGBASEPTR : HSAILInstBasic_0Op<"kernargbaseptr", BrigOpcode.KERNARGBASEPTR>;
 }
 
-let Predicates = [In64BitMode] in {
-  def : InstBasic_0Op_Pat<KERNARGBASEPTR, HSAILkernargbaseptr, i64, BrigTypeX.U64>;
-}
-
-let Predicates = [In32BitMode] in {
-  def : InstBasic_0Op_Pat<KERNARGBASEPTR, HSAILkernargbaseptr, i32, BrigTypeX.U32>;
-}
-
+def : InstBasic_0Op_Pat<KERNARGBASEPTR, HSAILkernargbaseptr, i64, BrigTypeX.U64>;
+def : InstBasic_0Op_Pat<KERNARGBASEPTR, HSAILkernargbaseptr, i32, BrigTypeX.U32>;
 
 // Cross-Lane Operations
 def ACTIVELANEMASK : HSAILInstLane_ActiveLaneMask<"activelanemask", BrigOpcode.ACTIVELANEMASK>;

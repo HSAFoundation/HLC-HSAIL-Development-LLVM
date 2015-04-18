@@ -1311,11 +1311,11 @@ def int_HSAIL_nullptr_kernarg : GCCBuiltin<"__hsail_nullptr_kernarg">,
 // ld_kernarg instructions have no side effects and can be CSE'd or
 // even deleted if dead.
 def int_HSAIL_ld_kernarg_u32 : GCCBuiltin<"__hsail_ld_kernarg_u32">,
-  Intrinsic<[llvm_i32_ty], [llvm_ptr_ty], [IntrNoMem]
+  Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrNoMem]
 >;
 
 def int_HSAIL_ld_kernarg_u64 : GCCBuiltin<"__hsail_ld_kernarg_u64">,
-  Intrinsic<[llvm_i64_ty], [llvm_ptr_ty], [IntrNoMem]
+  Intrinsic<[llvm_i64_ty], [llvm_i32_ty], [IntrNoMem]
 >;
 
 }

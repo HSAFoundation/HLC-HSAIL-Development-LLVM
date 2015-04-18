@@ -194,6 +194,7 @@ public:
  SDValue
   LowerADD(SDValue Op, SelectionDAG &DAG) const;
 
+  SDValue LowerLdKernargIntrinsic(SDValue Op, SelectionDAG &DAG) const;
   SDValue LowerINTRINSIC_WO_CHAIN(SDValue Op, SelectionDAG &DAG) const;
 
   SDValue
