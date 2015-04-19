@@ -1024,7 +1024,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   InFlag = Chain.getValue(1);
 
   // Read return value.
-  if(Ins.size() > 0) {
+  if (!Ins.empty()) {
     j = 0;
     Chain = LowerArgument(Chain, InFlag, true, &Ins, NULL, dl, DAG, &InVals, j,
                           retType, HSAILAS::ARG_ADDRESS, NULL, RetValue, NULL, true);
