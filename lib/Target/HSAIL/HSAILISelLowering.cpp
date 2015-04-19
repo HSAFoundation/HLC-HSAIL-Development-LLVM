@@ -738,36 +738,42 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
                                            uint64_t offset) const {
   assert((Ins == NULL && Outs != NULL) || (Ins != NULL && Outs == NULL));
 
-      Type *sType = type->getScalarType();
+  Type *sType = type->getScalarType();
 
   EVT argVT = Ins ? (*Ins)[ArgNo].VT : (*Outs)[ArgNo].VT;
-      if (sType->isIntegerTy(8)) argVT = MVT::i8;
-      else if (sType->isIntegerTy(16)) argVT = MVT::i16;
+
+  if (sType->isIntegerTy(8))
+    argVT = MVT::i8;
+  else if (sType->isIntegerTy(16))
+    argVT = MVT::i16;
 
   bool isLoad = Ins != NULL;
   bool hasFlag = InFlag.getNode() != NULL;
-      SDValue ArgValue;
+  SDValue ArgValue;
 
   const VectorType *VecTy = dyn_cast<VectorType>(type);
   const ArrayType  *ArrTy = dyn_cast<ArrayType>(type);
   if (VecTy || ArrTy) {
-        // This assumes that char and short vector elements are unpacked in Ins.
+    // This assumes that char and short vector elements are unpacked in Ins.
     unsigned num_elem = VecTy ? VecTy->getNumElements() : ArrTy->getNumElements();
     for (unsigned i = 0; i < num_elem; ++i) {
       bool isSExt = isLoad ? (*Ins)[ArgNo].Flags.isSExt()
-                           : (*Outs)[ArgNo].Flags.isSExt();
+        : (*Outs)[ArgNo].Flags.isSExt();
       ArgValue = getArgLoadOrStore(DAG, argVT, type, isLoad, isSExt, AS, ParamPtr,
                                    isLoad ? SDValue() : (*OutVals)[ArgNo],
                                    i, dl, Chain, InFlag, isRetArgLoad, AAInfo, offset);
 
-      if (ChainLink) Chain  = ArgValue.getValue(isLoad ? 1 : 0);
+      if (ChainLink)
+        Chain = ArgValue.getValue(isLoad ? 1 : 0);
       // Glue next vector loads regardless of input flag to favor vectorization.
       InFlag = ArgValue.getValue(isLoad ? 2 : 1);
-      if (InVals) InVals->push_back(ArgValue);
+      if (InVals)
+        InVals->push_back(ArgValue);
       ArgNo++;
-        }
+    }
+
     return ArgValue;
-      }
+  }
 
   if (StructType *STy = dyn_cast<StructType>(type)) {
     const StructLayout *SL = DL->getStructLayout(STy);
@@ -777,19 +783,23 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
                                InVals, ArgNo, STy->getElementType(i), AS,
                                ParamName, ParamPtr, OutVals, isRetArgLoad, AAInfo,
                                offset + SL->getElementOffset(i));
-      if (ChainLink) Chain  = ArgValue.getValue(isLoad ? 1 : 0);
-      if (hasFlag) InFlag = ArgValue.getValue(isLoad ? 2 : 1);
+      if (ChainLink)
+        Chain  = ArgValue.getValue(isLoad ? 1 : 0);
+
+      if (hasFlag)
+        InFlag = ArgValue.getValue(isLoad ? 2 : 1);
     }
     return ArgValue;
   }
 
-      // Regular scalar load case.
+  // Regular scalar load case.
   bool isSExt = isLoad ? (*Ins)[ArgNo].Flags.isSExt()
-                       : (*Outs)[ArgNo].Flags.isSExt();
+    : (*Outs)[ArgNo].Flags.isSExt();
   ArgValue = getArgLoadOrStore(DAG, argVT, type, isLoad, isSExt, AS, ParamPtr,
                                isLoad ? SDValue() : (*OutVals)[ArgNo], 0, dl,
                                Chain, InFlag, isRetArgLoad, AAInfo, offset);
-  if (InVals) InVals->push_back(ArgValue);
+  if (InVals)
+    InVals->push_back(ArgValue);
   ArgNo++;
 
   return ArgValue;
@@ -1162,11 +1172,10 @@ HSAILTargetLowering::LowerADD(SDValue Op, SelectionDAG &DAG) const {
   if(Op.getOperand(0).getOpcode() != ISD::TRUNCATE) return Op;
 
   SDValue Zext = DAG.getNode(ISD::ZERO_EXTEND, dl, MVT::i32,Op.getOperand(1));
-  SDValue Zext1 = DAG.getNode(ISD::ZERO_EXTEND, dl, srcVT,Op.getOperand(0)); 
+  SDValue Zext1 = DAG.getNode(ISD::ZERO_EXTEND, dl, srcVT,Op.getOperand(0));
   SDValue add_p = DAG.getNode(ISD::ADD, dl, srcVT,Zext1,Zext);
   SDValue Zext2 = DAG.getNode(ISD::TRUNCATE, dl, VT, add_p);
   return Zext2;
-  
 }
 
 static bool isRdimage(unsigned IntNo) {
@@ -1689,7 +1698,7 @@ HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
   return Op;
 }
 
-SDValue 
+SDValue
 HSAILTargetLowering::LowerROTL(SDValue Op, SelectionDAG &DAG) const {
   SDLoc dl = SDLoc(Op);
   EVT VT = Op.getValueType();
@@ -1705,10 +1714,10 @@ HSAILTargetLowering::LowerROTL(SDValue Op, SelectionDAG &DAG) const {
            src0, src0,
            shift ?
              DAG.getConstant(32 - (shift->getZExtValue() & 31), MVT::i32) :
-             DAG.getNode(ISD::SUB, dl, VT, DAG.getConstant(0, VT), src1));  
+             DAG.getNode(ISD::SUB, dl, VT, DAG.getConstant(0, VT), src1));
 }
 
-SDValue 
+SDValue
 HSAILTargetLowering::LowerROTR(SDValue Op, SelectionDAG &DAG) const {
   SDLoc dl = SDLoc(Op);
   EVT VT = Op.getValueType();
@@ -1720,7 +1729,7 @@ HSAILTargetLowering::LowerROTR(SDValue Op, SelectionDAG &DAG) const {
   const SDValue src1 = Op.getOperand(1);
   return DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
            DAG.getConstant(HSAILIntrinsic::HSAIL_bitalign_b32, MVT::i32),
-           src0, src0, src1);  
+           src0, src0, src1);
 }
 
 SDValue
@@ -1973,7 +1982,7 @@ HSAILTargetLowering::isLegalAddressingMode(const AddrMode &AM,
       return false;
     }
   }
-  
+
   return TargetLowering::isLegalAddressingMode(AM, Ty);
 }
 /// isTruncateFree - Return true if it's free to truncate a value of
