@@ -126,28 +126,24 @@ protected:
                         uint64_t offset = 0) const;
 
 public:
-  /// Create kernel or function parameter scalar load and return its value.
-  /// If isLoad = false create an argument value store.
-  /// AddressSpace used to determine if that is a kernel or function argument.
-  /// ArgVT specifies expected value type where 'Ty' refers to the real
-  /// argument type from function's signature.
-  /// We have to use machine nodes here because loads and stores must be glued
-  /// together with the whole call sequence, while ISD::LOAD/STORE do not have
-  /// a glue operand. That also skips instruction selection, so faster.
-  /// If the call sequence is not glued we may have unrelated to call
-  /// instructions scheduled into the argscope if intent was argscope use.
-  /// This function inserts a load or store argument instruction with glue.
-  /// If InFlag contains glue it is used for inbound glue. Glue is produced as a
-  /// last result and can be consumed at will of the caller.
-  /// Offset operand is added to the offset value calculated from index.
-  SDValue getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT, Type *Ty, bool isLoad,
-                            bool isSExt, unsigned AddressSpace,
-                            SDValue Ptr, SDValue ParamValue,
-                            unsigned index, SDLoc dl, SDValue Chain,
-                            SDValue InFlag,
-                            bool isRetArgLoad = false,
-                            const AAMDNodes &AAInfo = AAMDNodes(),
-                            uint64_t offset = 0) const;
+  SDValue getArgLoad(SelectionDAG &DAG, SDLoc SL, EVT ArgVT, Type *Ty,
+                     bool isSExt, unsigned AddressSpace,
+                     SDValue Chain,
+                     SDValue Ptr,
+                     SDValue InFlag,
+                     unsigned index,
+                     bool IsRetArgLoad = false,
+                     uint64_t Offset = 0) const;
+
+  SDValue getArgStore(SelectionDAG &DAG, SDLoc SL, EVT ArgVT, Type *Ty,
+                      unsigned AddressSpace,
+                      SDValue Chain,
+                      SDValue Ptr,
+                      SDValue Value,
+                      unsigned Index,
+                      SDValue InFlag,
+                      const AAMDNodes &AAInfo = AAMDNodes(),
+                      uint64_t Offset = 0) const;
 
   //===--------------------------------------------------------------------===//
   // Lowering methods - These methods must be implemented by targets so that

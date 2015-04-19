@@ -1,4 +1,3 @@
-; XFAIL: *
 ; RUN: llc -march=hsail -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
 
 ; This should work correctly, but the chain is somehow messed up when

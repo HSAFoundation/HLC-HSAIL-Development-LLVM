@@ -159,6 +159,9 @@ private:
                    SDValue &DestType,
                    SDValue &SrcType) const;
 
+  SDNode *SelectArgLd(MemSDNode *SetCC) const;
+  SDNode *SelectArgSt(MemSDNode *SetCC) const;
+
   bool SelectGPROrImm(SDValue In, SDValue &Src) const;
   bool MemOpHasPtr32(SDNode *N) const;
 
@@ -721,6 +724,14 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
                                    MVT::Other, MVT::Glue, Ops);
     break;
   }
+  case HSAILISD::ARG_LD: {
+    ResNode = SelectArgLd(cast<MemSDNode>(Node));
+    break;
+  }
+  case HSAILISD::ARG_ST: {
+    ResNode = SelectArgSt(cast<MemSDNode>(Node));
+    break;
+  }
 
 #if 0
   case ISD::ATOMIC_LOAD:
@@ -1240,6 +1251,73 @@ bool HSAILDAGToDAGISel::SelectSetCC(SDValue SetCC,
   SrcType = CurDAG->getTargetConstant(SrcBT, MVT::i32);
 
   return true;
+}
+
+SDNode *HSAILDAGToDAGISel::SelectArgLd(MemSDNode *Node) const {
+  bool IsRetLd = Node->getConstantOperandVal(4);
+  bool IsSext = Node->getConstantOperandVal(5);
+
+  SDValue Base, Reg, Offset;
+  if (!SelectAddr(Node->getOperand(1), Base, Reg, Offset))
+    return nullptr;
+
+  MVT MemVT = Node->getMemoryVT().getSimpleVT();
+  unsigned BrigType = getBrigType(MemVT.SimpleTy, IsSext);
+
+  SDValue Ops[10] = {
+    Base,
+    Reg,
+    Offset,
+    CurDAG->getTargetConstant(BrigType, MVT::i32), // TypeLength
+    Node->getOperand(2), // segment
+    CurDAG->getTargetConstant(Node->getAlignment(), MVT::i32), // align
+    Node->getOperand(3), // width
+    CurDAG->getTargetConstant(0, MVT::i1), // mask
+    Node->getOperand(0), // Chain
+    SDValue()
+  };
+
+  ArrayRef<SDValue> OpsArr = makeArrayRef(Ops);
+
+  if (Node->getNumOperands() == 7)
+    Ops[9] = Node->getOperand(6);
+  else
+    OpsArr = OpsArr.drop_back(1);
+
+  unsigned Opcode = IsRetLd ? HSAIL::RARG_LD_V1 : HSAIL::LD_V1;
+
+  return CurDAG->SelectNodeTo(Node, Opcode, Node->getVTList(), OpsArr);
+}
+
+SDNode *HSAILDAGToDAGISel::SelectArgSt(MemSDNode *Node) const {
+  SDValue Base, Reg, Offset;
+  if (!SelectAddr(Node->getOperand(2), Base, Reg, Offset))
+    return nullptr;
+
+  MVT MemVT = Node->getMemoryVT().getSimpleVT();
+  unsigned BrigType = getBrigType(MemVT.SimpleTy, false);
+
+  SDValue Ops[9] = {
+    Node->getOperand(1),
+    Base,
+    Reg,
+    Offset,
+    CurDAG->getTargetConstant(BrigType, MVT::i32),             // TypeLength
+    Node->getOperand(3),                                       // segment
+    CurDAG->getTargetConstant(Node->getAlignment(), MVT::i32), // align
+    Node->getOperand(0),                                       // Chain
+    SDValue()
+  };
+
+  ArrayRef<SDValue> OpsArr = makeArrayRef(Ops);
+
+  if (Node->getNumOperands() == 5)
+    Ops[8] = Node->getOperand(4);
+  else
+    OpsArr = OpsArr.drop_back(1);
+
+  return CurDAG->SelectNodeTo(Node, HSAIL::ST_V1,
+                              Node->getVTList(), OpsArr);
 }
 
 FunctionPass *llvm::createHSAILISelDag(TargetMachine &TM) {

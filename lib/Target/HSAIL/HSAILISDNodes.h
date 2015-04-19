@@ -32,7 +32,14 @@ namespace llvm {
       ACTIVELANECOUNT,
       ACTIVELANEMASK,
       KERNARGBASEPTR,
-      SEGMENTP
+      SEGMENTP,
+
+      FIRST_MEM_OPCODE_NUMBER = ISD::FIRST_TARGET_MEMORY_OPCODE,
+
+      // Load and store of arguments. Main purpose is to add glue to what would
+      // be a generic load / store.
+      ARG_LD,
+      ARG_ST
     };
   }
 }

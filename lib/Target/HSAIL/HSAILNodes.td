@@ -43,6 +43,10 @@ def HSAILArgLdOp : SDTypeProfile<1, 4,
   [SDTCisInt<1>, SDTCisInt<2>, SDTCisInt<3>, SDTCisSameAs<3, 4>]
 >;
 
+def HSAILArgStOp : SDTypeProfile<0, 4,
+  [SDTCisInt<1>, SDTCisInt<2>, SDTCisInt<3>, SDTCisSameAs<3, 4>]
+>;
+
 //===----------------------------------------------------------------------===//
 // Call/Return DAG Nodes
 //===----------------------------------------------------------------------===//
@@ -58,6 +62,10 @@ def HSAILret : SDNode<"HSAILISD::RET", SDTNone,
 
 def HSAILArgLd : SDNode<"HSAILISD::ARG_LD", HSAILArgLdOp,
   [SDNPHasChain, SDNPMayLoad, SDNPOutGlue, SDNPInGlue]
+>;
+
+def HSAILArgSt : SDNode<"HSAILISD::ARG_ST", HSAILArgStOp,
+  [SDNPHasChain, SDNPMayStore, SDNPOutGlue, SDNPInGlue]
 >;
 
 def HSAILlda : SDNode<"HSAILISD::LDA", HSAILLdaOp>;

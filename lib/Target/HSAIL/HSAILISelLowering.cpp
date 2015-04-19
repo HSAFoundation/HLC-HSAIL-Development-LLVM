@@ -579,136 +579,161 @@ EVT HSAILTargetLowering::getTypeForExtArgOrReturn(LLVMContext &Context,
   return TargetLowering::getTypeForExtArgOrReturn(Context, VT, ExtendKind);
 }
 
-/// Create kernel or function parameter scalar load and return its value.
-/// If isLoad = false create an argument value store.
-/// AddressSpace used to determine if that is a kernel or function argument.
-/// ArgVT specifies expected value type where 'Ty' refers to the real
+/// Create kernel or function parameter scalar load and return its
+/// value. AddressSpace used to determine if that is a kernel or function
+/// argument. ArgVT specifies expected value type where 'Ty' refers to the real
 /// argument type from function's signature.
-/// We have to use machine nodes here because loads and stores must be glued
-/// together with the whole call sequence, while ISD::LOAD/STORE do not have
-/// a glue operand. That also skips instruction selection, so faster.
-/// If the call sequence is not glued we may have unrelated to call
-/// instructions scheduled into the argscope if intent was argscope use.
-/// This function inserts a load or store argument instruction with glue.
-/// If InFlag contains glue it is used for inbound glue. Glue is produced as a
-/// last result and can be consumed at will of the caller.
-SDValue HSAILTargetLowering::getArgLoadOrStore(SelectionDAG &DAG, EVT ArgVT,
-                                               Type *Ty,
-                                               bool isLoad, bool isSExt,
-                                               unsigned AddressSpace,
-                                               SDValue Ptr, SDValue ParamValue,
-                                               unsigned index,
-                                               SDLoc dl, SDValue Chain,
-                                               SDValue InFlag,
-                                               bool isRetArgLoad,
-                                               const AAMDNodes &AAInfo,
-                                               uint64_t offset) const
-{
-    MachineFunction &MF = DAG.getMachineFunction();
-    Type* EltTy = Ty;
-    if (Ty->isArrayTy())
-      EltTy = Ty->getArrayElementType();
-    EltTy = EltTy->getScalarType();
-    MVT PtrTy = getPointerTy(AddressSpace);
-    PointerType *ArgPT = PointerType::get(EltTy, AddressSpace);
-    // TODO_HSA: check if that works with packed structs, it can happen
-    //           we would need to inhibit alignment calculation in that case.
-    offset += DL->getTypeStoreSize(EltTy) * index;
+///
+/// If the call sequence is not glued we may have unrelated to call instructions
+/// scheduled into the argscope if intent was argscope use. This function
+/// inserts a load or store argument instruction with glue. If InFlag contains
+/// glue it is used for inbound glue. Glue is produced as a last result and can
+/// be consumed at will of the caller. Offset operand is added to the offset
+/// value calculated from index.
+SDValue HSAILTargetLowering::getArgLoad(SelectionDAG &DAG,
+                                        SDLoc SL,
+                                        EVT ArgVT,
+                                        Type *Ty,
+                                        bool isSExt,
+                                        unsigned AddressSpace,
+                                        SDValue Chain,
+                                        SDValue Ptr,
+                                        SDValue InFlag,
+                                        unsigned Index,
+                                        bool IsRetArgLoad,
+                                        uint64_t Offset) const {
+  Type *EltTy = Ty;
 
-    if (ArgVT == MVT::i1) {
-      ArgVT = MVT::i32; // Handle a bit as DWORD;
-      Ty = EltTy = Type::getInt32Ty(Ty->getContext());
-      if (!isLoad) ParamValue = DAG.getZExtOrTrunc(ParamValue, dl, MVT::i32);
-    }
+  if (Ty->isArrayTy())
+    EltTy = Ty->getArrayElementType();
+  EltTy = EltTy->getScalarType();
 
-    unsigned alignment = getElementAlignment(DL, Ty, index);
-    // TODO_HSA: Due to problems with RT alignment of vectors we have to
-    //           use element size instead of vector size for alignment.
-    //           Fix when RT is fixed.
-    if (AddressSpace == HSAILAS::KERNARG_ADDRESS)
-      alignment = DL->getABITypeAlignment(EltTy);
+  MVT PtrVT = getPointerTy(AddressSpace);
+  PointerType *ArgPT = PointerType::get(EltTy, AddressSpace);
 
-    unsigned op = isLoad ? HSAIL::LD_V1 : HSAIL::ST_V1;
-    unsigned BrigType = HSAIL::getBrigType(EltTy, *DL, isSExt);
+  // TODO_HSA: check if that works with packed structs, it can happen
+  //           we would need to inhibit alignment calculation in that case.
+  Offset += DL->getTypeStoreSize(EltTy) * Index;
 
-    // Change opcode for load of return value
-    if (isRetArgLoad) {
-      assert(isLoad && AddressSpace == HSAILAS::ARG_ADDRESS);
-      op = HSAIL::RARG_LD_V1;
-    }
+  if (ArgVT == MVT::i1) {
+    // FIXME: Remove this
+    ArgVT = MVT::i32; // Handle a bit as DWORD;
+    Ty = EltTy = Type::getInt32Ty(Ty->getContext());
+  }
 
-    unsigned opShift = isLoad ? 1 : 0;
-    unsigned opNo = 7; // Value and pointer operands
-    SDValue Zero = DAG.getTargetConstant(0, MVT::i32);
-    SDValue Reg = DAG.getRegister(HSAIL::NoRegister, PtrTy);
-    if (!Ptr.getNode()) {
-      // %noreg [%noreg + offset]
-      alignment = ArgVT.getStoreSize(); // Assume base pointer zero.
-      if (offset & (alignment - 1))
-        alignment = 1;
-      if (AddressSpace == HSAILAS::KERNARG_ADDRESS) {
-        // If the argument symbol is unknown, generate a kernargbaseptr
-        // instruction for Ptr instead of a %noreg value.
-        Reg = DAG.getNode(HSAILISD::KERNARGBASEPTR, dl, PtrTy);
-      }
-    } else if (Ptr.getOpcode() != ISD::TargetExternalSymbol) {
-      // %noreg [%reg + offset]
-      Reg = Ptr;
-      Ptr = SDValue();
-      alignment = 1; // %reg is unknown, alignment as well.
-    }
-    if (!Ptr.getNode())
-      Ptr = DAG.getRegister(HSAIL::NoRegister, PtrTy);
-    SDValue Ops[] = {
-      ParamValue,
-      /* Address */ Ptr, Reg, DAG.getTargetConstant(offset, MVT::i32),
-      DAG.getTargetConstant(BrigType, MVT::i32),
-      DAG.getTargetConstant(AddressSpace, MVT::i32), // segment
-      DAG.getTargetConstant(alignment, MVT::i32),    // alignment
-      Zero,
-      Zero,
-      Zero,
-      Zero
-    };
+  if (!Ptr && AddressSpace == HSAILAS::KERNARG_ADDRESS) {
+    // If the argument symbol is unknown, generate a kernargbaseptr instruction.
+    Ptr = DAG.getNode(HSAILISD::KERNARGBASEPTR, SL, PtrVT);
+  }
 
-    if (isLoad) {
-      // Width qualifier.
-        Ops[opNo++] = DAG.getTargetConstant((AddressSpace ==
-          HSAILAS::KERNARG_ADDRESS) ? BRIG_WIDTH_ALL
-                                    : BRIG_WIDTH_1, MVT::i32);
+  unsigned Align = getElementAlignment(DL, Ty, Index);
+  unsigned Width = BRIG_WIDTH_1;
 
-      // Const qualifier.
-        Ops[opNo++] = DAG.getTargetConstant(0, MVT::i1);
-    }
+  // TODO_HSA: Due to problems with RT alignment of vectors we have to
+  //           use element size instead of vector size for alignment.
+  //           Fix when RT is fixed.
+  if (AddressSpace == HSAILAS::KERNARG_ADDRESS) {
+    Align = DL->getABITypeAlignment(EltTy);
+    Width = BRIG_WIDTH_ALL;
+  }
 
-    Ops[opNo++] = Chain;
-    if (InFlag.getNode())
-      Ops[opNo++] = InFlag;
+  SDValue PtrOffs = DAG.getNode(ISD::ADD, SL, PtrVT, Ptr,
+                                DAG.getConstant(Offset, PtrVT));
 
-    SDVTList VTs;
+  const SDValue Ops[] = {
+    Chain,
+    PtrOffs,
+    DAG.getTargetConstant(AddressSpace, MVT::i32),
+    DAG.getTargetConstant(Width, MVT::i32),
+    DAG.getTargetConstant(IsRetArgLoad, MVT::i1),
+    DAG.getTargetConstant(isSExt, MVT::i1),
+    InFlag
+  };
 
-    if (isLoad) {
-      EVT VT = (ArgVT.getStoreSize() < 4) ? MVT::i32 : ArgVT;
-      VTs = DAG.getVTList(VT, MVT::Other, MVT::Glue);
-    }
-    else VTs = DAG.getVTList(MVT::Other, MVT::Glue);
+  ArrayRef<SDValue> OpsArr = makeArrayRef(Ops);
+  if (!InFlag)
+    OpsArr = OpsArr.drop_back(1);
 
-    SmallVector <SDValue, 8> OpArg;
+  EVT VT = (ArgVT.getStoreSize() < 4) ? MVT::i32 : ArgVT;
+  SDVTList VTs = DAG.getVTList(VT, MVT::Other, MVT::Glue);
 
-    for (unsigned i = opShift; i < opNo; ++i) {
-      OpArg.push_back(Ops[i]);
-    }
-    SDNode *ArgNode = DAG.getMachineNode(op, dl, VTs, OpArg);
+  MachinePointerInfo PtrInfo(UndefValue::get(ArgPT), Offset);
 
-    MachinePointerInfo MPtrInfo(UndefValue::get(ArgPT), offset);
-    MachineSDNode::mmo_iterator MemOp = MF.allocateMemRefsArray(1);
-    MemOp[0] = MF.getMachineMemOperand(MPtrInfo,
-      isLoad ? MachineMemOperand::MOLoad : MachineMemOperand::MOStore,
-      ArgVT.getStoreSize(), alignment, AAInfo);
-    cast<MachineSDNode>(ArgNode)->setMemRefs(MemOp, MemOp + 1);
-
-    return SDValue(ArgNode, 0);
+  return DAG.getMemIntrinsicNode(HSAILISD::ARG_LD, SL, VTs,
+                                 OpsArr, ArgVT, PtrInfo,
+                                 Align,
+                                 false, // isVolatile
+                                 true,  // ReadMem
+                                 false, // WriteMem
+                                 ArgVT.getStoreSize()); // Size
 }
+
+#if 1
+SDValue HSAILTargetLowering::getArgStore(SelectionDAG &DAG, SDLoc SL,
+                                         EVT ArgVT,
+                                         Type *Ty,
+                                         unsigned AddressSpace,
+                                         SDValue Chain,
+                                         SDValue Ptr,
+                                         SDValue Value,
+                                         unsigned Index,
+                                         SDValue InFlag,
+                                         const AAMDNodes &AAInfo,
+                                         uint64_t Offset) const {
+
+  MachineFunction &MF = DAG.getMachineFunction();
+  Type* EltTy = Ty;
+  if (Ty->isArrayTy())
+    EltTy = Ty->getArrayElementType();
+  EltTy = EltTy->getScalarType();
+  MVT PtrVT = getPointerTy(AddressSpace);
+  PointerType *ArgPT = PointerType::get(EltTy, AddressSpace);
+  // TODO_HSA: check if that works with packed structs, it can happen
+  //           we would need to inhibit alignment calculation in that case.
+  Offset += DL->getTypeStoreSize(EltTy) * Index;
+
+  if (ArgVT == MVT::i1) {
+    // FIXME: Remove this.
+    ArgVT = MVT::i32; // Handle a bit as DWORD;
+    Ty = EltTy = Type::getInt32Ty(Ty->getContext());
+    Value = DAG.getZExtOrTrunc(Value, SL, MVT::i32);
+  }
+
+  SDValue PtrOffs = DAG.getNode(ISD::ADD, SL, PtrVT, Ptr,
+                                DAG.getConstant(Offset, PtrVT));
+
+
+  unsigned Align = getElementAlignment(DL, Ty, Index);
+  // TODO_HSA: Due to problems with RT alignment of vectors we have to
+  //           use element size instead of vector size for alignment.
+  //           Fix when RT is fixed.
+  if (AddressSpace == HSAILAS::KERNARG_ADDRESS)
+    Align = DL->getABITypeAlignment(EltTy);
+
+  SDValue Ops[] = {
+    Chain,
+    Value,
+    PtrOffs,
+    DAG.getTargetConstant(AddressSpace, MVT::i32),
+    InFlag
+  };
+
+  ArrayRef<SDValue> OpsArr = makeArrayRef(Ops);
+  if (!InFlag)
+    OpsArr = OpsArr.drop_back(1);
+
+  SDVTList VTs = DAG.getVTList(MVT::Other, MVT::Glue);
+  MachinePointerInfo PtrInfo(UndefValue::get(ArgPT), Offset);
+
+  return DAG.getMemIntrinsicNode(HSAILISD::ARG_ST, SL, VTs, OpsArr,
+                                 ArgVT, PtrInfo, Align,
+                                 false, // isVolatile
+                                 false, // ReadMem
+                                 true,  // WriteMem
+                                 ArgVT.getStoreSize());
+}
+
+#endif
 
 /// Recursively lower a single argument or its element.
 /// Either Ins or Outs must non-zero, which means we are doing argument load
@@ -757,14 +782,19 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
     // This assumes that char and short vector elements are unpacked in Ins.
     unsigned num_elem = VecTy ? VecTy->getNumElements() : ArrTy->getNumElements();
     for (unsigned i = 0; i < num_elem; ++i) {
-      bool isSExt = isLoad ? (*Ins)[ArgNo].Flags.isSExt()
-        : (*Outs)[ArgNo].Flags.isSExt();
-      ArgValue = getArgLoadOrStore(DAG, argVT, type, isLoad, isSExt, AS, ParamPtr,
-                                   isLoad ? SDValue() : (*OutVals)[ArgNo],
-                                   i, dl, Chain, InFlag, isRetArgLoad, AAInfo, offset);
+      if (isLoad) {
+        bool IsSExt = (*Ins)[ArgNo].Flags.isSExt();
+        ArgValue = getArgLoad(DAG, dl, argVT, type, IsSExt, AS, Chain, ParamPtr,
+                              InFlag, i, isRetArgLoad, offset);
+      } else {
+        ArgValue = getArgStore(DAG, dl, argVT, type, AS, Chain, ParamPtr,
+                               (*OutVals)[ArgNo],
+                               i, InFlag, AAInfo, offset);
+      }
 
       if (ChainLink)
         Chain = ArgValue.getValue(isLoad ? 1 : 0);
+
       // Glue next vector loads regardless of input flag to favor vectorization.
       InFlag = ArgValue.getValue(isLoad ? 2 : 1);
       if (InVals)
@@ -793,11 +823,23 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
   }
 
   // Regular scalar load case.
-  bool isSExt = isLoad ? (*Ins)[ArgNo].Flags.isSExt()
-    : (*Outs)[ArgNo].Flags.isSExt();
-  ArgValue = getArgLoadOrStore(DAG, argVT, type, isLoad, isSExt, AS, ParamPtr,
-                               isLoad ? SDValue() : (*OutVals)[ArgNo], 0, dl,
-                               Chain, InFlag, isRetArgLoad, AAInfo, offset);
+  if (isLoad) {
+    bool IsSExt = (*Ins)[ArgNo].Flags.isSExt();
+    ArgValue = getArgLoad(DAG, dl, argVT, type, IsSExt, AS, Chain, ParamPtr,
+                          InFlag,
+                          0,
+                          isRetArgLoad, offset);
+
+
+  } else {
+    ArgValue = getArgStore(DAG, dl, argVT, type, AS,
+                           Chain,
+                           ParamPtr,
+                           (*OutVals)[ArgNo],
+                           0, InFlag,
+                           AAInfo, offset);
+  }
+
   if (InVals)
     InVals->push_back(ArgValue);
   ArgNo++;
@@ -1152,6 +1194,10 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
     return "HSAILISD::KERNARGBASEPTR";
   case HSAILISD::SEGMENTP:
     return "HSAILISD::SEGMENTP";
+  case HSAILISD::ARG_LD:
+    return "HSAILISD::ARG_LD";
+  case HSAILISD::ARG_ST:
+    return "HSAILISD::ARG_ST";
   }
 }
 
@@ -1259,10 +1305,10 @@ SDValue HSAILTargetLowering::LowerLdKernargIntrinsic(SDValue Op,
   }
 
   SDValue Chain = DAG.getEntryNode();
-  return getArgLoadOrStore(DAG, VT, Ty, true, false,
-                           HSAILAS::KERNARG_ADDRESS, Addr,
-                           SDValue(), 0, SDLoc(Op),
-                           Chain, SDValue(), false, ArgMD, Offset);
+  return getArgLoad(DAG, SDLoc(Op), VT, Ty, false,
+                    HSAILAS::KERNARG_ADDRESS,
+                    Chain, Addr,
+                    SDValue(), 0, false, Offset);
 }
 
 SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
