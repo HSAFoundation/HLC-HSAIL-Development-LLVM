@@ -320,12 +320,12 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
   // Make sure this is actually an array. For the special case of a single
   // pointer initializer, we don't want the braces.
   if (NElts != 0)
-    O << '{';
+    O << getArgTypeName(EltTy) << "[](";
 
   store.print(O);
 
   if (NElts != 0)
-    O << '}';
+    O << ')';
 
   O << ";\n";
 
@@ -464,7 +464,7 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
       if (Init->isNullValue()) {
         Type *Ty = Init->getType();
         if (Ty->isAggregateType() || Ty->isVectorTy())
-          O << "{0}";
+          O << getArgTypeName(EmitTy) << "[](0)";
         else
           O << '0';
         O << ';';
