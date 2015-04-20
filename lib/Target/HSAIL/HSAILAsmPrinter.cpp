@@ -483,7 +483,7 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
 
   const HSAILSubtarget *Subtarget = &TM.getSubtarget<HSAILSubtarget>();
 
-  O << "version "
+  O << "module &__llvm_hsail_module:"
     << BRIG_VERSION_HSAIL_MAJOR
     << ':'
     << BRIG_VERSION_HSAIL_MINOR
@@ -491,6 +491,8 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
     << (Subtarget->isFull() ? "$full" : "$base")
     << ':'
     << (Subtarget->is64Bit() ? "$large" : "$small")
+    << ':'
+    << "$near" // TODO: Get from somewhere
     << ";\n\n";
 
   if (Subtarget->isGCN())
