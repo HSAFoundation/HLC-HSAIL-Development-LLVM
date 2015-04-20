@@ -643,7 +643,6 @@ SDValue HSAILTargetLowering::getArgLoad(SelectionDAG &DAG,
   const SDValue Ops[] = {
     Chain,
     PtrOffs,
-    DAG.getTargetConstant(AddressSpace, MVT::i32),
     DAG.getTargetConstant(Width, MVT::i32),
     DAG.getTargetConstant(IsRetArgLoad, MVT::i1),
     DAG.getTargetConstant(isSExt, MVT::i1),
@@ -714,7 +713,6 @@ SDValue HSAILTargetLowering::getArgStore(SelectionDAG &DAG, SDLoc SL,
     Chain,
     Value,
     PtrOffs,
-    DAG.getTargetConstant(AddressSpace, MVT::i32),
     InFlag
   };
 

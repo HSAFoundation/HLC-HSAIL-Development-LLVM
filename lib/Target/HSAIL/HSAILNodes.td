@@ -44,11 +44,11 @@ def HSAILSegmentPOp : SDTypeProfile<1, 3,
 >;
 
 def HSAILArgLdOp : SDTypeProfile<1, 4,
-  [SDTCisInt<1>, SDTCisInt<2>, SDTCisInt<3>, SDTCisSameAs<3, 4>]
+  [SDTCisInt<1>, SDTCisInt<2>, SDTCisSameAs<2, 3>]
 >;
 
 def HSAILArgStOp : SDTypeProfile<0, 4,
-  [SDTCisInt<1>, SDTCisInt<2>, SDTCisInt<3>, SDTCisSameAs<3, 4>]
+  [SDTCisInt<1>, SDTCisInt<2>, SDTCisInt<3>]
 >;
 
 //===----------------------------------------------------------------------===//

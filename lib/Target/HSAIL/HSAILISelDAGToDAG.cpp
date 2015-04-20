@@ -1254,8 +1254,8 @@ bool HSAILDAGToDAGISel::SelectSetCC(SDValue SetCC,
 }
 
 SDNode *HSAILDAGToDAGISel::SelectArgLd(MemSDNode *Node) const {
-  bool IsRetLd = Node->getConstantOperandVal(4);
-  bool IsSext = Node->getConstantOperandVal(5);
+  bool IsRetLd = Node->getConstantOperandVal(3);
+  bool IsSext = Node->getConstantOperandVal(4);
 
   SDValue Base, Reg, Offset;
   if (!SelectAddr(Node->getOperand(1), Base, Reg, Offset))
@@ -1269,9 +1269,9 @@ SDNode *HSAILDAGToDAGISel::SelectArgLd(MemSDNode *Node) const {
     Reg,
     Offset,
     CurDAG->getTargetConstant(BrigType, MVT::i32), // TypeLength
-    Node->getOperand(2), // segment
+    CurDAG->getTargetConstant(Node->getAddressSpace(), MVT::i32), // segment
     CurDAG->getTargetConstant(Node->getAlignment(), MVT::i32), // align
-    Node->getOperand(3), // width
+    Node->getOperand(2), // width
     CurDAG->getTargetConstant(0, MVT::i1), // mask
     Node->getOperand(0), // Chain
     SDValue()
@@ -1279,8 +1279,8 @@ SDNode *HSAILDAGToDAGISel::SelectArgLd(MemSDNode *Node) const {
 
   ArrayRef<SDValue> OpsArr = makeArrayRef(Ops);
 
-  if (Node->getNumOperands() == 7)
-    Ops[9] = Node->getOperand(6);
+  if (Node->getNumOperands() == 6)
+    Ops[9] = Node->getOperand(5);
   else
     OpsArr = OpsArr.drop_back(1);
 
@@ -1302,17 +1302,17 @@ SDNode *HSAILDAGToDAGISel::SelectArgSt(MemSDNode *Node) const {
     Base,
     Reg,
     Offset,
-    CurDAG->getTargetConstant(BrigType, MVT::i32),             // TypeLength
-    Node->getOperand(3),                                       // segment
-    CurDAG->getTargetConstant(Node->getAlignment(), MVT::i32), // align
-    Node->getOperand(0),                                       // Chain
+    CurDAG->getTargetConstant(BrigType, MVT::i32),                // TypeLength
+    CurDAG->getTargetConstant(Node->getAddressSpace(), MVT::i32), // segment
+    CurDAG->getTargetConstant(Node->getAlignment(), MVT::i32),    // align
+    Node->getOperand(0),                                          // Chain
     SDValue()
   };
 
   ArrayRef<SDValue> OpsArr = makeArrayRef(Ops);
 
-  if (Node->getNumOperands() == 5)
-    Ops[8] = Node->getOperand(4);
+  if (Node->getNumOperands() == 4)
+    Ops[8] = Node->getOperand(3);
   else
     OpsArr = OpsArr.drop_back(1);
 
