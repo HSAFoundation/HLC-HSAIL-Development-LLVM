@@ -667,7 +667,6 @@ SDValue HSAILTargetLowering::getArgLoad(SelectionDAG &DAG,
                                  ArgVT.getStoreSize()); // Size
 }
 
-#if 1
 SDValue HSAILTargetLowering::getArgStore(SelectionDAG &DAG, SDLoc SL,
                                          EVT ArgVT,
                                          Type *Ty,
@@ -730,8 +729,6 @@ SDValue HSAILTargetLowering::getArgStore(SelectionDAG &DAG, SDLoc SL,
                                  true,  // WriteMem
                                  ArgVT.getStoreSize());
 }
-
-#endif
 
 /// Recursively lower a single argument or its element.
 /// Either Ins or Outs must non-zero, which means we are doing argument load
