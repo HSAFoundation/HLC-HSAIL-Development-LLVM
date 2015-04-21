@@ -496,9 +496,18 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
       // Emit trivial zero initializers as a single 0.
       if (Init->isNullValue()) {
         Type *Ty = Init->getType();
-        if (Ty->isAggregateType() || Ty->isVectorTy())
-          O << getArgTypeName(EmitTy) << "[](0)";
-        else
+        if (Ty->isAggregateType() || Ty->isVectorTy()) {
+          O << getArgTypeName(EmitTy) << "[](";
+
+          // FIXME: Use uint64_t for NElts
+          for (unsigned I = 0; I < NElts; ++I) {
+            if (I > 0)
+              O << ", ";
+            O << '0';
+          }
+
+          O << ')';
+        } else
           O << '0';
         O << ';';
       } else {
