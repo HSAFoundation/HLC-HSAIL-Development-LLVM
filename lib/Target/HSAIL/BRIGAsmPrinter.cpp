@@ -1979,19 +1979,12 @@ HSAIL_ASM::InstAtomic BRIGAsmPrinter::BrigEmitInstAtomic(const MachineInstr &MI,
   int AddressIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::address);
   BrigEmitOperandLdStAddress(&MI, AddressIdx, Segment);
 
-  // InstAtomic is unusual in that the number of operands differs with the same
-  // instruction opcode depending on the atomicOperation modifier. We always
-  // have these operands in the MachineInstr, and must not emit them if they are
-  // unused for this operation.
-
   int Src0Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src0);
-  const MachineOperand &Src0 = MI.getOperand(Src0Idx);
-  if (!Src0.isReg() || Src0.getReg() != HSAIL::NoRegister)
+  if (Src0Idx != -1)
     BrigEmitOperand(&MI, Src0Idx, inst);
 
   int Src1Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src1);
-  const MachineOperand &Src1 = MI.getOperand(Src1Idx);
-  if (!Src1.isReg() || Src1.getReg() != HSAIL::NoRegister)
+  if (Src1Idx != -1)
     BrigEmitOperand(&MI, Src1Idx, inst);
 
   return inst;

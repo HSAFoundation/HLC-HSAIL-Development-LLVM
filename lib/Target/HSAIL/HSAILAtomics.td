@@ -25,23 +25,23 @@ def : InstAddr_1Op_Pat<
 // operation modifier operand. e.g. mayLoad must always be the same
 // for different instances of the instruction.
 multiclass InstAtomicOp<string opName, bits<16> brigVal> {
-  defm _ADD : InstAtomic_IntTypes<opName#"_add", brigVal, BrigAtomicOperation.ADD, "atomicnoret_add">;
-  defm _AND : InstAtomic_BitTypes<opName#"_and", brigVal, BrigAtomicOperation.AND, "atomicnoret_and">;
-  defm _CAS : InstAtomic_BitTypes<opName#"_cas", brigVal, BrigAtomicOperation.CAS>;
-  defm _EXCH : InstAtomic_BitTypes<opName#"_exch", brigVal, BrigAtomicOperation.EXCH>;
+  defm _ADD : InstAtomic_1Op_IntTypes<opName#"_add", brigVal, BrigAtomicOperation.ADD, "atomicnoret_add">;
+  defm _AND : InstAtomic_1Op_BitTypes<opName#"_and", brigVal, BrigAtomicOperation.AND, "atomicnoret_and">;
+  defm _CAS : InstAtomic_2Op_BitTypes<opName#"_cas", brigVal, BrigAtomicOperation.CAS>;
+  defm _EXCH : InstAtomic_1Op_BitTypes<opName#"_exch", brigVal, BrigAtomicOperation.EXCH>;
 
   let mayStore = 0 in {
-    defm _LD : InstAtomic_BitTypes<opName#"_ld", brigVal, BrigAtomicOperation.LD>;
+    defm _LD : InstAtomic_0Op_BitTypes<opName#"_ld", brigVal, BrigAtomicOperation.LD>;
   }
 
-  defm _MAX : InstAtomic_IntTypes<opName#"_max", brigVal, BrigAtomicOperation.MAX, "atomicnoret_max">;
-  defm _MIN : InstAtomic_IntTypes<opName#"_min", brigVal, BrigAtomicOperation.MIN, "atomicnoret_min">;
-  defm _OR : InstAtomic_BitTypes<opName#"_or", brigVal, BrigAtomicOperation.OR, "atomicnoret_or">;
+  defm _MAX : InstAtomic_1Op_IntTypes<opName#"_max", brigVal, BrigAtomicOperation.MAX, "atomicnoret_max">;
+  defm _MIN : InstAtomic_1Op_IntTypes<opName#"_min", brigVal, BrigAtomicOperation.MIN, "atomicnoret_min">;
+  defm _OR : InstAtomic_1Op_BitTypes<opName#"_or", brigVal, BrigAtomicOperation.OR, "atomicnoret_or">;
 
-  defm _SUB : InstAtomic_IntTypes<opName#"_sub", brigVal, BrigAtomicOperation.SUB, "atomicnoret_sub">;
-  defm _WRAPDEC : InstAtomic_IntTypes<opName#"_wrapdec", brigVal, BrigAtomicOperation.WRAPDEC, "atomicnoret_wrapdec">;
-  defm _WRAPINC : InstAtomic_IntTypes<opName#"_wrapinc", brigVal, BrigAtomicOperation.WRAPINC, "atomicnoret_wrapinc">;
-  defm _XOR : InstAtomic_BitTypes<opName#"_xor", brigVal, BrigAtomicOperation.XOR, "atomicnoret_xor">;
+  defm _SUB : InstAtomic_1Op_IntTypes<opName#"_sub", brigVal, BrigAtomicOperation.SUB, "atomicnoret_sub">;
+  defm _WRAPDEC : InstAtomic_1Op_IntTypes<opName#"_wrapdec", brigVal, BrigAtomicOperation.WRAPDEC, "atomicnoret_wrapdec">;
+  defm _WRAPINC : InstAtomic_1Op_IntTypes<opName#"_wrapinc", brigVal, BrigAtomicOperation.WRAPINC, "atomicnoret_wrapinc">;
+  defm _XOR : InstAtomic_1Op_BitTypes<opName#"_xor", brigVal, BrigAtomicOperation.XOR, "atomicnoret_xor">;
 }
 
 let hasPostISelHook = 1 in {
@@ -49,22 +49,21 @@ let hasPostISelHook = 1 in {
 }
 
 multiclass InstAtomicOp_NoRet<string opName, bits<16> brigVal> {
-  defm _ADD : InstAtomic_NoRet_IntTypes<opName#"_add", brigVal, BrigAtomicOperation.ADD>;
-  defm _AND : InstAtomic_NoRet_BitTypes<opName#"_and", brigVal, BrigAtomicOperation.AND>;
-  defm _EXCH : InstAtomic_NoRet_BitTypes<opName#"_exch", brigVal, BrigAtomicOperation.EXCH>;
-  defm _LD : InstAtomic_NoRet_BitTypes<opName#"_ld", brigVal, BrigAtomicOperation.LD>;
-  defm _MAX : InstAtomic_NoRet_IntTypes<opName#"_max", brigVal, BrigAtomicOperation.MAX>;
-  defm _MIN : InstAtomic_NoRet_IntTypes<opName#"_min", brigVal, BrigAtomicOperation.MIN>;
-  defm _OR : InstAtomic_NoRet_BitTypes<opName#"_or", brigVal, BrigAtomicOperation.OR>;
+  defm _ADD : InstAtomic_1Op_NoRet_IntTypes<opName#"_add", brigVal, BrigAtomicOperation.ADD>;
+  defm _AND : InstAtomic_1Op_NoRet_BitTypes<opName#"_and", brigVal, BrigAtomicOperation.AND>;
+  defm _EXCH : InstAtomic_1Op_NoRet_BitTypes<opName#"_exch", brigVal, BrigAtomicOperation.EXCH>;
+  defm _MAX : InstAtomic_1Op_NoRet_IntTypes<opName#"_max", brigVal, BrigAtomicOperation.MAX>;
+  defm _MIN : InstAtomic_1Op_NoRet_IntTypes<opName#"_min", brigVal, BrigAtomicOperation.MIN>;
+  defm _OR : InstAtomic_1Op_NoRet_BitTypes<opName#"_or", brigVal, BrigAtomicOperation.OR>;
 
   let mayLoad = 0 in {
-    defm _ST : InstAtomic_NoRet_BitTypes<opName#"_st", brigVal, BrigAtomicOperation.ST>;
+    defm _ST : InstAtomic_1Op_NoRet_BitTypes<opName#"_st", brigVal, BrigAtomicOperation.ST>;
   }
 
-  defm _SUB : InstAtomic_NoRet_IntTypes<opName#"_sub", brigVal, BrigAtomicOperation.SUB>;
-  defm _WRAPDEC : InstAtomic_NoRet_IntTypes<opName#"_wrapdec", brigVal, BrigAtomicOperation.WRAPDEC>;
-  defm _WRAPINC : InstAtomic_NoRet_IntTypes<opName#"_wrapinc", brigVal, BrigAtomicOperation.WRAPINC>;
-  defm _XOR : InstAtomic_NoRet_BitTypes<opName#"_xor", brigVal, BrigAtomicOperation.XOR>;
+  defm _SUB : InstAtomic_1Op_NoRet_IntTypes<opName#"_sub", brigVal, BrigAtomicOperation.SUB>;
+  defm _WRAPDEC : InstAtomic_1Op_NoRet_IntTypes<opName#"_wrapdec", brigVal, BrigAtomicOperation.WRAPDEC>;
+  defm _WRAPINC : InstAtomic_1Op_NoRet_IntTypes<opName#"_wrapinc", brigVal, BrigAtomicOperation.WRAPINC>;
+  defm _XOR : InstAtomic_1Op_NoRet_BitTypes<opName#"_xor", brigVal, BrigAtomicOperation.XOR>;
 }
 
 

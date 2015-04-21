@@ -267,14 +267,17 @@ def Inst_B1_F32_F32 : HSAILProfile<[i1, f32, f32, untyped, untyped], "">;
 def Inst_B1_F64_F64 : HSAILProfile<[i1, f64, f64, untyped, untyped], "">;
 
 // Atomic profiles.
-def Inst_Void_B32_B32 : HSAILProfile<[untyped, i32, i32, untyped, untyped], "b32">;
-def Inst_Void_B64_B64 : HSAILProfile<[untyped, i64, i64, untyped, untyped], "b64">;
+def Inst_Void_B32 : HSAILProfile<[untyped, i32, untyped, untyped, untyped], "b32">;
+def Inst_Void_B64 : HSAILProfile<[untyped, i64, untyped, untyped, untyped], "b64">;
 
-def Inst_Void_S32_S32 : HSAILProfile<[untyped, i32, i32, untyped, untyped], "s32">;
-def Inst_Void_S64_S64 : HSAILProfile<[untyped, i64, i64, untyped, untyped], "s64">;
+def Inst_Void_S32 : HSAILProfile<[untyped, i32, untyped, untyped, untyped], "s32">;
+def Inst_Void_S64 : HSAILProfile<[untyped, i64, untyped, untyped, untyped], "s64">;
 
-def Inst_Void_U32_U32 : HSAILProfile<[untyped, i32, i32, untyped, untyped], "u32">;
-def Inst_Void_U64_U64 : HSAILProfile<[untyped, i64, i64, untyped, untyped], "u64">;
+def Inst_Void_U32 : HSAILProfile<[untyped, i32, untyped, untyped, untyped], "u32">;
+def Inst_Void_U64 : HSAILProfile<[untyped, i64, untyped, untyped, untyped], "u64">;
+
+def Inst_B32 : HSAILProfile<[i32, untyped, untyped, untyped, untyped], "b32">;
+def Inst_B64 : HSAILProfile<[i64, untyped, untyped, untyped, untyped], "b64">;
 
 
 //===----------------------------------------------------------------------===//

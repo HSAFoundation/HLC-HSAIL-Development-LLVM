@@ -820,10 +820,43 @@ class HSAILInstAtomic<bits<16> BrigVal,
   int atomicOperation = ?;
 }
 
-// FIXME: We need to not print src0 / src1 depending on the specific
-// atomic op instead of noreg.
-class InstAtomic<string opName, bits<16> BrigVal,
-                 int opVal, HSAILProfile P, string noRetOp = ""> :
+class InstAtomic_0Op<string opName, bits<16> BrigVal,
+                     int opVal, HSAILProfile P, string noRetOp = ""> :
+  HSAILInstAtomic<
+    BrigVal,
+    (outs P.DestRC:$dest),
+    (ins BrigAtomicOperation:$op,
+         AddressSpace:$segment,
+         BrigMemoryOrder:$order,
+         BrigMemoryScope:$scope,
+         equiv:$equiv,
+         MEMOP:$address,
+         BrigTypeX:$TypeLength),
+    opName#"$segment$order$scope$equiv$TypeLength\t$dest, $address"
+>, AtomicNoRet<noRetOp, 1> {
+  let atomicOperation = opVal;
+}
+
+class InstAtomic_1Op<string opName, bits<16> BrigVal,
+                     int opVal, HSAILProfile P, string noRetOp = ""> :
+  HSAILInstAtomic<
+    BrigVal,
+    (outs P.DestRC:$dest),
+    (ins BrigAtomicOperation:$op,
+         AddressSpace:$segment,
+         BrigMemoryOrder:$order,
+         BrigMemoryScope:$scope,
+         equiv:$equiv,
+         MEMOP:$address,
+         P.Src0RC:$src0,
+         BrigTypeX:$TypeLength),
+    opName#"$segment$order$scope$equiv$TypeLength\t$dest, $address, $src0"
+>, AtomicNoRet<noRetOp, 1> {
+  let atomicOperation = opVal;
+}
+
+class InstAtomic_2Op<string opName, bits<16> BrigVal,
+                     int opVal, HSAILProfile P, string noRetOp = ""> :
   HSAILInstAtomic<
     BrigVal,
     (outs P.DestRC:$dest),
@@ -841,20 +874,69 @@ class InstAtomic<string opName, bits<16> BrigVal,
   let atomicOperation = opVal;
 }
 
-multiclass InstAtomic_BitTypes<string opName, bits<16> BrigVal, int opVal, string noRetOp = ""> {
-  def _B32 : InstAtomic<opName, BrigVal, opVal, Inst_B32_B32_B32, noRetOp#"_b32">;
-  def _B64 : InstAtomic<opName, BrigVal, opVal, Inst_B64_B64_B64, noRetOp#"_b64">;
+multiclass InstAtomic_0Op_BitTypes<string opName, bits<16> BrigVal,
+                                   int opVal, string noRetOp = ""> {
+  def _B32 : InstAtomic_0Op<opName, BrigVal, opVal, Inst_B32, noRetOp#"_b32">;
+  def _B64 : InstAtomic_0Op<opName, BrigVal, opVal, Inst_B64, noRetOp#"_b64">;
 }
 
-multiclass InstAtomic_IntTypes<string opName, bits<16> BrigVal, int opVal, string noRetOp = ""> {
-  def _S32 : InstAtomic<opName, BrigVal, opVal, Inst_S32_S32_S32, noRetOp#"_s32">;
-  def _S64 : InstAtomic<opName, BrigVal, opVal, Inst_S64_S64_S64, noRetOp#"_s64">;
-
-  def _U32 : InstAtomic<opName, BrigVal, opVal, Inst_U32_U32_U32, noRetOp#"_u32">;
-  def _U64 : InstAtomic<opName, BrigVal, opVal, Inst_U64_U64_U64, noRetOp#"_u64">;
+multiclass InstAtomic_1Op_BitTypes<string opName, bits<16> BrigVal,
+                                   int opVal, string noRetOp = ""> {
+  def _B32 : InstAtomic_1Op<opName, BrigVal, opVal, Inst_B32_B32, noRetOp#"_b32">;
+  def _B64 : InstAtomic_1Op<opName, BrigVal, opVal, Inst_B64_B64, noRetOp#"_b64">;
 }
 
-class InstAtomic_NoRet<string opName, bits<16> BrigVal, int opVal, HSAILProfile P, string typeSuffix> :
+multiclass InstAtomic_2Op_BitTypes<string opName, bits<16> BrigVal, int opVal, string noRetOp = ""> {
+  def _B32 : InstAtomic_2Op<opName, BrigVal, opVal, Inst_B32_B32_B32, noRetOp#"_b32">;
+  def _B64 : InstAtomic_2Op<opName, BrigVal, opVal, Inst_B64_B64_B64, noRetOp#"_b64">;
+}
+
+multiclass InstAtomic_1Op_IntTypes<string opName, bits<16> BrigVal, int opVal, string noRetOp = ""> {
+  def _S32 : InstAtomic_1Op<opName, BrigVal, opVal, Inst_S32_S32, noRetOp#"_s32">;
+  def _S64 : InstAtomic_1Op<opName, BrigVal, opVal, Inst_S64_S64, noRetOp#"_s64">;
+
+  def _U32 : InstAtomic_1Op<opName, BrigVal, opVal, Inst_U32_U32, noRetOp#"_u32">;
+  def _U64 : InstAtomic_1Op<opName, BrigVal, opVal, Inst_U64_U64, noRetOp#"_u64">;
+}
+
+class InstAtomic_0Op_NoRet<string opName, bits<16> BrigVal, int opVal,
+                           HSAILProfile P, string typeSuffix> :
+  HSAILInstAtomic<
+    BrigVal,
+    (outs),
+    (ins BrigAtomicOperation:$op,
+         AddressSpace:$segment,
+         BrigMemoryOrder:$order,
+         BrigMemoryScope:$scope,
+         equiv:$equiv,
+         MEMOP:$address,
+         BrigTypeX:$TypeLength),
+    opName#"$segment$order$scope$equiv$TypeLength\t$address"
+>, AtomicNoRet<opName#typeSuffix, 0> {
+  let atomicOperation = opVal;
+}
+
+class InstAtomic_1Op_NoRet<string opName, bits<16> BrigVal,
+                           int opVal, HSAILProfile P,
+                           string typeSuffix> :
+  HSAILInstAtomic<
+    BrigVal,
+    (outs),
+    (ins BrigAtomicOperation:$op,
+         AddressSpace:$segment,
+         BrigMemoryOrder:$order,
+         BrigMemoryScope:$scope,
+         equiv:$equiv,
+         MEMOP:$address,
+         P.Src0RC:$src0,
+         BrigTypeX:$TypeLength),
+    opName#"$segment$order$scope$equiv$TypeLength\t$address, $src0"
+>, AtomicNoRet<opName#typeSuffix, 0> {
+  let atomicOperation = opVal;
+}
+
+class InstAtomic_2Op_NoRet<string opName, bits<16> BrigVal, int opVal,
+                           HSAILProfile P, string typeSuffix> :
   HSAILInstAtomic<
     BrigVal,
     (outs),
@@ -872,17 +954,17 @@ class InstAtomic_NoRet<string opName, bits<16> BrigVal, int opVal, HSAILProfile 
   let atomicOperation = opVal;
 }
 
-multiclass InstAtomic_NoRet_BitTypes<string opName, bits<16> BrigVal, int opVal> {
-  def _B32 : InstAtomic_NoRet<opName, BrigVal, opVal, Inst_Void_B32_B32, "_b32">;
-  def _B64 : InstAtomic_NoRet<opName, BrigVal, opVal, Inst_Void_B64_B64, "_b64">;
+multiclass InstAtomic_1Op_NoRet_BitTypes<string opName, bits<16> BrigVal, int opVal> {
+  def _B32 : InstAtomic_1Op_NoRet<opName, BrigVal, opVal, Inst_Void_B32, "_b32">;
+  def _B64 : InstAtomic_1Op_NoRet<opName, BrigVal, opVal, Inst_Void_B64, "_b64">;
 }
 
-multiclass InstAtomic_NoRet_IntTypes<string opName, bits<16> BrigVal, int opVal> {
-  def _S32 : InstAtomic_NoRet<opName, BrigVal, opVal, Inst_Void_S32_S32, "_s32">;
-  def _S64 : InstAtomic_NoRet<opName, BrigVal, opVal, Inst_Void_S64_S64, "_s64">;
+multiclass InstAtomic_1Op_NoRet_IntTypes<string opName, bits<16> BrigVal, int opVal> {
+  def _S32 : InstAtomic_1Op_NoRet<opName, BrigVal, opVal, Inst_Void_S32, "_s32">;
+  def _S64 : InstAtomic_1Op_NoRet<opName, BrigVal, opVal, Inst_Void_S64, "_s64">;
 
-  def _U32 : InstAtomic_NoRet<opName, BrigVal, opVal, Inst_Void_U32_U32, "_u32">;
-  def _U64 : InstAtomic_NoRet<opName, BrigVal, opVal, Inst_Void_U64_U64, "_u64">;
+  def _U32 : InstAtomic_1Op_NoRet<opName, BrigVal, opVal, Inst_Void_U32, "_u32">;
+  def _U64 : InstAtomic_1Op_NoRet<opName, BrigVal, opVal, Inst_Void_U64, "_u64">;
 }
 
 // InstCmp
@@ -1331,7 +1413,6 @@ class InstAddr_1Op_Pat<HSAILInst inst,
 // Atomic instruction patterns
 ////////////////////////////////////////////////////////////////////////////////
 
-// FIXME: Remove zero_reg usage
 class AtomicPat_0Op_Pat<HSAILInstAtomic inst, SDPatternOperator node,
                         ValueType vt, int bt> : Pat<
   (node (AtomicAddr AddressSpace:$segment,
@@ -1345,8 +1426,6 @@ class AtomicPat_0Op_Pat<HSAILInstAtomic inst, SDPatternOperator node,
             $scope,
             $equiv,
             MEMOP:$address,
-            (vt zero_reg),
-            (vt zero_reg),
             bt))
 >;
 
@@ -1365,7 +1444,6 @@ class AtomicPat_1Op_Pat<HSAILInstAtomic inst, SDPatternOperator node,
             $equiv,
             MEMOP:$address,
             $src0,
-            (vt zero_reg),
             bt))
 >;
 
@@ -1404,7 +1482,6 @@ class AtomicPat_1Op_NoRet_Pat<HSAILInstAtomic inst, SDPatternOperator node,
         $equiv,
         MEMOP:$address,
         vt:$src0,
-        (vt zero_reg),
         bt)
 >;
 
