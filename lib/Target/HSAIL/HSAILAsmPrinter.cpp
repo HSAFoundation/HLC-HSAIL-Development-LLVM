@@ -81,6 +81,25 @@ static StringRef getSegmentName(unsigned AS) {
   }
 }
 
+static bool isProgramLinkage(const GlobalValue &GV) {
+  switch (GV.getLinkage()) {
+  case GlobalValue::ExternalLinkage:
+  case GlobalValue::WeakAnyLinkage:
+  case GlobalValue::WeakODRLinkage:
+  case GlobalValue::AvailableExternallyLinkage:
+  case GlobalValue::ExternalWeakLinkage:
+  case GlobalValue::AppendingLinkage:
+    return true;
+
+  default:
+    return false;
+  }
+}
+
+static bool isModuleLinkage(const GlobalValue &GV) {
+  return !isProgramLinkage(GV);
+}
+
 void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
                                            const Argument &A,
                                            bool IsKernel,
@@ -422,7 +441,7 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   Type *InitTy = Ty->getElementType();
   unsigned AS = Ty->getAddressSpace();
 
-  if (GlobalValue::isExternalLinkage(GV->getLinkage()))
+  if (isProgramLinkage(*GV))
     O << "prog ";
 
   unsigned NElts = ~0u;
@@ -514,14 +533,18 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
     if (F.isIntrinsic())
       continue;
 
-    if (F.isDeclaration() && F.getLinkage() != GlobalValue::ExternalLinkage)
+    if (F.isDeclaration() && isModuleLinkage(F))
       continue;
 
     if (!HSAIL::isKernelFunc(&F)) {
       Str.clear();
       O.resync();
 
-      O << "decl prog ";
+      O << "decl ";
+
+      if (isProgramLinkage(F))
+        O << "prog ";
+
       EmitFunctionLabel(F, O, true);
       O << ";\n\n";
       OutStreamer.EmitRawText(O.str());
@@ -599,8 +622,11 @@ void HSAILAsmPrinter::EmitFunctionEntryLabel() {
   std::string FunStr;
   raw_string_ostream O(FunStr);
 
-  O << "prog ";
-  EmitFunctionLabel(*MF->getFunction(), O, false);
+  const Function *F = MF->getFunction();
+
+  if (isProgramLinkage(*F))
+    O << "prog ";
+  EmitFunctionLabel(*F, O, false);
   O << "\n{";
 
   OutStreamer.EmitRawText(O.str());
