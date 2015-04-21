@@ -346,7 +346,7 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
   if (NElts != 0)
     O << ')';
 
-  O << ";\n";
+  O << ';';
 
   for (const auto &VarInit : store.varInitAddresses()) {
     printInitVarWithAddressPragma(GV.getName(), VarInit.BaseOffset,
@@ -491,6 +491,8 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
         printGVInitialValue(*GV, Init, DL, O);
       }
     }
+  } else {
+    O << ';';
   }
 
   OutStreamer.EmitRawText(O.str());
