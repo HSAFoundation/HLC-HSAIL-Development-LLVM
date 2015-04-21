@@ -357,7 +357,12 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
     O << '\n';
 
   for (const auto &VarInit : store.varInitAddresses()) {
-    printInitVarWithAddressPragma(GV.getName(), VarInit.BaseOffset,
+    char Pre = getSymbolPrefixForAddressSpace(GV.getType()->getAddressSpace());
+    SmallString<128> Name;
+    Name += Pre;
+    Name += GV.getName();
+
+    printInitVarWithAddressPragma(Name, VarInit.BaseOffset,
                                   VarInit.Expr, EltSize, O);
   }
 
