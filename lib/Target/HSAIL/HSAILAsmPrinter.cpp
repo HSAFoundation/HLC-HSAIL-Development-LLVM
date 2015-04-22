@@ -112,7 +112,8 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
 
   if (NElts > 1) {
     unsigned ABIAlign = DL.getABITypeAlignment(Ty);
-    O << "align(" << ABIAlign << ") ";
+    if (ABIAlign != DL.getABITypeAlignment(EltTy))
+      O << "align(" << ABIAlign << ") ";
   }
 
   // TODO_HSA: Need to emit alignment information.
@@ -138,7 +139,8 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
 
   if (NElts > 1) {
     unsigned ABIAlign = DL.getABITypeAlignment(Ty);
-    O << "align(" << ABIAlign << ") ";
+    if (ABIAlign != DL.getABITypeAlignment(EltTy))
+      O << "align(" << ABIAlign << ") ";
   }
 
   O << (IsKernel ? "kernarg" : "arg")
