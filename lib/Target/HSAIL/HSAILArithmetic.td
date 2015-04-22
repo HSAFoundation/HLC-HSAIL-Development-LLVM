@@ -289,15 +289,6 @@ def : BitconvertMovPat<MOV_B32, i32, f32, BrigTypeX.B32>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // misc operations
-def : Pat <
-  (f32 (int_HSAIL_ftz_f32 f32:$src0)),
-  (ADD_F32 1, BrigRound.FLOAT_DEFAULT, $src0, (i32 0), BrigTypeX.F32)
->;
-
-def : Pat <
-  (f32 (int_HSAIL_mul_ftz_f32 f32:$src0)),
-  (MUL_F32 1, BrigRound.FLOAT_DEFAULT, $src0, (i32 0x3f800000), BrigTypeX.F32)
->;
 
 defm BITSELECT : InstBasic_3Op_BitTypes<"bitselect", BrigOpcode.BITSELECT>;
 defm : InstBasic_3Op_BitTypes_Pat<"BITSELECT", HSAILbitselect>;

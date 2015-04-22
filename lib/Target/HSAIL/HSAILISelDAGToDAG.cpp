@@ -77,8 +77,9 @@ public:
 private:
   SDNode *Select(SDNode *N) override;
 
-  SDNode* SelectINTRINSIC_W_CHAIN(SDNode *Node);
-  SDNode* SelectINTRINSIC_WO_CHAIN(SDNode *Node);
+  SDNode *SelectINTRINSIC_WO_CHAIN(SDNode *Node);
+  SDNode *SelectINTRINSIC_W_CHAIN(SDNode *Node);
+
   SDNode* SelectAtomic(SDNode *Node, bool bitwise, bool isSigned);
   SDNode* SelectImageIntrinsic(SDNode *Node);
   SDNode *SelectActiveLaneMask(SDNode *Node);
@@ -281,6 +282,40 @@ static unsigned getImageInstr(HSAILIntrinsic::ID intr)
     case HSAILIntrinsic::HSAIL_ld_imgui_3d_u32: return HSAIL::ld_imgui_3d_u32;
     case HSAILIntrinsic::HSAIL_ld_imgf_2ddepth_u32: return HSAIL::ld_imgf_2ddepth_u32;
     case HSAILIntrinsic::HSAIL_ld_imgf_2dadepth_u32: return HSAIL::ld_imgf_2dadepth_u32;
+  }
+}
+
+SDNode *HSAILDAGToDAGISel::SelectINTRINSIC_WO_CHAIN(SDNode *Node) {
+  unsigned IntID = cast<ConstantSDNode>(Node->getOperand(0))->getZExtValue();
+  switch (IntID) {
+  case HSAILIntrinsic::HSAIL_ftz_f32: {
+    // This is a workaround for not being able to create fpimm in an output
+    // pattern.
+    const SDValue Ops[] = {
+      CurDAG->getTargetConstant(1, MVT::i1),                         // ftz
+      CurDAG->getTargetConstant(BRIG_ROUND_FLOAT_DEFAULT, MVT::i32), // round
+      Node->getOperand(1),                                           // src0
+      CurDAG->getConstantFP(0.0, MVT::f32),                          // src1
+      CurDAG->getTargetConstant(BRIG_TYPE_F32, MVT::i32)           // TypeLength
+    };
+
+    return CurDAG->SelectNodeTo(Node, HSAIL::ADD_F32, MVT::f32, Ops);
+  }
+  case HSAILIntrinsic::HSAIL_mul_ftz_f32: {
+    // This is a workaround for not being able to create fpimm in an output
+    // pattern.
+    const SDValue Ops[] = {
+      CurDAG->getTargetConstant(1, MVT::i1),                         // ftz
+      CurDAG->getTargetConstant(BRIG_ROUND_FLOAT_DEFAULT, MVT::i32), // round
+      Node->getOperand(1),                                           // src0
+      CurDAG->getConstantFP(BitsToFloat(0x3f800000), MVT::f32),      // src1
+      CurDAG->getTargetConstant(BRIG_TYPE_F32, MVT::i32)           // TypeLength
+    };
+
+    return CurDAG->SelectNodeTo(Node, HSAIL::MUL_F32, MVT::f32, Ops);
+  }
+  default:
+    return SelectCode(Node);
   }
 }
 
@@ -685,6 +720,9 @@ HSAILDAGToDAGISel::Select(SDNode *Node)
     ResNode = CurDAG->SelectNodeTo(Node, Opcode, PtrVT, Ops);
     break;
   }
+  case ISD::INTRINSIC_WO_CHAIN:
+    ResNode = SelectINTRINSIC_WO_CHAIN(Node);
+    break;
   case ISD::INTRINSIC_W_CHAIN:
     ResNode = SelectINTRINSIC_W_CHAIN(Node);
     break;
