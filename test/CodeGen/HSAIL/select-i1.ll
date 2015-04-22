@@ -2,8 +2,8 @@
 
 ; FUNC-LABEL: {{^}}prog function &select_i1
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[COND:\$s[0-9]+]], [%cond];
-; HSAIL-DAG: ld_arg_align(4)_u32 [[A:\$s[0-9]+]], [%a];
-; HSAIL-DAG: ld_arg_align(4)_u32 [[B:\$s[0-9]+]], [%b];
+; HSAIL-DAG: ld_arg_u8 [[A:\$s[0-9]+]], [%a];
+; HSAIL-DAG: ld_arg_u8 [[B:\$s[0-9]+]], [%b];
 
 ; HSAIL-DAG: cvt_b1_u32 [[CVTA:\$c[0-9]+]], [[A]];
 ; HSAIL-DAG: cvt_b1_u32 [[CVTB:\$c[0-9]+]], [[B]];

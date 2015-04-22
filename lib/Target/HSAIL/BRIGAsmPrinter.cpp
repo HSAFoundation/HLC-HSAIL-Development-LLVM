@@ -1162,11 +1162,9 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
   reg32Counter = 0;
   reg64Counter = 0;
 
-  // Handle bit return as DWORD
-  if (type->getScalarType()->isIntegerTy(1)) {
-    assert(!type->isVectorTy() && "i1 vectors do not work");
-    type = Type::getInt32Ty(type->getContext());
-  }
+  assert((!type->isVectorTy() ||
+          !type->getScalarType()->isIntegerTy(1)) &&
+         "i1 vectors do not work");
 
   const DataLayout &DL = getDataLayout();
 
@@ -1225,12 +1223,9 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
   } else {
     const DataLayout &DL = getDataLayout();
 
-    // Handle bit argument as DWORD
-    // FIXME: This is incorrect.
-    if (type->getScalarType()->isIntegerTy(1)) {
-      assert(!type->isVectorTy() && "i1 vectors are broken");
-      type = Type::getInt32Ty(type->getContext());
-    }
+    assert((!type->isVectorTy() ||
+            !type->getScalarType()->isIntegerTy(1)) &&
+           "i1 vectors are broken");
 
     unsigned NElts = ~0u;
     Type *EmitTy = analyzeType(type, NElts, DL, type->getContext());

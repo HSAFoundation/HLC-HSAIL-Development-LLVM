@@ -27,7 +27,7 @@ define void @store_i1_cmp(i1 addrspace(1)* %out, i32 %a) {
 
 ; FIXME: This should be using ld_arg_u8
 ; FUNC-LABEL: {{^}}prog function &store_i1_arg
-; HSAIL-DAG: ld_arg_align(4)_u32 [[ARG:\$s[0-9]+]], [%arg];
+; HSAIL-DAG: ld_arg_u8 [[ARG:\$s[0-9]+]], [%arg];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
 ; HSAIL-DAG: and_b32 [[REG:\$s[0-9]+]], [[ARG]], 1;
 ; HSAIL: st_global_u8 [[REG]], {{\[}}[[OUT]]{{\]}}

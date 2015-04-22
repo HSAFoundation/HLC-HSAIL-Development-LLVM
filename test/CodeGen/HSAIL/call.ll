@@ -47,13 +47,12 @@ define i64 @test_call_no_args_ret_i64() #0 {
   ret i64 %ret
 }
 
-; FIXME: This should be using u8
 ; HSAIL-LABEL{{^}}prog function &test_call_no_args_ret_i1(
 ; HSAIL: {
 ; HSAIL: {
-; HSAIL-NEXT: arg_u32 %extern.i1;
+; HSAIL-NEXT: arg_u8 %extern.i1;
 ; HSAIL-NEXT: call &extern.i1 (%extern.i1) ();
-; HSAIL-NEXT: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%extern.i1];
+; HSAIL-NEXT: ld_arg_u8 {{\$s[0-9]+}}, [%extern.i1];
 ; HSAIL-NEXT: }
 ; HSAIL: and_b32 {{\$s[0-9]+}}, {{\$s[0-9]+}}, 1;
 ; HSAIL: }
@@ -140,13 +139,12 @@ define void @test_call_i16_arg(i16 %x) #0 {
   ret void
 }
 
-; FIXME: Should use u8
 ; HSAIL-LABEL{{^}}prog function &test_call_i1_arg(
 ; HSAIL: {
 ; HSAIL: and_b32 {{\$s[0-9]+}}, {{\$s[0-9]+}}, 1;
 ; HSAIL: {
-; HSAIL-NEXT: arg_u32 %x;
-; HSAIL-NEXT: st_arg_align(4)_u32 {{\$s[0-9]+}}, [%x];
+; HSAIL-NEXT: arg_u8 %x;
+; HSAIL-NEXT: st_arg_u8 {{\$s[0-9]+}}, [%x];
 ; HSAIL-NEXT: call &extern.argi1 () (%x);
 ; HSAIL-NEXT: }
 ; HSAIL: }

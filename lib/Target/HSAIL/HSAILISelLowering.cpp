@@ -615,11 +615,9 @@ SDValue HSAILTargetLowering::getArgLoad(SelectionDAG &DAG,
   //           we would need to inhibit alignment calculation in that case.
   Offset += DL->getTypeStoreSize(EltTy) * Index;
 
-  if (ArgVT == MVT::i1) {
-    // FIXME: Remove this
-    ArgVT = MVT::i32; // Handle a bit as DWORD;
-    Ty = EltTy = Type::getInt32Ty(Ty->getContext());
-  }
+  EVT MemVT = ArgVT;
+  if (ArgVT == MVT::i1)
+    MemVT = MVT::i8;
 
   if (!Ptr && AddressSpace == HSAILAS::KERNARG_ADDRESS) {
     // If the argument symbol is unknown, generate a kernargbaseptr instruction.
@@ -653,18 +651,30 @@ SDValue HSAILTargetLowering::getArgLoad(SelectionDAG &DAG,
   if (!InFlag)
     OpsArr = OpsArr.drop_back(1);
 
-  EVT VT = (ArgVT.getStoreSize() < 4) ? MVT::i32 : ArgVT;
+  EVT VT = (MemVT.getStoreSize() < 4) ? MVT::i32 : ArgVT;
   SDVTList VTs = DAG.getVTList(VT, MVT::Other, MVT::Glue);
 
   MachinePointerInfo PtrInfo(UndefValue::get(ArgPT), Offset);
 
-  return DAG.getMemIntrinsicNode(HSAILISD::ARG_LD, SL, VTs,
-                                 OpsArr, ArgVT, PtrInfo,
-                                 Align,
-                                 false, // isVolatile
-                                 true,  // ReadMem
-                                 false, // WriteMem
-                                 ArgVT.getStoreSize()); // Size
+  SDValue Arg = DAG.getMemIntrinsicNode(HSAILISD::ARG_LD, SL, VTs,
+                                        OpsArr, MemVT, PtrInfo,
+                                        Align,
+                                        false, // isVolatile
+                                        true,  // ReadMem
+                                        false, // WriteMem
+                                        MemVT.getStoreSize()); // Size
+
+  if (ArgVT == MVT::i1) {
+    const SDValue Ops[] = {
+      DAG.getNode(ISD::TRUNCATE, SL, MVT::i1, Arg),
+      Arg.getValue(1),
+      Arg.getValue(2)
+    };
+
+    return DAG.getMergeValues(Ops, SL);
+  }
+
+  return Arg;
 }
 
 SDValue HSAILTargetLowering::getArgStore(SelectionDAG &DAG, SDLoc SL,
@@ -690,11 +700,11 @@ SDValue HSAILTargetLowering::getArgStore(SelectionDAG &DAG, SDLoc SL,
   //           we would need to inhibit alignment calculation in that case.
   Offset += DL->getTypeStoreSize(EltTy) * Index;
 
+  EVT MemVT = ArgVT;
+
   if (ArgVT == MVT::i1) {
-    // FIXME: Remove this.
-    ArgVT = MVT::i32; // Handle a bit as DWORD;
-    Ty = EltTy = Type::getInt32Ty(Ty->getContext());
-    Value = DAG.getZExtOrTrunc(Value, SL, MVT::i32);
+    MemVT = MVT::i8;
+    Value = DAG.getNode(ISD::ZERO_EXTEND, SL, MVT::i32, Value);
   }
 
   SDValue PtrOffs = DAG.getNode(ISD::ADD, SL, PtrVT, Ptr,
@@ -723,11 +733,11 @@ SDValue HSAILTargetLowering::getArgStore(SelectionDAG &DAG, SDLoc SL,
   MachinePointerInfo PtrInfo(UndefValue::get(ArgPT), Offset);
 
   return DAG.getMemIntrinsicNode(HSAILISD::ARG_ST, SL, VTs, OpsArr,
-                                 ArgVT, PtrInfo, Align,
+                                 MemVT, PtrInfo, Align,
                                  false, // isVolatile
                                  false, // ReadMem
                                  true,  // WriteMem
-                                 ArgVT.getStoreSize());
+                                 MemVT.getStoreSize());
 }
 
 /// Recursively lower a single argument or its element.
@@ -889,6 +899,11 @@ HSAILTargetLowering::LowerFormalArguments(SDValue Chain,
   return Chain;
 }
 
+static BrigType getParamBrigType(Type *Ty, const DataLayout &DL, bool IsSExt) {
+  BrigType BT = HSAIL::getBrigType(Ty, DL, IsSExt);
+  return (BT == BRIG_TYPE_B1) ? BRIG_TYPE_U8 : BT;
+}
+
 /// LowerCall - This hook must be implemented to lower calls into the
 /// the specified DAG. The outgoing arguments to the call are described
 /// by the Outs array, and the values to be returned by the call are
@@ -942,16 +957,12 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   Type *retType = funcType->getReturnType();
   SDValue RetValue;
   if (retType->getTypeID() != Type::VoidTyID) {
-    if (retType->isIntegerTy(1)) // Handle bit as DWORD
-      retType = Type::getInt32Ty(retType->getContext());
     RetValue = DAG.getTargetExternalSymbol(PM.getParamName(
       PM.addCallRetParam(retType, PM.mangleArg(&Mang, FuncName))),
       getPointerTy(HSAILAS::ARG_ADDRESS));
 
-    unsigned BrigType = (unsigned) HSAIL::getBrigType(retType, *DL, CLI.RetSExt);
-    if (BrigType == BRIG_TYPE_B1)
-      BrigType = BRIG_TYPE_U32; // Store bit as DWORD
-    SDValue SDBrigType =  DAG.getTargetConstant(BrigType, MVT::i32);
+    BrigType BT = getParamBrigType(retType, *DL, CLI.RetSExt);
+    SDValue SDBrigType =  DAG.getTargetConstant(BT, MVT::i32);
     SDValue arrSize = DAG.getTargetConstant(
       HSAIL::getNumElementsInHSAILType(retType, *DL), MVT::i32);
 
@@ -985,8 +996,6 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   for(FunctionType::param_iterator pb = funcType->param_begin(),
     pe = funcType->param_end(); pb != pe; ++pb, ++ai, ++k) {
     Type *type = *pb;
-    if (type->isIntegerTy(1)) // Handle bit as DWORD
-      type = Type::getInt32Ty(type->getContext());
     EVT VT = Outs[j].VT;
 
     std::string ParamName;
@@ -1002,11 +1011,8 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
       getPointerTy(HSAILAS::ARG_ADDRESS));
 
     // START array parameter declaration
-    unsigned BrigType
-      = (unsigned) HSAIL::getBrigType(type, *DL, Outs[j].Flags.isSExt());
-    if (BrigType == BRIG_TYPE_B1)
-      BrigType = BRIG_TYPE_U32; // Store bit as DWORD
-    SDValue SDBrigType =  DAG.getTargetConstant(BrigType, MVT::i32);
+    BrigType BT = getParamBrigType(type, *DL, Outs[j].Flags.isSExt());
+    SDValue SDBrigType =  DAG.getTargetConstant(BT, MVT::i32);
     SDValue arrSize =  DAG.getTargetConstant(
       HSAIL::getNumElementsInHSAILType(type, *DL), MVT::i32);
 
@@ -1033,9 +1039,6 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   for(FunctionType::param_iterator pb = funcType->param_begin(),
     pe = funcType->param_end(); pb != pe; ++pb, ++k) {
     Type *type = *pb;
-    if (type->isIntegerTy(1)) // Handle bit as DWORD
-      type = Type::getInt32Ty(type->getContext());
-
     Chain = LowerArgument(Chain, InFlag, true, NULL, &Outs, dl, DAG, NULL, j,
                           type, HSAILAS::ARG_ADDRESS, NULL,
                           VarOps[FirstArg + k], &OutVals);
