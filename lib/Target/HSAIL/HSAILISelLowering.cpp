@@ -1809,13 +1809,11 @@ HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
     // First, do 8 bit load into 32 bits with sign extension, then
     // truncate to 1 bit.
     LoadSDNode *LD = cast<LoadSDNode>(Op);
-    SDValue Chain = LD->getChain();
-    SDValue BasePtr = LD->getBasePtr();
-    MachineMemOperand *MMO = LD->getMemOperand();
-
-    SDValue NewLD = DAG.getExtLoad(ISD::SEXTLOAD, dl,
-                     MVT::i32, Chain, BasePtr, MMO->getPointerInfo(), MVT::i8,
-                     LD->isVolatile(),  LD->isNonTemporal(), LD->isInvariant(), 0);
+    SDValue NewLD = DAG.getExtLoad(ISD::ZEXTLOAD, dl, MVT::i32,
+                                   LD->getChain(),
+                                   LD->getBasePtr(),
+                                   MVT::i8,
+                                   LD->getMemOperand());
 
     SDValue Result = DAG.getNode(ISD::TRUNCATE, dl, MVT::i1, NewLD);
     SDValue Ops[] = {

@@ -53,3 +53,14 @@ define void @sextload_i1_to_i64(i64 addrspace(1)* %out, i1 addrspace(1)* %in) {
   store i64 %tmp2, i64 addrspace(1)* %out
   ret void
 }
+
+; FUNC-LABEL: {{^}}prog function &load_i1(
+; HSAIL: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
+; HSAIL: ld_global_u8 [[VAL:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};
+; HSAIL: st_global_u8 [[VAL]]
+; HSAIL: ret;
+define void @load_i1(i1 addrspace(1)* %out, i1 addrspace(1)* %in) {
+  %tmp1 = load i1 addrspace(1)* %in, align 1
+  store i1 %tmp1, i1 addrspace(1)* %out
+  ret void
+}
