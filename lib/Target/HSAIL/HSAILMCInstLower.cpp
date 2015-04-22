@@ -23,9 +23,9 @@
 
 using namespace llvm;
 
-HSAILMCInstLower::HSAILMCInstLower(MCContext &ctx, const HSAILSubtarget &st):
-  Ctx(ctx)
-{ }
+HSAILMCInstLower::HSAILMCInstLower(MCContext &ctx, const HSAILAsmPrinter &ap):
+  Ctx(ctx),
+  AP(ap) { }
 
 void HSAILMCInstLower::lower(const MachineInstr *MI, MCInst &OutMI) const {
 
@@ -59,12 +59,17 @@ void HSAILMCInstLower::lower(const MachineInstr *MI, MCInst &OutMI) const {
       break;
     case MachineOperand::MO_GlobalAddress: {
       const GlobalValue *GV = MO.getGlobal();
-      MCSymbol *Sym = Ctx.GetOrCreateSymbol(StringRef(GV->getName()));
+
+      SmallString<256> Name;
+      AP.getHSAILMangledName(Name, GV);
+
+      MCSymbol *Sym = Ctx.GetOrCreateSymbol(Name);
+
       MCOp = MCOperand::CreateExpr(MCSymbolRefExpr::Create(Sym, Ctx));
       break;
     }
     case MachineOperand::MO_ExternalSymbol: {
-      MCSymbol *Sym = Ctx.GetOrCreateSymbol(StringRef(MO.getSymbolName()));
+      MCSymbol *Sym = Ctx.GetOrCreateSymbol(Twine('%') +  MO.getSymbolName());
       MCOp = MCOperand::CreateExpr(MCSymbolRefExpr::Create(Sym, Ctx));
       break;
     }
@@ -78,8 +83,7 @@ void HSAILMCInstLower::lower(const MachineInstr *MI, MCInst &OutMI) const {
 }
 
 void HSAILAsmPrinter::EmitInstruction(const MachineInstr *MI) {
-  HSAILMCInstLower MCInstLowering(OutContext,
-                               MF->getTarget().getSubtarget<HSAILSubtarget>());
+  HSAILMCInstLower MCInstLowering(OutContext, *this);
 
   MCInst TmpInst;
   MCInstLowering.lower(MI, TmpInst);

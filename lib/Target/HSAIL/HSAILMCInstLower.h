@@ -13,17 +13,17 @@
 
 namespace llvm {
 
-class HSAILSubtarget;
+class HSAILAsmPrinter;
 class MachineInstr;
 class MCContext;
 class MCInst;
 
 class HSAILMCInstLower {
-
   MCContext &Ctx;
+  const HSAILAsmPrinter &AP;
 
 public:
-  HSAILMCInstLower(MCContext &ctx, const HSAILSubtarget &ST);
+  HSAILMCInstLower(MCContext &Ctx, const HSAILAsmPrinter &AP);
 
   /// \brief Lower a MachineInstr to an MCInst
   void lower(const MachineInstr *MI, MCInst &OutMI) const;

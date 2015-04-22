@@ -66,7 +66,6 @@ private:
                            const Constant *CV,
                            const DataLayout &DL,
                            raw_ostream &O);
-
 protected:
   // Returns the type to use when expressing the type in HSAIL. If this will be
   // expressed as an HSAIL array, set NElts to the number of elements, otherwise
@@ -74,8 +73,6 @@ protected:
   static Type *analyzeType(Type *Ty,
                            unsigned &NElts,
                            const DataLayout &DL);
-
-  void getHSAILMangledName(SmallString<256> &Out, const GlobalValue *GV) const;
 
 public:
   explicit HSAILAsmPrinter(TargetMachine &TM, MCStreamer &Streamer);
@@ -87,6 +84,7 @@ public:
     return "HSAIL Assembly Printer";
   }
 
+  void getHSAILMangledName(SmallString<256> &Out, const GlobalValue *GV) const;
   void EmitGlobalVariable(const GlobalVariable *GV) override;
   void EmitStartOfAsmFile(Module &) override;
   void EmitFunctionEntryLabel() override;
