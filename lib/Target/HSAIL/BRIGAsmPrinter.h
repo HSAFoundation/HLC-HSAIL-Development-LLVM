@@ -59,13 +59,6 @@ class LLVM_LIBRARY_VISIBILITY BRIGAsmPrinter : public HSAILAsmPrinter {
   unsigned retValCounter;
   unsigned paramCounter;
 
-  // Do counting for 1-bit, 32-bit, and 64-bit parameters or returned
-  // values in a function call and be cleared at every call site
-  // twice---one for parameters and the other for returned values
-  unsigned reg1Counter;
-  unsigned reg32Counter;
-  unsigned reg64Counter;
-
   const DataLayout &getDataLayout() const {
     return *Subtarget->getDataLayout();
   }
@@ -261,8 +254,6 @@ private:
 
   std::string getHSAILArgType( Type* type,
                               HSAIL_ARG_TYPE arg_type = ARG_TYPE_NONE);
-  std::string getHSAILReg(Type* type);
-
   BrigSegment8_t getHSAILSegment(unsigned AddressSpace) const;
   BrigSegment8_t getHSAILSegment(const GlobalVariable* gv) const;
 

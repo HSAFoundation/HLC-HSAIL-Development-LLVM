@@ -234,9 +234,6 @@ BRIGAsmPrinter::BRIGAsmPrinter(TargetMachine& TM, MCStreamer &Streamer)
     FuncRetValStr(),
     retValCounter(0),
     paramCounter(0),
-    reg1Counter(0),
-    reg32Counter(0),
-    reg64Counter(0),
     mTM(reinterpret_cast<HSAILTargetMachine*>(&TM)),
     TII(Subtarget->getInstrInfo()),
     mMeta(new HSAILKernelManager(mTM)),
@@ -433,9 +430,6 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &rF,
   if (funcType) {
     // Loop through all of the parameters and emit the types and
     // corresponding names.
-    reg1Counter = 0;
-    reg32Counter = 0;
-    reg64Counter = 0;
     Function::const_arg_iterator ai = F->arg_begin();
     Function::const_arg_iterator ae = F->arg_end();
     unsigned n = 1;
@@ -1158,9 +1152,6 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
   SymName += RetName;
 
   HSAIL_ASM::SRef ret(SymName);
-  reg1Counter = 0;
-  reg32Counter = 0;
-  reg64Counter = 0;
 
   assert((!type->isVectorTy() ||
           !type->getScalarType()->isIntegerTy(1)) &&
@@ -1281,9 +1272,6 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
   if (funcType) {
     // Loop through all of the parameters and emit the types and
     // corresponding names.
-    reg1Counter = 0;
-    reg32Counter = 0;
-    reg64Counter = 0;
     paramCounter = 0;
 
     // clear arguments mapping
@@ -1319,26 +1307,6 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
 
   // DO NOT need to call endFunc() here it'll be called later on
   // in EmitFunctionBodyEnd().
-}
-
-std::string BRIGAsmPrinter::getHSAILReg(Type* type) {
-  std::stringstream stream;
-
-  switch (getDataLayout().getTypeSizeInBits(type)) {
-  case 32:
-    stream << "$s" << reg32Counter++;
-    break;
-  case 64:
-    stream << "$d" << reg64Counter++;
-    break;
-  case 1:
-    stream << "$c" << reg1Counter++;
-    break;
-  default:
-    llvm_unreachable("Unhandled type size for register");
-  }
-
-  return stream.str();
 }
 
 //===------------------------------------------------------------------===//
