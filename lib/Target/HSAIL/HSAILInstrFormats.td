@@ -17,13 +17,14 @@
 class HSAILInst<dag outs, dag ins,
                 string asmstr,
                 list<dag> pattern,
-                bits<16> BrigVal = 0>
+                bits<16> BrigVal = 0,
+                bit appendSemicolon = 1>
   : Instruction {
   field bits<32> Inst;
   let Namespace = "HSAIL";
   dag OutOperandList = outs;
   dag InOperandList = ins;
-  let AsmString   = !strconcat(asmstr, ";");
+  let AsmString = !if(appendSemicolon, !strconcat(asmstr, ";"), asmstr);
   let Pattern = pattern;
 
   let UseNamedOperandTable = 1;

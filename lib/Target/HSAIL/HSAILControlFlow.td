@@ -15,15 +15,19 @@ let isNotDuplicable = 1, hasSideEffects = 1 in {
   def ARG_SCOPE_START : HSAILInst<
     (outs),
     (ins i32imm:$src0),
-    "; begin of call sequence $src0",
-    [(IL_callseq_start timm:$src0)]
+    "\\{",
+    [(IL_callseq_start timm:$src0)],
+    0,
+    0
   >;
 
   def ARG_SCOPE_END : HSAILInst<
     (outs),
     (ins i32imm:$src0, i32imm:$src1),
-    "; end of call sequence $src0 $src1",
-    [(IL_callseq_end timm:$src0, timm:$src1)]
+    "\\}",
+    [(IL_callseq_end timm:$src0, timm:$src1)],
+    0,
+    0
   >;
 }
 
