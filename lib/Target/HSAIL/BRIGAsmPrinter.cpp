@@ -1167,7 +1167,7 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
   if (NElts != 0) {
     retParam = brigantine.addArrayVariable(
       ret,
-      HSAIL::getNumElementsInHSAILType(type, getDataLayout()),
+      NElts,
       BRIG_SEGMENT_ARG,
       HSAIL::getBrigType(EmitTy, getDataLayout(), isSExt));
   } else {
