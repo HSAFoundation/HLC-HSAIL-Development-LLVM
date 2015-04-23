@@ -323,15 +323,31 @@ bool notUsedInKernel(const GlobalVariable *GV)
 
 bool sanitizedGlobalValueName(StringRef Name, SmallVectorImpl<char> &Out) {
   // Poor man's regexp check.
-  static const StringRef Syntax("abcdefghijklmnopqrstuvwxyz"
-          "_"
-          "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-          "0123456789");
+  static const StringRef Syntax(
+    "abcdefghijklmnopqrstuvwxyz"
+    "_."
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "0123456789");
+
+  static const StringRef FirstCharSyntax(
+    "abcdefghijklmnopqrstuvwxyz"
+    "_"
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
   static const StringRef Digits("0123456789");
 
   SmallString<32> NewName;
+
+  // The second character (after the prefix) of an identifier must must be a
+  // letter or underscore.
+  if (FirstCharSyntax.find(Name[0]) == StringRef::npos) {
+    NewName += '_';
+    Name = Name.drop_front(1);
+  }
+
   size_t p = 0;
   size_t q = 0;
+
   while (q != StringRef::npos) {
     q = Name.find_first_not_of(Syntax, p);
     // If q == p, the character at p itself violates the syntax.
@@ -375,7 +391,7 @@ bool sanitizeGlobalValueName(GlobalValue *GV) {
   if (sanitizedGlobalValueName(GV->getName(), NewName)) {
     // Add prefix to show that the name was replaced by HSA.
     // LLVM's setName adds seq num in case of name duplicating.
-    GV->setName(Twine("__hsa_replaced_") + StringRef(NewName));
+    GV->setName(Twine("__hsa_replaced_") + Twine(NewName));
     return true;
   }
 
