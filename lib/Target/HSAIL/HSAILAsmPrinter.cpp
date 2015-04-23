@@ -317,7 +317,10 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
                                           const DataLayout &DL,
                                           raw_ostream &O) {
   if (const ConstantInt *CI = dyn_cast<ConstantInt>(CV)) {
-    O << CI->getValue() << ';';
+    if (CI->getType()->isIntegerTy(1))
+      O << (CI->getZExtValue() ? '1' : '0') << ';';
+    else
+      O << CI->getValue() << ';';
     return;
   }
 
