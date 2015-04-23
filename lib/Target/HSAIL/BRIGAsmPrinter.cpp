@@ -533,17 +533,6 @@ void BRIGAsmPrinter::EmitSamplerDefs() {
   }
 }
 
-bool BRIGAsmPrinter::isMacroFunc(const MachineInstr *MI) {
-  if (MI->getOpcode() != HSAIL::TARGET_CALL) {
-    return false;
-  }
-  const llvm::StringRef &nameRef = MI->getOperand(0).getGlobal()->getName();
-  if (nameRef.startswith("barrier")) {
-    return true;
-  }
-  return false;
-}
-
 void BRIGAsmPrinter::emitMacroFunc(const MachineInstr *MI, raw_ostream &O) {
   llvm::StringRef nameRef;
   nameRef = MI->getOperand(0).getGlobal()->getName();
@@ -712,55 +701,48 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     brigantine.endArgScope();
     return HSAIL_ASM::Inst();
 
-  case HSAIL::TARGET_CALL:
-    if (isMacroFunc(II)) {
-      // TODO_HSA: SINCE THE 'barrier' ONLY IS CURRENTLY HANDLED WE'll SUPPORT THIS LATER
-#if 0
-      emitMacroFunc(II, O);
-#endif
-     return HSAIL_ASM::Inst();
-    } else {
-      MachineInstr::const_mop_iterator oi = II->operands_begin();
-      MachineInstr::const_mop_iterator oe = II->operands_end();
-      const GlobalValue *gv = (oi++)->getGlobal();;
+  case HSAIL::TARGET_CALL: {
+    MachineInstr::const_mop_iterator oi = II->operands_begin();
+    MachineInstr::const_mop_iterator oe = II->operands_end();
+    const GlobalValue *gv = (oi++)->getGlobal();;
 
-      // Place a call
-      HSAIL_ASM::InstBr call = brigantine.addInst<HSAIL_ASM::InstBr>(
-                                 BRIG_OPCODE_CALL, BRIG_TYPE_NONE);
-      call.width() = BRIG_WIDTH_ALL;
+    // Place a call
+    HSAIL_ASM::InstBr call = brigantine.addInst<HSAIL_ASM::InstBr>(
+      BRIG_OPCODE_CALL, BRIG_TYPE_NONE);
+    call.width() = BRIG_WIDTH_ALL;
 
-      HSAIL_ASM::ItemList ret_list;
-      for (; oi != oe && oi->isSymbol() ; ++oi) {
-        std::string ret("%");
-        ret += oi->getSymbolName();
-        ret_list.push_back(
-          brigantine.findInScopes<HSAIL_ASM::DirectiveVariable>(ret));
+    HSAIL_ASM::ItemList ret_list;
+    for (; oi != oe && oi->isSymbol() ; ++oi) {
+      std::string ret("%");
+      ret += oi->getSymbolName();
+      ret_list.push_back(
+        brigantine.findInScopes<HSAIL_ASM::DirectiveVariable>(ret));
+    }
+
+    // Return value and argument symbols are delimited with a 0 value.
+    assert((oi->isImm() && (oi->getImm() == 0)) ||
+           !"Unexpected target call instruction operand list!");
+
+    HSAIL_ASM::ItemList call_paramlist;
+    for (++oi; oi != oe; ++oi) {
+      if (oi->isSymbol()) {
+        std::string op("%");
+        op += oi->getSymbolName();
+        call_paramlist.push_back(
+          brigantine.findInScopes<HSAIL_ASM::DirectiveVariable>(op));
+      } else {
+        llvm_unreachable("Unexpected target call instruction operand list!");
       }
+    }
 
-      // Return value and argument symbols are delimited with a 0 value.
-      assert((oi->isImm() && (oi->getImm() == 0)) ||
-             !"Unexpected target call instruction operand list!");
+    m_opndList.push_back(
+      brigantine.createCodeList(ret_list));
+    m_opndList.push_back(
+      brigantine.createExecutableRef(std::string("&") + gv->getName().str()));
+    m_opndList.push_back(
+      brigantine.createCodeList(call_paramlist));
 
-      HSAIL_ASM::ItemList call_paramlist;
-      for (++oi; oi != oe; ++oi) {
-        if (oi->isSymbol()) {
-          std::string op("%");
-          op += oi->getSymbolName();
-          call_paramlist.push_back(
-            brigantine.findInScopes<HSAIL_ASM::DirectiveVariable>(op));
-        } else {
-          llvm_unreachable("Unexpected target call instruction operand list!");
-        }
-      }
-
-      m_opndList.push_back(
-        brigantine.createCodeList(ret_list));
-      m_opndList.push_back(
-        brigantine.createExecutableRef(std::string("&") + gv->getName().str()));
-      m_opndList.push_back(
-        brigantine.createCodeList(call_paramlist));
-
-      return call;
+    return call;
   }
   case HSAIL::ARG_DECL:
     BrigEmitVecArgDeclaration(II);
