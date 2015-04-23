@@ -96,14 +96,6 @@ public:
   virtual void EmitFunctionEntryLabel();
 
   bool doFinalization(Module &M);
-
-  //===------------------------------------------------------------------===//
-  // Dwarf Emission Helper Routines
-  //===------------------------------------------------------------------===//
-
-  /// Get the value for DW_AT_APPLE_isa. Zero if no isa encoding specified.
-  virtual unsigned getISAEncoding();
-
 public:
 
   bool runOnMachineFunction(MachineFunction &F);

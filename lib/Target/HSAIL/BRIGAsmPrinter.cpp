@@ -1295,12 +1295,6 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
 // Dwarf Emission Helper Routines
 //===------------------------------------------------------------------===//
 
-/// getISAEncoding - Get the value for DW_AT_APPLE_isa. Zero if no isa
-/// encoding specified.
-unsigned BRIGAsmPrinter::getISAEncoding() {
-  return 0;
-}
-
 /// Returns true and the offset of %privateStack BRIG variable, or false
 /// if there is no local stack
 bool BRIGAsmPrinter::getPrivateStackOffset(uint64_t *privateStackOffset) const {
