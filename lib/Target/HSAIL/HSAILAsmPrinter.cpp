@@ -425,11 +425,13 @@ Type *HSAILAsmPrinter::analyzeType(Type *Ty,
   return Ty;
 }
 
+// FIXME: Mostly duplicated in BRIGAsmPrinter
 static void printAlignTypeQualifier(const GlobalValue &GV,
                                     const DataLayout& DL,
                                     Type *InitTy,
                                     Type *EmitTy,
                                     unsigned NElts,
+                                    bool IsLocal,
                                     raw_ostream &O) {
   unsigned Alignment = GV.getAlignment();
   if (Alignment == 0)
@@ -437,11 +439,15 @@ static void printAlignTypeQualifier(const GlobalValue &GV,
   else {
     // If an alignment is specified, it must be equal to or greater than the
     // variable's natural alignment.
-    Alignment = std::max(Alignment, DL.getABITypeAlignment(EmitTy));
+    unsigned NaturalAlign = IsLocal ?
+      DL.getPrefTypeAlignment(EmitTy) :
+      DL.getABITypeAlignment(EmitTy);
+
+    Alignment = std::max(Alignment, NaturalAlign);
   }
 
   // Align arrays at least by 4 bytes
-  if (Alignment == 1 && NElts != 0)
+  if (Alignment < 4 && NElts != 0)
     Alignment = 4;
 
   if (Alignment != DL.getABITypeAlignment(EmitTy))
@@ -470,7 +476,7 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   unsigned NElts = ~0u;
   Type *EmitTy = analyzeType(InitTy, NElts, DL, GV->getContext());
 
-  printAlignTypeQualifier(*GV, DL, InitTy, EmitTy, NElts, O);
+  printAlignTypeQualifier(*GV, DL, InitTy, EmitTy, NElts, false, O);
 
   O << getSegmentName(AS) << '_' << getArgTypeName(EmitTy) << " &" << GVname;
 
@@ -698,9 +704,9 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
 
         Type *InitTy = Ty->getElementType();
 
-        unsigned NElts = 1;
+        unsigned NElts = ~0u;
         Type *EmitTy = analyzeType(InitTy, NElts, DL, M->getContext());
-        printAlignTypeQualifier(GV, DL, InitTy, EmitTy, NElts, O);
+        printAlignTypeQualifier(GV, DL, InitTy, EmitTy, NElts, true, O);
 
         O << getSegmentName(AS) << '_' << getArgTypeName(EmitTy)
           << " %" << GV.getName();
@@ -758,7 +764,7 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
         unsigned NElts = ~0u;
         Type *EmitTy = analyzeType(InitTy, NElts, DL, M->getContext());
 
-        printAlignTypeQualifier(GV, DL, InitTy, EmitTy, NElts, O);
+        printAlignTypeQualifier(GV, DL, InitTy, EmitTy, NElts, true, O);
         str = "";
 
         O << '_' << getArgTypeName(EmitTy) << " %" << GV.getName();

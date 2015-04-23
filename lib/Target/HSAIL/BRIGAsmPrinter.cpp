@@ -330,6 +330,31 @@ static BrigLinkage findGlobalBrigLinkage(const GlobalValue &GV) {
   }
 }
 
+static unsigned getGVAlignment(const GlobalVariable &GV,
+                               const DataLayout &DL,
+                               Type *InitTy,
+                               Type *EltTy,
+                               unsigned NElts,
+                               bool IsLocal) {
+  unsigned Alignment = GV.getAlignment();
+  if (Alignment == 0)
+    Alignment = DL.getPrefTypeAlignment(InitTy);
+  else {
+    // If an alignment is specified, it must be equal to or greater than the
+    // variable's natural alignment.
+
+    unsigned NaturalAlign
+      = IsLocal ? DL.getPrefTypeAlignment(EltTy) : DL.getABITypeAlignment(EltTy);
+    Alignment = std::max(Alignment, NaturalAlign);
+  }
+
+  // Align arrays at least by 4 bytes.
+  if (Alignment < 4 && NElts != 0)
+    Alignment = 4;
+
+  return Alignment;
+}
+
 /// EmitGlobalVariable - Emit the specified global variable to the .s file.
 void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
 {
@@ -368,20 +393,8 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   globalVar.modifier().isDefinition() = 1;
   globalVar.dim() = NElts;
 
-  unsigned Alignment = GV->getAlignment();
-  if (Alignment == 0)
-    Alignment = DL.getPrefTypeAlignment(InitTy);
-  else {
-    // If an alignment is specified, it must be equal to or greater than the
-    // variable's natural alignment.
-    Alignment = std::max(Alignment, DL.getABITypeAlignment(EltTy));
-  }
-
-  // Align arrays at least by 4 bytes
-  if (Alignment == 1 && NElts != 0)
-    Alignment = 4;
-
-  globalVar.align() = getBrigAlignment(Alignment);
+  unsigned Align = getGVAlignment(*GV, DL, InitTy, EltTy, NElts, false);
+  globalVar.align() = getBrigAlignment(Align);
 
   globalVariableOffsets[GV] = globalVar.brigOffset();
 
@@ -938,25 +951,22 @@ HSAIL_ASM::DirectiveVariable BRIGAsmPrinter::EmitLocalVariable(
   Type *InitTy = GV->getType()->getElementType();
 
   unsigned NElts = 0;
-  Type *type = analyzeType(InitTy, NElts, DL, GV->getContext());
+  Type *EltTy = analyzeType(InitTy, NElts, DL, GV->getContext());
+  unsigned Align = getGVAlignment(*GV, DL, InitTy, EltTy, NElts, true);
 
   HSAIL_ASM::DirectiveVariable var;
   if (NElts != 0) {
-    BrigType BT = HSAIL::getBrigType(type, DL);
-
-     var = brigantine.addArrayVariable(("%" + GV->getName()).str(), NElts,
-                                       segment, BT & ~BRIG_TYPE_ARRAY);
-    // Align arrays at least by 4 bytes
-    var.align() = getBrigAlignment(std::max((var.dim() > 1) ? 4U : 0U,
-                                            std::max(GV->getAlignment(),
-                                                     HSAIL::getAlignTypeQualifier(type, getDataLayout(), true))));
+    BrigType BT = HSAIL::getBrigType(EltTy, DL);
+    var = brigantine.addArrayVariable(("%" + GV->getName()).str(), NElts,
+                                      segment, BT & ~BRIG_TYPE_ARRAY);
   } else {
     var = brigantine.addVariable(("%" + GV->getName()).str(),
                                  segment,
-                                 HSAIL::getBrigType(type, getDataLayout()));
-    var.align() = getBrigAlignment(HSAIL::getAlignTypeQualifier(type,
-                                     getDataLayout(), true));
+                                 HSAIL::getBrigType(EltTy, getDataLayout()));
   }
+
+  var.align() = getBrigAlignment(Align);
+
   var.allocation() = BRIG_ALLOCATION_AUTOMATIC;
   var.linkage() = BRIG_LINKAGE_FUNCTION;
   var.modifier().isDefinition() = 1;

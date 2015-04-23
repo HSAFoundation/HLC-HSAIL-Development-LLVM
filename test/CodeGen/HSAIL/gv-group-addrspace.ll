@@ -119,7 +119,7 @@ define void @test_double_array_gv(double addrspace(1)* %out, i32 %index) {
 }
 
 ; FUNC-LABEL: {{^}}prog function &struct_foo_gv_load()(
-; HSAIL: align(4) group_u8 %struct_foo_gv[24];
+; HSAIL: align(8) group_u8 %struct_foo_gv[24];
 ; HSAIL: ld_group_align(8)_u32 [[LD:\$s[0-9]+]], [%struct_foo_gv][8];
 ; HSAIL: st_global_align(4)_u32 [[LD]]
 ; HSAIL: ret;
@@ -131,7 +131,7 @@ define void @struct_foo_gv_load(i32 addrspace(1)* %out, i32 %index) {
 }
 
 ; FUNC-LABEL: {{^}}prog function &array_struct_foo_gv_load()(
-; HSAIL: align(4) group_u8 %array_struct_foo_gv[240];
+; HSAIL: align(8) group_u8 %array_struct_foo_gv[240];
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
 ; HSAIL: ld_group_align(4)_u32 [[LD:\$s[0-9]+]], [%array_struct_foo_gv]{{\[}}[[ADDR]]+4{{\]}};
 ; HSAIL: st_global_align(4)_u32 [[LD]]
