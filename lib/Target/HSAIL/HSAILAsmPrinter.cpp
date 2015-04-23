@@ -452,6 +452,9 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   if (isProgramLinkage(*GV))
     O << "prog ";
 
+  if (AS != HSAILAS::CONSTANT_ADDRESS)
+    O << "alloc(agent) ";
+
   unsigned NElts = ~0u;
   Type *EmitTy = analyzeType(InitTy, NElts, DL, GV->getContext());
 
