@@ -427,13 +427,25 @@ Type *HSAILAsmPrinter::analyzeType(Type *Ty,
 
 static void printAlignTypeQualifier(const GlobalValue &GV,
                                     const DataLayout& DL,
+                                    Type *InitTy,
+                                    Type *EmitTy,
+                                    unsigned NElts,
                                     raw_ostream &O) {
+  unsigned Alignment = GV.getAlignment();
+  if (Alignment == 0)
+    Alignment = DL.getPrefTypeAlignment(InitTy);
+  else {
+    // If an alignment is specified, it must be equal to or greater than the
+    // variable's natural alignment.
+    Alignment = std::max(Alignment, DL.getABITypeAlignment(EmitTy));
+  }
 
-  unsigned Align = GV.getAlignment();
-  if (Align == 0)
-    Align = DL.getABITypeAlignment(GV.getType()->getElementType());
+  // Align arrays at least by 4 bytes
+  if (Alignment == 1 && NElts != 0)
+    Alignment = 4;
 
-  O << "align(" << Align << ") ";
+  if (Alignment != DL.getABITypeAlignment(EmitTy))
+    O << "align(" << Alignment << ") ";
 }
 
 void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
@@ -458,25 +470,10 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   unsigned NElts = ~0u;
   Type *EmitTy = analyzeType(InitTy, NElts, DL, GV->getContext());
 
-  // FIXME: Duplicated in BRIGAsmPrinter
-  unsigned Alignment = GV->getAlignment();
-  if (Alignment == 0)
-    Alignment = DL.getPrefTypeAlignment(InitTy);
-  else {
-    // If an alignment is specified, it must be equal to or greater than the
-    // variable's natural alignment.
-    Alignment = std::max(Alignment, DL.getABITypeAlignment(EmitTy));
-  }
-
-  // Align arrays at least by 4 bytes
-  if (Alignment == 1 && NElts != 0)
-    Alignment = 4;
-
-  if (Alignment != DL.getABITypeAlignment(EmitTy))
-    O << "align(" << Alignment << ") ";
-
+  printAlignTypeQualifier(*GV, DL, InitTy, EmitTy, NElts, O);
 
   O << getSegmentName(AS) << '_' << getArgTypeName(EmitTy) << " &" << GVname;
+
   if (NElts != 0)
     O << '[' << NElts << ']';
 
@@ -698,11 +695,12 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
       if (FuncGrpVarsSet.count(&GV)){
         std::string str;
         O << '\t';
-        printAlignTypeQualifier(GV, DL, O);
+
+        Type *InitTy = Ty->getElementType();
 
         unsigned NElts = 1;
-        Type *EmitTy = analyzeType(Ty->getElementType(), NElts,
-                                   DL, M->getContext());
+        Type *EmitTy = analyzeType(InitTy, NElts, DL, M->getContext());
+        printAlignTypeQualifier(GV, DL, InitTy, EmitTy, NElts, O);
 
         O << getSegmentName(AS) << '_' << getArgTypeName(EmitTy)
           << " %" << GV.getName();
@@ -754,12 +752,15 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
         }
 
         O << '\t';
-        printAlignTypeQualifier(GV, DL, O);
-        str = "";
+
+        Type *InitTy = Ty->getElementType();
 
         unsigned NElts = ~0u;
-        Type *EmitTy = analyzeType(Ty->getElementType(), NElts,
-                                   DL, M->getContext());
+        Type *EmitTy = analyzeType(InitTy, NElts, DL, M->getContext());
+
+        printAlignTypeQualifier(GV, DL, InitTy, EmitTy, NElts, O);
+        str = "";
+
         O << '_' << getArgTypeName(EmitTy) << " %" << GV.getName();
         if (NElts != 0)
           O << '[' << NElts << ']';
