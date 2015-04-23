@@ -111,6 +111,8 @@ bool isSPIRModule(const llvm::Module &M);
 
 bool notUsedInKernel(const llvm::GlobalVariable *GV);
 bool isIgnoredGV(const llvm::GlobalVariable *GV);
+
+bool sanitizedGlobalValueName(StringRef, SmallVectorImpl<char> &);
 bool sanitizeGlobalValueName(llvm::GlobalValue *GV);
 
 } // End namespace HSAIL

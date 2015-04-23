@@ -321,45 +321,64 @@ bool notUsedInKernel(const GlobalVariable *GV)
   return true;
 }
 
+bool sanitizedGlobalValueName(StringRef Name, SmallVectorImpl<char> &Out) {
+  // Poor man's regexp check.
+  static const StringRef Syntax("abcdefghijklmnopqrstuvwxyz"
+          "_"
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+          "0123456789");
+  static const StringRef Digits("0123456789");
+
+  SmallString<32> NewName;
+  size_t p = 0;
+  size_t q = 0;
+  while (q != StringRef::npos) {
+    q = Name.find_first_not_of(Syntax, p);
+    // If q == p, the character at p itself violates the syntax.
+    if (q != p) {
+      // Consume everything before q, not including q (even if q == npos).
+      NewName += Name.slice(p, q);
+    }
+
+    // If not found, do not replace.
+    if (q == StringRef::npos)
+      break;
+
+    // Replace found character with underscore.
+    NewName += '_';
+
+    // Then we directly move on to the next character: skip q.
+    p = q + 1;
+  }
+
+  // opt may generate empty names and names started with digit.
+  if (Name.empty() ||
+      Digits.find(Name[0]) != StringRef::npos ||
+      !Name.equals(NewName)) {
+    // Add prefix to show that the name was replaced by HSA.
+    // LLVM's setName adds seq num in case of name duplicating.
+    Out.append(NewName.begin(), NewName.end());
+    return true;
+  }
+
+  return false;
+}
+
 /// \brief Rename a global variable to satisfy HSAIL syntax.
 ///
 /// We simply drop all characters from the name that are disallowed by
 /// HSAIL. When the resulting string is applied as a name, it will be
 /// automatically modified to resolve conflicts.
-bool sanitizeGlobalValueName(GlobalValue *GV)
-{
-  // Poor man's regexp check.
-  static const std::string syntax("abcdefghijklmnopqrstuvwxyz"
-          "_"
-          "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-          "0123456789");
-  static const std::string digit("0123456789");
-  static const std::string hsa_replaced("__hsa_replaced_");
-  StringRef name = GV->getName();
-  SmallString<32> newname;
-  size_t p = 0;
-  size_t q = 0;
-  while (StringRef::npos != q) {
-    q = name.find_first_not_of(syntax, p);
-    // If q == p, the character at p itself violates the syntax.
-    if (q != p)
-      // Consume everything before q, not including q (even if q == npos).
-      newname += name.slice(p, q);
-    // If not found, do not replace.
-    if (StringRef::npos == q)
-      break;
-    // Replace found character with underscore.
-    newname += "_";
-    // Then we directly move on to the next character: skip q.
-    p = q + 1;
-  }
-  // opt may generate empty names and names started with digit.
-  if ((name.empty()) || StringRef::npos != digit.find(name[0]) || !name.equals(newname)) {
+bool sanitizeGlobalValueName(GlobalValue *GV) {
+  SmallString<256> NewName;
+
+  if (sanitizedGlobalValueName(GV->getName(), NewName)) {
     // Add prefix to show that the name was replaced by HSA.
     // LLVM's setName adds seq num in case of name duplicating.
-    GV->setName(hsa_replaced + newname.str());
+    GV->setName(Twine("__hsa_replaced_") + StringRef(NewName));
     return true;
   }
+
   return false;
 }
 
