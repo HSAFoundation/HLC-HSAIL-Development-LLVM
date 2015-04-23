@@ -68,37 +68,32 @@ public:
 
   virtual ~BRIGAsmPrinter();
 
-  virtual const char* getPassName() const { return "BRIG Container Filler"; }
+  const char* getPassName() const override {
+    return "BRIG Container Filler";
+  }
 
   const HSAILSubtarget& getSubtarget() const { return *Subtarget; }
 
-  /// EmitGlobalVariable - Emit the specified global variable to the .s file.
-  virtual void EmitGlobalVariable(const GlobalVariable *GV);
+  void EmitGlobalVariable(const GlobalVariable *GV) override;
 
-  void EmitFunctionLabel(const Function &, const llvm::StringRef sFuncName);
+  void EmitFunctionLabel(const Function &, StringRef sFuncName);
 
-  /// override by targets that emit something at start of file
-  virtual void EmitStartOfAsmFile(Module &);
+  void EmitStartOfAsmFile(Module &) override;
 
-  /// override by targets that emit something at end of file.
-  virtual void EmitEndOfAsmFile(Module &);
+  void EmitEndOfAsmFile(Module &) override;
 
-  /// override to emit stuff before the first basic block in function.
-  virtual void EmitFunctionBodyStart();
+  void EmitFunctionBodyStart() override;
 
-  /// Targets can override this to emit stuff after
-  /// the last basic block in the function.
-  virtual void EmitFunctionBodyEnd();
+  void EmitFunctionBodyEnd() override;
 
-  /// Targets should implement this to emit instructions [required]
-  virtual void EmitInstruction(const MachineInstr *);
+  void EmitInstruction(const MachineInstr *) override;
 
-  virtual void EmitFunctionEntryLabel();
+  void EmitFunctionEntryLabel() override;
 
-  bool doFinalization(Module &M);
+  bool doFinalization(Module &M) override;
 public:
 
-  bool runOnMachineFunction(MachineFunction &F);
+  bool runOnMachineFunction(MachineFunction &F) override;
   void EmitSamplerDefs();
 
   // Vector that keeps offsets and sizes (in bits) of all the BRIG variables
@@ -187,7 +182,7 @@ protected:
 
   void BrigEmitVecOperand(const MachineInstr *MI, unsigned opStart,
                           unsigned numRegs, HSAIL_ASM::Inst inst);
-  
+
   // Stream that captures DWARF data to the internal buffer
   RawVectorOstream* mDwarfStream;
   // Stream that will receive all BRIG data
@@ -255,7 +250,7 @@ private:
   BrigType getAtomicType(const MachineInstr *MI) const;
 
   bool canInitHSAILAddressSpace(const GlobalVariable* gv) const;
-  void EmitBasicBlockStart(const MachineBasicBlock &MBB);
+  void EmitBasicBlockStart(const MachineBasicBlock &MBB) override;
   // returns an offset of corresponding DirectiveVariable
   uint64_t EmitFunctionArgument(Type* type, bool isKernel,
                                 const StringRef argName, bool isSExt);
