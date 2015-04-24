@@ -436,8 +436,18 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &F,
 
   paramCounter = 0;
   if (!retType->isVoidTy()) {
-    EmitFunctionReturn(retType, false, "ret", F.getAttributes().getRetAttributes()
-                       .hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt));
+    const auto &RetAttrs = F.getAttributes().getRetAttributes();
+
+    bool IsSExt
+      = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
+    bool IsZExt
+      = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
+
+    if (IsSExt || IsZExt) {
+      EmitFunctionReturn(Type::getInt32Ty(retType->getContext()),
+                         false, "ret", IsSExt);
+    } else
+      EmitFunctionReturn(retType, false, "ret", IsSExt);
   }
 
   // Loop through all of the parameters and emit the types and
@@ -1220,8 +1230,18 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
   // Functions with kernel linkage cannot have output args
   if (!isKernel) {
     if (!retType->isVoidTy()) {
-      EmitFunctionReturn(retType, isKernel, PM.getParamName(*(PM.ret_begin())),
-        F->getAttributes().getRetAttributes().hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt));
+      const auto &RetAttrs = F->getAttributes().getRetAttributes();
+      bool IsSExt = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
+      bool IsZExt = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
+
+      if (IsSExt || IsZExt) {
+        EmitFunctionReturn(Type::getInt32Ty(retType->getContext()),
+                           isKernel, PM.getParamName(*(PM.ret_begin())),
+                           IsSExt);
+      } else {
+        EmitFunctionReturn(retType, isKernel,
+                           PM.getParamName(*(PM.ret_begin())), IsSExt);
+      }
     }
   }
   if (funcType) {
