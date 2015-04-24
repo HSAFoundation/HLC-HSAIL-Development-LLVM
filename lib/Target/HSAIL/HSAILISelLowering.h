@@ -175,9 +175,6 @@ public:
                       SDLoc dl,
                       SelectionDAG &DAG) const override;
 
-  EVT getTypeForExtArgOrReturn(LLVMContext &Context, EVT VT,
-                               ISD::NodeType ExtendKind) const override;
-
   SDValue LowerOperation(SDValue Op, SelectionDAG &DAG) const override;
 
   void ReplaceNodeResults(SDNode *N,

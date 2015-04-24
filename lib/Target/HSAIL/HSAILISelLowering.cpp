@@ -569,17 +569,6 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
   return DAG.getNode(HSAILISD::RET, dl, MVT::Other, Chain);
 }
 
-/// getTypeForExtArgOrReturn - Return the type that should be used to zero or
-/// sign extend a zeroext/signext integer argument or return value.
-EVT HSAILTargetLowering::getTypeForExtArgOrReturn(LLVMContext &Context,
-                                                  EVT VT,
-                                                  ISD::NodeType ExtendKind)
-                                                  const {
-  if (VT == MVT::i1)
-    return MVT::i32;
-  return TargetLowering::getTypeForExtArgOrReturn(Context, VT, ExtendKind);
-}
-
 /// Create kernel or function parameter scalar load and return its
 /// value. AddressSpace used to determine if that is a kernel or function
 /// argument. ArgVT specifies expected value type where 'Ty' refers to the real
