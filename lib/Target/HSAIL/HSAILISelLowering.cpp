@@ -1727,7 +1727,7 @@ HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
         MachineSDNode::mmo_iterator MemOp = MF.allocateMemRefsArray(1);
         unsigned size = VT.getStoreSize();
         Type *PTy = VT.getTypeForEVT(*DAG.getContext());
-        PointerType *PT = PointerType::get(PTy, HSAILAS::CONSTANT_ADDRESS);
+        PointerType *PT = PointerType::get(PTy, HSAILAS::READONLY_ADDRESS);
         MachinePointerInfo MPtrInfo(UndefValue::get(PT),
                                     size * samplerHandleIndex);
         MemOp[0] = MF.getMachineMemOperand(MPtrInfo, MachineMemOperand::MOLoad,

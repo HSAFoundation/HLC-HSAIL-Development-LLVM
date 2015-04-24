@@ -156,7 +156,7 @@ namespace llvm {
     enum AddressSpaces {
       PRIVATE_ADDRESS  = 0,
       GLOBAL_ADDRESS   = 1,
-      CONSTANT_ADDRESS = 2, // TODO_HSA: rename to READONLY_ADDRESS
+      READONLY_ADDRESS = 2,
       GROUP_ADDRESS    = 3,
       FLAT_ADDRESS     = 4,
       REGION_ADDRESS   = 5,

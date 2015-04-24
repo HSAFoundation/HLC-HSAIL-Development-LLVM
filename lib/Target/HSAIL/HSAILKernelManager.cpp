@@ -170,7 +170,7 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
   case HSAILAS::GLOBAL_ADDRESS:
     mMFI->uav_insert(ptrID);
     break;
-  case HSAILAS::CONSTANT_ADDRESS: {
+  case HSAILAS::READONLY_ADDRESS: {
     if (isKernel){
       const HSAILKernel* t = mAMI->getKernel(F->getName());
       if (mAMI->usesHWConstant(t, Ip->getName())) {

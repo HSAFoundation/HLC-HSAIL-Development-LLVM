@@ -63,14 +63,14 @@ bool HSAILAsmPrinter::runOnMachineFunction(MachineFunction &MF) {
 }
 
 static bool canInitAddressSpace(unsigned AS) {
-  return AS == HSAILAS::CONSTANT_ADDRESS || AS == HSAILAS::GLOBAL_ADDRESS;
+  return AS == HSAILAS::READONLY_ADDRESS || AS == HSAILAS::GLOBAL_ADDRESS;
 }
 
 static StringRef getSegmentName(unsigned AS) {
   switch (AS) {
   case HSAILAS::GLOBAL_ADDRESS:
     return "global";
-  case HSAILAS::CONSTANT_ADDRESS:
+  case HSAILAS::READONLY_ADDRESS:
     return "readonly";
   case HSAILAS::GROUP_ADDRESS:
     return "group";
@@ -475,7 +475,7 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   if (isProgramLinkage(*GV))
     O << "prog ";
 
-  if (AS != HSAILAS::CONSTANT_ADDRESS)
+  if (AS != HSAILAS::READONLY_ADDRESS)
     O << "alloc(agent) ";
 
   unsigned NElts = ~0u;

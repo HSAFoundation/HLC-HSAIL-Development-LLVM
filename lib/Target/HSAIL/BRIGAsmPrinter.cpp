@@ -278,7 +278,7 @@ BrigSegment8_t BRIGAsmPrinter::getHSAILSegment(unsigned AddressSpace)
   switch (AddressSpace) {
   case HSAILAS::PRIVATE_ADDRESS:  return BRIG_SEGMENT_PRIVATE;
   case HSAILAS::GLOBAL_ADDRESS:   return BRIG_SEGMENT_GLOBAL;
-  case HSAILAS::CONSTANT_ADDRESS: return BRIG_SEGMENT_READONLY;
+  case HSAILAS::READONLY_ADDRESS: return BRIG_SEGMENT_READONLY;
   case HSAILAS::GROUP_ADDRESS:    return BRIG_SEGMENT_GROUP;
   case HSAILAS::FLAT_ADDRESS:     return BRIG_SEGMENT_FLAT;
   case HSAILAS::REGION_ADDRESS:   return BRIG_SEGMENT_AMD_GCN;
@@ -298,7 +298,7 @@ bool BRIGAsmPrinter::canInitHSAILAddressSpace(const GlobalVariable* gv) const {
   bool canInit;
   switch (gv->getType()->getAddressSpace()) {
   case HSAILAS::GLOBAL_ADDRESS:
-  case HSAILAS::CONSTANT_ADDRESS:
+  case HSAILAS::READONLY_ADDRESS:
     canInit = true;
     break;
   default:

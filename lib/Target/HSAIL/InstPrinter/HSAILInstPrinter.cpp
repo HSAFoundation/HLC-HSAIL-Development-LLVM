@@ -862,7 +862,7 @@ void HSAILInstPrinter::printBrigSegment(const MCInst *MI, unsigned OpNo,
   case HSAILAS::GLOBAL_ADDRESS:
     O << "_global";
     break;
-  case HSAILAS::CONSTANT_ADDRESS:
+  case HSAILAS::READONLY_ADDRESS:
     O << "_readonly";
     break;
   case HSAILAS::KERNARG_ADDRESS:
