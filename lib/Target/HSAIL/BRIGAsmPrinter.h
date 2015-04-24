@@ -79,7 +79,7 @@ public:
 
   void EmitGlobalVariable(const GlobalVariable *GV) override;
 
-  void EmitFunctionLabel(const Function &, StringRef sFuncName);
+  void EmitFunctionLabel(const Function &F, const GlobalAlias *GA = nullptr);
 
   void EmitStartOfAsmFile(Module &) override;
 
@@ -222,10 +222,6 @@ protected:
   typedef PVGVOffsetMap::iterator pvgvo_iterator;
   typedef PVGVOffsetMap::const_iterator pvgvo_const_iterator;
   typedef PVGVOffsetMap::value_type pvgvo_record;
-
-
-  typedef DenseMap<const Function *, std::vector<llvm::StringRef> > FuncAliasMap;
-  FuncAliasMap funcAliases;
 
 private:
 

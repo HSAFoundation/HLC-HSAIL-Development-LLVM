@@ -417,41 +417,43 @@ static bool isLLVMDebugIntrinsic(StringRef str) {
   return str.equals("llvm.dbg.declare") || str.equals("llvm.dbg.value");
 }
 
-/// NOTE: sFuncName is NOT the same as rF.getName()
-/// rF may be an unnamed alias of the another function
-/// sFuncName is the resolved alias name but rF.getName() is empty
-void BRIGAsmPrinter::EmitFunctionLabel(const Function &rF,
-                                       const llvm::StringRef sFuncName ) {
-  if (isLLVMDebugIntrinsic(rF.getName())) {
+// Emit a declaration of function F, optionally using the name of alias GA.
+void BRIGAsmPrinter::EmitFunctionLabel(const Function &F,
+                                       const GlobalAlias *GA) {
+  if (isLLVMDebugIntrinsic(F.getName())) {
     return; // Nothing to do with LLVM debug-related intrinsics
   }
-  const Function *F = &rF;
-  Type *retType = F->getReturnType();
-  FunctionType *funcType = F->getFunctionType();
+
+  FunctionType *funcType = F.getFunctionType();
+  Type *retType = funcType->getReturnType();
 
   SmallString<256> Name;
-  getHSAILMangledName(Name, F);
+
+  if (GA)
+    getHSAILMangledName(Name, GA);
+  else
+    getHSAILMangledName(Name, &F);
 
   HSAIL_ASM::DirectiveFunction fx = brigantine.declFunc(makeSRef(Name));
   // TODO_HSA: pending BRIG_LINKAGE_STATIC implementation in the Finalizer
-  fx.linkage() = findGlobalBrigLinkage(*F);
+  fx.linkage() = findGlobalBrigLinkage(F);
 
   paramCounter = 0;
   if (!retType->isVoidTy()) {
-    EmitFunctionReturn(retType, false, "ret", F->getAttributes().getRetAttributes()
+    EmitFunctionReturn(retType, false, "ret", F.getAttributes().getRetAttributes()
                        .hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt));
   }
   if (funcType) {
     // Loop through all of the parameters and emit the types and
     // corresponding names.
-    Function::const_arg_iterator ai = F->arg_begin();
-    Function::const_arg_iterator ae = F->arg_end();
+    Function::const_arg_iterator ai = F.arg_begin();
+    Function::const_arg_iterator ae = F.arg_end();
     unsigned n = 1;
     for (FunctionType::param_iterator pb = funcType->param_begin(),
          pe = funcType->param_end(); pb != pe; ++pb, ++ai, ++n) {
       assert(ai != ae);
       Type* type = *pb;
-      EmitFunctionArgument(type, false, ai->getName(), F->getAttributes().getParamAttributes(n)
+      EmitFunctionArgument(type, false, ai->getName(), F.getAttributes().getParamAttributes(n)
                            .hasAttribute(AttributeSet::FunctionIndex, Attribute::SExt));
     }
   }
@@ -830,47 +832,26 @@ void BRIGAsmPrinter::EmitStartOfAsmFile(Module &M) {
                               getTextSection());
   OutStreamer.EmitZeros(brigantine.container().code().secHeader()->headerByteCount);
 
-  for(Module::const_alias_iterator I = M.alias_begin(), E = M.alias_end();
-      I != E; ++I) {
-    const Function * F = dyn_cast<Function>(I->getAliasee());
-    if (F) {
-      funcAliases[F].push_back(I->getName());
-    }
+  for (GlobalAlias &GA : M.aliases()) {
+    if (const Function *F = dyn_cast<Function>(GA.getAliasee()))
+      EmitFunctionLabel(*F, &GA);
+    else if (isa<GlobalVariable>(GA.getAliasee())) {
+      llvm_unreachable("Use of alias globals not yet implemented");
+    } else
+      llvm_unreachable("Unhandled alias type");
   }
 
-  for (Module::const_global_iterator I = M.global_begin(), E = M.global_end();
-       I != E; ++I)
-    EmitGlobalVariable(I);
+  for (const GlobalVariable &GV : M.globals())
+    EmitGlobalVariable(&GV);
 
-  // Emit function declarations
-  for (Module::const_iterator I = M.begin(), E = M.end(); I != E; ++I) {
-    const Function &F = *I;
-
-    // No declaration for kernels.
-    if (HSAIL::isKernelFunc(&F))
+  // Emit function declarations.
+  for (const Function &F : M.functions()) {
+    // No declaration for kernels or intrinsics.
+    if (F.isIntrinsic() || HSAIL::isKernelFunc(&F) ||
+        isHSAILInstrinsic(F.getName()))
       continue;
 
-    std::vector<llvm::StringRef> aliasList;
-
-    SmallString<256> Name;
-    getHSAILMangledName(Name, &F);
-
-    aliasList.push_back(Name);
-
-
-    std::vector<llvm::StringRef> aliases = funcAliases[&F];
-    if ( !aliases.empty()) {
-      aliasList.insert(aliasList.end(), aliases.begin(), aliases.end());
-    }
-
-    for (std::vector<llvm::StringRef>::const_iterator AI = aliasList.begin(),
-         AE = aliasList.end(); AI != AE; ++AI ) {
-      std::string sFuncName = (*AI).str();
-      // No declaration for HSAIL instrinsic
-      if (!isHSAILInstrinsic(sFuncName) && !F.isIntrinsic()) {
-        EmitFunctionLabel(F, sFuncName);
-      }
-    }
+    EmitFunctionLabel(F, nullptr);
   }
 }
 
@@ -2059,7 +2040,12 @@ void BRIGAsmPrinter::getHSAILMangledName(SmallString<256> &NameStr,
                                          const GlobalValue *GV) const {
   if (isa<Function>(GV))
     NameStr += '&';
-  else {
+  else if (const GlobalAlias *GA = dyn_cast<GlobalAlias>(GV)) {
+    if (isa<Function>(GA->getAliasee()))
+      NameStr += '&';
+    else
+      llvm_unreachable("Not handled");
+  } else {
     unsigned AS = GV->getType()->getAddressSpace();
     NameStr += getSymbolPrefixForAddressSpace(AS);
   }

@@ -24,6 +24,7 @@
 #include "HSAILOpaqueTypes.h"
 
 #include "llvm/ADT/StringExtras.h"
+#include "llvm/IR/GlobalAlias.h"
 #include "llvm/IR/Mangler.h"
 #include "llvm/IR/MDBuilder.h"
 #include "llvm/CodeGen/MachineFunction.h"
@@ -942,7 +943,11 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     const GlobalValue *GV = G->getGlobal();
     Callee = DAG.getTargetGlobalAddress(GV, dl, getPointerTy(AS));
 
-    calleeFunc = cast<Function>(GV);
+    if (const GlobalAlias *GA = dyn_cast<GlobalAlias>(GV))
+      calleeFunc = cast<Function>(GA->getAliasee());
+    else
+      calleeFunc = cast<Function>(GV);
+
     funcType = calleeFunc->getFunctionType();
     FuncName = GV->getName().data();
   } else
