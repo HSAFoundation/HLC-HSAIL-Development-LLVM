@@ -44,6 +44,9 @@ class MCSymbol;
 class Module;
 class raw_ostream;
 
+template <unsigned>
+class SmallString;
+
 class LLVM_LIBRARY_VISIBILITY BRIGAsmPrinter : public HSAILAsmPrinter {
   friend class StoreInitializer;
 
@@ -258,6 +261,8 @@ private:
                           bool isSExt);
 
   bool usesGCNAtomicCounter(void);
+
+  void getHSAILMangledName(SmallString<256> &Out, const GlobalValue *GV) const;
 
   HSAIL_ASM::OperandRegister getBrigReg(MachineOperand s);
 

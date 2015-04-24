@@ -364,9 +364,7 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   const DataLayout& DL = getDataLayout();
 
   SmallString<256> NameStr;
-  unsigned AS = GV->getType()->getAddressSpace();
-  NameStr += getSymbolPrefixForAddressSpace(AS);
-  NameStr += GV->getName();
+  getHSAILMangledName(NameStr, GV);
 
 
   // Initializer has pointer element type.
@@ -431,7 +429,10 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &rF,
   Type *retType = F->getReturnType();
   FunctionType *funcType = F->getFunctionType();
 
-  HSAIL_ASM::DirectiveFunction fx = brigantine.declFunc(( "&" + sFuncName).str());
+  SmallString<256> Name;
+  getHSAILMangledName(Name, F);
+
+  HSAIL_ASM::DirectiveFunction fx = brigantine.declFunc(makeSRef(Name));
   // TODO_HSA: pending BRIG_LINKAGE_STATIC implementation in the Finalizer
   fx.linkage() = findGlobalBrigLinkage(*F);
 
@@ -748,10 +749,13 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
       }
     }
 
+    SmallString<256> Name;
+    getHSAILMangledName(Name, gv);
+
     m_opndList.push_back(
       brigantine.createCodeList(ret_list));
     m_opndList.push_back(
-      brigantine.createExecutableRef(std::string("&") + gv->getName().str()));
+      brigantine.createExecutableRef(makeSRef(Name)));
     m_opndList.push_back(
       brigantine.createCodeList(call_paramlist));
 
@@ -848,9 +852,11 @@ void BRIGAsmPrinter::EmitStartOfAsmFile(Module &M) {
 
     std::vector<llvm::StringRef> aliasList;
 
-    if(F.hasName()) {
-      aliasList.push_back(F.getName());
-    }
+    SmallString<256> Name;
+    getHSAILMangledName(Name, &F);
+
+    aliasList.push_back(Name);
+
 
     std::vector<llvm::StringRef> aliases = funcAliases[&F];
     if ( !aliases.empty()) {
@@ -948,6 +954,9 @@ HSAIL_ASM::DirectiveVariable BRIGAsmPrinter::EmitLocalVariable(
   const GlobalVariable *GV, BrigSegment8_t segment) {
   const DataLayout& DL = getDataLayout();
 
+  SmallString<256> NameStr;
+  getHSAILMangledName(NameStr, GV);
+
   Type *InitTy = GV->getType()->getElementType();
 
   unsigned NElts = 0;
@@ -957,10 +966,10 @@ HSAIL_ASM::DirectiveVariable BRIGAsmPrinter::EmitLocalVariable(
   HSAIL_ASM::DirectiveVariable var;
   if (NElts != 0) {
     BrigType BT = HSAIL::getBrigType(EltTy, DL);
-    var = brigantine.addArrayVariable(("%" + GV->getName()).str(), NElts,
+    var = brigantine.addArrayVariable(makeSRef(NameStr), NElts,
                                       segment, BT & ~BRIG_TYPE_ARRAY);
   } else {
-    var = brigantine.addVariable(("%" + GV->getName()).str(),
+    var = brigantine.addVariable(makeSRef(NameStr),
                                  segment,
                                  HSAIL::getBrigType(EltTy, getDataLayout()));
   }
@@ -1234,18 +1243,14 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
   const HSAILParamManager &PM = MF->getInfo<HSAILMachineFunctionInfo>()->
         getParamManager();
 
-  std::string NameWithPrefix;
-
-  {
-    raw_string_ostream ss(NameWithPrefix);
-    ss << '&' << F->getName();
-  }
+  SmallString<256> NameWithPrefix;
+  getHSAILMangledName(NameWithPrefix, F);
 
   HSAIL_ASM::DirectiveExecutable fx;
   if (isKernel)
-    fx = brigantine.declKernel(NameWithPrefix);
+    fx = brigantine.declKernel(makeSRef(NameWithPrefix));
   else
-    fx = brigantine.declFunc(NameWithPrefix);
+    fx = brigantine.declFunc(makeSRef(NameWithPrefix));
 
   fx.linkage() = findGlobalBrigLinkage(*F);
 
@@ -1457,15 +1462,13 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI,
   // Get [%name]
   std::string base_name;
   if (base.isGlobal()) {
-    const GlobalValue *gv = base.getGlobal();
-    std::stringstream ss;
+    SmallString<256> NameStr;
+    getHSAILMangledName(NameStr, base.getGlobal());
 
-    unsigned AS = gv->getType()->getAddressSpace();
-    ss << getSymbolPrefixForAddressSpace(AS) << gv->getName().str();
     // Do not add offset since it will already be in offset field
     // see 'HSAILDAGToDAGISel::SelectAddrCommon'
+    base_name = NameStr.str();
 
-    base_name = ss.str();
   }
   // Special cases for spill and private stack
   else if (base.isImm()) {
@@ -2050,6 +2053,33 @@ bool BRIGAsmPrinter::usesGCNAtomicCounter(void) {
     }
   }
   return false;
+}
+
+void BRIGAsmPrinter::getHSAILMangledName(SmallString<256> &NameStr,
+                                         const GlobalValue *GV) const {
+  if (isa<Function>(GV))
+    NameStr += '&';
+  else {
+    unsigned AS = GV->getType()->getAddressSpace();
+    NameStr += getSymbolPrefixForAddressSpace(AS);
+  }
+
+  SmallString<256> Mangled;
+  SmallString<256> Sanitized;
+
+  getNameWithPrefix(Mangled, GV);
+
+  NameStr += Mangled;
+
+#if 0
+  // FIXME: We need a way to deal with invalid identifiers, e.g. leading
+  // period. We can replace them with something here, but need a way to resolve
+  // possible conflicts.
+  if (HSAIL::sanitizedGlobalValueName(Mangled, Sanitized))
+    NameStr += Sanitized;
+  else
+    NameStr += Mangled;
+#endif
 }
 
 BrigAlignment8_t BRIGAsmPrinter::getBrigAlignment(unsigned AlignVal) {
