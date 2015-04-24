@@ -439,19 +439,18 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &F,
     EmitFunctionReturn(retType, false, "ret", F.getAttributes().getRetAttributes()
                        .hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt));
   }
-  if (funcType) {
-    // Loop through all of the parameters and emit the types and
-    // corresponding names.
-    Function::const_arg_iterator ai = F.arg_begin();
-    Function::const_arg_iterator ae = F.arg_end();
-    unsigned n = 1;
-    for (FunctionType::param_iterator pb = funcType->param_begin(),
+
+  // Loop through all of the parameters and emit the types and
+  // corresponding names.
+  Function::const_arg_iterator ai = F.arg_begin();
+  Function::const_arg_iterator ae = F.arg_end();
+  unsigned n = 1;
+  for (FunctionType::param_iterator pb = funcType->param_begin(),
          pe = funcType->param_end(); pb != pe; ++pb, ++ai, ++n) {
-      assert(ai != ae);
-      Type* type = *pb;
-      EmitFunctionArgument(type, false, ai->getName(), F.getAttributes().getParamAttributes(n)
-                           .hasAttribute(n, Attribute::SExt));
-    }
+    assert(ai != ae);
+    Type* type = *pb;
+    EmitFunctionArgument(type, false, ai->getName(), F.getAttributes().getParamAttributes(n)
+                         .hasAttribute(n, Attribute::SExt));
   }
 }
 
