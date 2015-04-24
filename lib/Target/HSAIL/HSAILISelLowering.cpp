@@ -547,9 +547,6 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
   RetOps.push_back(Chain);
 
   Type *type  = funcType->getReturnType();
-  if (type->isIntegerTy(1)) // Handle bit as DWORD
-    type = Type::getInt32Ty(type->getContext());
-
   if (!type->isVoidTy()) {
     Mangler Mang(getDataLayout());
     SDValue RetVariable =  DAG.getTargetExternalSymbol(PM.getParamName(

@@ -55,11 +55,10 @@ define <4 x i32> @return_v4i32() {
   ret <4 x i32> <i32 9, i32 34, i32 91, i32 462>
 }
 
-; FIXME: Should use u8
 ; HSAIL: prog function &return_arg_i1(arg_u8 %return_arg_i1)(arg_u8 %x)
 ; HSAIL: ld_arg_u8 [[LDI1:\$s[0-9]+]], [%x];
 ; HSAIL: and_b32 [[RESULT:\$s[0-9]+]], [[LDI1]], 1;
-; HSAIL: st_arg_align(4)_u8 [[RESULT]], [%return_arg_i1];
+; HSAIL: st_arg_u8 [[RESULT]], [%return_arg_i1];
 define i1 @return_arg_i1(i1 %x) {
   ret i1 %x
 }
