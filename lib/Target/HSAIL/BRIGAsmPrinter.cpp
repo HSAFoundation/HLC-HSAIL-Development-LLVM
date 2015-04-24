@@ -1023,11 +1023,6 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     }
   }
 
-  // Fix names for GROUP_ADDRESS
-  for (PVGVOffsetMap::iterator i=groupVariablesOffsets.begin(),
-                               e=groupVariablesOffsets.end(); i!=e; ++i)
-    HSAIL::sanitizeGlobalValueName(const_cast<GlobalVariable*>(i->first));
-
   // Emit recorded
   for (Module::const_global_iterator I = F->getParent()->global_begin(),
        E = F->getParent()->global_end(); I != E; ++I) {
