@@ -550,7 +550,7 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
   if (type->isIntegerTy(1)) // Handle bit as DWORD
     type = Type::getInt32Ty(type->getContext());
 
-  if(type->getTypeID() != Type::VoidTyID) {
+  if (!type->isVoidTy()) {
     Mangler Mang(getDataLayout());
     SDValue RetVariable =  DAG.getTargetExternalSymbol(PM.getParamName(
       PM.addReturnParam(type, PM.mangleArg(&Mang, F->getName()))),
