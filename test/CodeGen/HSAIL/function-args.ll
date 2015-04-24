@@ -10,7 +10,7 @@
 
 ; HSAIL: decl prog function &i8_sext_arg()(
 ; HSAIL-NEXT: arg_u32 %out,
-; HSAIL-NEXT: arg_u8 %in);
+; HSAIL-NEXT: arg_s8 %in);
 
 ; HSAIL: decl prog function &i16_arg()(
 ; HSAIL-NEXT: arg_u32 %out,
@@ -22,7 +22,7 @@
 
 ; HSAIL: decl prog function &i16_sext_arg()(
 ; HSAIL-NEXT: arg_u32 %out,
-; HSAIL-NEXT: arg_u16 %in);
+; HSAIL-NEXT: arg_s16 %in);
 
 ; HSAIL: decl prog function &i32_arg()(
 ; HSAIL-NEXT: arg_u32 %out,
@@ -172,7 +172,7 @@ define void @i8_zext_arg(i32 addrspace(1)* nocapture %out, i8 zeroext %in) nounw
 
 ; FUNC-LABEL: {{^}}prog function &i8_sext_arg()(
 ; HSAIL-NEXT: arg_u32 %out,
-; HSAIL-NEXT: arg_u8 %in)
+; HSAIL-NEXT: arg_s8 %in)
 ; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%out];
 ; HSAIL: ld_arg_s8 {{\$s[0-9]+}}, [%in];
 define void @i8_sext_arg(i32 addrspace(1)* nocapture %out, i8 signext %in) nounwind {
@@ -206,7 +206,7 @@ define void @i16_zext_arg(i32 addrspace(1)* nocapture %out, i16 zeroext %in) nou
 
 ; FUNC-LABEL: {{^}}prog function &i16_sext_arg()(
 ; HSAIL-NEXT: arg_u32 %out,
-; HSAIL-NEXT: arg_u16 %in)
+; HSAIL-NEXT: arg_s16 %in)
 ; HSAIL: ld_arg_align(4)_u32 {{\$s[0-9]+}}, [%out];
 ; HSAIL: ld_arg_align(2)_s16 {{\$s[0-9]+}}, [%in];
 define void @i16_sext_arg(i32 addrspace(1)* nocapture %out, i16 signext %in) nounwind {

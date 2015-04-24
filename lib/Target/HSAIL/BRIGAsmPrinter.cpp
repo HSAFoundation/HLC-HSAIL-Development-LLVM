@@ -450,7 +450,7 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &F,
       assert(ai != ae);
       Type* type = *pb;
       EmitFunctionArgument(type, false, ai->getName(), F.getAttributes().getParamAttributes(n)
-                           .hasAttribute(AttributeSet::FunctionIndex, Attribute::SExt));
+                           .hasAttribute(n, Attribute::SExt));
     }
   }
 }
@@ -1256,7 +1256,7 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
       // Here we will store an offset of DirectiveVariable
       uint64_t argDirectiveOffset = 0;
       argDirectiveOffset = EmitFunctionArgument(type, isKernel, argName,
-        F->getAttributes().getParamAttributes(n).hasAttribute(AttributeSet::FunctionIndex, Attribute::SExt));
+        F->getAttributes().getParamAttributes(n).hasAttribute(n, Attribute::SExt));
       functionScalarArgumentOffsets[argName] = argDirectiveOffset;
     }
   }

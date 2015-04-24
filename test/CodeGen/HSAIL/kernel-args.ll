@@ -26,7 +26,7 @@ define spir_kernel void @i8_zext_kernarg(i32 addrspace(1)* nocapture %out, i8 ze
 
 ; FUNC-LABEL: {{^}}prog kernel &i8_sext_kernarg(
 ; HSAIL-NEXT: kernarg_u32 %out,
-; HSAIL-NEXT: kernarg_u8 %in)
+; HSAIL-NEXT: kernarg_s8 %in)
 ; HSAIL: ld_kernarg_align(4)_width(all)_u32 {{\$s[0-9]+}}, [%out];
 ; HSAIL: ld_kernarg_width(all)_s8 {{\$s[0-9]+}}, [%in];
 define spir_kernel void @i8_sext_kernarg(i32 addrspace(1)* nocapture %out, i8 signext %in) nounwind {
@@ -60,7 +60,7 @@ define spir_kernel void @i16_zext_kernarg(i32 addrspace(1)* nocapture %out, i16 
 
 ; FUNC-LABEL: {{^}}prog kernel &i16_sext_kernarg(
 ; HSAIL-NEXT: kernarg_u32 %out,
-; HSAIL-NEXT: kernarg_u16 %in)
+; HSAIL-NEXT: kernarg_s16 %in)
 ; HSAIL: ld_kernarg_align(4)_width(all)_u32 {{\$s[0-9]+}}, [%out];
 ; HSAIL: ld_kernarg_align(2)_width(all)_s16 {{\$s[0-9]+}}, [%in];
 define spir_kernel void @i16_sext_kernarg(i32 addrspace(1)* nocapture %out, i16 signext %in) nounwind {

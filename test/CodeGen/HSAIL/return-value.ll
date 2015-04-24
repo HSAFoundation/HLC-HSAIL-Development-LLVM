@@ -5,7 +5,11 @@
 
 ; HSAIL: decl prog function &return_arg_i1(arg_u8 %ret)(arg_u8 %x);
 ; HSAIL: decl prog function &return_arg_i8(arg_u8 %ret)(arg_u8 %x);
+; HSAIL: decl prog function &return_sext_arg_i8(arg_s8 %ret)(arg_u8 %x);
+; HSAIL: decl prog function &return_zext_arg_i8(arg_u8 %ret)(arg_u8 %x);
 ; HSAIL: decl prog function &return_arg_i16(arg_u16 %ret)(arg_u16 %x);
+; HSAIL: decl prog function &return_sext_arg_i16(arg_s16 %ret)(arg_u16 %x);
+; HSAIL: decl prog function &return_zext_arg_i16(arg_u16 %ret)(arg_u16 %x);
 ; HSAIL: decl prog function &return_arg_i32(arg_u32 %ret)(arg_u32 %x);
 
 ; HSAIL: decl prog function &return_vector_arg_v1i32(arg_u32 %ret[1])(arg_u32 %x[1]);
@@ -66,9 +70,33 @@ define i8 @return_arg_i8(i8 %x) {
   ret i8 %x
 }
 
+; HSAIL: prog function &return_sext_arg_i8(arg_s8 %return_sext_arg_i8)(arg_u8 %x)
+; HSAIL: st_arg_u8 {{\$s[0-9]+}}, [%return_sext_arg_i8];
+define signext i8 @return_sext_arg_i8(i8 %x) {
+  ret i8 %x
+}
+
+; HSAIL: prog function &return_zext_arg_i8(arg_u8 %return_zext_arg_i8)(arg_u8 %x)
+; HSAIL: st_arg_u8 {{\$s[0-9]+}}, [%return_zext_arg_i8];
+define zeroext i8 @return_zext_arg_i8(i8 %x) {
+  ret i8 %x
+}
+
 ; HSAIL: prog function &return_arg_i16(arg_u16 %return_arg_i16)(arg_u16 %x)
 ; HSAIL: st_arg_align(2)_u16 {{\$s[0-9]+}}, [%return_arg_i16];
 define i16 @return_arg_i16(i16 %x) {
+  ret i16 %x
+}
+
+; HSAIL: prog function &return_sext_arg_i16(arg_s16 %return_sext_arg_i16)(arg_u16 %x)
+; HSAIL: st_arg_align(2)_u16 {{\$s[0-9]+}}, [%return_sext_arg_i16];
+define signext i16 @return_sext_arg_i16(i16 %x) {
+  ret i16 %x
+}
+
+; HSAIL: prog function &return_zext_arg_i16(arg_u16 %return_zext_arg_i16)(arg_u16 %x)
+; HSAIL: st_arg_align(2)_u16 {{\$s[0-9]+}}, [%return_zext_arg_i16];
+define zeroext i16 @return_zext_arg_i16(i16 %x) {
   ret i16 %x
 }
 

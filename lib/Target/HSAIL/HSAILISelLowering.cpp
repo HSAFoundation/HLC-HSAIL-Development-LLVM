@@ -902,7 +902,12 @@ HSAILTargetLowering::LowerFormalArguments(SDValue Chain,
 
 static BrigType getParamBrigType(Type *Ty, const DataLayout &DL, bool IsSExt) {
   BrigType BT = HSAIL::getBrigType(Ty, DL, IsSExt);
-  return (BT == BRIG_TYPE_B1) ? BRIG_TYPE_U8 : BT;
+  if (BT == BRIG_TYPE_B1) {
+    assert(!IsSExt && "When does this happen?");
+    return IsSExt ? BRIG_TYPE_S8 : BRIG_TYPE_U8;
+  }
+
+  return BT;
 }
 
 /// LowerCall - This hook must be implemented to lower calls into the
