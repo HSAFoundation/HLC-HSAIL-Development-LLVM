@@ -118,8 +118,6 @@ void StoreInitializer::append(const Constant *CV, StringRef Var) {
   case Value::ConstantIntVal: {
     const ConstantInt *CI = cast<ConstantInt>(CV);
     if (CI->getType()->isIntegerTy(1)) {
-      //pushValue<BRIG_TYPE_B1>(CI->getZExtValue() ? 1 : 0);
-      //XXX
       LE.write(static_cast<uint8_t>(CI->getZExtValue() ? 1 : 0));
     } else {
       switch (CI->getBitWidth()) {

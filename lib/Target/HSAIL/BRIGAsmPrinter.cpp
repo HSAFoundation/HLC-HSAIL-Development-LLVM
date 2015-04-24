@@ -73,10 +73,6 @@ static cl::opt<bool>DisableValidator("disable-validator",
   cl::desc("Disable validation of the BRIG container"),
   cl::init(false), cl::Hidden);
 
-static cl::opt<bool> PrintBeforeBRIG("print-before-brig",
-  llvm::cl::desc("Print LLVM IR just before emitting BRIG"), cl::Hidden);
-
-
 static HSAIL_ASM::SRef makeSRef(const SmallVectorImpl<char> &Str) {
   return HSAIL_ASM::SRef(Str.begin(), Str.end());
 }
@@ -798,15 +794,8 @@ bool BRIGAsmPrinter::doFinalization(Module &M) {
   return false;
 }
 
-/// EmitStartOfAsmFile - This virtual method can be overridden by targets
-/// that want to emit something at the start of their file.
 void BRIGAsmPrinter::EmitStartOfAsmFile(Module &M) {
-  if (PrintBeforeBRIG) {
-    dbgs() << std::string("*** IR Dump Before ") + getPassName() + " ***";
-    M.dump();
-  }
-
-  // Clear global variable map
+  // Clear global variable map.
   globalVariableOffsets.clear();
 
   brigantine.startProgram();
@@ -855,8 +844,6 @@ void BRIGAsmPrinter::EmitStartOfAsmFile(Module &M) {
   }
 }
 
-/// EmitEndOfAsmFile - This virtual method can be overridden by targets that
-/// want to emit something at the end of their file.
 void BRIGAsmPrinter::EmitEndOfAsmFile(Module &M) {
   brigantine.endProgram();
   // Clear global variable map
@@ -879,9 +866,7 @@ void BRIGAsmPrinter::EmitEndOfAsmFile(Module &M) {
       section.insertData(section.size(), data.begin, data.end);
     }
   }
-#if 0
-  HSAIL_ASM::dump(bc);
-#endif
+
   // optimizeOperands is not functional as of now
   // bc.optimizeOperands();
   HSAIL_ASM::Validator vld(bc);
@@ -1116,8 +1101,6 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
 #endif
 }
 
-/// EmitFunctionBodyEnd - Targets can override this to emit stuff after
-/// the last basic block in the function.
 void BRIGAsmPrinter::EmitFunctionBodyEnd() {
   autoCodeEmitter ace(&OutStreamer, &brigantine);
   brigantine.endBody();
@@ -1446,10 +1429,7 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI,
     SmallString<256> NameStr;
     getHSAILMangledName(NameStr, base.getGlobal());
 
-    // Do not add offset since it will already be in offset field
-    // see 'HSAILDAGToDAGISel::SelectAddrCommon'
     base_name = NameStr.str();
-
   }
   // Special cases for spill and private stack
   else if (base.isImm()) {
