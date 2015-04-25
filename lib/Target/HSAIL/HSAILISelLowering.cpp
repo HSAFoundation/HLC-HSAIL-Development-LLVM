@@ -948,7 +948,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
   Type *retType = funcType->getReturnType();
   SDValue RetValue;
-  if (retType->getTypeID() != Type::VoidTyID) {
+  if (!retType->isVoidTy()) {
     RetValue = DAG.getTargetExternalSymbol(PM.getParamName(
       PM.addCallRetParam(retType, PM.mangleArg(&Mang, FuncName))),
       getPointerTy(HSAILAS::ARG_ADDRESS));
