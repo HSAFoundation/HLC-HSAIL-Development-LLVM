@@ -54,7 +54,7 @@ let Predicates = [In32BitMode] in {
 let isNotDuplicable = 1, hasCtrlDep = 1, hasSideEffects = 1 in {
   def ARG_DECL : HSAILInst<(outs), (ins PtrRC:$symbol, BrigTypeX:$TypeLength, i32imm:$size,
                                     i32imm:$alignment),
-                                    "align $alignment arg_$TypeLength\t$symbol[$size]", []>;
+                                    "align $alignment arg$TypeLength\t$symbol[$size]", []>;
 }
 
 class LdStVectorMap<string op, int size> {
