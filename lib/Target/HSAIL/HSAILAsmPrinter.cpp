@@ -103,6 +103,7 @@ static bool isModuleLinkage(const GlobalValue &GV) {
 void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
                                            const Argument &A,
                                            bool IsKernel,
+                                           bool IsSExt,
                                            raw_ostream &O) const {
   const DataLayout &DL = getDataLayout();
   Type *Ty = A.getType();
@@ -119,7 +120,7 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
   // TODO_HSA: Need to emit alignment information.
   O << (IsKernel ? "kernarg" : "arg")
     << '_'
-    << getArgTypeName(EltTy)
+    << getArgTypeName(EltTy, IsSExt)
     << ' '
     << '%' << A.getName();
 
@@ -131,6 +132,7 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
 void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
                                          StringRef Name,
                                          bool IsKernel,
+                                         bool IsSExt,
                                          raw_ostream &O) const {
   const DataLayout &DL = getDataLayout();
 
@@ -145,7 +147,7 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
 
   O << (IsKernel ? "kernarg" : "arg")
     << '_'
-    << getArgTypeName(EltTy)
+    << getArgTypeName(EltTy, IsSExt)
     << ' '
     << '%'
     << Name;
@@ -170,18 +172,36 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F,
   if (!IsKernel) {
     // TODO_HSA: Need "good" names for the formal arguments and returned value.
     // TODO_HSA: Need to emit alignment information..
-    if (!RetTy->isVoidTy())
-      EmitFunctionReturn(RetTy, IsDecl ? "ret" : F.getName(), IsKernel, O);
+    if (!RetTy->isVoidTy()) {
+      StringRef RetName = IsDecl ? "ret" : F.getName();
+
+      const auto &RetAttrs = F.getAttributes().getRetAttributes();
+
+      bool IsSExt
+        = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
+      bool IsZExt
+        = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
+
+      if (IsSExt || IsZExt) {
+        EmitFunctionReturn(Type::getInt32Ty(RetTy->getContext()),
+                           RetName, IsKernel, IsSExt, O);
+      } else
+        EmitFunctionReturn(RetTy, RetName, IsKernel, IsSExt, O);
+
+    }
 
     O << ")(";
   }
+
+  const auto &Attrs = F.getAttributes();
 
   // Avoid ugly line breaks with small argument lists.
   unsigned NArgs = F.arg_size();
   if (NArgs == 0) {
     O << ')';
   } else if (NArgs == 1) {
-    EmitFunctionArgument(0, *F.arg_begin(), IsKernel, O);
+    bool IsSExt = Attrs.hasAttribute(1, Attribute::SExt);
+    EmitFunctionArgument(0, *F.arg_begin(), IsKernel, IsSExt, O);
     O << ')';
   } else {
     O << "\n\t";
@@ -191,7 +211,8 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F,
     unsigned Index = 0;
     for (Function::const_arg_iterator I = F.arg_begin(), E = F.arg_end();
          I != E; ++Index) {
-      EmitFunctionArgument(Index, *I++, IsKernel, O);
+      bool IsSExt = Attrs.hasAttribute(Index + 1, Attribute::SExt);
+      EmitFunctionArgument(Index, *I++, IsKernel, IsSExt, O);
       if (I != E)
         O << ",\n\t";
     }
@@ -618,7 +639,7 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
   }
 }
 
-StringRef HSAILAsmPrinter::getArgTypeName(Type *Ty) const {
+StringRef HSAILAsmPrinter::getArgTypeName(Type *Ty, bool Signed) const {
   switch (Ty->getTypeID()) {
   case Type::VoidTyID:
     break;
@@ -629,15 +650,15 @@ StringRef HSAILAsmPrinter::getArgTypeName(Type *Ty) const {
   case Type::IntegerTyID: {
     switch (Ty->getIntegerBitWidth()) {
     case 32:
-      return "u32";
+      return Signed ? "s32" : "u32";
     case 64:
-      return "u64";
+      return Signed ? "s64" : "u64";
     case 1:
       return "b1";
     case 8:
-      return "u8";
+      return Signed ? "s8" : "u8";
     case 16:
-      return "u16";
+      return Signed ? "s16" : "u16";
     default:
       llvm_unreachable("unhandled integer width argument");
     }

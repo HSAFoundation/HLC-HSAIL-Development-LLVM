@@ -30,15 +30,17 @@ class HSAILAsmPrinter : public AsmPrinter {
 private:
   typedef std::pair<uint64_t, const MCExpr *> AddrInit;
 
-  StringRef getArgTypeName(Type *Ty) const;
+  StringRef getArgTypeName(Type *Ty, bool Signed = false) const;
 
   void EmitFunctionArgument(unsigned ParamIndex,
                             const Argument &Arg,
                             bool IsKernel,
+                            bool IsSExt,
                             raw_ostream &O) const;
   void EmitFunctionReturn(Type *Ty,
                           StringRef Name,
                           bool IsKernel,
+                          bool IsSExt,
                           raw_ostream &O) const;
   void EmitFunctionLabel(const Function &F, raw_ostream &O, bool IsDecl) const;
 
