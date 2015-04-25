@@ -1227,23 +1227,21 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
 
   fx.linkage() = findGlobalBrigLinkage(*F);
 
-  // Functions with kernel linkage cannot have output args
-  if (!isKernel) {
-    if (!retType->isVoidTy()) {
-      const auto &RetAttrs = F->getAttributes().getRetAttributes();
-      bool IsSExt = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
-      bool IsZExt = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
+  if (!retType->isVoidTy()) {
+    const auto &RetAttrs = F->getAttributes().getRetAttributes();
+    bool IsSExt = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
+    bool IsZExt = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
 
-      if (IsSExt || IsZExt) {
-        EmitFunctionReturn(Type::getInt32Ty(retType->getContext()),
-                           isKernel, PM.getParamName(*(PM.ret_begin())),
-                           IsSExt);
-      } else {
-        EmitFunctionReturn(retType, isKernel,
-                           PM.getParamName(*(PM.ret_begin())), IsSExt);
-      }
+    if (IsSExt || IsZExt) {
+      EmitFunctionReturn(Type::getInt32Ty(retType->getContext()),
+                         isKernel, PM.getParamName(*(PM.ret_begin())),
+                         IsSExt);
+    } else {
+      EmitFunctionReturn(retType, isKernel,
+                         PM.getParamName(*(PM.ret_begin())), IsSExt);
     }
   }
+
 
   // Loop through all of the parameters and emit the types and
   // corresponding names.
