@@ -150,7 +150,7 @@ public:
   }
 
   bool isGCN() const {
-    return false;
+    return true;
   }
 
   // FIXME: Remove this

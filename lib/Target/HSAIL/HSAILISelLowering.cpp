@@ -38,10 +38,6 @@
 using namespace llvm;
 using namespace dwarf;
 
-namespace llvm {
-  extern enum OptimizeForTargetArch OptimizeFor;
-}
-
 HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   TargetLowering(TM) {
   // HSAIL uses a -1 to store a Boolean value as an int. For example,
@@ -2006,19 +2002,13 @@ SDValue HSAILTargetLowering::LowerATOMIC_STORE(SDValue Op,
 /// The type may be VoidTy, in which case only return true if the addressing
 /// mode is legal for a load/store of any legal type.
 /// TODO: Handle pre/postinc as well.
-bool
-HSAILTargetLowering::isLegalAddressingMode(const AddrMode &AM,
-                                           Type *Ty) const
-{
-  if (OptimizeFor == SI)
-  {
-    // Do not generate negative offsets as they can not be folded
-    // into instruction
-    if (AM.BaseOffs < 0 ||
-        AM.Scale < 0)
-    {
+bool HSAILTargetLowering::isLegalAddressingMode(const AddrMode &AM,
+                                                Type *Ty) const {
+  if (Subtarget->isGCN()) {
+    // Do not generate negative offsets as they can not be folded into
+    // instructions.
+    if (AM.BaseOffs < 0 || AM.Scale < 0)
       return false;
-    }
   }
 
   return TargetLowering::isLegalAddressingMode(AM, Ty);

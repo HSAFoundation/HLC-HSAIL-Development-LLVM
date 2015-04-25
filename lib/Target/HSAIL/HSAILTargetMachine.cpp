@@ -28,21 +28,6 @@ UseStandardAsmPrinter("hsail-asmprinter",
                       cl::init(false));
 
 
-// TODO_HSA: As soon as -enable-experimetal llc option is not needed anymore
-//           the code block below shall be removed.
-namespace llvm {
-  enum OptimizeForTargetArch OptimizeFor;
-
-  cl::opt<enum OptimizeForTargetArch, true> HsailOptimizeFor("hsail-optimize-for", cl::Hidden,
-    cl::desc("Tune backend optimizations for specific target architecture"),
-    cl::values(
-      clEnumVal(GENERIC, "No target specific flavor"),
-      clEnumVal(SI,      "Sea Islands family"),
-    clEnumValEnd),
-    cl::location(OptimizeFor),
-    cl::init(SI));
-}
-
 extern "C" void LLVMInitializeHSAILTarget() {
   // Register the target.
   RegisterTargetMachine<HSAIL_32TargetMachine> X(TheHSAIL_32Target);
