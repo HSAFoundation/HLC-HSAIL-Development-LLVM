@@ -434,14 +434,12 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &F,
   // TODO_HSA: pending BRIG_LINKAGE_STATIC implementation in the Finalizer
   fx.linkage() = findGlobalBrigLinkage(F);
 
+  const auto &Attrs = F.getAttributes();
+
   paramCounter = 0;
   if (!retType->isVoidTy()) {
-    const auto &RetAttrs = F.getAttributes().getRetAttributes();
-
-    bool IsSExt
-      = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
-    bool IsZExt
-      = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
+    bool IsSExt = Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
+    bool IsZExt = Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
 
     if (IsSExt || IsZExt) {
       EmitFunctionReturn(Type::getInt32Ty(retType->getContext()),
@@ -455,12 +453,13 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &F,
   Function::const_arg_iterator ai = F.arg_begin();
   Function::const_arg_iterator ae = F.arg_end();
   unsigned n = 1;
+
   for (FunctionType::param_iterator pb = funcType->param_begin(),
          pe = funcType->param_end(); pb != pe; ++pb, ++ai, ++n) {
     assert(ai != ae);
     Type* type = *pb;
-    EmitFunctionArgument(type, false, ai->getName(), F.getAttributes().getParamAttributes(n)
-                         .hasAttribute(n, Attribute::SExt));
+    bool IsSExt = Attrs.hasAttribute(n, Attribute::SExt);
+    EmitFunctionArgument(type, false, ai->getName(), IsSExt);
   }
 }
 
@@ -1227,10 +1226,10 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
 
   fx.linkage() = findGlobalBrigLinkage(*F);
 
+  const auto &Attrs = F->getAttributes();
   if (!retType->isVoidTy()) {
-    const auto &RetAttrs = F->getAttributes().getRetAttributes();
-    bool IsSExt = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
-    bool IsZExt = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
+    bool IsSExt = Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
+    bool IsZExt = Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
 
     if (IsSExt || IsZExt) {
       EmitFunctionReturn(Type::getInt32Ty(retType->getContext()),
@@ -1273,7 +1272,7 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
     // Here we will store an offset of DirectiveVariable
     uint64_t argDirectiveOffset = 0;
 
-    bool IsSExt = F->getAttributes().hasAttribute(n, Attribute::SExt);
+    bool IsSExt = Attrs.hasAttribute(n, Attribute::SExt);
     argDirectiveOffset = EmitFunctionArgument(type, isKernel, argName, IsSExt);
     functionScalarArgumentOffsets[argName] = argDirectiveOffset;
   }
