@@ -18,6 +18,7 @@
 
 #include "HSAILAsmPrinter.h"
 #include "HSAIL.h"
+#include "HSAILMCInstLower.h"
 #include "HSAILUtilityFunctions.h"
 #include "HSAILSubtarget.h"
 #include "HSAILStoreInitializer.h"
@@ -875,4 +876,12 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
 
 void HSAILAsmPrinter::EmitFunctionBodyEnd() {
   OutStreamer.EmitRawText("};");
+}
+
+void HSAILAsmPrinter::EmitInstruction(const MachineInstr *MI) {
+  HSAILMCInstLower MCInstLowering(OutContext, *this);
+
+  MCInst TmpInst;
+  MCInstLowering.lower(MI, TmpInst);
+  EmitToStreamer(OutStreamer, TmpInst);
 }

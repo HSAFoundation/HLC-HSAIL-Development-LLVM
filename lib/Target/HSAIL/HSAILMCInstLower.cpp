@@ -14,9 +14,13 @@
 //
 
 #include "HSAILMCInstLower.h"
+#include "HSAIL.h"
 #include "HSAILAsmPrinter.h"
-#include "HSAILTargetMachine.h"
 #include "InstPrinter/HSAILInstPrinter.h"
+#include "llvm/CodeGen/AsmPrinter.h"
+#include "llvm/CodeGen/MachineBasicBlock.h"
+#include "llvm/IR/Constants.h"
+#include "llvm/IR/GlobalValue.h"
 #include "llvm/MC/MCContext.h"
 #include "llvm/MC/MCExpr.h"
 #include "llvm/MC/MCInst.h"
@@ -80,12 +84,4 @@ void HSAILMCInstLower::lower(const MachineInstr *MI, MCInst &OutMI) const {
     }
     OutMI.addOperand(MCOp);
   }
-}
-
-void HSAILAsmPrinter::EmitInstruction(const MachineInstr *MI) {
-  HSAILMCInstLower MCInstLowering(OutContext, *this);
-
-  MCInst TmpInst;
-  MCInstLowering.lower(MI, TmpInst);
-  EmitToStreamer(OutStreamer, TmpInst);
 }
