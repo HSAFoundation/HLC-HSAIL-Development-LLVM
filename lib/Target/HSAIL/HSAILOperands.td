@@ -50,3 +50,13 @@ def equiv : Operand <i32> {
 def v4mod : Operand <i1> {
   let PrintMethod = "printV4";
 }
+
+def ArgDeclAlignment : Operand<i32> {
+  let OperandType = "OPERAND_IMMEDIATE";
+  let PrintMethod = "printArgDeclAlignment";
+}
+
+def ArraySize : Operand<i32> {
+  let OperandType = "OPERAND_IMMEDIATE";
+  let PrintMethod = "printArraySize";
+}

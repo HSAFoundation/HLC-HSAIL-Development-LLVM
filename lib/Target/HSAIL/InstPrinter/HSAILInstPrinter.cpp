@@ -154,6 +154,20 @@ void HSAILInstPrinter::printBrigAlignment(const MCInst *MI, unsigned OpNo,
     O << "_align(" << formatDec(Align) << ')';
 }
 
+void HSAILInstPrinter::printArgDeclAlignment(const MCInst *MI, unsigned OpNo,
+                                             raw_ostream &O) {
+  unsigned Align = MI->getOperand(OpNo).getImm();
+  if (Align != 0)
+    O << "align(" << formatDec(Align) << ") ";
+}
+
+void HSAILInstPrinter::printArraySize(const MCInst *MI, unsigned OpNo,
+                                      raw_ostream &O) {
+  int64_t Size = MI->getOperand(OpNo).getImm();
+  if (Size != 0)
+    O << '[' << Size << ']';
+}
+
 void HSAILInstPrinter::printEquiv(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   unsigned Equiv = MI->getOperand(OpNo).getImm();
