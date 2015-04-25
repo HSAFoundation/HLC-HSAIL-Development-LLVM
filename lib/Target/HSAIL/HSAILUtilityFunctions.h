@@ -104,8 +104,6 @@ static inline bool isImageInst(const llvm::MachineInstr *MI) {
   return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_IMAGEINST;
 }
 
-bool isArgInst(const llvm::TargetMachine &TM, const llvm::MachineInstr *MI);
-
 bool isKernelFunc(const llvm::Function *F);
 bool isSPIRModule(const llvm::Module &M);
 

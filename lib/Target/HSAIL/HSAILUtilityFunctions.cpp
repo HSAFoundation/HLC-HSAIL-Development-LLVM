@@ -169,17 +169,6 @@ unsigned getAlignTypeQualifier(Type *ty, const DataLayout& DL,
   return align;
 }
 
-bool isArgInst(const TargetMachine &TM, const llvm::MachineInstr *MI) {
-  unsigned op = MI->getOpcode();
-  const TargetInstrInfo *TII = TM.getSubtarget<HSAILSubtarget>().getInstrInfo();
-  const MCInstrDesc &MCID = TII->get(op);
-  if (!MCID.mayLoad() || !MI->hasOneMemOperand()) return false;
-  unsigned as = (*MI->memoperands_begin())->getPointerInfo().getAddrSpace();
-  if (as != HSAILAS::KERNARG_ADDRESS && as != HSAILAS::ARG_ADDRESS) return false;
-  return true;
-}
-
-
 const char *getTypeName(Type *ptr, const char *symTab,
                         HSAILMachineFunctionInfo *mfi, bool signedType) {
   switch (ptr->getTypeID()) {
