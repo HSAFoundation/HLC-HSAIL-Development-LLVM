@@ -1499,7 +1499,7 @@ void BRIGAsmPrinter::BrigEmitVecArgDeclaration(const MachineInstr *MI) {
 
   HSAIL_ASM::DirectiveVariable ArgDecl = (NElts > 1) ?
     brigantine.addArrayVariable(makeSRef(Name), NElts, BRIG_SEGMENT_ARG,
-                                BT & ~BRIG_TYPE_ARRAY) :
+                                BT) :
     brigantine.addVariable(makeSRef(Name), BRIG_SEGMENT_ARG, BT);
 
   ArgDecl.align() = getBrigAlignment(Align);

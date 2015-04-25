@@ -949,19 +949,27 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   Type *retType = funcType->getReturnType();
   SDValue RetValue;
   if (!retType->isVoidTy()) {
+    MVT PtrVT = getPointerTy(HSAILAS::ARG_ADDRESS);
     RetValue = DAG.getTargetExternalSymbol(PM.getParamName(
       PM.addCallRetParam(retType, PM.mangleArg(&Mang, FuncName))),
-      getPointerTy(HSAILAS::ARG_ADDRESS));
+      PtrVT);
 
-    BrigType BT = getParamBrigType(retType, *DL, CLI.RetSExt);
-    SDValue SDBrigType =  DAG.getTargetConstant(BT, MVT::i32);
-    SDValue arrSize = DAG.getTargetConstant(
-      HSAIL::getNumElementsInHSAILType(retType, *DL), MVT::i32);
+    unsigned NElts;
+    Type *EmitTy = HSAIL::analyzeType(retType, NElts, *DL);
 
-    unsigned alignment = HSAIL::getAlignTypeQualifier(retType, *DL, false);
-    SDValue Align = DAG.getTargetConstant(alignment, MVT::i32);
-    SDValue ArgDeclOps[] = { RetValue, SDBrigType, arrSize, Align,
-                             Chain, InFlag };
+    BrigType BT = getParamBrigType(EmitTy, *DL, CLI.RetSExt);
+
+    unsigned Align = HSAIL::getAlignTypeQualifier(retType, *DL, false);
+
+    const SDValue ArgDeclOps[] = {
+      RetValue,
+      DAG.getTargetConstant(BT, MVT::i32),
+      DAG.getTargetConstant(NElts, PtrVT),
+      DAG.getTargetConstant(Align, MVT::i32),
+      Chain,
+      InFlag
+    };
+
     SDNode *ArgDeclNode
       = DAG.getMachineNode(HSAIL::ARG_DECL, dl, VTs, ArgDeclOps);
 
@@ -972,6 +980,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
     VarOps.push_back(RetValue);
   }
+
   // Delimit return value and parameters with 0
   VarOps.push_back(DAG.getTargetConstant(0, MVT::i32));
   unsigned FirstArg = VarOps.size();
@@ -983,6 +992,8 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     ai = calleeFunc->arg_begin();
     ae = calleeFunc->arg_end();
   }
+
+  MVT ArgPtrVT = getPointerTy(HSAILAS::ARG_ADDRESS);
 
   MDBuilder MDB(*DAG.getContext());
   for(FunctionType::param_iterator pb = funcType->param_begin(),
@@ -1000,18 +1011,24 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     }
     SDValue StParamValue = DAG.getTargetExternalSymbol(
       PM.getParamName(PM.addCallArgParam(type, ParamName)),
-      getPointerTy(HSAILAS::ARG_ADDRESS));
+      ArgPtrVT);
+
+    unsigned NElts;
+    Type *EmitTy = HSAIL::analyzeType(type, NElts, *DL);
 
     // START array parameter declaration
-    BrigType BT = getParamBrigType(type, *DL, Outs[j].Flags.isSExt());
-    SDValue SDBrigType =  DAG.getTargetConstant(BT, MVT::i32);
-    SDValue arrSize =  DAG.getTargetConstant(
-      HSAIL::getNumElementsInHSAILType(type, *DL), MVT::i32);
+    BrigType BT = getParamBrigType(EmitTy, *DL, Outs[j].Flags.isSExt());
 
-    unsigned alignment = HSAIL::getAlignTypeQualifier(type, *DL, false);
-    SDValue Align = DAG.getTargetConstant(alignment, MVT::i32);
-    SDValue ArgDeclOps[] = { StParamValue, SDBrigType, arrSize, Align,
-                             Chain, InFlag };
+    unsigned Align = HSAIL::getAlignTypeQualifier(type, *DL, false);
+    const SDValue ArgDeclOps[] = {
+      StParamValue,
+      DAG.getTargetConstant(BT, MVT::i32),
+      DAG.getTargetConstant(NElts, ArgPtrVT),
+      DAG.getTargetConstant(Align, MVT::i32),
+      Chain,
+      InFlag
+    };
+
     SDNode *ArgDeclNode
       = DAG.getMachineNode(HSAIL::ARG_DECL, dl, VTs, ArgDeclOps);
     Chain = SDValue(ArgDeclNode, 0);
