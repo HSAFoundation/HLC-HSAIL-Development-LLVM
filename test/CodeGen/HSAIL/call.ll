@@ -12,6 +12,12 @@ declare void @extern.argi16(i16 %x) #0
 declare void @extern.argi32(i32 %x) #0
 declare void @extern.argi64(i64 %x) #0
 
+declare void @extern.argv3i32(<3 x i32>) #0
+declare void @extern.argv4i32(<4 x i32>) #0
+
+declare void @argument.name.is.shadowed(i32 %is.shadowed) #0
+declare void @argument.name.is.shadowed.vector(<2 x i32> %is.shadowed) #0
+
 ; HSAIL-LABEL{{^}}prog function &test_void_call_no_args(
 ; HSAIL: {
 ; HSAIL: call &extern.noret () ();
@@ -150,6 +156,74 @@ define void @test_call_i16_arg(i16 %x) #0 {
 ; HSAIL: }
 define void @test_call_i1_arg(i1 %x) #0 {
   call void @extern.argi1(i1 %x) #0
+  ret void
+}
+
+; HSAIL-LABEL{{^}}prog function &test_call_v4i32_arg(
+; HSAIL: {
+; HSAIL: ld_arg_align(16)_u32 [[LDELT0:\$s[0-9]+]], [%x];
+; HSAIL: ld_arg_align(4)_u32 [[LDELT1:\$s[0-9]+]], [%x][4];
+; HSAIL: ld_arg_align(8)_u32 [[LDELT2:\$s[0-9]+]], [%x][8];
+; HSAIL: ld_arg_align(4)_u32 [[LDELT3:\$s[0-9]+]], [%x][12];
+; HSAIL-NEXT: {
+; HSAIL-NEXT: align(16) arg_u32 %__param_p0[4];
+; HSAIL-NEXT: st_arg_align(16)_u32 [[LDELT0]], [%__param_p0];
+; HSAIL-NEXT: st_arg_align(4)_u32 [[LDELT1]], [%__param_p0][4];
+; HSAIL-NEXT: st_arg_align(8)_u32 [[LDELT2]], [%__param_p0][8];
+; HSAIL-NEXT: st_arg_align(4)_u32 [[LDELT3]], [%__param_p0][12];
+; HSAIL-NEXT: call &extern.argv4i32 () (%__param_p0);
+; HSAIL-NEXT: }
+; HSAIL: }
+define void @test_call_v4i32_arg(<4 x i32> %x) #0 {
+  call void @extern.argv4i32(<4 x i32> %x) #0
+  ret void
+}
+
+; HSAIL-LABEL{{^}}prog function &test_call_v3i32_arg(
+; HSAIL: {
+; HSAIL: ld_arg_align(16)_u32 [[LDELT0:\$s[0-9]+]], [%x];
+; HSAIL: ld_arg_align(4)_u32 [[LDELT1:\$s[0-9]+]], [%x][4];
+; HSAIL: ld_arg_align(8)_u32 [[LDELT2:\$s[0-9]+]], [%x][8];
+; HSAIL-NEXT: {
+; HSAIL-NEXT: align(16) arg_u32 %__param_p0[4];
+; HSAIL-NEXT: st_arg_align(16)_u32 [[LDELT0]], [%__param_p0];
+; HSAIL-NEXT: st_arg_align(4)_u32 [[LDELT1]], [%__param_p0][4];
+; HSAIL-NEXT: st_arg_align(8)_u32 [[LDELT2]], [%__param_p0][8];
+; HSAIL-NEXT: call &extern.argv3i32 () (%__param_p0);
+; HSAIL-NEXT: }
+; HSAIL: }
+define void @test_call_v3i32_arg(<3 x i32> %x) #0 {
+  call void @extern.argv3i32(<3 x i32> %x) #0
+  ret void
+}
+
+; HSAIL-LABEL{{^}}prog function &test_call_shadow_argument_name()(arg_u32 %is.shadowed)
+; HSAIL: {
+; HSAIL: ld_arg_align(4)_u32 [[LDARG:\$s[0-9]+]], [%is.shadowed];
+; HSAIL-NEXT: {
+; HSAIL-NEXT: arg_u32 %is.shadowed;
+; HSAIL-NEXT: st_arg_align(4)_u32 [[LDARG]], [%is.shadowed];
+; HSAIL-NEXT: call &argument.name.is.shadowed () (%is.shadowed);
+; HSAIL-NEXT: }
+; HSAIL: }
+define void @test_call_shadow_argument_name(i32 %is.shadowed) #0 {
+  call void @argument.name.is.shadowed(i32 %is.shadowed) #0
+  ret void
+}
+
+; HSAIL-LABEL{{^}}prog function &test_call_shadow_argument_name_vector()(arg_u32 %is.shadowed[2])
+; HSAIL: {
+; HSAIL: ld_arg_align(8)_u32 [[LDELT0:\$s[0-9]+]], [%is.shadowed];
+; HSAIL: ld_arg_align(4)_u32 [[LDELT1:\$s[0-9]+]], [%is.shadowed][4];
+; HSAIL-NEXT: {
+; HSAIL-NEXT: align(8) arg_u32 %is.shadowed[2];
+; HSAIL-NEXT: st_arg_align(8)_u32 [[LDELT0]], [%is.shadowed];
+; HSAIL-NEXT: st_arg_align(4)_u32 [[LDELT1]], [%is.shadowed][4];
+; HSAIL-NEXT: call &argument.name.is.shadowed.vector () (%is.shadowed);
+; HSAIL-NEXT: }
+; HSAIL: }
+define void @test_call_shadow_argument_name_vector(<2 x i32> %is.shadowed) #0 {
+  call void @argument.name.is.shadowed.vector(<2 x i32> %is.shadowed) #0
   ret void
 }
 

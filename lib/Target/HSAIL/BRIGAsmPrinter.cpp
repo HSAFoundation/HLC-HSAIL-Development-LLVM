@@ -1486,34 +1486,26 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI,
 }
 
 void BRIGAsmPrinter::BrigEmitVecArgDeclaration(const MachineInstr *MI) {
-  const MachineOperand &symb
+  const MachineOperand &Symbol
     = *TII->getNamedOperand(*MI, HSAIL::OpName::symbol);
-  const MachineOperand &brig_type
-    = *TII->getNamedOperand(*MI, HSAIL::OpName::TypeLength);
-  const MachineOperand &size
-    = *TII->getNamedOperand(*MI, HSAIL::OpName::size);
-  const MachineOperand &align
-    = *TII->getNamedOperand(*MI, HSAIL::OpName::alignment);
 
-  assert( symb.getType()      == MachineOperand::MO_ExternalSymbol );
-  assert( brig_type.getType() == MachineOperand::MO_Immediate );
-  assert( size.getType()      == MachineOperand::MO_Immediate );
-  assert( align.getType()     == MachineOperand::MO_Immediate );
+  unsigned BT = TII->getNamedModifierOperand(*MI, HSAIL::OpName::TypeLength);
+  int64_t NElts = TII->getNamedModifierOperand(*MI, HSAIL::OpName::size);
+  unsigned Align = TII->getNamedModifierOperand(*MI, HSAIL::OpName::alignment);
 
-  std::ostringstream stream;
-  stream << "%" << symb.getSymbolName();
+  SmallString<64> Name;
+  Name += '%';
+  Name += Symbol.getSymbolName();
 
-  unsigned num_elem = size.getImm();
+  HSAIL_ASM::DirectiveVariable ArgDecl = (NElts > 1) ?
+    brigantine.addArrayVariable(makeSRef(Name), NElts, BRIG_SEGMENT_ARG,
+                                BT & ~BRIG_TYPE_ARRAY) :
+    brigantine.addVariable(makeSRef(Name), BRIG_SEGMENT_ARG, BT);
 
-  BrigType brigType = (BrigType)brig_type.getImm();
-  HSAIL_ASM::DirectiveVariable vec_arg = (num_elem > 1 ) ?
-    brigantine.addArrayVariable(stream.str(), num_elem, BRIG_SEGMENT_ARG, brigType) :
-    brigantine.addVariable(stream.str(), BRIG_SEGMENT_ARG, brigType);
-
-  vec_arg.align() = getBrigAlignment(align.getImm());
-  vec_arg.modifier().isDefinition() = true;
-  vec_arg.allocation() = BRIG_ALLOCATION_AUTOMATIC;
-  vec_arg.linkage() = BRIG_LINKAGE_ARG;
+  ArgDecl.align() = getBrigAlignment(Align);
+  ArgDecl.modifier().isDefinition() = true;
+  ArgDecl.allocation() = BRIG_ALLOCATION_AUTOMATIC;
+  ArgDecl.linkage() = BRIG_LINKAGE_ARG;
 
   return;
 }
