@@ -1244,44 +1244,41 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
       }
     }
   }
-  if (funcType) {
-    // Loop through all of the parameters and emit the types and
-    // corresponding names.
-    paramCounter = 0;
 
-    // clear arguments mapping
-    functionScalarArgumentOffsets.clear();
-    functionVectorArgumentOffsets.clear();
+  // Loop through all of the parameters and emit the types and
+  // corresponding names.
+  paramCounter = 0;
 
-    HSAILParamManager::param_iterator Ip = PM.arg_begin();
-    HSAILParamManager::param_iterator Ep = PM.arg_end();
+  // clear arguments mapping
+  functionScalarArgumentOffsets.clear();
+  functionVectorArgumentOffsets.clear();
 
-    FunctionType::param_iterator pb = funcType->param_begin(),
-                                 pe = funcType->param_end();
+  HSAILParamManager::param_iterator Ip = PM.arg_begin();
+  HSAILParamManager::param_iterator Ep = PM.arg_end();
 
-    if (isKernel && F->hasStructRetAttr()) {
-      assert(Ip != Ep && "Invalid struct return fucntion!");
-      // If this is a struct-return function, don't process the hidden
-      // struct-return argument.
-      ++Ip;
-      ++pb;
-    }
+  FunctionType::param_iterator pb = funcType->param_begin(),
+    pe = funcType->param_end();
 
-    for (unsigned n = 1; pb != pe; ++pb, ++Ip, ++n) {
-      Type* type = *pb;
-      assert(Ip != Ep);
-      // Obtain argument name
-      const char* argName = PM.getParamName(*Ip);
-      // Here we will store an offset of DirectiveVariable
-      uint64_t argDirectiveOffset = 0;
-      argDirectiveOffset = EmitFunctionArgument(type, isKernel, argName,
-        F->getAttributes().getParamAttributes(n).hasAttribute(n, Attribute::SExt));
-      functionScalarArgumentOffsets[argName] = argDirectiveOffset;
-    }
+  if (isKernel && F->hasStructRetAttr()) {
+    assert(Ip != Ep && "Invalid struct return fucntion!");
+    // If this is a struct-return function, don't process the hidden
+    // struct-return argument.
+    ++Ip;
+    ++pb;
   }
 
-  // DO NOT need to call endFunc() here it'll be called later on
-  // in EmitFunctionBodyEnd().
+  for (unsigned n = 1; pb != pe; ++pb, ++Ip, ++n) {
+    Type* type = *pb;
+    assert(Ip != Ep);
+    // Obtain argument name
+    const char* argName = PM.getParamName(*Ip);
+    // Here we will store an offset of DirectiveVariable
+    uint64_t argDirectiveOffset = 0;
+
+    bool IsSExt = F->getAttributes().hasAttribute(n, Attribute::SExt);
+    argDirectiveOffset = EmitFunctionArgument(type, isKernel, argName, IsSExt);
+    functionScalarArgumentOffsets[argName] = argDirectiveOffset;
+  }
 }
 
 //===------------------------------------------------------------------===//
