@@ -17,19 +17,9 @@
 #include "HSAILAsmPrinter.h"
 #include "HSAILTargetMachine.h"
 #include "InstPrinter/HSAILInstPrinter.h"
-#include "llvm/CodeGen/MachineBasicBlock.h"
-#include "llvm/CodeGen/MachineInstr.h"
-#include "llvm/IR/Constants.h"
-#include "llvm/IR/GlobalVariable.h"
-#include "llvm/MC/MCCodeEmitter.h"
 #include "llvm/MC/MCContext.h"
 #include "llvm/MC/MCExpr.h"
 #include "llvm/MC/MCInst.h"
-#include "llvm/MC/MCObjectStreamer.h"
-#include "llvm/MC/MCStreamer.h"
-#include "llvm/Support/ErrorHandling.h"
-#include "llvm/Support/Format.h"
-#include <algorithm>
 
 using namespace llvm;
 
