@@ -367,7 +367,7 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   Type *InitTy = GV->getType()->getElementType();
 
   unsigned NElts = 0;
-  Type *EltTy = analyzeType(InitTy, NElts, DL, GV->getContext());
+  Type *EltTy = analyzeType(InitTy, NElts, DL);
 
   HSAIL_ASM::DirectiveVariable globalVar;
   // TODO_HSA: pending BRIG_LINKAGE_STATIC implementation in the Finalizer
@@ -934,7 +934,7 @@ HSAIL_ASM::DirectiveVariable BRIGAsmPrinter::EmitLocalVariable(
   Type *InitTy = GV->getType()->getElementType();
 
   unsigned NElts = 0;
-  Type *EltTy = analyzeType(InitTy, NElts, DL, GV->getContext());
+  Type *EltTy = analyzeType(InitTy, NElts, DL);
   unsigned Align = getGVAlignment(*GV, DL, InitTy, EltTy, NElts, true);
 
   HSAIL_ASM::DirectiveVariable var;
@@ -1128,7 +1128,7 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
   const DataLayout &DL = getDataLayout();
 
   unsigned NElts = ~0u;
-  Type *EmitTy = analyzeType(type, NElts, DL, type->getContext());
+  Type *EmitTy = analyzeType(type, NElts, DL);
 
   // construct return symbol
   HSAIL_ASM::DirectiveVariable retParam;
@@ -1187,7 +1187,7 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
            "i1 vectors are broken");
 
     unsigned NElts = ~0u;
-    Type *EmitTy = analyzeType(type, NElts, DL, type->getContext());
+    Type *EmitTy = analyzeType(type, NElts, DL);
 
     if (NElts != 0) {
       BrigType EltTy = HSAIL::getBrigType(EmitTy, DL, isSExt);

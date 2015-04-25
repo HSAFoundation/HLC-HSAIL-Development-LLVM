@@ -109,7 +109,7 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
   Type *Ty = A.getType();
 
   unsigned NElts = ~0u;
-  Type *EltTy = analyzeType(Ty, NElts, DL, Ty->getContext());
+  Type *EltTy = analyzeType(Ty, NElts, DL);
 
   if (NElts > 1) {
     unsigned ABIAlign = DL.getABITypeAlignment(Ty);
@@ -143,7 +143,7 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
   const DataLayout &DL = getDataLayout();
 
   unsigned NElts = ~0u;
-  Type *EltTy = analyzeType(Ty, NElts, DL, Ty->getContext());
+  Type *EltTy = analyzeType(Ty, NElts, DL);
 
   if (NElts > 1) {
     unsigned ABIAlign = DL.getABITypeAlignment(Ty);
@@ -359,7 +359,7 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
   }
 
   unsigned NElts = 1;
-  Type *EltTy = analyzeType(CV->getType(), NElts, DL, GV.getContext());
+  Type *EltTy = analyzeType(CV->getType(), NElts, DL);
 
   unsigned EltSize = DL.getTypeAllocSize(EltTy);
   SmallVector<AddrInit, 16> AddrInits;
@@ -399,8 +399,7 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
 
 Type *HSAILAsmPrinter::analyzeType(Type *Ty,
                                    unsigned &NElts,
-                                   const DataLayout &DL,
-                                   LLVMContext &Ctx) {
+                                   const DataLayout &DL) {
   // Scan through levels of nested arrays until we get to something that can't
   // be expressed as a simple array element.
   if (ArrayType *AT = dyn_cast<ArrayType>(Ty)) {
@@ -416,7 +415,7 @@ Type *HSAILAsmPrinter::analyzeType(Type *Ty,
     unsigned EltElts = ~0u;
 
     // We could have arrays of vectors or structs.
-    Type *Tmp = analyzeType(EltTy, EltElts, DL, Ctx);
+    Type *Tmp = analyzeType(EltTy, EltElts, DL);
 
     // We only need to multiply if this was a nested vector type.
     if (EltElts != 0)
@@ -443,7 +442,7 @@ Type *HSAILAsmPrinter::analyzeType(Type *Ty,
 
   if (isa<StructType>(Ty)) {
     NElts = DL.getTypeAllocSize(Ty);
-    return Type::getInt8Ty(Ctx);
+    return Type::getInt8Ty(Ty->getContext());
   }
 
   assert(!Ty->isAggregateType());
@@ -453,7 +452,7 @@ Type *HSAILAsmPrinter::analyzeType(Type *Ty,
   // Arrays of i1 are not supported, and must be replaced with byte sized
   // elements.
   if (Ty->isIntegerTy(1))
-    return Type::getInt8Ty(Ctx);
+    return Type::getInt8Ty(Ty->getContext());
 
   return Ty;
 }
@@ -542,7 +541,7 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
     O << "alloc(agent) ";
 
   unsigned NElts = ~0u;
-  Type *EmitTy = analyzeType(InitTy, NElts, DL, GV->getContext());
+  Type *EmitTy = analyzeType(InitTy, NElts, DL);
 
   printAlignTypeQualifier(*GV, DL, InitTy, EmitTy, NElts, false, O);
 
@@ -782,7 +781,7 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
         Type *InitTy = Ty->getElementType();
 
         unsigned NElts = ~0u;
-        Type *EmitTy = analyzeType(InitTy, NElts, DL, M->getContext());
+        Type *EmitTy = analyzeType(InitTy, NElts, DL);
         printAlignTypeQualifier(GV, DL, InitTy, EmitTy, NElts, true, O);
 
         O << getSegmentName(AS) << '_' << getArgTypeName(EmitTy)
@@ -839,7 +838,7 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
         Type *InitTy = Ty->getElementType();
 
         unsigned NElts = ~0u;
-        Type *EmitTy = analyzeType(InitTy, NElts, DL, M->getContext());
+        Type *EmitTy = analyzeType(InitTy, NElts, DL);
 
         printAlignTypeQualifier(GV, DL, InitTy, EmitTy, NElts, true, O);
         str = "";

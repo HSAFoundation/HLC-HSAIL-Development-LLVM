@@ -73,8 +73,7 @@ protected:
   // 0.
   static Type *analyzeType(Type *Ty,
                            unsigned &NElts,
-                           const DataLayout &DL,
-                           LLVMContext &Ctx);
+                           const DataLayout &DL);
 
   void getHSAILMangledName(SmallString<256> &Out, const GlobalValue *GV) const;
 
