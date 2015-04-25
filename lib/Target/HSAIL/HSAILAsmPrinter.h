@@ -22,6 +22,10 @@ namespace llvm {
 
 class ConstantFP;
 
+template <unsigned>
+class SmallString;
+
+
 class HSAILAsmPrinter : public AsmPrinter {
 private:
   typedef std::pair<uint64_t, const MCExpr *> AddrInit;
@@ -69,6 +73,9 @@ protected:
                            unsigned &NElts,
                            const DataLayout &DL,
                            LLVMContext &Ctx);
+
+  void getHSAILMangledName(SmallString<256> &Out, const GlobalValue *GV) const;
+
 public:
   explicit HSAILAsmPrinter(TargetMachine &TM, MCStreamer &Streamer);
 

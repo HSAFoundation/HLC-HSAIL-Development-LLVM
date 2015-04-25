@@ -161,9 +161,10 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F,
   // FIXME: Should define HSA calling conventions.
   bool IsKernel = HSAIL::isKernelFunc(&F);
 
-  O << (IsKernel ? "kernel " : "function ");
-  O << '&' << F.getName() << '(';
+  SmallString<256> Name;
+  getHSAILMangledName(Name, &F);
 
+  O << (IsKernel ? "kernel " : "function ") << Name << '(';
 
   // Functions with kernel linkage cannot have output args.
   if (!IsKernel) {
@@ -430,6 +431,38 @@ Type *HSAILAsmPrinter::analyzeType(Type *Ty,
   return Ty;
 }
 
+void HSAILAsmPrinter::getHSAILMangledName(SmallString<256> &NameStr,
+                                          const GlobalValue *GV) const {
+  if (isa<Function>(GV))
+    NameStr += '&';
+  else if (const GlobalAlias *GA = dyn_cast<GlobalAlias>(GV)) {
+    if (isa<Function>(GA->getAliasee()))
+      NameStr += '&';
+    else
+      llvm_unreachable("Not handled");
+  } else {
+    unsigned AS = GV->getType()->getAddressSpace();
+    NameStr += getSymbolPrefixForAddressSpace(AS);
+  }
+
+  SmallString<256> Mangled;
+  SmallString<256> Sanitized;
+
+  getNameWithPrefix(Mangled, GV);
+
+  NameStr += Mangled;
+
+#if 0
+  // FIXME: We need a way to deal with invalid identifiers, e.g. leading
+  // period. We can replace them with something here, but need a way to resolve
+  // possible conflicts.
+  if (HSAIL::sanitizedGlobalValueName(Mangled, Sanitized))
+    NameStr += Sanitized;
+  else
+    NameStr += Mangled;
+#endif
+}
+
 // FIXME: Mostly duplicated in BRIGAsmPrinter
 static void printAlignTypeQualifier(const GlobalValue &GV,
                                     const DataLayout& DL,
@@ -463,7 +496,10 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   if (HSAIL::isIgnoredGV(GV))
     return;
 
-  StringRef GVname = GV->getName();
+  SmallString<256> Name;
+  getHSAILMangledName(Name, GV);
+
+
   SmallString<1024> Str;
   raw_svector_ostream O(Str);
   const DataLayout &DL = getDataLayout();
@@ -483,7 +519,7 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
 
   printAlignTypeQualifier(*GV, DL, InitTy, EmitTy, NElts, false, O);
 
-  O << getSegmentName(AS) << '_' << getArgTypeName(EmitTy) << " &" << GVname;
+  O << getSegmentName(AS) << '_' << getArgTypeName(EmitTy) << ' ' << Name;
 
   if (NElts != 0)
     O << '[' << NElts << ']';

@@ -2035,38 +2035,6 @@ bool BRIGAsmPrinter::usesGCNAtomicCounter(void) {
   return false;
 }
 
-void BRIGAsmPrinter::getHSAILMangledName(SmallString<256> &NameStr,
-                                         const GlobalValue *GV) const {
-  if (isa<Function>(GV))
-    NameStr += '&';
-  else if (const GlobalAlias *GA = dyn_cast<GlobalAlias>(GV)) {
-    if (isa<Function>(GA->getAliasee()))
-      NameStr += '&';
-    else
-      llvm_unreachable("Not handled");
-  } else {
-    unsigned AS = GV->getType()->getAddressSpace();
-    NameStr += getSymbolPrefixForAddressSpace(AS);
-  }
-
-  SmallString<256> Mangled;
-  SmallString<256> Sanitized;
-
-  getNameWithPrefix(Mangled, GV);
-
-  NameStr += Mangled;
-
-#if 0
-  // FIXME: We need a way to deal with invalid identifiers, e.g. leading
-  // period. We can replace them with something here, but need a way to resolve
-  // possible conflicts.
-  if (HSAIL::sanitizedGlobalValueName(Mangled, Sanitized))
-    NameStr += Sanitized;
-  else
-    NameStr += Mangled;
-#endif
-}
-
 BrigAlignment8_t BRIGAsmPrinter::getBrigAlignment(unsigned AlignVal) {
   // Round to the next power of 2.
   unsigned Rounded = RoundUpToAlignment(AlignVal, NextPowerOf2(AlignVal - 1));
