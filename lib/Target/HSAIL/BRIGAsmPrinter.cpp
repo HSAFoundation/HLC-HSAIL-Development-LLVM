@@ -1497,10 +1497,13 @@ void BRIGAsmPrinter::BrigEmitVecArgDeclaration(const MachineInstr *MI) {
   Name += '%';
   Name += Symbol.getSymbolName();
 
-  HSAIL_ASM::DirectiveVariable ArgDecl = (NElts > 1) ?
-    brigantine.addArrayVariable(makeSRef(Name), NElts, BRIG_SEGMENT_ARG,
-                                BT) :
-    brigantine.addVariable(makeSRef(Name), BRIG_SEGMENT_ARG, BT);
+  HSAIL_ASM::DirectiveVariable ArgDecl;
+  if (NElts != 0) {
+    ArgDecl = brigantine.addArrayVariable(makeSRef(Name),
+                                          NElts, BRIG_SEGMENT_ARG, BT);
+  } else {
+    ArgDecl = brigantine.addVariable(makeSRef(Name), BRIG_SEGMENT_ARG, BT);
+  }
 
   ArgDecl.align() = getBrigAlignment(Align);
   ArgDecl.modifier().isDefinition() = true;
