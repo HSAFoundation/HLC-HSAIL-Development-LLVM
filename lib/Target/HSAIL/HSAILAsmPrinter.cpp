@@ -122,7 +122,13 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
     << '_'
     << getArgTypeName(EltTy, IsSExt)
     << ' '
-    << '%' << A.getName();
+    << '%';
+
+  StringRef Name = A.getName();
+  if (Name.empty())
+    O << "arg_p" << ParamIndex;
+  else
+    O << Name;
 
   // For vector args, we'll use an HSAIL array.
   if (NElts != 0)
