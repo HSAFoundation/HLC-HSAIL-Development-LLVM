@@ -66,13 +66,6 @@ private:
                            const Constant *CV,
                            const DataLayout &DL,
                            raw_ostream &O);
-protected:
-  // Returns the type to use when expressing the type in HSAIL. If this will be
-  // expressed as an HSAIL array, set NElts to the number of elements, otherwise
-  // 0.
-  static Type *analyzeType(Type *Ty,
-                           unsigned &NElts,
-                           const DataLayout &DL);
 
 public:
   explicit HSAILAsmPrinter(TargetMachine &TM, MCStreamer &Streamer);

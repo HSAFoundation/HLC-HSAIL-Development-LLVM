@@ -88,6 +88,11 @@ uint64_t getNumElementsInHSAILType(llvm::Type* type,
 BrigType getBrigType(Type* Ty, const DataLayout &DL,
                      bool Signed = false);
 
+/// Returns the type to use when expressing the type in HSAIL. If this will be
+/// expressed as an HSAIL array, set NElts to the number of elements,
+/// otherwise 0.
+Type *analyzeType(Type *Ty, unsigned &NElts, const DataLayout &DL);
+
 unsigned getAlignTypeQualifier(llvm::Type *ty, const llvm::DataLayout& DL,
                                bool isPreferred);
 
