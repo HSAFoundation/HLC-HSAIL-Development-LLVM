@@ -32,6 +32,41 @@ void HSAILInstPrinter::printInst(const MCInst *MI, raw_ostream &OS,
                                  StringRef Annot) {
   printInstruction(MI, OS);
 
+  // Special case call because there appears to be no way to handle variable_ops
+  // in the generated printer.
+  if (MI->getOpcode() == HSAIL::CALL) {
+    // First operand is called function, and should have been automatically
+    // printed. We just need to specially handle the variable_ops.
+    unsigned I = 1;
+
+    OS << '(';
+
+    const MCOperand *Op = &MI->getOperand(1);
+    while (!Op->isImm()) {
+      printOperand(MI, I++, OS);
+      Op = &MI->getOperand(I);
+    }
+
+    // Return value and argument symbols are delimited with a 0 value.
+    assert((Op->isImm() && Op->getImm() == 0) &&
+           "Unexpected target call instruction operand list!");
+
+    // Skip the zero.
+    ++I;
+
+    OS << ") (";
+
+    unsigned N = MI->getNumOperands();
+    while (I < N) {
+      printOperand(MI, I++, OS);
+
+      if (I < N)
+        OS << ", ";
+    }
+
+    OS << ");";
+  }
+
   printAnnotation(OS, Annot);
 }
 

@@ -2,10 +2,14 @@
 // call
 
 let isNotDuplicable = 1, isCall = 1 in {
+  // No semicolon because we need to specially handle the printing of
+  // the variable_ops.
   def CALL : HSAILInst<(outs),
     (ins calltarget:$dest, variable_ops),
-    "call\t$dest", []
-    >;
+    "call\t$dest ", [],
+    0,
+    0
+  >;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
