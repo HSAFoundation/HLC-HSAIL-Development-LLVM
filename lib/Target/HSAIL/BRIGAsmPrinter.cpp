@@ -721,7 +721,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     brigantine.endArgScope();
     return HSAIL_ASM::Inst();
 
-  case HSAIL::TARGET_CALL: {
+  case HSAIL::CALL: {
     MachineInstr::const_mop_iterator oi = II->operands_begin();
     MachineInstr::const_mop_iterator oe = II->operands_end();
     const GlobalValue *gv = (oi++)->getGlobal();;

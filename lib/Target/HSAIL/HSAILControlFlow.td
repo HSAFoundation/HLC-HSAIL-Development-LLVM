@@ -2,7 +2,7 @@
 // call
 
 let isNotDuplicable = 1, isCall = 1 in {
-  def TARGET_CALL : HSAILInst<(outs),
+  def CALL : HSAILInst<(outs),
     (ins calltarget:$dest, variable_ops),
     "call\t$dest", []
     >;

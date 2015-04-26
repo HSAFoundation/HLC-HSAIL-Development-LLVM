@@ -1050,7 +1050,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   Ops.push_back(Chain);
   Ops.push_back(InFlag);
 
-  SDNode *Call = DAG.getMachineNode(HSAIL::TARGET_CALL, dl, VTs, Ops);
+  SDNode *Call = DAG.getMachineNode(HSAIL::CALL, dl, VTs, Ops);
   Chain = SDValue(Call, 0);
 
   InFlag = Chain.getValue(1);
