@@ -243,7 +243,7 @@ void HSAILRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
     // instead of just a pointer. If we are size 4 then we can
     // just do register copies since we don't need to worry about
     // indexing dynamically
-    if (MI.getOperand(x).isImm() == false)  {
+    if (!MI.getOperand(x).isImm())  {
       MI.getOperand(x).ChangeToImmediate(Offset);
     } else {
       MI.getOperand(x).setImm(Offset);
