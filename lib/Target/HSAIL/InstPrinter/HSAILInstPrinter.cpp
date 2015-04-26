@@ -30,7 +30,6 @@ HSAILInstPrinter::HSAILInstPrinter(const MCAsmInfo &MAI, const MCInstrInfo &MII,
 
 void HSAILInstPrinter::printInst(const MCInst *MI, raw_ostream &OS,
                                  StringRef Annot) {
-  OS.flush();
   printInstruction(MI, OS);
 
   printAnnotation(OS, Annot);
