@@ -123,7 +123,7 @@ class HSAILOperand<BRIGType ty, string pm> : RegisterOperand<ty.SrcRC, pm> {
   let OperandType = "OPERAND_REG_IMM";
 }
 
-class HSAILProfile <list<HSAILOperand> ArgBT, string TypeName = "", int BT = 0> {
+class HSAILProfile <list<HSAILOperand> ArgBT> {
   field ValueType DestVT = ArgBT[0].VT;
   field ValueType Src0VT = ArgBT[1].VT;
   field ValueType Src1VT = ArgBT[2].VT;
@@ -135,9 +135,6 @@ class HSAILProfile <list<HSAILOperand> ArgBT, string TypeName = "", int BT = 0> 
   field HSAILOperand Src1RC = ArgBT[2];
   field HSAILOperand Src2RC = ArgBT[3];
   field HSAILOperand Src3RC = ArgBT[4];
-
-//  field string TypeLengthName = TypeName;
-//  field int BrigTypeVal = BT;
 }
 
 //===----------------------------------------------------------------------===//
@@ -279,131 +276,131 @@ def Vec4SrcOpF64 : Operand<untyped> {
 }
 
 
-def Inst_Void : HSAILProfile<[UntypedOp, UntypedOp, UntypedOp, UntypedOp, UntypedOp], "">;
+def Inst_Void : HSAILProfile<[UntypedOp, UntypedOp, UntypedOp, UntypedOp, UntypedOp]>;
 
-def Inst_S32_S32 : HSAILProfile<[S32Op, S32Op, UntypedOp, UntypedOp, UntypedOp], "s32">;
-def Inst_S32_S32_S32 : HSAILProfile<[S32Op, S32Op, S32Op, UntypedOp, UntypedOp], "s32">;
-def Inst_S32_S32_S32_S32 : HSAILProfile<[S32Op, S32Op, S32Op, S32Op, UntypedOp], "s32">;
+def Inst_S32_S32 : HSAILProfile<[S32Op, S32Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_S32_S32_S32 : HSAILProfile<[S32Op, S32Op, S32Op, UntypedOp, UntypedOp]>;
+def Inst_S32_S32_S32_S32 : HSAILProfile<[S32Op, S32Op, S32Op, S32Op, UntypedOp]>;
 
-def Inst_S64_S64 : HSAILProfile<[S64Op, S64Op, UntypedOp, UntypedOp, UntypedOp], "s64">;
-def Inst_S64_S64_S64 : HSAILProfile<[S64Op, S64Op, S64Op, UntypedOp, UntypedOp], "s64">;
-def Inst_S64_S64_S64_S64 : HSAILProfile<[S64Op, S64Op, S64Op, S64Op, UntypedOp], "s64">;
+def Inst_S64_S64 : HSAILProfile<[S64Op, S64Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_S64_S64_S64 : HSAILProfile<[S64Op, S64Op, S64Op, UntypedOp, UntypedOp]>;
+def Inst_S64_S64_S64_S64 : HSAILProfile<[S64Op, S64Op, S64Op, S64Op, UntypedOp]>;
 
-def Inst_U32 : HSAILProfile<[U32Op, UntypedOp, UntypedOp, UntypedOp, UntypedOp], "u32">;
-def Inst_U32_U32 : HSAILProfile<[U32Op, U32Op, UntypedOp, UntypedOp, UntypedOp], "u32">;
-def Inst_U32_U32_U32 : HSAILProfile<[U32Op, U32Op, U32Op, UntypedOp, UntypedOp], "u32">;
-def Inst_U32_U32_U32_U32 : HSAILProfile<[U32Op, U32Op, U32Op, U32Op, UntypedOp], "u32">;
+def Inst_U32 : HSAILProfile<[U32Op, UntypedOp, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_U32_U32 : HSAILProfile<[U32Op, U32Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_U32_U32_U32 : HSAILProfile<[U32Op, U32Op, U32Op, UntypedOp, UntypedOp]>;
+def Inst_U32_U32_U32_U32 : HSAILProfile<[U32Op, U32Op, U32Op, U32Op, UntypedOp]>;
 
-def Inst_U64 : HSAILProfile<[U64Op, UntypedOp, UntypedOp, UntypedOp, UntypedOp], "u64">;
-def Inst_U64_U64 : HSAILProfile<[U64Op, U64Op, UntypedOp, UntypedOp, UntypedOp], "u64">;
-def Inst_U64_U64_U64 : HSAILProfile<[U64Op, U64Op, U64Op, UntypedOp, UntypedOp], "u64">;
-def Inst_U64_U64_U64_U64 : HSAILProfile<[U64Op, U64Op, U64Op, U64Op, UntypedOp], "u64">;
+def Inst_U64 : HSAILProfile<[U64Op, UntypedOp, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_U64_U64 : HSAILProfile<[U64Op, U64Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_U64_U64_U64 : HSAILProfile<[U64Op, U64Op, U64Op, UntypedOp, UntypedOp]>;
+def Inst_U64_U64_U64_U64 : HSAILProfile<[U64Op, U64Op, U64Op, U64Op, UntypedOp]>;
 
-def Inst_B1_B1 : HSAILProfile<[B1Op, B1Op, UntypedOp, UntypedOp, UntypedOp], "b1">;
-def Inst_B1_B1_B1 : HSAILProfile<[B1Op, B1Op, B1Op, UntypedOp, UntypedOp], "b1">;
-def Inst_B1_B1_B1_B1 : HSAILProfile<[B1Op, B1Op, B1Op, B1Op, UntypedOp], "b1">;
+def Inst_B1_B1 : HSAILProfile<[B1Op, B1Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_B1_B1_B1 : HSAILProfile<[B1Op, B1Op, B1Op, UntypedOp, UntypedOp]>;
+def Inst_B1_B1_B1_B1 : HSAILProfile<[B1Op, B1Op, B1Op, B1Op, UntypedOp]>;
 
-def Inst_B32_B32 : HSAILProfile<[B32Op, B32Op, UntypedOp, UntypedOp, UntypedOp], "b32">;
-def Inst_B32_B32_B32 : HSAILProfile<[B32Op, B32Op, B32Op, UntypedOp, UntypedOp], "b32">;
-def Inst_B32_B32_B32_B32 : HSAILProfile<[B32Op, B32Op, B32Op, B32Op, UntypedOp], "b32">;
+def Inst_B32_B32 : HSAILProfile<[B32Op, B32Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_B32_B32_B32 : HSAILProfile<[B32Op, B32Op, B32Op, UntypedOp, UntypedOp]>;
+def Inst_B32_B32_B32_B32 : HSAILProfile<[B32Op, B32Op, B32Op, B32Op, UntypedOp]>;
 
-def Inst_B64_B64 : HSAILProfile<[B64Op, B64Op, UntypedOp, UntypedOp, UntypedOp], "b64">;
-def Inst_B64_B64_B64 : HSAILProfile<[B64Op, B64Op, B64Op, UntypedOp, UntypedOp], "b64">;
-def Inst_B64_B64_B64_B64 : HSAILProfile<[B64Op, B64Op, B64Op, B64Op, UntypedOp], "b64">;
+def Inst_B64_B64 : HSAILProfile<[B64Op, B64Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_B64_B64_B64 : HSAILProfile<[B64Op, B64Op, B64Op, UntypedOp, UntypedOp]>;
+def Inst_B64_B64_B64_B64 : HSAILProfile<[B64Op, B64Op, B64Op, B64Op, UntypedOp]>;
 
-def Inst_F32_F32 : HSAILProfile<[F32Op, F32Op, UntypedOp, UntypedOp, UntypedOp], "f32", BrigTypeX.F32>;
-def Inst_F32_F32_F32 : HSAILProfile<[F32Op, F32Op, F32Op, UntypedOp, UntypedOp], "f32", BrigTypeX.F32>;
-def Inst_F32_F32_F32_F32 : HSAILProfile<[F32Op, F32Op, F32Op, F32Op, UntypedOp], "f32", BrigTypeX.F32>;
+def Inst_F32_F32 : HSAILProfile<[F32Op, F32Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_F32_F32_F32 : HSAILProfile<[F32Op, F32Op, F32Op, UntypedOp, UntypedOp]>;
+def Inst_F32_F32_F32_F32 : HSAILProfile<[F32Op, F32Op, F32Op, F32Op, UntypedOp]>;
 
-def Inst_F64_F64 : HSAILProfile<[F64Op, F64Op, UntypedOp, UntypedOp, UntypedOp], "f64", BrigTypeX.F64>;
-def Inst_F64_F64_F64 : HSAILProfile<[F64Op, F64Op, F64Op, UntypedOp, UntypedOp], "f64", BrigTypeX.F64>;
-def Inst_F64_F64_F64_F64 : HSAILProfile<[F64Op, F64Op, F64Op, F64Op, UntypedOp], "f64", BrigTypeX.F64>;
+def Inst_F64_F64 : HSAILProfile<[F64Op, F64Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_F64_F64_F64 : HSAILProfile<[F64Op, F64Op, F64Op, UntypedOp, UntypedOp]>;
+def Inst_F64_F64_F64_F64 : HSAILProfile<[F64Op, F64Op, F64Op, F64Op, UntypedOp]>;
 
-def Inst_B32_B1_B32_B32 : HSAILProfile<[B32Op, B1Op, B32Op, B32Op, UntypedOp, UntypedOp], "b32">;
-def Inst_B64_B1_B64_B64 : HSAILProfile<[B64Op, B1Op, B64Op, B64Op, UntypedOp, UntypedOp], "b64">;
+def Inst_B32_B1_B32_B32 : HSAILProfile<[B32Op, B1Op, B32Op, B32Op, UntypedOp, UntypedOp]>;
+def Inst_B64_B1_B64_B64 : HSAILProfile<[B64Op, B1Op, B64Op, B64Op, UntypedOp, UntypedOp]>;
 
-def Inst_F32_B1_F32_F32 : HSAILProfile<[F32Op, B1Op, F32Op, F32Op, UntypedOp, UntypedOp], "f32">;
-def Inst_F64_B1_F64_F64 : HSAILProfile<[F64Op, B1Op, F64Op, F64Op, UntypedOp, UntypedOp], "f64">;
+def Inst_F32_B1_F32_F32 : HSAILProfile<[F32Op, B1Op, F32Op, F32Op, UntypedOp, UntypedOp]>;
+def Inst_F64_B1_F64_F64 : HSAILProfile<[F64Op, B1Op, F64Op, F64Op, UntypedOp, UntypedOp]>;
 
-def Inst_U8X4_U8X4_U8X4_U8X4 : HSAILProfile<[U8X4Op, U8X4Op, U8X4Op, U8X4Op, UntypedOp], "u8x4">;
-def Inst_B64_B64_B32_B64 : HSAILProfile<[B64Op, B64Op, B32Op, B64Op, UntypedOp], "b64">;
+def Inst_U8X4_U8X4_U8X4_U8X4 : HSAILProfile<[U8X4Op, U8X4Op, U8X4Op, U8X4Op, UntypedOp]>;
+def Inst_B64_B64_B32_B64 : HSAILProfile<[B64Op, B64Op, B32Op, B64Op, UntypedOp]>;
 
-def Inst_S64_S64_U32_U32 : HSAILProfile<[S64Op, S64Op, U32Op, U32Op, UntypedOp], "s64">;
-def Inst_U64_U64_U32_U32 : HSAILProfile<[U64Op, U64Op, U32Op, U32Op, UntypedOp], "u64">;
-def Inst_S32_S32_U32_U32 : HSAILProfile<[S32Op, S32Op, U32Op, U32Op, UntypedOp], "s32">;
+def Inst_S64_S64_U32_U32 : HSAILProfile<[S64Op, S64Op, U32Op, U32Op, UntypedOp]>;
+def Inst_U64_U64_U32_U32 : HSAILProfile<[U64Op, U64Op, U32Op, U32Op, UntypedOp]>;
+def Inst_S32_S32_U32_U32 : HSAILProfile<[S32Op, S32Op, U32Op, U32Op, UntypedOp]>;
 
-def Inst_S64_S64_U32 : HSAILProfile<[S64Op, S64Op, U32Op, UntypedOp, UntypedOp], "s64">;
-def Inst_U64_U64_U32 : HSAILProfile<[U64Op, U64Op, U32Op, UntypedOp, UntypedOp], "u64">;
+def Inst_S64_S64_U32 : HSAILProfile<[S64Op, S64Op, U32Op, UntypedOp, UntypedOp]>;
+def Inst_U64_U64_U32 : HSAILProfile<[U64Op, U64Op, U32Op, UntypedOp, UntypedOp]>;
 
-def Inst_F32_F32_U32 : HSAILProfile<[F32Op, F32Op, U32Op, UntypedOp, UntypedOp], "f32">;
-def Inst_F64_F64_U32 : HSAILProfile<[F64Op, F64Op, U32Op, UntypedOp, UntypedOp], "f64">;
+def Inst_F32_F32_U32 : HSAILProfile<[F32Op, F32Op, U32Op, UntypedOp, UntypedOp]>;
+def Inst_F64_F64_U32 : HSAILProfile<[F64Op, F64Op, U32Op, UntypedOp, UntypedOp]>;
 
-def Inst_U32_B64 : HSAILProfile<[U32Op, B64Op, UntypedOp, UntypedOp, UntypedOp], "b64">;
-def Inst_U32_B32 : HSAILProfile<[U32Op, B32Op, UntypedOp, UntypedOp, UntypedOp], "b32">;
+def Inst_U32_B64 : HSAILProfile<[U32Op, B64Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_U32_B32 : HSAILProfile<[U32Op, B32Op, UntypedOp, UntypedOp, UntypedOp]>;
 
-def Inst_U32_S64 : HSAILProfile<[U32Op, S64Op, UntypedOp, UntypedOp, UntypedOp], "s64">;
-def Inst_U32_U64 : HSAILProfile<[U32Op, U64Op, UntypedOp, UntypedOp, UntypedOp], "u64">;
-def Inst_U32_S32 : HSAILProfile<[U32Op, S32Op, UntypedOp, UntypedOp, UntypedOp], "s32">;
-def Inst_U64_U32 : HSAILProfile<[U64Op, U32Op, UntypedOp, UntypedOp, UntypedOp], "u64">;
+def Inst_U32_S64 : HSAILProfile<[U32Op, S64Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_U32_U64 : HSAILProfile<[U32Op, U64Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_U32_S32 : HSAILProfile<[U32Op, S32Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_U64_U32 : HSAILProfile<[U64Op, U32Op, UntypedOp, UntypedOp, UntypedOp]>;
 
-def Inst_U32_B1 : HSAILProfile<[U32Op, B1Op, UntypedOp, UntypedOp, UntypedOp], "u32">;
-def Inst_B1_U32 : HSAILProfile<[B1Op, U32Op, UntypedOp, UntypedOp, UntypedOp], "u32">;
-def Inst_B1_U64 : HSAILProfile<[B1Op, U64Op, UntypedOp, UntypedOp, UntypedOp], "u64">;
-
-
-def Inst_U8X4_U8X4_U32_U32 : HSAILProfile<[U8X4Op, U8X4Op, U32Op, U32Op, UntypedOp], "u8x4">;
-def Inst_S8X4_S8X4_S32_U32 : HSAILProfile<[S8X4Op, S8X4Op, S32Op, U32Op, UntypedOp], "s8x4">;
-
-def Inst_U8X8_U8X8_U32_U32 : HSAILProfile<[U8X8Op, U8X8Op, U32Op, U32Op, UntypedOp], "u8x8">;
-def Inst_S8X8_S8X8_S32_U32 : HSAILProfile<[S8X8Op, S8X8Op, S32Op, U32Op, UntypedOp], "s8x8">;
-
-def Inst_U16X4_U16X4_U32_U32 : HSAILProfile<[U16X4Op, U16X4Op, U32Op, U32Op, UntypedOp], "u16x4">;
-def Inst_S16X4_S16X4_S32_U32 : HSAILProfile<[S16X4Op, S16X4Op, S32Op, U32Op, UntypedOp], "s16x4">;
-
-def Inst_U32X2_U32X2_U32_U32 : HSAILProfile<[U32X2Op, U32X2Op, U32Op, U32Op, UntypedOp], "u32x2">;
-def Inst_S32X2_S32X2_S32_U32 : HSAILProfile<[S32X2Op, S32X2Op, S32Op, U32Op, UntypedOp], "s32x2">;
-
-def Inst_F16X2_F16X2_F16_U32 : HSAILProfile<[F16X2Op, F16X2Op, F16Op, U32Op, UntypedOp], "f16x2">;
-def Inst_F16X4_F16X4_F16_U32 : HSAILProfile<[F16X4Op, F16X4Op, F16Op, U32Op, UntypedOp], "f16x4">;
+def Inst_U32_B1 : HSAILProfile<[U32Op, B1Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_B1_U32 : HSAILProfile<[B1Op, U32Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_B1_U64 : HSAILProfile<[B1Op, U64Op, UntypedOp, UntypedOp, UntypedOp]>;
 
 
-def Inst_U8X4_F32_F32_F32_F32 : HSAILProfile<[U8X4Op, F32Op, F32Op, F32Op, F32Op], "u8x4">;
-def Inst_F32_U8X4_U32 : HSAILProfile<[F32Op, U8X4Op, U32Op, UntypedOp, UntypedOp], "f32">;
+def Inst_U8X4_U8X4_U32_U32 : HSAILProfile<[U8X4Op, U8X4Op, U32Op, U32Op, UntypedOp]>;
+def Inst_S8X4_S8X4_S32_U32 : HSAILProfile<[S8X4Op, S8X4Op, S32Op, U32Op, UntypedOp]>;
 
-def Inst_U32_U16X2_U16X2_U32 : HSAILProfile<[U32Op, U16X2Op, U16X2Op, U32Op, UntypedOp], "u32">;
-def Inst_U32_U8X4_U8X4_U32 : HSAILProfile<[U32Op, U8X4Op, U8X4Op, U32Op, UntypedOp], "u32">;
-def Inst_U16X2_U8X4_U8X4_U16X2 : HSAILProfile<[U16X2Op, U8X4Op, U8X4Op, U16X2Op, UntypedOp], "u16x2">;
+def Inst_U8X8_U8X8_U32_U32 : HSAILProfile<[U8X8Op, U8X8Op, U32Op, U32Op, UntypedOp]>;
+def Inst_S8X8_S8X8_S32_U32 : HSAILProfile<[S8X8Op, S8X8Op, S32Op, U32Op, UntypedOp]>;
 
-def Inst_B1_F32_U32 : HSAILProfile<[B1Op, F32Op, U32Op, UntypedOp, UntypedOp], "b1">;
-def Inst_B1_F64_U32 : HSAILProfile<[B1Op, F64Op, U32Op, UntypedOp, UntypedOp], "b1">;
+def Inst_U16X4_U16X4_U32_U32 : HSAILProfile<[U16X4Op, U16X4Op, U32Op, U32Op, UntypedOp]>;
+def Inst_S16X4_S16X4_S32_U32 : HSAILProfile<[S16X4Op, S16X4Op, S32Op, U32Op, UntypedOp]>;
 
-def Inst_B1_B1_U32_B1_B1 : HSAILProfile<[B1Op, B1Op, U32Op, B1Op, B1Op], "b1">;
-def Inst_B32_B32_U32_B32_B1 : HSAILProfile<[B32Op, B32Op, U32Op, B32Op, B1Op], "b32">;
-def Inst_B64_B64_U32_B64_B1 : HSAILProfile<[B64Op, B64Op, U32Op, B64Op, B1Op], "b64">;
+def Inst_U32X2_U32X2_U32_U32 : HSAILProfile<[U32X2Op, U32X2Op, U32Op, U32Op, UntypedOp]>;
+def Inst_S32X2_S32X2_S32_U32 : HSAILProfile<[S32X2Op, S32X2Op, S32Op, U32Op, UntypedOp]>;
+
+def Inst_F16X2_F16X2_F16_U32 : HSAILProfile<[F16X2Op, F16X2Op, F16Op, U32Op, UntypedOp]>;
+def Inst_F16X4_F16X4_F16_U32 : HSAILProfile<[F16X4Op, F16X4Op, F16Op, U32Op, UntypedOp]>;
+
+
+def Inst_U8X4_F32_F32_F32_F32 : HSAILProfile<[U8X4Op, F32Op, F32Op, F32Op, F32Op]>;
+def Inst_F32_U8X4_U32 : HSAILProfile<[F32Op, U8X4Op, U32Op, UntypedOp, UntypedOp]>;
+
+def Inst_U32_U16X2_U16X2_U32 : HSAILProfile<[U32Op, U16X2Op, U16X2Op, U32Op, UntypedOp]>;
+def Inst_U32_U8X4_U8X4_U32 : HSAILProfile<[U32Op, U8X4Op, U8X4Op, U32Op, UntypedOp]>;
+def Inst_U16X2_U8X4_U8X4_U16X2 : HSAILProfile<[U16X2Op, U8X4Op, U8X4Op, U16X2Op, UntypedOp]>;
+
+def Inst_B1_F32_U32 : HSAILProfile<[B1Op, F32Op, U32Op, UntypedOp, UntypedOp]>;
+def Inst_B1_F64_U32 : HSAILProfile<[B1Op, F64Op, U32Op, UntypedOp, UntypedOp]>;
+
+def Inst_B1_B1_U32_B1_B1 : HSAILProfile<[B1Op, B1Op, U32Op, B1Op, B1Op]>;
+def Inst_B32_B32_U32_B32_B1 : HSAILProfile<[B32Op, B32Op, U32Op, B32Op, B1Op]>;
+def Inst_B64_B64_U32_B64_B1 : HSAILProfile<[B64Op, B64Op, U32Op, B64Op, B1Op]>;
 
 
 // Compare profiles.
-def Inst_B1_S32_S32 : HSAILProfile<[B1Op, S32Op, S32Op, UntypedOp, UntypedOp], "">;
-def Inst_B1_S64_S64 : HSAILProfile<[B1Op, S64Op, S64Op, UntypedOp, UntypedOp], "">;
+def Inst_B1_S32_S32 : HSAILProfile<[B1Op, S32Op, S32Op, UntypedOp, UntypedOp]>;
+def Inst_B1_S64_S64 : HSAILProfile<[B1Op, S64Op, S64Op, UntypedOp, UntypedOp]>;
 
-def Inst_B1_U32_U32 : HSAILProfile<[B1Op, U32Op, U32Op, UntypedOp, UntypedOp], "">;
-def Inst_B1_U64_U64 : HSAILProfile<[B1Op, U64Op, U64Op, UntypedOp, UntypedOp], "">;
+def Inst_B1_U32_U32 : HSAILProfile<[B1Op, U32Op, U32Op, UntypedOp, UntypedOp]>;
+def Inst_B1_U64_U64 : HSAILProfile<[B1Op, U64Op, U64Op, UntypedOp, UntypedOp]>;
 
-def Inst_B1_F32_F32 : HSAILProfile<[B1Op, F32Op, F32Op, UntypedOp, UntypedOp], "">;
-def Inst_B1_F64_F64 : HSAILProfile<[B1Op, F64Op, F64Op, UntypedOp, UntypedOp], "">;
+def Inst_B1_F32_F32 : HSAILProfile<[B1Op, F32Op, F32Op, UntypedOp, UntypedOp]>;
+def Inst_B1_F64_F64 : HSAILProfile<[B1Op, F64Op, F64Op, UntypedOp, UntypedOp]>;
 
 // Atomic profiles.
-def Inst_Void_B32 : HSAILProfile<[UntypedOp, B32Op, UntypedOp, UntypedOp, UntypedOp], "b32">;
-def Inst_Void_B64 : HSAILProfile<[UntypedOp, B64Op, UntypedOp, UntypedOp, UntypedOp], "b64">;
+def Inst_Void_B32 : HSAILProfile<[UntypedOp, B32Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_Void_B64 : HSAILProfile<[UntypedOp, B64Op, UntypedOp, UntypedOp, UntypedOp]>;
 
-def Inst_Void_S32 : HSAILProfile<[UntypedOp, S32Op, UntypedOp, UntypedOp, UntypedOp], "s32">;
-def Inst_Void_S64 : HSAILProfile<[UntypedOp, S64Op, UntypedOp, UntypedOp, UntypedOp], "s64">;
+def Inst_Void_S32 : HSAILProfile<[UntypedOp, S32Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_Void_S64 : HSAILProfile<[UntypedOp, S64Op, UntypedOp, UntypedOp, UntypedOp]>;
 
-def Inst_Void_U32 : HSAILProfile<[UntypedOp, U32Op, UntypedOp, UntypedOp, UntypedOp], "u32">;
-def Inst_Void_U64 : HSAILProfile<[UntypedOp, U64Op, UntypedOp, UntypedOp, UntypedOp], "u64">;
+def Inst_Void_U32 : HSAILProfile<[UntypedOp, U32Op, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_Void_U64 : HSAILProfile<[UntypedOp, U64Op, UntypedOp, UntypedOp, UntypedOp]>;
 
-def Inst_B32 : HSAILProfile<[B32Op, UntypedOp, UntypedOp, UntypedOp, UntypedOp], "b32">;
-def Inst_B64 : HSAILProfile<[B64Op, UntypedOp, UntypedOp, UntypedOp, UntypedOp], "b64">;
+def Inst_B32 : HSAILProfile<[B32Op, UntypedOp, UntypedOp, UntypedOp, UntypedOp]>;
+def Inst_B64 : HSAILProfile<[B64Op, UntypedOp, UntypedOp, UntypedOp, UntypedOp]>;
 
 
 //===----------------------------------------------------------------------===//
