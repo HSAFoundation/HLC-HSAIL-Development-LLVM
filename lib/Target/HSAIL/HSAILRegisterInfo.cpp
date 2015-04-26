@@ -60,22 +60,13 @@ static cl::opt<int> HSAILRegSlots(
 HSAILRegisterInfo::HSAILRegisterInfo(HSAILSubtarget &st)
   : HSAILGenRegisterInfo(0, 0), ST(st) {}
 
-/// getCalleeSavedRegs - Return a null-terminated list of all of the
-/// callee saved registers on this target. The register should be in the
-/// order of desired callee-save stack frame offset. The first register is
-/// closed to the incoming stack pointer if stack grows down, and vice versa.
-const uint16_t*
-HSAILRegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const
-{
+const uint16_t *HSAILRegisterInfo::getCalleeSavedRegs(
+  const MachineFunction *MF) const {
   static const uint16_t CalleeSavedRegs[] = { 0 };
   return CalleeSavedRegs;
 }
 
-/// getRegsAvailable - Return all available registers in the register class
-/// in Mask.
-BitVector
-HSAILRegisterInfo::getRegsAvailable(const TargetRegisterClass *RC) const
-{
+BitVector HSAILRegisterInfo::getRegsAvailable(const TargetRegisterClass *RC) const {
   BitVector Mask(getNumRegs());
   for (TargetRegisterClass::iterator I = RC->begin(), E = RC->end();
        I != E; ++I)
@@ -83,13 +74,7 @@ HSAILRegisterInfo::getRegsAvailable(const TargetRegisterClass *RC) const
   return Mask;
 }
 
-/// getReservedRegs - Returns a bitset indexed by physical register number
-/// indicating if a register is a special register that has particular uses
-/// and should be considered unavailable at all times, e.g. SP, RA. This is
-/// used by register scavenger to determine what registers are free.
-BitVector
-HSAILRegisterInfo::getReservedRegs(const MachineFunction &MF) const
-{
+BitVector HSAILRegisterInfo::getReservedRegs(const MachineFunction &MF) const {
   BitVector Reserved(getNumRegs());
 
   // We can have up to 128 s-registers, but we should have (s + 2*d + 4*q) <= 128.
@@ -163,20 +148,16 @@ HSAILRegisterInfo::getReservedRegs(const MachineFunction &MF) const
   return Reserved;
 }
 
-bool
-HSAILRegisterInfo::trackLivenessAfterRegAlloc(const MachineFunction &MF) const {
+bool HSAILRegisterInfo::trackLivenessAfterRegAlloc(
+  const MachineFunction &MF) const {
   // Only enable when post-RA scheduling is enabled and this is needed.
   // TODO: HSA
   return true;
 }
 
-/// getPointerRegClass - Returns a TargetRegisterClass used for pointer
-/// values.  If a target supports multiple different pointer register classes,
-/// kind specifies which one is indicated.
-const TargetRegisterClass*
-HSAILRegisterInfo::getPointerRegClass(const MachineFunction &MF,
-		                      unsigned Kind) const
-{
+const TargetRegisterClass *HSAILRegisterInfo::getPointerRegClass(
+  const MachineFunction &MF,
+  unsigned Kind) const {
   if (Kind == 32) return &HSAIL::GPR32RegClass;
 
   assert(Kind == 0);
@@ -186,11 +167,8 @@ HSAILRegisterInfo::getPointerRegClass(const MachineFunction &MF,
   return &HSAIL::GPR32RegClass;
 }
 
-/// requiresRegisterScavenging - returns true if the target requires (and can
-/// make use of) the register scavenger.
-bool
-HSAILRegisterInfo::requiresRegisterScavenging(const MachineFunction &MF) const
-{
+bool HSAILRegisterInfo::requiresRegisterScavenging(
+  const MachineFunction &MF) const {
   return true;
 }
 
@@ -241,26 +219,17 @@ HSAILRegisterInfo::saveScavengerRegisterToFI(MachineBasicBlock &MBB,
   return true;
 }
 
-/// eliminateFrameIndex - This method must be overriden to eliminate abstract
-/// frame indices from instructions which may use them.  The instruction
-/// referenced by the iterator contains an MO_FrameIndex operand which must be
-/// eliminated by this method.  This method may modify or replace the
-/// specified instruction, as long as it keeps the iterator pointing at the
-/// finished product. SPAdj is the SP adjustment due to call frame setup
-/// instruction.
-void
-HSAILRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
-                                       int SPAdj,
-                                       unsigned FIOperandNum,
-                                       RegScavenger *RS) const
-{
+void HSAILRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
+                                            int SPAdj,
+                                            unsigned FIOperandNum,
+                                            RegScavenger *RS) const {
   assert(SPAdj == 0 && "Unexpected");
   MachineInstr &MI = *II;
   MachineFunction &MF = *MI.getParent()->getParent();
   // FrameIndex to Offset translation is usually performed by the
   // target-specific implementation of TargetFrameLowering
   const TargetFrameLowering *TFL = MF.getTarget().getSubtarget<HSAILSubtarget>().getFrameLowering();
-  
+
   unsigned int y = MI.getNumOperands();
   for (unsigned int x = 0; x < y; ++x) {
     if (!MI.getOperand(x).isFI()) {
@@ -285,34 +254,13 @@ HSAILRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
 //===--------------------------------------------------------------------===//
 /// Debug information queries.
 
-/// getDwarfRegNum - Map a target register to an equivalent dwarf register
-/// number.  Returns -1 if there is no equivalent value.  The second
-/// parameter allows targets to use different numberings for EH info and
-/// debugging info.
-/*
-int
-HSAILRegisterInfo::getDwarfRegNum(unsigned RegNum, bool isEH) const
-{
-  // We only support 32 bit dwarf registers right now.
-  unsigned Flavour = DWARFFlavour::HSAIL_Generic;
-  return HSAILGenRegisterInfo::getDwarfRegNumFull( RegNum, Flavour );
-}
-*/
-/// getFrameRegister - This method should return the register used as a base
-/// for values allocated in the current stack frame.
-unsigned
-HSAILRegisterInfo::getFrameRegister(const MachineFunction &MF) const
-{
-  //This value is unused in LLVM
+unsigned HSAILRegisterInfo::getFrameRegister(const MachineFunction &MF) const {
+  // This value is unused in LLVM
   return HSAIL::NoRegister;
 }
 
-/// getRegPressureLimit - Return the register pressure "high water mark" for
-/// the specific register class. The scheduler is in high register pressure
-/// mode (for the specific register class) if it goes over the limit.
-unsigned
-HSAILRegisterInfo::getRegPressureLimit(const TargetRegisterClass *RC,
-                                       MachineFunction &MF) const {
+unsigned HSAILRegisterInfo::getRegPressureLimit(const TargetRegisterClass *RC,
+                                                MachineFunction &MF) const {
   if (RC == &HSAIL::GPR32RegClass) {
     return HSAILReg32PressureLimit;
   }
