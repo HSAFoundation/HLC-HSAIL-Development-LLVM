@@ -561,7 +561,7 @@ class HSAILInstLane_ActiveLaneMask<string opName, bits<16> BrigVal> :
   //(outs Vec4Op:$dest),
     (outs GPR64:$dest0, GPR64:$dest1,  GPR64:$dest2,  GPR64:$dest3),
     (ins BrigWidth:$width,
-         CR:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+         B1Op:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
 //  opName#"$width$TypeLength$sourceType\t$dest, $src0"
   opName#"_v4$width$TypeLength$sourceType\t($dest0, $dest1, $dest2, $dest3), $src0"
 >;
@@ -694,17 +694,27 @@ class StoreOperands<DAGOperand srcOp> {
                     BrigSegment:$segment, BrigAlignment:$align);
 }
 
-def store_32 : StoreOperands<HSAILSrc32Operand>;
-def store_64 : StoreOperands<HSAILSrc64Operand>;
+def store_u32 : StoreOperands<U32Op>;
+def store_f32 : StoreOperands<F32Op>;
+def store_u64 : StoreOperands<U64Op>;
+def store_f64 : StoreOperands<F64Op>;
 
-def store_v2_32 : StoreOperands<Vec2SrcOp32>;
-def store_v2_64 : StoreOperands<Vec2SrcOp64>;
+def store_v2_u32 : StoreOperands<Vec2SrcOpU32>;
+def store_v2_f32 : StoreOperands<Vec2SrcOpF32>;
 
-def store_v3_32 : StoreOperands<Vec3SrcOp32>;
-def store_v3_64 : StoreOperands<Vec3SrcOp64>;
+def store_v2_u64 : StoreOperands<Vec2SrcOpU64>;
+def store_v2_f64 : StoreOperands<Vec2SrcOpF64>;
 
-def store_v4_32 : StoreOperands<Vec4SrcOp32>;
-def store_v4_64 : StoreOperands<Vec4SrcOp64>;
+def store_v3_u32 : StoreOperands<Vec3SrcOpU32>;
+def store_v3_f32 : StoreOperands<Vec3SrcOpF32>;
+
+def store_v3_u64 : StoreOperands<Vec3SrcOpU64>;
+def store_v3_f64 : StoreOperands<Vec3SrcOpF64>;
+
+def store_v4_u32 : StoreOperands<Vec4SrcOpU32>;
+def store_v4_f32 : StoreOperands<Vec4SrcOpF32>;
+def store_v4_u64 : StoreOperands<Vec4SrcOpU64>;
+def store_v4_f64 : StoreOperands<Vec4SrcOpF64>;
 
 
 multiclass LD_Types<string opName, bits<16> BrigVal> {
@@ -783,29 +793,29 @@ class ST<string opName, bits<16> BrigVal, dag ins> :
 }
 
 multiclass ST_Types<string opName, bits<16> BrigVal> {
-  def _U8 : ST<opName, BrigVal, store_32.op_ins>;
-  def _U16 : ST<opName, BrigVal, store_32.op_ins>;
+  def _U8 : ST<opName, BrigVal, store_u32.op_ins>;
+  def _U16 : ST<opName, BrigVal, store_u32.op_ins>;
 
-  def _U32 : ST<opName, BrigVal, store_32.op_ins>;
-  def _F32 : ST<opName, BrigVal, store_32.op_ins>;
+  def _U32 : ST<opName, BrigVal, store_u32.op_ins>;
+  def _F32 : ST<opName, BrigVal, store_f32.op_ins>;
 
-  def _U64 : ST<opName, BrigVal, store_64.op_ins>;
-  def _F64 : ST<opName, BrigVal, store_64.op_ins>;
+  def _U64 : ST<opName, BrigVal, store_u64.op_ins>;
+  def _F64 : ST<opName, BrigVal, store_f64.op_ins>;
 
-  def _V2_U32 : ST<opName, BrigVal, store_v2_32.op_ins>;
-  def _V2_F32 : ST<opName, BrigVal, store_v2_32.op_ins>;
-  def _V2_U64 : ST<opName, BrigVal, store_v2_64.op_ins>;
-  def _V2_F64 : ST<opName, BrigVal, store_v2_64.op_ins>;
+  def _V2_U32 : ST<opName, BrigVal, store_v2_u32.op_ins>;
+  def _V2_F32 : ST<opName, BrigVal, store_v2_f32.op_ins>;
+  def _V2_U64 : ST<opName, BrigVal, store_v2_u64.op_ins>;
+  def _V2_F64 : ST<opName, BrigVal, store_v2_f64.op_ins>;
 
-  def _V3_U32 : ST<opName, BrigVal, store_v3_32.op_ins>;
-  def _V3_F32 : ST<opName, BrigVal, store_v3_32.op_ins>;
-  def _V3_U64 : ST<opName, BrigVal, store_v3_64.op_ins>;
-  def _V3_F64 : ST<opName, BrigVal, store_v3_64.op_ins>;
+  def _V3_U32 : ST<opName, BrigVal, store_v3_u32.op_ins>;
+  def _V3_F32 : ST<opName, BrigVal, store_v3_f32.op_ins>;
+  def _V3_U64 : ST<opName, BrigVal, store_v3_u64.op_ins>;
+  def _V3_F64 : ST<opName, BrigVal, store_v3_f64.op_ins>;
 
-  def _V4_U32 : ST<opName, BrigVal, store_v4_32.op_ins>;
-  def _V4_F32 : ST<opName, BrigVal, store_v4_32.op_ins>;
-  def _V4_U64 : ST<opName, BrigVal, store_v4_64.op_ins>;
-  def _V4_F64 : ST<opName, BrigVal, store_v4_64.op_ins>;
+  def _V4_U32 : ST<opName, BrigVal, store_v4_u32.op_ins>;
+  def _V4_F32 : ST<opName, BrigVal, store_v4_f32.op_ins>;
+  def _V4_U64 : ST<opName, BrigVal, store_v4_u64.op_ins>;
+  def _V4_F64 : ST<opName, BrigVal, store_v4_f64.op_ins>;
 }
 
 // InstAtomic

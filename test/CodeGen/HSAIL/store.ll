@@ -67,6 +67,14 @@ define void @store_i32(i32 addrspace(1)* %out, i32 %in) {
   ret void
 }
 
+; FUNC-LABEL: {{^}}prog function &store_imm_neg1_i32(
+; HSAIL: st_global_align(4)_u32 4294967295, {{\[}}[[OUT]]{{\]}}
+; HSAIL: ret;
+define void @store_imm_neg1_i32(i32 addrspace(1)* %out) {
+  store i32 -1, i32 addrspace(1)* %out
+  ret void
+}
+
 ; FUNC-LABEL: {{^}}prog function &store_v2i8
 define void @store_v2i8(<2 x i8> addrspace(1)* %out, <2 x i32> %in) {
   %tmp0 = trunc <2 x i32> %in to <2 x i8>
@@ -99,13 +107,22 @@ define void @store_v4i16(<4 x i16> addrspace(1)* %out, <4 x i32> %in) {
 
 ; floating-point store
 
-; FUNC-LABEL: {{^}}prog function &store_f32
+; FUNC-LABEL: {{^}}prog function &store_f32(
 ; HSAIL-DAG: ld_arg_align(4)_f32 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
 ; HSAIL: st_global_align(4)_f32 [[IN]], {{\[}}[[OUT]]{{\]}}
 ; HSAIL: ret;
 define void @store_f32(float addrspace(1)* %out, float %in) {
   store float %in, float addrspace(1)* %out
+  ret void
+}
+
+; FUNC-LABEL: {{^}}prog function &store_f32_imm(
+; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
+; HSAIL: st_global_align(4)_u32 3212836864, {{\[}}[[OUT]]{{\]}}
+; HSAIL: ret;
+define void @store_f32_imm(float addrspace(1)* %out) {
+  store float -1.0, float addrspace(1)* %out
   ret void
 }
 

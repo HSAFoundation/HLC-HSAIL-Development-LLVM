@@ -30,12 +30,77 @@ public:
   void printInst(const MCInst *MI, raw_ostream &O, StringRef Annot) override;
 
 private:
+//  void printU8(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printU16(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printU32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printU64(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printS8(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printS16(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printS32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printS64(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printF16(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printF32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printF64(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printB1(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printB8(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printB16(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printB32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printB64(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printB128(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printSAMP(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printROIMG(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printWOIMG(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printRWIMG(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printSIG32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printSIG64(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printU8X4(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printU8X8(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printU8X16(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printU16X2(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printU16X4(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  //void printU16X8(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printU32X2(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printU32X4(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printU64X2(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printS8X4(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printS8X8(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printS8X16(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printS16X2(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printS16X4(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printS16X8(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printS32X2(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printS32X4(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  //void printS64X2(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printF16X2(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printF16X4(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printF16X8(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printF32X2(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printF32X4(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+//  void printF64X2(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+
+
   void printUImmediate(uint64_t Imm, raw_ostream &O);
   void printSImmediate(int64_t Imm, raw_ostream &O);
   void printAddrMode3Op(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printVec2Op(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printVec3Op(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printVec4Op(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+
+  void printV2U32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printV2F32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printV2U64(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printV2F64(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+
+  void printV3U32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printV3F32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printV3U64(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printV3F64(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+
+  void printV4U32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printV4F32(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printV4U64(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+  void printV4F64(const MCInst *MI, unsigned OpNo, raw_ostream &O);
+
   void printFTZ(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printNoNull(const MCInst *MI, unsigned OpNo, raw_ostream &O);
   void printV4(const MCInst *MI, unsigned OpNo, raw_ostream &O);
