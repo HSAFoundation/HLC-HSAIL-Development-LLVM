@@ -87,14 +87,12 @@ public:
     return "HSAIL Assembly Printer";
   }
 
-  /// Implemented in HSAILMCInstLower.cpp
-  void EmitInstruction(const MachineInstr *MI) override;
-
   void EmitGlobalVariable(const GlobalVariable *GV) override;
   void EmitStartOfAsmFile(Module &) override;
   void EmitFunctionEntryLabel() override;
   void EmitFunctionBodyStart() override;
   void EmitFunctionBodyEnd() override;
+  void EmitInstruction(const MachineInstr *MI) override;
 };
 
 } // End anonymous llvm
