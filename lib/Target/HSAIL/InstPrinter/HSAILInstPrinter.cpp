@@ -547,10 +547,107 @@ void HSAILInstPrinter::printBrigAlignment(const MCInst *MI, unsigned OpNo,
     O << "_align(" << formatDec(Align) << ')';
 }
 
+static bool isNaturalAlignment(BrigType BT, unsigned Align) {
+  switch (Align) {
+  case 4: {
+    switch (BT) {
+    case BRIG_TYPE_U32:
+    case BRIG_TYPE_F32:
+    case BRIG_TYPE_B32:
+    case BRIG_TYPE_S32:
+    case BRIG_TYPE_U8X4:
+    case BRIG_TYPE_S8X4:
+    case BRIG_TYPE_F16X2:
+    case BRIG_TYPE_S16X2:
+    case BRIG_TYPE_U16X2:
+      return true;
+    default:
+      return false;
+    }
+  }
+  case 8: {
+    switch (BT) {
+    case BRIG_TYPE_U64:
+    case BRIG_TYPE_B64:
+    case BRIG_TYPE_F64:
+    case BRIG_TYPE_S64:
+    case BRIG_TYPE_F16X4:
+    case BRIG_TYPE_F32X2:
+    case BRIG_TYPE_ROIMG:
+    case BRIG_TYPE_RWIMG:
+    case BRIG_TYPE_S16X4:
+    case BRIG_TYPE_S32X2:
+    case BRIG_TYPE_S8X8:
+    case BRIG_TYPE_SAMP:
+    case BRIG_TYPE_SIG32:
+    case BRIG_TYPE_SIG64:
+    case BRIG_TYPE_U16X4:
+    case BRIG_TYPE_U32X2:
+    case BRIG_TYPE_U8X8:
+    case BRIG_TYPE_WOIMG:
+      return true;
+    default:
+      return false;
+    }
+  }
+  case 1: {
+    switch (BT) {
+    case BRIG_TYPE_B1:
+    case BRIG_TYPE_B8:
+    case BRIG_TYPE_S8:
+    case BRIG_TYPE_U8:
+      return true;
+    default:
+      return false;
+    }
+  }
+  case 2: {
+    switch (BT) {
+    case BRIG_TYPE_U16:
+    case BRIG_TYPE_B16:
+    case BRIG_TYPE_S16:
+    case BRIG_TYPE_F16:
+      return true;
+    default:
+      return false;
+    }
+  }
+  case 16: {
+    switch (BT) {
+    case BRIG_TYPE_B128:
+    case BRIG_TYPE_F16X8:
+    case BRIG_TYPE_F32X4:
+    case BRIG_TYPE_F64X2:
+    case BRIG_TYPE_S16X8:
+    case BRIG_TYPE_S32X4:
+    case BRIG_TYPE_S64X2:
+    case BRIG_TYPE_S8X16:
+    case BRIG_TYPE_U16X8:
+    case BRIG_TYPE_U32X4:
+    case BRIG_TYPE_U64X2:
+    case BRIG_TYPE_U8X16:
+      return true;
+    default:
+      return false;
+    }
+  }
+  default:
+    return false;
+  }
+}
+
 void HSAILInstPrinter::printArgDeclAlignment(const MCInst *MI, unsigned OpNo,
                                              raw_ostream &O) {
   unsigned Align = MI->getOperand(OpNo).getImm();
-  if (Align != 0)
+
+  int TypeLengthIdx = HSAIL::getNamedOperandIdx(MI->getOpcode(),
+                                                HSAIL::OpName::TypeLength);
+  BrigType BT = static_cast<BrigType>(MI->getOperand(TypeLengthIdx).getImm());
+
+  // Don't print align declaration if it uses the alignment implied in this
+  // context. This isn't necessary, but it matches what libHSAIL's disassembler
+  // produces.
+  if (!isNaturalAlignment(BT, Align))
     O << "align(" << formatDec(Align) << ") ";
 }
 
