@@ -1150,8 +1150,10 @@ namespace llvm {
 
 raw_ostream &operator<<(raw_ostream &OS, const MCFixup &AF) {
   OS << "<MCFixup" << " Offset:" << AF.getOffset()
-     << " Value:" << *AF.getValue()
-     << " Kind:" << AF.getKind() << ">";
+     << " Value:";
+  AF.getValue()->print(OS, nullptr);
+
+  OS << " Kind:" << AF.getKind() << ">";
   return OS;
 }
 
@@ -1243,26 +1245,32 @@ void MCFragment::dump() {
   case MCFragment::FT_Org:  {
     const MCOrgFragment *OF = cast<MCOrgFragment>(this);
     OS << "\n       ";
-    OS << " Offset:" << OF->getOffset() << " Value:" << OF->getValue();
+    OS << " Offset:";
+    OF->getOffset().print(OS, nullptr);
+    OS << " Value:" << OF->getValue();
     break;
   }
   case MCFragment::FT_Dwarf:  {
     const MCDwarfLineAddrFragment *OF = cast<MCDwarfLineAddrFragment>(this);
-    OS << "\n       ";
-    OS << " AddrDelta:" << OF->getAddrDelta()
-       << " LineDelta:" << OF->getLineDelta();
+    OS << "\n       "
+          " AddrDelta:";
+    OF->getAddrDelta().print(OS, nullptr);
+    OS << " LineDelta:" << OF->getLineDelta();
     break;
   }
   case MCFragment::FT_DwarfFrame:  {
     const MCDwarfCallFrameFragment *CF = cast<MCDwarfCallFrameFragment>(this);
-    OS << "\n       ";
-    OS << " AddrDelta:" << CF->getAddrDelta();
+    OS << "\n       "
+          " AddrDelta:";
+    CF->getAddrDelta().print(OS, nullptr);
     break;
   }
   case MCFragment::FT_LEB: {
     const MCLEBFragment *LF = cast<MCLEBFragment>(this);
     OS << "\n       ";
-    OS << " Value:" << LF->getValue() << " Signed:" << LF->isSigned();
+    OS << " Value:";
+    LF->getValue().print(OS, nullptr);
+    OS << " Signed:" << LF->isSigned();
     break;
   }
   }
@@ -1285,8 +1293,9 @@ void MCSectionData::dump() {
 void MCSymbolData::dump() const {
   raw_ostream &OS = llvm::errs();
 
-  OS << "<MCSymbolData Symbol:" << getSymbol()
-     << " Fragment:" << getFragment();
+  OS << "<MCSymbolData Symbol:";
+  getSymbol().print(OS, nullptr);
+  OS << " Fragment:" << getFragment();
   if (!isCommon())
     OS << " Offset:" << getOffset();
   OS << " Flags:" << getFlags() << " Index:" << getIndex();

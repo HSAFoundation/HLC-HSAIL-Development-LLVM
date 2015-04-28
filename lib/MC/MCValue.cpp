@@ -15,7 +15,7 @@
 
 using namespace llvm;
 
-void MCValue::print(raw_ostream &OS) const {
+void MCValue::print(raw_ostream &OS, const MCAsmInfo *MAI) const {
   if (isAbsolute()) {
     OS << getConstant();
     return;
@@ -26,11 +26,11 @@ void MCValue::print(raw_ostream &OS) const {
   if (getRefKind())
     OS << ':' << getRefKind() <<  ':';
 
-  getSymA()->print(OS);
+  getSymA()->print(OS, MAI);
 
   if (getSymB()) {
     OS << " - ";
-    getSymB()->print(OS);
+    getSymB()->print(OS, MAI);
   }
 
   if (getConstant())
@@ -39,7 +39,7 @@ void MCValue::print(raw_ostream &OS) const {
 
 #if !defined(NDEBUG) || defined(LLVM_ENABLE_DUMP)
 void MCValue::dump() const {
-  print(dbgs());
+  print(dbgs(), nullptr);
 }
 #endif
 

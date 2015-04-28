@@ -20,7 +20,7 @@ NVPTXFloatMCExpr::Create(VariantKind Kind, APFloat Flt, MCContext &Ctx) {
   return new (Ctx) NVPTXFloatMCExpr(Kind, Flt);
 }
 
-void NVPTXFloatMCExpr::PrintImpl(raw_ostream &OS) const {
+void NVPTXFloatMCExpr::PrintImpl(raw_ostream &OS, const MCAsmInfo *MAI) const {
   bool Ignored;
   unsigned NumHex;
   APFloat APF = getAPFloat();
@@ -52,6 +52,8 @@ NVPTXGenericMCSymbolRefExpr::Create(const MCSymbolRefExpr *SymExpr,
   return new (Ctx) NVPTXGenericMCSymbolRefExpr(SymExpr);
 }
 
-void NVPTXGenericMCSymbolRefExpr::PrintImpl(raw_ostream &OS) const {
-  OS << "generic(" << *SymExpr << ")";
+void NVPTXGenericMCSymbolRefExpr::PrintImpl(raw_ostream &OS, const MCAsmInfo *MAI) const {
+  OS << "generic(";
+  SymExpr->print(OS, MAI);
+  OS << ")";
 }

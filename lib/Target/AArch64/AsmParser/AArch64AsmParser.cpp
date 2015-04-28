@@ -1690,12 +1690,12 @@ void AArch64Operand::print(raw_ostream &OS) const {
     break;
   }
   case k_Immediate:
-    getImm()->print(OS);
+    getImm()->print(OS, nullptr);
     break;
   case k_ShiftedImm: {
     unsigned Shift = getShiftedImmShift();
     OS << "<shiftedimm ";
-    getShiftedImmVal()->print(OS);
+    getShiftedImmVal()->print(OS, nullptr);
     OS << ", lsl #" << AArch64_AM::getShiftValue(Shift) << ">";
     break;
   }

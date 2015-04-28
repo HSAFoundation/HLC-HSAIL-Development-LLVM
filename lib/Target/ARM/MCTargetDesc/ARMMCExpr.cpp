@@ -21,7 +21,7 @@ ARMMCExpr::Create(VariantKind Kind, const MCExpr *Expr,
   return new (Ctx) ARMMCExpr(Kind, Expr);
 }
 
-void ARMMCExpr::PrintImpl(raw_ostream &OS) const {
+void ARMMCExpr::PrintImpl(raw_ostream &OS, const MCAsmInfo *MAI) const {
   switch (Kind) {
   default: llvm_unreachable("Invalid kind!");
   case VK_ARM_HI16: OS << ":upper16:"; break;
@@ -31,7 +31,7 @@ void ARMMCExpr::PrintImpl(raw_ostream &OS) const {
   const MCExpr *Expr = getSubExpr();
   if (Expr->getKind() != MCExpr::SymbolRef)
     OS << '(';
-  Expr->print(OS);
+  Expr->print(OS, MAI);
   if (Expr->getKind() != MCExpr::SymbolRef)
     OS << ')';
 }

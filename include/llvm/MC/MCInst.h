@@ -139,7 +139,7 @@ public:
     return Op;
   }
 
-  void print(raw_ostream &OS) const;
+  void print(raw_ostream &OS, const MCAsmInfo *MAI) const;
   void dump() const;
 };
 
@@ -181,7 +181,7 @@ public:
     return Operands.insert(I, Op);
   }
 
-  void print(raw_ostream &OS) const;
+  void print(raw_ostream &OS, const MCAsmInfo *MAI) const;
   void dump() const;
 
   /// \brief Dump the MCInst as prettily as possible using the additional MC
@@ -192,12 +192,12 @@ public:
 };
 
 inline raw_ostream& operator<<(raw_ostream &OS, const MCOperand &MO) {
-  MO.print(OS);
+  MO.print(OS, nullptr);
   return OS;
 }
 
 inline raw_ostream& operator<<(raw_ostream &OS, const MCInst &MI) {
-  MI.print(OS);
+  MI.print(OS, nullptr);
   return OS;
 }
 

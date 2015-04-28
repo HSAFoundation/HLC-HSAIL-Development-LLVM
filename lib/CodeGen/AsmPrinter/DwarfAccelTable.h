@@ -201,7 +201,7 @@ private:
       O << "  Hash Value: " << format("0x%x", HashValue) << "\n";
       O << "  Symbol: ";
       if (Sym)
-        Sym->print(O);
+        O << Sym->getName();
       else
         O << "<none>";
       O << "\n";

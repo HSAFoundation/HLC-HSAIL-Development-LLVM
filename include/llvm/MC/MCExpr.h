@@ -73,7 +73,7 @@ public:
   /// \name Utility Methods
   /// @{
 
-  void print(raw_ostream &OS) const;
+  void print(raw_ostream &OS, const MCAsmInfo *MAI) const;
   void dump() const;
 
   /// @}
@@ -120,11 +120,6 @@ public:
 
   /// @}
 };
-
-inline raw_ostream &operator<<(raw_ostream &OS, const MCExpr &E) {
-  E.print(OS);
-  return OS;
-}
 
 //// \brief  Represent a constant integer expression.
 class MCConstantExpr : public MCExpr {
@@ -553,7 +548,7 @@ protected:
   virtual ~MCTargetExpr() {}
 public:
 
-  virtual void PrintImpl(raw_ostream &OS) const = 0;
+  virtual void PrintImpl(raw_ostream &OS, const MCAsmInfo *MAI) const = 0;
   virtual bool EvaluateAsRelocatableImpl(MCValue &Res,
                                          const MCAsmLayout *Layout,
                                          const MCFixup *Fixup) const = 0;

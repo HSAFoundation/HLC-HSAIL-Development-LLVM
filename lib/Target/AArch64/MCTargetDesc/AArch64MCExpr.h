@@ -145,7 +145,7 @@ public:
   /// (e.g. ":got:", ":lo12:").
   StringRef getVariantKindName() const;
 
-  void PrintImpl(raw_ostream &OS) const override;
+  void PrintImpl(raw_ostream &OS, const MCAsmInfo *MAI) const override;
 
   void visitUsedExpr(MCStreamer &Streamer) const override;
 

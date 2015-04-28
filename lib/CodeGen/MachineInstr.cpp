@@ -414,7 +414,7 @@ void MachineOperand::print(raw_ostream &OS,
     OS << '>';
     break;
   case MachineOperand::MO_MCSymbol:
-    OS << "<MCSym=" << *getMCSymbol() << '>';
+    OS << "<MCSym=" << getMCSymbol()->getName() << '>';
     break;
   case MachineOperand::MO_CFIIndex:
     OS << "<call frame instruction>";

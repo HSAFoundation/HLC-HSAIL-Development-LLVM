@@ -19,6 +19,7 @@
 #include "llvm/Support/Compiler.h"
 
 namespace llvm {
+  class MCAsmInfo;
   class MCExpr;
   class MCSection;
   class MCContext;
@@ -169,16 +170,11 @@ namespace llvm {
     /// @}
 
     /// print - Print the value to the stream \p OS.
-    void print(raw_ostream &OS) const;
+    void print(raw_ostream &OS, const MCAsmInfo *) const;
 
     /// dump - Print the value to stderr.
     void dump() const;
   };
-
-  inline raw_ostream &operator<<(raw_ostream &OS, const MCSymbol &Sym) {
-    Sym.print(OS);
-    return OS;
-  }
 } // end namespace llvm
 
 #endif

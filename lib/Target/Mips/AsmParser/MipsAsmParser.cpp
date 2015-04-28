@@ -1182,14 +1182,14 @@ public:
     switch (Kind) {
     case k_Immediate:
       OS << "Imm<";
-      Imm.Val->print(OS);
+      Imm.Val->print(OS, nullptr);
       OS << ">";
       break;
     case k_Memory:
       OS << "Mem<";
       Mem.Base->print(OS);
       OS << ", ";
-      Mem.Off->print(OS);
+      Mem.Off->print(OS, nullptr);
       OS << ">";
       break;
     case k_PhysRegister:
