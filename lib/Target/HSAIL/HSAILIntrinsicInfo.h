@@ -43,37 +43,20 @@ class HSAILIntrinsicInfo : public TargetIntrinsicInfo {
 public:
   HSAILIntrinsicInfo(HSAILTargetMachine *tm);
 
-  /// Return the name of a target intrinsic, e.g. "llvm.bfin.ssync".
-  /// The Tys and numTys parameters are for intrinsics with overloaded types
-  /// (e.g., those using iAny or fAny). For a declaration for an overloaded
-  /// intrinsic, Tys should point to an array of numTys pointers to Type,
-  /// and must provide exactly one type for each overloaded type in the
-  /// intrinsic.
-  virtual std::string
-  getName(unsigned IID,  Type **Tys = 0, unsigned int numTys = 0) const;
+  std::string getName(unsigned IID,  Type **Tys = nullptr,
+                      unsigned numTys = 0) const override;
 
-  /// Look up target intrinsic by name. Return intrinsic ID or 0 for unknown
-  /// names.
-  virtual unsigned
-  lookupName(const char *Name, unsigned Len) const;
+  unsigned lookupName(const char *Name, unsigned Len) const override;
 
-  /// Returns true if the intrinsic can be overloaded.
-  virtual bool
-  isOverloaded(unsigned IID) const;
+  bool isOverloaded(unsigned IID) const override;
 
-  /// Create or insert an LLVM Function declaration for an intrinsic,
-  /// and return it. The Tys and numTys are for intrinsics with overloaded
-  /// types. See above for more information.
-
-  virtual Function*
-  getDeclaration(Module *M,
-                 unsigned ID,
-                 Type ** Tys = 0,
-                 unsigned int numTys = 0) const;
+  Function *getDeclaration(Module *M,
+                           unsigned ID,
+                           Type ** Tys = nullptr,
+                           unsigned numTys = 0) const override;
 
   static bool isReadImage(llvm::HSAILIntrinsic::ID intr);
   static bool isLoadImage(llvm::HSAILIntrinsic::ID intr);
-
 };
 
 } // End llvm namespace
