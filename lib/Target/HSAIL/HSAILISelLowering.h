@@ -192,10 +192,10 @@ public:
   SDValue
   LowerINTRINSIC_W_CHAIN(SDValue Op, SelectionDAG &DAG) const;
 
-  SDValue 
+  SDValue
   lowerSamplerInitializerOperand(SDValue Op, SelectionDAG &DAG) const;
 
-  SDValue 
+  SDValue
   LowerROTL(SDValue Op, SelectionDAG &DAG) const;
 
   SDValue

@@ -1,4 +1,4 @@
-//===-- HSAILAsmBackend.h - HSAIL Assembler Backend -----------------------===//
+//===-- HSAILAsmBackend.h - HSAIL Assembler Backend -------------*- C++ -*-===//
 //
 //                     The LLVM Compiler Infrastructure
 //

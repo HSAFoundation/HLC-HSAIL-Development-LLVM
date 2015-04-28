@@ -1,8 +1,12 @@
-//===- HSAILInstrInfo.cpp - HSAIL Instruction Information ----------------===//
+//===-- HSAILInstrInfo.cpp - HSAIL Instruction Information ----------------===//
 //
-// This file contains the HSAIL implementation of the TargetInstrInfo class.
+//                     The LLVM Compiler Infrastructure
 //
-//===---------------------------------------------------------------------===//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+
 #include "HSAILInstrInfo.h"
 #include "HSAILBrig.h"
 #include "HSAILTargetMachine.h"

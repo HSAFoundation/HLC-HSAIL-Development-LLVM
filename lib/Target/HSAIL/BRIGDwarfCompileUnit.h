@@ -1,3 +1,12 @@
+//===-- BRIGDwarfCompileUnit.h ----------------------------------*- C++ -*-===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+
 #ifndef BRIG_DWARF_COMPILE_UNIT_HEADER
 #define BRIG_DWARF_COMPILE_UNIT_HEADER
 
@@ -24,7 +33,7 @@ namespace llvm {
 
     virtual void addString(DIE *Die, unsigned Attribute, const StringRef Str);
 
-    virtual void addLabel(DIE *Die, unsigned Attribute, 
+    virtual void addLabel(DIE *Die, unsigned Attribute,
                           unsigned Form, const MCSymbol *Label);
 
     virtual void addDelta(DIE *Die, unsigned Attribute, unsigned Form,
@@ -39,15 +48,13 @@ namespace llvm {
 
     static inline bool classof(const BRIGDwarfCompileUnit* BDCU) {
       return true;
-    } 
+    }
 
     static inline bool classof(const CompileUnit* CU) {
      return true;
     }
 
   }; // class BRIGDwarfCompileUnit
-
 } // namespace llvm
 
-#else
 #endif //BRIG_DWARF_COMPILE_UNIT_HEADER

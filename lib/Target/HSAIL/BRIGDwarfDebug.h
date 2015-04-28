@@ -1,3 +1,12 @@
+//===-- BRIGDwarfDebug.h ----------------------------------------*- C++ -*-===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+
 #ifndef BRIG_DWARF_DEBUG_HEADER
 #define BRIG_DWARF_DEBUG_HEADER
 
@@ -14,7 +23,7 @@
 
 namespace llvm {
 
-  // class that provides access to the fields of metadata node describing BRIG private or global variables 
+  // class that provides access to the fields of metadata node describing BRIG private or global variables
   class DIPGVariable : public DIGlobalVariable {
   public:
     const HSAILAS::AddressSpaces addrSpace;
@@ -48,8 +57,8 @@ namespace llvm {
     unsigned getDotDebugLocOffset()    const { return DotDebugLocOffset; }
     StringRef getName()                const { return Var.getName(); }
 
-    // Translate tag to proper Dwarf tag.  
-    unsigned getTag()                  const { 
+    // Translate tag to proper Dwarf tag.
+    unsigned getTag()                  const {
       return dwarf::DW_TAG_variable;
     }
 
@@ -66,7 +75,7 @@ namespace llvm {
     friend class BRIGAsmPrinter;
     // allow construction of BRIGDwarfDebug only in BRIGAsmPrinter
     BRIGDwarfDebug(BRIGAsmPrinter* Asm, Module* M);
- 
+
   protected:
     /// createCompileUnitInstance - Returns target-specific instance of CompileUnit
     virtual DICompileUnit* createCompileUnit(unsigned int I, unsigned int L, DIE* D);
@@ -79,7 +88,7 @@ namespace llvm {
     /// it in CurrentFnArguments list.
     virtual bool addCurrentFnArgument(const MachineFunction *MF,
                                       DbgVariable *Var, LexicalScope *Scope);
-    
+
     /// recordDebugLocsForVariable - records debug locations for variable
     virtual void recordDebugLocsForVariable(const SmallVectorImpl<const MachineInstr*> &History,
                                             DbgVariable *RegVar, LexicalScope *Scope);
@@ -129,7 +138,7 @@ namespace llvm {
   public:
     virtual ~BRIGDwarfDebug();
 
-    /// addPrivateVariableMDNode - callback function for BRIGDwarfCompileUnit 
+    /// addPrivateVariableMDNode - callback function for BRIGDwarfCompileUnit
     /// this function notifies BRIGDwarfDebug instance about private variable
     /// found in the module's metadata
     void addPrivateVariableMDNode(const MDNode* N);
@@ -140,8 +149,6 @@ namespace llvm {
     void addGroupVariableMDNode(const MDNode* N);
 
   }; // class BRIGDwarfDebug
-
 } // namespace llvm
 
-#else
 #endif //BRIG_DWARF_DEBUG_HEADER

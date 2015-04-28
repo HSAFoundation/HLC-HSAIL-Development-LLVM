@@ -1,13 +1,17 @@
-//===-- HSAILOpaqueTypes.cpp - SPIR opaque types ----------------*- C++ -*-===//
+//===-- HSAILOpaqueTypes.cpp - SPIR opaque types --------------------------===//
 //
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-///
+//
 /// \file
-/// 
+///
 /// \brief This file implements the API for working with SPIR opaque
 /// types. This includes images and samplers among other things.
-///
+//
 //===----------------------------------------------------------------------===//
 
 #include "HSAILOpaqueTypes.h"

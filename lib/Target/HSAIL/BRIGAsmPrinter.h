@@ -1,4 +1,4 @@
-//===- BRIGAsmPrinter.h - Convert HSAIL LLVM code to assembly --*- C++ -*-===//
+//===- BRIGAsmPrinter.h - Convert HSAIL LLVM code to assembly ---*- C++ -*-===//
 //
 //                     The LLVM Compiler Infrastructure
 //

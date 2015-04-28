@@ -7,8 +7,9 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file defines the HSAILParamManager class, which manages all defined .param
-// variables for a particular function.
+/// \ file
+/// This file defines the HSAILParamManager class, which manages all defined
+/// .param variables for a particular function.
 //
 //===----------------------------------------------------------------------===//
 

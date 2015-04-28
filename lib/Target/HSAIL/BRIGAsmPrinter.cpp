@@ -1,3 +1,19 @@
+//===-- BRIGAsmPrinter.cpp - BRIG object emitter via libHSAIL -------------===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+/// \file
+///
+/// The BRIGAsmPrinter is used to emit BRIG object code or HSAIL text (via
+/// dissembling) using libHSAIL
+//
+//===----------------------------------------------------------------------===//
+//
+
 #include "BRIGAsmPrinter.h"
 #include "BRIGDwarfDebug.h"
 #include "MCTargetDesc/BRIGDwarfStreamer.h"
