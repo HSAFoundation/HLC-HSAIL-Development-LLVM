@@ -53,10 +53,10 @@ protected:                                        // Can only create subclasses.
 public:
   DummyMCCodeEmitter(const MCInstrInfo &II, const MCSubtargetInfo &STI,
                      MCContext &Ctx)
-    : m_ii(II), m_sti(STI), m_ctx(Ctx) {}
+      : m_ii(II), m_sti(STI), m_ctx(Ctx) {}
   DummyMCCodeEmitter(const MCInstrInfo &II, const MCRegisterInfo &MRI,
                      const MCSubtargetInfo &STI, MCContext &Ctx)
-    : m_ii(II), m_sti(STI), m_ctx(Ctx) {}
+      : m_ii(II), m_sti(STI), m_ctx(Ctx) {}
 
   ~DummyMCCodeEmitter() override {}
 
@@ -83,11 +83,10 @@ void HSAILMCCodeEmitter::EmitImmediate(const MCOperand &DispOp, unsigned Size,
   llvm_unreachable("When do we hit this?");
 }
 
-void HSAILMCCodeEmitter::EmitMemModRMByte(const MCInst &MI, unsigned Op,
-                                          unsigned RegOpcodeField,
-                                          uint64_t TSFlags,
-                                          unsigned &CurByte, raw_ostream &OS,
-                                          SmallVectorImpl<MCFixup> &Fixups) const {
+void HSAILMCCodeEmitter::EmitMemModRMByte(
+    const MCInst &MI, unsigned Op, unsigned RegOpcodeField, uint64_t TSFlags,
+    unsigned &CurByte, raw_ostream &OS,
+    SmallVectorImpl<MCFixup> &Fixups) const {
   llvm_unreachable("When do we hit this?");
 }
 

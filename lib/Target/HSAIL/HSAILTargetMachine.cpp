@@ -22,18 +22,16 @@
 
 using namespace llvm;
 
-static cl::opt<bool>
-UseStandardAsmPrinter("hsail-asmprinter",
-                      cl::desc("Use standard LLVM AsmPrinter instead of BRIGAsmPrinter"),
-                      cl::init(false));
-
+static cl::opt<bool> UseStandardAsmPrinter(
+    "hsail-asmprinter",
+    cl::desc("Use standard LLVM AsmPrinter instead of BRIGAsmPrinter"),
+    cl::init(false));
 
 extern "C" void LLVMInitializeHSAILTarget() {
   // Register the target.
   RegisterTargetMachine<HSAIL_32TargetMachine> X(TheHSAIL_32Target);
   RegisterTargetMachine<HSAIL_64TargetMachine> Y(TheHSAIL_64Target);
 }
-
 
 extern "C" void LLVMInitializeBRIGAsmPrinter();
 
@@ -45,18 +43,14 @@ static TargetLoweringObjectFile *createTLOF(const Triple &TT) {
 
 /// HSAILTargetMachine ctor -
 ///
-HSAILTargetMachine::HSAILTargetMachine(const Target &T,
-                                       StringRef TT,
-                                       StringRef CPU,
-                                       StringRef FS,
+HSAILTargetMachine::HSAILTargetMachine(const Target &T, StringRef TT,
+                                       StringRef CPU, StringRef FS,
                                        const TargetOptions &Options,
-                                       Reloc::Model RM,
-                                       CodeModel::Model CM,
-                                       CodeGenOpt::Level OL) :
-  LLVMTargetMachine(T, TT, CPU, FS,Options, RM, CM,OL),
-  Subtarget(TT, CPU, FS, *this),
-  IntrinsicInfo(this),
-  TLOF(createTLOF(Triple(getTargetTriple()))) {
+                                       Reloc::Model RM, CodeModel::Model CM,
+                                       CodeGenOpt::Level OL)
+    : LLVMTargetMachine(T, TT, CPU, FS, Options, RM, CM, OL),
+      Subtarget(TT, CPU, FS, *this), IntrinsicInfo(this),
+      TLOF(createTLOF(Triple(getTargetTriple()))) {
   initAsmInfo();
   setAsmVerbosityDefault(true);
 
@@ -67,12 +61,9 @@ HSAILTargetMachine::HSAILTargetMachine(const Target &T,
     LLVMInitializeBRIGAsmPrinter();
 }
 
-bool HSAILTargetMachine::addPassesToEmitFile(PassManagerBase &PM,
-                                             formatted_raw_ostream &Out,
-                                             CodeGenFileType FT,
-                                             bool DisableVerify,
-                                             AnalysisID StartAfter,
-                                             AnalysisID StopAfter) {
+bool HSAILTargetMachine::addPassesToEmitFile(
+    PassManagerBase &PM, formatted_raw_ostream &Out, CodeGenFileType FT,
+    bool DisableVerify, AnalysisID StartAfter, AnalysisID StopAfter) {
   HSAILFileType = FT; // FIXME: Remove this.
 
   if (!UseStandardAsmPrinter) {
@@ -85,8 +76,7 @@ bool HSAILTargetMachine::addPassesToEmitFile(PassManagerBase &PM,
                                                 StartAfter, StopAfter);
 }
 
-TargetPassConfig*
-HSAILTargetMachine::createPassConfig(PassManagerBase &PM) {
+TargetPassConfig *HSAILTargetMachine::createPassConfig(PassManagerBase &PM) {
   return new HSAILPassConfig(this, PM);
 }
 
@@ -101,16 +91,17 @@ void HSAILPassConfig::addIRPasses() {
   TargetPassConfig::addIRPasses();
 }
 
-bool HSAILPassConfig::addPreISel(){
+bool HSAILPassConfig::addPreISel() {
   addPass(createLCSSAPass()); // Required by early CFG opts
 
   return true;
 }
 
 bool HSAILPassConfig::addInstSelector() {
-	HSAILTargetMachine &HSATM = getTM<HSAILTargetMachine>();
-	//return HSAILTargetMachine::addInstSelector(*PM,HSATM.Options,HSATM.getOptLevel());
-    //mOptLevel = OptLevel;
+  HSAILTargetMachine &HSATM = getTM<HSAILTargetMachine>();
+  // return
+  // HSAILTargetMachine::addInstSelector(*PM,HSATM.Options,HSATM.getOptLevel());
+  // mOptLevel = OptLevel;
   // Install an instruction selector.
 
   addPass(createHSAILISelDag(HSATM));
@@ -124,65 +115,56 @@ bool HSAILPassConfig::addInstSelector() {
 
   return false;
 }
-bool HSAILPassConfig::addPreEmitPass()
-{
-	return false;
-}
-bool HSAILPassConfig::addPreRegAlloc()
-{
-	return false;
-}
-bool HSAILPassConfig::addPostRegAlloc()
-{
-	return false;
-}
+bool HSAILPassConfig::addPreEmitPass() { return false; }
+bool HSAILPassConfig::addPreRegAlloc() { return false; }
+bool HSAILPassConfig::addPostRegAlloc() { return false; }
 
 //===----------------------------------------------------------------------===//
 // HSAIL_32Machine functions
 //===----------------------------------------------------------------------===//
-HSAIL_32TargetMachine::HSAIL_32TargetMachine(const Target &T,
-                                             StringRef TT,
-                                             StringRef CPU,
-                                             StringRef FS,
+HSAIL_32TargetMachine::HSAIL_32TargetMachine(const Target &T, StringRef TT,
+                                             StringRef CPU, StringRef FS,
                                              const TargetOptions &Options,
                                              Reloc::Model RM,
                                              CodeModel::Model CM,
-                                             CodeGenOpt::Level OL) :
-  HSAILTargetMachine(T, TT, CPU, FS,Options, RM, CM, OL),
-  TSInfo(*this) {
+                                             CodeGenOpt::Level OL)
+    : HSAILTargetMachine(T, TT, CPU, FS, Options, RM, CM, OL), TSInfo(*this) {
   Triple TheTriple(TT);
 
-  // Check for mismatch in target triple settings and data layout. Note the target
-  // triple comes from the module (unless overridden on command line). It's just a
+  // Check for mismatch in target triple settings and data layout. Note the
+  // target
+  // triple comes from the module (unless overridden on command line). It's just
+  // a
   // warning, but users should know if they're specifying --march=hsail-64 on a
   // 32-bit module or --march=hsail on a 64-bit module.
   if (TheTriple.getArch() == Triple::hsail64) {
-    errs() << "warning: target triple '" << TT <<
-      "' does not match target 'hsail', expecting hsail-pc-amdopencl.\n";
+    errs()
+        << "warning: target triple '" << TT
+        << "' does not match target 'hsail', expecting hsail-pc-amdopencl.\n";
   }
 }
 
 //===----------------------------------------------------------------------===//
 // HSAIL_64Machine functions
 //===----------------------------------------------------------------------===//
-HSAIL_64TargetMachine::HSAIL_64TargetMachine(const Target &T,
-                                             StringRef TT,
-                                             StringRef CPU,
-                                             StringRef FS,
+HSAIL_64TargetMachine::HSAIL_64TargetMachine(const Target &T, StringRef TT,
+                                             StringRef CPU, StringRef FS,
                                              const TargetOptions &Options,
                                              Reloc::Model RM,
                                              CodeModel::Model CM,
-                                             CodeGenOpt::Level OL) :
-  HSAILTargetMachine(T, TT, CPU, FS,Options, RM, CM, OL),
-  TSInfo(*this) {
+                                             CodeGenOpt::Level OL)
+    : HSAILTargetMachine(T, TT, CPU, FS, Options, RM, CM, OL), TSInfo(*this) {
   Triple TheTriple(TT);
 
-  // Check for mismatch in target triple settings and data layout. Note the target
-  // triple comes from the module (unless overridden on command line). It's just a
+  // Check for mismatch in target triple settings and data layout. Note the
+  // target
+  // triple comes from the module (unless overridden on command line). It's just
+  // a
   // warning, but users should know if they're specifying --march=hsail-64 on a
   // 32-bit module.
   if (TheTriple.getArch() == Triple::hsail) {
-    errs() << "warning: target triple '" << TT <<
-      "' does not match target 'hsail-64', expecting hsail64-pc-amdopencl.\n";
+    errs() << "warning: target triple '" << TT << "' does not match target "
+                                                  "'hsail-64', expecting "
+                                                  "hsail64-pc-amdopencl.\n";
   }
 }

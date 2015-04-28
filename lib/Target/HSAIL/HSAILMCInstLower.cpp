@@ -27,9 +27,8 @@
 
 using namespace llvm;
 
-HSAILMCInstLower::HSAILMCInstLower(MCContext &ctx, const HSAILAsmPrinter &ap):
-  Ctx(ctx),
-  AP(ap) { }
+HSAILMCInstLower::HSAILMCInstLower(MCContext &ctx, const HSAILAsmPrinter &ap)
+    : Ctx(ctx), AP(ap) {}
 
 void HSAILMCInstLower::lower(const MachineInstr *MI, MCInst &OutMI) const {
 
@@ -58,8 +57,8 @@ void HSAILMCInstLower::lower(const MachineInstr *MI, MCInst &OutMI) const {
       MCOp = MCOperand::CreateReg(MO.getReg());
       break;
     case MachineOperand::MO_MachineBasicBlock:
-      MCOp = MCOperand::CreateExpr(MCSymbolRefExpr::Create(
-                                   MO.getMBB()->getSymbol(), Ctx));
+      MCOp = MCOperand::CreateExpr(
+          MCSymbolRefExpr::Create(MO.getMBB()->getSymbol(), Ctx));
       break;
     case MachineOperand::MO_GlobalAddress: {
       const GlobalValue *GV = MO.getGlobal();
@@ -73,7 +72,7 @@ void HSAILMCInstLower::lower(const MachineInstr *MI, MCInst &OutMI) const {
       break;
     }
     case MachineOperand::MO_ExternalSymbol: {
-      MCSymbol *Sym = Ctx.GetOrCreateSymbol(Twine('%') +  MO.getSymbolName());
+      MCSymbol *Sym = Ctx.GetOrCreateSymbol(Twine('%') + MO.getSymbolName());
       MCOp = MCOperand::CreateExpr(MCSymbolRefExpr::Create(Sym, Ctx));
       break;
     }

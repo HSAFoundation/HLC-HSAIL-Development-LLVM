@@ -35,12 +35,12 @@
 
 // The next two values can never be zero, as zero is the ID that is
 // used to assert against.
-#define DEFAULT_LDS_ID     1
-#define DEFAULT_GDS_ID     1
+#define DEFAULT_LDS_ID 1
+#define DEFAULT_GDS_ID 1
 #define DEFAULT_SCRATCH_ID 1
-#define DEFAULT_VEC_SLOTS  8
+#define DEFAULT_VEC_SLOTS 8
 
-#define OCL_DEVICE_ALL          0xFFFFF
+#define OCL_DEVICE_ALL 0xFFFFF
 
 const unsigned int RESERVED_FUNCS = 1024;
 
@@ -64,48 +64,41 @@ class formatted_raw_ostream;
 class raw_ostream;
 class ModulePass;
 
-ModulePass*
-createHSAILLowerSPIRSamplersPass();
+ModulePass *createHSAILLowerSPIRSamplersPass();
 
 ///
 ///
-FunctionPass *
-createHSAILControlDependencyAnalysis();
+FunctionPass *createHSAILControlDependencyAnalysis();
 
 ///
 ///
-FunctionPass *
-createHSAILUniformOperations(const HSAILTargetMachine &TM);
+FunctionPass *createHSAILUniformOperations(const HSAILTargetMachine &TM);
 
 ///
 ///
-FunctionPass *
-createHSAILOptimizeMemoryOps(const HSAILTargetMachine &TM);
+FunctionPass *createHSAILOptimizeMemoryOps(const HSAILTargetMachine &TM);
 
 ///
 ///
-FunctionPass*
-createHSAILPropagateImageOperandsPass();
+FunctionPass *createHSAILPropagateImageOperandsPass();
 
 ///
 ///
-ModulePass *
-createHSAILSyntaxCleanupPass();
+ModulePass *createHSAILSyntaxCleanupPass();
 
 /// Insert kernel index metadata for device enqueue.
-ModulePass* createHSAILInsertKernelIndexMetadataPass();
+ModulePass *createHSAILInsertKernelIndexMetadataPass();
 
 /// Optimize and lower AddrSpaceCast
 FunctionPass *createHSAILAddrSpaceCastPass();
 
-ModulePass* createHSAILProducePrintfMetadataPass();
+ModulePass *createHSAILProducePrintfMetadataPass();
 FunctionPass *createHSAILConsumePrintfMetadataPass(HSAILTargetMachine &TM);
 
 ModulePass *createHSAILNullPtrInsertionPass();
 
 /// createHSAILEarlyCFGOpts - HSAIL specific control flow optimizations
-LoopPass *
-createHSAILEarlyCFGOpts();
+LoopPass *createHSAILEarlyCFGOpts();
 
 /// createHSAILISelDag - This pass converts a legalized DAG into a
 /// HSAIL-specific DAG, ready for instruction scheduling.
@@ -113,139 +106,128 @@ FunctionPass *createHSAILISelDag(TargetMachine &TM);
 
 /// createGlobalBaseRegPass - This pass initializes a global base
 /// register for PIC on x86-32.
-FunctionPass*
-createGlobalBaseRegPass();
+FunctionPass *createGlobalBaseRegPass();
 
 /// createHSAILFloatingPointStackifierPass - This function returns a pass which
 /// converts floating point register references and pseudo instructions into
 /// floating point stack references and physical instructions.
 ///
-FunctionPass*
-createHSAILFloatingPointStackifierPass();
+FunctionPass *createHSAILFloatingPointStackifierPass();
 
 /// createSSEDomainFixPass - This pass twiddles SSE opcodes to prevent domain
 /// crossings.
-FunctionPass*
-createSSEDomainFixPass();
+FunctionPass *createSSEDomainFixPass();
 
 /// createHSAILEmitCodeToMemory - Returns a pass that converts a register
 /// allocated function into raw machine code in a dynamically
 /// allocated chunk of memory.
-FunctionPass*
-createEmitHSAILCodeToMemory();
+FunctionPass *createEmitHSAILCodeToMemory();
 
 /// createHSAILMaxStackAlignmentHeuristicPass - This function returns a pass
 /// which determines whether the frame pointer register should be
 /// reserved in case dynamic stack alignment is later required.
 ///
-FunctionPass*
-createHSAILMaxStackAlignmentHeuristicPass();
+FunctionPass *createHSAILMaxStackAlignmentHeuristicPass();
 
-FunctionPass *
-createHSAILFuncArgScopeEmitter(TargetMachine &tm, CodeGenOpt::Level OL);
+FunctionPass *createHSAILFuncArgScopeEmitter(TargetMachine &tm,
+                                             CodeGenOpt::Level OL);
 
-ModulePass*
-createHSAILAlwaysInlinePass();
+ModulePass *createHSAILAlwaysInlinePass();
 
 extern Target TheHSAIL_32Target, TheHSAIL_64Target;
 
 } // End llvm namespace
 
 namespace llvm {
-  namespace HSAILAS {
+namespace HSAILAS {
 
-    enum AddressSpaces {
-      PRIVATE_ADDRESS  = 0,
-      GLOBAL_ADDRESS   = 1,
-      READONLY_ADDRESS = 2,
-      GROUP_ADDRESS    = 3,
-      FLAT_ADDRESS     = 4,
-      REGION_ADDRESS   = 5,
-      SPILL_ADDRESS    = 6,
-      KERNARG_ADDRESS  = 7,
-      ARG_ADDRESS      = 8,
-      ADDRESS_NONE     = 9
-     };
-  }
-
-  // Target flags from tablegen
-  // See HSAILInstFormats.td
-  namespace HSAILInstrFlags {
-    enum {
-      // Instruction kind.
-      InstAddr = 1 << 3,
-      InstAtomic = 1 << 4,
-      InstBasic = 1 << 5,
-      InstBr = 1 << 6,
-      InstCmp = 1 << 7,
-      InstCvt = 1 << 8,
-      InstImage = 1 << 9,
-      InstLane = 1 << 10,
-      InstMem = 1 << 11,
-      InstMemFence = 1 << 12,
-      InstMod = 1 << 13,
-      InstQueryImage = 1 << 14,
-      InstQuerySampler = 1 << 15,
-      InstQueue = 1 << 16,
-      InstSeg = 1 << 17,
-      InstSegCvt = 1 << 18,
-      InstSignal = 1 << 19,
-      InstSourceType = 1 << 20,
-
-      // Others.
-      IS_CONV         = 1 << 23,
-      IS_IMAGEINST    = 1 << 24,
-
-      // Default modifier attributes. Used for marking default values of a
-      // modifier for an instruction to skip printing it.
-      RoundAttrLo = 1 << 25, // 2 bits
-      RoundAttrHi = 1 << 26,
-      RoundAttr = RoundAttrLo | RoundAttrHi,
-
-      WidthAttrLo = 1 << 27,  // 2 bits
-      WidthAttrHi = 1 << 28,
-      WidthAttr = WidthAttrLo | WidthAttrHi,
-
-      HasDefaultSegment = 1 << 29,
-
-      InstBrigOpcodeLo = UINT64_C(1) << 48,
-      InstBrigOpcode = UINT64_C(0xffff) << 48
-    };
-  }
-
-  namespace HSAILWidthAttrFlags {
-    enum {
-      WidthAttrNone = 0,
-      WidthAttrAll = 1,
-      WidthAttrWaveSize = 2,
-      WidthAttrOne = 3
-    };
-  }
-
-  // Enum for memory operand decoding
-  namespace HSAILADDRESS {
-    enum {
-      BASE = 0,
-      REG = 1,
-      OFFSET = 2,
-      ADDRESS_NUM_OPS
-    };
-  }
-
-  // Target architectures to optimize for
-  enum OptimizeForTargetArch {
-    GENERIC, // No target specific flavor
-    SI       // Optimize fot Southern Islands family
-  };
-
-  namespace HSAIL {
-    enum OperandType {
-      /// Operand with register or immediate.
-      OPERAND_REG_IMM = llvm::MCOI::OPERAND_FIRST_TARGET
-    };
-  }
+enum AddressSpaces {
+  PRIVATE_ADDRESS = 0,
+  GLOBAL_ADDRESS = 1,
+  READONLY_ADDRESS = 2,
+  GROUP_ADDRESS = 3,
+  FLAT_ADDRESS = 4,
+  REGION_ADDRESS = 5,
+  SPILL_ADDRESS = 6,
+  KERNARG_ADDRESS = 7,
+  ARG_ADDRESS = 8,
+  ADDRESS_NONE = 9
+};
 }
 
-#define IMAGE_ARG_BIAS  (1 << 16)
+// Target flags from tablegen
+// See HSAILInstFormats.td
+namespace HSAILInstrFlags {
+enum {
+  // Instruction kind.
+  InstAddr = 1 << 3,
+  InstAtomic = 1 << 4,
+  InstBasic = 1 << 5,
+  InstBr = 1 << 6,
+  InstCmp = 1 << 7,
+  InstCvt = 1 << 8,
+  InstImage = 1 << 9,
+  InstLane = 1 << 10,
+  InstMem = 1 << 11,
+  InstMemFence = 1 << 12,
+  InstMod = 1 << 13,
+  InstQueryImage = 1 << 14,
+  InstQuerySampler = 1 << 15,
+  InstQueue = 1 << 16,
+  InstSeg = 1 << 17,
+  InstSegCvt = 1 << 18,
+  InstSignal = 1 << 19,
+  InstSourceType = 1 << 20,
+
+  // Others.
+  IS_CONV = 1 << 23,
+  IS_IMAGEINST = 1 << 24,
+
+  // Default modifier attributes. Used for marking default values of a
+  // modifier for an instruction to skip printing it.
+  RoundAttrLo = 1 << 25, // 2 bits
+  RoundAttrHi = 1 << 26,
+  RoundAttr = RoundAttrLo | RoundAttrHi,
+
+  WidthAttrLo = 1 << 27, // 2 bits
+  WidthAttrHi = 1 << 28,
+  WidthAttr = WidthAttrLo | WidthAttrHi,
+
+  HasDefaultSegment = 1 << 29,
+
+  InstBrigOpcodeLo = UINT64_C(1) << 48,
+  InstBrigOpcode = UINT64_C(0xffff) << 48
+};
+}
+
+namespace HSAILWidthAttrFlags {
+enum {
+  WidthAttrNone = 0,
+  WidthAttrAll = 1,
+  WidthAttrWaveSize = 2,
+  WidthAttrOne = 3
+};
+}
+
+// Enum for memory operand decoding
+namespace HSAILADDRESS {
+enum { BASE = 0, REG = 1, OFFSET = 2, ADDRESS_NUM_OPS };
+}
+
+// Target architectures to optimize for
+enum OptimizeForTargetArch {
+  GENERIC, // No target specific flavor
+  SI       // Optimize fot Southern Islands family
+};
+
+namespace HSAIL {
+enum OperandType {
+  /// Operand with register or immediate.
+  OPERAND_REG_IMM = llvm::MCOI::OPERAND_FIRST_TARGET
+};
+}
+}
+
+#define IMAGE_ARG_BIAS (1 << 16)
 
 #endif

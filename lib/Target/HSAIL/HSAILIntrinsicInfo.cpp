@@ -25,10 +25,10 @@ using namespace llvm;
 #include "HSAILGenIntrinsics.inc"
 #undef GET_LLVM_INTRINSIC_FOR_GCC_BUILTIN
 
-bool HSAILIntrinsicInfo::isReadImage(HSAILIntrinsic::ID intr)
-{
+bool HSAILIntrinsicInfo::isReadImage(HSAILIntrinsic::ID intr) {
   switch (intr) {
-  default: return false;
+  default:
+    return false;
 
   case HSAILIntrinsic::HSAIL_rd_imgf_1d_f32:
   case HSAILIntrinsic::HSAIL_rd_imgf_1d_s32:
@@ -68,10 +68,10 @@ bool HSAILIntrinsicInfo::isReadImage(HSAILIntrinsic::ID intr)
   }
 }
 
-bool HSAILIntrinsicInfo::isLoadImage(HSAILIntrinsic::ID intr)
-{
+bool HSAILIntrinsicInfo::isLoadImage(HSAILIntrinsic::ID intr) {
   switch (intr) {
-  default: return false;
+  default:
+    return false;
 
   case HSAILIntrinsic::HSAIL_ld_imgf_1d_u32:
   case HSAILIntrinsic::HSAIL_ld_imgf_1da_u32:
@@ -98,14 +98,11 @@ bool HSAILIntrinsicInfo::isLoadImage(HSAILIntrinsic::ID intr)
 }
 
 HSAILIntrinsicInfo::HSAILIntrinsicInfo(HSAILTargetMachine *tm)
-  : TargetIntrinsicInfo() {}
+    : TargetIntrinsicInfo() {}
 
-std::string
-HSAILIntrinsicInfo::getName(unsigned int IntrID,
-                            Type **Tys,
-                            unsigned int numTys) const
-{
-  static const char* const names[] = {
+std::string HSAILIntrinsicInfo::getName(unsigned int IntrID, Type **Tys,
+                                        unsigned int numTys) const {
+  static const char *const names[] = {
 #define GET_INTRINSIC_NAME_TABLE
 #include "HSAILGenIntrinsics.inc"
 #undef GET_INTRINSIC_NAME_TABLE
@@ -114,17 +111,15 @@ HSAILIntrinsicInfo::getName(unsigned int IntrID,
   if (IntrID < Intrinsic::num_intrinsics) {
     return 0;
   }
-  assert(IntrID < HSAILIntrinsic::num_HSAIL_intrinsics
-         && "Invalid intrinsic ID");
+  assert(IntrID < HSAILIntrinsic::num_HSAIL_intrinsics &&
+         "Invalid intrinsic ID");
 
   std::string Result(names[IntrID - Intrinsic::num_intrinsics]);
   return Result;
 }
 
-unsigned int
-HSAILIntrinsicInfo::lookupName(const char *Name,
-                               unsigned int Len) const
-{
+unsigned int HSAILIntrinsicInfo::lookupName(const char *Name,
+                                            unsigned int Len) const {
 #define GET_FUNCTION_RECOGNIZER
 #include "HSAILGenIntrinsics.inc"
 #undef GET_FUNCTION_RECOGNIZER
@@ -149,8 +144,7 @@ HSAILIntrinsicInfo::lookupName(const char *Name,
   return 0;
 }
 
-bool
-HSAILIntrinsicInfo::isOverloaded(unsigned IntrID) const {
+bool HSAILIntrinsicInfo::isOverloaded(unsigned IntrID) const {
   if (!IntrID)
     return false;
 
@@ -160,12 +154,9 @@ HSAILIntrinsicInfo::isOverloaded(unsigned IntrID) const {
 #undef GET_INTRINSIC_OVERLOAD_TABLE
 }
 
-Function*
-HSAILIntrinsicInfo::getDeclaration(Module *M,
-                                   unsigned IntrID,
-                                   Type ** Tys,
-                                   unsigned int numTys) const
-{
+Function *HSAILIntrinsicInfo::getDeclaration(Module *M, unsigned IntrID,
+                                             Type **Tys,
+                                             unsigned int numTys) const {
   llvm_unreachable("Not implemented");
 
   return NULL;

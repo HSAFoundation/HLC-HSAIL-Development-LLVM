@@ -12,28 +12,30 @@
 using namespace llvm;
 
 BRIGDwarfStreamer::BRIGDwarfStreamer(MCContext &Context, MCAsmBackend &TAB,
-                                     RawVectorOstream &RVOS, MCCodeEmitter *Emitter)
-  : MCELFStreamer(Context, TAB, RVOS, Emitter), dwarfStream(&RVOS) {}
+                                     RawVectorOstream &RVOS,
+                                     MCCodeEmitter *Emitter)
+    : MCELFStreamer(Context, TAB, RVOS, Emitter), dwarfStream(&RVOS) {}
 
 BRIGDwarfStreamer::BRIGDwarfStreamer(MCContext &Context, MCAsmBackend &TAB,
-                                     RawVectorOstream &RVOS, MCCodeEmitter *Emitter,
+                                     RawVectorOstream &RVOS,
+                                     MCCodeEmitter *Emitter,
                                      MCAssembler *Assembler)
-  : MCELFStreamer(Context, TAB, RVOS, Emitter, Assembler), dwarfStream(&RVOS) {}
+    : MCELFStreamer(Context, TAB, RVOS, Emitter, Assembler),
+      dwarfStream(&RVOS) {}
 
-RawVectorOstream* BRIGDwarfStreamer::getDwarfStream() {
-  raw_ostream* strm = &(getAssembler().getWriter().getStream());
+RawVectorOstream *BRIGDwarfStreamer::getDwarfStream() {
+  raw_ostream *strm = &(getAssembler().getWriter().getStream());
   // we must ensure MC layer is writing to the same stream
-  assert(strm == static_cast<raw_ostream*>(dwarfStream) && "MC layer doesn't write to DWARF stream");
+  assert(strm == static_cast<raw_ostream *>(dwarfStream) &&
+         "MC layer doesn't write to DWARF stream");
   return dwarfStream;
 }
 
 void BRIGDwarfStreamer::InitSections(bool NoExecStack) {
-  const MCSectionELF* codeSection =
-        getContext().getELFSection(".brigcode", ELF::SHT_NOBITS,
-                                    0, SectionKind::getText());
-  const MCSectionELF* directivesSection =
-        getContext().getELFSection(".brigdirectives", ELF::SHT_NOBITS,
-                                    0, SectionKind::getDataRel());
+  const MCSectionELF *codeSection = getContext().getELFSection(
+      ".brigcode", ELF::SHT_NOBITS, 0, SectionKind::getText());
+  const MCSectionELF *directivesSection = getContext().getELFSection(
+      ".brigdirectives", ELF::SHT_NOBITS, 0, SectionKind::getDataRel());
   SwitchSection(codeSection);
   SwitchSection(directivesSection);
   SwitchSection(codeSection);
@@ -53,9 +55,9 @@ void BRIGDwarfStreamer::Finish() {
   dwarfStream->releaseStream();
 }
 
-MCStreamer* llvm::createBRIGDwarfStreamer(MCContext &Context, MCAsmBackend &MAB,
-                                          RawVectorOstream &RVOS, MCCodeEmitter *CE,
-                                          bool RelaxAll) {
+MCStreamer *llvm::createBRIGDwarfStreamer(MCContext &Context, MCAsmBackend &MAB,
+                                          RawVectorOstream &RVOS,
+                                          MCCodeEmitter *CE, bool RelaxAll) {
   BRIGDwarfStreamer *S = new BRIGDwarfStreamer(Context, MAB, RVOS, CE);
   if (RelaxAll)
     S->getAssembler().setRelaxAll(true);

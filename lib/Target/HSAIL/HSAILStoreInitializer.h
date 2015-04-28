@@ -35,8 +35,7 @@ public:
     const MCExpr *Expr;
 
     VarInitOffset(uint64_t Offset, const MCExpr *E)
-      : BaseOffset(Offset),
-        Expr(E) {}
+        : BaseOffset(Offset), Expr(E) {}
   };
 
 private:
@@ -66,13 +65,9 @@ public:
     return makeArrayRef(VarInitAddresses);
   }
 
-  StringRef str() {
-    return OS.str();
-  }
+  StringRef str() { return OS.str(); }
 
-  size_t elementCount() {
-    return dataSizeInBytes() / InitEltSize;
-  }
+  size_t elementCount() { return dataSizeInBytes() / InitEltSize; }
 
   size_t dataSizeInBytes() {
     // Be sure to flush the stream before computing the size.
@@ -81,7 +76,6 @@ public:
 
   void print(raw_ostream &O);
 };
-
 }
 
 #endif

@@ -1,4 +1,5 @@
-//===- HSAILTargetStreamer.cpp ---------------------------*- C++ -*---------===//
+//===- HSAILTargetStreamer.cpp ---------------------------*- C++
+//-*---------===//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -23,7 +24,6 @@ public:
   HSAILTargetStreamer(MCStreamer &S);
   ~HSAILTargetStreamer();
 };
-
 }
 
 #endif

@@ -37,7 +37,6 @@ using namespace llvm;
 #define GET_REGINFO_MC_DESC
 #include "HSAILGenRegisterInfo.inc"
 
-
 // MC related code probably should be in MCTargetDesc subdir
 static MCCodeGenInfo *createHSAILMCCodeGenInfo(StringRef TT, Reloc::Model RM,
                                                CodeModel::Model CM,
@@ -50,7 +49,8 @@ static MCCodeGenInfo *createHSAILMCCodeGenInfo(StringRef TT, Reloc::Model RM,
 static MCStreamer *createBRIGStreamer(const Target &T, StringRef TT,
                                       MCContext &Ctx, MCAsmBackend &TAB,
                                       raw_ostream &_OS, MCCodeEmitter *_Emitter,
-                                      const MCSubtargetInfo &MSI, bool RelaxAll) {
+                                      const MCSubtargetInfo &MSI,
+                                      bool RelaxAll) {
   Triple TheTriple(TT);
 
   // pass 0 instead of &_OS, if you do not want DWARF data to be forwarded to
@@ -95,7 +95,6 @@ extern "C" void LLVMInitializeHSAILTargetMC() {
                                        createHSAIL32AsmBackend);
   TargetRegistry::RegisterMCObjectStreamer(TheHSAIL_32Target,
                                            createBRIGStreamer);
-
 
   TargetRegistry::RegisterMCCodeEmitter(TheHSAIL_64Target,
                                         createHSAILMCCodeEmitter);

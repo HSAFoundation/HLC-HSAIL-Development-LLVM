@@ -22,8 +22,7 @@
 using namespace llvm;
 
 /// \brief Check for an opaque type.
-OpaqueType llvm::GetOpaqueType(const Type *T)
-{
+OpaqueType llvm::GetOpaqueType(const Type *T) {
   // Handle the degenerate case first.
   if (!T)
     return NotOpaque;
@@ -47,23 +46,24 @@ OpaqueType llvm::GetOpaqueType(const Type *T)
     return NotOpaque;
 
   return StringSwitch<OpaqueType>(ST->getName())
-    .Cases("opencl.image1d_t",        "struct._image1d_t",        I1D)
-    .Cases("opencl.image1d_array_t",  "struct._image1d_array_t",  I1DA)
-    .Cases("opencl.image1d_buffer_t", "struct._image1d_buffer_t", I1DB)
-    .Cases("opencl.image2d_t",        "struct._image2d_t",        I2D)
-    .Cases("opencl.image2d_array_t",  "struct._image2d_array_t",  I2DA)
-    .Cases("opencl.image3d_t",        "struct._image3d_t",        I3D)
-    .Cases("opencl.image2d_depth_t",  "struct._image2d_depth_t",  I2DDepth)
-    .Cases("opencl.image2d_array_depth_t", "struct._image2d_array_depth_t", I2DADepth)
-    // There is no opaque sampler type in SPIR. The i32 in SPIR is
-    // lowered to the EDG-stype opaque sampler type.
-    .Case("struct._sampler_t",        Sampler)
-    .Cases("opencl.event_t",          "struct._event_t",          Event)
-    .Case("struct._counter32_t", C32)
-    .Case("struct._counter64_t", C64)
-    .Case("struct._sema_t", Sema)
-    .Case("opencl.reserve_id_t",ReserveId)
-    .Case("opencl.clk_event_t", CLKEventT)
-    .Case("opencl.queue_t", QueueT)
-    .Default(UnknownOpaque);
+      .Cases("opencl.image1d_t", "struct._image1d_t", I1D)
+      .Cases("opencl.image1d_array_t", "struct._image1d_array_t", I1DA)
+      .Cases("opencl.image1d_buffer_t", "struct._image1d_buffer_t", I1DB)
+      .Cases("opencl.image2d_t", "struct._image2d_t", I2D)
+      .Cases("opencl.image2d_array_t", "struct._image2d_array_t", I2DA)
+      .Cases("opencl.image3d_t", "struct._image3d_t", I3D)
+      .Cases("opencl.image2d_depth_t", "struct._image2d_depth_t", I2DDepth)
+      .Cases("opencl.image2d_array_depth_t", "struct._image2d_array_depth_t",
+             I2DADepth)
+      // There is no opaque sampler type in SPIR. The i32 in SPIR is
+      // lowered to the EDG-stype opaque sampler type.
+      .Case("struct._sampler_t", Sampler)
+      .Cases("opencl.event_t", "struct._event_t", Event)
+      .Case("struct._counter32_t", C32)
+      .Case("struct._counter64_t", C64)
+      .Case("struct._sema_t", Sema)
+      .Case("opencl.reserve_id_t", ReserveId)
+      .Case("opencl.clk_event_t", CLKEventT)
+      .Case("opencl.queue_t", QueueT)
+      .Default(UnknownOpaque);
 }

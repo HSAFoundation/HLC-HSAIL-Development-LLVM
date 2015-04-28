@@ -29,7 +29,6 @@
 #include "libHSAIL/HSAILBrigantine.h"
 #include "libHSAIL/HSAILItems.h"
 
-
 #include <cstdio>
 #include <ostream>
 #include <sstream>
@@ -47,20 +46,19 @@ namespace clk {
 typedef unsigned int uint;
 typedef uint32_t cl_mem_fence_flags;
 //#include <amdocl/cl_kernel.h>
-//kernel arg access qualifier and type qualifier
-typedef enum clk_arg_qualifier_t
-{
-    Q_NONE = 0,
+// kernel arg access qualifier and type qualifier
+typedef enum clk_arg_qualifier_t {
+  Q_NONE = 0,
 
-    //for image type only, access qualifier
-    Q_READ = 1,
-    Q_WRITE = 2,
+  // for image type only, access qualifier
+  Q_READ = 1,
+  Q_WRITE = 2,
 
-    //for pointer type only
-    Q_CONST = 4, // pointee
-    Q_RESTRICT = 8,
-    Q_VOLATILE = 16,  // pointee
-    Q_PIPE = 32  // pipe
+  // for pointer type only
+  Q_CONST = 4, // pointee
+  Q_RESTRICT = 8,
+  Q_VOLATILE = 16, // pointee
+  Q_PIPE = 32      // pipe
 
 } clk_arg_qualifier_t;
 
@@ -75,8 +73,8 @@ static bool errorPrint(const char *ptr, raw_ostream &O) {
   return false;
 }
 
-static bool
-printfPrint(std::pair<const std::string, HSAILPrintfInfo *> &data, raw_ostream &O) {
+static bool printfPrint(std::pair<const std::string, HSAILPrintfInfo *> &data,
+                        raw_ostream &O) {
   O << ";printf_fmt:" << data.second->getPrintfID();
   // Number of operands
   O << ":" << data.second->getNumOperands();
@@ -97,7 +95,7 @@ printfPrint(std::pair<const std::string, HSAILPrintfInfo *> &data, raw_ostream &
       O << ptr[i];
     }
   }
-  O << ";\n";   // c_str() is cheap way to trim
+  O << ";\n"; // c_str() is cheap way to trim
   return false;
 }
 
@@ -114,16 +112,18 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
   uint32_t Align = 4;
   const char *MemType = "uav";
   if (PT->getElementType()->isSized()) {
-    Align = mTM->getSubtarget<HSAILSubtarget>().getDataLayout()->getTypeAllocSize(PT->getElementType());
-    if ((Align & (Align - 1))) Align = NextPowerOf2(Align);
+    Align =
+        mTM->getSubtarget<HSAILSubtarget>().getDataLayout()->getTypeAllocSize(
+            PT->getElementType());
+    if ((Align & (Align - 1)))
+      Align = NextPowerOf2(Align);
   }
   ptrArg += Ip->getName().str() + ":" +
-    HSAIL::getTypeName(PT, symTab, mMFI,
-                       mMFI->isSignedIntType(Ip)) + ":1:1:" +
-    itostr(counter * 16) + ":";
+            HSAIL::getTypeName(PT, symTab, mMFI, mMFI->isSignedIntType(Ip)) +
+            ":1:1:" + itostr(counter * 16) + ":";
   switch (PT->getAddressSpace()) {
   case HSAILAS::ADDRESS_NONE:
-    //O << "No Address space qualifier!";
+    // O << "No Address space qualifier!";
     mMFI->addErrorMsg(hsa::CompilerErrorMessage[INTERNAL_ERROR]);
     assert(1);
     break;
@@ -131,8 +131,8 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
     mMFI->uav_insert(ptrID);
     break;
   case HSAILAS::READONLY_ADDRESS: {
-    if (isKernel){
-      const HSAILKernel* t = mAMI->getKernel(F->getName());
+    if (isKernel) {
+      const HSAILKernel *t = mAMI->getKernel(F->getName());
       if (mAMI->usesHWConstant(t, Ip->getName())) {
         MemType = /*(isSI) ? "uc\0" :*/ "hc\0";
         ptrID = mAMI->getConstPtrCB(t, Ip->getName());
@@ -164,29 +164,28 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
   ptrArg += std::string(MemType) + ":";
   ptrArg += itostr(ptrID) + ":";
   ptrArg += itostr(Align) + ":";
-  const Value* ptr = Ip;
+  const Value *ptr = Ip;
   if (mMFI->read_ptr_count(ptr)) {
     ptrArg += "RO";
-  // FIXME: add write-only pointer detection.
-  //} else if (mMFI->write_ptr_count(ptr)) {
-  //  ptrArg += "WO";
+    // FIXME: add write-only pointer detection.
+    //} else if (mMFI->write_ptr_count(ptr)) {
+    //  ptrArg += "WO";
   } else {
     ptrArg += "RW";
   }
 
-  const Module* M = mMF->getMMI().getModule();
+  const Module *M = mMF->getMMI().getModule();
   bool isSPIR = HSAIL::isSPIRModule(*M);
   if (isSPIR) {
     if (pointerCount == 0)
-      ptrArg += ":0:0:0"; //skip the print_buffer pointer
+      ptrArg += ":0:0:0"; // skip the print_buffer pointer
     // No need update the kernel info for block kernels (child kernel).
-    else if (!F->getName().startswith("__OpenCL___amd_blocks_func__"))
-    {
-      int typeQual = mAMI->getKernel(F->getName())->
-         accessTypeQualifer[pointerCount-1];
+    else if (!F->getName().startswith("__OpenCL___amd_blocks_func__")) {
+      int typeQual =
+          mAMI->getKernel(F->getName())->accessTypeQualifer[pointerCount - 1];
       ptrArg += (typeQual & clk::Q_VOLATILE) ? ":1" : ":0";
       ptrArg += (typeQual & clk::Q_RESTRICT) ? ":1" : ":0";
-      ptrArg += (typeQual & clk::Q_PIPE)     ? ":1" : ":0";
+      ptrArg += (typeQual & clk::Q_PIPE) ? ":1" : ":0";
     }
   } else {
     ptrArg += (mMFI->isVolatilePointer(Ip)) ? ":1" : ":0";
@@ -195,8 +194,7 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
   mMFI->addMetadata(ptrArg, true);
 }
 
-HSAILKernelManager::HSAILKernelManager(HSAILTargetMachine *TM)
-{
+HSAILKernelManager::HSAILKernelManager(HSAILTargetMachine *TM) {
   mTM = TM;
   mSTM = mTM->getSubtargetImpl();
   mMFI = NULL;
@@ -205,13 +203,9 @@ HSAILKernelManager::HSAILKernelManager(HSAILTargetMachine *TM)
   clear();
 }
 
-HSAILKernelManager::~HSAILKernelManager() {
-  clear();
-}
+HSAILKernelManager::~HSAILKernelManager() { clear(); }
 
-void
-HSAILKernelManager::setMF(MachineFunction *MF)
-{
+void HSAILKernelManager::setMF(MachineFunction *MF) {
   mMF = MF;
   mMFI = MF->getInfo<HSAILMachineFunctionInfo>();
   mAMI = &(MF->getMMI().getObjFileInfo<HSAILModuleInfo>());
@@ -224,12 +218,10 @@ void HSAILKernelManager::clear() {
   mHasOutputInst = false;
 }
 
-void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
-                                            uint32_t buf,
-                                            bool isKernel)
-{
+void HSAILKernelManager::processArgMetadata(raw_ostream &ignored, uint32_t buf,
+                                            bool isKernel) {
   const Function *F = mMF->getFunction();
-  const char * symTab = "NoSymTab";
+  const char *symTab = "NoSymTab";
   Function::const_arg_iterator Ip = F->arg_begin();
   Function::const_arg_iterator Ep = F->arg_end();
   int pointerCount = 0;
@@ -252,8 +244,10 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
     Type *cType = Ip->getType();
     if (cType->isIntOrIntVectorTy() || cType->isFPOrFPVectorTy()) {
       std::string argMeta("value:");
-      argMeta += Ip->getName().str() + ":" + HSAIL::getTypeName(cType, symTab, mMFI
-          , mMFI->isSignedIntType(Ip)) + ":";
+      argMeta +=
+          Ip->getName().str() + ":" +
+          HSAIL::getTypeName(cType, symTab, mMFI, mMFI->isSignedIntType(Ip)) +
+          ":";
       int bitsize = cType->getPrimitiveSizeInBits();
       int numEle = 1;
       if (cType->getTypeID() == Type::VectorTyID) {
@@ -283,19 +277,37 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
           std::string imageArg("image:");
           imageArg += Ip->getName().str() + ":";
           switch (OT) {
-            case I1D:   imageArg += "1D:";   break;
-            case I1DA:  imageArg += "1DA:";  break;
-            case I1DB:  imageArg += "1DB:";  break;
-            case I2D:   imageArg += "2D:";   break;
-            case I2DA:  imageArg += "2DA:";  break;
-            case I3D:   imageArg += "3D:";   break;
-            case I2DDepth: imageArg += "2DDepth:"; break;
-            case I2DADepth: imageArg += "2DADepth:"; break;
-            default:    llvm_unreachable("unknown image type"); break;
+          case I1D:
+            imageArg += "1D:";
+            break;
+          case I1DA:
+            imageArg += "1DA:";
+            break;
+          case I1DB:
+            imageArg += "1DB:";
+            break;
+          case I2D:
+            imageArg += "2D:";
+            break;
+          case I2DA:
+            imageArg += "2DA:";
+            break;
+          case I3D:
+            imageArg += "3D:";
+            break;
+          case I2DDepth:
+            imageArg += "2DDepth:";
+            break;
+          case I2DADepth:
+            imageArg += "2DADepth:";
+            break;
+          default:
+            llvm_unreachable("unknown image type");
+            break;
           }
           if (isKernel) {
-            if (mAMI->isReadOnlyImage (mMF->getFunction()->getName(),
-                                       (ROArg + WOArg + RWArg))) {
+            if (mAMI->isReadOnlyImage(mMF->getFunction()->getName(),
+                                      (ROArg + WOArg + RWArg))) {
               imageArg += "RO:" + itostr(ROArg);
               ++ROArg;
             } else if (mAMI->isWriteOnlyImage(mMF->getFunction()->getName(),
@@ -314,21 +326,21 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
           mCBSize += NUM_EXTRA_SLOTS_PER_IMAGE + 1;
         } else if (OT == C32 || OT == C64) {
           std::string counterArg("counter:");
-          counterArg += Ip->getName().str() + ":"
-            + itostr(OT == C32 ? 32 : 64) + ":"
-            + itostr(CounterNum++) + ":1:" + itostr(mCBSize * 16);
+          counterArg += Ip->getName().str() + ":" +
+                        itostr(OT == C32 ? 32 : 64) + ":" +
+                        itostr(CounterNum++) + ":1:" + itostr(mCBSize * 16);
           mMFI->addMetadata(counterArg, true);
           ++mCBSize;
         } else if (OT == Sema) {
           std::string semaArg("sema:");
-          semaArg += Ip->getName().str() + ":" + itostr(SemaNum++)
-            + ":1:" + itostr(mCBSize * 16);
+          semaArg += Ip->getName().str() + ":" + itostr(SemaNum++) + ":1:" +
+                     itostr(mCBSize * 16);
           mMFI->addMetadata(semaArg, true);
           ++mCBSize;
         } else if (OT == Sampler) {
           std::string samplerArg("sampler:");
-          samplerArg += Ip->getName().str() + ":" + itostr(SamplerNum++)
-            + ":1:" + itostr(mCBSize * 16);
+          samplerArg += Ip->getName().str() + ":" + itostr(SamplerNum++) +
+                        ":1:" + itostr(mCBSize * 16);
           mMFI->addMetadata(samplerArg, true);
           ++mCBSize;
         } else if (OT == QueueT) {
@@ -338,22 +350,27 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
           if (PT->getAddressSpace() == HSAILAS::PRIVATE_ADDRESS) {
             MemType = "hp\0";
           }
-          queueArg += Ip->getName().str() + ":"
-            + HSAIL::getTypeName(PT, symTab, mMFI, mMFI->isSignedIntType(Ip))
-            + ":1:1:" + itostr(mCBSize * 16) + ":" + MemType;
+          queueArg +=
+              Ip->getName().str() + ":" +
+              HSAIL::getTypeName(PT, symTab, mMFI, mMFI->isSignedIntType(Ip)) +
+              ":1:1:" + itostr(mCBSize * 16) + ":" + MemType;
           mMFI->addMetadata(queueArg, true);
           ++mCBSize;
-		} else {
+        } else {
           updatePtrArg(Ip, mCBSize, isKernel, F, pointerCount++);
           ++mCBSize;
         }
-      } else if (CT->getTypeID() == Type::StructTyID
-                 && Ip->hasByValAttr()) { // To distinguish pass-by-value from pass-by-ptr.
+      } else if (CT->getTypeID() == Type::StructTyID &&
+                 Ip->hasByValAttr()) { // To distinguish pass-by-value from
+                                       // pass-by-ptr.
         // When struct is passed-by-value, the pointer to the struct copy
-        // is passed to the kernel. Relevant RTI is generated here (value...struct).
-        // [Informative: RTI for pass-by-pointer case (pointer...struct) is generated
+        // is passed to the kernel. Relevant RTI is generated here
+        // (value...struct).
+        // [Informative: RTI for pass-by-pointer case (pointer...struct) is
+        // generated
         // in the next "else if" block.]
-        const DataLayout *dl = mTM->getSubtarget<HSAILSubtarget>().getDataLayout();
+        const DataLayout *dl =
+            mTM->getSubtarget<HSAILSubtarget>().getDataLayout();
         const StructLayout *sl = dl->getStructLayout(dyn_cast<StructType>(CT));
         int bytesize = sl->getSizeInBytes();
         int reservedsize = (bytesize + 15) & ~15;
@@ -362,15 +379,14 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
           numSlots = 1;
         }
         std::string structArg("value:");
-        structArg += Ip->getName().str() + ":struct:"
-          + itostr(bytesize) + ":1:" + itostr(mCBSize * 16);
+        structArg += Ip->getName().str() + ":struct:" + itostr(bytesize) +
+                     ":1:" + itostr(mCBSize * 16);
         mMFI->addMetadata(structArg, true);
         mCBSize += numSlots;
-      } else if (CT->isIntOrIntVectorTy()
-                 || CT->isFPOrFPVectorTy()
-                 || CT->getTypeID() == Type::ArrayTyID
-                 || CT->getTypeID() == Type::PointerTyID
-                 || PT->getAddressSpace() != HSAILAS::PRIVATE_ADDRESS) {
+      } else if (CT->isIntOrIntVectorTy() || CT->isFPOrFPVectorTy() ||
+                 CT->getTypeID() == Type::ArrayTyID ||
+                 CT->getTypeID() == Type::PointerTyID ||
+                 PT->getAddressSpace() != HSAILAS::PRIVATE_ADDRESS) {
         updatePtrArg(Ip, mCBSize, isKernel, F, pointerCount++);
         ++mCBSize;
       } else {
@@ -381,7 +397,7 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
       assert(0 && "Cannot process current kernel argument");
       mMFI->addErrorMsg(hsa::CompilerErrorMessage[INTERNAL_ERROR]);
     }
-    const Module* M = mMF->getMMI().getModule();
+    const Module *M = mMF->getMMI().getModule();
     bool isSPIR = HSAIL::isSPIRModule(*M);
     bool isConstArg = false;
 
@@ -389,13 +405,13 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
     // No need update the kernel info for block kernels (child kernel).
     if (isSPIR && !FuncName.startswith("__OpenCL___amd_blocks_func_")) {
       if (NumArg >= HSAIL::KE_NUM_ARGS) {
-       int typeQual = mAMI->getKernel(F->getName())->
-                            accessTypeQualifer[NumArg - HSAIL::KE_NUM_ARGS];
-       if ((typeQual & clk::Q_CONST))
-         isConstArg = true;
+        int typeQual = mAMI->getKernel(F->getName())
+                           ->accessTypeQualifer[NumArg - HSAIL::KE_NUM_ARGS];
+        if ((typeQual & clk::Q_CONST))
+          isConstArg = true;
       }
     } else if (mMFI->isConstantArgument(Ip)) {
-         isConstArg = true;
+      isConstArg = true;
     }
     if (isConstArg) {
       std::string constArg("constarg:");
@@ -407,8 +423,7 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
   }
 }
 
-void HSAILKernelManager::printHeader(const std::string &name)
-{
+void HSAILKernelManager::printHeader(const std::string &name) {
   mName = name;
   mAMI->getOrCreateFunctionID(name);
 }
@@ -432,109 +447,129 @@ void HSAILKernelManager::setKernel(bool kernel) {
   }
 }
 
-void HSAILKernelManager::setID(uint32_t id)
-{
-  mUniqueID = id;
-}
+void HSAILKernelManager::setID(uint32_t id) { mUniqueID = id; }
 
-void HSAILKernelManager::setName(const std::string &name) {
-  mName = name;
-}
+void HSAILKernelManager::setName(const std::string &name) { mName = name; }
 
 class RTI {
-    std::string m_str;
-    HSAIL_ASM::Brigantine&  m_brig;
-    mutable raw_string_ostream m_os;
+  std::string m_str;
+  HSAIL_ASM::Brigantine &m_brig;
+  mutable raw_string_ostream m_os;
+
 public:
-    RTI(HSAIL_ASM::Brigantine&  brig) : m_brig(brig), m_os(m_str) { }
+  RTI(HSAIL_ASM::Brigantine &brig) : m_brig(brig), m_os(m_str) {}
 
-    ~RTI() {
-      HSAIL_ASM::DirectivePragma pragma = m_brig.append<HSAIL_ASM::DirectivePragma>();
-      HSAIL_ASM::ItemList opnds;
-      opnds.push_back(m_brig.createOperandString("AMD RTI"));
-      const std::string& str = m_os.str();
-      opnds.push_back(m_brig.createOperandString(str));
+  ~RTI() {
+    HSAIL_ASM::DirectivePragma pragma =
+        m_brig.append<HSAIL_ASM::DirectivePragma>();
+    HSAIL_ASM::ItemList opnds;
+    opnds.push_back(m_brig.createOperandString("AMD RTI"));
+    const std::string &str = m_os.str();
+    opnds.push_back(m_brig.createOperandString(str));
     pragma.operands() = opnds;
-    }
+  }
 
-    raw_string_ostream& os() const { return m_os; }
+  raw_string_ostream &os() const { return m_os; }
 };
 
-template <typename T>
-const RTI& operator << (const RTI& os, const T& s)    { os.os() << s; return os; }
-const RTI& operator << (const RTI& os, const char *s) { os.os() << s; return os; }
+template <typename T> const RTI &operator<<(const RTI &os, const T &s) {
+  os.os() << s;
+  return os;
+}
+const RTI &operator<<(const RTI &os, const char *s) {
+  os.os() << s;
+  return os;
+}
 
-void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t id, bool isKernel) {
+void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine &brig,
+                                          uint32_t id, bool isKernel) {
 
-    // Initialization block related to current function being processed
-    int kernelId = id;
-    if (isKernel) {
-      kernelId = mAMI->getOrCreateFunctionID(mName);
-      mMFI->addCalledFunc(id);
-      mUniqueID = kernelId;
-      mIsKernel = true;
-    }
+  // Initialization block related to current function being processed
+  int kernelId = id;
+  if (isKernel) {
+    kernelId = mAMI->getOrCreateFunctionID(mName);
+    mMFI->addCalledFunc(id);
+    mUniqueID = kernelId;
+    mIsKernel = true;
+  }
 
-    const HSAILKernel *kernel = mAMI->getKernel(mName);
+  const HSAILKernel *kernel = mAMI->getKernel(mName);
 
-    if (kernel && isKernel && kernel->sgv) {
-      if (kernel->sgv->mHasRWG) {
-          HSAIL_ASM::DirectiveControl dc = brig.append< HSAIL_ASM::DirectiveControl>();
-          dc.control() = BRIG_CONTROL_REQUIREDWORKGROUPSIZE;
+  if (kernel && isKernel && kernel->sgv) {
+    if (kernel->sgv->mHasRWG) {
+      HSAIL_ASM::DirectiveControl dc =
+          brig.append<HSAIL_ASM::DirectiveControl>();
+      dc.control() = BRIG_CONTROL_REQUIREDWORKGROUPSIZE;
 
-          HSAIL_ASM::ItemList opnds;
-          for(int i=0; i<3; ++i) {
-            opnds.push_back(brig.createImmed(kernel->sgv->reqGroupSize[i], BRIG_TYPE_U32));
-          }
-          dc.operands() = opnds;
+      HSAIL_ASM::ItemList opnds;
+      for (int i = 0; i < 3; ++i) {
+        opnds.push_back(
+            brig.createImmed(kernel->sgv->reqGroupSize[i], BRIG_TYPE_U32));
       }
+      dc.operands() = opnds;
     }
+  }
 
+  if (isKernel) {
+    std::string emptyStr("");
+    std::string &refEmptyStr(emptyStr);
+    raw_string_ostream oss(refEmptyStr);
+    // function name
+    RTI(brig) << "ARGSTART:" << mName;
     if (isKernel) {
-      std::string emptyStr("");
-      std::string &refEmptyStr(emptyStr);
-      raw_string_ostream oss(refEmptyStr);
-      // function name
-      RTI(brig)  << "ARGSTART:" << mName;
-      if(isKernel) {
-        // version
-        RTI(brig) << "version:" << itostr(mSTM->supportMetadata30() ? HSAIL_MAJOR_VERSION : 2) << ":"
-                        << itostr(HSAIL_MINOR_VERSION) + ":"
-                        << itostr(mSTM->supportMetadata30() ? HSAIL_REVISION_NUMBER : HSAIL_20_REVISION_NUMBER);
-        // device info
-        RTI(brig) << "device:" << mSTM->getDeviceName();
-      }
-      RTI(brig) << "uniqueid:" << kernelId;
-      if (kernel) {
-        size_t local = kernel->curSize;
-        size_t hwlocal = ((kernel->curHWSize + 3) & (~0x3));
-        size_t region = kernel->curRSize;
-        size_t hwregion = ((kernel->curHWRSize + 3) & (~0x3));
-        // private memory
-        RTI(brig) << "memory:" << "hwprivate:" << (((mMFI->getStackSize() + mMFI->getPrivateSize() + 15) & (~0xF)));
-        // region memory
-        RTI(brig) << "memory:" << "hwregion:" << hwregion;
-        // local memory
-        RTI(brig) << "memory:" << "hwlocal:" << hwlocal + mMFI->getGroupSize();
-        if (kernel && isKernel && kernel->sgv) {
-          if (kernel->sgv->mHasRWG) {
-            RTI(brig) << "cws:" << kernel->sgv->reqGroupSize[0] << ":" << kernel->sgv->reqGroupSize[1] << ":" << kernel->sgv->reqGroupSize[2];
-          }
-          if (kernel->sgv->mHasRWR) {
-            RTI(brig) << "crs:" << kernel->sgv->reqRegionSize[0] << ":" << kernel->sgv->reqRegionSize[1] << ":" << kernel->sgv->reqRegionSize[2];
-          }
+      // version
+      RTI(brig) << "version:"
+                << itostr(mSTM->supportMetadata30() ? HSAIL_MAJOR_VERSION : 2)
+                << ":" << itostr(HSAIL_MINOR_VERSION) + ":"
+                << itostr(mSTM->supportMetadata30() ? HSAIL_REVISION_NUMBER
+                                                    : HSAIL_20_REVISION_NUMBER);
+      // device info
+      RTI(brig) << "device:" << mSTM->getDeviceName();
+    }
+    RTI(brig) << "uniqueid:" << kernelId;
+    if (kernel) {
+      size_t local = kernel->curSize;
+      size_t hwlocal = ((kernel->curHWSize + 3) & (~0x3));
+      size_t region = kernel->curRSize;
+      size_t hwregion = ((kernel->curHWRSize + 3) & (~0x3));
+      // private memory
+      RTI(brig) << "memory:"
+                << "hwprivate:"
+                << (((mMFI->getStackSize() + mMFI->getPrivateSize() + 15) &
+                     (~0xF)));
+      // region memory
+      RTI(brig) << "memory:"
+                << "hwregion:" << hwregion;
+      // local memory
+      RTI(brig) << "memory:"
+                << "hwlocal:" << hwlocal + mMFI->getGroupSize();
+      if (kernel && isKernel && kernel->sgv) {
+        if (kernel->sgv->mHasRWG) {
+          RTI(brig) << "cws:" << kernel->sgv->reqGroupSize[0] << ":"
+                    << kernel->sgv->reqGroupSize[1] << ":"
+                    << kernel->sgv->reqGroupSize[2];
+        }
+        if (kernel->sgv->mHasRWR) {
+          RTI(brig) << "crs:" << kernel->sgv->reqRegionSize[0] << ":"
+                    << kernel->sgv->reqRegionSize[1] << ":"
+                    << kernel->sgv->reqRegionSize[2];
         }
       }
-      if (isKernel) {
-        for (std::vector<std::string>::iterator ib = mMFI->kernel_md_begin(), ie = mMFI->kernel_md_end(); ib != ie; ++ib) {
-          std::string md = *ib;
-          if ( md.find("argmap") == std::string::npos ) {
-            RTI(brig) << (*ib);
-          }
+    }
+    if (isKernel) {
+      for (std::vector<std::string>::iterator ib = mMFI->kernel_md_begin(),
+                                              ie = mMFI->kernel_md_end();
+           ib != ie; ++ib) {
+        std::string md = *ib;
+        if (md.find("argmap") == std::string::npos) {
+          RTI(brig) << (*ib);
         }
       }
+    }
 
-    for (std::set<std::string>::iterator ib = mMFI->func_md_begin(), ie = mMFI->func_md_end(); ib != ie; ++ib) {
+    for (std::set<std::string>::iterator ib = mMFI->func_md_begin(),
+                                         ie = mMFI->func_md_end();
+         ib != ie; ++ib) {
       RTI(brig) << (*ib);
     }
 
@@ -549,12 +584,14 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
     }
 
     if (isKernel) {
-      for (StringMap<SamplerInfo>::iterator
-        smb = mMFI->sampler_begin(),
-        sme = mMFI->sampler_end(); smb != sme; ++ smb) {
-        RTI(brig) << "sampler:" << (*smb).second.name << ":" << (*smb).second.idx
-          << ":" << ((*smb).second.val == (uint32_t)-1 ? 0 : 1)
-          << ":" << ((*smb).second.val != (uint32_t)-1 ? (*smb).second.val : 0);
+      for (StringMap<SamplerInfo>::iterator smb = mMFI->sampler_begin(),
+                                            sme = mMFI->sampler_end();
+           smb != sme; ++smb) {
+        RTI(brig) << "sampler:" << (*smb).second.name << ":"
+                  << (*smb).second.idx << ":"
+                  << ((*smb).second.val == (uint32_t)-1 ? 0 : 1) << ":"
+                  << ((*smb).second.val != (uint32_t)-1 ? (*smb).second.val
+                                                        : 0);
       }
     }
     if (mSTM->is64Bit()) {

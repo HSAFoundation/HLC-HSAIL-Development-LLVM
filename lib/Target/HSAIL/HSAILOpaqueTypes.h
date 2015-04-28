@@ -19,51 +19,50 @@
 
 namespace llvm {
 
-  class Type;
+class Type;
 
-  enum OpaqueType {
-    NotOpaque,
-    I1D, I1DA, I1DB,
-    I2D, I2DA,
-    I3D, I2DDepth,
-    I2DADepth,
-    C32, C64,
-    Sema,
-    Sampler,
-    Event,
-    ReserveId,
-    CLKEventT,
-    QueueT,
-    UnknownOpaque
-  };
+enum OpaqueType {
+  NotOpaque,
+  I1D,
+  I1DA,
+  I1DB,
+  I2D,
+  I2DA,
+  I3D,
+  I2DDepth,
+  I2DADepth,
+  C32,
+  C64,
+  Sema,
+  Sampler,
+  Event,
+  ReserveId,
+  CLKEventT,
+  QueueT,
+  UnknownOpaque
+};
 
-  OpaqueType GetOpaqueType(const Type *T);
+OpaqueType GetOpaqueType(const Type *T);
 
-  inline bool IsImage(OpaqueType OT) {
-    switch (OT) {
-    default:
-      return false;
-    case I1D:
-    case I1DA:
-    case I1DB:
-    case I2D:
-    case I2DA:
-    case I3D:
-    case I2DDepth:
-    case I2DADepth:
-      return true;
-    }
+inline bool IsImage(OpaqueType OT) {
+  switch (OT) {
+  default:
+    return false;
+  case I1D:
+  case I1DA:
+  case I1DB:
+  case I2D:
+  case I2DA:
+  case I3D:
+  case I2DDepth:
+  case I2DADepth:
+    return true;
   }
+}
 
-  inline bool IsImage(const Type *T)
-  {
-    return IsImage(GetOpaqueType(T));
-  }
+inline bool IsImage(const Type *T) { return IsImage(GetOpaqueType(T)); }
 
-  inline bool IsSampler(const Type *T)
-  {
-    return GetOpaqueType(T) == Sampler;
-  }
+inline bool IsSampler(const Type *T) { return GetOpaqueType(T) == Sampler; }
 } // end namespace llvm
 
 #endif

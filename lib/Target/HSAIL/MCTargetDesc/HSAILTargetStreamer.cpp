@@ -1,4 +1,5 @@
-//===- HSAILTargetStreamer.cpp ---------------------------*- C++ -*---------===//
+//===- HSAILTargetStreamer.cpp ---------------------------*- C++
+//-*---------===//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -14,11 +15,9 @@
 
 using namespace llvm;
 
-HSAILTargetStreamer::HSAILTargetStreamer(MCStreamer &S)
-  : MCTargetStreamer(S) {}
+HSAILTargetStreamer::HSAILTargetStreamer(MCStreamer &S) : MCTargetStreamer(S) {}
 
 HSAILTargetStreamer::~HSAILTargetStreamer() {}
-
 
 class HSAILTargetAsmStreamer : public HSAILTargetStreamer {
 private:
@@ -30,5 +29,4 @@ public:
 
 HSAILTargetAsmStreamer::HSAILTargetAsmStreamer(MCStreamer &S,
                                                formatted_raw_ostream &OS)
-  : HSAILTargetStreamer(S),
-    OS(OS) {}
+    : HSAILTargetStreamer(S), OS(OS) {}

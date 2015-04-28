@@ -26,7 +26,7 @@ using namespace llvm;
 
 HSAILInstPrinter::HSAILInstPrinter(const MCAsmInfo &MAI, const MCInstrInfo &MII,
                                    const MCRegisterInfo &MRI)
-  : MCInstPrinter(MAI, MII, MRI) {}
+    : MCInstPrinter(MAI, MII, MRI) {}
 
 void HSAILInstPrinter::printInst(const MCInst *MI, raw_ostream &OS,
                                  StringRef Annot) {
@@ -78,9 +78,8 @@ void HSAILInstPrinter::printSImmediate(int64_t Imm, raw_ostream &O) {
   O << format("%" PRId64, Imm);
 }
 
-void HSAILInstPrinter::printU32(const MCInst *MI,
-                               unsigned OpNo,
-                               raw_ostream &O) {
+void HSAILInstPrinter::printU32(const MCInst *MI, unsigned OpNo,
+                                raw_ostream &O) {
   const MCOperand &Op = MI->getOperand(OpNo);
   if (Op.isImm()) {
     O << format("%" PRIu32, Op.getImm());
@@ -90,8 +89,7 @@ void HSAILInstPrinter::printU32(const MCInst *MI,
   printOperand(MI, OpNo, O);
 }
 
-void HSAILInstPrinter::printU64(const MCInst *MI,
-                                unsigned OpNo,
+void HSAILInstPrinter::printU64(const MCInst *MI, unsigned OpNo,
                                 raw_ostream &O) {
   const MCOperand &Op = MI->getOperand(OpNo);
   if (Op.isImm()) {
@@ -102,9 +100,8 @@ void HSAILInstPrinter::printU64(const MCInst *MI,
   printOperand(MI, OpNo, O);
 }
 
-void HSAILInstPrinter::printS32(const MCInst *MI,
-                               unsigned OpNo,
-                               raw_ostream &O) {
+void HSAILInstPrinter::printS32(const MCInst *MI, unsigned OpNo,
+                                raw_ostream &O) {
   const MCOperand &Op = MI->getOperand(OpNo);
   if (Op.isImm()) {
     O << format("%" PRId32, Op.getImm());
@@ -114,8 +111,7 @@ void HSAILInstPrinter::printS32(const MCInst *MI,
   printOperand(MI, OpNo, O);
 }
 
-void HSAILInstPrinter::printS64(const MCInst *MI,
-                                unsigned OpNo,
+void HSAILInstPrinter::printS64(const MCInst *MI, unsigned OpNo,
                                 raw_ostream &O) {
   const MCOperand &Op = MI->getOperand(OpNo);
   if (Op.isImm()) {
@@ -126,15 +122,13 @@ void HSAILInstPrinter::printS64(const MCInst *MI,
   printOperand(MI, OpNo, O);
 }
 
-void HSAILInstPrinter::printF16(const MCInst *MI,
-                               unsigned OpNo,
-                               raw_ostream &O) {
+void HSAILInstPrinter::printF16(const MCInst *MI, unsigned OpNo,
+                                raw_ostream &O) {
   llvm_unreachable("Implement me");
 }
 
-void HSAILInstPrinter::printF32(const MCInst *MI,
-                               unsigned OpNo,
-                               raw_ostream &O) {
+void HSAILInstPrinter::printF32(const MCInst *MI, unsigned OpNo,
+                                raw_ostream &O) {
   const MCOperand &Op = MI->getOperand(OpNo);
   if (Op.isFPImm()) {
     O << format("0F%08" PRIx32, FloatToBits(static_cast<float>(Op.getFPImm())));
@@ -146,9 +140,8 @@ void HSAILInstPrinter::printF32(const MCInst *MI,
   printOperand(MI, OpNo, O);
 }
 
-void HSAILInstPrinter::printF64(const MCInst *MI,
-                               unsigned OpNo,
-                               raw_ostream &O) {
+void HSAILInstPrinter::printF64(const MCInst *MI, unsigned OpNo,
+                                raw_ostream &O) {
   const MCOperand &Op = MI->getOperand(OpNo);
   if (Op.isFPImm()) {
     O << format("0D%016" PRIx64, DoubleToBits(Op.getFPImm()));
@@ -160,8 +153,7 @@ void HSAILInstPrinter::printF64(const MCInst *MI,
   printOperand(MI, OpNo, O);
 }
 
-void HSAILInstPrinter::printB1(const MCInst *MI,
-                               unsigned OpNo,
+void HSAILInstPrinter::printB1(const MCInst *MI, unsigned OpNo,
                                raw_ostream &O) {
   const MCOperand &Op = MI->getOperand(OpNo);
   if (Op.isImm()) {
@@ -172,20 +164,17 @@ void HSAILInstPrinter::printB1(const MCInst *MI,
   printOperand(MI, OpNo, O);
 }
 
-void HSAILInstPrinter::printB32(const MCInst *MI,
-                                unsigned OpNo,
+void HSAILInstPrinter::printB32(const MCInst *MI, unsigned OpNo,
                                 raw_ostream &O) {
   printU32(MI, OpNo, O);
 }
 
-void HSAILInstPrinter::printB64(const MCInst *MI,
-                                unsigned OpNo,
+void HSAILInstPrinter::printB64(const MCInst *MI, unsigned OpNo,
                                 raw_ostream &O) {
   printU64(MI, OpNo, O);
 }
 
-void HSAILInstPrinter::printU8X4(const MCInst *MI,
-                                 unsigned OpNo,
+void HSAILInstPrinter::printU8X4(const MCInst *MI, unsigned OpNo,
                                  raw_ostream &O) {
   const MCOperand &Op = MI->getOperand(OpNo);
   if (Op.isImm()) {
@@ -195,22 +184,20 @@ void HSAILInstPrinter::printU8X4(const MCInst *MI,
     } U;
 
     U.I = Op.getImm();
-    O << format("u8x4(%" PRIu8",%" PRIu8 ",%" PRIu8 ",%" PRIu8")",
-                U.Byte[3], U.Byte[2], U.Byte[1], U.Byte[0]);
+    O << format("u8x4(%" PRIu8 ",%" PRIu8 ",%" PRIu8 ",%" PRIu8 ")", U.Byte[3],
+                U.Byte[2], U.Byte[1], U.Byte[0]);
     return;
   }
 
   printOperand(MI, OpNo, O);
 }
 
-void HSAILInstPrinter::printU8X8(const MCInst *MI,
-                                 unsigned OpNo,
+void HSAILInstPrinter::printU8X8(const MCInst *MI, unsigned OpNo,
                                  raw_ostream &O) {
   llvm_unreachable("Implement me");
 }
 
-void HSAILInstPrinter::printU16X2(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printU16X2(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   const MCOperand &Op = MI->getOperand(OpNo);
   if (Op.isImm()) {
@@ -220,21 +207,19 @@ void HSAILInstPrinter::printU16X2(const MCInst *MI,
     } U;
 
     U.I = Op.getImm();
-    O << format("u16x2(%" PRIu16",%" PRIu16")", U.U16[1], U.U16[0]);
+    O << format("u16x2(%" PRIu16 ",%" PRIu16 ")", U.U16[1], U.U16[0]);
     return;
   }
 
   printOperand(MI, OpNo, O);
 }
 
-void HSAILInstPrinter::printU16X4(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printU16X4(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   llvm_unreachable("Implement me");
 }
 
-void HSAILInstPrinter::printU32X2(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printU32X2(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   const MCOperand &Op = MI->getOperand(OpNo);
   if (Op.isImm()) {
@@ -244,57 +229,49 @@ void HSAILInstPrinter::printU32X2(const MCInst *MI,
     } U;
 
     U.I = Op.getImm();
-    O << format("u32x2(%" PRIu32",%" PRIu32 ")", U.U32[1], U.U32[0]);
+    O << format("u32x2(%" PRIu32 ",%" PRIu32 ")", U.U32[1], U.U32[0]);
     return;
   }
 
   printOperand(MI, OpNo, O);
 }
 
-void HSAILInstPrinter::printS8X4(const MCInst *MI,
-                                 unsigned OpNo,
+void HSAILInstPrinter::printS8X4(const MCInst *MI, unsigned OpNo,
                                  raw_ostream &O) {
   llvm_unreachable("Implement me");
 }
 
-void HSAILInstPrinter::printS8X8(const MCInst *MI,
-                                 unsigned OpNo,
+void HSAILInstPrinter::printS8X8(const MCInst *MI, unsigned OpNo,
                                  raw_ostream &O) {
   llvm_unreachable("Implement me");
 }
 
-void HSAILInstPrinter::printS16X2(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printS16X2(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   llvm_unreachable("Implement me");
 }
 
-void HSAILInstPrinter::printS16X4(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printS16X4(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   llvm_unreachable("Implement me");
 }
 
-void HSAILInstPrinter::printS32X2(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printS32X2(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   llvm_unreachable("Implement me");
 }
 
-void HSAILInstPrinter::printF16X2(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printF16X2(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   llvm_unreachable("Implement me");
 }
 
-void HSAILInstPrinter::printF16X4(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printF16X4(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   llvm_unreachable("Implement me");
 }
 
-void HSAILInstPrinter::printAddrMode3Op(const MCInst *MI,
-                                        unsigned OpNo,
+void HSAILInstPrinter::printAddrMode3Op(const MCInst *MI, unsigned OpNo,
                                         raw_ostream &O) {
   const MCOperand &BaseOp = MI->getOperand(OpNo);
   const MCOperand &RegOp = MI->getOperand(OpNo + 1);
@@ -339,8 +316,7 @@ void HSAILInstPrinter::printAddrMode3Op(const MCInst *MI,
     O << '[' << formatDec(Offset) << ']';
 }
 
-void HSAILInstPrinter::printVec2Op(const MCInst *MI,
-                                   unsigned OpNo,
+void HSAILInstPrinter::printVec2Op(const MCInst *MI, unsigned OpNo,
                                    raw_ostream &O) {
   O << '(';
   printOperand(MI, OpNo + 0, O);
@@ -349,8 +325,7 @@ void HSAILInstPrinter::printVec2Op(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printVec3Op(const MCInst *MI,
-                                   unsigned OpNo,
+void HSAILInstPrinter::printVec3Op(const MCInst *MI, unsigned OpNo,
                                    raw_ostream &O) {
   O << '(';
   printOperand(MI, OpNo + 0, O);
@@ -361,8 +336,7 @@ void HSAILInstPrinter::printVec3Op(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printVec4Op(const MCInst *MI,
-                                   unsigned OpNo,
+void HSAILInstPrinter::printVec4Op(const MCInst *MI, unsigned OpNo,
                                    raw_ostream &O) {
   O << '(';
   printOperand(MI, OpNo + 0, O);
@@ -375,8 +349,7 @@ void HSAILInstPrinter::printVec4Op(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printV2U32(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printV2U32(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   O << '(';
   printU32(MI, OpNo + 0, O);
@@ -385,8 +358,7 @@ void HSAILInstPrinter::printV2U32(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printV2F64(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printV2F64(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   O << '(';
   printF64(MI, OpNo + 0, O);
@@ -395,8 +367,7 @@ void HSAILInstPrinter::printV2F64(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printV2U64(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printV2U64(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   O << '(';
   printU64(MI, OpNo + 0, O);
@@ -405,8 +376,7 @@ void HSAILInstPrinter::printV2U64(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printV2F32(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printV2F32(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   O << '(';
   printF32(MI, OpNo + 0, O);
@@ -415,8 +385,7 @@ void HSAILInstPrinter::printV2F32(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printV3U32(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printV3U32(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   O << '(';
   printU32(MI, OpNo + 0, O);
@@ -427,8 +396,7 @@ void HSAILInstPrinter::printV3U32(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printV3F32(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printV3F32(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   O << '(';
   printF32(MI, OpNo + 0, O);
@@ -439,8 +407,7 @@ void HSAILInstPrinter::printV3F32(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printV3U64(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printV3U64(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   O << '(';
   printU64(MI, OpNo + 0, O);
@@ -451,8 +418,7 @@ void HSAILInstPrinter::printV3U64(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printV3F64(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printV3F64(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   O << '(';
   printF64(MI, OpNo + 0, O);
@@ -463,8 +429,7 @@ void HSAILInstPrinter::printV3F64(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printV4U32(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printV4U32(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   O << '(';
   printU32(MI, OpNo + 0, O);
@@ -477,8 +442,7 @@ void HSAILInstPrinter::printV4U32(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printV4F32(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printV4F32(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   O << '(';
   printF32(MI, OpNo + 0, O);
@@ -491,8 +455,7 @@ void HSAILInstPrinter::printV4F32(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printV4U64(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printV4U64(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   O << '(';
   printU64(MI, OpNo + 0, O);
@@ -505,8 +468,7 @@ void HSAILInstPrinter::printV4U64(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printV4F64(const MCInst *MI,
-                                  unsigned OpNo,
+void HSAILInstPrinter::printV4F64(const MCInst *MI, unsigned OpNo,
                                   raw_ostream &O) {
   O << '(';
   printF64(MI, OpNo + 0, O);
@@ -519,22 +481,19 @@ void HSAILInstPrinter::printV4F64(const MCInst *MI,
   O << ')';
 }
 
-void HSAILInstPrinter::printFTZ(const MCInst *MI,
-                                unsigned OpNo,
+void HSAILInstPrinter::printFTZ(const MCInst *MI, unsigned OpNo,
                                 raw_ostream &O) {
   if (MI->getOperand(OpNo).getImm())
     O << "_ftz";
 }
 
-void HSAILInstPrinter::printNoNull(const MCInst *MI,
-                                unsigned OpNo,
-                                raw_ostream &O) {
+void HSAILInstPrinter::printNoNull(const MCInst *MI, unsigned OpNo,
+                                   raw_ostream &O) {
   if (MI->getOperand(OpNo).getImm())
     O << "_nonull";
 }
 
-void HSAILInstPrinter::printV4(const MCInst *MI,
-                               unsigned OpNo,
+void HSAILInstPrinter::printV4(const MCInst *MI, unsigned OpNo,
                                raw_ostream &O) {
   if (MI->getOperand(OpNo).getImm())
     O << "_v4";
@@ -640,8 +599,8 @@ void HSAILInstPrinter::printArgDeclAlignment(const MCInst *MI, unsigned OpNo,
                                              raw_ostream &O) {
   unsigned Align = MI->getOperand(OpNo).getImm();
 
-  int TypeLengthIdx = HSAIL::getNamedOperandIdx(MI->getOpcode(),
-                                                HSAIL::OpName::TypeLength);
+  int TypeLengthIdx =
+      HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::TypeLength);
   BrigType BT = static_cast<BrigType>(MI->getOperand(TypeLengthIdx).getImm());
 
   // Don't print align declaration if it uses the alignment implied in this
@@ -1704,8 +1663,8 @@ void HSAILInstPrinter::printBrigWidth(const MCInst *MI, unsigned OpNo,
   unsigned Width = MI->getOperand(OpNo).getImm();
 
   const MCInstrDesc &Desc = MII.get(MI->getOpcode());
-  uint32_t DefaultWidth = (Desc.TSFlags & HSAILInstrFlags::WidthAttr)
-    >> Log2_32(HSAILInstrFlags::WidthAttrLo);
+  uint32_t DefaultWidth = (Desc.TSFlags & HSAILInstrFlags::WidthAttr) >>
+                          Log2_32(HSAILInstrFlags::WidthAttrLo);
 
   // Don't print the width modifier if it is the default for the instruction.
   switch (DefaultWidth) {

@@ -13,8 +13,7 @@
 
 using namespace llvm;
 
-HSAILModuleInfo::HSAILModuleInfo(const MachineModuleInfo &MMI)
-{
+HSAILModuleInfo::HSAILModuleInfo(const MachineModuleInfo &MMI) {
   mMMI = &MMI;
   mOffset = 0;
   mReservedBuffs = 0;
@@ -25,21 +24,23 @@ HSAILModuleInfo::HSAILModuleInfo(const MachineModuleInfo &MMI)
 }
 
 HSAILModuleInfo::~HSAILModuleInfo() {
-  for (StringMap<HSAILKernel*>::iterator kb = mKernels.begin(), ke = mKernels.end();
-      kb != ke; ++kb) {
+  for (StringMap<HSAILKernel *>::iterator kb = mKernels.begin(),
+                                          ke = mKernels.end();
+       kb != ke; ++kb) {
     HSAILKernel *ptr = kb->getValue();
     delete ptr;
   }
 }
 
-static const HSAILConstPtr *getConstPtr(const HSAILKernel *krnl, const std::string &arg) {
+static const HSAILConstPtr *getConstPtr(const HSAILKernel *krnl,
+                                        const std::string &arg) {
   if (!krnl) {
     return NULL;
   }
   SmallVector<HSAILConstPtr, DEFAULT_VEC_SLOTS>::const_iterator begin, end;
-  for (begin = krnl->constPtr.begin(), end = krnl->constPtr.end();
-       begin != end; ++begin) {
-    if (!strcmp(begin->name.data(),arg.c_str())) {
+  for (begin = krnl->constPtr.begin(), end = krnl->constPtr.end(); begin != end;
+       ++begin) {
+    if (!strcmp(begin->name.data(), arg.c_str())) {
       return &(*begin);
     }
   }
@@ -47,8 +48,7 @@ static const HSAILConstPtr *getConstPtr(const HSAILKernel *krnl, const std::stri
 }
 
 void HSAILModuleInfo::processModule(const Module *M,
-                                    const HSAILTargetMachine *mTM)
-{
+                                    const HSAILTargetMachine *mTM) {
   mSTM = mTM->getSubtargetImpl();
   if (mProcessed) {
     return;
@@ -59,45 +59,40 @@ void HSAILModuleInfo::processModule(const Module *M,
   mProcessed = true;
 }
 
-HSAILKernel *
-HSAILModuleInfo::getKernel(StringRef name) {
-  StringMap<HSAILKernel*>::iterator iter = mKernels.find(name);
+HSAILKernel *HSAILModuleInfo::getKernel(StringRef name) {
+  StringMap<HSAILKernel *>::iterator iter = mKernels.find(name);
   if (iter == mKernels.end()) {
-      return NULL;
+    return NULL;
   } else {
     return iter->second;
   }
 }
 
-bool HSAILModuleInfo::isWriteOnlyImage(StringRef name,
-                                       uint32_t iID) const {
-  const StringMap<HSAILKernel*>::const_iterator kiter = mKernels.find(name);
+bool HSAILModuleInfo::isWriteOnlyImage(StringRef name, uint32_t iID) const {
+  const StringMap<HSAILKernel *>::const_iterator kiter = mKernels.find(name);
   if (kiter == mKernels.end()) {
     return false;
   }
   return kiter->second->writeOnly.count(iID);
 }
 
-bool HSAILModuleInfo::isReadOnlyImage(StringRef name,
-                                      uint32_t iID) const {
-  const StringMap<HSAILKernel*>::const_iterator kiter = mKernels.find(name);
+bool HSAILModuleInfo::isReadOnlyImage(StringRef name, uint32_t iID) const {
+  const StringMap<HSAILKernel *>::const_iterator kiter = mKernels.find(name);
   if (kiter == mKernels.end()) {
     return false;
   }
   return kiter->second->readOnly.count(iID);
 }
 
-bool HSAILModuleInfo::isReadWriteImage(StringRef name,
-                                         uint32_t iID) const {
-  const StringMap<HSAILKernel*>::const_iterator kiter = mKernels.find(name);
+bool HSAILModuleInfo::isReadWriteImage(StringRef name, uint32_t iID) const {
+  const StringMap<HSAILKernel *>::const_iterator kiter = mKernels.find(name);
   if (kiter == mKernels.end()) {
     return false;
   }
   return kiter->second->readWrite.count(iID);
 }
 
-bool HSAILModuleInfo::usesHWConstant(const HSAILKernel *krnl,
-                                     StringRef arg) {
+bool HSAILModuleInfo::usesHWConstant(const HSAILKernel *krnl, StringRef arg) {
   const HSAILConstPtr *curConst = getConstPtr(krnl, arg);
   if (!curConst) {
     return false;
@@ -106,8 +101,7 @@ bool HSAILModuleInfo::usesHWConstant(const HSAILKernel *krnl,
 }
 
 uint32_t HSAILModuleInfo::getConstPtrCB(const HSAILKernel *krnl,
-                                        StringRef Arg)
-{
+                                        StringRef Arg) {
   const HSAILConstPtr *curConst = getConstPtr(krnl, Arg);
   if (!curConst) {
     return 0;

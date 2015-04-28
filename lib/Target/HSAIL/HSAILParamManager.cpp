@@ -25,8 +25,8 @@ using namespace llvm;
 
 HSAILParamManager::~HSAILParamManager() {
   // Special handling for teardown of ParamNames
-  for (names_iterator I = ParamNames.begin(), E = ParamNames.end();
-    I != E; ++I) {
+  for (names_iterator I = ParamNames.begin(), E = ParamNames.end(); I != E;
+       ++I) {
     // Delete malloc'ed name strings
     free(I->second);
   }
@@ -38,8 +38,8 @@ unsigned HSAILParamManager::addParam(HSAILParamType ParamType, Type *Ty,
   HSAILParam Param;
   Param.Type = ParamType;
   Param.Arg = NULL;
-  SmallVector<unsigned, 4>* ParamList = 0;
-  const char* DefName = 0;
+  SmallVector<unsigned, 4> *ParamList = 0;
+  const char *DefName = 0;
 
   std::string Name;
 
@@ -103,34 +103,37 @@ unsigned HSAILParamManager::addParam(HSAILParamType ParamType, Type *Ty,
 
 unsigned HSAILParamManager::addArgumentParam(unsigned AS, const Argument &Arg,
                                              const StringRef ParamName) {
-  unsigned Param = addParam(
-    (AS == HSAILAS::ARG_ADDRESS) ? HSAIL_PARAM_TYPE_ARGUMENT
-                                 : HSAIL_PARAM_TYPE_KERNARG,
-    Arg.getType(), ParamName);
+  unsigned Param =
+      addParam((AS == HSAILAS::ARG_ADDRESS) ? HSAIL_PARAM_TYPE_ARGUMENT
+                                            : HSAIL_PARAM_TYPE_KERNARG,
+               Arg.getType(), ParamName);
   AllParams.find(Param)->second.Arg = &Arg;
   return Param;
 }
 
-unsigned HSAILParamManager::addReturnParam(Type *Ty, const StringRef ParamName) {
+unsigned HSAILParamManager::addReturnParam(Type *Ty,
+                                           const StringRef ParamName) {
   return addParam(HSAIL_PARAM_TYPE_RETURN, Ty, ParamName);
 }
 
-unsigned HSAILParamManager::addCallArgParam(Type *Ty, const StringRef ParamName) {
+unsigned HSAILParamManager::addCallArgParam(Type *Ty,
+                                            const StringRef ParamName) {
   return addParam(HSAIL_PARAM_TYPE_CALL_PARAM, Ty, ParamName);
 }
 
-unsigned HSAILParamManager::addCallRetParam(Type *Ty, const StringRef ParamName) {
+unsigned HSAILParamManager::addCallRetParam(Type *Ty,
+                                            const StringRef ParamName) {
   return addParam(HSAIL_PARAM_TYPE_CALL_RET, Ty, ParamName);
 }
 
 void HSAILParamManager::addParamName(std::string Name, unsigned Index) {
   // malloc arg name string so that it persists through compilation
-  char* name = (char*)malloc(Name.length()+1);
+  char *name = (char *)malloc(Name.length() + 1);
   strcpy(name, Name.c_str());
   ParamNames[Index] = name;
 }
 
-void HSAILParamManager::addParamType(Type* pTy, unsigned Index) {
+void HSAILParamManager::addParamType(Type *pTy, unsigned Index) {
   ParamTypes[Index] = pTy;
 }
 

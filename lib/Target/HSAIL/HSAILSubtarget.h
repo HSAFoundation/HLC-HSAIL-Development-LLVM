@@ -31,10 +31,10 @@ class HSAILTargetMachine;
 
 class HSAILSamplerHandle {
 private:
-  std::string   mSym;
-  unsigned int  mVal;
-  bool          mIsRO;
-  bool          mEmitted;
+  std::string mSym;
+  unsigned int mVal;
+  bool mIsRO;
+  bool mEmitted;
 
 public:
   HSAILSamplerHandle(HSAILSamplerHandle &copy) {
@@ -44,18 +44,18 @@ public:
     mEmitted = copy.mEmitted;
   }
 
-  HSAILSamplerHandle(/*bool isImage, */const char* sym) {
+  HSAILSamplerHandle(/*bool isImage, */ const char *sym) {
     mSym = sym;
     mVal = 0;
     mIsRO = false;
     mEmitted = false;
   }
 
-  HSAILSamplerHandle(/*bool isImage, */unsigned int u) {
+  HSAILSamplerHandle(/*bool isImage, */ unsigned int u) {
     mVal = u;
     mIsRO = false;
     mEmitted = false;
-}
+  }
 
   inline void setSym(std::string str) { mSym = str; }
   inline std::string getSym() { return mSym; }
@@ -72,16 +72,19 @@ private:
   SmallVector<std::string, 16> HSAILImageArgs;
 
   // Sampler initializers
-  SmallVector<HSAILSamplerHandle*, 16> HSAILSamplers;
+  SmallVector<HSAILSamplerHandle *, 16> HSAILSamplers;
   unsigned index;
+
 public:
-  HSAILImageHandles() {index = 0;}
+  HSAILImageHandles() { index = 0; }
   // TODO_HSA Add a destructor
 
-  SmallVector<HSAILSamplerHandle*, 16> getSamplerHandles() { return HSAILSamplers; }
-  HSAILSamplerHandle* getSamplerHandle(unsigned index);
+  SmallVector<HSAILSamplerHandle *, 16> getSamplerHandles() {
+    return HSAILSamplers;
+  }
+  HSAILSamplerHandle *getSamplerHandle(unsigned index);
 
-  unsigned findOrCreateImageHandle(const char* sym);
+  unsigned findOrCreateImageHandle(const char *sym);
   unsigned findOrCreateSamplerHandle(unsigned int u);
 
   std::string getImageSymbol(unsigned index);
@@ -110,7 +113,6 @@ protected:
   HSAILImageHandles *imageHandles;
 
 public:
-
   /// This constructor initializes the data members to match that
   /// of the specified triple.
   ///
@@ -137,38 +139,22 @@ public:
 
   void ParseSubtargetFeatures(StringRef CPU, StringRef FS);
 
-  bool isFull() const {
-    return true;
-  }
+  bool isFull() const { return true; }
 
-  bool is64Bit() const {
-    return Is64Bit;
-  }
+  bool is64Bit() const { return Is64Bit; }
 
-  bool hasImages() const {
-    return false;
-  }
+  bool hasImages() const { return false; }
 
-  bool isGCN() const {
-    return true;
-  }
+  bool isGCN() const { return true; }
 
   // FIXME: Remove this
-  bool supportMetadata30() const {
-    return true;
-  }
+  bool supportMetadata30() const { return true; }
 
-  const DataLayout *getDataLayout() const override {
-    return &DL;
-  }
+  const DataLayout *getDataLayout() const override { return &DL; }
 
-  StringRef getDeviceName() const {
-    return DevName;
-  }
+  StringRef getDeviceName() const { return DevName; }
 
-  HSAILImageHandles *getImageHandles() const {
-    return imageHandles;
-  }
+  HSAILImageHandles *getImageHandles() const { return imageHandles; }
 };
 
 } // End llvm namespace

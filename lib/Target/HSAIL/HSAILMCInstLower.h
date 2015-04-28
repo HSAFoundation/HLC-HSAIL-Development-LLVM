@@ -27,7 +27,6 @@ public:
 
   /// \brief Lower a MachineInstr to an MCInst
   void lower(const MachineInstr *MI, MCInst &OutMI) const;
-
 };
 
 } // End namespace llvm

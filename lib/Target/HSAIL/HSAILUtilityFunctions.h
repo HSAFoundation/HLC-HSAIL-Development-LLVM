@@ -43,23 +43,19 @@ class DebugLoc;
 
 namespace HSAIL {
 
-uint64_t getNumElementsInHSAILType(Type* type,
-                                   const DataLayout& dataLayout);
-BrigType getBrigType(Type* Ty, const DataLayout &DL,
-                     bool Signed = false);
+uint64_t getNumElementsInHSAILType(Type *type, const DataLayout &dataLayout);
+BrigType getBrigType(Type *Ty, const DataLayout &DL, bool Signed = false);
 
 /// Returns the type to use when expressing the type in HSAIL. If this will be
 /// expressed as an HSAIL array, set NElts to the number of elements,
 /// otherwise 0.
 Type *analyzeType(Type *Ty, unsigned &NElts, const DataLayout &DL);
 
-unsigned getAlignTypeQualifier(Type *ty, const DataLayout& DL,
+unsigned getAlignTypeQualifier(Type *ty, const DataLayout &DL,
                                bool isPreferred);
 
-const char *getTypeName(Type *ptr,
-                        const char *symTab,
-                        HSAILMachineFunctionInfo *mMFI,
-                        bool signedType);
+const char *getTypeName(Type *ptr, const char *symTab,
+                        HSAILMachineFunctionInfo *mMFI, bool signedType);
 
 static inline bool isConv(const MachineInstr *MI) {
   return MI->getDesc().TSFlags & HSAILInstrFlags::IS_CONV;

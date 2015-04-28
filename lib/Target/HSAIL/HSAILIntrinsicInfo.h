@@ -26,13 +26,14 @@ class Type;
 class HSAILTargetMachine;
 
 namespace HSAILIntrinsic {
-  enum ID {
-    last_non_HSAIL_intrinsic = Intrinsic::num_intrinsics - 1,
+enum ID {
+  last_non_HSAIL_intrinsic = Intrinsic::num_intrinsics - 1,
 #define GET_INTRINSIC_ENUM_VALUES
 #include "HSAILGenIntrinsics.inc"
 #undef GET_INTRINSIC_ENUM_VALUES
-    , num_HSAIL_intrinsics
-  };
+  ,
+  num_HSAIL_intrinsics
+};
 }
 
 //---------------------------------------------------------------------------
@@ -43,16 +44,14 @@ class HSAILIntrinsicInfo : public TargetIntrinsicInfo {
 public:
   HSAILIntrinsicInfo(HSAILTargetMachine *tm);
 
-  std::string getName(unsigned IID,  Type **Tys = nullptr,
+  std::string getName(unsigned IID, Type **Tys = nullptr,
                       unsigned numTys = 0) const override;
 
   unsigned lookupName(const char *Name, unsigned Len) const override;
 
   bool isOverloaded(unsigned IID) const override;
 
-  Function *getDeclaration(Module *M,
-                           unsigned ID,
-                           Type ** Tys = nullptr,
+  Function *getDeclaration(Module *M, unsigned ID, Type **Tys = nullptr,
                            unsigned numTys = 0) const override;
 
   static bool isReadImage(llvm::HSAILIntrinsic::ID intr);

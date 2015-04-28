@@ -44,8 +44,7 @@ namespace hsa {
 #define INVALID_INIT_VALUE 27
 #define NUM_ERROR_MESSAGES 28
 
-  static const char *CompilerErrorMessage[NUM_ERROR_MESSAGES] =
-  {
+static const char *CompilerErrorMessage[NUM_ERROR_MESSAGES] = {
     "E000:Compute Shader Not Supported!   ",
     "E001:Generic Compiler Error Message! ",
     "E002:Internal Compiler Error Message!",
@@ -73,9 +72,7 @@ namespace hsa {
     "E024:Illegal usage of intrinsic inst!",
     "E025:Insufficient Semaphore Resources",
     "E026:Semaphores not supported!       ",
-    "E027:Semaphore init value is invalid!"
-  };
-
+    "E027:Semaphore init value is invalid!"};
 }
 
 #endif // _HSAIL_COMPILER_ERRORS_H_

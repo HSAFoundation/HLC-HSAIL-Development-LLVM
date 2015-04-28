@@ -79,15 +79,19 @@ using namespace llvm;
 #undef GET_LLVM_INTRINSIC_FOR_GCC_BUILTIN
 
 static cl::opt<std::string> DebugInfoFilename("odebug",
-  cl::desc("Debug Info filename"), cl::value_desc("filename"), cl::init(""));
+                                              cl::desc("Debug Info filename"),
+                                              cl::value_desc("filename"),
+                                              cl::init(""));
 
-static cl::opt<std::string> DumpOnFailFilename("dumpOnFail",
-  cl::desc("Filename for the BRIG container dump if validation failed"),
-  cl::value_desc("filename"), cl::init(""));
+static cl::opt<std::string> DumpOnFailFilename(
+    "dumpOnFail",
+    cl::desc("Filename for the BRIG container dump if validation failed"),
+    cl::value_desc("filename"), cl::init(""));
 
-static cl::opt<bool>DisableValidator("disable-validator",
-  cl::desc("Disable validation of the BRIG container"),
-  cl::init(false), cl::Hidden);
+static cl::opt<bool>
+    DisableValidator("disable-validator",
+                     cl::desc("Disable validation of the BRIG container"),
+                     cl::init(false), cl::Hidden);
 
 static HSAIL_ASM::SRef makeSRef(const SmallVectorImpl<char> &Str) {
   return HSAIL_ASM::SRef(Str.begin(), Str.end());
@@ -104,22 +108,19 @@ BRIGAsmPrinter::getAtomicOpcode(const MachineInstr *MI) const {
   return static_cast<BrigAtomicOperation>(Val);
 }
 
-BrigSegment
-BRIGAsmPrinter::getAtomicSegment(const MachineInstr *MI) const {
+BrigSegment BRIGAsmPrinter::getAtomicSegment(const MachineInstr *MI) const {
   int64_t Val = TII->getNamedModifierOperand(*MI, HSAIL::OpName::segment);
   assert(Val > 0 && Val < BRIG_SEGMENT_AMD_GCN);
   return static_cast<BrigSegment>(Val);
 }
 
-BrigMemoryOrder
-BRIGAsmPrinter::getAtomicOrder(const MachineInstr *MI) const {
+BrigMemoryOrder BRIGAsmPrinter::getAtomicOrder(const MachineInstr *MI) const {
   int64_t Val = TII->getNamedModifierOperand(*MI, HSAIL::OpName::order);
   assert(Val > 0 && Val <= BRIG_MEMORY_ORDER_SC_ACQUIRE_RELEASE);
   return static_cast<BrigMemoryOrder>(Val);
 }
 
-BrigMemoryScope
-BRIGAsmPrinter::getAtomicScope(const MachineInstr *MI) const {
+BrigMemoryScope BRIGAsmPrinter::getAtomicScope(const MachineInstr *MI) const {
   int64_t Val = TII->getNamedModifierOperand(*MI, HSAIL::OpName::scope);
   assert(Val > 0 && Val <= BRIG_MEMORY_SCOPE_SYSTEM);
   return static_cast<BrigMemoryScope>(Val);
@@ -142,8 +143,8 @@ BrigType BRIGAsmPrinter::getAtomicType(const MachineInstr *MI) const {
 
 // FIXME: Doesn't make sense to rely on address space for this.
 char BRIGAsmPrinter::getSymbolPrefixForAddressSpace(unsigned AS) {
-  return (AS == HSAILAS::GROUP_ADDRESS ||
-          AS == HSAILAS::PRIVATE_ADDRESS) ? '%' : '&';
+  return (AS == HSAILAS::GROUP_ADDRESS || AS == HSAILAS::PRIVATE_ADDRESS) ? '%'
+                                                                          : '&';
 }
 
 char BRIGAsmPrinter::getSymbolPrefix(const MCSymbol &Sym) const {
@@ -163,20 +164,19 @@ void BRIGAsmPrinter::BrigEmitInitVarWithAddressPragma(StringRef VarName,
 
   MCValue Val;
   bool Res = Expr->EvaluateAsValue(Val, nullptr, nullptr);
-  (void) Res;
+  (void)Res;
   assert(Res && "Could not evaluate MCExpr");
   assert(!Val.getSymB() && "Multi-symbol expressions not handled");
 
   const MCSymbol &Sym = Val.getSymA()->getSymbol();
 
-  O << "initvarwithaddress:" << VarName
-    << ':' << BaseOffset // Offset into the destination.
-    << ':' << EltSize
-    << ':' << getSymbolPrefix(Sym) << Sym.getName()
-    << ':' << Val.getConstant(); // Offset of the symbol being written.
+  O << "initvarwithaddress:" << VarName << ':'
+    << BaseOffset // Offset into the destination.
+    << ':' << EltSize << ':' << getSymbolPrefix(Sym) << Sym.getName() << ':'
+    << Val.getConstant(); // Offset of the symbol being written.
 
-  HSAIL_ASM::DirectivePragma pgm
-    = brigantine.append<HSAIL_ASM::DirectivePragma>();
+  HSAIL_ASM::DirectivePragma pgm =
+      brigantine.append<HSAIL_ASM::DirectivePragma>();
 
   HSAIL_ASM::ItemList opnds;
 
@@ -185,13 +185,11 @@ void BRIGAsmPrinter::BrigEmitInitVarWithAddressPragma(StringRef VarName,
 }
 
 void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
-                                        Type *EltTy,
-                                        Constant *CV) {
+                                        Type *EltTy, Constant *CV) {
   if (isa<UndefValue>(CV)) // Don't emit anything for undefined initializers.
     return;
 
-  BrigType EltBT
-    = static_cast<BrigType>(globalVar.type() & ~BRIG_TYPE_ARRAY);
+  BrigType EltBT = static_cast<BrigType>(globalVar.type() & ~BRIG_TYPE_ARRAY);
 
   size_t typeBytes = HSAIL_ASM::getBrigTypeNumBytes(EltBT);
 
@@ -207,7 +205,8 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
 
     // FIXME: Should not have to allocate a zero array for this.
     HSAIL_ASM::SRef init(Zeros.get(), Zeros.get() + Size);
-    globalVar.init() = brigantine.createOperandConstantBytes(init, EltBT, isArray);
+    globalVar.init() =
+        brigantine.createOperandConstantBytes(init, EltBT, isArray);
     return;
   }
 
@@ -219,45 +218,32 @@ void BRIGAsmPrinter::BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable globalVar,
   store.append(CV, Name);
 
   if (store.elementCount() > 0) {
-    globalVar.init()
-      = brigantine.createOperandConstantBytes(makeSRef(store.str()),
-                                              EltBT,
-                                              isArray);
+    globalVar.init() = brigantine.createOperandConstantBytes(
+        makeSRef(store.str()), EltBT, isArray);
   } else {
     uint64_t Size = globalVar.dim() * typeBytes;
     std::unique_ptr<char[]> Zeros(new char[Size]());
 
     HSAIL_ASM::SRef init(Zeros.get(), Zeros.get() + Size);
-    globalVar.init() = brigantine.createOperandConstantBytes(init, EltBT, isArray);
+    globalVar.init() =
+        brigantine.createOperandConstantBytes(init, EltBT, isArray);
   }
 
   for (const auto &VarInit : store.varInitAddresses()) {
-    BrigEmitInitVarWithAddressPragma(Name,
-                                     VarInit.BaseOffset,
-                                     VarInit.Expr,
+    BrigEmitInitVarWithAddressPragma(Name, VarInit.BaseOffset, VarInit.Expr,
                                      EltSize);
   }
 }
 
-BRIGAsmPrinter::BRIGAsmPrinter(TargetMachine& TM, MCStreamer &Streamer)
-  : HSAILAsmPrinter(TM, Streamer),
-    Subtarget(&TM.getSubtarget<HSAILSubtarget>()),
-    FuncArgsStr(),
-    FuncRetValStr(),
-    retValCounter(0),
-    paramCounter(0),
-    mTM(reinterpret_cast<HSAILTargetMachine*>(&TM)),
-    TII(Subtarget->getInstrInfo()),
-    mMeta(new HSAILKernelManager(mTM)),
-    mMFI(nullptr),
-    m_bIsKernel(false),
-    brigantine(bc),
-    mDwarfStream(nullptr),
-    mBrigStream(nullptr),
-    mDwarfFileStream(nullptr),
-    privateStackBRIGOffset(0),
-    spillStackBRIGOffset(0),
-    mBuffer(0) {
+BRIGAsmPrinter::BRIGAsmPrinter(TargetMachine &TM, MCStreamer &Streamer)
+    : HSAILAsmPrinter(TM, Streamer),
+      Subtarget(&TM.getSubtarget<HSAILSubtarget>()), FuncArgsStr(),
+      FuncRetValStr(), retValCounter(0), paramCounter(0),
+      mTM(reinterpret_cast<HSAILTargetMachine *>(&TM)),
+      TII(Subtarget->getInstrInfo()), mMeta(new HSAILKernelManager(mTM)),
+      mMFI(nullptr), m_bIsKernel(false), brigantine(bc), mDwarfStream(nullptr),
+      mBrigStream(nullptr), mDwarfFileStream(nullptr),
+      privateStackBRIGOffset(0), spillStackBRIGOffset(0), mBuffer(0) {
 
   // Obtain DWARF stream.
   BRIGDwarfStreamer *DwarfStreamer = dyn_cast<BRIGDwarfStreamer>(&OutStreamer);
@@ -273,8 +259,8 @@ BRIGAsmPrinter::BRIGAsmPrinter(TargetMachine& TM, MCStreamer &Streamer)
 
   if (DebugInfoFilename.size() > 0) {
     std::error_code err;
-    mDwarfFileStream = new raw_fd_ostream(DebugInfoFilename.c_str(), err,
-                                          sys::fs::F_Text);
+    mDwarfFileStream =
+        new raw_fd_ostream(DebugInfoFilename.c_str(), err, sys::fs::F_Text);
     mDwarfStream->setOtherStream(mDwarfFileStream);
   }
 }
@@ -285,28 +271,35 @@ BRIGAsmPrinter::~BRIGAsmPrinter() {
   delete mDwarfFileStream;
 }
 
-BrigSegment8_t BRIGAsmPrinter::getHSAILSegment(unsigned AddressSpace)
-                                                     const {
+BrigSegment8_t BRIGAsmPrinter::getHSAILSegment(unsigned AddressSpace) const {
   switch (AddressSpace) {
-  case HSAILAS::PRIVATE_ADDRESS:  return BRIG_SEGMENT_PRIVATE;
-  case HSAILAS::GLOBAL_ADDRESS:   return BRIG_SEGMENT_GLOBAL;
-  case HSAILAS::READONLY_ADDRESS: return BRIG_SEGMENT_READONLY;
-  case HSAILAS::GROUP_ADDRESS:    return BRIG_SEGMENT_GROUP;
-  case HSAILAS::FLAT_ADDRESS:     return BRIG_SEGMENT_FLAT;
-  case HSAILAS::REGION_ADDRESS:   return BRIG_SEGMENT_AMD_GCN;
-  case HSAILAS::KERNARG_ADDRESS:  return BRIG_SEGMENT_KERNARG;
-  case HSAILAS::ARG_ADDRESS:      return BRIG_SEGMENT_ARG;
-  case HSAILAS::SPILL_ADDRESS:    return BRIG_SEGMENT_SPILL;
+  case HSAILAS::PRIVATE_ADDRESS:
+    return BRIG_SEGMENT_PRIVATE;
+  case HSAILAS::GLOBAL_ADDRESS:
+    return BRIG_SEGMENT_GLOBAL;
+  case HSAILAS::READONLY_ADDRESS:
+    return BRIG_SEGMENT_READONLY;
+  case HSAILAS::GROUP_ADDRESS:
+    return BRIG_SEGMENT_GROUP;
+  case HSAILAS::FLAT_ADDRESS:
+    return BRIG_SEGMENT_FLAT;
+  case HSAILAS::REGION_ADDRESS:
+    return BRIG_SEGMENT_AMD_GCN;
+  case HSAILAS::KERNARG_ADDRESS:
+    return BRIG_SEGMENT_KERNARG;
+  case HSAILAS::ARG_ADDRESS:
+    return BRIG_SEGMENT_ARG;
+  case HSAILAS::SPILL_ADDRESS:
+    return BRIG_SEGMENT_SPILL;
   }
   llvm_unreachable("Unexpected BRIG address space value");
 }
 
-BrigSegment8_t BRIGAsmPrinter::getHSAILSegment(const GlobalVariable* gv)
-                                                     const {
+BrigSegment8_t BRIGAsmPrinter::getHSAILSegment(const GlobalVariable *gv) const {
   return getHSAILSegment(gv->getType()->getAddressSpace());
 }
 
-bool BRIGAsmPrinter::canInitHSAILAddressSpace(const GlobalVariable* gv) const {
+bool BRIGAsmPrinter::canInitHSAILAddressSpace(const GlobalVariable *gv) const {
   bool canInit;
   switch (gv->getType()->getAddressSpace()) {
   case HSAILAS::GLOBAL_ADDRESS:
@@ -342,11 +335,8 @@ static BrigLinkage findGlobalBrigLinkage(const GlobalValue &GV) {
   }
 }
 
-static unsigned getGVAlignment(const GlobalVariable &GV,
-                               const DataLayout &DL,
-                               Type *InitTy,
-                               Type *EltTy,
-                               unsigned NElts,
+static unsigned getGVAlignment(const GlobalVariable &GV, const DataLayout &DL,
+                               Type *InitTy, Type *EltTy, unsigned NElts,
                                bool IsLocal) {
   unsigned Alignment = GV.getAlignment();
   if (Alignment == 0)
@@ -355,8 +345,8 @@ static unsigned getGVAlignment(const GlobalVariable &GV,
     // If an alignment is specified, it must be equal to or greater than the
     // variable's natural alignment.
 
-    unsigned NaturalAlign
-      = IsLocal ? DL.getPrefTypeAlignment(EltTy) : DL.getABITypeAlignment(EltTy);
+    unsigned NaturalAlign = IsLocal ? DL.getPrefTypeAlignment(EltTy)
+                                    : DL.getABITypeAlignment(EltTy);
     Alignment = std::max(Alignment, NaturalAlign);
   }
 
@@ -368,16 +358,14 @@ static unsigned getGVAlignment(const GlobalVariable &GV,
 }
 
 /// EmitGlobalVariable - Emit the specified global variable to the .s file.
-void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
-{
+void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   if (HSAIL::isIgnoredGV(GV))
     return;
 
-  const DataLayout& DL = getDataLayout();
+  const DataLayout &DL = getDataLayout();
 
   SmallString<256> NameStr;
   getHSAILMangledName(NameStr, GV);
-
 
   // Initializer has pointer element type.
   Type *InitTy = GV->getType()->getElementType();
@@ -388,12 +376,10 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
   HSAIL_ASM::DirectiveVariable globalVar;
   // TODO_HSA: pending BRIG_LINKAGE_STATIC implementation in the Finalizer
   if (NElts == 0) {
-    globalVar = brigantine.addVariable(makeSRef(NameStr),
-                                       getHSAILSegment(GV),
+    globalVar = brigantine.addVariable(makeSRef(NameStr), getHSAILSegment(GV),
                                        HSAIL::getBrigType(EltTy, DL));
   } else {
-    globalVar = brigantine.addArrayVariable(makeSRef(NameStr),
-                                            NElts,
+    globalVar = brigantine.addArrayVariable(makeSRef(NameStr), NElts,
                                             getHSAILSegment(GV),
                                             HSAIL::getBrigType(EltTy, DL));
   }
@@ -417,7 +403,8 @@ void BRIGAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV)
 
 static bool isHSAILInstrinsic(StringRef str) {
   if ((HSAILIntrinsic::ID)Intrinsic::not_intrinsic !=
-      getIntrinsicForGCCBuiltin("HSAIL", str.data())) return true;
+      getIntrinsicForGCCBuiltin("HSAIL", str.data()))
+    return true;
   return str.startswith(StringRef("llvm.HSAIL."));
 }
 
@@ -454,12 +441,14 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &F,
 
   paramCounter = 0;
   if (!retType->isVoidTy()) {
-    bool IsSExt = Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
-    bool IsZExt = Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
+    bool IsSExt =
+        Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
+    bool IsZExt =
+        Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
 
     if (IsSExt || IsZExt) {
-      EmitFunctionReturn(Type::getInt32Ty(retType->getContext()),
-                         false, "ret", IsSExt);
+      EmitFunctionReturn(Type::getInt32Ty(retType->getContext()), false, "ret",
+                         IsSExt);
     } else
       EmitFunctionReturn(retType, false, "ret", IsSExt);
   }
@@ -471,9 +460,10 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &F,
   unsigned n = 1;
 
   for (FunctionType::param_iterator pb = funcType->param_begin(),
-         pe = funcType->param_end(); pb != pe; ++pb, ++ai, ++n) {
+                                    pe = funcType->param_end();
+       pb != pe; ++pb, ++ai, ++n) {
     assert(ai != ae);
-    Type* type = *pb;
+    Type *type = *pb;
     bool IsSExt = Attrs.hasAttribute(n, Attribute::SExt);
     EmitFunctionArgument(type, false, ai->getName(), IsSExt);
   }
@@ -493,17 +483,19 @@ void BRIGAsmPrinter::EmitFunctionLabel(const Function &F,
  * @return
  */
 
-bool  BRIGAsmPrinter::runOnMachineFunction(MachineFunction &lMF) {
+bool BRIGAsmPrinter::runOnMachineFunction(MachineFunction &lMF) {
   this->MF = &lMF;
   mMeta->setMF(&lMF);
   mMFI = lMF.getInfo<HSAILMachineFunctionInfo>();
   SetupMachineFunction(lMF);
   const Function *F = MF->getFunction();
-  OutStreamer.SwitchSection(getObjFileLowering().SectionForGlobal(F, *Mang, TM));
+  OutStreamer.SwitchSection(
+      getObjFileLowering().SectionForGlobal(F, *Mang, TM));
   m_bIsKernel = HSAIL::isKernelFunc(MF->getFunction());
   mMeta->printHeader(MF->getFunction()->getName());
 
-  // The need to define global samplers is discovered during instruction selection,
+  // The need to define global samplers is discovered during instruction
+  // selection,
   // so we emit them at file scope just before a kernel function is emitted.
   Subtarget->getImageHandles()->finalize();
   EmitSamplerDefs();
@@ -519,8 +511,8 @@ bool  BRIGAsmPrinter::runOnMachineFunction(MachineFunction &lMF) {
 
 void BRIGAsmPrinter::EmitSamplerDefs() {
 
-  HSAILImageHandles* handles = Subtarget->getImageHandles();
-  SmallVector<HSAILSamplerHandle*, 16> samplers = handles->getSamplerHandles();
+  HSAILImageHandles *handles = Subtarget->getImageHandles();
+  SmallVector<HSAILSamplerHandle *, 16> samplers = handles->getSamplerHandles();
 
   // Emit global sampler defs
   for (unsigned i = 0; i < samplers.size(); i++) {
@@ -528,23 +520,23 @@ void BRIGAsmPrinter::EmitSamplerDefs() {
     // them only once.
     if (!samplers[i]->isEmitted()) {
 
-      HSAIL_ASM::DirectiveVariable samplerVar = brigantine.addSampler("&" +
-        samplers[i]->getSym(), samplers[i]->isRO() ? BRIG_SEGMENT_READONLY
-                                                   : BRIG_SEGMENT_GLOBAL);
+      HSAIL_ASM::DirectiveVariable samplerVar = brigantine.addSampler(
+          "&" + samplers[i]->getSym(),
+          samplers[i]->isRO() ? BRIG_SEGMENT_READONLY : BRIG_SEGMENT_GLOBAL);
       samplerVar.align() = BRIG_ALIGNMENT_8;
       samplerVar.allocation() = BRIG_ALLOCATION_AGENT;
       samplerVar.linkage() = BRIG_LINKAGE_MODULE;
       samplerVar.modifier().isDefinition() = 1;
-      HSAIL_ASM::OperandConstantSampler samplerProps = brigantine.append<HSAIL_ASM::OperandConstantSampler>();
+      HSAIL_ASM::OperandConstantSampler samplerProps =
+          brigantine.append<HSAIL_ASM::OperandConstantSampler>();
       // HSAIL_ASM::ItemList samplerInit;
       // samplerInit.push_back(samplerProps);
       samplerVar.init() = samplerProps;
 
       int ocl_init = handles->getSamplerValue(i);
 
-      samplerProps.coord() = (ocl_init & 0x1)
-            ? BRIG_COORD_NORMALIZED
-            : BRIG_COORD_UNNORMALIZED;
+      samplerProps.coord() =
+          (ocl_init & 0x1) ? BRIG_COORD_NORMALIZED : BRIG_COORD_UNNORMALIZED;
 
       switch (ocl_init & 0x30) {
       default:
@@ -557,11 +549,21 @@ void BRIGAsmPrinter::EmitSamplerDefs() {
       }
 
       switch (ocl_init & 0xE) {
-      case 0x0 : samplerProps.addressing() = BRIG_ADDRESSING_UNDEFINED;          break;  // CLK_ADDRESS_NONE
-      case 0x2 : samplerProps.addressing() = BRIG_ADDRESSING_REPEAT;             break;  // CLK_ADDRESS_REPEAT
-      case 0x4 : samplerProps.addressing() = BRIG_ADDRESSING_CLAMP_TO_EDGE;      break;  // CLK_ADDRESS_CLAMP_TO_EDGE
-      case 0x6 : samplerProps.addressing() = BRIG_ADDRESSING_CLAMP_TO_BORDER;    break;  // CLK_ADDRESS_CLAMP
-      case 0x8 : samplerProps.addressing() = BRIG_ADDRESSING_MIRRORED_REPEAT;    break;  // CLK_ADDRESS_MIRRORED_REPEAT
+      case 0x0:
+        samplerProps.addressing() = BRIG_ADDRESSING_UNDEFINED;
+        break; // CLK_ADDRESS_NONE
+      case 0x2:
+        samplerProps.addressing() = BRIG_ADDRESSING_REPEAT;
+        break; // CLK_ADDRESS_REPEAT
+      case 0x4:
+        samplerProps.addressing() = BRIG_ADDRESSING_CLAMP_TO_EDGE;
+        break; // CLK_ADDRESS_CLAMP_TO_EDGE
+      case 0x6:
+        samplerProps.addressing() = BRIG_ADDRESSING_CLAMP_TO_BORDER;
+        break; // CLK_ADDRESS_CLAMP
+      case 0x8:
+        samplerProps.addressing() = BRIG_ADDRESSING_MIRRORED_REPEAT;
+        break; // CLK_ADDRESS_MIRRORED_REPEAT
       }
 
       samplers[i]->setEmitted();
@@ -609,39 +611,38 @@ void BRIGAsmPrinter::EmitBasicBlockStart(const MachineBasicBlock &MBB) {
 }
 
 namespace {
-  class autoCodeEmitter {
-    MCStreamer                *streamer;
-    const HSAIL_ASM::Brigantine *brigantine;
-    uint64_t                   lowpc;
-    uint64_t                   hipc;
+class autoCodeEmitter {
+  MCStreamer *streamer;
+  const HSAIL_ASM::Brigantine *brigantine;
+  uint64_t lowpc;
+  uint64_t hipc;
 
-  public:
-    autoCodeEmitter(MCStreamer *strm, const HSAIL_ASM::Brigantine *brig):
-        streamer(strm), brigantine(brig) {
-        lowpc = brigantine->container().code().size();
-    }
+public:
+  autoCodeEmitter(MCStreamer *strm, const HSAIL_ASM::Brigantine *brig)
+      : streamer(strm), brigantine(brig) {
+    lowpc = brigantine->container().code().size();
+  }
 
-    ~autoCodeEmitter() {
-      hipc = brigantine->container().code().size();
-      streamer->SwitchSection(streamer->getContext().getObjectFileInfo()->
-        getTextSection());
-      assert(lowpc <= hipc);
-      // This is the only way to adjust the size of virtual ELF section
-      // (type SHT_NOBITS) like .brigcode
-      streamer->EmitZeros(hipc - lowpc);
-    }
-
-  };
+  ~autoCodeEmitter() {
+    hipc = brigantine->container().code().size();
+    streamer->SwitchSection(
+        streamer->getContext().getObjectFileInfo()->getTextSection());
+    assert(lowpc <= hipc);
+    // This is the only way to adjust the size of virtual ELF section
+    // (type SHT_NOBITS) like .brigcode
+    streamer->EmitZeros(hipc - lowpc);
+  }
+};
 }
 
 bool IsKernel(const MachineInstr *II) {
   std::string sFuncName;
-  const MachineBasicBlock * bb = II->getParent();
-  if ( bb ) {
-    const MachineFunction * mf = bb->getParent();
+  const MachineBasicBlock *bb = II->getParent();
+  if (bb) {
+    const MachineFunction *mf = bb->getParent();
 
-    if ( mf ) {
-      const Function * F = mf->getFunction();
+    if (mf) {
+      const Function *F = mf->getFunction();
       sFuncName = "&" + F->getName().str();
       return HSAIL::isKernelFunc(F);
     }
@@ -658,7 +659,8 @@ void BRIGAsmPrinter::EmitInstruction(const MachineInstr *II) {
 }
 
 HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
-  // autoCodeEmitter will emit required amount of bytes in corresponding MCSection
+  // autoCodeEmitter will emit required amount of bytes in corresponding
+  // MCSection
   autoCodeEmitter ace(&OutStreamer, &brigantine);
 
   unsigned Opc = II->getOpcode();
@@ -716,18 +718,19 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     return inst;
   }
 
-  switch(II->getOpcode()) {
+  switch (II->getOpcode()) {
   default: {
     const char *AsmStr = getInstMnemonic(II);
     HSAIL_ASM::Inst inst = HSAIL_ASM::parseMnemo(AsmStr, brigantine);
     unsigned NumOperands = II->getNumOperands();
-    for (unsigned OpNum=0; OpNum != NumOperands; ++OpNum) {
+    for (unsigned OpNum = 0; OpNum != NumOperands; ++OpNum) {
       BrigEmitOperand(II, OpNum, inst);
     }
     return inst;
   }
   case HSAIL::RET:
-    return brigantine.addInst<HSAIL_ASM::InstBasic>(BRIG_OPCODE_RET, BRIG_TYPE_NONE);
+    return brigantine.addInst<HSAIL_ASM::InstBasic>(BRIG_OPCODE_RET,
+                                                    BRIG_TYPE_NONE);
 
   case HSAIL::ARG_SCOPE_START:
     brigantine.startArgScope();
@@ -740,19 +743,20 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   case HSAIL::CALL: {
     MachineInstr::const_mop_iterator oi = II->operands_begin();
     MachineInstr::const_mop_iterator oe = II->operands_end();
-    const GlobalValue *gv = (oi++)->getGlobal();;
+    const GlobalValue *gv = (oi++)->getGlobal();
+    ;
 
     // Place a call
-    HSAIL_ASM::InstBr call = brigantine.addInst<HSAIL_ASM::InstBr>(
-      BRIG_OPCODE_CALL, BRIG_TYPE_NONE);
+    HSAIL_ASM::InstBr call =
+        brigantine.addInst<HSAIL_ASM::InstBr>(BRIG_OPCODE_CALL, BRIG_TYPE_NONE);
     call.width() = BRIG_WIDTH_ALL;
 
     HSAIL_ASM::ItemList ret_list;
-    for (; oi != oe && oi->isSymbol() ; ++oi) {
+    for (; oi != oe && oi->isSymbol(); ++oi) {
       std::string ret("%");
       ret += oi->getSymbolName();
       ret_list.push_back(
-        brigantine.findInScopes<HSAIL_ASM::DirectiveVariable>(ret));
+          brigantine.findInScopes<HSAIL_ASM::DirectiveVariable>(ret));
     }
 
     // Return value and argument symbols are delimited with a 0 value.
@@ -765,7 +769,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
         std::string op("%");
         op += oi->getSymbolName();
         call_paramlist.push_back(
-          brigantine.findInScopes<HSAIL_ASM::DirectiveVariable>(op));
+            brigantine.findInScopes<HSAIL_ASM::DirectiveVariable>(op));
       } else {
         llvm_unreachable("Unexpected target call instruction operand list!");
       }
@@ -774,12 +778,9 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     SmallString<256> Name;
     getHSAILMangledName(Name, gv);
 
-    m_opndList.push_back(
-      brigantine.createCodeList(ret_list));
-    m_opndList.push_back(
-      brigantine.createExecutableRef(makeSRef(Name)));
-    m_opndList.push_back(
-      brigantine.createCodeList(call_paramlist));
+    m_opndList.push_back(brigantine.createCodeList(ret_list));
+    m_opndList.push_back(brigantine.createExecutableRef(makeSRef(Name)));
+    m_opndList.push_back(brigantine.createCodeList(call_paramlist));
 
     return call;
   }
@@ -823,17 +824,14 @@ void BRIGAsmPrinter::EmitStartOfAsmFile(Module &M) {
   globalVariableOffsets.clear();
 
   brigantine.startProgram();
-  brigantine.module(
-    "&__llvm_hsail_module",
-    BRIG_VERSION_HSAIL_MAJOR,
-    BRIG_VERSION_HSAIL_MINOR,
-    Subtarget->is64Bit() ? BRIG_MACHINE_LARGE : BRIG_MACHINE_SMALL,
-    BRIG_PROFILE_FULL,
-    BRIG_ROUND_FLOAT_NEAR_EVEN
-  );
+  brigantine.module("&__llvm_hsail_module", BRIG_VERSION_HSAIL_MAJOR,
+                    BRIG_VERSION_HSAIL_MINOR,
+                    Subtarget->is64Bit() ? BRIG_MACHINE_LARGE
+                                         : BRIG_MACHINE_SMALL,
+                    BRIG_PROFILE_FULL, BRIG_ROUND_FLOAT_NEAR_EVEN);
 
-  //if (usesGCNAtomicCounter()) {
-    brigantine.addExtension("amd:gcn");
+  // if (usesGCNAtomicCounter()) {
+  brigantine.addExtension("amd:gcn");
   //}
 
   brigantine.addExtension("IMAGE");
@@ -841,9 +839,10 @@ void BRIGAsmPrinter::EmitStartOfAsmFile(Module &M) {
   // If we are emitting first instruction that occupied some place in BRIG
   // we should also emit 4 reserved bytes to the MCSection, so that offsets
   // of instructions are the same in the BRIG .code section and MCSection
-  OutStreamer.SwitchSection(OutStreamer.getContext().getObjectFileInfo()->
-                              getTextSection());
-  OutStreamer.EmitZeros(brigantine.container().code().secHeader()->headerByteCount);
+  OutStreamer.SwitchSection(
+      OutStreamer.getContext().getObjectFileInfo()->getTextSection());
+  OutStreamer.EmitZeros(
+      brigantine.container().code().secHeader()->headerByteCount);
 
   for (GlobalAlias &GA : M.aliases()) {
     if (const Function *F = dyn_cast<Function>(GA.getAliasee()))
@@ -872,7 +871,7 @@ void BRIGAsmPrinter::EmitEndOfAsmFile(Module &M) {
   brigantine.endProgram();
   // Clear global variable map
   globalVariableOffsets.clear();
-  if(mDwarfStream) {
+  if (mDwarfStream) {
     // Flush all DWARF data captured
     mDwarfStream->flush();
     // Stop writing to another stream, if any provided
@@ -885,8 +884,10 @@ void BRIGAsmPrinter::EmitEndOfAsmFile(Module &M) {
       // Obtain reference to data block
       HSAIL_ASM::SRef data = mDwarfStream->getData();
       // \todo1.0 get rid of data copying, stream directly into brig section
-      brigantine.container().initSectionRaw(BRIG_SECTION_INDEX_IMPLEMENTATION_DEFINED, "hsa_debug");
-      HSAIL_ASM::BrigSectionImpl& section = brigantine.container().sectionById(BRIG_SECTION_INDEX_IMPLEMENTATION_DEFINED);
+      brigantine.container().initSectionRaw(
+          BRIG_SECTION_INDEX_IMPLEMENTATION_DEFINED, "hsa_debug");
+      HSAIL_ASM::BrigSectionImpl &section = brigantine.container().sectionById(
+          BRIG_SECTION_INDEX_IMPLEMENTATION_DEFINED);
       section.insertData(section.size(), data.begin, data.end);
     }
   }
@@ -895,22 +896,22 @@ void BRIGAsmPrinter::EmitEndOfAsmFile(Module &M) {
   // bc.optimizeOperands();
   HSAIL_ASM::Validator vld(bc);
 
-  bool isValid=true;
+  bool isValid = true;
   if (!DisableValidator) {
-    isValid= vld.validate();
+    isValid = vld.validate();
   }
 
   if (!isValid) {
     errs() << vld.getErrorMsg(NULL) << '\n';
-//    HSAIL_ASM::dump(bc);
-    if(DumpOnFailFilename.size() > 0) {
+    //    HSAIL_ASM::dump(bc);
+    if (DumpOnFailFilename.size() > 0) {
       std::string info;
 
       std::ofstream dumpStream(DumpOnFailFilename.c_str());
-      HSAIL_ASM::dump(bc,dumpStream);
+      HSAIL_ASM::dump(bc, dumpStream);
     }
     report_fatal_error(
-      "\n Brig container validation has failed in BRIGAsmPrinter.cpp\n");
+        "\n Brig container validation has failed in BRIGAsmPrinter.cpp\n");
     return;
   }
 
@@ -925,7 +926,7 @@ void BRIGAsmPrinter::EmitEndOfAsmFile(Module &M) {
       disasm.log(std::cerr); // TBD err stream
       // TBD this is incredibly inefficient
       std::stringstream ss;
-      int result=disasm.run(ss);
+      int result = disasm.run(ss);
       if (result) {
         assert(!"disasm should not fail if container was validated above");
       }
@@ -934,15 +935,15 @@ void BRIGAsmPrinter::EmitEndOfAsmFile(Module &M) {
         mBrigStream->write(s.data(), s.size());
       }
     }
-  }
-  else {
+  } else {
     HSAIL_ASM::BrigStreamer::save(bc, "test_output.brig");
   }
 }
 
-HSAIL_ASM::DirectiveVariable BRIGAsmPrinter::EmitLocalVariable(
-  const GlobalVariable *GV, BrigSegment8_t segment) {
-  const DataLayout& DL = getDataLayout();
+HSAIL_ASM::DirectiveVariable
+BRIGAsmPrinter::EmitLocalVariable(const GlobalVariable *GV,
+                                  BrigSegment8_t segment) {
+  const DataLayout &DL = getDataLayout();
 
   SmallString<256> NameStr;
   getHSAILMangledName(NameStr, GV);
@@ -956,11 +957,10 @@ HSAIL_ASM::DirectiveVariable BRIGAsmPrinter::EmitLocalVariable(
   HSAIL_ASM::DirectiveVariable var;
   if (NElts != 0) {
     BrigType BT = HSAIL::getBrigType(EltTy, DL);
-    var = brigantine.addArrayVariable(makeSRef(NameStr), NElts,
-                                      segment, BT & ~BRIG_TYPE_ARRAY);
+    var = brigantine.addArrayVariable(makeSRef(NameStr), NElts, segment,
+                                      BT & ~BRIG_TYPE_ARRAY);
   } else {
-    var = brigantine.addVariable(makeSRef(NameStr),
-                                 segment,
+    var = brigantine.addVariable(makeSRef(NameStr), segment,
                                  HSAIL::getBrigType(EltTy, getDataLayout()));
   }
 
@@ -1000,9 +1000,10 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
       std::string ignored_FunStr;
       raw_string_ostream ignored_OFunStr(ignored_FunStr);
       formatted_raw_ostream ignored(ignored_OFunStr);
-// D2 does not need to report kernel args info
-//      mMeta->processArgMetadata(ignored, mBuffer, isKernel);
-      // We have to call processArgMetadata with ostream before we can emit something
+      // D2 does not need to report kernel args info
+      //      mMeta->processArgMetadata(ignored, mBuffer, isKernel);
+      // We have to call processArgMetadata with ostream before we can emit
+      // something
       mMeta->brigEmitMetaData(brigantine, id, isKernel);
     }
   }
@@ -1012,16 +1013,18 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
 
   // Record private/group variable references
   for (MachineFunction::const_iterator block = MF->begin(),
-     endBlock = MF->end();  block != endBlock; ++block) {
+                                       endBlock = MF->end();
+       block != endBlock; ++block) {
     for (MachineBasicBlock::const_iterator inst = block->begin(),
-      instEnd = block->end(); inst != instEnd; ++inst ) {
+                                           instEnd = block->end();
+         inst != instEnd; ++inst) {
       const MachineInstr *MI = inst;
       for (unsigned int opNum = 0; opNum < MI->getNumOperands(); opNum++) {
         const MachineOperand &MO = MI->getOperand(opNum);
         if (MO.getType() == MachineOperand::MO_GlobalAddress) {
           if (const GlobalVariable *GV =
-              dyn_cast<GlobalVariable>(MO.getGlobal())) {
-            switch(GV->getType()->getAddressSpace()) {
+                  dyn_cast<GlobalVariable>(MO.getGlobal())) {
+            switch (GV->getType()->getAddressSpace()) {
             case HSAILAS::GROUP_ADDRESS:
               groupVariablesOffsets.insert(pvgvo_record(GV, 0));
               break;
@@ -1034,11 +1037,12 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
 
   // Emit recorded
   for (Module::const_global_iterator I = F->getParent()->global_begin(),
-       E = F->getParent()->global_end(); I != E; ++I) {
+                                     E = F->getParent()->global_end();
+       I != E; ++I) {
     pvgvo_iterator II = groupVariablesOffsets.find(I);
     if (II != groupVariablesOffsets.end()) {
-         HSAIL_ASM::DirectiveVariable var =
-             EmitLocalVariable(II->first, BRIG_SEGMENT_GROUP);
+      HSAIL_ASM::DirectiveVariable var =
+          EmitLocalVariable(II->first, BRIG_SEGMENT_GROUP);
 
       II->second = var.brigOffset();
     }
@@ -1049,8 +1053,8 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
   const MachineFrameInfo *MFI = MF->getFrameInfo();
   size_t stack_size = MFI->getOffsetAdjustment() + MFI->getStackSize();
 
-  size_t spill_size =0;
-  size_t local_stack_size =0;
+  size_t spill_size = 0;
+  size_t local_stack_size = 0;
   unsigned local_stack_align, spill_align;
   local_stack_align = spill_align = DL.getABIIntegerTypeAlignment(32);
 
@@ -1068,17 +1072,16 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
         spillMapforStack[MFI->getObjectOffset(obj_index)] = spill_size;
         spill_size += MFI->getObjectSize(obj_index);
         spill_align = std::max(spill_align, obj_align);
-      }
-      else {
+      } else {
         unsigned obj_offset = MFI->getObjectOffset(obj_index);
         unsigned obj_align = MFI->getObjectAlignment(obj_index);
-        local_stack_size = (local_stack_size + obj_align - 1) /
-                           obj_align * obj_align;
+        local_stack_size =
+            (local_stack_size + obj_align - 1) / obj_align * obj_align;
         LocalVarMapforStack[obj_offset] = local_stack_size;
         unsigned obj_size = MFI->getObjectSize(obj_index);
-        for (unsigned cnt = 1 ; cnt < obj_size; cnt++)
-          LocalVarMapforStack[obj_offset+cnt] = local_stack_size + cnt;
-        local_stack_size  += obj_size;
+        for (unsigned cnt = 1; cnt < obj_size; cnt++)
+          LocalVarMapforStack[obj_offset + cnt] = local_stack_size + cnt;
+        local_stack_size += obj_size;
         local_stack_align = std::max(local_stack_align, obj_align);
       }
     }
@@ -1090,8 +1093,8 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     // Dimension is in units of type length
     if (local_stack_size) {
       HSAIL_ASM::DirectiveVariable stack_for_locals =
-        brigantine.addArrayVariable("%__privateStack", local_stack_size,
-                     BRIG_SEGMENT_PRIVATE, BRIG_TYPE_U8);
+          brigantine.addArrayVariable("%__privateStack", local_stack_size,
+                                      BRIG_SEGMENT_PRIVATE, BRIG_TYPE_U8);
       stack_for_locals.align() = getBrigAlignment(local_stack_align);
       stack_for_locals.allocation() = BRIG_ALLOCATION_AUTOMATIC;
       stack_for_locals.linkage() = BRIG_LINKAGE_FUNCTION;
@@ -1100,7 +1103,7 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     }
     if (spill_size) {
       HSAIL_ASM::DirectiveVariable spill = brigantine.addArrayVariable(
-        "%__spillStack", spill_size, BRIG_SEGMENT_SPILL, BRIG_TYPE_U8);
+          "%__spillStack", spill_size, BRIG_SEGMENT_SPILL, BRIG_TYPE_U8);
       spill.align() = getBrigAlignment(spill_align);
       spill.allocation() = BRIG_ALLOCATION_AUTOMATIC;
       spill.linkage() = BRIG_LINKAGE_FUNCTION;
@@ -1130,15 +1133,14 @@ void BRIGAsmPrinter::EmitFunctionBodyEnd() {
   brigantine.endBody();
 }
 
-void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
+void BRIGAsmPrinter::EmitFunctionReturn(Type *type, bool isKernel,
                                         StringRef RetName, bool isSExt) {
   std::string SymName("%");
   SymName += RetName;
 
   HSAIL_ASM::SRef ret(SymName);
 
-  assert((!type->isVectorTy() ||
-          !type->getScalarType()->isIntegerTy(1)) &&
+  assert((!type->isVectorTy() || !type->getScalarType()->isIntegerTy(1)) &&
          "i1 vectors do not work");
 
   const DataLayout &DL = getDataLayout();
@@ -1150,22 +1152,18 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type* type, bool isKernel,
   HSAIL_ASM::DirectiveVariable retParam;
   if (NElts != 0) {
     retParam = brigantine.addArrayVariable(
-      ret,
-      NElts,
-      BRIG_SEGMENT_ARG,
-      HSAIL::getBrigType(EmitTy, getDataLayout(), isSExt));
+        ret, NElts, BRIG_SEGMENT_ARG,
+        HSAIL::getBrigType(EmitTy, getDataLayout(), isSExt));
   } else {
-    retParam = brigantine.addVariable(
-      ret,
-      BRIG_SEGMENT_ARG,
-      HSAIL::getBrigType(EmitTy, DL, isSExt));
+    retParam = brigantine.addVariable(ret, BRIG_SEGMENT_ARG,
+                                      HSAIL::getBrigType(EmitTy, DL, isSExt));
   }
 
   retParam.align() = getBrigAlignment(DL.getABITypeAlignment(type));
   brigantine.addOutputParameter(retParam);
 }
 
-uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
+uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type *type, bool isKernel,
                                               const StringRef argName,
                                               bool isSExt) {
   std::string name;
@@ -1182,8 +1180,8 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
 
   paramCounter++;
 
-  const BrigSegment8_t symSegment = isKernel ? BRIG_SEGMENT_KERNARG
-                                             : BRIG_SEGMENT_ARG;
+  const BrigSegment8_t symSegment =
+      isKernel ? BRIG_SEGMENT_KERNARG : BRIG_SEGMENT_ARG;
 
   HSAIL_ASM::DirectiveVariable sym;
 
@@ -1198,8 +1196,7 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
   } else {
     const DataLayout &DL = getDataLayout();
 
-    assert((!type->isVectorTy() ||
-            !type->getScalarType()->isIntegerTy(1)) &&
+    assert((!type->isVectorTy() || !type->getScalarType()->isIntegerTy(1)) &&
            "i1 vectors are broken");
 
     unsigned NElts = ~0u;
@@ -1210,7 +1207,7 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type* type, bool isKernel,
       sym = brigantine.addArrayVariable(name, NElts, symSegment, EltTy);
     } else {
       sym = brigantine.addVariable(name, symSegment,
-                          HSAIL::getBrigType(EmitTy, DL, isSExt));
+                                   HSAIL::getBrigType(EmitTy, DL, isSExt));
     }
 
     sym.align() = getBrigAlignment(DL.getABITypeAlignment(type));
@@ -1228,8 +1225,8 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
   Type *retType = F->getReturnType();
   FunctionType *funcType = F->getFunctionType();
   bool isKernel = HSAIL::isKernelFunc(F);
-  const HSAILParamManager &PM = MF->getInfo<HSAILMachineFunctionInfo>()->
-        getParamManager();
+  const HSAILParamManager &PM =
+      MF->getInfo<HSAILMachineFunctionInfo>()->getParamManager();
 
   SmallString<256> NameWithPrefix;
   getHSAILMangledName(NameWithPrefix, F);
@@ -1244,8 +1241,10 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
 
   const auto &Attrs = F->getAttributes();
   if (!retType->isVoidTy()) {
-    bool IsSExt = Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
-    bool IsZExt = Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
+    bool IsSExt =
+        Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
+    bool IsZExt =
+        Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
 
     // FIXME: Move this logic into ParamManager or remove ParamManager.
     SmallString<256> ReturnName;
@@ -1261,13 +1260,12 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
       ParamName = PM.getParamName(*I);
 
     if (IsSExt || IsZExt) {
-      EmitFunctionReturn(Type::getInt32Ty(retType->getContext()),
-                         isKernel, ParamName, IsSExt);
+      EmitFunctionReturn(Type::getInt32Ty(retType->getContext()), isKernel,
+                         ParamName, IsSExt);
     } else {
       EmitFunctionReturn(retType, isKernel, ParamName, IsSExt);
     }
   }
-
 
   // Loop through all of the parameters and emit the types and
   // corresponding names.
@@ -1281,7 +1279,7 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
   HSAILParamManager::param_iterator Ep = PM.arg_end();
 
   FunctionType::param_iterator pb = funcType->param_begin(),
-    pe = funcType->param_end();
+                               pe = funcType->param_end();
 
   if (isKernel && F->hasStructRetAttr()) {
     assert(Ip != Ep && "Invalid struct return fucntion!");
@@ -1292,10 +1290,10 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
   }
 
   for (unsigned n = 1; pb != pe; ++pb, ++Ip, ++n) {
-    Type* type = *pb;
+    Type *type = *pb;
     assert(Ip != Ep);
     // Obtain argument name
-    const char* argName = PM.getParamName(*Ip);
+    const char *argName = PM.getParamName(*Ip);
     // Here we will store an offset of DirectiveVariable
     uint64_t argDirectiveOffset = 0;
 
@@ -1343,8 +1341,9 @@ bool BRIGAsmPrinter::getLocalVariableStackOffset(int varOffset,
 
 /// This function is used to translate stack objects' offsets reported by
 /// MachineFrameInfo to actual offsets in the %spill array
-bool BRIGAsmPrinter::getSpillVariableStackOffset(int varOffset, int *stackOffset) const {
-  stack_map_iterator i =  spillMapforStack.find(varOffset);
+bool BRIGAsmPrinter::getSpillVariableStackOffset(int varOffset,
+                                                 int *stackOffset) const {
+  stack_map_iterator i = spillMapforStack.find(varOffset);
   if (i != spillMapforStack.end()) {
     *stackOffset = i->second;
     return true;
@@ -1352,28 +1351,28 @@ bool BRIGAsmPrinter::getSpillVariableStackOffset(int varOffset, int *stackOffset
   return false;
 }
 
-bool BRIGAsmPrinter::getGlobalVariableOffset(const GlobalVariable* GV,
+bool BRIGAsmPrinter::getGlobalVariableOffset(const GlobalVariable *GV,
                                              uint64_t *result) const {
   gvo_iterator i = globalVariableOffsets.find(GV);
   if (i == globalVariableOffsets.end()) {
     assert(!"Unknown global variable");
     return false;
   }
-  *result =  i->second;
+  *result = i->second;
   return true;
 }
 
-bool BRIGAsmPrinter::getGroupVariableOffset(const GlobalVariable* GV,
+bool BRIGAsmPrinter::getGroupVariableOffset(const GlobalVariable *GV,
                                             uint64_t *result) const {
   pvgvo_const_iterator i = groupVariablesOffsets.find(GV);
   if (i == groupVariablesOffsets.end()) {
     return false;
   }
-  *result =  i->second;
+  *result = i->second;
   return true;
 }
 
-bool BRIGAsmPrinter::getFunctionScalarArgumentOffset(const std::string& argName,
+bool BRIGAsmPrinter::getFunctionScalarArgumentOffset(const std::string &argName,
                                                      uint64_t *result) const {
   fao_iterator i = functionScalarArgumentOffsets.find(argName);
   if (i == functionScalarArgumentOffsets.end()) {
@@ -1383,8 +1382,8 @@ bool BRIGAsmPrinter::getFunctionScalarArgumentOffset(const std::string& argName,
   return true;
 }
 
-bool BRIGAsmPrinter::getFunctionVectorArgumentOffsets(const std::string& argName,
-     VectorArgumentOffsets& result) const {
+bool BRIGAsmPrinter::getFunctionVectorArgumentOffsets(
+    const std::string &argName, VectorArgumentOffsets &result) const {
   fvo_iterator i = functionVectorArgumentOffsets.find(argName);
   if (i == functionVectorArgumentOffsets.end()) {
     return false;
@@ -1393,10 +1392,11 @@ bool BRIGAsmPrinter::getFunctionVectorArgumentOffsets(const std::string& argName
   return true;
 }
 
-void BRIGAsmPrinter::BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSAIL_ASM::Inst inst) {
+void BRIGAsmPrinter::BrigEmitOperand(const MachineInstr *MI, unsigned opNum,
+                                     HSAIL_ASM::Inst inst) {
 
-  int AddressIndex = HSAIL::getNamedOperandIdx(MI->getOpcode(),
-                                               HSAIL::OpName::address);
+  int AddressIndex =
+      HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address);
   if (AddressIndex != -1) {
     unsigned addrStart = AddressIndex;
     if (opNum == addrStart) {
@@ -1414,30 +1414,34 @@ void BRIGAsmPrinter::BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSA
 
   const MachineOperand &MO = MI->getOperand(opNum);
 
-  BrigType16_t const expType = HSAIL_ASM::getOperandType(inst, m_opndList.size(),
-                                                         brigantine.getMachineModel(), brigantine.getProfile());
+  BrigType16_t const expType = HSAIL_ASM::getOperandType(
+      inst, m_opndList.size(), brigantine.getMachineModel(),
+      brigantine.getProfile());
 
   switch (MO.getType()) {
   case MachineOperand::MO_Register:
     m_opndList.push_back(getBrigReg(MO));
     break;
   case MachineOperand::MO_Immediate:
-    if (expType==BRIG_TYPE_B1) {
-      m_opndList.push_back(brigantine.createImmed(MO.getImm() != 0 ? 1 : 0, expType));
+    if (expType == BRIG_TYPE_B1) {
+      m_opndList.push_back(
+          brigantine.createImmed(MO.getImm() != 0 ? 1 : 0, expType));
     } else {
       m_opndList.push_back(brigantine.createImmed(MO.getImm(), expType));
     }
     break;
   case MachineOperand::MO_FPImmediate: {
-    const ConstantFP * CFP = MO.getFPImm();
+    const ConstantFP *CFP = MO.getFPImm();
     if (CFP->getType()->isFloatTy()) {
-      m_opndList.push_back(
-        brigantine.createImmed(HSAIL_ASM::f32_t::fromRawBits(
-          *CFP->getValueAPF().bitcastToAPInt().getRawData()), expType));
+      m_opndList.push_back(brigantine.createImmed(
+          HSAIL_ASM::f32_t::fromRawBits(
+              *CFP->getValueAPF().bitcastToAPInt().getRawData()),
+          expType));
     } else if (CFP->getType()->isDoubleTy()) {
-      m_opndList.push_back(
-        brigantine.createImmed(HSAIL_ASM::f64_t::fromRawBits(
-          *CFP->getValueAPF().bitcastToAPInt().getRawData()), expType));
+      m_opndList.push_back(brigantine.createImmed(
+          HSAIL_ASM::f64_t::fromRawBits(
+              *CFP->getValueAPF().bitcastToAPInt().getRawData()),
+          expType));
     }
     break;
   }
@@ -1453,11 +1457,11 @@ void BRIGAsmPrinter::BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSA
 
 void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI,
                                                 unsigned opNum,
-                                                unsigned Segment)  {
+                                                unsigned Segment) {
   assert(opNum + 2 < MI->getNumOperands());
   const MachineOperand &base = MI->getOperand(opNum),
-    &reg  = MI->getOperand(opNum+1),
-    &offset_op  = MI->getOperand(opNum+2);
+                       &reg = MI->getOperand(opNum + 1),
+                       &offset_op = MI->getOperand(opNum + 2);
 
   // Get offset
   assert(offset_op.isImm());
@@ -1479,18 +1483,15 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI,
     if (MI->getOpcode() == HSAIL::LD_SAMP) {
       BrigEmitOperandImage(MI, opNum); // Constant sampler.
       return;
-    }
-    else if (spillMapforStack.find(addr) != spillMapforStack.end()) {
+    } else if (spillMapforStack.find(addr) != spillMapforStack.end()) {
       base_name = "%__spillStack";
       offset += spillMapforStack[addr];
-    }
-    else if (LocalVarMapforStack.find(addr) != LocalVarMapforStack.end()) {
+    } else if (LocalVarMapforStack.find(addr) != LocalVarMapforStack.end()) {
       base_name = "%__privateStack";
       offset += LocalVarMapforStack[addr];
-    }
-    else
-      llvm_unreachable(
-        "Immediate base address: neither spill, private stack nor sampler handle");
+    } else
+      llvm_unreachable("Immediate base address: neither spill, private stack "
+                       "nor sampler handle");
   }
   // Kernel or function argument
   else if (base.isSymbol()) {
@@ -1507,12 +1508,13 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI,
   bool Is32Bit = (DL.getPointerSize(Segment) == 4);
 
   // Emit operand.
-  m_opndList.push_back(brigantine.createRef(base_name, reg_name, offset, Is32Bit));
+  m_opndList.push_back(
+      brigantine.createRef(base_name, reg_name, offset, Is32Bit));
 }
 
 void BRIGAsmPrinter::BrigEmitVecArgDeclaration(const MachineInstr *MI) {
-  const MachineOperand &Symbol
-    = *TII->getNamedOperand(*MI, HSAIL::OpName::symbol);
+  const MachineOperand &Symbol =
+      *TII->getNamedOperand(*MI, HSAIL::OpName::symbol);
 
   unsigned BT = TII->getNamedModifierOperand(*MI, HSAIL::OpName::TypeLength);
   int64_t NElts = TII->getNamedModifierOperand(*MI, HSAIL::OpName::size);
@@ -1524,8 +1526,8 @@ void BRIGAsmPrinter::BrigEmitVecArgDeclaration(const MachineInstr *MI) {
 
   HSAIL_ASM::DirectiveVariable ArgDecl;
   if (NElts != 0) {
-    ArgDecl = brigantine.addArrayVariable(makeSRef(Name),
-                                          NElts, BRIG_SEGMENT_ARG, BT);
+    ArgDecl = brigantine.addArrayVariable(makeSRef(Name), NElts,
+                                          BRIG_SEGMENT_ARG, BT);
   } else {
     ArgDecl = brigantine.addVariable(makeSRef(Name), BRIG_SEGMENT_ARG, BT);
   }
@@ -1538,7 +1540,8 @@ void BRIGAsmPrinter::BrigEmitVecArgDeclaration(const MachineInstr *MI) {
   return;
 }
 
-void BRIGAsmPrinter::BrigEmitOperandImage(const MachineInstr *MI, unsigned opNum) {
+void BRIGAsmPrinter::BrigEmitOperandImage(const MachineInstr *MI,
+                                          unsigned opNum) {
   MachineOperand object = MI->getOperand(opNum);
   unsigned idx = object.getImm();
   std::string sOp;
@@ -1547,16 +1550,16 @@ void BRIGAsmPrinter::BrigEmitOperandImage(const MachineInstr *MI, unsigned opNum
   // HSAILPropagateImageOperands and HSAILISelLowering::LowerFormalArguments.
   if (idx < IMAGE_ARG_BIAS) {
     // This is the initialized sampler.
-    HSAILSamplerHandle* hSampler = Subtarget->getImageHandles()->
-                                     getSamplerHandle(idx);
+    HSAILSamplerHandle *hSampler =
+        Subtarget->getImageHandles()->getSamplerHandle(idx);
     assert(hSampler && "Invalid sampler handle");
     std::string samplerName = hSampler->getSym();
     assert(!samplerName.empty() && "Expected symbol here");
     sOp = "&" + samplerName;
   } else {
     // This is the image
-    std::string sym = Subtarget->getImageHandles()->
-                        getImageSymbol(idx-IMAGE_ARG_BIAS);
+    std::string sym =
+        Subtarget->getImageHandles()->getImageSymbol(idx - IMAGE_ARG_BIAS);
     assert(!sym.empty() && "Expected symbol here");
     sOp = "%" + sym;
   }
@@ -1566,25 +1569,25 @@ void BRIGAsmPrinter::BrigEmitOperandImage(const MachineInstr *MI, unsigned opNum
 
 HSAIL_ASM::OperandRegister BRIGAsmPrinter::getBrigReg(MachineOperand s) {
   assert(s.getType() == MachineOperand::MO_Register);
-  return brigantine.createOperandReg(HSAIL_ASM::SRef(
-                                       getRegisterName(s.getReg())));
+  return brigantine.createOperandReg(
+      HSAIL_ASM::SRef(getRegisterName(s.getReg())));
 }
 
-void BRIGAsmPrinter::BrigEmitVecOperand(
-                            const MachineInstr *MI, unsigned opStart,
-                            unsigned numRegs, HSAIL_ASM::Inst inst) {
-  assert(numRegs >=2 && numRegs <= 4);
+void BRIGAsmPrinter::BrigEmitVecOperand(const MachineInstr *MI,
+                                        unsigned opStart, unsigned numRegs,
+                                        HSAIL_ASM::Inst inst) {
+  assert(numRegs >= 2 && numRegs <= 4);
   HSAIL_ASM::ItemList list;
-  for(unsigned i=opStart; i<opStart + numRegs; ++i) {
-      const MachineOperand &MO = MI->getOperand(i);
-      if (MO.isReg()) {
-        list.push_back(getBrigReg(MO));
-      } else if (MO.isImm()) {
-        BrigType16_t const expType =
-          HSAIL_ASM::getOperandType(inst, m_opndList.size(),
-            brigantine.getMachineModel(), brigantine.getProfile());
-        list.push_back(brigantine.createImmed(MO.getImm(), expType));
-      }
+  for (unsigned i = opStart; i < opStart + numRegs; ++i) {
+    const MachineOperand &MO = MI->getOperand(i);
+    if (MO.isReg()) {
+      list.push_back(getBrigReg(MO));
+    } else if (MO.isImm()) {
+      BrigType16_t const expType = HSAIL_ASM::getOperandType(
+          inst, m_opndList.size(), brigantine.getMachineModel(),
+          brigantine.getProfile());
+      list.push_back(brigantine.createImmed(MO.getImm(), expType));
+    }
   }
   m_opndList.push_back(brigantine.createOperandList(list));
 }
@@ -1594,27 +1597,27 @@ void BRIGAsmPrinter::BrigEmitImageInst(const MachineInstr *MI,
   unsigned opCnt = 0;
 
   if (inst.geometry() == BRIG_GEOMETRY_2DDEPTH ||
-      inst.geometry() == BRIG_GEOMETRY_2DADEPTH)
-  {
+      inst.geometry() == BRIG_GEOMETRY_2DADEPTH) {
     BrigEmitOperand(MI, opCnt++, inst);
   } else {
     BrigEmitVecOperand(MI, opCnt, 4, inst);
-    opCnt+=4;
+    opCnt += 4;
   }
 
-    switch(inst.opcode()) {
-    case BRIG_OPCODE_RDIMAGE:
-      BrigEmitOperand(MI, opCnt++, inst);
-      BrigEmitOperand(MI, opCnt++, inst);
+  switch (inst.opcode()) {
+  case BRIG_OPCODE_RDIMAGE:
+    BrigEmitOperand(MI, opCnt++, inst);
+    BrigEmitOperand(MI, opCnt++, inst);
     break;
-    case BRIG_OPCODE_LDIMAGE:
-    case BRIG_OPCODE_STIMAGE:
-      BrigEmitOperand(MI, opCnt++, inst);
-      break;
-    default: ;
-    }
+  case BRIG_OPCODE_LDIMAGE:
+  case BRIG_OPCODE_STIMAGE:
+    BrigEmitOperand(MI, opCnt++, inst);
+    break;
+  default:
+    ;
+  }
 
-  switch(inst.geometry()) {
+  switch (inst.geometry()) {
   case BRIG_GEOMETRY_1D:
   case BRIG_GEOMETRY_1DB:
     BrigEmitOperand(MI, opCnt++, inst);
@@ -1622,12 +1625,14 @@ void BRIGAsmPrinter::BrigEmitImageInst(const MachineInstr *MI,
   case BRIG_GEOMETRY_1DA:
   case BRIG_GEOMETRY_2D:
   case BRIG_GEOMETRY_2DDEPTH:
-    BrigEmitVecOperand(MI, opCnt, 2, inst); opCnt += 2;
+    BrigEmitVecOperand(MI, opCnt, 2, inst);
+    opCnt += 2;
     break;
   case BRIG_GEOMETRY_2DA:
   case BRIG_GEOMETRY_2DADEPTH:
   case BRIG_GEOMETRY_3D:
-    BrigEmitVecOperand(MI, opCnt, 3, inst); opCnt += 3;
+    BrigEmitVecOperand(MI, opCnt, 3, inst);
+    opCnt += 3;
     break;
   }
 }
@@ -1664,11 +1669,10 @@ HSAIL_ASM::InstMod BRIGAsmPrinter::BrigEmitInstMod(const MachineInstr &MI,
   unsigned Opc = MI.getOpcode();
 
   inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
-  inst.modifier().ftz()
-    = TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
+  inst.modifier().ftz() =
+      TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
 
-  inst.round()
-    = TII->getNamedOperand(MI, HSAIL::OpName::round)->getImm();
+  inst.round() = TII->getNamedOperand(MI, HSAIL::OpName::round)->getImm();
 
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
                   inst);
@@ -1691,17 +1695,15 @@ HSAIL_ASM::InstCmp BRIGAsmPrinter::BrigEmitInstCmp(const MachineInstr &MI,
   HSAIL_ASM::InstCmp inst = brigantine.addInst<HSAIL_ASM::InstCmp>(BrigOpc);
   unsigned Opc = MI.getOpcode();
 
-  inst.compare()
-    = TII->getNamedOperand(MI, HSAIL::OpName::op)->getImm();
+  inst.compare() = TII->getNamedOperand(MI, HSAIL::OpName::op)->getImm();
 
-  inst.modifier().ftz()
-    = TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
+  inst.modifier().ftz() =
+      TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
 
-  inst.type()
-    = TII->getNamedOperand(MI, HSAIL::OpName::destTypedestLength)->getImm();
-  inst.sourceType()
-    = TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
-
+  inst.type() =
+      TII->getNamedOperand(MI, HSAIL::OpName::destTypedestLength)->getImm();
+  inst.sourceType() =
+      TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
 
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
                   inst);
@@ -1717,14 +1719,14 @@ HSAIL_ASM::InstCvt BRIGAsmPrinter::BrigEmitInstCvt(const MachineInstr &MI,
   HSAIL_ASM::InstCvt inst = brigantine.addInst<HSAIL_ASM::InstCvt>(BrigOpc);
   unsigned Opc = MI.getOpcode();
 
-  inst.type()
-    = TII->getNamedOperand(MI, HSAIL::OpName::destTypedestLength)->getImm();
-  inst.sourceType()
-    = TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
+  inst.type() =
+      TII->getNamedOperand(MI, HSAIL::OpName::destTypedestLength)->getImm();
+  inst.sourceType() =
+      TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
 
   // XXX - sourceType, destTypedestLength - These names are awful
-  inst.modifier().ftz()
-    = TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
+  inst.modifier().ftz() =
+      TII->getNamedOperand(MI, HSAIL::OpName::ftz)->getImm();
   inst.round() = TII->getNamedOperand(MI, HSAIL::OpName::round)->getImm();
 
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
@@ -1737,14 +1739,14 @@ HSAIL_ASM::InstCvt BRIGAsmPrinter::BrigEmitInstCvt(const MachineInstr &MI,
 HSAIL_ASM::InstSourceType
 BRIGAsmPrinter::BrigEmitInstSourceType(const MachineInstr &MI,
                                        unsigned BrigOpc) {
-  HSAIL_ASM::InstSourceType inst
-    = brigantine.addInst<HSAIL_ASM::InstSourceType>(BrigOpc);
+  HSAIL_ASM::InstSourceType inst =
+      brigantine.addInst<HSAIL_ASM::InstSourceType>(BrigOpc);
 
   unsigned Opc = MI.getOpcode();
 
   inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
-  inst.sourceType()
-    = TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
+  inst.sourceType() =
+      TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
 
   BrigEmitOperand(&MI, HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest),
                   inst);
@@ -1773,11 +1775,10 @@ HSAIL_ASM::InstLane BRIGAsmPrinter::BrigEmitInstLane(const MachineInstr &MI,
   unsigned Opc = MI.getOpcode();
 
   inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength)->getImm();
-  inst.sourceType()
-    = TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
+  inst.sourceType() =
+      TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
 
-  inst.width()
-    = TII->getNamedOperand(MI, HSAIL::OpName::width)->getImm();
+  inst.width() = TII->getNamedOperand(MI, HSAIL::OpName::width)->getImm();
 
   int DestIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest);
   if (DestIdx != -1) {
@@ -1832,7 +1833,7 @@ HSAIL_ASM::InstBr BRIGAsmPrinter::BrigEmitInstBr(const MachineInstr &MI,
 }
 
 HSAIL_ASM::InstSeg BRIGAsmPrinter::BrigEmitInstSeg(const MachineInstr &MI,
-                                                  unsigned BrigOpc) {
+                                                   unsigned BrigOpc) {
   HSAIL_ASM::InstSeg inst = brigantine.addInst<HSAIL_ASM::InstSeg>(BrigOpc);
   unsigned Opc = MI.getOpcode();
 
@@ -1850,19 +1851,21 @@ HSAIL_ASM::InstSeg BRIGAsmPrinter::BrigEmitInstSeg(const MachineInstr &MI,
 
 HSAIL_ASM::InstSegCvt BRIGAsmPrinter::BrigEmitInstSegCvt(const MachineInstr &MI,
                                                          unsigned BrigOpc) {
-  HSAIL_ASM::InstSegCvt inst = brigantine.addInst<HSAIL_ASM::InstSegCvt>(BrigOpc);
+  HSAIL_ASM::InstSegCvt inst =
+      brigantine.addInst<HSAIL_ASM::InstSegCvt>(BrigOpc);
   unsigned Opc = MI.getOpcode();
 
-  inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::destTypedestLength)->getImm();
+  inst.type() =
+      TII->getNamedOperand(MI, HSAIL::OpName::destTypedestLength)->getImm();
 
-  inst.sourceType()
-    = TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
+  inst.sourceType() =
+      TII->getNamedOperand(MI, HSAIL::OpName::sourceType)->getImm();
 
   unsigned Segment = TII->getNamedOperand(MI, HSAIL::OpName::segment)->getImm();
   inst.segment() = getHSAILSegment(Segment);
 
-  inst.modifier().isNoNull()
-    = TII->getNamedOperand(MI, HSAIL::OpName::nonull)->getImm();
+  inst.modifier().isNoNull() =
+      TII->getNamedOperand(MI, HSAIL::OpName::nonull)->getImm();
 
   int DestIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::dest);
   BrigEmitOperand(&MI, DestIdx, inst);
@@ -1875,14 +1878,14 @@ HSAIL_ASM::InstSegCvt BRIGAsmPrinter::BrigEmitInstSegCvt(const MachineInstr &MI,
 
 HSAIL_ASM::InstMemFence
 BRIGAsmPrinter::BrigEmitInstMemFence(const MachineInstr &MI, unsigned BrigOpc) {
-  HSAIL_ASM::InstMemFence inst
-    = brigantine.addInst<HSAIL_ASM::InstMemFence>(BrigOpc, BRIG_TYPE_NONE);
+  HSAIL_ASM::InstMemFence inst =
+      brigantine.addInst<HSAIL_ASM::InstMemFence>(BrigOpc, BRIG_TYPE_NONE);
 
   // FIXME: libHSAIL seems to not have been updated for change to remove
   // separate segment scope modifiers.
   inst.memoryOrder() = TII->getNamedModifierOperand(MI, HSAIL::OpName::order);
-  inst.globalSegmentMemoryScope()
-    = TII->getNamedModifierOperand(MI, HSAIL::OpName::scope);
+  inst.globalSegmentMemoryScope() =
+      TII->getNamedModifierOperand(MI, HSAIL::OpName::scope);
   inst.groupSegmentMemoryScope() = inst.globalSegmentMemoryScope();
   inst.imageSegmentMemoryScope() = BRIG_MEMORY_SCOPE_NONE;
 
@@ -1968,10 +1971,12 @@ HSAIL_ASM::InstMem BRIGAsmPrinter::BrigEmitInstMem(const MachineInstr &MI,
   inst.equivClass() = 0;
 
   // FIXME: These operands should always be present.
-  if (const MachineOperand *Mask = TII->getNamedOperand(MI, HSAIL::OpName::mask))
+  if (const MachineOperand *Mask =
+          TII->getNamedOperand(MI, HSAIL::OpName::mask))
     inst.modifier().isConst() = Mask->getImm() & BRIG_MEMORY_CONST;
 
-  if (const MachineOperand *Width = TII->getNamedOperand(MI, HSAIL::OpName::width))
+  if (const MachineOperand *Width =
+          TII->getNamedOperand(MI, HSAIL::OpName::width))
     inst.width() = Width->getImm();
   else
     inst.width() = BRIG_WIDTH_NONE;
@@ -1988,7 +1993,8 @@ HSAIL_ASM::InstMem BRIGAsmPrinter::BrigEmitInstMem(const MachineInstr &MI,
 
 HSAIL_ASM::InstAtomic BRIGAsmPrinter::BrigEmitInstAtomic(const MachineInstr &MI,
                                                          unsigned BrigOpc) {
-  HSAIL_ASM::InstAtomic inst = brigantine.addInst<HSAIL_ASM::InstAtomic>(BrigOpc);
+  HSAIL_ASM::InstAtomic inst =
+      brigantine.addInst<HSAIL_ASM::InstAtomic>(BrigOpc);
   unsigned Opc = MI.getOpcode();
 
   unsigned Segment = TII->getNamedOperand(MI, HSAIL::OpName::segment)->getImm();
@@ -2022,13 +2028,14 @@ HSAIL_ASM::InstImage BRIGAsmPrinter::BrigEmitInstImage(const MachineInstr &MI,
   HSAIL_ASM::InstImage inst = brigantine.addInst<HSAIL_ASM::InstImage>(BrigOpc);
   unsigned Opc = MI.getOpcode();
 
-  inst.imageType() = TII->getNamedOperand(MI, HSAIL::OpName::imageType)->getImm();
-  inst.coordType() = TII->getNamedOperand(MI, HSAIL::OpName::coordType)->getImm();
+  inst.imageType() =
+      TII->getNamedOperand(MI, HSAIL::OpName::imageType)->getImm();
+  inst.coordType() =
+      TII->getNamedOperand(MI, HSAIL::OpName::coordType)->getImm();
   inst.geometry() = TII->getNamedOperand(MI, HSAIL::OpName::geometry)->getImm();
   inst.equivClass() = TII->getNamedOperand(MI, HSAIL::OpName::equiv)->getImm();
 
   inst.type() = TII->getNamedOperand(MI, HSAIL::OpName::destType)->getImm();
-
 
   int DestRIdx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::destR);
   if (DestRIdx != -1) {
@@ -2073,8 +2080,8 @@ HSAIL_ASM::InstAddr BRIGAsmPrinter::BrigEmitInstAddr(const MachineInstr &MI,
 bool BRIGAsmPrinter::usesGCNAtomicCounter(void) {
   // TODO_HSA: This introduces another pass over all the instrs in the
   // kernel. Need to find a more efficient way to get this info.
-  for (MachineFunction::const_iterator I = MF->begin(), E = MF->end();
-       I != E; ++I) {
+  for (MachineFunction::const_iterator I = MF->begin(), E = MF->end(); I != E;
+       ++I) {
     for (MachineBasicBlock::const_iterator II = I->begin(), IE = I->end();
          II != IE; ++II) {
       switch (II->getOpcode()) {

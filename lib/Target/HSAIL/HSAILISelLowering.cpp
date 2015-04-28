@@ -38,8 +38,8 @@
 using namespace llvm;
 using namespace dwarf;
 
-HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
-  TargetLowering(TM) {
+HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM)
+    : TargetLowering(TM) {
   // HSAIL uses a -1 to store a Boolean value as an int. For example,
   // see the return values of the cmp instructions. This also requires
   // that we never use a cvt instruction for converting a Boolean to a
@@ -58,7 +58,7 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   addRegisterClass(MVT::i64, &HSAIL::GPR64RegClass);
   addRegisterClass(MVT::f32, &HSAIL::GPR32RegClass);
   addRegisterClass(MVT::f64, &HSAIL::GPR64RegClass);
-  addRegisterClass(MVT::i1,  &HSAIL::CRRegClass);
+  addRegisterClass(MVT::i1, &HSAIL::CRRegClass);
 
   setOperationAction(ISD::FRINT, MVT::f32, Legal);
   setOperationAction(ISD::FRINT, MVT::f64, Legal);
@@ -214,7 +214,7 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   setTruncStoreAction(MVT::i64, MVT::v16i8, Expand);
 
   setOperationAction(ISD::STORE, MVT::i1, Custom);
-  setOperationAction(ISD::LOAD,  MVT::i1, Custom);
+  setOperationAction(ISD::LOAD, MVT::i1, Custom);
 
   setOperationAction(ISD::ATOMIC_LOAD, MVT::i32, Custom);
   setOperationAction(ISD::ATOMIC_LOAD, MVT::i64, Custom);
@@ -227,10 +227,10 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
   setSelectIsExpensive(true);
   setPow2SDivIsCheap(false);
   setPrefLoopAlignment(0);
-  setSchedulingPreference((CodeGenOpt::None == TM.getOptLevel()) ?
-    Sched::Source : Sched::ILP);
+  setSchedulingPreference((CodeGenOpt::None == TM.getOptLevel()) ? Sched::Source
+                                                                 : Sched::ILP);
 #ifdef _DEBUG
-  const char* pScheduler = std::getenv("AMD_DEBUG_HSAIL_PRE_RA_SCHEDULER");
+  const char *pScheduler = std::getenv("AMD_DEBUG_HSAIL_PRE_RA_SCHEDULER");
   if (pScheduler) {
     if (strcmp(pScheduler, "ilp") == 0) {
       printf("Overriding pre-RA scheduler with %s\n", pScheduler);
@@ -246,9 +246,9 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM) :
 #endif
 
   computeRegisterProperties();
-  MaxStoresPerMemcpy  = 4096;
+  MaxStoresPerMemcpy = 4096;
   MaxStoresPerMemmove = 4096;
-  MaxStoresPerMemset  = 4096;
+  MaxStoresPerMemset = 4096;
 }
 
 HSAILTargetLowering::~HSAILTargetLowering() {}
@@ -258,9 +258,8 @@ HSAILTargetLowering::~HSAILTargetLowering() {}
 /// the condition operand of SELECT and BRCOND nodes.  In the case of
 /// BRCOND the argument passed is MVT::Other since there are no other
 /// operands to get a type hint from.
-EVT
-HSAILTargetLowering::getSetCCResultType(LLVMContext &Context, EVT VT) const
-{
+EVT HSAILTargetLowering::getSetCCResultType(LLVMContext &Context,
+                                            EVT VT) const {
   return MVT::i1;
 }
 
@@ -268,8 +267,7 @@ HSAILTargetLowering::getSetCCResultType(LLVMContext &Context, EVT VT) const
 /// different scheduling heuristics for different nodes. This function returns
 /// the preference (or none) for the given node.
 Sched::Preference
-HSAILTargetLowering::getSchedulingPreference(SDNode *N) const
-{
+HSAILTargetLowering::getSchedulingPreference(SDNode *N) const {
   return TargetLowering::getSchedulingPreference(N);
 }
 /// getRepRegClassFor - Return the 'representative' register class for the
@@ -277,23 +275,22 @@ HSAILTargetLowering::getSchedulingPreference(SDNode *N) const
 /// legal super-reg register class for the register class of the value type.
 /// For example, on i386 the rep register class for i8, i16, and i32 are GR32;
 /// while the rep register class is GR64 on x86_64.
-const TargetRegisterClass*
-HSAILTargetLowering::getRepRegClassFor(MVT VT) const
-{
+const TargetRegisterClass *
+HSAILTargetLowering::getRepRegClassFor(MVT VT) const {
   switch (VT.SimpleTy) {
-    case MVT::i64:
-    case MVT::f64:
-      return &HSAIL::GPR64RegClass;
-    case MVT::i8:
-    case MVT::i16:
-    case MVT::i32:
-    case MVT::f32:
-      return &HSAIL::GPR32RegClass;
-    case MVT::i1:
-      return &HSAIL::CRRegClass;
-    default:
-      llvm_unreachable("Cannot find register class for value type");
-      break;
+  case MVT::i64:
+  case MVT::f64:
+    return &HSAIL::GPR64RegClass;
+  case MVT::i8:
+  case MVT::i16:
+  case MVT::i32:
+  case MVT::f32:
+    return &HSAIL::GPR32RegClass;
+  case MVT::i1:
+    return &HSAIL::CRRegClass;
+  default:
+    llvm_unreachable("Cannot find register class for value type");
+    break;
   }
   return NULL;
 }
@@ -309,21 +306,16 @@ uint8_t HSAILTargetLowering::getRepRegClassCostFor(MVT VT) const {
 /// intrinsic will need to map to a MemIntrinsicNode (touches memory). If
 /// this is the case, it returns true and store the intrinsic
 /// information into the IntrinsicInfo that was passed to the function.
-bool
-HSAILTargetLowering::getTgtMemIntrinsic(IntrinsicInfo &Info,
-                                        const CallInst &I,
-                                        unsigned Intrinsic) const
-{
+bool HSAILTargetLowering::getTgtMemIntrinsic(IntrinsicInfo &Info,
+                                             const CallInst &I,
+                                             unsigned Intrinsic) const {
   return false;
 }
 
 /// isFPImmLegal - Returns true if the target can instruction select the
 /// specified FP immediate natively. If false, the legalizer will materialize
 /// the FP immediate as a load from a constant pool.
-bool
-HSAILTargetLowering::isFPImmLegal(const APFloat &Imm,
-                                  EVT VT) const
-{
+bool HSAILTargetLowering::isFPImmLegal(const APFloat &Imm, EVT VT) const {
   // All floating point types are legal for 32bit and 64bit types.
   return (VT == EVT(MVT::f32) || VT == EVT(MVT::f64));
 }
@@ -331,9 +323,7 @@ HSAILTargetLowering::isFPImmLegal(const APFloat &Imm,
 /// getByValTypeAlignment - Return the desired alignment for ByVal aggregate
 /// function arguments in the caller parameter area.  This is the actual
 /// alignment, not its logarithm.
-unsigned
-HSAILTargetLowering::getByValTypeAlignment(Type *Ty) const
-{
+unsigned HSAILTargetLowering::getByValTypeAlignment(Type *Ty) const {
   return TargetLowering::getByValTypeAlignment(Ty);
 }
 
@@ -344,23 +334,20 @@ bool HSAILTargetLowering::allowsMisalignedMemoryAccesses(EVT,
   return true;
 }
 
-
 /// getJumpTableEncoding - Return the entry encoding for a jump table in the
 /// current function.  The returned value is a member of the
 /// MachineJumpTableInfo::JTEntryKind enum.
-unsigned
-HSAILTargetLowering::getJumpTableEncoding() const
-{
-    return MachineJumpTableInfo::EK_BlockAddress;
+unsigned HSAILTargetLowering::getJumpTableEncoding() const {
+  return MachineJumpTableInfo::EK_BlockAddress;
 }
 
 /// isOffsetFoldingLegal - Return true if folding a constant offset
 /// with the given GlobalAddress is legal.  It is frequently not legal in
 /// PIC relocation models.
-bool
-HSAILTargetLowering::isOffsetFoldingLegal(const GlobalAddressSDNode *GA) const
-{
-  // Micah: Since HSAIL does not support PIC now, we can always set this to true.
+bool HSAILTargetLowering::isOffsetFoldingLegal(
+    const GlobalAddressSDNode *GA) const {
+  // Micah: Since HSAIL does not support PIC now, we can always set this to
+  // true.
   return true;
 }
 
@@ -368,26 +355,21 @@ HSAILTargetLowering::isOffsetFoldingLegal(const GlobalAddressSDNode *GA) const
 /// targets that want to expose additional information about sign bits to the
 /// DAG Combiner.
 unsigned HSAILTargetLowering::ComputeNumSignBitsForTargetNode(
-  SDValue Op,
-  const SelectionDAG &DAG,
-  unsigned Depth) const {
+    SDValue Op, const SelectionDAG &DAG, unsigned Depth) const {
   return 1;
 }
 
 /// isGAPlusOffset - Returns true (and the GlobalValue and the offset) if the
 /// node is a GlobalAddress + offset.
-bool
-HSAILTargetLowering::isGAPlusOffset(SDNode *N,
-                                    const GlobalValue* &GA,
-                                    int64_t &Offset) const
-{
+bool HSAILTargetLowering::isGAPlusOffset(SDNode *N, const GlobalValue *&GA,
+                                         int64_t &Offset) const {
   bool res = TargetLowering::isGAPlusOffset(N, GA, Offset);
   return res;
 }
 
-static SDValue
-PerformBitalignCombine(SDNode *N, TargetLowering::DAGCombinerInfo &DCI, unsigned IID)
-{
+static SDValue PerformBitalignCombine(SDNode *N,
+                                      TargetLowering::DAGCombinerInfo &DCI,
+                                      unsigned IID) {
   assert(IID == HSAILIntrinsic::HSAIL_bitalign_b32 ||
          IID == HSAILIntrinsic::HSAIL_bytealign_b32);
   SDValue Opr0 = N->getOperand(1);
@@ -397,35 +379,40 @@ PerformBitalignCombine(SDNode *N, TargetLowering::DAGCombinerInfo &DCI, unsigned
   SelectionDAG &DAG = DCI.DAG;
   SDLoc dl = SDLoc(N);
   EVT VT = N->getValueType(0);
-  // fold bitalign_b32(x & c1, x & c1, c2) -> bitalign_b32(x, x, c2) & rotr(c1, c2)
+  // fold bitalign_b32(x & c1, x & c1, c2) -> bitalign_b32(x, x, c2) & rotr(c1,
+  // c2)
   if (SHR && (Opr0 == Opr1) && (Opr0.getOpcode() == ISD::AND)) {
-    if (ConstantSDNode *AndMask = dyn_cast<ConstantSDNode>(Opr0.getOperand(1))) {
+    if (ConstantSDNode *AndMask =
+            dyn_cast<ConstantSDNode>(Opr0.getOperand(1))) {
       uint64_t and_mask = AndMask->getZExtValue();
       uint64_t shr_val = SHR->getZExtValue() & 31U;
       if (IID == HSAILIntrinsic::HSAIL_bytealign_b32)
         shr_val = (shr_val & 3U) << 3U;
-      and_mask = ((and_mask >> shr_val) | (and_mask << (32U - shr_val))) & 0xffffffffu;
+      and_mask =
+          ((and_mask >> shr_val) | (and_mask << (32U - shr_val))) & 0xffffffffu;
       Opr0 = Opr0->getOperand(0);
       return DAG.getNode(ISD::AND, SDLoc(Opr1), Opr1.getValueType(),
-        DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
-          DAG.getConstant(IID, MVT::i32), Opr0, Opr0, Opr2),
-        DAG.getConstant(and_mask, MVT::i32));
+                         DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
+                                     DAG.getConstant(IID, MVT::i32), Opr0, Opr0,
+                                     Opr2),
+                         DAG.getConstant(and_mask, MVT::i32));
     }
   }
   // fold bitalign_b32(x, y, c) -> bytealign_b32(x, y, c/8) if c & 7 == 0
   if (SHR && (IID == HSAILIntrinsic::HSAIL_bitalign_b32)) {
-      uint64_t shr_val = SHR->getZExtValue() & 31U;
-      if ((shr_val & 7U) == 0)
-        return DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
-          DAG.getConstant(HSAILIntrinsic::HSAIL_bytealign_b32, MVT::i32),
-          Opr0, Opr1, DAG.getConstant(shr_val >> 3U, MVT::i32));
+    uint64_t shr_val = SHR->getZExtValue() & 31U;
+    if ((shr_val & 7U) == 0)
+      return DAG.getNode(
+          ISD::INTRINSIC_WO_CHAIN, dl, VT,
+          DAG.getConstant(HSAILIntrinsic::HSAIL_bytealign_b32, MVT::i32), Opr0,
+          Opr1, DAG.getConstant(shr_val >> 3U, MVT::i32));
   }
   return SDValue();
 }
 
 static SDValue
-PerformIntrinsic_Wo_ChainCombine(SDNode *N, TargetLowering::DAGCombinerInfo &DCI)
-{
+PerformIntrinsic_Wo_ChainCombine(SDNode *N,
+                                 TargetLowering::DAGCombinerInfo &DCI) {
   assert(N->getOpcode() == ISD::INTRINSIC_WO_CHAIN);
   unsigned IID = cast<ConstantSDNode>(N->getOperand(0))->getZExtValue();
   switch (IID) {
@@ -448,13 +435,13 @@ PerformIntrinsic_Wo_ChainCombine(SDNode *N, TargetLowering::DAGCombinerInfo &DCI
 ///
 /// In addition, methods provided by DAGCombinerInfo may be used to perform
 /// more complex transformations.
-SDValue
-HSAILTargetLowering::PerformDAGCombine(SDNode *N,
-                                       DAGCombinerInfo &DCI) const
-{
+SDValue HSAILTargetLowering::PerformDAGCombine(SDNode *N,
+                                               DAGCombinerInfo &DCI) const {
   switch (N->getOpcode()) {
-  case ISD::INTRINSIC_WO_CHAIN: return PerformIntrinsic_Wo_ChainCombine(N, DCI);
-  default: break;
+  case ISD::INTRINSIC_WO_CHAIN:
+    return PerformIntrinsic_Wo_ChainCombine(N, DCI);
+  default:
+    break;
   }
 
   return SDValue();
@@ -464,30 +451,23 @@ HSAILTargetLowering::PerformDAGCombine(SDNode *N,
 /// the specified value type and it is 'desirable' to use the type for the
 /// given node type. e.g. On x86 i16 is legal, but undesirable since i16
 /// instruction encodings are longer and some i16 instructions are slow.
-bool
-HSAILTargetLowering::isTypeDesirableForOp(unsigned Opc, EVT VT) const
-{
+bool HSAILTargetLowering::isTypeDesirableForOp(unsigned Opc, EVT VT) const {
   return TargetLowering::isTypeDesirableForOp(Opc, VT);
 }
 
 /// isDesirableToPromoteOp - Return true if it is profitable for dag combiner
 /// to transform a floating point op of specified opcode to a equivalent op of
 /// an integer type. e.g. f32 load -> i32 load can be profitable on ARM.
-bool
-HSAILTargetLowering::isDesirableToTransformToIntegerOp(unsigned Opc,
-                                                       EVT VT) const
-{
-    return (Opc == ISD::LOAD || Opc == ISD::STORE)
-        && (VT.getSimpleVT() == MVT::f32
-        || VT.getSimpleVT() == MVT::f64);
+bool HSAILTargetLowering::isDesirableToTransformToIntegerOp(unsigned Opc,
+                                                            EVT VT) const {
+  return (Opc == ISD::LOAD || Opc == ISD::STORE) &&
+         (VT.getSimpleVT() == MVT::f32 || VT.getSimpleVT() == MVT::f64);
 }
 
 /// IsDesirableToPromoteOp - This method query the target whether it is
 /// beneficial for dag combiner to promote the specified node. If true, it
 /// should return the desired promotion type by reference.
-bool
-HSAILTargetLowering::IsDesirableToPromoteOp(SDValue Op, EVT &PVT) const
-{
+bool HSAILTargetLowering::IsDesirableToPromoteOp(SDValue Op, EVT &PVT) const {
   return TargetLowering::IsDesirableToPromoteOp(Op, PVT);
 }
 
@@ -500,17 +480,18 @@ HSAILTargetLowering::IsDesirableToPromoteOp(SDValue Op, EVT &PVT) const
 /// This function returns alignment for n-th alement.
 
 // FIXME: It is probably not correct to use this.
-static unsigned getElementAlignment(const DataLayout *DL, Type *Ty, unsigned n) {
+static unsigned getElementAlignment(const DataLayout *DL, Type *Ty,
+                                    unsigned n) {
   if (Ty->isArrayTy()) // FIXME
     return getElementAlignment(DL, Ty->getArrayElementType(), 0);
 
   unsigned Alignment = DL->getABITypeAlignment(Ty);
   if (n && (Alignment > 1)) {
-    Type* EltTy = Ty->getScalarType();
+    Type *EltTy = Ty->getScalarType();
     unsigned ffs = 0;
-    while (((n >> ffs) & 1) == 0) ffs++;
-    Alignment = (DL->getABITypeAlignment(EltTy) * (1 << ffs)) &
-                (Alignment - 1);
+    while (((n >> ffs) & 1) == 0)
+      ffs++;
+    Alignment = (DL->getABITypeAlignment(EltTy) * (1 << ffs)) & (Alignment - 1);
   } else {
     if (OpaqueType OT = GetOpaqueType(Ty)) {
       if (IsImage(OT) || OT == Sampler)
@@ -525,14 +506,11 @@ static unsigned getElementAlignment(const DataLayout *DL, Type *Ty, unsigned n) 
 /// DAG. The implementation should return the resulting token chain
 /// value.
 SDValue
-HSAILTargetLowering::LowerReturn(SDValue Chain,
-                                 CallingConv::ID CallConv,
+HSAILTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv,
                                  bool isVarArg,
                                  const SmallVectorImpl<ISD::OutputArg> &Outs,
                                  const SmallVectorImpl<SDValue> &OutVals,
-                                 SDLoc dl,
-                                 SelectionDAG &DAG) const
-{
+                                 SDLoc dl, SelectionDAG &DAG) const {
   MachineFunction &MF = DAG.getMachineFunction();
   HSAILMachineFunctionInfo *FuncInfo = MF.getInfo<HSAILMachineFunctionInfo>();
   HSAILParamManager &PM = FuncInfo->getParamManager();
@@ -542,20 +520,22 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
   SmallVector<SDValue, 6> RetOps;
   RetOps.push_back(Chain);
 
-  Type *type  = funcType->getReturnType();
+  Type *type = funcType->getReturnType();
   if (!type->isVoidTy()) {
     Mangler Mang(getDataLayout());
-    SDValue RetVariable =  DAG.getTargetExternalSymbol(PM.getParamName(
-      PM.addReturnParam(type, PM.mangleArg(&Mang, F->getName()))),
-      getPointerTy(HSAILAS::ARG_ADDRESS));
+    SDValue RetVariable = DAG.getTargetExternalSymbol(
+        PM.getParamName(
+            PM.addReturnParam(type, PM.mangleArg(&Mang, F->getName()))),
+        getPointerTy(HSAILAS::ARG_ADDRESS));
 
     AAMDNodes MD; // FIXME: What is this for?
-    //Value *mdops[] = { const_cast<Function*>(F) };
-    //MDNode *MD = MDNode::get(F->getContext(), mdops);
+    // Value *mdops[] = { const_cast<Function*>(F) };
+    // MDNode *MD = MDNode::get(F->getContext(), mdops);
 
     unsigned ArgNo = 0;
     LowerArgument(Chain, SDValue(), false, NULL, &Outs, dl, DAG, &RetOps, ArgNo,
-                  type, HSAILAS::ARG_ADDRESS, NULL, RetVariable, &OutVals, false, MD);
+                  type, HSAILAS::ARG_ADDRESS, NULL, RetVariable, &OutVals,
+                  false, MD);
     Chain = DAG.getNode(ISD::TokenFactor, dl, MVT::Other, RetOps);
   }
 
@@ -573,17 +553,11 @@ HSAILTargetLowering::LowerReturn(SDValue Chain,
 /// glue it is used for inbound glue. Glue is produced as a last result and can
 /// be consumed at will of the caller. Offset operand is added to the offset
 /// value calculated from index.
-SDValue HSAILTargetLowering::getArgLoad(SelectionDAG &DAG,
-                                        SDLoc SL,
-                                        EVT ArgVT,
-                                        Type *Ty,
-                                        bool isSExt,
-                                        unsigned AddressSpace,
-                                        SDValue Chain,
-                                        SDValue Ptr,
-                                        SDValue InFlag,
-                                        unsigned Index,
-                                        bool IsRetArgLoad,
+SDValue HSAILTargetLowering::getArgLoad(SelectionDAG &DAG, SDLoc SL, EVT ArgVT,
+                                        Type *Ty, bool isSExt,
+                                        unsigned AddressSpace, SDValue Chain,
+                                        SDValue Ptr, SDValue InFlag,
+                                        unsigned Index, bool IsRetArgLoad,
                                         uint64_t Offset) const {
   Type *EltTy = Ty;
 
@@ -618,17 +592,12 @@ SDValue HSAILTargetLowering::getArgLoad(SelectionDAG &DAG,
     Width = BRIG_WIDTH_ALL;
   }
 
-  SDValue PtrOffs = DAG.getNode(ISD::ADD, SL, PtrVT, Ptr,
-                                DAG.getConstant(Offset, PtrVT));
+  SDValue PtrOffs =
+      DAG.getNode(ISD::ADD, SL, PtrVT, Ptr, DAG.getConstant(Offset, PtrVT));
 
-  const SDValue Ops[] = {
-    Chain,
-    PtrOffs,
-    DAG.getTargetConstant(Width, MVT::i32),
-    DAG.getTargetConstant(IsRetArgLoad, MVT::i1),
-    DAG.getTargetConstant(isSExt, MVT::i1),
-    InFlag
-  };
+  const SDValue Ops[] = {Chain, PtrOffs, DAG.getTargetConstant(Width, MVT::i32),
+                         DAG.getTargetConstant(IsRetArgLoad, MVT::i1),
+                         DAG.getTargetConstant(isSExt, MVT::i1), InFlag};
 
   ArrayRef<SDValue> OpsArr = makeArrayRef(Ops);
   if (!InFlag)
@@ -639,20 +608,16 @@ SDValue HSAILTargetLowering::getArgLoad(SelectionDAG &DAG,
 
   MachinePointerInfo PtrInfo(UndefValue::get(ArgPT), Offset);
 
-  SDValue Arg = DAG.getMemIntrinsicNode(HSAILISD::ARG_LD, SL, VTs,
-                                        OpsArr, MemVT, PtrInfo,
-                                        Align,
-                                        false, // isVolatile
-                                        true,  // ReadMem
-                                        false, // WriteMem
+  SDValue Arg = DAG.getMemIntrinsicNode(HSAILISD::ARG_LD, SL, VTs, OpsArr,
+                                        MemVT, PtrInfo, Align,
+                                        false,                 // isVolatile
+                                        true,                  // ReadMem
+                                        false,                 // WriteMem
                                         MemVT.getStoreSize()); // Size
 
   if (ArgVT == MVT::i1) {
-    const SDValue Ops[] = {
-      DAG.getNode(ISD::TRUNCATE, SL, MVT::i1, Arg),
-      Arg.getValue(1),
-      Arg.getValue(2)
-    };
+    const SDValue Ops[] = {DAG.getNode(ISD::TRUNCATE, SL, MVT::i1, Arg),
+                           Arg.getValue(1), Arg.getValue(2)};
 
     return DAG.getMergeValues(Ops, SL);
   }
@@ -660,20 +625,13 @@ SDValue HSAILTargetLowering::getArgLoad(SelectionDAG &DAG,
   return Arg;
 }
 
-SDValue HSAILTargetLowering::getArgStore(SelectionDAG &DAG, SDLoc SL,
-                                         EVT ArgVT,
-                                         Type *Ty,
-                                         unsigned AddressSpace,
-                                         SDValue Chain,
-                                         SDValue Ptr,
-                                         SDValue Value,
-                                         unsigned Index,
-                                         SDValue InFlag,
-                                         const AAMDNodes &AAInfo,
-                                         uint64_t Offset) const {
+SDValue HSAILTargetLowering::getArgStore(
+    SelectionDAG &DAG, SDLoc SL, EVT ArgVT, Type *Ty, unsigned AddressSpace,
+    SDValue Chain, SDValue Ptr, SDValue Value, unsigned Index, SDValue InFlag,
+    const AAMDNodes &AAInfo, uint64_t Offset) const {
 
   MachineFunction &MF = DAG.getMachineFunction();
-  Type* EltTy = Ty;
+  Type *EltTy = Ty;
   if (Ty->isArrayTy())
     EltTy = Ty->getArrayElementType();
   EltTy = EltTy->getScalarType();
@@ -690,9 +648,8 @@ SDValue HSAILTargetLowering::getArgStore(SelectionDAG &DAG, SDLoc SL,
     Value = DAG.getNode(ISD::ZERO_EXTEND, SL, MVT::i32, Value);
   }
 
-  SDValue PtrOffs = DAG.getNode(ISD::ADD, SL, PtrVT, Ptr,
-                                DAG.getConstant(Offset, PtrVT));
-
+  SDValue PtrOffs =
+      DAG.getNode(ISD::ADD, SL, PtrVT, Ptr, DAG.getConstant(Offset, PtrVT));
 
   unsigned Align = getElementAlignment(DL, Ty, Index);
   // TODO_HSA: Due to problems with RT alignment of vectors we have to
@@ -701,12 +658,7 @@ SDValue HSAILTargetLowering::getArgStore(SelectionDAG &DAG, SDLoc SL,
   if (AddressSpace == HSAILAS::KERNARG_ADDRESS)
     Align = DL->getABITypeAlignment(EltTy);
 
-  SDValue Ops[] = {
-    Chain,
-    Value,
-    PtrOffs,
-    InFlag
-  };
+  SDValue Ops[] = {Chain, Value, PtrOffs, InFlag};
 
   ArrayRef<SDValue> OpsArr = makeArrayRef(Ops);
   if (!InFlag)
@@ -715,8 +667,8 @@ SDValue HSAILTargetLowering::getArgStore(SelectionDAG &DAG, SDLoc SL,
   SDVTList VTs = DAG.getVTList(MVT::Other, MVT::Glue);
   MachinePointerInfo PtrInfo(UndefValue::get(ArgPT), Offset);
 
-  return DAG.getMemIntrinsicNode(HSAILISD::ARG_ST, SL, VTs, OpsArr,
-                                 MemVT, PtrInfo, Align,
+  return DAG.getMemIntrinsicNode(HSAILISD::ARG_ST, SL, VTs, OpsArr, MemVT,
+                                 PtrInfo, Align,
                                  false, // isVolatile
                                  false, // ReadMem
                                  true,  // WriteMem
@@ -733,22 +685,14 @@ SDValue HSAILTargetLowering::getArgStore(SelectionDAG &DAG, SDLoc SL,
 /// If InFlag gis present lue all operations.
 /// If ChainLink is true chain link all operations.
 /// Returns last operation value.
-SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
-                                           bool ChainLink,
-                                           const SmallVectorImpl<ISD::InputArg> *Ins,
-                                           const SmallVectorImpl<ISD::OutputArg> *Outs,
-                                           SDLoc dl,
-                                           SelectionDAG &DAG,
-                                           SmallVectorImpl<SDValue> *InVals,
-                                           unsigned &ArgNo,
-                                           Type *type,
-                                           unsigned AS,
-                                           const char *ParamName,
-                                           SDValue ParamPtr,
-                                           const SmallVectorImpl<SDValue> *OutVals,
-                                           bool isRetArgLoad,
-                                           const AAMDNodes & AAInfo,
-                                           uint64_t offset) const {
+SDValue HSAILTargetLowering::LowerArgument(
+    SDValue Chain, SDValue InFlag, bool ChainLink,
+    const SmallVectorImpl<ISD::InputArg> *Ins,
+    const SmallVectorImpl<ISD::OutputArg> *Outs, SDLoc dl, SelectionDAG &DAG,
+    SmallVectorImpl<SDValue> *InVals, unsigned &ArgNo, Type *type, unsigned AS,
+    const char *ParamName, SDValue ParamPtr,
+    const SmallVectorImpl<SDValue> *OutVals, bool isRetArgLoad,
+    const AAMDNodes &AAInfo, uint64_t offset) const {
   assert((Ins == NULL && Outs != NULL) || (Ins != NULL && Outs == NULL));
 
   Type *sType = type->getScalarType();
@@ -765,10 +709,11 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
   SDValue ArgValue;
 
   const VectorType *VecTy = dyn_cast<VectorType>(type);
-  const ArrayType  *ArrTy = dyn_cast<ArrayType>(type);
+  const ArrayType *ArrTy = dyn_cast<ArrayType>(type);
   if (VecTy || ArrTy) {
     // This assumes that char and short vector elements are unpacked in Ins.
-    unsigned num_elem = VecTy ? VecTy->getNumElements() : ArrTy->getNumElements();
+    unsigned num_elem =
+        VecTy ? VecTy->getNumElements() : ArrTy->getNumElements();
     for (unsigned i = 0; i < num_elem; ++i) {
       if (isLoad) {
         bool IsSExt = (*Ins)[ArgNo].Flags.isSExt();
@@ -776,8 +721,7 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
                               InFlag, i, isRetArgLoad, offset);
       } else {
         ArgValue = getArgStore(DAG, dl, argVT, type, AS, Chain, ParamPtr,
-                               (*OutVals)[ArgNo],
-                               i, InFlag, AAInfo, offset);
+                               (*OutVals)[ArgNo], i, InFlag, AAInfo, offset);
       }
 
       if (ChainLink)
@@ -799,10 +743,10 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
     for (unsigned i = 0; i < num_elem; ++i) {
       ArgValue = LowerArgument(Chain, InFlag, ChainLink, Ins, Outs, dl, DAG,
                                InVals, ArgNo, STy->getElementType(i), AS,
-                               ParamName, ParamPtr, OutVals, isRetArgLoad, AAInfo,
-                               offset + SL->getElementOffset(i));
+                               ParamName, ParamPtr, OutVals, isRetArgLoad,
+                               AAInfo, offset + SL->getElementOffset(i));
       if (ChainLink)
-        Chain  = ArgValue.getValue(isLoad ? 1 : 0);
+        Chain = ArgValue.getValue(isLoad ? 1 : 0);
 
       if (hasFlag)
         InFlag = ArgValue.getValue(isLoad ? 2 : 1);
@@ -814,18 +758,11 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
   if (isLoad) {
     bool IsSExt = (*Ins)[ArgNo].Flags.isSExt();
     ArgValue = getArgLoad(DAG, dl, argVT, type, IsSExt, AS, Chain, ParamPtr,
-                          InFlag,
-                          0,
-                          isRetArgLoad, offset);
-
+                          InFlag, 0, isRetArgLoad, offset);
 
   } else {
-    ArgValue = getArgStore(DAG, dl, argVT, type, AS,
-                           Chain,
-                           ParamPtr,
-                           (*OutVals)[ArgNo],
-                           0, InFlag,
-                           AAInfo, offset);
+    ArgValue = getArgStore(DAG, dl, argVT, type, AS, Chain, ParamPtr,
+                           (*OutVals)[ArgNo], 0, InFlag, AAInfo, offset);
   }
 
   if (InVals)
@@ -841,15 +778,10 @@ SDValue HSAILTargetLowering::LowerArgument(SDValue Chain, SDValue InFlag,
 /// with legal-type argument values, and return the resulting token
 /// chain value.
 ///
-SDValue
-HSAILTargetLowering::LowerFormalArguments(SDValue Chain,
-                                          CallingConv::ID CallConv,
-                                          bool isVarArg,
-                                          const SmallVectorImpl<ISD::InputArg> &Ins,
-                                          SDLoc dl,
-                                          SelectionDAG &DAG,
-                                          SmallVectorImpl<SDValue> &InVals) const
-{
+SDValue HSAILTargetLowering::LowerFormalArguments(
+    SDValue Chain, CallingConv::ID CallConv, bool isVarArg,
+    const SmallVectorImpl<ISD::InputArg> &Ins, SDLoc dl, SelectionDAG &DAG,
+    SmallVectorImpl<SDValue> &InVals) const {
   MachineFunction &MF = DAG.getMachineFunction();
   HSAILMachineFunctionInfo *FuncInfo = MF.getInfo<HSAILMachineFunctionInfo>();
   HSAILParamManager &PM = FuncInfo->getParamManager();
@@ -863,17 +795,17 @@ HSAILTargetLowering::LowerFormalArguments(SDValue Chain,
   // Map function param types to Ins.
   Function::const_arg_iterator AI = MF.getFunction()->arg_begin();
   Function::const_arg_iterator AE = MF.getFunction()->arg_end();
-  for(unsigned ArgNo = 0; AI != AE; ++AI) {
-    unsigned Param = PM.addArgumentParam(AS, *AI,
-                        HSAILParamManager::mangleArg(&Mang, AI->getName()));
-    const char* ParamName = PM.getParamName(Param);
+  for (unsigned ArgNo = 0; AI != AE; ++AI) {
+    unsigned Param = PM.addArgumentParam(
+        AS, *AI, HSAILParamManager::mangleArg(&Mang, AI->getName()));
+    const char *ParamName = PM.getParamName(Param);
     std::string md = (AI->getName() + ":" + ParamName + " ").str();
-    FuncInfo->addMetadata("argmap:"+ md, true);
+    FuncInfo->addMetadata("argmap:" + md, true);
     SDValue ParamPtr = DAG.getTargetExternalSymbol(ParamName, PtrTy);
 
     // FIXME: What is this for?
-    //Value *mdops[] = { const_cast<Argument*>(&(*AI)) };
-    //MDNode *ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
+    // Value *mdops[] = { const_cast<Argument*>(&(*AI)) };
+    // MDNode *ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
 
     LowerArgument(Chain, SDValue(), false, &Ins, NULL, dl, DAG, &InVals, ArgNo,
                   AI->getType(), AS, ParamName, ParamPtr, NULL);
@@ -900,18 +832,19 @@ static BrigType getParamBrigType(Type *Ty, const DataLayout &DL, bool IsSExt) {
 /// the resulting token chain value.
 
 SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
-                               SmallVectorImpl<SDValue> &InVals) const {
-  SelectionDAG &DAG                     = CLI.DAG;
-  SDLoc &dl                          = CLI.DL;
+                                       SmallVectorImpl<SDValue> &InVals) const {
+  SelectionDAG &DAG = CLI.DAG;
+  SDLoc &dl = CLI.DL;
   SmallVector<ISD::OutputArg, 32> &Outs = CLI.Outs;
-  SmallVector<SDValue, 32> &OutVals     = CLI.OutVals;
-  SmallVector<ISD::InputArg, 32> &Ins   = CLI.Ins;
-  SDValue Chain                         = CLI.Chain;
-  SDValue Callee                        = CLI.Callee;
+  SmallVector<SDValue, 32> &OutVals = CLI.OutVals;
+  SmallVector<ISD::InputArg, 32> &Ins = CLI.Ins;
+  SDValue Chain = CLI.Chain;
+  SDValue Callee = CLI.Callee;
   CLI.IsTailCall = false;
 
-  MachineFunction& MF = DAG.getMachineFunction();
-  HSAILParamManager &PM = MF.getInfo<HSAILMachineFunctionInfo>()->getParamManager();
+  MachineFunction &MF = DAG.getMachineFunction();
+  HSAILParamManager &PM =
+      MF.getInfo<HSAILMachineFunctionInfo>()->getParamManager();
   Mangler Mang(DL);
 
   Chain = DAG.getCALLSEQ_START(Chain, DAG.getIntPtrConstant(0, true), dl);
@@ -925,7 +858,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   // every direct call is) turn it into a TargetGlobalAddress/
   // TargetExternalSymbol
   // node so that legalize doesn't hack it.
-  if (GlobalAddressSDNode *G = dyn_cast<GlobalAddressSDNode>(Callee))  {
+  if (GlobalAddressSDNode *G = dyn_cast<GlobalAddressSDNode>(Callee)) {
     unsigned AS = G->getAddressSpace();
     const GlobalValue *GV = G->getGlobal();
     Callee = DAG.getTargetGlobalAddress(GV, dl, getPointerTy(AS));
@@ -938,7 +871,8 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     funcType = calleeFunc->getFunctionType();
     FuncName = GV->getName().data();
   } else
-    llvm_unreachable("Cannot lower call to a function which is not a global address");
+    llvm_unreachable(
+        "Cannot lower call to a function which is not a global address");
 
   assert(funcType != NULL);
 
@@ -950,9 +884,10 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   SDValue RetValue;
   if (!retType->isVoidTy()) {
     MVT PtrVT = getPointerTy(HSAILAS::ARG_ADDRESS);
-    RetValue = DAG.getTargetExternalSymbol(PM.getParamName(
-      PM.addCallRetParam(retType, PM.mangleArg(&Mang, FuncName))),
-      PtrVT);
+    RetValue = DAG.getTargetExternalSymbol(
+        PM.getParamName(
+            PM.addCallRetParam(retType, PM.mangleArg(&Mang, FuncName))),
+        PtrVT);
 
     unsigned NElts;
     Type *EmitTy = HSAIL::analyzeType(retType, NElts, *DL);
@@ -961,17 +896,13 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
     unsigned Align = HSAIL::getAlignTypeQualifier(retType, *DL, false);
 
-    const SDValue ArgDeclOps[] = {
-      RetValue,
-      DAG.getTargetConstant(BT, MVT::i32),
-      DAG.getTargetConstant(NElts, PtrVT),
-      DAG.getTargetConstant(Align, MVT::i32),
-      Chain,
-      InFlag
-    };
+    const SDValue ArgDeclOps[] = {RetValue, DAG.getTargetConstant(BT, MVT::i32),
+                                  DAG.getTargetConstant(NElts, PtrVT),
+                                  DAG.getTargetConstant(Align, MVT::i32), Chain,
+                                  InFlag};
 
-    SDNode *ArgDeclNode
-      = DAG.getMachineNode(HSAIL::ARG_DECL, dl, VTs, ArgDeclOps);
+    SDNode *ArgDeclNode =
+        DAG.getMachineNode(HSAIL::ARG_DECL, dl, VTs, ArgDeclOps);
 
     SDValue ArgDecl(ArgDeclNode, 0);
 
@@ -985,7 +916,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   VarOps.push_back(DAG.getTargetConstant(0, MVT::i32));
   unsigned FirstArg = VarOps.size();
 
-  unsigned int j=0, k=0;
+  unsigned int j = 0, k = 0;
   Function::const_arg_iterator ai;
   Function::const_arg_iterator ae;
   if (calleeFunc) {
@@ -996,8 +927,9 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   MVT ArgPtrVT = getPointerTy(HSAILAS::ARG_ADDRESS);
 
   MDBuilder MDB(*DAG.getContext());
-  for(FunctionType::param_iterator pb = funcType->param_begin(),
-    pe = funcType->param_end(); pb != pe; ++pb, ++ai, ++k) {
+  for (FunctionType::param_iterator pb = funcType->param_begin(),
+                                    pe = funcType->param_end();
+       pb != pe; ++pb, ++ai, ++k) {
     Type *type = *pb;
     EVT VT = Outs[j].VT;
 
@@ -1010,8 +942,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
       ParamName.append(itostr(k));
     }
     SDValue StParamValue = DAG.getTargetExternalSymbol(
-      PM.getParamName(PM.addCallArgParam(type, ParamName)),
-      ArgPtrVT);
+        PM.getParamName(PM.addCallArgParam(type, ParamName)), ArgPtrVT);
 
     unsigned NElts;
     Type *EmitTy = HSAIL::analyzeType(type, NElts, *DL);
@@ -1021,23 +952,19 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
     unsigned Align = HSAIL::getAlignTypeQualifier(type, *DL, false);
     const SDValue ArgDeclOps[] = {
-      StParamValue,
-      DAG.getTargetConstant(BT, MVT::i32),
-      DAG.getTargetConstant(NElts, ArgPtrVT),
-      DAG.getTargetConstant(Align, MVT::i32),
-      Chain,
-      InFlag
-    };
+        StParamValue, DAG.getTargetConstant(BT, MVT::i32),
+        DAG.getTargetConstant(NElts, ArgPtrVT),
+        DAG.getTargetConstant(Align, MVT::i32), Chain, InFlag};
 
-    SDNode *ArgDeclNode
-      = DAG.getMachineNode(HSAIL::ARG_DECL, dl, VTs, ArgDeclOps);
+    SDNode *ArgDeclNode =
+        DAG.getMachineNode(HSAIL::ARG_DECL, dl, VTs, ArgDeclOps);
     Chain = SDValue(ArgDeclNode, 0);
     InFlag = Chain.getValue(1);
 
     // END array parameter declaration
     VarOps.push_back(StParamValue);
 
-    for ( ; j < Outs.size() - 1; j++) {
+    for (; j < Outs.size() - 1; j++) {
       if (Outs[j].OrigArgIndex != Outs[j + 1].OrigArgIndex)
         break;
     }
@@ -1045,13 +972,14 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   }
 
   j = k = 0;
-  for(FunctionType::param_iterator pb = funcType->param_begin(),
-    pe = funcType->param_end(); pb != pe; ++pb, ++k) {
+  for (FunctionType::param_iterator pb = funcType->param_begin(),
+                                    pe = funcType->param_end();
+       pb != pe; ++pb, ++k) {
     Type *type = *pb;
     Chain = LowerArgument(Chain, InFlag, true, NULL, &Outs, dl, DAG, NULL, j,
                           type, HSAILAS::ARG_ADDRESS, NULL,
                           VarOps[FirstArg + k], &OutVals);
-      InFlag = Chain.getValue(1);
+    InFlag = Chain.getValue(1);
   }
 
   // If this is a direct call, pass the chain and the callee
@@ -1076,32 +1004,29 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   if (!Ins.empty()) {
     j = 0;
     Chain = LowerArgument(Chain, InFlag, true, &Ins, NULL, dl, DAG, &InVals, j,
-                          retType, HSAILAS::ARG_ADDRESS, NULL, RetValue, NULL, true);
+                          retType, HSAILAS::ARG_ADDRESS, NULL, RetValue, NULL,
+                          true);
     InFlag = Chain.getValue(2);
-    Chain  = Chain.getValue(1);
+    Chain = Chain.getValue(1);
   }
 
   // Create the CALLSEQ_END node
-  Chain = DAG.getCALLSEQ_END(Chain,
-                             DAG.getIntPtrConstant(0, true),
-                             DAG.getIntPtrConstant(0, true),
-                             InFlag, dl);
+  Chain = DAG.getCALLSEQ_END(Chain, DAG.getIntPtrConstant(0, true),
+                             DAG.getIntPtrConstant(0, true), InFlag, dl);
   return Chain;
 }
 
-#define LOWER(A) \
-  case ISD:: A: \
-  return Lower##A(Op, DAG)
+#define LOWER(A)                                                               \
+  case ISD::A:                                                                 \
+    return Lower##A(Op, DAG)
 
 /// LowerOperation - This callback is invoked for operations that are
 /// unsupported by the target, which are registered to use 'custom' lowering,
 /// and whose defined values are all legal.
 /// If the target has no operations that require custom lowering, it need not
 /// implement this.  The default implementation of this aborts.
-SDValue
-HSAILTargetLowering::LowerOperation(SDValue Op,
-                                    SelectionDAG &DAG) const
-{
+SDValue HSAILTargetLowering::LowerOperation(SDValue Op,
+                                            SelectionDAG &DAG) const {
   switch (Op.getOpcode()) {
     LOWER(INTRINSIC_WO_CHAIN);
     LOWER(INTRINSIC_W_CHAIN);
@@ -1117,7 +1042,7 @@ HSAILTargetLowering::LowerOperation(SDValue Op,
   default:
     Op.getNode()->dump();
     assert(0 && "Custom lowering code for this"
-           "instruction is not implemented yet!");
+                "instruction is not implemented yet!");
     break;
   }
   return Op;
@@ -1132,19 +1057,15 @@ HSAILTargetLowering::LowerOperation(SDValue Op,
 ///
 /// If the target has no operations that require custom lowering, it need not
 /// implement this.  The default implementation aborts.
-void
-HSAILTargetLowering::ReplaceNodeResults(SDNode *N,
-                                        SmallVectorImpl<SDValue> &Results,
-                                        SelectionDAG &DAG) const
-{
+void HSAILTargetLowering::ReplaceNodeResults(SDNode *N,
+                                             SmallVectorImpl<SDValue> &Results,
+                                             SelectionDAG &DAG) const {
   return TargetLowering::ReplaceNodeResults(N, Results, DAG);
 }
 
 /// getTargetNodeName() - This method returns the name of a target specific
 /// DAG node.
-const char*
-HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
-{
+const char *HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const {
   switch (Opcode) {
   default:
     llvm_unreachable("Unknown target-node");
@@ -1212,8 +1133,7 @@ HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const
 // Custom lowering methods
 //
 
-SDValue
-HSAILTargetLowering::LowerADD(SDValue Op, SelectionDAG &DAG) const {
+SDValue HSAILTargetLowering::LowerADD(SDValue Op, SelectionDAG &DAG) const {
   SDLoc dl = SDLoc(Op);
   EVT VT = Op.getValueType();
 
@@ -1222,11 +1142,12 @@ HSAILTargetLowering::LowerADD(SDValue Op, SelectionDAG &DAG) const {
   }
   const SDValue src = Op.getOperand(0).getOperand(0);
   EVT srcVT = src.getValueType();
-  if(Op.getOperand(0).getOpcode() != ISD::TRUNCATE) return Op;
+  if (Op.getOperand(0).getOpcode() != ISD::TRUNCATE)
+    return Op;
 
-  SDValue Zext = DAG.getNode(ISD::ZERO_EXTEND, dl, MVT::i32,Op.getOperand(1));
-  SDValue Zext1 = DAG.getNode(ISD::ZERO_EXTEND, dl, srcVT,Op.getOperand(0));
-  SDValue add_p = DAG.getNode(ISD::ADD, dl, srcVT,Zext1,Zext);
+  SDValue Zext = DAG.getNode(ISD::ZERO_EXTEND, dl, MVT::i32, Op.getOperand(1));
+  SDValue Zext1 = DAG.getNode(ISD::ZERO_EXTEND, dl, srcVT, Op.getOperand(0));
+  SDValue add_p = DAG.getNode(ISD::ADD, dl, srcVT, Zext1, Zext);
   SDValue Zext2 = DAG.getNode(ISD::TRUNCATE, dl, VT, add_p);
   return Zext2;
 }
@@ -1239,38 +1160,38 @@ static bool isRdimage(unsigned IntNo) {
   case HSAILIntrinsic::HSAIL_rd_imgi_1d_f32:
   case HSAILIntrinsic::HSAIL_rd_imgui_1d_s32:
   case HSAILIntrinsic::HSAIL_rd_imgui_1d_f32:
-    // read image 1d array
+  // read image 1d array
   case HSAILIntrinsic::HSAIL_rd_imgf_1da_s32:
   case HSAILIntrinsic::HSAIL_rd_imgf_1da_f32:
   case HSAILIntrinsic::HSAIL_rd_imgi_1da_s32:
   case HSAILIntrinsic::HSAIL_rd_imgi_1da_f32:
   case HSAILIntrinsic::HSAIL_rd_imgui_1da_s32:
   case HSAILIntrinsic::HSAIL_rd_imgui_1da_f32:
-    // read image 2d
+  // read image 2d
   case HSAILIntrinsic::HSAIL_rd_imgf_2d_s32:
   case HSAILIntrinsic::HSAIL_rd_imgf_2d_f32:
   case HSAILIntrinsic::HSAIL_rd_imgi_2d_s32:
   case HSAILIntrinsic::HSAIL_rd_imgi_2d_f32:
   case HSAILIntrinsic::HSAIL_rd_imgui_2d_s32:
   case HSAILIntrinsic::HSAIL_rd_imgui_2d_f32:
-    // read image 2d array
+  // read image 2d array
   case HSAILIntrinsic::HSAIL_rd_imgf_2da_s32:
   case HSAILIntrinsic::HSAIL_rd_imgf_2da_f32:
   case HSAILIntrinsic::HSAIL_rd_imgi_2da_s32:
   case HSAILIntrinsic::HSAIL_rd_imgi_2da_f32:
   case HSAILIntrinsic::HSAIL_rd_imgui_2da_s32:
   case HSAILIntrinsic::HSAIL_rd_imgui_2da_f32:
-    // read image 3d
+  // read image 3d
   case HSAILIntrinsic::HSAIL_rd_imgf_3d_s32:
   case HSAILIntrinsic::HSAIL_rd_imgf_3d_f32:
   case HSAILIntrinsic::HSAIL_rd_imgi_3d_s32:
   case HSAILIntrinsic::HSAIL_rd_imgi_3d_f32:
   case HSAILIntrinsic::HSAIL_rd_imgui_3d_s32:
   case HSAILIntrinsic::HSAIL_rd_imgui_3d_f32:
-    // read image 2d depth
+  // read image 2d depth
   case HSAILIntrinsic::HSAIL_rd_imgf_2ddepth_s32:
   case HSAILIntrinsic::HSAIL_rd_imgf_2ddepth_f32:
-    // read image 2d array depth
+  // read image 2d array depth
   case HSAILIntrinsic::HSAIL_rd_imgf_2dadepth_s32:
   case HSAILIntrinsic::HSAIL_rd_imgf_2dadepth_f32:
     return true;
@@ -1304,18 +1225,16 @@ SDValue HSAILTargetLowering::LowerLdKernargIntrinsic(SDValue Op,
 
     if (Param != UINT_MAX) {
       Addr = DAG.getTargetExternalSymbol(PM.getParamName(Param), PtrTy);
-      //Value *mdops[] = { const_cast<Argument*>(PM.getParamArg(param)) };
-      //ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
+      // Value *mdops[] = { const_cast<Argument*>(PM.getParamArg(param)) };
+      // ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
     } else {
       Addr = SDValue();
     }
   }
 
   SDValue Chain = DAG.getEntryNode();
-  return getArgLoad(DAG, SDLoc(Op), VT, Ty, false,
-                    HSAILAS::KERNARG_ADDRESS,
-                    Chain, Addr,
-                    SDValue(), 0, false, Offset);
+  return getArgLoad(DAG, SDLoc(Op), VT, Ty, false, HSAILAS::KERNARG_ADDRESS,
+                    Chain, Addr, SDValue(), 0, false, Offset);
 }
 
 SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
@@ -1370,170 +1289,168 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
     return DAG.getNode(HSAILISD::FRACT, SL, MVT::f64, Op.getOperand(1));
 
   case HSAILIntrinsic::HSAIL_copysign_f32:
-    return DAG.getNode(ISD::FCOPYSIGN, SL, MVT::f32,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(ISD::FCOPYSIGN, SL, MVT::f32, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_copysign_f64:
-    return DAG.getNode(ISD::FCOPYSIGN, SL, MVT::f64,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(ISD::FCOPYSIGN, SL, MVT::f64, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_min_f32:
-    return DAG.getNode(ISD::FMINNUM, SL, MVT::f32,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(ISD::FMINNUM, SL, MVT::f32, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_min_f64:
-    return DAG.getNode(ISD::FMINNUM, SL, MVT::f64,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(ISD::FMINNUM, SL, MVT::f64, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_max_f32:
-    return DAG.getNode(ISD::FMAXNUM, SL, MVT::f32,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(ISD::FMAXNUM, SL, MVT::f32, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_max_f64:
-    return DAG.getNode(ISD::FMAXNUM, SL, MVT::f64,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(ISD::FMAXNUM, SL, MVT::f64, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_fma_f32:
-    return DAG.getNode(ISD::FMA, SL, MVT::f32,
-                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(ISD::FMA, SL, MVT::f32, Op.getOperand(1),
+                       Op.getOperand(2), Op.getOperand(3));
 
   case HSAILIntrinsic::HSAIL_fma_f64:
-    return DAG.getNode(ISD::FMA, SL, MVT::f64,
-                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(ISD::FMA, SL, MVT::f64, Op.getOperand(1),
+                       Op.getOperand(2), Op.getOperand(3));
 
   case HSAILIntrinsic::HSAIL_popcount_u32_b32:
     return DAG.getNode(ISD::CTPOP, SL, MVT::i32, Op.getOperand(1));
 
   case HSAILIntrinsic::HSAIL_nfma_f32:
-    return DAG.getNode(HSAILISD::NFMA, SL, MVT::f32,
-                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::NFMA, SL, MVT::f32, Op.getOperand(1),
+                       Op.getOperand(2), Op.getOperand(3));
 
   case HSAILIntrinsic::HSAIL_nfma_f64:
-    return DAG.getNode(HSAILISD::NFMA, SL, MVT::f64,
-                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::NFMA, SL, MVT::f64, Op.getOperand(1),
+                       Op.getOperand(2), Op.getOperand(3));
 
   case HSAILIntrinsic::HSAIL_bitselect_u32:
-    return DAG.getNode(HSAILISD::BITSELECT, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::BITSELECT, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2), Op.getOperand(3));
 
   case HSAILIntrinsic::HSAIL_bitselect_u64:
-    return DAG.getNode(HSAILISD::BITSELECT, SL, MVT::i64,
-                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::BITSELECT, SL, MVT::i64, Op.getOperand(1),
+                       Op.getOperand(2), Op.getOperand(3));
 
   case HSAILIntrinsic::HSAIL_bfe:
-    return DAG.getNode(HSAILISD::UBITEXTRACT, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::UBITEXTRACT, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2), Op.getOperand(3));
 
   case HSAILIntrinsic::HSAIL_ibfe:
-    return DAG.getNode(HSAILISD::SBITEXTRACT, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::SBITEXTRACT, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2), Op.getOperand(3));
 
-    // FIXME: There should be LLVM intrinsics for mulhs / mulhu.
+  // FIXME: There should be LLVM intrinsics for mulhs / mulhu.
   case HSAILIntrinsic::HSAIL_mulhi_s32:
-    return DAG.getNode(ISD::MULHS, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(ISD::MULHS, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_mulhi_s64:
-    return DAG.getNode(ISD::MULHS, SL, MVT::i64,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(ISD::MULHS, SL, MVT::i64, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_mulhi_u32:
-    return DAG.getNode(ISD::MULHU, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(ISD::MULHU, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_mulhi_u64:
-    return DAG.getNode(ISD::MULHU, SL, MVT::i64,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(ISD::MULHU, SL, MVT::i64, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_mad_u64:
-    return DAG.getNode(HSAILISD::UMAD, SL, MVT::i64,
-                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::UMAD, SL, MVT::i64, Op.getOperand(1),
+                       Op.getOperand(2), Op.getOperand(3));
 
   case HSAILIntrinsic::HSAIL_mad_u32:
-    return DAG.getNode(HSAILISD::UMAD, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::UMAD, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2), Op.getOperand(3));
 
   case HSAILIntrinsic::HSAIL_max_s32:
-    return DAG.getNode(HSAILISD::SMAX, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(HSAILISD::SMAX, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_max_u32:
-    return DAG.getNode(HSAILISD::UMAX, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(HSAILISD::UMAX, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_min_s32:
-    return DAG.getNode(HSAILISD::SMIN, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(HSAILISD::SMIN, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_min_u32:
-    return DAG.getNode(HSAILISD::UMIN, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(HSAILISD::UMIN, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_max_s64:
-    return DAG.getNode(HSAILISD::SMAX, SL, MVT::i64,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(HSAILISD::SMAX, SL, MVT::i64, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_max_u64:
-    return DAG.getNode(HSAILISD::UMAX, SL, MVT::i64,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(HSAILISD::UMAX, SL, MVT::i64, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_min_s64:
-    return DAG.getNode(HSAILISD::SMIN, SL, MVT::i64,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(HSAILISD::SMIN, SL, MVT::i64, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_min_u64:
-    return DAG.getNode(HSAILISD::UMIN, SL, MVT::i64,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(HSAILISD::UMIN, SL, MVT::i64, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_mul24_s32:
-    return DAG.getNode(HSAILISD::SMUL24, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(HSAILISD::SMUL24, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_mul24_u32:
-    return DAG.getNode(HSAILISD::UMUL24, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(HSAILISD::UMUL24, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_mad24_s32:
-    return DAG.getNode(HSAILISD::SMAD24, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::SMAD24, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2), Op.getOperand(3));
 
   case HSAILIntrinsic::HSAIL_mad24_u32:
-    return DAG.getNode(HSAILISD::UMAD24, SL, MVT::i32,
-                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::UMAD24, SL, MVT::i32, Op.getOperand(1),
+                       Op.getOperand(2), Op.getOperand(3));
 
   case HSAILIntrinsic::HSAIL_gcn_fldexp_f32:
-    return DAG.getNode(HSAILISD::FLDEXP, SL, MVT::f32,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(HSAILISD::FLDEXP, SL, MVT::f32, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_gcn_fldexp_f64:
-    return DAG.getNode(HSAILISD::FLDEXP, SL, MVT::f64,
-                       Op.getOperand(1), Op.getOperand(2));
+    return DAG.getNode(HSAILISD::FLDEXP, SL, MVT::f64, Op.getOperand(1),
+                       Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_class_f32:
   case HSAILIntrinsic::HSAIL_class_f64: {
     // FIXME: The intrinsic should be i1 to begin with.
-    SDValue Class = DAG.getNode(HSAILISD::CLASS, SL, MVT::i1,
-                                Op.getOperand(1), Op.getOperand(2));
+    SDValue Class = DAG.getNode(HSAILISD::CLASS, SL, MVT::i1, Op.getOperand(1),
+                                Op.getOperand(2));
     return DAG.getNode(ISD::SIGN_EXTEND, SL, MVT::i32, Class);
   }
 
   case HSAILIntrinsic::HSAIL_segmentp_global: {
     return DAG.getNode(HSAILISD::SEGMENTP, SL, MVT::i1,
                        DAG.getTargetConstant(HSAILAS::GLOBAL_ADDRESS, MVT::i32),
-                       DAG.getTargetConstant(0, MVT::i1),
-                       Op.getOperand(1));
+                       DAG.getTargetConstant(0, MVT::i1), Op.getOperand(1));
   }
   case HSAILIntrinsic::HSAIL_segmentp_local: {
     return DAG.getNode(HSAILISD::SEGMENTP, SL, MVT::i1,
                        DAG.getTargetConstant(HSAILAS::GROUP_ADDRESS, MVT::i32),
-                       DAG.getTargetConstant(0, MVT::i1),
-                       Op.getOperand(1));
+                       DAG.getTargetConstant(0, MVT::i1), Op.getOperand(1));
   }
   case HSAILIntrinsic::HSAIL_segmentp_private: {
-    return DAG.getNode(HSAILISD::SEGMENTP, SL, MVT::i1,
-                       DAG.getTargetConstant(HSAILAS::PRIVATE_ADDRESS, MVT::i32),
-                       DAG.getTargetConstant(0, MVT::i1),
-                       Op.getOperand(1));
+    return DAG.getNode(
+        HSAILISD::SEGMENTP, SL, MVT::i1,
+        DAG.getTargetConstant(HSAILAS::PRIVATE_ADDRESS, MVT::i32),
+        DAG.getTargetConstant(0, MVT::i1), Op.getOperand(1));
   }
   case HSAILIntrinsic::HSAIL_ld_kernarg_u32:
   case HSAILIntrinsic::HSAIL_ld_kernarg_u64: {
@@ -1557,12 +1474,12 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
 
     const SDValue Ops[] = {
-      Op.getOperand(0), // Chain
-      DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32), // width
-      Op.getOperand(2), // src0
-      Op.getOperand(3), // src1
-      Op.getOperand(4), // src2
-      Op.getOperand(5)  // src3
+        Op.getOperand(0),                              // Chain
+        DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32), // width
+        Op.getOperand(2),                              // src0
+        Op.getOperand(3),                              // src1
+        Op.getOperand(4),                              // src2
+        Op.getOperand(5)                               // src3
     };
 
     return DAG.getNode(HSAILISD::ACTIVELANEPERMUTE, SL, VTs, Ops);
@@ -1572,12 +1489,12 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     SDVTList VTs = DAG.getVTList(MVT::i64, MVT::Other);
 
     const SDValue Ops[] = {
-      Op.getOperand(0), // Chain
-      DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32), // width
-      Op.getOperand(2), // src0
-      Op.getOperand(3), // src1
-      Op.getOperand(4), // src2
-      Op.getOperand(5)  // src3
+        Op.getOperand(0),                              // Chain
+        DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32), // width
+        Op.getOperand(2),                              // src0
+        Op.getOperand(3),                              // src1
+        Op.getOperand(4),                              // src2
+        Op.getOperand(5)                               // src3
     };
 
     return DAG.getNode(HSAILISD::ACTIVELANEPERMUTE, SL, VTs, Ops);
@@ -1587,12 +1504,12 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
 
     const SDValue Ops[] = {
-      Op.getOperand(0), // Chain
-      DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32), // width
-      Op.getOperand(2), // src0
-      Op.getOperand(3), // src1
-      Op.getOperand(4), // src2
-      Op.getOperand(5)  // src3
+        Op.getOperand(0),                                     // Chain
+        DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32), // width
+        Op.getOperand(2),                                     // src0
+        Op.getOperand(3),                                     // src1
+        Op.getOperand(4),                                     // src2
+        Op.getOperand(5)                                      // src3
     };
 
     return DAG.getNode(HSAILISD::ACTIVELANEPERMUTE, SL, VTs, Ops);
@@ -1602,12 +1519,12 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     SDVTList VTs = DAG.getVTList(MVT::i64, MVT::Other);
 
     const SDValue Ops[] = {
-      Op.getOperand(0), // Chain
-      DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32), // width
-      Op.getOperand(2), // src0
-      Op.getOperand(3), // src1
-      Op.getOperand(4), // src2
-      Op.getOperand(5)  // src3
+        Op.getOperand(0),                                     // Chain
+        DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32), // width
+        Op.getOperand(2),                                     // src0
+        Op.getOperand(3),                                     // src1
+        Op.getOperand(4),                                     // src2
+        Op.getOperand(5)                                      // src3
     };
 
     return DAG.getNode(HSAILISD::ACTIVELANEPERMUTE, SL, VTs, Ops);
@@ -1617,8 +1534,8 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
 
     const SDValue Ops[] = {
-      Op.getOperand(0), // Chain
-      DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32) // width
+        Op.getOperand(0),                             // Chain
+        DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32) // width
     };
 
     return DAG.getNode(HSAILISD::ACTIVELANEID, SL, VTs, Ops);
@@ -1628,8 +1545,8 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
 
     const SDValue Ops[] = {
-      Op.getOperand(0), // Chain
-      DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32) // width
+        Op.getOperand(0),                                    // Chain
+        DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32) // width
     };
 
     return DAG.getNode(HSAILISD::ACTIVELANEID, SL, VTs, Ops);
@@ -1639,10 +1556,9 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
 
     const SDValue Ops[] = {
-      Op.getOperand(0), // Chain
-      DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32), // width
-      Op.getOperand(2)
-    };
+        Op.getOperand(0),                              // Chain
+        DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32), // width
+        Op.getOperand(2)};
 
     return DAG.getNode(HSAILISD::ACTIVELANECOUNT, SL, VTs, Ops);
   }
@@ -1651,30 +1567,27 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
 
     const SDValue Ops[] = {
-      Op.getOperand(0), // Chain
-      DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32), // width
-      Op.getOperand(2)
-    };
+        Op.getOperand(0),                                     // Chain
+        DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32), // width
+        Op.getOperand(2)};
 
     return DAG.getNode(HSAILISD::ACTIVELANECOUNT, SL, VTs, Ops);
   }
 
   case HSAILIntrinsic::HSAIL_activelanemask_v4_b64_b1: {
     const SDValue Ops[] = {
-      Op.getOperand(0), // Chain
-      DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32), // width
-      Op.getOperand(2)
-    };
+        Op.getOperand(0),                              // Chain
+        DAG.getTargetConstant(BRIG_WIDTH_1, MVT::i32), // width
+        Op.getOperand(2)};
 
     return DAG.getNode(HSAILISD::ACTIVELANEMASK, SL, Op->getVTList(), Ops);
   }
 
   case HSAILIntrinsic::HSAIL_activelanemask_v4_width_b64_b1: {
     const SDValue Ops[] = {
-      Op.getOperand(0), // Chain
-      DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32), // width
-      Op.getOperand(2)
-    };
+        Op.getOperand(0),                                     // Chain
+        DAG.getTargetConstant(BRIG_WIDTH_WAVESIZE, MVT::i32), // width
+        Op.getOperand(2)};
 
     return DAG.getNode(HSAILISD::ACTIVELANEMASK, SL, Op->getVTList(), Ops);
   }
@@ -1694,22 +1607,24 @@ HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
 
   // The sampler operand is an initializer if it is constant and less than
   // IMAGE_ARG_BIAS.
-  if (!isa<ConstantSDNode>(sampler)) return Op;
+  if (!isa<ConstantSDNode>(sampler))
+    return Op;
 
-    unsigned samplerConstant = cast<ConstantSDNode>(sampler)->getZExtValue();
-  if (samplerConstant >= IMAGE_ARG_BIAS) return Op;
+  unsigned samplerConstant = cast<ConstantSDNode>(sampler)->getZExtValue();
+  if (samplerConstant >= IMAGE_ARG_BIAS)
+    return Op;
 
-      // This is a sampler initializer.
-      // Find or create sampler handle based on init val.
+  // This is a sampler initializer.
+  // Find or create sampler handle based on init val.
   unsigned samplerHandleIndex =
-        Subtarget->getImageHandles()->findOrCreateSamplerHandle(samplerConstant);
+      Subtarget->getImageHandles()->findOrCreateSamplerHandle(samplerConstant);
 
-      // Provided that this is simply int const we can assume it is not going to be
+  // Provided that this is simply int const we can assume it is not going to be
   // changed, so we use readonly segment for the sampler.
-      // According to OpenCL spec samplers cannot be modified, so that is safe for
-      // OpenCL. If we are going to support modifiable or non-OpenCL samplers most
-      // likely the whole support code will need change.
-      Subtarget->getImageHandles()->getSamplerHandle(samplerHandleIndex)->setRO();
+  // According to OpenCL spec samplers cannot be modified, so that is safe for
+  // OpenCL. If we are going to support modifiable or non-OpenCL samplers most
+  // likely the whole support code will need change.
+  Subtarget->getImageHandles()->getSamplerHandle(samplerHandleIndex)->setRO();
 
   SDValue ops[16];
   for (unsigned i = 0; i < Op.getNumOperands(); i++) {
@@ -1717,42 +1632,39 @@ HSAILTargetLowering::lowerSamplerInitializerOperand(SDValue Op,
   }
 
   // FIXME: Get correct address space pointer type.
-        SDValue Ops[] = {
-          DAG.getTargetConstant(samplerHandleIndex, MVT::i32),
-          DAG.getRegister(HSAIL::NoRegister, getPointerTy()),
-          DAG.getTargetConstant(0, MVT::i32),
-          DAG.getTargetConstant(BRIG_TYPE_SAMP, MVT::i32),
-          DAG.getTargetConstant(BRIG_WIDTH_ALL, MVT::i32),
-          DAG.getTargetConstant(1, MVT::i1), // Const
-          DAG.getEntryNode() // Chain
-        };
-        EVT VT = sampler.getValueType();
+  SDValue Ops[] = {
+      DAG.getTargetConstant(samplerHandleIndex, MVT::i32),
+      DAG.getRegister(HSAIL::NoRegister, getPointerTy()),
+      DAG.getTargetConstant(0, MVT::i32),
+      DAG.getTargetConstant(BRIG_TYPE_SAMP, MVT::i32),
+      DAG.getTargetConstant(BRIG_WIDTH_ALL, MVT::i32),
+      DAG.getTargetConstant(1, MVT::i1), // Const
+      DAG.getEntryNode()                 // Chain
+  };
+  EVT VT = sampler.getValueType();
 
-    // Don't use ptr32 since this is the readonly segment.
-        MachineSDNode *LDSamp = DAG
-          .getMachineNode(HSAIL::LD_SAMP, SDLoc(Op), VT, MVT::Other, Ops);
+  // Don't use ptr32 since this is the readonly segment.
+  MachineSDNode *LDSamp =
+      DAG.getMachineNode(HSAIL::LD_SAMP, SDLoc(Op), VT, MVT::Other, Ops);
 
-        MachineFunction &MF = DAG.getMachineFunction();
-        MachineSDNode::mmo_iterator MemOp = MF.allocateMemRefsArray(1);
-        unsigned size = VT.getStoreSize();
-        Type *PTy = VT.getTypeForEVT(*DAG.getContext());
-        PointerType *PT = PointerType::get(PTy, HSAILAS::READONLY_ADDRESS);
-        MachinePointerInfo MPtrInfo(UndefValue::get(PT),
-                                    size * samplerHandleIndex);
-        MemOp[0] = MF.getMachineMemOperand(MPtrInfo, MachineMemOperand::MOLoad,
-                                           size, size);
-        LDSamp->setMemRefs(MemOp, MemOp + 1);
+  MachineFunction &MF = DAG.getMachineFunction();
+  MachineSDNode::mmo_iterator MemOp = MF.allocateMemRefsArray(1);
+  unsigned size = VT.getStoreSize();
+  Type *PTy = VT.getTypeForEVT(*DAG.getContext());
+  PointerType *PT = PointerType::get(PTy, HSAILAS::READONLY_ADDRESS);
+  MachinePointerInfo MPtrInfo(UndefValue::get(PT), size * samplerHandleIndex);
+  MemOp[0] =
+      MF.getMachineMemOperand(MPtrInfo, MachineMemOperand::MOLoad, size, size);
+  LDSamp->setMemRefs(MemOp, MemOp + 1);
 
-        ops[SAMPLER_ARG] = SDValue(LDSamp, 0);
+  ops[SAMPLER_ARG] = SDValue(LDSamp, 0);
 
-      DAG.UpdateNodeOperands(Op.getNode(),
-                             makeArrayRef(ops, Op.getNumOperands()));
+  DAG.UpdateNodeOperands(Op.getNode(), makeArrayRef(ops, Op.getNumOperands()));
 
   return Op;
 }
 
-SDValue
-HSAILTargetLowering::LowerROTL(SDValue Op, SelectionDAG &DAG) const {
+SDValue HSAILTargetLowering::LowerROTL(SDValue Op, SelectionDAG &DAG) const {
   SDLoc dl = SDLoc(Op);
   EVT VT = Op.getValueType();
 
@@ -1761,17 +1673,15 @@ HSAILTargetLowering::LowerROTL(SDValue Op, SelectionDAG &DAG) const {
   }
   const SDValue src0 = Op.getOperand(0);
   const SDValue src1 = Op.getOperand(1);
-  const ConstantSDNode* shift = dyn_cast<ConstantSDNode>(src1);
-  return DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
-           DAG.getConstant(HSAILIntrinsic::HSAIL_bitalign_b32, MVT::i32),
-           src0, src0,
-           shift ?
-             DAG.getConstant(32 - (shift->getZExtValue() & 31), MVT::i32) :
-             DAG.getNode(ISD::SUB, dl, VT, DAG.getConstant(0, VT), src1));
+  const ConstantSDNode *shift = dyn_cast<ConstantSDNode>(src1);
+  return DAG.getNode(
+      ISD::INTRINSIC_WO_CHAIN, dl, VT,
+      DAG.getConstant(HSAILIntrinsic::HSAIL_bitalign_b32, MVT::i32), src0, src0,
+      shift ? DAG.getConstant(32 - (shift->getZExtValue() & 31), MVT::i32)
+            : DAG.getNode(ISD::SUB, dl, VT, DAG.getConstant(0, VT), src1));
 }
 
-SDValue
-HSAILTargetLowering::LowerROTR(SDValue Op, SelectionDAG &DAG) const {
+SDValue HSAILTargetLowering::LowerROTR(SDValue Op, SelectionDAG &DAG) const {
   SDLoc dl = SDLoc(Op);
   EVT VT = Op.getValueType();
 
@@ -1780,13 +1690,13 @@ HSAILTargetLowering::LowerROTR(SDValue Op, SelectionDAG &DAG) const {
   }
   const SDValue src0 = Op.getOperand(0);
   const SDValue src1 = Op.getOperand(1);
-  return DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
-           DAG.getConstant(HSAILIntrinsic::HSAIL_bitalign_b32, MVT::i32),
-           src0, src0, src1);
+  return DAG.getNode(
+      ISD::INTRINSIC_WO_CHAIN, dl, VT,
+      DAG.getConstant(HSAILIntrinsic::HSAIL_bitalign_b32, MVT::i32), src0, src0,
+      src1);
 }
 
-SDValue
-HSAILTargetLowering::LowerBSWAP(SDValue Op, SelectionDAG &DAG) const {
+SDValue HSAILTargetLowering::LowerBSWAP(SDValue Op, SelectionDAG &DAG) const {
   SDLoc dl = SDLoc(Op);
   EVT VT = Op.getValueType();
 
@@ -1794,19 +1704,21 @@ HSAILTargetLowering::LowerBSWAP(SDValue Op, SelectionDAG &DAG) const {
     return Op;
   }
   const SDValue src = Op.getOperand(0);
-  const SDValue opr0 = DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
-           DAG.getConstant(HSAILIntrinsic::HSAIL_bytealign_b32, MVT::i32),
-           src, src, DAG.getConstant(3, MVT::i32));
-  const SDValue opr1 = DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
-           DAG.getConstant(HSAILIntrinsic::HSAIL_bytealign_b32, MVT::i32),
-           src, src, DAG.getConstant(1, MVT::i32));
-  return DAG.getNode(ISD::INTRINSIC_WO_CHAIN, dl, VT,
-           DAG.getConstant(HSAILIntrinsic::HSAIL_bitselect_u32, MVT::i32),
-           DAG.getConstant(0x00ff00ff, VT), opr0, opr1);
+  const SDValue opr0 = DAG.getNode(
+      ISD::INTRINSIC_WO_CHAIN, dl, VT,
+      DAG.getConstant(HSAILIntrinsic::HSAIL_bytealign_b32, MVT::i32), src, src,
+      DAG.getConstant(3, MVT::i32));
+  const SDValue opr1 = DAG.getNode(
+      ISD::INTRINSIC_WO_CHAIN, dl, VT,
+      DAG.getConstant(HSAILIntrinsic::HSAIL_bytealign_b32, MVT::i32), src, src,
+      DAG.getConstant(1, MVT::i32));
+  return DAG.getNode(
+      ISD::INTRINSIC_WO_CHAIN, dl, VT,
+      DAG.getConstant(HSAILIntrinsic::HSAIL_bitselect_u32, MVT::i32),
+      DAG.getConstant(0x00ff00ff, VT), opr0, opr1);
 }
 
-SDValue
-HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
+SDValue HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
   SDLoc dl(Op);
 
   EVT VT = Op.getValueType();
@@ -1818,17 +1730,12 @@ HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
     // First, do 8 bit load into 32 bits with sign extension, then
     // truncate to 1 bit.
     LoadSDNode *LD = cast<LoadSDNode>(Op);
-    SDValue NewLD = DAG.getExtLoad(ISD::ZEXTLOAD, dl, MVT::i32,
-                                   LD->getChain(),
-                                   LD->getBasePtr(),
-                                   MVT::i8,
-                                   LD->getMemOperand());
+    SDValue NewLD =
+        DAG.getExtLoad(ISD::ZEXTLOAD, dl, MVT::i32, LD->getChain(),
+                       LD->getBasePtr(), MVT::i8, LD->getMemOperand());
 
     SDValue Result = DAG.getNode(ISD::TRUNCATE, dl, MVT::i1, NewLD);
-    SDValue Ops[] = {
-      Result,
-      NewLD.getValue(1)
-    };
+    SDValue Ops[] = {Result, NewLD.getValue(1)};
 
     return DAG.getMergeValues(Ops, dl);
   }
@@ -1837,7 +1744,8 @@ HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
   // do it because LLVM currently does not support Expand for EXTLOAD
   // with illegal types.
   // See "EXTLOAD should always be supported!" assert in LegalizeDAG.cpp.
-  if (VT.getSimpleVT() != MVT::i64) return Op;
+  if (VT.getSimpleVT() != MVT::i64)
+    return Op;
   ISD::LoadExtType extType = LD->getExtensionType();
 
   if (extType == ISD::SEXTLOAD && LD->hasNUsesOfValue(1, 0)) {
@@ -1845,15 +1753,17 @@ HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
     // In this case produce zext instead of sext. Note, that load chain
     // has its own use.
     SDNode::use_iterator UI = LD->use_begin(), UE = LD->use_end();
-    for ( ; UI != UE; ++UI) {
+    for (; UI != UE; ++UI) {
       if (UI.getUse().getResNo() == 0) {
         // User of a loaded value.
-        if (UI->getOpcode() == ISD::AND && isa<ConstantSDNode>(UI->getOperand(1))) {
+        if (UI->getOpcode() == ISD::AND &&
+            isa<ConstantSDNode>(UI->getOperand(1))) {
           EVT MemVT = LD->getMemoryVT();
           uint64_t Mask = UI->getConstantOperandVal(1);
-          if ((MemVT == MVT::i8  && Mask == 0xFFul) ||
+          if ((MemVT == MVT::i8 && Mask == 0xFFul) ||
               (MemVT == MVT::i16 && Mask == 0xFFFFul)) {
-            // The AND operator was not really needed. Produce zextload as it does
+            // The AND operator was not really needed. Produce zextload as it
+            // does
             // not change the result and let AND node silintly die.
             extType = ISD::ZEXTLOAD;
           }
@@ -1864,13 +1774,13 @@ HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
   }
 
   // Do extload into 32-bit register, then extend that.
-  SDValue NewLD = DAG.getExtLoad(extType, dl, MVT::i32, LD->getChain(),
-                                 LD->getBasePtr(), MVT::i8, LD->getMemOperand());
+  SDValue NewLD =
+      DAG.getExtLoad(extType, dl, MVT::i32, LD->getChain(), LD->getBasePtr(),
+                     MVT::i8, LD->getMemOperand());
 
   SDValue Ops[] = {
-    DAG.getNode(ISD::getExtForLoadExtType(extType), dl, MVT::i64, NewLD),
-    NewLD.getValue(1)
-  };
+      DAG.getNode(ISD::getExtForLoadExtType(extType), dl, MVT::i64, NewLD),
+      NewLD.getValue(1)};
 
   // Replace chain in all uses.
   // XXX: Do we really need to do this?
@@ -1899,51 +1809,37 @@ SDValue HSAILTargetLowering::LowerSTORE(SDValue Op, SelectionDAG &DAG) const {
   return DAG.getTruncStore(Chain, dl, Value, BasePtr, MVT::i8, MMO);
 }
 
-static SDValue getMemFenceImpl(SDValue Chain, SDLoc SL,
-                               unsigned MemoryOrder,
+static SDValue getMemFenceImpl(SDValue Chain, SDLoc SL, unsigned MemoryOrder,
                                unsigned GlobalMemoryScope,
                                unsigned GroupMemoryScope,
                                unsigned ImageMemoryScope,
                                SelectionDAG &CurDAG) {
   const SDValue Ops[] = {
-    Chain,
-    CurDAG.getTargetConstant(HSAILIntrinsic::HSAIL_memfence, MVT::i64),
-    CurDAG.getConstant(MemoryOrder, MVT::i32),
-    CurDAG.getConstant(GlobalMemoryScope, MVT::i32),
-    CurDAG.getConstant(GroupMemoryScope, MVT::i32),
-    CurDAG.getConstant(ImageMemoryScope, MVT::i32)
-  };
+      Chain, CurDAG.getTargetConstant(HSAILIntrinsic::HSAIL_memfence, MVT::i64),
+      CurDAG.getConstant(MemoryOrder, MVT::i32),
+      CurDAG.getConstant(GlobalMemoryScope, MVT::i32),
+      CurDAG.getConstant(GroupMemoryScope, MVT::i32),
+      CurDAG.getConstant(ImageMemoryScope, MVT::i32)};
 
   return CurDAG.getNode(ISD::INTRINSIC_VOID, SL, MVT::Other, Ops);
 }
 
 static SDValue getMemFence(SDValue Chain, SDLoc SL, unsigned AS,
-                           unsigned MemoryOrder,
-                           unsigned MemoryScope,
+                           unsigned MemoryOrder, unsigned MemoryScope,
                            SelectionDAG &CurDAG) {
   switch (AS) {
   case HSAILAS::GLOBAL_ADDRESS:
-    return getMemFenceImpl(Chain, SL,
-                           MemoryOrder,
-                           MemoryScope,
-                           BRIG_MEMORY_SCOPE_NONE,
-                           BRIG_MEMORY_SCOPE_NONE,
+    return getMemFenceImpl(Chain, SL, MemoryOrder, MemoryScope,
+                           BRIG_MEMORY_SCOPE_NONE, BRIG_MEMORY_SCOPE_NONE,
                            CurDAG);
 
   case HSAILAS::GROUP_ADDRESS:
-    return getMemFenceImpl(Chain, SL,
-                           MemoryOrder,
-                           MemoryScope,
-                           MemoryScope,
-                           BRIG_MEMORY_SCOPE_NONE,
-                           CurDAG);
+    return getMemFenceImpl(Chain, SL, MemoryOrder, MemoryScope, MemoryScope,
+                           BRIG_MEMORY_SCOPE_NONE, CurDAG);
 
   case HSAILAS::FLAT_ADDRESS:
-    return getMemFenceImpl(Chain, SL,
-                           MemoryOrder,
-                           MemoryScope,
-                           BRIG_MEMORY_SCOPE_WORKGROUP,
-                           BRIG_MEMORY_SCOPE_NONE,
+    return getMemFenceImpl(Chain, SL, MemoryOrder, MemoryScope,
+                           BRIG_MEMORY_SCOPE_WORKGROUP, BRIG_MEMORY_SCOPE_NONE,
                            CurDAG);
 
   default:
@@ -1962,25 +1858,18 @@ SDValue HSAILTargetLowering::LowerATOMIC_LOAD(SDValue Op,
     return Op;
 
   unsigned brigMemoryOrder = BRIG_MEMORY_ORDER_SC_RELEASE;
-  unsigned brigMemoryScope = Node->getAddressSpace() == HSAILAS::GROUP_ADDRESS ?
-    BRIG_MEMORY_SCOPE_WORKGROUP : BRIG_MEMORY_SCOPE_SYSTEM;
+  unsigned brigMemoryScope = Node->getAddressSpace() == HSAILAS::GROUP_ADDRESS
+                                 ? BRIG_MEMORY_SCOPE_WORKGROUP
+                                 : BRIG_MEMORY_SCOPE_SYSTEM;
 
   SDLoc SL(Op);
 
-  SDValue Chain = getMemFence(Op.getOperand(0), Op,
-                              Node->getAddressSpace(),
-                              brigMemoryOrder,
-                              brigMemoryScope,
-                              DAG);
+  SDValue Chain = getMemFence(Op.getOperand(0), Op, Node->getAddressSpace(),
+                              brigMemoryOrder, brigMemoryScope, DAG);
 
-  return DAG.getAtomic(ISD::ATOMIC_LOAD, SL,
-                       Node->getMemoryVT(),
-                       Op.getValueType(),
-                       Chain,
-                       Node->getBasePtr(),
-                       Node->getMemOperand(),
-                       Acquire,
-                       Node->getSynchScope());
+  return DAG.getAtomic(ISD::ATOMIC_LOAD, SL, Node->getMemoryVT(),
+                       Op.getValueType(), Chain, Node->getBasePtr(),
+                       Node->getMemOperand(), Acquire, Node->getSynchScope());
 }
 
 SDValue HSAILTargetLowering::LowerATOMIC_STORE(SDValue Op,
@@ -1994,21 +1883,19 @@ SDValue HSAILTargetLowering::LowerATOMIC_STORE(SDValue Op,
     return Op;
 
   unsigned MemoryOrder = BRIG_MEMORY_ORDER_SC_ACQUIRE;
-  unsigned MemoryScope = Node->getAddressSpace() == HSAILAS::GROUP_ADDRESS ?
-    BRIG_MEMORY_SCOPE_WORKGROUP : BRIG_MEMORY_SCOPE_SYSTEM;
+  unsigned MemoryScope = Node->getAddressSpace() == HSAILAS::GROUP_ADDRESS
+                             ? BRIG_MEMORY_SCOPE_WORKGROUP
+                             : BRIG_MEMORY_SCOPE_SYSTEM;
 
   SDLoc SL(Op);
 
-  SDValue ResNode = DAG.getAtomic(ISD::ATOMIC_STORE, SL,
-                                  Node->getMemoryVT(),
-                                  Node->getOperand(0), // Chain
-                                  Node->getBasePtr(),
-                                  Node->getVal(),
-                                  Node->getMemOperand(),
-                                  Release,
-                                  Node->getSynchScope());
-  return getMemFence(ResNode, Op, Node->getAddressSpace(),
-                     MemoryOrder, MemoryScope, DAG);
+  SDValue ResNode =
+      DAG.getAtomic(ISD::ATOMIC_STORE, SL, Node->getMemoryVT(),
+                    Node->getOperand(0), // Chain
+                    Node->getBasePtr(), Node->getVal(), Node->getMemOperand(),
+                    Release, Node->getSynchScope());
+  return getMemFence(ResNode, Op, Node->getAddressSpace(), MemoryOrder,
+                     MemoryScope, DAG);
 }
 
 //===--------------------------------------------------------------------===//
@@ -2033,15 +1920,11 @@ bool HSAILTargetLowering::isLegalAddressingMode(const AddrMode &AM,
 /// isTruncateFree - Return true if it's free to truncate a value of
 /// type Ty1 to type Ty2. e.g. On x86 it's free to truncate a i32 value in
 /// register EAX to i16 by referencing its sub-register AX.
-bool
-HSAILTargetLowering::isTruncateFree(Type *Ty1, Type *Ty2) const
-{
+bool HSAILTargetLowering::isTruncateFree(Type *Ty1, Type *Ty2) const {
   return TargetLowering::isTruncateFree(Ty1, Ty2);
 }
 
-bool
-HSAILTargetLowering::isTruncateFree(EVT VT1, EVT VT2) const
-{
+bool HSAILTargetLowering::isTruncateFree(EVT VT1, EVT VT2) const {
   return TargetLowering::isTruncateFree(VT1, VT2);
 }
 /// isZExtFree - Return true if any actual instruction that defines a
@@ -2052,45 +1935,31 @@ HSAILTargetLowering::isTruncateFree(EVT VT1, EVT VT2) const
 /// does not necessarily apply to truncate instructions. e.g. on x86-64,
 /// all instructions that define 32-bit values implicit zero-extend the
 /// result out to 64 bits.
-bool
-HSAILTargetLowering::isZExtFree(Type *Ty1, Type *Ty2) const
-{
+bool HSAILTargetLowering::isZExtFree(Type *Ty1, Type *Ty2) const {
   return false;
 }
 
-bool
-HSAILTargetLowering::isZExtFree(EVT VT1, EVT VT2) const
-{
-  return false;
-}
+bool HSAILTargetLowering::isZExtFree(EVT VT1, EVT VT2) const { return false; }
 
-bool HSAILTargetLowering::isFAbsFree(EVT VT) const {
-  return true;
-}
+bool HSAILTargetLowering::isFAbsFree(EVT VT) const { return true; }
 
-bool HSAILTargetLowering::isFNegFree(EVT VT) const {
-  return true;
-}
+bool HSAILTargetLowering::isFNegFree(EVT VT) const { return true; }
 
 /// isNarrowingProfitable - Return true if it's profitable to narrow
 /// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
 /// from i32 to i8 but not from i32 to i16.
-bool
-HSAILTargetLowering::isNarrowingProfitable(EVT VT1, EVT VT2) const
-{
+bool HSAILTargetLowering::isNarrowingProfitable(EVT VT1, EVT VT2) const {
   // This is only profitable in HSAIL to go from a 64bit type to
   // a 32bit type, but not to a 8 or 16bit type.
-  return (VT1 == EVT(MVT::i64) && VT2 == EVT(MVT::i32))
-    || (VT1 == EVT(MVT::f64) && VT2 == EVT(MVT::f32));
+  return (VT1 == EVT(MVT::i64) && VT2 == EVT(MVT::i32)) ||
+         (VT1 == EVT(MVT::f64) && VT2 == EVT(MVT::f32));
 }
 
 /// isLegalICmpImmediate - Return true if the specified immediate is legal
 /// icmp immediate, that is the target has icmp instructions which can compare
 /// a register against the immediate without having to materialize the
 /// immediate into a register.
-bool
-HSAILTargetLowering::isLegalICmpImmediate(int64_t Imm) const
-{
+bool HSAILTargetLowering::isLegalICmpImmediate(int64_t Imm) const {
   // HSAIL doesn't have any restrictions on this.
   return true;
 }
@@ -2103,14 +1972,15 @@ MVT HSAILTargetLowering::getScalarShiftAmountTy(EVT LHSTy) const {
 
 bool HSAILTargetLowering::isNoopAddrSpaceCast(unsigned SrcAS,
                                               unsigned DestAS) const {
-  return (SrcAS == HSAILAS::FLAT_ADDRESS && DestAS == HSAILAS::GLOBAL_ADDRESS) ||
+  return (SrcAS == HSAILAS::FLAT_ADDRESS &&
+          DestAS == HSAILAS::GLOBAL_ADDRESS) ||
          (SrcAS == HSAILAS::GLOBAL_ADDRESS && DestAS == HSAILAS::FLAT_ADDRESS);
 }
 
 void HSAILTargetLowering::AdjustInstrPostInstrSelection(MachineInstr *MI,
                                                         SDNode *Node) const {
   const HSAILInstrInfo *TII =
-    static_cast<const HSAILInstrInfo *>(Subtarget->getInstrInfo());
+      static_cast<const HSAILInstrInfo *>(Subtarget->getInstrInfo());
 
   if (TII->isInstAtomic(MI->getOpcode()) && !Node->hasAnyUseOfValue(0)) {
     int NoRetAtomicOp = HSAIL::getAtomicNoRetOp(MI->getOpcode());
@@ -2123,17 +1993,16 @@ void HSAILTargetLowering::AdjustInstrPostInstrSelection(MachineInstr *MI,
   }
 }
 
-bool
-HSAILTargetLowering::isLoadBitCastBeneficial(EVT lVT, EVT bVT) const
-{
-  return !(lVT.getSizeInBits() == bVT.getSizeInBits()
-      && lVT.getScalarType().getSizeInBits() > bVT.getScalarType().getSizeInBits()
-      && bVT.getScalarType().getSizeInBits() < 32
-      && lVT.getScalarType().getSizeInBits() >= 32);
+bool HSAILTargetLowering::isLoadBitCastBeneficial(EVT lVT, EVT bVT) const {
+  return !(lVT.getSizeInBits() == bVT.getSizeInBits() &&
+           lVT.getScalarType().getSizeInBits() >
+               bVT.getScalarType().getSizeInBits() &&
+           bVT.getScalarType().getSizeInBits() < 32 &&
+           lVT.getScalarType().getSizeInBits() >= 32);
 }
 
 bool HSAILTargetLowering::isVectorToScalarLoadStoreWidenBeneficial(
-  unsigned Width, EVT WidenVT, const MemSDNode *N) const {
+    unsigned Width, EVT WidenVT, const MemSDNode *N) const {
   unsigned WidenWidth = WidenVT.getSizeInBits();
 
   // In HSAIL we have _v3 loads and stores, and in case of uneven vector size
@@ -2143,6 +2012,7 @@ bool HSAILTargetLowering::isVectorToScalarLoadStoreWidenBeneficial(
   //   ld_v1_u32
   // Is worse than:
   //   ld_v3_u32
-  if ((Width * 4 / 3) == WidenWidth) return false;
+  if ((Width * 4 / 3) == WidenWidth)
+    return false;
   return true;
 }

@@ -26,7 +26,7 @@ class HSAILAlwaysInline : public ModulePass {
   static char ID;
 
 public:
-  HSAILAlwaysInline() : ModulePass(ID) { }
+  HSAILAlwaysInline() : ModulePass(ID) {}
   bool runOnModule(Module &M) override;
   const char *getPassName() const override {
     return "HSAIL Always Inline Pass";
@@ -39,7 +39,7 @@ char HSAILAlwaysInline::ID = 0;
 
 bool HSAILAlwaysInline::runOnModule(Module &M) {
 
-  std::vector<Function*> FuncsToClone;
+  std::vector<Function *> FuncsToClone;
   for (Module::iterator I = M.begin(), E = M.end(); I != E; ++I) {
     Function &F = *I;
     if (!F.hasLocalLinkage() && !F.isDeclaration() && !F.use_empty() &&

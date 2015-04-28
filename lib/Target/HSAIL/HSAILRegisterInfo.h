@@ -20,17 +20,15 @@
 #include "HSAILGenRegisterInfo.inc"
 
 namespace llvm {
-  class Type;
-  class TargetInstrInfo;
-  class HSAILSubtarget;
+class Type;
+class TargetInstrInfo;
+class HSAILSubtarget;
 
-  /// DWARFFlavour - Flavour of dwarf regnumbers
-  ///
-  namespace DWARFFlavour {
-    enum {
-      HSAIL_Generic = 0
-    };
-  }
+/// DWARFFlavour - Flavour of dwarf regnumbers
+///
+namespace DWARFFlavour {
+enum { HSAIL_Generic = 0 };
+}
 
 class HSAILRegisterInfo : public HSAILGenRegisterInfo {
 private:
@@ -46,8 +44,9 @@ public:
 
   BitVector getReservedRegs(const MachineFunction &MF) const override;
 
-  const TargetRegisterClass *getPointerRegClass(const MachineFunction &MF,
-                                                unsigned Kind = 0) const override;
+  const TargetRegisterClass *
+  getPointerRegClass(const MachineFunction &MF,
+                     unsigned Kind = 0) const override;
 
   bool trackLivenessAfterRegAlloc(const MachineFunction &MF) const override;
 
@@ -59,11 +58,11 @@ public:
   bool saveScavengerRegisterToFI(MachineBasicBlock &MBB,
                                  MachineBasicBlock::iterator I,
                                  MachineBasicBlock::iterator &UseMI,
-                                 const TargetRegisterClass *RC,
-                                 unsigned Reg, int FI) const;
+                                 const TargetRegisterClass *RC, unsigned Reg,
+                                 int FI) const;
 
-  void eliminateFrameIndex(MachineBasicBlock::iterator MI,
-                           int SPAdj, unsigned FIOperandNum,
+  void eliminateFrameIndex(MachineBasicBlock::iterator MI, int SPAdj,
+                           unsigned FIOperandNum,
                            RegScavenger *RS = nullptr) const override;
 
   unsigned getFrameRegister(const MachineFunction &MF) const override;

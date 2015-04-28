@@ -45,14 +45,9 @@ class MachineInstr;
 class ConstantFP;
 class HSAILPrintfInfo;
 
-
 class HSAILKernelManager {
 public:
-  typedef enum {
-    RELEASE_ONLY,
-    DEBUG_ONLY,
-    ALWAYS
-  } ErrorMsgEnum;
+  typedef enum { RELEASE_ONLY, DEBUG_ONLY, ALWAYS } ErrorMsgEnum;
   HSAILKernelManager(HSAILTargetMachine *TM);
   virtual ~HSAILKernelManager();
 
@@ -62,15 +57,14 @@ public:
 
   /// Process the specific kernel parsing out the parameter information for the
   /// kernel.
-  void processArgMetadata(raw_ostream &ignored,
-                          uint32_t buf, bool kernel);
-
+  void processArgMetadata(raw_ostream &ignored, uint32_t buf, bool kernel);
 
   /// Prints the header for the kernel which includes the groupsize declaration
   /// and calculation of the local/group/global id's.
   void printHeader(const std::string &name);
 
-  void brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t id, bool isKernel = false);
+  void brigEmitMetaData(HSAIL_ASM::Brigantine &brig, uint32_t id,
+                        bool isKernel = false);
 
   /// Set bool value on whether to consider the function a kernel or a normal
   /// function.
@@ -86,12 +80,8 @@ public:
   uint32_t getUAVID(const Value *value);
 
 private:
-
-  void updatePtrArg(llvm::Function::const_arg_iterator Ip,
-                    int counter,
-                    bool isKernel,
-                    const Function *F,
-                    int pointerCount);
+  void updatePtrArg(llvm::Function::const_arg_iterator Ip, int counter,
+                    bool isKernel, const Function *F, int pointerCount);
   /// Name of the current kernel.
   std::string mName;
   uint32_t mUniqueID;
@@ -106,8 +96,8 @@ private:
   /// Map from const Value * to UAV ID.
   std::map<const Value *, uint32_t> mValueIDMap;
 
-  HSAILTargetMachine * mTM;
-  const HSAILSubtarget * mSTM;
+  HSAILTargetMachine *mTM;
+  const HSAILSubtarget *mSTM;
   /// This is the global offset of the printf string id's.
   MachineFunction *mMF;
   HSAILMachineFunctionInfo *mMFI;

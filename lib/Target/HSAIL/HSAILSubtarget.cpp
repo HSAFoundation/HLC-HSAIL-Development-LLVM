@@ -50,16 +50,13 @@ static std::string computeDataLayout(const HSAILSubtarget &ST) {
 }
 
 HSAILSubtarget::HSAILSubtarget(StringRef TT, StringRef CPU, StringRef FS,
-                               HSAILTargetMachine &TM) :
-  HSAILGenSubtargetInfo(TT, CPU, FS),
-  TargetTriple(TT),
-  DevName(CPU.empty() ? "generic" : CPU.str()),
-  Is64Bit(TargetTriple.getArch() == Triple::hsail64),
-  DL(computeDataLayout(initializeSubtargetDependencies(DevName, FS))),
-  FrameLowering(TargetFrameLowering::StackGrowsUp, 16, 0),
-  TLInfo(),
-  InstrInfo(),
-  imageHandles(new HSAILImageHandles()) {
+                               HSAILTargetMachine &TM)
+    : HSAILGenSubtargetInfo(TT, CPU, FS), TargetTriple(TT),
+      DevName(CPU.empty() ? "generic" : CPU.str()),
+      Is64Bit(TargetTriple.getArch() == Triple::hsail64),
+      DL(computeDataLayout(initializeSubtargetDependencies(DevName, FS))),
+      FrameLowering(TargetFrameLowering::StackGrowsUp, 16, 0), TLInfo(),
+      InstrInfo(), imageHandles(new HSAILImageHandles()) {
 
   // The constructor for TargetLoweringBase calls
   // HSAILSubtarget::getDataLayout(), so we need to initialize
@@ -77,8 +74,7 @@ HSAILSubtarget &HSAILSubtarget::initializeSubtargetDependencies(StringRef GPU,
 //
 // Support for processing Image and Sampler kernel args and operands.
 //
-unsigned
-HSAILImageHandles::findOrCreateImageHandle(const char* sym) {
+unsigned HSAILImageHandles::findOrCreateImageHandle(const char *sym) {
   // Check for image arg with same value already present
   std::string symStr = sym;
   for (unsigned i = 0; i < HSAILImageArgs.size(); i++) {
@@ -90,27 +86,24 @@ HSAILImageHandles::findOrCreateImageHandle(const char* sym) {
   return HSAILImageArgs.size() - 1;
 }
 
-unsigned
-HSAILImageHandles::findOrCreateSamplerHandle(unsigned int u) {
+unsigned HSAILImageHandles::findOrCreateSamplerHandle(unsigned int u) {
   // Check for handle with same value already present
   for (unsigned i = 0; i < HSAILSamplers.size(); i++) {
     if (getSamplerValue(i) == u) {
       return i;
     }
   }
-  HSAILSamplerHandle* handle = new HSAILSamplerHandle(u);
+  HSAILSamplerHandle *handle = new HSAILSamplerHandle(u);
   HSAILSamplers.push_back(handle);
   return HSAILSamplers.size() - 1;
 }
 
-HSAILSamplerHandle*
-HSAILImageHandles::getSamplerHandle(unsigned index) {
+HSAILSamplerHandle *HSAILImageHandles::getSamplerHandle(unsigned index) {
   assert(index < HSAILSamplers.size() && "Invalid sampler index");
   return HSAILSamplers[index];
 }
 
-std::string
-HSAILImageHandles::getImageSymbol(unsigned index) {
+std::string HSAILImageHandles::getImageSymbol(unsigned index) {
   assert(index < HSAILImageArgs.size() && "Invalid image arg index");
   return HSAILImageArgs[index];
 }
@@ -120,14 +113,12 @@ std::string HSAILImageHandles::getSamplerSymbol(unsigned index) {
   return HSAILSamplers[index]->getSym();
 }
 
-unsigned
-HSAILImageHandles::getSamplerValue(unsigned index) {
+unsigned HSAILImageHandles::getSamplerValue(unsigned index) {
   assert(index < HSAILSamplers.size() && "Invalid sampler index");
   return HSAILSamplers[index]->getVal();
 }
 
-bool
-HSAILImageHandles::isSamplerSym(std::string sym) {
+bool HSAILImageHandles::isSamplerSym(std::string sym) {
   for (unsigned i = 0; i < HSAILSamplers.size(); i++) {
     if (getSamplerSymbol(i) == sym) {
       return true;
@@ -136,10 +127,9 @@ HSAILImageHandles::isSamplerSym(std::string sym) {
   return false;
 }
 
-void
-HSAILImageHandles::finalize() {
-  //printf("ImageHandles before finalize\n");
-  //dump();
+void HSAILImageHandles::finalize() {
+  // printf("ImageHandles before finalize\n");
+  // dump();
   char buf[16];
   for (unsigned i = 0; i < HSAILSamplers.size(); i++) {
     if (getSamplerSymbol(i).empty()) {
@@ -150,7 +140,4 @@ HSAILImageHandles::finalize() {
   }
 }
 
-void
-HSAILImageHandles::clearImageArgs() {
-  HSAILImageArgs.clear();
-}
+void HSAILImageHandles::clearImageArgs() { HSAILImageArgs.clear(); }

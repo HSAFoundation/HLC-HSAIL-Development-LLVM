@@ -40,13 +40,14 @@ static AsmPrinter *createHSAILAsmPrinterPass(TargetMachine &tm,
 }
 
 extern "C" void LLVMInitializeHSAILAsmPrinter() {
-  TargetRegistry::RegisterAsmPrinter(TheHSAIL_32Target, createHSAILAsmPrinterPass);
-  TargetRegistry::RegisterAsmPrinter(TheHSAIL_64Target, createHSAILAsmPrinterPass);
+  TargetRegistry::RegisterAsmPrinter(TheHSAIL_32Target,
+                                     createHSAILAsmPrinterPass);
+  TargetRegistry::RegisterAsmPrinter(TheHSAIL_64Target,
+                                     createHSAILAsmPrinterPass);
 }
 
 HSAILAsmPrinter::HSAILAsmPrinter(TargetMachine &TM, MCStreamer &Streamer)
-    : AsmPrinter(TM, Streamer) {
-}
+    : AsmPrinter(TM, Streamer) {}
 
 bool HSAILAsmPrinter::doFinalization(Module &M) {
   EmitEndOfAsmFile(M);
@@ -102,10 +103,8 @@ static bool isModuleLinkage(const GlobalValue &GV) {
 }
 
 void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
-                                           const Argument &A,
-                                           bool IsKernel,
-                                           bool IsSExt,
-                                           raw_ostream &O) const {
+                                           const Argument &A, bool IsKernel,
+                                           bool IsSExt, raw_ostream &O) const {
   const DataLayout &DL = getDataLayout();
   Type *Ty = A.getType();
 
@@ -119,11 +118,8 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
   }
 
   // TODO_HSA: Need to emit alignment information.
-  O << (IsKernel ? "kernarg" : "arg")
-    << '_'
-    << getArgTypeName(EltTy, IsSExt)
-    << ' '
-    << '%';
+  O << (IsKernel ? "kernarg" : "arg") << '_' << getArgTypeName(EltTy, IsSExt)
+    << ' ' << '%';
 
   StringRef Name = A.getName();
   if (Name.empty())
@@ -136,10 +132,8 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
     O << '[' << NElts << ']';
 }
 
-void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
-                                         StringRef Name,
-                                         bool IsKernel,
-                                         bool IsSExt,
+void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty, StringRef Name,
+                                         bool IsKernel, bool IsSExt,
                                          raw_ostream &O) const {
   const DataLayout &DL = getDataLayout();
 
@@ -152,18 +146,13 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty,
       O << "align(" << ABIAlign << ") ";
   }
 
-  O << (IsKernel ? "kernarg" : "arg")
-    << '_'
-    << getArgTypeName(EltTy, IsSExt)
-    << ' '
-    << '%'
-    << Name;
+  O << (IsKernel ? "kernarg" : "arg") << '_' << getArgTypeName(EltTy, IsSExt)
+    << ' ' << '%' << Name;
   if (NElts != 0)
     O << '[' << NElts << ']';
 }
 
-void HSAILAsmPrinter::EmitFunctionLabel(const Function &F,
-                                        raw_ostream &O,
+void HSAILAsmPrinter::EmitFunctionLabel(const Function &F, raw_ostream &O,
                                         bool IsDecl) const {
   Type *RetTy = F.getReturnType();
 
@@ -184,17 +173,16 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F,
 
       const auto &RetAttrs = F.getAttributes().getRetAttributes();
 
-      bool IsSExt
-        = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
-      bool IsZExt
-        = RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
+      bool IsSExt =
+          RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
+      bool IsZExt =
+          RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
 
       if (IsSExt || IsZExt) {
-        EmitFunctionReturn(Type::getInt32Ty(RetTy->getContext()),
-                           RetName, IsKernel, IsSExt, O);
+        EmitFunctionReturn(Type::getInt32Ty(RetTy->getContext()), RetName,
+                           IsKernel, IsSExt, O);
       } else
         EmitFunctionReturn(RetTy, RetName, IsKernel, IsSExt, O);
-
     }
 
     O << ")(";
@@ -230,8 +218,8 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F,
 
 // FIXME: Doesn't make sense to rely on address space for this.
 char HSAILAsmPrinter::getSymbolPrefixForAddressSpace(unsigned AS) {
-  return (AS == HSAILAS::GROUP_ADDRESS ||
-          AS == HSAILAS::PRIVATE_ADDRESS) ? '%' : '&';
+  return (AS == HSAILAS::GROUP_ADDRESS || AS == HSAILAS::PRIVATE_ADDRESS) ? '%'
+                                                                          : '&';
 }
 
 // FIXME: Duplicated in BRIGAsmPrinter
@@ -250,21 +238,17 @@ void HSAILAsmPrinter::printInitVarWithAddressPragma(StringRef VarName,
                                                     raw_ostream &O) {
   MCValue Val;
   bool Res = Expr->EvaluateAsValue(Val, nullptr, nullptr);
-  (void) Res;
+  (void)Res;
   assert(Res && "Could not evaluate MCExpr");
   assert(!Val.getSymB() && "Multi-symbol expressions not handled");
 
   const MCSymbol &Sym = Val.getSymA()->getSymbol();
 
-  O << "pragma \"initvarwithaddress:"
-    << VarName
-    << ':' << BaseOffset // Offset into the destination.
-    << ':' << EltSize
-    << ':' << getSymbolPrefix(Sym) << Sym.getName()
-    << ':' << Val.getConstant() // Offset of the symbol being written.
-    << '\"'
-    << ';'
-    << '\n';
+  O << "pragma \"initvarwithaddress:" << VarName << ':'
+    << BaseOffset // Offset into the destination.
+    << ':' << EltSize << ':' << getSymbolPrefix(Sym) << Sym.getName() << ':'
+    << Val.getConstant() // Offset of the symbol being written.
+    << '\"' << ';' << '\n';
 }
 
 void HSAILAsmPrinter::printFloat(uint32_t Val, raw_ostream &O) {
@@ -302,7 +286,8 @@ void HSAILAsmPrinter::printScalarConstant(const Constant *CPV,
     return;
   }
 
-  if (const ConstantDataSequential *CDS = dyn_cast<ConstantDataSequential>(CPV)) {
+  if (const ConstantDataSequential *CDS =
+          dyn_cast<ConstantDataSequential>(CPV)) {
     for (unsigned I = 0, E = CDS->getNumElements(); I != E; ++I) {
       if (I > 0)
         O << ", ";
@@ -391,8 +376,8 @@ void HSAILAsmPrinter::printGVInitialValue(const GlobalValue &GV,
     Name += Pre;
     Name += GV.getName();
 
-    printInitVarWithAddressPragma(Name, VarInit.BaseOffset,
-                                  VarInit.Expr, EltSize, O);
+    printInitVarWithAddressPragma(Name, VarInit.BaseOffset, VarInit.Expr,
+                                  EltSize, O);
   }
 
   O << '\n';
@@ -431,22 +416,17 @@ void HSAILAsmPrinter::getHSAILMangledName(SmallString<256> &NameStr,
 }
 
 // FIXME: Mostly duplicated in BRIGAsmPrinter
-static void printAlignTypeQualifier(const GlobalValue &GV,
-                                    const DataLayout& DL,
-                                    Type *InitTy,
-                                    Type *EmitTy,
-                                    unsigned NElts,
-                                    bool IsLocal,
-                                    raw_ostream &O) {
+static void printAlignTypeQualifier(const GlobalValue &GV, const DataLayout &DL,
+                                    Type *InitTy, Type *EmitTy, unsigned NElts,
+                                    bool IsLocal, raw_ostream &O) {
   unsigned Alignment = GV.getAlignment();
   if (Alignment == 0)
     Alignment = DL.getPrefTypeAlignment(InitTy);
   else {
     // If an alignment is specified, it must be equal to or greater than the
     // variable's natural alignment.
-    unsigned NaturalAlign = IsLocal ?
-      DL.getPrefTypeAlignment(EmitTy) :
-      DL.getABITypeAlignment(EmitTy);
+    unsigned NaturalAlign = IsLocal ? DL.getPrefTypeAlignment(EmitTy)
+                                    : DL.getABITypeAlignment(EmitTy);
 
     Alignment = std::max(Alignment, NaturalAlign);
   }
@@ -465,7 +445,6 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
 
   SmallString<256> Name;
   getHSAILMangledName(Name, GV);
-
 
   SmallString<1024> Str;
   raw_svector_ostream O(Str);
@@ -535,15 +514,10 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
 
   const HSAILSubtarget *Subtarget = &TM.getSubtarget<HSAILSubtarget>();
 
-  O << "module &__llvm_hsail_module:"
-    << BRIG_VERSION_HSAIL_MAJOR
-    << ':'
-    << BRIG_VERSION_HSAIL_MINOR
-    << ':'
-    << (Subtarget->isFull() ? "$full" : "$base")
-    << ':'
-    << (Subtarget->is64Bit() ? "$large" : "$small")
-    << ':'
+  O << "module &__llvm_hsail_module:" << BRIG_VERSION_HSAIL_MAJOR << ':'
+    << BRIG_VERSION_HSAIL_MINOR << ':'
+    << (Subtarget->isFull() ? "$full" : "$base") << ':'
+    << (Subtarget->is64Bit() ? "$large" : "$small") << ':'
     << "$near" // TODO: Get from somewhere
     << ";\n\n";
 
@@ -557,7 +531,7 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
 
   for (const GlobalVariable &GV : M.globals()) {
     unsigned AS = GV.getType()->getAddressSpace();
-	if (AS != HSAILAS::PRIVATE_ADDRESS && AS != HSAILAS::GROUP_ADDRESS)
+    if (AS != HSAILAS::PRIVATE_ADDRESS && AS != HSAILAS::GROUP_ADDRESS)
       EmitGlobalVariable(&GV);
   }
 
@@ -710,12 +684,12 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
   }
 
   // Emit group variable declarations.
-  const Module* M = MF->getMMI().getModule();
+  const Module *M = MF->getMMI().getModule();
   for (const GlobalVariable &GV : M->globals()) {
     PointerType *Ty = GV.getType();
     unsigned AS = Ty->getAddressSpace();
     if (AS == HSAILAS::GROUP_ADDRESS) {
-      if (FuncGrpVarsSet.count(&GV)){
+      if (FuncGrpVarsSet.count(&GV)) {
         std::string str;
         O << '\t';
 
@@ -725,8 +699,8 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
         Type *EmitTy = HSAIL::analyzeType(InitTy, NElts, DL);
         printAlignTypeQualifier(GV, DL, InitTy, EmitTy, NElts, true, O);
 
-        O << getSegmentName(AS) << '_' << getArgTypeName(EmitTy)
-          << " %" << GV.getName();
+        O << getSegmentName(AS) << '_' << getArgTypeName(EmitTy) << " %"
+          << GV.getName();
 
         if (NElts != 0)
           O << '[' << NElts << ']';
@@ -743,16 +717,16 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
     PointerType *Ty = GV.getType();
     unsigned AS = Ty->getAddressSpace();
     if (AS == HSAILAS::PRIVATE_ADDRESS) {
-      if (FuncPvtVarsSet.count(&GV)){
+      if (FuncPvtVarsSet.count(&GV)) {
         StringRef GVname = GV.getName();
         bool ChangeName = false;
         SmallVector<StringRef, 10> NameParts;
         const char *tmp_opt_name = "tmp_opt_var";
         std::string str;
-        if (GVname.empty()){
+        if (GVname.empty()) {
           str = tmp_opt_name;
           ChangeName = true;
-        } else if (!isalpha(GVname[0]) && GVname[0] != '_'){
+        } else if (!isalpha(GVname[0]) && GVname[0] != '_') {
           str = tmp_opt_name;
           str.append(GVname);
           ChangeName = true;
@@ -763,7 +737,7 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
           if (pos != std::string::npos)
             ChangeName = true;
 
-          while (pos != std::string::npos){
+          while (pos != std::string::npos) {
             str.replace(pos++, 1, "_");
             pos = str.find('.', pos);
           }
@@ -771,7 +745,7 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
 
         if (ChangeName) {
           // FIXME
-          (const_cast<GlobalVariable*>(&GV))->setName(str);
+          (const_cast<GlobalVariable *>(&GV))->setName(str);
         }
 
         O << '\t';
@@ -800,7 +774,7 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
   size_t StackSize = MFI->getOffsetAdjustment() + MFI->getStackSize();
   if (StackSize) {
     // Dimension is in units of type length.
-    O <<  "\tspill_u32 %stack[" << (StackSize >> 2) << "];\n";
+    O << "\tspill_u32 %stack[" << (StackSize >> 2) << "];\n";
   }
 
   O << '@' << F->getName() << "_entry:\n";
@@ -814,9 +788,7 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
   OutStreamer.EmitRawText(O.str());
 }
 
-void HSAILAsmPrinter::EmitFunctionBodyEnd() {
-  OutStreamer.EmitRawText("};");
-}
+void HSAILAsmPrinter::EmitFunctionBodyEnd() { OutStreamer.EmitRawText("};"); }
 
 void HSAILAsmPrinter::EmitInstruction(const MachineInstr *MI) {
   HSAILMCInstLower MCInstLowering(OutContext, *this);

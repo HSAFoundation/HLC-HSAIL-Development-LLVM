@@ -43,8 +43,7 @@ public:
 
 class ELFHSAILAsmBackend : public HSAILAsmBackend {
 public:
-  ELFHSAILAsmBackend(const Target &T)
-    : HSAILAsmBackend(T) {}
+  ELFHSAILAsmBackend(const Target &T) : HSAILAsmBackend(T) {}
 
   bool doesSectionRequireSymbols(const MCSection &Section) const override {
     const MCSectionELF &ES = static_cast<const MCSectionELF &>(Section);
@@ -54,8 +53,7 @@ public:
 
 class ELFHSAIL_32AsmBackend : public ELFHSAILAsmBackend {
 public:
-  ELFHSAIL_32AsmBackend(const Target &T)
-      : ELFHSAILAsmBackend(T) {}
+  ELFHSAIL_32AsmBackend(const Target &T) : ELFHSAILAsmBackend(T) {}
 
   MCObjectWriter *createObjectWriter(raw_ostream &OS) const {
     return createELFObjectWriter(
@@ -66,8 +64,7 @@ public:
 
 class ELFHSAIL_64AsmBackend : public ELFHSAILAsmBackend {
 public:
-  ELFHSAIL_64AsmBackend(const Target &T)
-      : ELFHSAILAsmBackend(T) {}
+  ELFHSAIL_64AsmBackend(const Target &T) : ELFHSAILAsmBackend(T) {}
 
   MCObjectWriter *createObjectWriter(raw_ostream &OS) const {
     return createELFObjectWriter(

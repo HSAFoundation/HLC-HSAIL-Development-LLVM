@@ -26,12 +26,11 @@ namespace llvm {
 
 class HSAILTargetMachine : public LLVMTargetMachine {
 private:
-  HSAILSubtarget      Subtarget;
+  HSAILSubtarget Subtarget;
   HSAILIntrinsicInfo IntrinsicInfo;
   TargetLoweringObjectFile *TLOF;
 
 public:
-
   class HSAILSelectionDAGInfo : public TargetSelectionDAGInfo {
     /// Subtarget - Keep a pointer to the HSAILSubtarget around so that we can
     /// make the right decision when generating code for different targets.
@@ -40,44 +39,38 @@ public:
     const HSAILTargetLowering &TLI;
 
   public:
-    explicit HSAILSelectionDAGInfo(const HSAILTargetMachine &TM) :
-      TargetSelectionDAGInfo(TM.getSubtarget<HSAILSubtarget>().getDataLayout()),
-      Subtarget(&TM.getSubtarget<HSAILSubtarget>()),
-      TLI(*TM.getSubtarget<HSAILSubtarget>().getTargetLowering()) {}
+    explicit HSAILSelectionDAGInfo(const HSAILTargetMachine &TM)
+        : TargetSelectionDAGInfo(
+              TM.getSubtarget<HSAILSubtarget>().getDataLayout()),
+          Subtarget(&TM.getSubtarget<HSAILSubtarget>()),
+          TLI(*TM.getSubtarget<HSAILSubtarget>().getTargetLowering()) {}
   };
 
 public:
-
   //  HSAILTargetMachine(const Target &T,
   //                   const std::string &TT,
   //                   const std::string &FS,
   //                   bool is64Bit);
 
- HSAILTargetMachine(const Target &T, StringRef TT, StringRef CPU, StringRef FS,
-                    const TargetOptions &Options, Reloc::Model RM,
-                    CodeModel::Model CM, CodeGenOpt::Level OL);
+  HSAILTargetMachine(const Target &T, StringRef TT, StringRef CPU, StringRef FS,
+                     const TargetOptions &Options, Reloc::Model RM,
+                     CodeModel::Model CM, CodeGenOpt::Level OL);
 
-   const HSAILIntrinsicInfo *getIntrinsicInfo() const override {
-     return &IntrinsicInfo;
-   }
-
-  const HSAILSubtarget *getSubtargetImpl() const override {
-    return &Subtarget;
+  const HSAILIntrinsicInfo *getIntrinsicInfo() const override {
+    return &IntrinsicInfo;
   }
 
-  TargetLoweringObjectFile *getObjFileLowering() const override {
-    return TLOF;
-  }
+  const HSAILSubtarget *getSubtargetImpl() const override { return &Subtarget; }
+
+  TargetLoweringObjectFile *getObjFileLowering() const override { return TLOF; }
 
   TargetPassConfig *createPassConfig(PassManagerBase &PM) override;
 
   CodeGenFileType HSAILFileType;
 
 public:
-  bool addPassesToEmitFile(PassManagerBase &PM,
-                           formatted_raw_ostream &Out,
-                           CodeGenFileType FT,
-                           bool DisableVerify = true,
+  bool addPassesToEmitFile(PassManagerBase &PM, formatted_raw_ostream &Out,
+                           CodeGenFileType FT, bool DisableVerify = true,
                            AnalysisID StartAfter = 0,
                            AnalysisID StopAfter = 0) override;
 };
@@ -85,12 +78,12 @@ public:
 /// HSAIL_32TargetMachine - HSAIL 32-bit target machine.
 class HSAIL_32TargetMachine : public HSAILTargetMachine {
   HSAILSelectionDAGInfo TSInfo;
+
 public:
-  HSAIL_32TargetMachine(const Target &T,
-			StringRef TT, StringRef CPU,
-			StringRef FS,const TargetOptions &Options,
-			Reloc::Model RM,
-			CodeModel::Model CM,CodeGenOpt::Level OL);
+  HSAIL_32TargetMachine(const Target &T, StringRef TT, StringRef CPU,
+                        StringRef FS, const TargetOptions &Options,
+                        Reloc::Model RM, CodeModel::Model CM,
+                        CodeGenOpt::Level OL);
 
   void dump(raw_ostream &O);
 };
@@ -99,13 +92,12 @@ public:
 ///
 class HSAIL_64TargetMachine : public HSAILTargetMachine {
   HSAILSelectionDAGInfo TSInfo;
-public:
-  HSAIL_64TargetMachine(const Target &T,
-			StringRef TT, StringRef CPU,
-			StringRef FS,const TargetOptions &Options,
-			Reloc::Model RM,
-			CodeModel::Model CM,CodeGenOpt::Level OL);
 
+public:
+  HSAIL_64TargetMachine(const Target &T, StringRef TT, StringRef CPU,
+                        StringRef FS, const TargetOptions &Options,
+                        Reloc::Model RM, CodeModel::Model CM,
+                        CodeGenOpt::Level OL);
 };
 
 } // End llvm namespace
@@ -114,8 +106,7 @@ namespace llvm {
 class HSAILPassConfig : public TargetPassConfig {
 public:
   HSAILPassConfig(HSAILTargetMachine *TM, PassManagerBase &PM)
-    : TargetPassConfig(TM, PM) {
-  }
+      : TargetPassConfig(TM, PM) {}
 
   HSAILTargetMachine &getHSAILTargetMachine() const {
     return getTM<HSAILTargetMachine>();
@@ -132,7 +123,6 @@ public:
   bool addInstSelector() override;
   bool addPreRegAlloc() override;
   bool addPostRegAlloc() override;
-
 };
 } // End llvm namespace
 #endif

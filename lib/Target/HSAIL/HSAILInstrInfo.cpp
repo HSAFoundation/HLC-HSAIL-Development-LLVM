@@ -36,19 +36,21 @@ using namespace llvm;
 namespace llvm {
 
 static cl::opt<bool> DisableBranchAnalysis("disable-branch-analysis",
-  cl::Hidden, cl::desc("Disable branch analysis"));
-static cl::opt<bool> DisableCondReversion("disable-branch-cond-reversion",
-  cl::Hidden, cl::desc("Disable branch condition reversion"));
+                                           cl::Hidden,
+                                           cl::desc("Disable branch analysis"));
+static cl::opt<bool>
+    DisableCondReversion("disable-branch-cond-reversion", cl::Hidden,
+                         cl::desc("Disable branch condition reversion"));
 
 // Reverse conditions in branch analysis
 // It marks whether or not we need to reverse condition
 // when we insert new branch
 enum CondReverseFlag {
-  COND_IRREVERSIBLE,      // For branches that can not be reversed
-  COND_REVERSE_POSITIVE,  // Don't need invertion
-  COND_REVERSE_NEGATIVE,  // Need invertion
-  COND_REVERSE_DEPENDANT  // Indicates that this condition has exactly
-                          // one depency which should be reverted with it
+  COND_IRREVERSIBLE,     // For branches that can not be reversed
+  COND_REVERSE_POSITIVE, // Don't need invertion
+  COND_REVERSE_NEGATIVE, // Need invertion
+  COND_REVERSE_DEPENDANT // Indicates that this condition has exactly
+                         // one depency which should be reverted with it
 };
 
 static unsigned getBrigTypeFromRCID(unsigned ID) {
@@ -64,33 +66,24 @@ static unsigned getBrigTypeFromRCID(unsigned ID) {
   }
 }
 HSAILInstrInfo::HSAILInstrInfo(HSAILSubtarget &st)
-  : HSAILGenInstrInfo(),
-//  : TargetInstrInfoImpl(HSAILInsts, array_lengthof(HSAILInsts)),
-    RI(st)
-{
+    : HSAILGenInstrInfo(),
+      //  : TargetInstrInfoImpl(HSAILInsts, array_lengthof(HSAILInsts)),
+      RI(st) {
   RS = new RegScavenger();
 }
 
-HSAILInstrInfo::~HSAILInstrInfo()
-{
-  delete RS;
-}
+HSAILInstrInfo::~HSAILInstrInfo() { delete RS; }
 
-bool
-HSAILInstrInfo::isCoalescableExtInstr(const MachineInstr &MI,
-                                      unsigned &SrcReg,
-                                      unsigned &DstReg,
-                                      unsigned &SubIdx) const
-{
+bool HSAILInstrInfo::isCoalescableExtInstr(const MachineInstr &MI,
+                                           unsigned &SrcReg, unsigned &DstReg,
+                                           unsigned &SubIdx) const {
   // HSAIL does not have any registers that overlap and cause
   // an extension.
   return false;
 }
 
-unsigned
-HSAILInstrInfo::isLoadFromStackSlot(const MachineInstr *MI,
-                                    int &FrameIndex) const
-{
+unsigned HSAILInstrInfo::isLoadFromStackSlot(const MachineInstr *MI,
+                                             int &FrameIndex) const {
   const MCInstrDesc &MCID = get(MI->getOpcode());
   if (!MCID.mayLoad() || !MI->hasOneMemOperand())
     return HSAIL::NoRegister;
@@ -99,8 +92,8 @@ HSAILInstrInfo::isLoadFromStackSlot(const MachineInstr *MI,
   if (!Segment || Segment->getImm() != HSAILAS::SPILL_ADDRESS)
     return HSAIL::NoRegister;
 
-  int AddressIdx = HSAIL::getNamedOperandIdx(MI->getOpcode(),
-                                             HSAIL::OpName::address);
+  int AddressIdx =
+      HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address);
   const MachineOperand &Base = MI->getOperand(AddressIdx + HSAILADDRESS::BASE);
 
   if (Base.isFI()) {
@@ -111,17 +104,13 @@ HSAILInstrInfo::isLoadFromStackSlot(const MachineInstr *MI,
   return HSAIL::NoRegister;
 }
 
-unsigned
-HSAILInstrInfo::isLoadFromStackSlotPostFE(const MachineInstr *MI,
-                                          int &FrameIndex) const
-{
+unsigned HSAILInstrInfo::isLoadFromStackSlotPostFE(const MachineInstr *MI,
+                                                   int &FrameIndex) const {
   return isLoadFromStackSlot(MI, FrameIndex);
 }
 
-unsigned
-HSAILInstrInfo::isStoreToStackSlot(const MachineInstr *MI,
-                                   int &FrameIndex) const
-{
+unsigned HSAILInstrInfo::isStoreToStackSlot(const MachineInstr *MI,
+                                            int &FrameIndex) const {
   const MCInstrDesc &MCID = get(MI->getOpcode());
   if (!MCID.mayStore() || !MI->hasOneMemOperand())
     return 0;
@@ -130,8 +119,8 @@ HSAILInstrInfo::isStoreToStackSlot(const MachineInstr *MI,
   if (!Segment || Segment->getImm() != HSAILAS::SPILL_ADDRESS)
     return HSAIL::NoRegister;
 
-  int AddressIdx = HSAIL::getNamedOperandIdx(MI->getOpcode(),
-                                             HSAIL::OpName::address);
+  int AddressIdx =
+      HSAIL::getNamedOperandIdx(MI->getOpcode(), HSAIL::OpName::address);
   const MachineOperand &Base = MI->getOperand(AddressIdx + HSAILADDRESS::BASE);
   if (Base.isFI()) {
     FrameIndex = Base.getIndex();
@@ -141,18 +130,13 @@ HSAILInstrInfo::isStoreToStackSlot(const MachineInstr *MI,
   return HSAIL::NoRegister;
 }
 
-unsigned
-HSAILInstrInfo::isStoreToStackSlotPostFE(const MachineInstr *MI,
-                                           int &FrameIndex) const
-{
+unsigned HSAILInstrInfo::isStoreToStackSlotPostFE(const MachineInstr *MI,
+                                                  int &FrameIndex) const {
   return isStoreToStackSlot(MI, FrameIndex);
 }
 
-static bool
-IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg,
-  const MachineRegisterInfo &MRI,
-  bool &CanReverse)
-{
+static bool IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg,
+                           const MachineRegisterInfo &MRI, bool &CanReverse) {
   // TODO_HSA: With LiveVariable analysis we can make it
   // a lot more effectively.
   // But currently we can not rely on any of the analysis results
@@ -165,42 +149,37 @@ IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg,
     return true;
 
   std::queue<MachineBasicBlock *> Q;
-  SmallPtrSet<MachineBasicBlock*, 32> Visited;
+  SmallPtrSet<MachineBasicBlock *, 32> Visited;
 
   Q.push(&MBB);
 
-  while (!Q.empty())
-  {
+  while (!Q.empty()) {
     MachineBasicBlock *cur_mbb = Q.front();
     Q.pop();
 
     for (MachineBasicBlock::succ_iterator succ = cur_mbb->succ_begin(),
-         succ_end = cur_mbb->succ_end(); succ != succ_end; ++succ)
-      if (!Visited.count(*succ))
-      {
+                                          succ_end = cur_mbb->succ_end();
+         succ != succ_end; ++succ)
+      if (!Visited.count(*succ)) {
         Visited.insert(*succ);
 
         bool need_process_futher = true;
 
         // Process basic block
         for (MachineBasicBlock::iterator instr = (*succ)->begin(),
-             instr_end = (*succ)->end(); instr != instr_end; ++instr)
-        {
-          if (instr->readsRegister(Reg))
-          {
+                                         instr_end = (*succ)->end();
+             instr != instr_end; ++instr) {
+          if (instr->readsRegister(Reg)) {
             // Always abort on circular dependencies
             // Which will require to insert or remove not
             if (instr->getParent() == &MBB &&
-                (instr->isBranch() ||
-                 (instr->getOpcode() == HSAIL::NOT_B1)))
-            {
+                (instr->isBranch() || (instr->getOpcode() == HSAIL::NOT_B1))) {
               CanReverse = false;
             }
 
             return false;
           }
-          if (instr->definesRegister(Reg))
-          {
+          if (instr->definesRegister(Reg)) {
             need_process_futher = false;
             break;
           }
@@ -215,17 +194,16 @@ IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg,
   return true;
 }
 
-static bool
-CheckSpillAfterDef(MachineInstr * start, unsigned reg, bool& canBeSpilled)
-{
-  MachineBasicBlock * MBB = start->getParent();
+static bool CheckSpillAfterDef(MachineInstr *start, unsigned reg,
+                               bool &canBeSpilled) {
+  MachineBasicBlock *MBB = start->getParent();
   MachineBasicBlock::reverse_iterator B(start);
   MachineBasicBlock::reverse_iterator E = MBB->rend();
-  if (E == B) return false; // empty block check
-  ++B; // skip branch instr itself
+  if (E == B)
+    return false; // empty block check
+  ++B;            // skip branch instr itself
   for (MachineBasicBlock::reverse_iterator I = B; I != E; ++I) {
-    if (I->definesRegister(reg))
-    {
+    if (I->definesRegister(reg)) {
       return true;
     }
     if (I->readsRegister(reg) && (HSAIL::isConv(&*I) || I->mayStore())) {
@@ -236,36 +214,30 @@ CheckSpillAfterDef(MachineInstr * start, unsigned reg, bool& canBeSpilled)
   return false;
 }
 
-static bool
-IsSpilledAfterDef(MachineInstr * start, unsigned reg)
-{
+static bool IsSpilledAfterDef(MachineInstr *start, unsigned reg) {
   bool canBeSpilled = false;
-  if (!CheckSpillAfterDef(start, reg, canBeSpilled))
-  {
+  if (!CheckSpillAfterDef(start, reg, canBeSpilled)) {
     std::queue<MachineBasicBlock *> Q;
-    SmallPtrSet<MachineBasicBlock*, 32> Visited;
-    MachineBasicBlock * MBB = start->getParent();
+    SmallPtrSet<MachineBasicBlock *, 32> Visited;
+    MachineBasicBlock *MBB = start->getParent();
     Q.push(MBB);
-    while (!Q.empty() && !canBeSpilled)
-    {
+    while (!Q.empty() && !canBeSpilled) {
       MachineBasicBlock *cur_mbb = Q.front();
       Q.pop();
       for (MachineBasicBlock::pred_iterator pred = cur_mbb->pred_begin(),
-        pred_end = cur_mbb->pred_end(); pred != pred_end; ++pred)
-      {
-        if (!Visited.count(*pred) && !(*pred)->empty())
-        {
+                                            pred_end = cur_mbb->pred_end();
+           pred != pred_end; ++pred) {
+        if (!Visited.count(*pred) && !(*pred)->empty()) {
           Visited.insert(*pred);
-          MachineInstr * instr;
-          MachineBasicBlock::instr_iterator termIt = (*pred)->getFirstInstrTerminator();
-          if (termIt == (*pred)->instr_end())
-          {
-            instr =  &*(*pred)->rbegin();
+          MachineInstr *instr;
+          MachineBasicBlock::instr_iterator termIt =
+              (*pred)->getFirstInstrTerminator();
+          if (termIt == (*pred)->instr_end()) {
+            instr = &*(*pred)->rbegin();
           } else {
             instr = termIt;
           }
-          if (!CheckSpillAfterDef(instr, reg, canBeSpilled))
-          {
+          if (!CheckSpillAfterDef(instr, reg, canBeSpilled)) {
             Q.push(*pred);
           }
         }
@@ -275,12 +247,11 @@ IsSpilledAfterDef(MachineInstr * start, unsigned reg)
   return canBeSpilled;
 }
 
-bool
-HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
-                              MachineBasicBlock *&TBB,
-                              MachineBasicBlock *&FBB,
-                              SmallVectorImpl<MachineOperand> &Cond,
-                              bool AllowModify) const {
+bool HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
+                                   MachineBasicBlock *&TBB,
+                                   MachineBasicBlock *&FBB,
+                                   SmallVectorImpl<MachineOperand> &Cond,
+                                   bool AllowModify) const {
   const MachineRegisterInfo &MRI = MBB.getParent()->getRegInfo();
   if (DisableBranchAnalysis)
     return true;
@@ -351,8 +322,7 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
       // (register, COND_REVERSE_DEPENDANT, free reg num, reverse flag)
       Cond.push_back(I->getOperand(Src0Idx));
 
-      if (DisableCondReversion)
-      {
+      if (DisableCondReversion) {
         Cond.push_back(MachineOperand::CreateImm(COND_IRREVERSIBLE));
         continue;
       }
@@ -361,8 +331,7 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
       unsigned reg = I->getOperand(Src0Idx).getReg();
       bool can_reverse = false;
       bool is_def_before_use = IsDefBeforeUse(MBB, reg, MRI, can_reverse);
-      if (can_reverse)
-      {
+      if (can_reverse) {
         /* Here we're taking care of the possible control register spilling
          that occur between it's definition and branch. If it does, we're not
          allowed to inverse branch because some other place rely on the
@@ -374,16 +343,14 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
       // insert or remove 'not_b1' inside loop
       // Also, we avoid reversing for that comparisons
       // whose result is spilled in between the definition and use.
-      if (!can_reverse)
-      {
+      if (!can_reverse) {
         Cond.push_back(MachineOperand::CreateImm(COND_IRREVERSIBLE));
         continue;
       }
 
       // If there is no uses of condition register we can just reverse
       // instruction and be fine
-      if (is_def_before_use)
-      {
+      if (is_def_before_use) {
         Cond.push_back(MachineOperand::CreateImm(COND_REVERSE_POSITIVE));
         continue;
       }
@@ -391,21 +358,18 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
       // There is uses of this instruction somewhere down the control flow
       // Try to use RegisterScavenger to get free register
       // If there is no such one than do not inverse condition
-      if (!MRI.tracksLiveness())
-      {
+      if (!MRI.tracksLiveness()) {
         Cond.push_back(MachineOperand::CreateImm(COND_IRREVERSIBLE));
         continue;
       }
 
       unsigned free_reg = 0;
-      if (!TargetRegisterInfo::isVirtualRegister(Cond[0].getReg()))
-      {
+      if (!TargetRegisterInfo::isVirtualRegister(Cond[0].getReg())) {
         RS->enterBasicBlock(&MBB);
         RS->forward(std::prev(MBB.end()));
 
         free_reg = RS->FindUnusedReg(&HSAIL::CRRegClass);
-        if (free_reg == 0)
-        {
+        if (free_reg == 0) {
           Cond.push_back(MachineOperand::CreateImm(COND_IRREVERSIBLE));
           continue;
         }
@@ -496,12 +460,10 @@ static bool isFPBrigType(BrigType BT) {
 // Different from `HSAILInstrInfo::ReverseBranchCondition`
 // because it actually generates reversion code
 // Returns register with condition result
-static unsigned GenerateBranchCondReversion(
-  MachineBasicBlock &MBB,
-  const MachineOperand &CondOp,
-  const HSAILInstrInfo *TII,
-  DebugLoc DL)
-{
+static unsigned GenerateBranchCondReversion(MachineBasicBlock &MBB,
+                                            const MachineOperand &CondOp,
+                                            const HSAILInstrInfo *TII,
+                                            DebugLoc DL) {
   assert(CondOp.isReg());
   unsigned cond_reg = CondOp.getReg();
 
@@ -512,12 +474,10 @@ static unsigned GenerateBranchCondReversion(
   // Manualy search for latest usage of condition register in MBB
   MachineBasicBlock::iterator I = MBB.end();
 
-  while (I != MBB.begin())
-  {
+  while (I != MBB.begin()) {
     --I;
 
-    if (I->definesRegister(cond_reg))
-    {
+    if (I->definesRegister(cond_reg)) {
       cond_expr = &*I;
       break;
     }
@@ -526,20 +486,16 @@ static unsigned GenerateBranchCondReversion(
   // If condition is compare instruction - reverse it
   bool need_insert_not = false;
   if (cond_expr && cond_expr->isCompare()) {
-    MachineOperand *CmpOp
-      = TII->getNamedOperand(*cond_expr, HSAIL::OpName::op);
+    MachineOperand *CmpOp = TII->getNamedOperand(*cond_expr, HSAIL::OpName::op);
 
-    BrigType CmpType
-      = static_cast<BrigType>(
-        TII->getNamedOperand(*cond_expr,
-                             HSAIL::OpName::sourceType)->getImm());
+    BrigType CmpType = static_cast<BrigType>(
+        TII->getNamedOperand(*cond_expr, HSAIL::OpName::sourceType)->getImm());
 
-    BrigCompareOperation OrigOp
-      = static_cast<BrigCompareOperation>(CmpOp->getImm());
+    BrigCompareOperation OrigOp =
+        static_cast<BrigCompareOperation>(CmpOp->getImm());
 
-    BrigCompareOperation RevOp = isFPBrigType(CmpType) ?
-      invFPCondOp(OrigOp) :
-      invIntCondOp(OrigOp);
+    BrigCompareOperation RevOp =
+        isFPBrigType(CmpType) ? invFPCondOp(OrigOp) : invIntCondOp(OrigOp);
 
     if (OrigOp != RevOp) // Can invert the operation.
       CmpOp->setImm(RevOp);
@@ -547,37 +503,30 @@ static unsigned GenerateBranchCondReversion(
       need_insert_not = true;
   }
   // If condition is logical not - just remove it
-  else if (cond_expr && cond_expr->getOpcode() == HSAIL::NOT_B1)
-  {
+  else if (cond_expr && cond_expr->getOpcode() == HSAIL::NOT_B1) {
     cond_reg = cond_expr->getOperand(1).getReg();
     cond_expr->eraseFromParent();
-  }
-  else
+  } else
     need_insert_not = true;
 
   // Else insert logical not
-  if (need_insert_not)
-  {
+  if (need_insert_not) {
     // If we are before register allocation we need to maintain SSA form
     if (TargetRegisterInfo::isVirtualRegister(CondOp.getReg()))
       cond_reg = MRI.createVirtualRegister(MRI.getRegClass(CondOp.getReg()));
 
     BuildMI(&MBB, DL, TII->get(HSAIL::NOT_B1))
-      .addReg(cond_reg, RegState::Define)
-      .addReg(CondOp.getReg())
-      .addImm(BRIG_TYPE_B1);
+        .addReg(cond_reg, RegState::Define)
+        .addReg(CondOp.getReg())
+        .addImm(BRIG_TYPE_B1);
   }
 
   return cond_reg;
 }
 
-unsigned
-HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
-                             MachineBasicBlock *TBB,
-                             MachineBasicBlock *FBB,
-                             const SmallVectorImpl<MachineOperand> &Cond,
-                             DebugLoc DL) const
-{
+unsigned HSAILInstrInfo::InsertBranch(
+    MachineBasicBlock &MBB, MachineBasicBlock *TBB, MachineBasicBlock *FBB,
+    const SmallVectorImpl<MachineOperand> &Cond, DebugLoc DL) const {
   // Shouldn't be a fall through.
   assert(TBB && "InsertBranch must not be told to insert a fallthrough");
 
@@ -585,15 +534,14 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
     // Unconditional branch?
     assert(!FBB && "Unconditional branch with multiple successors!");
     BuildMI(&MBB, DL, get(HSAIL::BR))
-      .addImm(BRIG_WIDTH_ALL)
-      .addMBB(TBB)
-      .addImm(BRIG_TYPE_NONE);
+        .addImm(BRIG_WIDTH_ALL)
+        .addMBB(TBB)
+        .addImm(BRIG_TYPE_NONE);
     return 1;
   }
 
   // AnalyzeBranch can handle only one condition
-  if (Cond.size() != 2 &&
-      Cond.size() != 4)
+  if (Cond.size() != 2 && Cond.size() != 4)
     return 0;
 
   // Conditional branch.
@@ -602,13 +550,11 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
   unsigned cond_reg = Cond[0].getReg();
 
   // Reverse condition
-  switch (static_cast<CondReverseFlag>(Cond[1].getImm()))
-  {
+  switch (static_cast<CondReverseFlag>(Cond[1].getImm())) {
   case COND_REVERSE_DEPENDANT:
     assert(Cond.size() == 4 && Cond[2].isImm());
 
-    if (Cond[3].getImm() == COND_REVERSE_NEGATIVE)
-    {
+    if (Cond[3].getImm() == COND_REVERSE_NEGATIVE) {
       MachineRegisterInfo &MRI = MBB.getParent()->getRegInfo();
       if (TargetRegisterInfo::isVirtualRegister(Cond[0].getReg()))
         cond_reg = MRI.createVirtualRegister(MRI.getRegClass(Cond[0].getReg()));
@@ -616,9 +562,9 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
         cond_reg = Cond[2].getImm();
 
       BuildMI(&MBB, DL, get(HSAIL::NOT_B1))
-        .addReg(cond_reg, RegState::Define)
-        .addReg(Cond[0].getReg())
-        .addImm(BRIG_TYPE_B1);
+          .addReg(cond_reg, RegState::Define)
+          .addReg(Cond[0].getReg())
+          .addImm(BRIG_TYPE_B1);
     }
 
     break;
@@ -637,19 +583,19 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
   unsigned Count = 0;
 
   BuildMI(&MBB, DL, get(HSAIL::CBR))
-    .addImm(BRIG_WIDTH_1)
-    .addReg(cond_reg)
-    .addMBB(TBB)
-    .addImm(BRIG_TYPE_B1);
+      .addImm(BRIG_WIDTH_1)
+      .addReg(cond_reg)
+      .addMBB(TBB)
+      .addImm(BRIG_TYPE_B1);
 
   ++Count;
 
   if (FBB) {
     // Two-way Conditional branch. Insert the second branch.
     BuildMI(&MBB, DL, get(HSAIL::BR))
-      .addImm(BRIG_WIDTH_ALL)
-      .addMBB(FBB)
-      .addImm(BRIG_TYPE_NONE);
+        .addImm(BRIG_WIDTH_ALL)
+        .addMBB(FBB)
+        .addImm(BRIG_TYPE_NONE);
 
     ++Count;
   }
@@ -657,9 +603,7 @@ HSAILInstrInfo::InsertBranch(MachineBasicBlock &MBB,
   return Count;
 }
 
-unsigned int
-HSAILInstrInfo::RemoveBranch(MachineBasicBlock &MBB) const
-{
+unsigned int HSAILInstrInfo::RemoveBranch(MachineBasicBlock &MBB) const {
   MachineBasicBlock::iterator I = MBB.end();
   unsigned Count = 0;
 
@@ -668,8 +612,7 @@ HSAILInstrInfo::RemoveBranch(MachineBasicBlock &MBB) const
     if (I->isDebugValue())
       continue;
 
-    if (I->getOpcode() != HSAIL::BR &&
-        I->getOpcode() != HSAIL::CBR)
+    if (I->getOpcode() != HSAIL::BR && I->getOpcode() != HSAIL::CBR)
       break;
 
     // Remove the branch.
@@ -682,29 +625,25 @@ HSAILInstrInfo::RemoveBranch(MachineBasicBlock &MBB) const
 }
 
 // Emergency spill frame indexes for functions
-static DenseMap<const MachineFunction*, int> emergencyStackSlot;
+static DenseMap<const MachineFunction *, int> emergencyStackSlot;
 
 // Creates or returns a 32 bit emergency frame index for a function
-static int
-getEmergencyStackSlot(MachineFunction* MF)
-{
+static int getEmergencyStackSlot(MachineFunction *MF) {
   if (emergencyStackSlot.find(MF) == emergencyStackSlot.end()) {
-    emergencyStackSlot.insert(std::make_pair(MF,
-      MF->getFrameInfo()->CreateSpillStackObject(HSAIL::GPR32RegClass.getSize(),
-       HSAIL::GPR32RegClass.getAlignment())));
+    emergencyStackSlot.insert(
+        std::make_pair(MF, MF->getFrameInfo()->CreateSpillStackObject(
+                               HSAIL::GPR32RegClass.getSize(),
+                               HSAIL::GPR32RegClass.getAlignment())));
   }
   return emergencyStackSlot[MF];
 }
 
-void
-HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
-                                    MachineBasicBlock::iterator MI,
-                                    unsigned SrcReg,
-                                    bool isKill,
-                                    int FrameIndex,
-                                    const TargetRegisterClass *RC,
-                                    const TargetRegisterInfo *TRI) const
-{
+void HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
+                                         MachineBasicBlock::iterator MI,
+                                         unsigned SrcReg, bool isKill,
+                                         int FrameIndex,
+                                         const TargetRegisterClass *RC,
+                                         const TargetRegisterInfo *TRI) const {
   unsigned int Opc = 0;
   MachineFunction &MF = *MBB.getParent();
   MachineFrameInfo &MFI = *MF.getFrameInfo();
@@ -712,21 +651,21 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
 
   unsigned BT;
   switch (RC->getID()) {
-    default:
-      llvm_unreachable("unrecognized TargetRegisterClass");
-      break;
-    case HSAIL::GPR32RegClassID:
-      Opc = HSAIL::ST_U32;
-      BT = BRIG_TYPE_U32;
-      break;
-    case HSAIL::GPR64RegClassID:
-      Opc = HSAIL::ST_U64;
-      BT = BRIG_TYPE_U64;
-      break;
-    case HSAIL::CRRegClassID:
-      Opc = HSAIL::SPILL_B1;
-      BT = BRIG_TYPE_B1;
-      break;
+  default:
+    llvm_unreachable("unrecognized TargetRegisterClass");
+    break;
+  case HSAIL::GPR32RegClassID:
+    Opc = HSAIL::ST_U32;
+    BT = BRIG_TYPE_U32;
+    break;
+  case HSAIL::GPR64RegClassID:
+    Opc = HSAIL::ST_U64;
+    BT = BRIG_TYPE_U64;
+    break;
+  case HSAIL::CRRegClassID:
+    Opc = HSAIL::SPILL_B1;
+    BT = BRIG_TYPE_B1;
+    break;
   }
   if (MI != MBB.end()) {
     DL = MI->getDebugLoc();
@@ -742,40 +681,35 @@ HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
     // it will be too late to create it, so create it now.
     // Note, there is no need to do it in loadRegFromStackSlot() because
     // there is no spill load w/o a spill store.
-    (void) getEmergencyStackSlot(&MF);
-    // Fall through
+    (void)getEmergencyStackSlot(&MF);
+  // Fall through
   case HSAIL::GPR32RegClassID:
   case HSAIL::GPR64RegClassID: {
-    MachineMemOperand *MMO
-      = MF.getMachineMemOperand(
+    MachineMemOperand *MMO = MF.getMachineMemOperand(
         MachinePointerInfo::getFixedStack(FrameIndex),
-        MachineMemOperand::MOStore,
-        MFI.getObjectSize(FrameIndex),
+        MachineMemOperand::MOStore, MFI.getObjectSize(FrameIndex),
         MFI.getObjectAlignment(FrameIndex));
 
     // FIXME: Why is this setting kill?
     BuildMI(MBB, MI, DL, get(Opc))
-      .addReg(SrcReg, getKillRegState(isKill)) // src
-      .addFrameIndex(FrameIndex)               // address_base
-      .addReg(HSAIL::NoRegister)               // address_reg
-      .addImm(0)                               // address_offset
-      .addImm(BT)                              // TypeLength
-      .addImm(HSAILAS::SPILL_ADDRESS)          // segment
-      .addImm(MMO->getAlignment())
-      .addMemOperand(MMO);
+        .addReg(SrcReg, getKillRegState(isKill)) // src
+        .addFrameIndex(FrameIndex)               // address_base
+        .addReg(HSAIL::NoRegister)               // address_reg
+        .addImm(0)                               // address_offset
+        .addImm(BT)                              // TypeLength
+        .addImm(HSAILAS::SPILL_ADDRESS)          // segment
+        .addImm(MMO->getAlignment())
+        .addMemOperand(MMO);
     break;
   }
   }
 }
 
-void
-HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
-                                     MachineBasicBlock::iterator MI,
-                                     unsigned DestReg,
-                                     int FrameIndex,
-                                     const TargetRegisterClass *RC,
-                                     const TargetRegisterInfo *TRI) const
-{
+void HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
+                                          MachineBasicBlock::iterator MI,
+                                          unsigned DestReg, int FrameIndex,
+                                          const TargetRegisterClass *RC,
+                                          const TargetRegisterInfo *TRI) const {
   unsigned int Opc = 0;
   MachineFunction &MF = *MBB.getParent();
   MachineFrameInfo &MFI = *MF.getFrameInfo();
@@ -783,21 +717,21 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
 
   unsigned BT;
   switch (RC->getID()) {
-    default:
-      llvm_unreachable("unrecognized TargetRegisterClass");
-      break;
-    case HSAIL::GPR32RegClassID:
-      Opc = HSAIL::LD_U32;
-      BT = BRIG_TYPE_U32;
-      break;
-    case HSAIL::GPR64RegClassID:
-      Opc = HSAIL::LD_U64;
-      BT = BRIG_TYPE_U64;
-      break;
-    case HSAIL::CRRegClassID:
-      Opc = HSAIL::RESTORE_B1;
-      BT = BRIG_TYPE_B1;
-      break;
+  default:
+    llvm_unreachable("unrecognized TargetRegisterClass");
+    break;
+  case HSAIL::GPR32RegClassID:
+    Opc = HSAIL::LD_U32;
+    BT = BRIG_TYPE_U32;
+    break;
+  case HSAIL::GPR64RegClassID:
+    Opc = HSAIL::LD_U64;
+    BT = BRIG_TYPE_U64;
+    break;
+  case HSAIL::CRRegClassID:
+    Opc = HSAIL::RESTORE_B1;
+    BT = BRIG_TYPE_B1;
+    break;
   }
   if (MI != MBB.end()) {
     DL = MI->getDebugLoc();
@@ -810,33 +744,29 @@ HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
   case HSAIL::GPR32RegClassID:
   case HSAIL::GPR64RegClassID:
   case HSAIL::CRRegClassID: {
-    MachineMemOperand *MMO
-      = MF.getMachineMemOperand(MachinePointerInfo::getFixedStack(FrameIndex),
-                                MachineMemOperand::MOLoad,
-                                MFI.getObjectSize(FrameIndex),
-                                MFI.getObjectAlignment(FrameIndex));
+    MachineMemOperand *MMO = MF.getMachineMemOperand(
+        MachinePointerInfo::getFixedStack(FrameIndex),
+        MachineMemOperand::MOLoad, MFI.getObjectSize(FrameIndex),
+        MFI.getObjectAlignment(FrameIndex));
     BuildMI(MBB, MI, DL, get(Opc))
-      .addReg(DestReg, RegState::Define) // dest
-      .addFrameIndex(FrameIndex)         // address_base
-      .addReg(HSAIL::NoRegister)         // address_reg
-      .addImm(0)                         // address_offset
-      .addImm(BT)                        // TypeLength
-      .addImm(HSAILAS::SPILL_ADDRESS)    // segment
-      .addImm(MMO->getAlignment())       // align
-      .addImm(BRIG_WIDTH_1)              // width
-      .addImm(0)                         // mask
-      .addMemOperand(MMO);
+        .addReg(DestReg, RegState::Define) // dest
+        .addFrameIndex(FrameIndex)         // address_base
+        .addReg(HSAIL::NoRegister)         // address_reg
+        .addImm(0)                         // address_offset
+        .addImm(BT)                        // TypeLength
+        .addImm(HSAILAS::SPILL_ADDRESS)    // segment
+        .addImm(MMO->getAlignment())       // align
+        .addImm(BRIG_WIDTH_1)              // width
+        .addImm(0)                         // mask
+        .addMemOperand(MMO);
     break;
   }
   }
 }
 
-bool
-HSAILInstrInfo::areLoadsFromSameBasePtr(SDNode *Node1,
-                                        SDNode *Node2,
-                                        int64_t &Offset1,
-                                        int64_t &Offset2) const
-{
+bool HSAILInstrInfo::areLoadsFromSameBasePtr(SDNode *Node1, SDNode *Node2,
+                                             int64_t &Offset1,
+                                             int64_t &Offset2) const {
   // Warning! This function will handle not only load but store nodes too
   // because there is no real difference between memory operands in loads and
   // stores.
@@ -846,7 +776,7 @@ HSAILInstrInfo::areLoadsFromSameBasePtr(SDNode *Node1,
     return false;
 
   MachineSDNode *mnode1 = cast<MachineSDNode>(Node1),
-    *mnode2 = cast<MachineSDNode>(Node2);
+                *mnode2 = cast<MachineSDNode>(Node2);
 
   if (mnode1->memoperands_empty() || mnode2->memoperands_empty())
     return false;
@@ -863,10 +793,9 @@ HSAILInstrInfo::areLoadsFromSameBasePtr(SDNode *Node1,
   // TODO_HSA: Consider extension types to be checked explicitly
   if (mo1->getSize() != mo2->getSize() ||
       mo1->getPointerInfo().getAddrSpace() !=
-        mo2->getPointerInfo().getAddrSpace() ||
+          mo2->getPointerInfo().getAddrSpace() ||
       mo1->getValue() != mo2->getValue() ||
-      mo1->getFlags() != mo2->getFlags())
-  {
+      mo1->getFlags() != mo2->getFlags()) {
     return false;
   }
 
@@ -876,13 +805,9 @@ HSAILInstrInfo::areLoadsFromSameBasePtr(SDNode *Node1,
   return true;
 }
 
-bool
-HSAILInstrInfo::shouldScheduleLoadsNear(SDNode *Node1,
-                                        SDNode *Node2,
-                                        int64_t Offset1,
-                                        int64_t Offset2,
-                                        unsigned NumLoads) const
-{
+bool HSAILInstrInfo::shouldScheduleLoadsNear(SDNode *Node1, SDNode *Node2,
+                                             int64_t Offset1, int64_t Offset2,
+                                             unsigned NumLoads) const {
   // Warning! This function will handle not only load but store nodes too
   // because there is no real difference between memory operands in loads and
   // stores.
@@ -896,15 +821,13 @@ HSAILInstrInfo::shouldScheduleLoadsNear(SDNode *Node1,
 
   // Check that loads are close enough
   if (Offset2 - Offset1 <=
-        4 * (int64_t)(*mnode1->memoperands_begin())->getSize())
+      4 * (int64_t)(*mnode1->memoperands_begin())->getSize())
     return true;
   return false;
 }
 
-bool
-HSAILInstrInfo::ReverseBranchCondition(SmallVectorImpl<MachineOperand> &Cond)
-                                       const
-{
+bool HSAILInstrInfo::ReverseBranchCondition(
+    SmallVectorImpl<MachineOperand> &Cond) const {
   if (Cond.size() < 2)
     return true;
 
@@ -912,31 +835,34 @@ HSAILInstrInfo::ReverseBranchCondition(SmallVectorImpl<MachineOperand> &Cond)
   assert(Cond.size() % 2 == 0);
 
   for (SmallVectorImpl<MachineOperand>::iterator I = Cond.begin(),
-       E = Cond.end();
-       I != E; ++I)
-  {
+                                                 E = Cond.end();
+       I != E; ++I) {
     ++I;
     if (static_cast<CondReverseFlag>(I->getImm()) == COND_IRREVERSIBLE)
       return true;
   }
 
-
   for (SmallVectorImpl<MachineOperand>::iterator I = Cond.begin(),
-       E = Cond.end();
-       I != E; ++I)
-  {
+                                                 E = Cond.end();
+       I != E; ++I) {
     ++I;
 
     assert(I->isImm());
 
     CondReverseFlag cond_rev_flag = static_cast<CondReverseFlag>(I->getImm());
 
-    switch (cond_rev_flag)
-    {
-    case COND_REVERSE_POSITIVE: cond_rev_flag = COND_REVERSE_NEGATIVE; break;
-    case COND_REVERSE_NEGATIVE: cond_rev_flag = COND_REVERSE_POSITIVE; break;
-    case COND_REVERSE_DEPENDANT: cond_rev_flag = COND_REVERSE_DEPENDANT; break;
-    default: llvm_unreachable("Unknown cond reverse flag");
+    switch (cond_rev_flag) {
+    case COND_REVERSE_POSITIVE:
+      cond_rev_flag = COND_REVERSE_NEGATIVE;
+      break;
+    case COND_REVERSE_NEGATIVE:
+      cond_rev_flag = COND_REVERSE_POSITIVE;
+      break;
+    case COND_REVERSE_DEPENDANT:
+      cond_rev_flag = COND_REVERSE_DEPENDANT;
+      break;
+    default:
+      llvm_unreachable("Unknown cond reverse flag");
     }
 
     I->setImm(cond_rev_flag);
@@ -945,38 +871,35 @@ HSAILInstrInfo::ReverseBranchCondition(SmallVectorImpl<MachineOperand> &Cond)
   return false;
 }
 
-bool
-HSAILInstrInfo::isSafeToMoveRegClassDefs(const TargetRegisterClass *RC) const
-{
+bool HSAILInstrInfo::isSafeToMoveRegClassDefs(
+    const TargetRegisterClass *RC) const {
   // Micah: HSAIL does not have any constraints about moving defs.
   return true;
 }
 
 void HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
-                                 MachineBasicBlock::iterator MI,
-                                 DebugLoc DL,
-                                 unsigned DestReg,
-                                 unsigned SrcReg,
+                                 MachineBasicBlock::iterator MI, DebugLoc DL,
+                                 unsigned DestReg, unsigned SrcReg,
                                  bool KillSrc) const {
   if (HSAIL::GPR32RegClass.contains(DestReg, SrcReg)) {
     BuildMI(MBB, MI, DL, get(HSAIL::MOV_B32), DestReg)
-      .addReg(SrcReg, getKillRegState(KillSrc))
-      .addImm(BRIG_TYPE_B32);
-      return;
+        .addReg(SrcReg, getKillRegState(KillSrc))
+        .addImm(BRIG_TYPE_B32);
+    return;
   }
 
   if (HSAIL::GPR64RegClass.contains(DestReg, SrcReg)) {
     BuildMI(MBB, MI, DL, get(HSAIL::MOV_B64), DestReg)
-      .addReg(SrcReg, getKillRegState(KillSrc))
-      .addImm(BRIG_TYPE_B64);
-      return;
+        .addReg(SrcReg, getKillRegState(KillSrc))
+        .addImm(BRIG_TYPE_B64);
+    return;
   }
 
   if (HSAIL::CRRegClass.contains(DestReg, SrcReg)) {
     BuildMI(MBB, MI, DL, get(HSAIL::MOV_B1), DestReg)
-      .addReg(SrcReg, getKillRegState(KillSrc))
-      .addImm(BRIG_TYPE_B1);
-      return;
+        .addReg(SrcReg, getKillRegState(KillSrc))
+        .addImm(BRIG_TYPE_B1);
+    return;
   }
 
   unsigned SrcBT = -1;
@@ -1011,25 +934,24 @@ void HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
   }
 
   BuildMI(MBB, MI, DL, get(CvtOpc), DestReg)
-    .addImm(0)      // ftz
-    .addImm(0)      // round
-    .addImm(DestBT) // destTypedestLength
-    .addImm(SrcBT)  // srcTypesrcLength
-    .addReg(SrcReg, getKillRegState(KillSrc));
+      .addImm(0)      // ftz
+      .addImm(0)      // round
+      .addImm(DestBT) // destTypedestLength
+      .addImm(SrcBT)  // srcTypesrcLength
+      .addReg(SrcReg, getKillRegState(KillSrc));
 }
 
 /// Get a free GPR32 or insert spill and reload around specified instruction
 /// and return fried register
 unsigned
-HSAILInstrInfo::getTempGPR32PostRA(MachineBasicBlock::iterator MBBI) const
-{
-  MachineBasicBlock* MBB = MBBI->getParent();
+HSAILInstrInfo::getTempGPR32PostRA(MachineBasicBlock::iterator MBBI) const {
+  MachineBasicBlock *MBB = MBBI->getParent();
   RS->enterBasicBlock(MBB);
   RS->forward(MBBI);
   unsigned tempU32 = RS->FindUnusedReg(&HSAIL::GPR32RegClass);
   if (!tempU32) {
-    BitVector AS = RI.getAllocatableSet(*(MBB->getParent()),
-                                        &HSAIL::GPR32RegClass);
+    BitVector AS =
+        RI.getAllocatableSet(*(MBB->getParent()), &HSAIL::GPR32RegClass);
     // Remove any candidates touched by instruction.
     for (unsigned i = 0, e = MBBI->getNumOperands(); i != e; ++i) {
       const MachineOperand &MO = MBBI->getOperand(i);
@@ -1042,76 +964,74 @@ HSAILInstrInfo::getTempGPR32PostRA(MachineBasicBlock::iterator MBBI) const
       }
     }
     tempU32 = AS.find_first();
-    MachineBasicBlock::iterator UseMI (MBBI);
+    MachineBasicBlock::iterator UseMI(MBBI);
     RI.saveScavengerRegisterToFI(*MBB, *MBBI, ++UseMI, &HSAIL::GPR32RegClass,
-      tempU32, getEmergencyStackSlot(MBB->getParent()));
+                                 tempU32,
+                                 getEmergencyStackSlot(MBB->getParent()));
 
     // FIXME: Need to pass correct FrameOperand Idx
     unsigned FIOpIdx = 0;
     RI.eliminateFrameIndex(--MBBI, 0, FIOpIdx, RS);
-    RI.eliminateFrameIndex(--UseMI, 0, FIOpIdx,  RS);
+    RI.eliminateFrameIndex(--UseMI, 0, FIOpIdx, RS);
   }
   return tempU32;
 }
 
-bool
-HSAILInstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MBBI) const
-{
-  MachineBasicBlock* MBB = MBBI->getParent();
+bool HSAILInstrInfo::expandPostRAPseudo(
+    MachineBasicBlock::iterator MBBI) const {
+  MachineBasicBlock *MBB = MBBI->getParent();
   MachineInstr &MI = *MBBI;
   unsigned opcode = MI.getOpcode();
 
   switch (opcode) {
-  case HSAIL::SPILL_B1:
-    {
-      unsigned tempU32 = getTempGPR32PostRA(MBBI);
-      DebugLoc DL = MI.getDebugLoc();
-      BuildMI(*MBB, MBBI, DL, get(HSAIL::CVT_U32_B1), tempU32)
+  case HSAIL::SPILL_B1: {
+    unsigned tempU32 = getTempGPR32PostRA(MBBI);
+    DebugLoc DL = MI.getDebugLoc();
+    BuildMI(*MBB, MBBI, DL, get(HSAIL::CVT_U32_B1), tempU32)
         .addImm(0)             // ftz
         .addImm(0)             // round
         .addImm(BRIG_TYPE_U32) // destTypedestLength
         .addImm(BRIG_TYPE_B1)  // srcTypesrcLength
         .addOperand(MI.getOperand(0));
 
-      MI.setDesc(get(HSAIL::ST_U32));
-      MI.getOperand(0).setReg(tempU32);
-      MI.getOperand(0).setIsKill();
+    MI.setDesc(get(HSAIL::ST_U32));
+    MI.getOperand(0).setReg(tempU32);
+    MI.getOperand(0).setIsKill();
 
-      MachineOperand *TypeOp = getNamedOperand(MI, HSAIL::OpName::TypeLength);
-      TypeOp->setImm(BRIG_TYPE_U32);
-      RS->setRegUsed(tempU32);
-    }
+    MachineOperand *TypeOp = getNamedOperand(MI, HSAIL::OpName::TypeLength);
+    TypeOp->setImm(BRIG_TYPE_U32);
+    RS->setRegUsed(tempU32);
+  }
     return true;
   case HSAIL::RESTORE_B1: {
-      unsigned tempU32 = getTempGPR32PostRA(MBBI);
-      DebugLoc DL = MI.getDebugLoc();
-      unsigned DestReg = MI.getOperand(0).getReg();
+    unsigned tempU32 = getTempGPR32PostRA(MBBI);
+    DebugLoc DL = MI.getDebugLoc();
+    unsigned DestReg = MI.getOperand(0).getReg();
 
-      BuildMI(*MBB, ++MBBI, DL, get(HSAIL::CVT_B1_U32), DestReg)
+    BuildMI(*MBB, ++MBBI, DL, get(HSAIL::CVT_B1_U32), DestReg)
         .addImm(0)             // ftz
         .addImm(0)             // round
         .addImm(BRIG_TYPE_B1)  // destTypedestLength
         .addImm(BRIG_TYPE_U32) // srcTypesrcLength
         .addReg(tempU32, RegState::Kill);
 
-      MI.setDesc(get(HSAIL::LD_U32));
-      MI.getOperand(0).setReg(tempU32);
-      MI.getOperand(0).setIsDef();
+    MI.setDesc(get(HSAIL::LD_U32));
+    MI.getOperand(0).setReg(tempU32);
+    MI.getOperand(0).setIsDef();
 
-      MachineOperand *TypeOp = getNamedOperand(MI, HSAIL::OpName::TypeLength);
-      TypeOp->setImm(BRIG_TYPE_U32);
+    MachineOperand *TypeOp = getNamedOperand(MI, HSAIL::OpName::TypeLength);
+    TypeOp->setImm(BRIG_TYPE_U32);
 
-      RS->setRegUsed(tempU32);
-    }
+    RS->setRegUsed(tempU32);
+  }
     return true;
   }
   return HSAILGenInstrInfo::expandPostRAPseudo(MI);
 }
 
-const TargetRegisterClass *HSAILInstrInfo::getOpRegClass(
-  const MachineRegisterInfo &MRI,
-  const MachineInstr &MI,
-  unsigned OpNo) const {
+const TargetRegisterClass *
+HSAILInstrInfo::getOpRegClass(const MachineRegisterInfo &MRI,
+                              const MachineInstr &MI, unsigned OpNo) const {
 
   const MachineOperand &MO = MI.getOperand(OpNo);
   if (!MO.isReg())

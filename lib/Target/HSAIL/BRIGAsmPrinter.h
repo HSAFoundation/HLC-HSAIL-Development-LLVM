@@ -26,7 +26,6 @@
 
 #include "libHSAIL/HSAILBrigantine.h"
 
-
 namespace llvm {
 
 class Argument;
@@ -64,15 +63,13 @@ class LLVM_LIBRARY_VISIBILITY BRIGAsmPrinter : public HSAILAsmPrinter {
   }
 
 public:
-  explicit BRIGAsmPrinter(TargetMachine& TM, MCStreamer &Streamer);
+  explicit BRIGAsmPrinter(TargetMachine &TM, MCStreamer &Streamer);
 
   virtual ~BRIGAsmPrinter();
 
-  const char* getPassName() const override {
-    return "BRIG Container Filler";
-  }
+  const char *getPassName() const override { return "BRIG Container Filler"; }
 
-  const HSAILSubtarget& getSubtarget() const { return *Subtarget; }
+  const HSAILSubtarget &getSubtarget() const { return *Subtarget; }
 
   void EmitGlobalVariable(const GlobalVariable *GV) override;
 
@@ -91,8 +88,8 @@ public:
   void EmitFunctionEntryLabel() override;
 
   bool doFinalization(Module &M) override;
-public:
 
+public:
   bool runOnMachineFunction(MachineFunction &F) override;
   void EmitSamplerDefs();
 
@@ -100,38 +97,44 @@ public:
   // generated for some vector argument
   typedef SmallVector<std::pair<uint64_t, uint64_t>, 16> VectorArgumentOffsets;
 
-  bool getGlobalVariableOffset(const GlobalVariable* GV, uint64_t *result) const;
-  bool getFunctionScalarArgumentOffset(const std::string& argName, uint64_t *result) const;
-  bool getFunctionVectorArgumentOffsets(const std::string& argName, VectorArgumentOffsets& result) const;
-  bool getGroupVariableOffset(const GlobalVariable* GV, uint64_t *result) const;
+  bool getGlobalVariableOffset(const GlobalVariable *GV,
+                               uint64_t *result) const;
+  bool getFunctionScalarArgumentOffset(const std::string &argName,
+                                       uint64_t *result) const;
+  bool getFunctionVectorArgumentOffsets(const std::string &argName,
+                                        VectorArgumentOffsets &result) const;
+  bool getGroupVariableOffset(const GlobalVariable *GV, uint64_t *result) const;
 
-  // returns true and the offset of %privateStack BRIG variable, or false if there is no local stack
+  // returns true and the offset of %privateStack BRIG variable, or false if
+  // there is no local stack
   bool getPrivateStackOffset(uint64_t *privateStackOffset) const;
 
-  // returns true and the offset of %spillStack BRIG variable, or false if there is no stack for spills
+  // returns true and the offset of %spillStack BRIG variable, or false if there
+  // is no stack for spills
   bool getSpillStackOffset(uint64_t *spillStackOffset) const;
 
-  // this function is used to translate stack objects' offsets reported by MachineFrameInfo
+  // this function is used to translate stack objects' offsets reported by
+  // MachineFrameInfo
   // to actual offsets in the %privateStack array
   bool getLocalVariableStackOffset(int varOffset, int *stackOffset) const;
 
-  // this function is used to translate stack objects' offsets reported by MachineFrameInfo
+  // this function is used to translate stack objects' offsets reported by
+  // MachineFrameInfo
   // to actual offsets in the %spillStack array
   bool getSpillVariableStackOffset(int varOffset, int *stackOffset) const;
 
 protected:
-
-
   virtual void emitMacroFunc(const MachineInstr *MI, raw_ostream &O);
 
   HSAILTargetMachine *mTM;
   const HSAILInstrInfo *TII;
-  HSAILKernelManager *mMeta;    /* metadata required by the runtime */
+  HSAILKernelManager *mMeta;      /* metadata required by the runtime */
   HSAILMachineFunctionInfo *mMFI; /* current function being processed */
 
   /// name of the kernel wrapper of the current function
   std::string mKernelName;
-  bool m_bIsKernel;  // is 'true' if the current function being processed is OpenCL kernel
+  bool m_bIsKernel; // is 'true' if the current function being processed is
+                    // OpenCL kernel
 
   HSAIL_ASM::BrigContainer bc;
   HSAIL_ASM::Brigantine brigantine;
@@ -139,14 +142,14 @@ protected:
   static char getSymbolPrefixForAddressSpace(unsigned AS);
   char getSymbolPrefix(const MCSymbol &S) const;
 
-  void BrigEmitInitVarWithAddressPragma(StringRef VarName,
-                                        uint64_t BaseOffset,
-                                        const MCExpr *E,
-                                        unsigned EltSize);
-  void BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable, Type *EltTy, Constant *);
-  void BrigEmitOperand(const MachineInstr *MI, unsigned opNum, HSAIL_ASM::Inst inst);
-  void BrigEmitOperandLdStAddress(const MachineInstr *MI,
-                                  unsigned opNum, unsigned Segment);
+  void BrigEmitInitVarWithAddressPragma(StringRef VarName, uint64_t BaseOffset,
+                                        const MCExpr *E, unsigned EltSize);
+  void BrigEmitGlobalInit(HSAIL_ASM::DirectiveVariable, Type *EltTy,
+                          Constant *);
+  void BrigEmitOperand(const MachineInstr *MI, unsigned opNum,
+                       HSAIL_ASM::Inst inst);
+  void BrigEmitOperandLdStAddress(const MachineInstr *MI, unsigned opNum,
+                                  unsigned Segment);
   void BrigEmitVecArgDeclaration(const MachineInstr *MI);
   void BrigEmitOperandImage(const MachineInstr *MI, unsigned opNum);
   void BrigEmitImageInst(const MachineInstr *MI, HSAIL_ASM::InstImage inst);
@@ -154,25 +157,20 @@ protected:
   HSAIL_ASM::InstBasic BrigEmitInstBasic(const MachineInstr &MI,
                                          unsigned BrigOpc);
   HSAIL_ASM::InstMod BrigEmitInstMod(const MachineInstr &MI, unsigned BrigOpc);
-  HSAIL_ASM::InstCmp BrigEmitInstCmp(const MachineInstr &MI,
-                                     unsigned BrigOpc);
-  HSAIL_ASM::InstCvt BrigEmitInstCvt(const MachineInstr &MI,
-                                     unsigned BrigOpc);
+  HSAIL_ASM::InstCmp BrigEmitInstCmp(const MachineInstr &MI, unsigned BrigOpc);
+  HSAIL_ASM::InstCvt BrigEmitInstCvt(const MachineInstr &MI, unsigned BrigOpc);
   HSAIL_ASM::InstSourceType BrigEmitInstSourceType(const MachineInstr &MI,
                                                    unsigned BrigOpc);
 
   HSAIL_ASM::InstLane BrigEmitInstLane(const MachineInstr &MI,
                                        unsigned BrigOpc);
-  HSAIL_ASM::InstBr BrigEmitInstBr(const MachineInstr &MI,
-                                   unsigned BrigOpc);
-  HSAIL_ASM::InstSeg BrigEmitInstSeg(const MachineInstr &MI,
-                                     unsigned BrigOpc);
+  HSAIL_ASM::InstBr BrigEmitInstBr(const MachineInstr &MI, unsigned BrigOpc);
+  HSAIL_ASM::InstSeg BrigEmitInstSeg(const MachineInstr &MI, unsigned BrigOpc);
   HSAIL_ASM::InstSegCvt BrigEmitInstSegCvt(const MachineInstr &MI,
                                            unsigned BrigOpc);
   HSAIL_ASM::InstMemFence BrigEmitInstMemFence(const MachineInstr &MI,
                                                unsigned BrigOpc);
-  HSAIL_ASM::InstMem BrigEmitInstMem(const MachineInstr &MI,
-                                     unsigned BrigOpc);
+  HSAIL_ASM::InstMem BrigEmitInstMem(const MachineInstr &MI, unsigned BrigOpc);
   HSAIL_ASM::InstAtomic BrigEmitInstAtomic(const MachineInstr &MI,
                                            unsigned BrigOpc);
   HSAIL_ASM::InstImage BrigEmitInstImage(const MachineInstr &MI,
@@ -184,15 +182,16 @@ protected:
                           unsigned numRegs, HSAIL_ASM::Inst inst);
 
   // Stream that captures DWARF data to the internal buffer
-  RawVectorOstream* mDwarfStream;
+  RawVectorOstream *mDwarfStream;
   // Stream that will receive all BRIG data
-  raw_ostream*      mBrigStream;
+  raw_ostream *mBrigStream;
   // Stream that will receive all captured DWARF data in the case of -odebug
-  raw_fd_ostream*   mDwarfFileStream;
+  raw_fd_ostream *mDwarfFileStream;
 
   // table that stores offsets of all emitted global variables - used in DWARF
-  std::map<const GlobalVariable*, uint64_t> globalVariableOffsets;
-  typedef std::map<const GlobalVariable*, uint64_t>::const_iterator gvo_iterator;
+  std::map<const GlobalVariable *, uint64_t> globalVariableOffsets;
+  typedef std::map<const GlobalVariable *, uint64_t>::const_iterator
+      gvo_iterator;
 
   std::map<int, int> spillMapforStack;
   std::map<int, int> LocalVarMapforStack;
@@ -202,26 +201,27 @@ protected:
   uint64_t privateStackBRIGOffset;
   uint64_t spillStackBRIGOffset;
 
-  // table that stores offsets of scalar arguments of function being emitted - used in DWARF
+  // table that stores offsets of scalar arguments of function being emitted -
+  // used in DWARF
   typedef std::map<std::string, uint64_t> ScalarArgumentOffsetsMap;
   typedef ScalarArgumentOffsetsMap::const_iterator fao_iterator;
   ScalarArgumentOffsetsMap functionScalarArgumentOffsets;
 
-  // table that stores offsets of BRIG variables generated for vector arguments - used in DWARF
+  // table that stores offsets of BRIG variables generated for vector arguments
+  // - used in DWARF
   typedef std::map<std::string, VectorArgumentOffsets> VectorArgumentOffsetsMap;
   typedef VectorArgumentOffsetsMap::const_iterator fvo_iterator;
   VectorArgumentOffsetsMap functionVectorArgumentOffsets;
 
-
-  // tables that store offsets of private and group variables - used in both DWARF and EmitFunctionBodyStart
-  typedef DenseMap<const GlobalVariable*, uint64_t> PVGVOffsetMap;
+  // tables that store offsets of private and group variables - used in both
+  // DWARF and EmitFunctionBodyStart
+  typedef DenseMap<const GlobalVariable *, uint64_t> PVGVOffsetMap;
   PVGVOffsetMap groupVariablesOffsets;
   typedef PVGVOffsetMap::iterator pvgvo_iterator;
   typedef PVGVOffsetMap::const_iterator pvgvo_const_iterator;
   typedef PVGVOffsetMap::value_type pvgvo_record;
 
 private:
-
   HSAIL_ASM::ItemList m_opndList;
 
   int mBuffer;
@@ -234,10 +234,10 @@ private:
     ARG_TYPE_VALUE = 4
   } HSAIL_ARG_TYPE;
 
-  std::string getHSAILArgType( Type* type,
+  std::string getHSAILArgType(Type *type,
                               HSAIL_ARG_TYPE arg_type = ARG_TYPE_NONE);
   BrigSegment8_t getHSAILSegment(unsigned AddressSpace) const;
-  BrigSegment8_t getHSAILSegment(const GlobalVariable* gv) const;
+  BrigSegment8_t getHSAILSegment(const GlobalVariable *gv) const;
 
   BrigAtomicOperation getAtomicOpcode(const MachineInstr *MI) const;
   BrigSegment getAtomicSegment(const MachineInstr *MI) const;
@@ -245,19 +245,20 @@ private:
   BrigMemoryScope getAtomicScope(const MachineInstr *MI) const;
   BrigType getAtomicType(const MachineInstr *MI) const;
 
-  bool canInitHSAILAddressSpace(const GlobalVariable* gv) const;
+  bool canInitHSAILAddressSpace(const GlobalVariable *gv) const;
   void EmitBasicBlockStart(const MachineBasicBlock &MBB) override;
   // returns an offset of corresponding DirectiveVariable
-  uint64_t EmitFunctionArgument(Type* type, bool isKernel,
+  uint64_t EmitFunctionArgument(Type *type, bool isKernel,
                                 const StringRef argName, bool isSExt);
-  void EmitFunctionReturn(Type* type, bool isKernel, StringRef RetName,
+  void EmitFunctionReturn(Type *type, bool isKernel, StringRef RetName,
                           bool isSExt);
 
   bool usesGCNAtomicCounter(void);
 
   HSAIL_ASM::OperandRegister getBrigReg(MachineOperand s);
 
-  HSAIL_ASM::DirectiveVariable EmitLocalVariable(const GlobalVariable *GV, BrigSegment8_t segment);
+  HSAIL_ASM::DirectiveVariable EmitLocalVariable(const GlobalVariable *GV,
+                                                 BrigSegment8_t segment);
 
   BrigAlignment8_t getBrigAlignment(unsigned align_value);
 

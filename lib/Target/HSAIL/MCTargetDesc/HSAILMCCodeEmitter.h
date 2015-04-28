@@ -33,9 +33,9 @@ class HSAILMCCodeEmitter : public MCCodeEmitter {
   MCContext &Ctx;
 
 public:
-    HSAILMCCodeEmitter(const MCInstrInfo &mcii, const MCRegisterInfo &mri,
-                       MCContext &ctx)
-      : MCII(mcii), MRI(mri), Ctx(ctx) { }
+  HSAILMCCodeEmitter(const MCInstrInfo &mcii, const MCRegisterInfo &mri,
+                     MCContext &ctx)
+      : MCII(mcii), MRI(mri), Ctx(ctx) {}
 
   ~HSAILMCCodeEmitter() {}
 

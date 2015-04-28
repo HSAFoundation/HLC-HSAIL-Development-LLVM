@@ -22,20 +22,16 @@ namespace llvm {
 
 class HSAILFrameLowering : public TargetFrameLowering {
 public:
-  explicit HSAILFrameLowering(StackDirection D,
-                              unsigned StackAl,
-                              int LAO,
-                              unsigned TransAl=1)
-    : TargetFrameLowering(D, StackAl, LAO, TransAl) {}
+  explicit HSAILFrameLowering(StackDirection D, unsigned StackAl, int LAO,
+                              unsigned TransAl = 1)
+      : TargetFrameLowering(D, StackAl, LAO, TransAl) {}
 
-  void emitPrologue(MachineFunction &MF) const override {};
+  void emitPrologue(MachineFunction &MF) const override{};
 
   void emitEpilogue(MachineFunction &MF,
-                    MachineBasicBlock &MBB) const override {};
+                    MachineBasicBlock &MBB) const override{};
 
-  bool hasFP(const MachineFunction &MF) const override {
-    return false;
-  }
+  bool hasFP(const MachineFunction &MF) const override { return false; }
 
   int getFrameIndexOffset(const MachineFunction &MF, int FI) const override {
     return MF.getFrameInfo()->getObjectOffset(FI);

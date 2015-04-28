@@ -22,15 +22,9 @@
 
 using namespace llvm;
 
-StoreInitializer::StoreInitializer(Type *EltTy,
-                                   AsmPrinter &AP)
-  : DL(AP.getDataLayout()),
-    AP(AP),
-    InitEltSize(DL.getTypeAllocSize(EltTy)),
-    IsFPElt(EltTy->isFloatingPointTy()),
-    m_data(),
-    OS(m_data),
-    LE(OS) {}
+StoreInitializer::StoreInitializer(Type *EltTy, AsmPrinter &AP)
+    : DL(AP.getDataLayout()), AP(AP), InitEltSize(DL.getTypeAllocSize(EltTy)),
+      IsFPElt(EltTy->isFloatingPointTy()), m_data(), OS(m_data), LE(OS) {}
 
 void StoreInitializer::append(const Constant *CV, StringRef Var) {
   switch (CV->getValueID()) {
@@ -269,5 +263,4 @@ void StoreInitializer::print(raw_ostream &O) {
       llvm_unreachable("Unhandled element size");
     }
   }
-
 }

@@ -12,31 +12,22 @@
 #include "libHSAIL/HSAILBrigObjectFile.h"
 
 class RawOstreamWriteAdapter : public HSAIL_ASM::WriteAdapter {
-    llvm::raw_ostream& os;
+  llvm::raw_ostream &os;
+
 public:
-    RawOstreamWriteAdapter(llvm::raw_ostream& os_, std::ostream& errs_)
-    : IOAdapter(errs_)
-    , WriteAdapter(errs_)
-    , os(os_)
-    {
-    };
+  RawOstreamWriteAdapter(llvm::raw_ostream &os_, std::ostream &errs_)
+      : IOAdapter(errs_), WriteAdapter(errs_), os(os_){};
 
-    int write(const char* data, size_t numBytes) const override {
-        os.write(data, numBytes);
-        return 0;
-    }
+  int write(const char *data, size_t numBytes) const override {
+    os.write(data, numBytes);
+    return 0;
+  }
 
-    Position getPos() const override {
-      return os.tell();
-    }
+  Position getPos() const override { return os.tell(); }
 
-    void setPos(Position) override {
-      llvm_unreachable("Unimplemented");
-    }
+  void setPos(Position) override { llvm_unreachable("Unimplemented"); }
 
-    ~RawOstreamWriteAdapter() {
-        os.flush();
-    }
+  ~RawOstreamWriteAdapter() { os.flush(); }
 };
 
 #endif

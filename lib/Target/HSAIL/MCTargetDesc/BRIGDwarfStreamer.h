@@ -20,35 +20,33 @@
 #include "llvm/MC/MCELFStreamer.h"
 #include "RawVectorOstream.h"
 
-
 namespace llvm {
 
 class BRIGDwarfStreamer : public MCELFStreamer {
 private:
-  RawVectorOstream* dwarfStream;
+  RawVectorOstream *dwarfStream;
 
 public:
   BRIGDwarfStreamer(MCContext &Context, MCAsmBackend &TAB,
-                  RawVectorOstream &RVOS, MCCodeEmitter *Emitter);
+                    RawVectorOstream &RVOS, MCCodeEmitter *Emitter);
 
   BRIGDwarfStreamer(MCContext &Context, MCAsmBackend &TAB,
-                RawVectorOstream &RVOS, MCCodeEmitter *Emitter,
-                MCAssembler *Assembler);
+                    RawVectorOstream &RVOS, MCCodeEmitter *Emitter,
+                    MCAssembler *Assembler);
 
   void InitSections(bool NoExecStack) override;
   void Finish();
 
-  RawVectorOstream* getDwarfStream();
+  RawVectorOstream *getDwarfStream();
 
-  //support for LLVM-style RTTI operations like dyn_cast
-  inline static bool classof(const BRIGDwarfStreamer* ) { return true; }
-  inline static bool classof(const MCStreamer* streamer) { return true; }
+  // support for LLVM-style RTTI operations like dyn_cast
+  inline static bool classof(const BRIGDwarfStreamer *) { return true; }
+  inline static bool classof(const MCStreamer *streamer) { return true; }
 };
 
-
-  MCStreamer* createBRIGDwarfStreamer(MCContext &Context, MCAsmBackend &MAB,
-                                      RawVectorOstream &RVOS, MCCodeEmitter *CE,
-                                      bool RelaxAll);
+MCStreamer *createBRIGDwarfStreamer(MCContext &Context, MCAsmBackend &MAB,
+                                    RawVectorOstream &RVOS, MCCodeEmitter *CE,
+                                    bool RelaxAll);
 
 } // namespace llvm
 

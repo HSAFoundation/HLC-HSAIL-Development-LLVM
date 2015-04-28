@@ -57,5 +57,5 @@ HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(StringRef &T) {
 
 const MCSection *
 HSAILELFMCAsmInfo::getNonexecutableStackSection(MCContext &Ctx) const {
-  return NULL;
+  return nullptr;
 }

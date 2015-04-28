@@ -36,12 +36,12 @@ MCCodeEmitter *createHSAILMCCodeEmitter(const MCInstrInfo &MCII,
                                         MCContext &Ctx);
 
 MCAsmBackend *createHSAIL32AsmBackend(const Target &T,
-                                      const MCRegisterInfo &MRI,
-                                      StringRef TT, StringRef CPU);
+                                      const MCRegisterInfo &MRI, StringRef TT,
+                                      StringRef CPU);
 
 MCAsmBackend *createHSAIL64AsmBackend(const Target &T,
-                                      const MCRegisterInfo &MRI,
-                                      StringRef TT, StringRef CPU);
+                                      const MCRegisterInfo &MRI, StringRef TT,
+                                      StringRef CPU);
 
 } // End llvm namespace
 

@@ -47,6 +47,7 @@ private:
   const HSAILSubtarget *Subtarget;
   const HSAILRegisterInfo *RegInfo;
   const DataLayout *DL;
+
 public:
   /// NOTE: The constructor takes ownership of TLOF.
   explicit HSAILTargetLowering(HSAILTargetMachine &TM);
@@ -60,16 +61,14 @@ public:
 
   uint8_t getRepRegClassCostFor(MVT VT) const override;
 
-  bool getTgtMemIntrinsic(IntrinsicInfo &Info,
-                          const CallInst &I,
+  bool getTgtMemIntrinsic(IntrinsicInfo &Info, const CallInst &I,
                           unsigned Intrinsic) const override;
 
   bool isFPImmLegal(const APFloat &Imm, EVT VT) const override;
 
   unsigned getByValTypeAlignment(Type *Ty) const override;
 
-  bool allowsMisalignedMemoryAccesses(EVT,
-                                      unsigned AddrSpace = 0,
+  bool allowsMisalignedMemoryAccesses(EVT, unsigned AddrSpace = 0,
                                       unsigned Align = 1,
                                       bool * /*Fast*/ = nullptr) const override;
 
@@ -77,11 +76,10 @@ public:
 
   bool isOffsetFoldingLegal(const GlobalAddressSDNode *GA) const override;
 
-  unsigned ComputeNumSignBitsForTargetNode(SDValue Op,
-                                           const SelectionDAG &DAG,
+  unsigned ComputeNumSignBitsForTargetNode(SDValue Op, const SelectionDAG &DAG,
                                            unsigned Depth = 0) const override;
 
-  bool isGAPlusOffset(SDNode *N, const GlobalValue* &GA,
+  bool isGAPlusOffset(SDNode *N, const GlobalValue *&GA,
                       int64_t &Offset) const override;
 
   SDValue PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const override;
@@ -94,11 +92,11 @@ public:
 
   bool isLoadBitCastBeneficial(EVT load, EVT bitcast) const override;
 
-  virtual bool isVectorToScalarLoadStoreWidenBeneficial(unsigned Width, EVT WidenVT,
-                                                        const MemSDNode *N) const;
+  virtual bool
+  isVectorToScalarLoadStoreWidenBeneficial(unsigned Width, EVT WidenVT,
+                                           const MemSDNode *N) const;
 
 protected:
-
   /// Recursively lower a single argument.
   /// Either Ins or Outs must non-zero, which means we are doing argument load
   /// or store.
@@ -111,14 +109,10 @@ protected:
   /// Returns last operation value.
   SDValue LowerArgument(SDValue Chain, SDValue InFlag, bool ChainLink,
                         const SmallVectorImpl<ISD::InputArg> *Ins,
-                        const SmallVectorImpl<ISD::OutputArg> *Outs,
-                        SDLoc dl, SelectionDAG &DAG,
-                        SmallVectorImpl<SDValue> *InVals,
-                        unsigned &ArgNo,
-                        Type *type,
-                        unsigned AS,
-                        const char *ParamName,
-                        SDValue ParamPtr,
+                        const SmallVectorImpl<ISD::OutputArg> *Outs, SDLoc dl,
+                        SelectionDAG &DAG, SmallVectorImpl<SDValue> *InVals,
+                        unsigned &ArgNo, Type *type, unsigned AS,
+                        const char *ParamName, SDValue ParamPtr,
                         const SmallVectorImpl<SDValue> *OutVals = nullptr,
                         bool isRetArgLoad = false,
                         const AAMDNodes & = AAMDNodes(),
@@ -126,21 +120,13 @@ protected:
 
 public:
   SDValue getArgLoad(SelectionDAG &DAG, SDLoc SL, EVT ArgVT, Type *Ty,
-                     bool isSExt, unsigned AddressSpace,
-                     SDValue Chain,
-                     SDValue Ptr,
-                     SDValue InFlag,
-                     unsigned index,
-                     bool IsRetArgLoad = false,
-                     uint64_t Offset = 0) const;
+                     bool isSExt, unsigned AddressSpace, SDValue Chain,
+                     SDValue Ptr, SDValue InFlag, unsigned index,
+                     bool IsRetArgLoad = false, uint64_t Offset = 0) const;
 
   SDValue getArgStore(SelectionDAG &DAG, SDLoc SL, EVT ArgVT, Type *Ty,
-                      unsigned AddressSpace,
-                      SDValue Chain,
-                      SDValue Ptr,
-                      SDValue Value,
-                      unsigned Index,
-                      SDValue InFlag,
+                      unsigned AddressSpace, SDValue Chain, SDValue Ptr,
+                      SDValue Value, unsigned Index, SDValue InFlag,
                       const AAMDNodes &AAInfo = AAMDNodes(),
                       uint64_t Offset = 0) const;
 
@@ -148,67 +134,51 @@ public:
   // Lowering methods - These methods must be implemented by targets so that
   // the SelectionDAGLowering code knows how to lower these.
 
-  SDValue LowerMemArgument(SDValue Chain,
-                           CallingConv::ID CallConv,
+  SDValue LowerMemArgument(SDValue Chain, CallingConv::ID CallConv,
                            const SmallVectorImpl<ISD::InputArg> &ArgInfo,
-                           SDLoc dl, SelectionDAG &DAG,
-                           const CCValAssign &VA,  MachineFrameInfo *MFI,
-                           unsigned i) const;
+                           SDLoc dl, SelectionDAG &DAG, const CCValAssign &VA,
+                           MachineFrameInfo *MFI, unsigned i) const;
 
-  SDValue LowerFormalArguments(SDValue Chain,
-                               CallingConv::ID CallConv,
+  SDValue LowerFormalArguments(SDValue Chain, CallingConv::ID CallConv,
                                bool isVarArg,
                                const SmallVectorImpl<ISD::InputArg> &Ins,
-                               SDLoc dl,
-                               SelectionDAG &DAG,
+                               SDLoc dl, SelectionDAG &DAG,
                                SmallVectorImpl<SDValue> &InVals) const override;
 
   SDValue LowerCall(CallLoweringInfo &CLI,
                     SmallVectorImpl<SDValue> &InVals) const override;
 
-  SDValue LowerReturn(SDValue Chain,
-                      CallingConv::ID CallConv,
-                      bool isVarArg,
+  SDValue LowerReturn(SDValue Chain, CallingConv::ID CallConv, bool isVarArg,
                       const SmallVectorImpl<ISD::OutputArg> &Outs,
-                      const SmallVectorImpl<SDValue> &OutVals,
-                      SDLoc dl,
+                      const SmallVectorImpl<SDValue> &OutVals, SDLoc dl,
                       SelectionDAG &DAG) const override;
 
   SDValue LowerOperation(SDValue Op, SelectionDAG &DAG) const override;
 
-  void ReplaceNodeResults(SDNode *N,
-                          SmallVectorImpl<SDValue> &Results,
+  void ReplaceNodeResults(SDNode *N, SmallVectorImpl<SDValue> &Results,
                           SelectionDAG &DAG) const override;
 
   const char *getTargetNodeName(unsigned Opcode) const override;
 
   /// Custom lowering methods
- SDValue
-  LowerADD(SDValue Op, SelectionDAG &DAG) const;
+  SDValue LowerADD(SDValue Op, SelectionDAG &DAG) const;
 
   SDValue LowerLdKernargIntrinsic(SDValue Op, SelectionDAG &DAG) const;
   SDValue LowerINTRINSIC_WO_CHAIN(SDValue Op, SelectionDAG &DAG) const;
 
-  SDValue
-  LowerINTRINSIC_W_CHAIN(SDValue Op, SelectionDAG &DAG) const;
+  SDValue LowerINTRINSIC_W_CHAIN(SDValue Op, SelectionDAG &DAG) const;
 
-  SDValue
-  lowerSamplerInitializerOperand(SDValue Op, SelectionDAG &DAG) const;
+  SDValue lowerSamplerInitializerOperand(SDValue Op, SelectionDAG &DAG) const;
 
-  SDValue
-  LowerROTL(SDValue Op, SelectionDAG &DAG) const;
+  SDValue LowerROTL(SDValue Op, SelectionDAG &DAG) const;
 
-  SDValue
-  LowerROTR(SDValue Op, SelectionDAG &DAG) const;
+  SDValue LowerROTR(SDValue Op, SelectionDAG &DAG) const;
 
-  SDValue
-  LowerBSWAP(SDValue Op, SelectionDAG &DAG) const;
+  SDValue LowerBSWAP(SDValue Op, SelectionDAG &DAG) const;
 
-  SDValue
-  LowerLOAD(SDValue Op, SelectionDAG &DAG) const;
+  SDValue LowerLOAD(SDValue Op, SelectionDAG &DAG) const;
 
-  SDValue
-  LowerSTORE(SDValue Op, SelectionDAG &DAG) const;
+  SDValue LowerSTORE(SDValue Op, SelectionDAG &DAG) const;
 
   SDValue LowerATOMIC_LOAD(SDValue Op, SelectionDAG &DAG) const;
   SDValue LowerATOMIC_STORE(SDValue Op, SelectionDAG &DAG) const;
@@ -226,7 +196,6 @@ public:
   /// mode is legal for a load/store of any legal type.
   /// TODO: Handle pre/postinc as well.
   bool isLegalAddressingMode(const AddrMode &AM, Type *Ty) const override;
-
 
   /// isTruncateFree - Return true if it's free to truncate a value of
   /// type Ty1 to type Ty2. e.g. On x86 it's free to truncate a i32 value in
@@ -269,46 +238,46 @@ public:
                                      SDNode *Node) const override;
 };
 
-  namespace HSAILISD {
-    // HSAIL Specific DAG Nodes
-    enum {
-      // Start the numbering where the builtin ops leave off.
-      FIRST_NUMBER = ISD::BUILTIN_OP_END,
-      CALL,        // Function call based on a single integer
-      RET,
-      SMAX,
-      UMAX,
-      SMIN,
-      UMIN,
-      FRACT,
-      NFMA,
-      UMAD,
-      SMAD,
-      UMUL24,
-      SMUL24,
-      UMAD24,
-      SMAD24,
-      BITSELECT,
-      SBITEXTRACT,
-      UBITEXTRACT,
-      FLDEXP,
-      CLASS,
-      LDA,
-      ACTIVELANEPERMUTE,
-      ACTIVELANEID,
-      ACTIVELANECOUNT,
-      ACTIVELANEMASK,
-      KERNARGBASEPTR,
-      SEGMENTP,
+namespace HSAILISD {
+// HSAIL Specific DAG Nodes
+enum {
+  // Start the numbering where the builtin ops leave off.
+  FIRST_NUMBER = ISD::BUILTIN_OP_END,
+  CALL, // Function call based on a single integer
+  RET,
+  SMAX,
+  UMAX,
+  SMIN,
+  UMIN,
+  FRACT,
+  NFMA,
+  UMAD,
+  SMAD,
+  UMUL24,
+  SMUL24,
+  UMAD24,
+  SMAD24,
+  BITSELECT,
+  SBITEXTRACT,
+  UBITEXTRACT,
+  FLDEXP,
+  CLASS,
+  LDA,
+  ACTIVELANEPERMUTE,
+  ACTIVELANEID,
+  ACTIVELANECOUNT,
+  ACTIVELANEMASK,
+  KERNARGBASEPTR,
+  SEGMENTP,
 
-      FIRST_MEM_OPCODE_NUMBER = ISD::FIRST_TARGET_MEMORY_OPCODE,
+  FIRST_MEM_OPCODE_NUMBER = ISD::FIRST_TARGET_MEMORY_OPCODE,
 
-      // Load and store of arguments. Main purpose is to add glue to what would
-      // be a generic load / store.
-      ARG_LD,
-      ARG_ST
-    };
-  }
+  // Load and store of arguments. Main purpose is to add glue to what would
+  // be a generic load / store.
+  ARG_LD,
+  ARG_ST
+};
+}
 } // end llvm namespace
 
 #endif // _HSAIL_LOWERING_H_

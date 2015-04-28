@@ -29,7 +29,6 @@ namespace llvm {
 /// particular function.
 class HSAILParamManager {
 private:
-
   /// HSAILParamType - Type of a kernarg/arg/call param variable
   enum HSAILParamType {
     HSAIL_PARAM_TYPE_KERNARG,
@@ -41,30 +40,29 @@ private:
 
   /// HSAILParam - Definition of a HSAIL kernarg/arg variable
   struct HSAILParam {
-    HSAILParamType  Type;
-    unsigned        Offset; // Parameter offset in its segment
-    const Argument* Arg;    // Original function argument if any
+    HSAILParamType Type;
+    unsigned Offset;     // Parameter offset in its segment
+    const Argument *Arg; // Original function argument if any
   };
 
   DenseMap<unsigned, HSAILParam> AllParams;
-  DenseMap<unsigned, char*> ParamNames;
-  DenseMap<unsigned, Type*> ParamTypes;
+  DenseMap<unsigned, char *> ParamNames;
+  DenseMap<unsigned, Type *> ParamTypes;
   SmallVector<unsigned, 4> ArgumentParams;
   SmallVector<unsigned, 4> ReturnParams;
   SmallVector<unsigned, 4> CallArgParams;
   SmallVector<unsigned, 4> CallRetParams;
 
-  unsigned addParam(HSAILParamType ParamType, Type* Ty,
-    const StringRef ParamName);
+  unsigned addParam(HSAILParamType ParamType, Type *Ty,
+                    const StringRef ParamName);
 
   const DataLayout *DL;
 
 public:
-
-  typedef DenseMap<unsigned, char*>::const_iterator names_iterator;
+  typedef DenseMap<unsigned, char *>::const_iterator names_iterator;
   typedef SmallVector<unsigned, 4>::const_iterator param_iterator;
 
-  HSAILParamManager(const DataLayout *_DL) : DL(_DL) {};
+  HSAILParamManager(const DataLayout *_DL) : DL(_DL){};
   ~HSAILParamManager();
 
   param_iterator arg_begin() const { return ArgumentParams.begin(); }
@@ -95,16 +93,16 @@ public:
   void addParamName(std::string Name, unsigned Index);
 
   /// addParamType - Saves the type of the parameter
-  void addParamType(Type * pTy, unsigned Index);
+  void addParamType(Type *pTy, unsigned Index);
 
   /// getParamName - Returns the name of the parameter as a string.
-  const char* getParamName(unsigned Param) const {
+  const char *getParamName(unsigned Param) const {
     assert(AllParams.count(Param) == 1 && "Param has not been defined!");
     return ParamNames.find(Param)->second;
   }
 
   /// getParamType - Returns the type of the parameter
-  Type* getParamType(unsigned Param) const {
+  Type *getParamType(unsigned Param) const {
     assert(AllParams.count(Param) == 1 && "Param has not been defined!");
     return ParamTypes.find(Param)->second;
   }
@@ -123,7 +121,7 @@ public:
 
   /// getParamOffset - Returns an offset of the parameter in its segment if
   /// available, or UINT_MAX if unknown.
-  const Argument* getParamArg(unsigned Param) const {
+  const Argument *getParamArg(unsigned Param) const {
     assert(AllParams.count(Param) == 1 && "Param has not been defined!");
     return AllParams.find(Param)->second.Arg;
   }
@@ -134,8 +132,9 @@ public:
   unsigned getParamByOffset(unsigned &Offset) const;
 
   unsigned getParamByOffset(int64_t &Offset) const {
-    if (Offset >= UINT_MAX || Offset < 0) return UINT_MAX;
-    unsigned o = (unsigned) Offset;
+    if (Offset >= UINT_MAX || Offset < 0)
+      return UINT_MAX;
+    unsigned o = (unsigned)Offset;
     unsigned r = getParamByOffset(o);
     Offset = o;
     return r;
@@ -143,10 +142,7 @@ public:
 
   /// returns a unique argument name.
   static std::string mangleArg(Mangler *Mang, const StringRef argName);
-
 };
-
 }
 
 #endif
-
