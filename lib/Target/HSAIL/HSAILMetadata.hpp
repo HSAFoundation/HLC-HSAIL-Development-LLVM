@@ -1,6 +1,6 @@
 //
 // taken from hsa/compiler/lib/include/aclTypes.h
-// 
+//
 
 #ifndef _HSAIL_METADATA_HPP
 #define _HSAIL_METADATA_HPP

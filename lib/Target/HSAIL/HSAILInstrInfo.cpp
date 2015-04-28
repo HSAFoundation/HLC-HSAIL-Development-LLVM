@@ -35,9 +35,9 @@
 using namespace llvm;
 namespace llvm {
 
-static cl::opt<bool> DisableBranchAnalysis("disable-branch-analysis", 
+static cl::opt<bool> DisableBranchAnalysis("disable-branch-analysis",
   cl::Hidden, cl::desc("Disable branch analysis"));
-static cl::opt<bool> DisableCondReversion("disable-branch-cond-reversion", 
+static cl::opt<bool> DisableCondReversion("disable-branch-cond-reversion",
   cl::Hidden, cl::desc("Disable branch condition reversion"));
 
 // Reverse conditions in branch analysis
@@ -149,7 +149,7 @@ HSAILInstrInfo::isStoreToStackSlotPostFE(const MachineInstr *MI,
 }
 
 static bool
-IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg, 
+IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg,
   const MachineRegisterInfo &MRI,
   bool &CanReverse)
 {
@@ -181,7 +181,7 @@ IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg,
         Visited.insert(*succ);
 
         bool need_process_futher = true;
-        
+
         // Process basic block
         for (MachineBasicBlock::iterator instr = (*succ)->begin(),
              instr_end = (*succ)->end(); instr != instr_end; ++instr)
@@ -370,7 +370,7 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
        */
         can_reverse = !IsSpilledAfterDef(I, reg);
       }
-      // Can not reverse instruction which will require to 
+      // Can not reverse instruction which will require to
       // insert or remove 'not_b1' inside loop
       // Also, we avoid reversing for that comparisons
       // whose result is spilled in between the definition and use.
@@ -380,7 +380,7 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
         continue;
       }
 
-      // If there is no uses of condition register we can just reverse 
+      // If there is no uses of condition register we can just reverse
       // instruction and be fine
       if (is_def_before_use)
       {
@@ -418,7 +418,7 @@ HSAILInstrInfo::AnalyzeBranch(MachineBasicBlock &MBB,
       Cond.push_back(MachineOperand::CreateImm(COND_REVERSE_POSITIVE));
       continue;
     }
-    
+
     // Can not handle more than one conditional branch
     return true;
   }
@@ -492,12 +492,12 @@ static bool isFPBrigType(BrigType BT) {
 }
 
 // Helper for `HSAILInstrInfo::InsertBranch`
-// Reverse branch condition 
+// Reverse branch condition
 // Different from `HSAILInstrInfo::ReverseBranchCondition`
-// because it actually generates reversion code 
+// because it actually generates reversion code
 // Returns register with condition result
-static unsigned GenerateBranchCondReversion( 
-  MachineBasicBlock &MBB, 
+static unsigned GenerateBranchCondReversion(
+  MachineBasicBlock &MBB,
   const MachineOperand &CondOp,
   const HSAILInstrInfo *TII,
   DebugLoc DL)
@@ -512,7 +512,7 @@ static unsigned GenerateBranchCondReversion(
   // Manualy search for latest usage of condition register in MBB
   MachineBasicBlock::iterator I = MBB.end();
 
-  while (I != MBB.begin()) 
+  while (I != MBB.begin())
   {
     --I;
 
@@ -554,7 +554,7 @@ static unsigned GenerateBranchCondReversion(
   }
   else
     need_insert_not = true;
-    
+
   // Else insert logical not
   if (need_insert_not)
   {
@@ -699,7 +699,7 @@ getEmergencyStackSlot(MachineFunction* MF)
 void
 HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
                                     MachineBasicBlock::iterator MI,
-                                    unsigned SrcReg, 
+                                    unsigned SrcReg,
                                     bool isKill,
                                     int FrameIndex,
                                     const TargetRegisterClass *RC,
@@ -836,22 +836,22 @@ HSAILInstrInfo::areLoadsFromSameBasePtr(SDNode *Node1,
                                         SDNode *Node2,
                                         int64_t &Offset1,
                                         int64_t &Offset2) const
-{ 
-  // Warning! This function will handle not only load but store nodes too 
-  // because there is no real difference between memory operands in loads and 
+{
+  // Warning! This function will handle not only load but store nodes too
+  // because there is no real difference between memory operands in loads and
   // stores.
   // Do not change name of this function to avoid more changes in core llvm.
 
   if (!Node1->isMachineOpcode() || !Node2->isMachineOpcode())
     return false;
 
-  MachineSDNode *mnode1 = cast<MachineSDNode>(Node1), 
+  MachineSDNode *mnode1 = cast<MachineSDNode>(Node1),
     *mnode2 = cast<MachineSDNode>(Node2);
 
   if (mnode1->memoperands_empty() || mnode2->memoperands_empty())
     return false;
 
-  if ((mnode1->memoperands_begin() + 1) != mnode1->memoperands_end() || 
+  if ((mnode1->memoperands_begin() + 1) != mnode1->memoperands_end() ||
       (mnode2->memoperands_begin() + 1) != mnode2->memoperands_end())
     return false;
 
@@ -862,7 +862,7 @@ HSAILInstrInfo::areLoadsFromSameBasePtr(SDNode *Node1,
 
   // TODO_HSA: Consider extension types to be checked explicitly
   if (mo1->getSize() != mo2->getSize() ||
-      mo1->getPointerInfo().getAddrSpace() != 
+      mo1->getPointerInfo().getAddrSpace() !=
         mo2->getPointerInfo().getAddrSpace() ||
       mo1->getValue() != mo2->getValue() ||
       mo1->getFlags() != mo2->getFlags())
@@ -883,8 +883,8 @@ HSAILInstrInfo::shouldScheduleLoadsNear(SDNode *Node1,
                                         int64_t Offset2,
                                         unsigned NumLoads) const
 {
-  // Warning! This function will handle not only load but store nodes too 
-  // because there is no real difference between memory operands in loads and 
+  // Warning! This function will handle not only load but store nodes too
+  // because there is no real difference between memory operands in loads and
   // stores.
 
   // Assume that 'areLoadsFromSameBasePtr' returned true
@@ -892,10 +892,10 @@ HSAILInstrInfo::shouldScheduleLoadsNear(SDNode *Node1,
   if (!Node1->isMachineOpcode())
     return false;
 
-  MachineSDNode *mnode1 = cast<MachineSDNode>(Node1);  
+  MachineSDNode *mnode1 = cast<MachineSDNode>(Node1);
 
   // Check that loads are close enough
-  if (Offset2 - Offset1 <= 
+  if (Offset2 - Offset1 <=
         4 * (int64_t)(*mnode1->memoperands_begin())->getSize())
     return true;
   return false;

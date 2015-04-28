@@ -87,10 +87,10 @@ private:
   // Checks that OR operation is semantically equivalent to ADD
   bool IsOREquivalentToADD(SDValue Op) const;
 
-  bool SelectAddrCommon(SDValue Addr, 
-                        SDValue& Base, 
-                        SDValue& Reg, 
-                        int64_t& Offset, 
+  bool SelectAddrCommon(SDValue Addr,
+                        SDValue& Base,
+                        SDValue& Reg,
+                        int64_t& Offset,
                         MVT ValueType,
                         int Depth) const;
 
@@ -879,7 +879,7 @@ bool HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr,
     if (Base.getNode() == 0)
     {
       Base = CurDAG->getTargetFrameIndex(
-        cast<FrameIndexSDNode>(Addr)->getIndex(), 
+        cast<FrameIndexSDNode>(Addr)->getIndex(),
         ValueType);
       return true;
     }
@@ -893,7 +893,7 @@ bool HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr,
     if (Base.getNode() == 0)
     {
       Base = CurDAG->getTargetGlobalAddress(
-        cast<GlobalAddressSDNode>(Addr)->getGlobal(), 
+        cast<GlobalAddressSDNode>(Addr)->getGlobal(),
         SDLoc(Addr),
         ValueType);
       int64_t new_offset = Offset + cast<GlobalAddressSDNode>(Addr)->getOffset();
@@ -903,7 +903,7 @@ bool HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr,
       return true;
     }
     break;
-  }  
+  }
   case ISD::TargetExternalSymbol:
   {
     if (Base.getNode() == 0)
@@ -916,12 +916,12 @@ bool HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr,
   case ISD::OR: // Treat OR as ADD when Op1 & Op2 == 0
     if (IsOREquivalentToADD(Addr))
     {
-      bool can_selec_first_op = 
-        SelectAddrCommon(Addr.getOperand(0), Base, Reg, Offset, 
+      bool can_selec_first_op =
+        SelectAddrCommon(Addr.getOperand(0), Base, Reg, Offset,
           ValueType, Depth+1);
 
-      if (can_selec_first_op && 
-          SelectAddrCommon(Addr.getOperand(1), Base, Reg, Offset, 
+      if (can_selec_first_op &&
+          SelectAddrCommon(Addr.getOperand(1), Base, Reg, Offset,
             ValueType, Depth+1))
         return true;
       Base = backup_base;
@@ -931,12 +931,12 @@ bool HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr,
     break;
   case ISD::ADD:
   {
-    bool can_selec_first_op = 
-      SelectAddrCommon(Addr.getOperand(0), Base, Reg, Offset, 
+    bool can_selec_first_op =
+      SelectAddrCommon(Addr.getOperand(0), Base, Reg, Offset,
       ValueType, Depth+1);
 
     if (can_selec_first_op &&
-        SelectAddrCommon(Addr.getOperand(1), Base, Reg, Offset, 
+        SelectAddrCommon(Addr.getOperand(1), Base, Reg, Offset,
           ValueType, Depth+1))
       return true;
     Base = backup_base;

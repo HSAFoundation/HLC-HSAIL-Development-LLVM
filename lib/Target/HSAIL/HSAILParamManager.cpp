@@ -25,7 +25,7 @@ using namespace llvm;
 
 HSAILParamManager::~HSAILParamManager() {
   // Special handling for teardown of ParamNames
-  for (names_iterator I = ParamNames.begin(), E = ParamNames.end(); 
+  for (names_iterator I = ParamNames.begin(), E = ParamNames.end();
     I != E; ++I) {
     // Delete malloc'ed name strings
     free(I->second);

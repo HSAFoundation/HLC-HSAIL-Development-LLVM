@@ -253,7 +253,7 @@ HSAILMachineFunctionInfo::isSignedIntType(const Value* ptr)
   std::string argName = ptr->getName();
   if (!mMF) return false;
   signedNames += mMF->getFunction()->getName();
-  const GlobalVariable *GV = 
+  const GlobalVariable *GV =
     mMF->getFunction()->getParent()->getGlobalVariable(signedNames);
   if (!GV || !GV->hasInitializer()) return false;
   const ConstantArray *CA = dyn_cast<ConstantArray>(GV->getInitializer());
@@ -262,7 +262,7 @@ HSAILMachineFunctionInfo::isSignedIntType(const Value* ptr)
     const ConstantExpr *nameField = dyn_cast<ConstantExpr>(CA->getOperand(start));
     if (!nameField) continue;
 
-    const GlobalVariable *nameGV = 
+    const GlobalVariable *nameGV =
       dyn_cast<GlobalVariable>(nameField->getOperand(0));
     if (!nameGV || !nameGV->hasInitializer()) continue;
 
@@ -284,7 +284,7 @@ HSAILMachineFunctionInfo::isVolatilePointer(const Value* ptr)
   std::string argName = ptr->getName();
   if (!mMF) return false;
   signedNames += mMF->getFunction()->getName();
-  const GlobalVariable *GV = 
+  const GlobalVariable *GV =
     mMF->getFunction()->getParent()->getGlobalVariable(signedNames);
   if (!GV || !GV->hasInitializer()) return false;
   const ConstantArray *CA = dyn_cast<ConstantArray>(GV->getInitializer());
@@ -293,7 +293,7 @@ HSAILMachineFunctionInfo::isVolatilePointer(const Value* ptr)
     const ConstantExpr *nameField = dyn_cast<ConstantExpr>(CA->getOperand(start));
     if (!nameField) continue;
 
-    const GlobalVariable *nameGV = 
+    const GlobalVariable *nameGV =
       dyn_cast<GlobalVariable>(nameField->getOperand(0));
     if (!nameGV || !nameGV->hasInitializer()) continue;
 
@@ -315,7 +315,7 @@ HSAILMachineFunctionInfo::isRestrictPointer(const Value* ptr)
   std::string argName = ptr->getName();
   if (!mMF) return false;
   signedNames += mMF->getFunction()->getName();
-  const GlobalVariable *GV = 
+  const GlobalVariable *GV =
     mMF->getFunction()->getParent()->getGlobalVariable(signedNames);
   if (!GV || !GV->hasInitializer()) return false;
   const ConstantArray *CA = dyn_cast<ConstantArray>(GV->getInitializer());
@@ -324,7 +324,7 @@ HSAILMachineFunctionInfo::isRestrictPointer(const Value* ptr)
     const ConstantExpr *nameField = dyn_cast<ConstantExpr>(CA->getOperand(start));
     if (!nameField) continue;
 
-    const GlobalVariable *nameGV = 
+    const GlobalVariable *nameGV =
       dyn_cast<GlobalVariable>(nameField->getOperand(0));
     if (!nameGV || !nameGV->hasInitializer()) continue;
 
@@ -347,7 +347,7 @@ HSAILMachineFunctionInfo::isConstantArgument(const Value* ptr)
   std::string argName = ptr->getName();
   if (!mMF) return false;
   signedNames += mMF->getFunction()->getName();
-  const GlobalVariable *GV = 
+  const GlobalVariable *GV =
     mMF->getFunction()->getParent()->getGlobalVariable(signedNames);
   if (!GV || !GV->hasInitializer()) return false;
   const ConstantArray *CA = dyn_cast<ConstantArray>(GV->getInitializer());
@@ -356,7 +356,7 @@ HSAILMachineFunctionInfo::isConstantArgument(const Value* ptr)
     const ConstantExpr *nameField = dyn_cast<ConstantExpr>(CA->getOperand(start));
     if (!nameField) continue;
 
-    const GlobalVariable *nameGV = 
+    const GlobalVariable *nameGV =
       dyn_cast<GlobalVariable>(nameField->getOperand(0));
     if (!nameGV || !nameGV->hasInitializer()) continue;
 

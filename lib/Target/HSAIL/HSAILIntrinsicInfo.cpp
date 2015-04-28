@@ -67,7 +67,7 @@ bool HSAILIntrinsicInfo::isReadImage(HSAILIntrinsic::ID intr)
     return true;
   }
 }
-    
+
 bool HSAILIntrinsicInfo::isLoadImage(HSAILIntrinsic::ID intr)
 {
   switch (intr) {
@@ -130,7 +130,7 @@ HSAILIntrinsicInfo::lookupName(const char *Name,
 #undef GET_FUNCTION_RECOGNIZER
   HSAILIntrinsic::ID IntrinsicID;
   // Translate "__atom_*" intrinsic name to "__atomic_*" so we don't need to
-  // support both flavors. The "__atom_*" variants come from OCL 1.0 32-bit 
+  // support both flavors. The "__atom_*" variants come from OCL 1.0 32-bit
   // atomics and OCL Extension 1.2 64-bit atomics.
   if (strncmp(Name, "__atom_", 7) == 0) {
     // Translate "__atom_" to "__atomic_"

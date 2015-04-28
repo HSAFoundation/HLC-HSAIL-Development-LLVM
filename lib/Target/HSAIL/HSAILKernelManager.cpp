@@ -209,7 +209,7 @@ HSAILKernelManager::~HSAILKernelManager() {
   clear();
 }
 
-void 
+void
 HSAILKernelManager::setMF(MachineFunction *MF)
 {
   mMF = MF;
@@ -279,7 +279,7 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
       if (ST && ST->isOpaque()) {
         OpaqueType OT = GetOpaqueType(ST);
         if (IsImage(OT)) {
-           
+
           std::string imageArg("image:");
           imageArg += Ip->getName().str() + ":";
           switch (OT) {
@@ -347,12 +347,12 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
           updatePtrArg(Ip, mCBSize, isKernel, F, pointerCount++);
           ++mCBSize;
         }
-      } else if (CT->getTypeID() == Type::StructTyID 
+      } else if (CT->getTypeID() == Type::StructTyID
                  && Ip->hasByValAttr()) { // To distinguish pass-by-value from pass-by-ptr.
         // When struct is passed-by-value, the pointer to the struct copy
         // is passed to the kernel. Relevant RTI is generated here (value...struct).
         // [Informative: RTI for pass-by-pointer case (pointer...struct) is generated
-        // in the next "else if" block.]     
+        // in the next "else if" block.]
         const DataLayout *dl = mTM->getSubtarget<HSAILSubtarget>().getDataLayout();
         const StructLayout *sl = dl->getStructLayout(dyn_cast<StructType>(CT));
         int bytesize = sl->getSizeInBytes();
@@ -407,22 +407,22 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored,
   }
 }
 
-void HSAILKernelManager::printHeader(const std::string &name) 
+void HSAILKernelManager::printHeader(const std::string &name)
 {
   mName = name;
   mAMI->getOrCreateFunctionID(name);
 }
 
-/** 
+/**
  *
- * HSAIL format for emitting runtime information: 
+ * HSAIL format for emitting runtime information:
  * block "rti"
  * blockstring "<metadata>";
  * endblock;
  *
- * @param O 
- * @param id 
- * @param kernel 
+ * @param O
+ * @param id
+ * @param kernel
  */
 
 void HSAILKernelManager::setKernel(bool kernel) {
@@ -461,8 +461,8 @@ public:
 };
 
 template <typename T>
-const RTI& operator << (const RTI& os, const T& s)    { os.os() << s; return os; } 
-const RTI& operator << (const RTI& os, const char *s) { os.os() << s; return os; } 
+const RTI& operator << (const RTI& os, const T& s)    { os.os() << s; return os; }
+const RTI& operator << (const RTI& os, const char *s) { os.os() << s; return os; }
 
 void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t id, bool isKernel) {
 
@@ -475,8 +475,8 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
       mIsKernel = true;
     }
 
-    const HSAILKernel *kernel = mAMI->getKernel(mName);  
-    
+    const HSAILKernel *kernel = mAMI->getKernel(mName);
+
     if (kernel && isKernel && kernel->sgv) {
       if (kernel->sgv->mHasRWG) {
           HSAIL_ASM::DirectiveControl dc = brig.append< HSAIL_ASM::DirectiveControl>();
@@ -499,7 +499,7 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
       if(isKernel) {
         // version
         RTI(brig) << "version:" << itostr(mSTM->supportMetadata30() ? HSAIL_MAJOR_VERSION : 2) << ":"
-                        << itostr(HSAIL_MINOR_VERSION) + ":" 
+                        << itostr(HSAIL_MINOR_VERSION) + ":"
                         << itostr(mSTM->supportMetadata30() ? HSAIL_REVISION_NUMBER : HSAIL_20_REVISION_NUMBER);
         // device info
         RTI(brig) << "device:" << mSTM->getDeviceName();
@@ -539,7 +539,7 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
     }
 
     if (!mMFI->func_empty()) {
-      oss.str().clear();  
+      oss.str().clear();
       oss << "function:" << mMFI->func_size();
 
       for (unsigned FID : mMFI->funcs())
@@ -549,11 +549,11 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
     }
 
     if (isKernel) {
-      for (StringMap<SamplerInfo>::iterator 
+      for (StringMap<SamplerInfo>::iterator
         smb = mMFI->sampler_begin(),
         sme = mMFI->sampler_end(); smb != sme; ++ smb) {
         RTI(brig) << "sampler:" << (*smb).second.name << ":" << (*smb).second.idx
-          << ":" << ((*smb).second.val == (uint32_t)-1 ? 0 : 1) 
+          << ":" << ((*smb).second.val == (uint32_t)-1 ? 0 : 1)
           << ":" << ((*smb).second.val != (uint32_t)-1 ? (*smb).second.val : 0);
       }
     }

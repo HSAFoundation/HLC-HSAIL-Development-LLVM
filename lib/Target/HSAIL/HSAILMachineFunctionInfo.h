@@ -256,7 +256,7 @@ namespace llvm
 
     /// add/retrieve the argument registers numbers
     void addArgReg(unsigned arg) { mArgRegs.push_back(arg); }
-    unsigned getArgReg(unsigned arg) { 
+    unsigned getArgReg(unsigned arg) {
       return (arg < mArgRegs.size()) ? mArgRegs[arg] : arg; }
 
     void setRegisterPartitioning(unsigned RegSlots) {
