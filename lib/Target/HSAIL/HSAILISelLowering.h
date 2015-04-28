@@ -27,7 +27,6 @@
 #include "llvm/CodeGen/CallingConvLower.h"
 #include "llvm/CodeGen/SelectionDAG.h"
 #include "llvm/Target/TargetLowering.h"
-#include "HSAILISDNodes.h"
 
 namespace llvm {
 
@@ -270,6 +269,46 @@ public:
                                      SDNode *Node) const override;
 };
 
+  namespace HSAILISD {
+    // HSAIL Specific DAG Nodes
+    enum {
+      // Start the numbering where the builtin ops leave off.
+      FIRST_NUMBER = ISD::BUILTIN_OP_END,
+      CALL,        // Function call based on a single integer
+      RET,
+      SMAX,
+      UMAX,
+      SMIN,
+      UMIN,
+      FRACT,
+      NFMA,
+      UMAD,
+      SMAD,
+      UMUL24,
+      SMUL24,
+      UMAD24,
+      SMAD24,
+      BITSELECT,
+      SBITEXTRACT,
+      UBITEXTRACT,
+      FLDEXP,
+      CLASS,
+      LDA,
+      ACTIVELANEPERMUTE,
+      ACTIVELANEID,
+      ACTIVELANECOUNT,
+      ACTIVELANEMASK,
+      KERNARGBASEPTR,
+      SEGMENTP,
+
+      FIRST_MEM_OPCODE_NUMBER = ISD::FIRST_TARGET_MEMORY_OPCODE,
+
+      // Load and store of arguments. Main purpose is to add glue to what would
+      // be a generic load / store.
+      ARG_LD,
+      ARG_ST
+    };
+  }
 } // end llvm namespace
 
 #endif // _HSAIL_LOWERING_H_
