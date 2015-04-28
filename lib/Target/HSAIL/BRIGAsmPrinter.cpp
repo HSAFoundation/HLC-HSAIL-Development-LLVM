@@ -570,7 +570,7 @@ void BRIGAsmPrinter::EmitSamplerDefs() {
 }
 
 void BRIGAsmPrinter::emitMacroFunc(const MachineInstr *MI, raw_ostream &O) {
-  llvm::StringRef nameRef;
+  StringRef nameRef;
   nameRef = MI->getOperand(0).getGlobal()->getName();
   if (nameRef.startswith("barrier")) {
     O << '\t';

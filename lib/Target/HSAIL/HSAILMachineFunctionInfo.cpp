@@ -16,7 +16,8 @@ static const HSAILConstPtr *getConstPtr(const HSAILKernel *krnl, const std::stri
   if (!krnl) {
     return NULL;
   }
-  llvm::SmallVector<HSAILConstPtr, DEFAULT_VEC_SLOTS>::const_iterator begin, end;
+
+  SmallVector<HSAILConstPtr, DEFAULT_VEC_SLOTS>::const_iterator begin, end;
   for (begin = krnl->constPtr.begin(), end = krnl->constPtr.end();
        begin != end; ++begin) {
     if (!strcmp(begin->name.data(),arg.c_str())) {

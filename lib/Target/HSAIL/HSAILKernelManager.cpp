@@ -444,7 +444,7 @@ void HSAILKernelManager::setName(const std::string &name) {
 class RTI {
     std::string m_str;
     HSAIL_ASM::Brigantine&  m_brig;
-    mutable llvm::raw_string_ostream m_os;
+    mutable raw_string_ostream m_os;
 public:
     RTI(HSAIL_ASM::Brigantine&  brig) : m_brig(brig), m_os(m_str) { }
 
@@ -457,7 +457,7 @@ public:
     pragma.operands() = opnds;
     }
 
-    llvm::raw_string_ostream& os() const { return m_os; }
+    raw_string_ostream& os() const { return m_os; }
 };
 
 template <typename T>
@@ -493,7 +493,7 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine& brig, uint32_t 
     if (isKernel) {
       std::string emptyStr("");
       std::string &refEmptyStr(emptyStr);
-      llvm::raw_string_ostream oss(refEmptyStr);
+      raw_string_ostream oss(refEmptyStr);
       // function name
       RTI(brig)  << "ARGSTART:" << mName;
       if(isKernel) {

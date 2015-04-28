@@ -417,11 +417,11 @@ static SDValue getBRIGMemorySegment(SelectionDAG *CurDAG,
                                     unsigned memSeg) {
   unsigned BRIGMemSegment;
   switch(memSeg) {
-    case llvm::HSAILAS::GLOBAL_ADDRESS:
+    case HSAILAS::GLOBAL_ADDRESS:
         BRIGMemSegment = BRIG_SEGMENT_GLOBAL; break;
-    case llvm::HSAILAS::GROUP_ADDRESS:
+    case HSAILAS::GROUP_ADDRESS:
         BRIGMemSegment = BRIG_SEGMENT_GROUP; break;
-    case llvm::HSAILAS::FLAT_ADDRESS:
+    case HSAILAS::FLAT_ADDRESS:
         BRIGMemSegment = BRIG_SEGMENT_FLAT; break;
     default: llvm_unreachable("unexpected memory segment ");
   }

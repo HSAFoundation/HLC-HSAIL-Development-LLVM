@@ -43,8 +43,8 @@ class DebugLoc;
 
 namespace HSAIL {
 
-uint64_t getNumElementsInHSAILType(llvm::Type* type,
-                                   const llvm::DataLayout& dataLayout);
+uint64_t getNumElementsInHSAILType(Type* type,
+                                   const DataLayout& dataLayout);
 BrigType getBrigType(Type* Ty, const DataLayout &DL,
                      bool Signed = false);
 
@@ -53,27 +53,27 @@ BrigType getBrigType(Type* Ty, const DataLayout &DL,
 /// otherwise 0.
 Type *analyzeType(Type *Ty, unsigned &NElts, const DataLayout &DL);
 
-unsigned getAlignTypeQualifier(llvm::Type *ty, const llvm::DataLayout& DL,
+unsigned getAlignTypeQualifier(Type *ty, const DataLayout& DL,
                                bool isPreferred);
 
-const char *getTypeName(llvm::Type *ptr,
+const char *getTypeName(Type *ptr,
                         const char *symTab,
-                        llvm::HSAILMachineFunctionInfo *mMFI,
+                        HSAILMachineFunctionInfo *mMFI,
                         bool signedType);
 
-static inline bool isConv(const llvm::MachineInstr *MI) {
-  return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_CONV;
+static inline bool isConv(const MachineInstr *MI) {
+  return MI->getDesc().TSFlags & HSAILInstrFlags::IS_CONV;
 }
 
-static inline bool isImageInst(const llvm::MachineInstr *MI) {
-  return MI->getDesc().TSFlags & llvm::HSAILInstrFlags::IS_IMAGEINST;
+static inline bool isImageInst(const MachineInstr *MI) {
+  return MI->getDesc().TSFlags & HSAILInstrFlags::IS_IMAGEINST;
 }
 
-bool isKernelFunc(const llvm::Function *F);
-bool isSPIRModule(const llvm::Module &M);
+bool isKernelFunc(const Function *F);
+bool isSPIRModule(const Module &M);
 
-bool notUsedInKernel(const llvm::GlobalVariable *GV);
-bool isIgnoredGV(const llvm::GlobalVariable *GV);
+bool notUsedInKernel(const GlobalVariable *GV);
+bool isIgnoredGV(const GlobalVariable *GV);
 
 bool sanitizedGlobalValueName(StringRef, SmallVectorImpl<char> &);
 bool sanitizeGlobalValueName(llvm::GlobalValue *GV);

@@ -32,7 +32,7 @@ namespace llvm {
 
     bool Verify() const {
       if(DIGlobalVariable::Verify()) {
-        const llvm::GlobalVariable *GV = getGlobal();
+        const GlobalVariable *GV = getGlobal();
         /* address spaces should be the same */
         return GV && GV->getType() && GV->getType()->getAddressSpace() == static_cast<unsigned int>(addrSpace);
       }

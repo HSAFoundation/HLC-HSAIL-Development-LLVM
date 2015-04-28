@@ -191,8 +191,8 @@ protected:
   raw_fd_ostream*   mDwarfFileStream;
 
   // table that stores offsets of all emitted global variables - used in DWARF
-  std::map<const llvm::GlobalVariable*, uint64_t> globalVariableOffsets;
-  typedef std::map<const llvm::GlobalVariable*, uint64_t>::const_iterator gvo_iterator;
+  std::map<const GlobalVariable*, uint64_t> globalVariableOffsets;
+  typedef std::map<const GlobalVariable*, uint64_t>::const_iterator gvo_iterator;
 
   std::map<int, int> spillMapforStack;
   std::map<int, int> LocalVarMapforStack;
@@ -214,7 +214,7 @@ protected:
 
 
   // tables that store offsets of private and group variables - used in both DWARF and EmitFunctionBodyStart
-  typedef DenseMap<const llvm::GlobalVariable*, uint64_t> PVGVOffsetMap;
+  typedef DenseMap<const GlobalVariable*, uint64_t> PVGVOffsetMap;
   PVGVOffsetMap groupVariablesOffsets;
   typedef PVGVOffsetMap::iterator pvgvo_iterator;
   typedef PVGVOffsetMap::const_iterator pvgvo_const_iterator;
