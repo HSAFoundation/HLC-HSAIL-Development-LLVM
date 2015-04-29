@@ -1248,7 +1248,7 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
     bool IsZExt = Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
 
     // FIXME: Move this logic into ParamManager or remove ParamManager.
-    SmallString<256> ReturnName("__ret_");
+    SmallString<256> ReturnName;
 
     // If a unreachable function has a return type, we will never set the
     // param name.
