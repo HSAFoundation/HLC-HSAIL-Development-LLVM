@@ -1,5 +1,7 @@
-; RUN: llc -march=hsail < %s | FileCheck -check-prefix=HSAIL %s
-; RUN: llc -march=hsail64 < %s | FileCheck -check-prefix=HSAIL %s
+; RUN: llc -march=hsail < %s | FileCheck -check-prefix=HSAIL -check-prefix=OPT %s
+; RUN: llc -march=hsail64 < %s | FileCheck -check-prefix=HSAIL -check-prefix=OPT %s
+; RUN: llc -O0 -march=hsail < %s | FileCheck -check-prefix=HSAIL -check-prefix=SPILL -check-prefix=SPILL32 %s
+; RUN: llc -O0 -march=hsail64 < %s | FileCheck -check-prefix=HSAIL -check-prefix=SPILL -check-prefix=SPILL64 %s
 
 declare i32 @llvm.HSAIL.get.global.id(i32) nounwind readnone
 
@@ -34,6 +36,13 @@ entry:
 
 ; HSAIL-LABEL: {{^}}prog function &multiple_structs()(
 ; HSAIL: align(8) private_u8 %__privateStack[16];
+
+; HSAIL-DAG: st_private_align(8)_u32 0, [%__privateStack];
+; HSAIL-DAG: st_private_align(4)_u32 1, [%__privateStack][4];
+; HSAIL-DAG: st_private_align(8)_u64 12884901890, [%__privateStack][8];
+; HSAIL-DAG: ld_private_align(8)_u32 {{\$s[0-9]+}}, [%__privateStack][8];
+; HSAIL-DAG: ld_private_align(8)_u32 {{\$s[0-9]+}}, [%__privateStack];
+; HSAIL: ret;
 define void @multiple_structs(i32 addrspace(1)* %out) {
 entry:
   %a = alloca %struct.point
@@ -57,6 +66,26 @@ entry:
 
 ; HSAIL-LABEL: {{^}}prog function &direct_loop()(
 ; HSAIL: align(4) private_u8 %__privateStack[16];
+; SPILL32: align(4) spill_u8 %__spillStack[8];
+; SPILL64: align(8) spill_u8 %__spillStack[12];
+
+; HSAIL: st_private_align(4)_u64 {{\$d[0-9]+}}, [%__privateStack];
+; SPILL32-DAG: st_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack];
+; SPILL32-DAG: st_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][4];
+; SPILL64-DAG: st_spill_align(8)_u64 {{\$d[0-9]+}}, [%__spillStack];
+; SPILL64-DAG: st_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][8];
+
+; HSAIL: @BB2_1:
+; SPILL32-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][4];
+; SPILL64-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][8];
+; HSAIL-DAG: ld_private_align(4)_u32 {{\$s[0-9]+}}, [%__privateStack];
+; HSAIL-DAG: st_private_align(4)_u32 {{\$s[0-9]+}}, [%__privateStack][8];
+; HSAIL: cbr
+
+; HSAIL-DAG: ld_private_align(4)_u32 {{\$s[0-9]+}}, [%__privateStack][8];
+; SPILL32-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack];
+; SPILL64-DAG: ld_spill_align(8)_u64 {{\$d[0-9]+}}, [%__spillStack];
+; HSAIL: ret;
 define void @direct_loop(i32 addrspace(1)* %out, i32 addrspace(1)* %in) {
 entry:
   %prv_array_const = alloca [2 x i32]
@@ -91,6 +120,10 @@ for.end:
 
 ; HSAIL-LABEL: {{^}}prog function &short_array()(
 ; HSAIL: align(4) private_u8 %__privateStack[4];
+
+; HSAIL: st_private_align(2)_u32 65536, [%__privateStack];
+; HSAIL: ld_private_align(2)_s16 {{\$s[0-9]+}}, [%__privateStack][$s0];
+; HSAIL: ret;
 define void @short_array(i32 addrspace(1)* %out, i32 %index) {
 entry:
   %0 = alloca [2 x i16]
@@ -105,8 +138,46 @@ entry:
   ret void
 }
 
+; FIXME: This should not be overriding the alignment
+; HSAIL-LABEL: {{^}}prog function &align1_short_array()(
+; HSAIL: align(4) private_u8 %__privateStack[4];
+; HSAIL: ret;
+define void @align1_short_array(i32 addrspace(1)* %out, i32 %index) {
+entry:
+  %0 = alloca [2 x i16], align 1
+  %1 = getelementptr [2 x i16]* %0, i32 0, i32 0
+  %2 = getelementptr [2 x i16]* %0, i32 0, i32 1
+  store i16 0, i16* %1
+  store i16 1, i16* %2
+  %3 = getelementptr [2 x i16]* %0, i32 0, i32 %index
+  %4 = load i16* %3
+  %5 = sext i16 %4 to i32
+  store i32 %5, i32 addrspace(1)* %out
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &align32_short_array()(
+; HSAIL: align(32) private_u8 %__privateStack[4];
+; HSAIL: ret;
+define void @align32_short_array(i32 addrspace(1)* %out, i32 %index) {
+entry:
+  %0 = alloca [2 x i16], align 32
+  %1 = getelementptr [2 x i16]* %0, i32 0, i32 0
+  %2 = getelementptr [2 x i16]* %0, i32 0, i32 1
+  store i16 0, i16* %1
+  store i16 1, i16* %2
+  %3 = getelementptr [2 x i16]* %0, i32 0, i32 %index
+  %4 = load i16* %3
+  %5 = sext i16 %4 to i32
+  store i32 %5, i32 addrspace(1)* %out
+  ret void
+}
+
 ; HSAIL-LABEL: {{^}}prog function &char_array()(
 ; HSAIL: align(4) private_u8 %__privateStack[2];
+; HSAIL: st_private_u16 256, [%__privateStack];
+; HSAIL: ld_private_s8 $s0, [%__privateStack][$s0];
+; HSAIL: ret;
 define void @char_array(i32 addrspace(1)* %out, i32 %index) {
 entry:
   %0 = alloca [2 x i8]
@@ -124,6 +195,10 @@ entry:
 
 ; HSAIL-LABEL: {{^}}prog function &work_item_info()(
 ; HSAIL: align(4) private_u8 %__privateStack[8];
+
+; HSAIL: st_private_align(4)_u64 4294967296, [%__privateStack];
+; HSAIL: ld_private_align(4)_u32 {{\$s[0-9]+}}, [%__privateStack][$s0];
+; HSAIL: ret;
 define void @work_item_info(i32 addrspace(1)* %out, i32 %in) {
 entry:
   %0 = alloca [2 x i32]
@@ -141,6 +216,16 @@ entry:
 
 ; HSAIL-LABEL: {{^}}prog function &no_overlap()(
 ; HSAIL: align(4) private_u8 %__privateStack[5];
+
+
+; HSAIL-DAG: st_private_u8 0, [%__privateStack];
+; HSAIL-DAG: st_private_u8 1, [%__privateStack][1];
+; HSAIL-DAG: st_private_u8 2, [%__privateStack][2];
+; HSAIL-DAG: st_private_u16 1, [%__privateStack][3];
+
+; HSAIL-DAG: ld_private_u8 {{\$s[0-9]+}}, [%__privateStack][{{\$s[0-9]+}}+3];
+; HSAIL-DAG: ld_private_u8 {{\$s[0-9]+}}, [%__privateStack][{{\$s[0-9]+}}];
+; HSAIL: ret;
 define void @no_overlap(i32 addrspace(1)* %out, i32 %in) {
 entry:
   %0 = alloca [3 x i8], align 1
@@ -167,6 +252,9 @@ entry:
 
 ; HSAIL-LABEL: {{^}}prog function &char_array_array()(
 ; HSAIL: align(4) private_u8 %__privateStack[4];
+; HSAIL: st_private_u16 256, [%__privateStack];
+; HSAIL: ld_private_s8 $s0, [%__privateStack][{{\$s[0-9]+}}];
+; HSAIL: ret;
 define void @char_array_array(i32 addrspace(1)* %out, i32 %index) {
 entry:
   %alloca = alloca [2 x [2 x i8]]
@@ -215,6 +303,11 @@ entry:
 
 ; HSAIL-LABEL: {{^}}prog function &struct_array_array()(
 ; HSAIL: align(8) private_u8 %__privateStack[32];
+
+; HSAIL-DAG: st_private_align(4)_u32 0, [%__privateStack][4];
+; HSAIL-DAG: st_private_align(4)_u32 1, [%__privateStack][12];
+; HSAIL: ld_private_align(4)_u32 {{\$s[0-9]+}}, [%__privateStack][{{\$s[0-9]+}}];
+; HSAIL: ret;
 define void @struct_array_array(i32 addrspace(1)* %out, i32 %index) {
 entry:
   %alloca = alloca [2 x [2 x %struct.pair32]]
@@ -230,6 +323,11 @@ entry:
 
 ; HSAIL-LABEL: {{^}}prog function &struct_pair32_array()(
 ; HSAIL: align(8) private_u8 %__privateStack[16];
+
+; HSAIL-DAG: st_private_align(4)_u32 0, [%__privateStack][4];
+; HSAIL-DAG: st_private_align(8)_u32 1, [%__privateStack][8];
+; HSAIL-DAG: ld_private_align(4)_u32 {{\$s[0-9]+}}, [%__privateStack][{{\$s[0-9]+}}];
+; HSAIL: ret;
 define void @struct_pair32_array(i32 addrspace(1)* %out, i32 %index) {
 entry:
   %alloca = alloca [2 x %struct.pair32]
@@ -245,6 +343,9 @@ entry:
 
 ; HSAIL-LABEL: {{^}}prog function &select_private()(
 ; HSAIL: align(4) private_u8 %__privateStack[8];
+
+; HSAIL: st_private_align(4)_u64 4294967296, [%__privateStack];
+; HSAIL: ld_private_align(4)_u32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}];
 define void @select_private(i32 addrspace(1)* %out, i32 %in) nounwind {
 entry:
   %tmp = alloca [2 x i32]
@@ -274,5 +375,38 @@ define void @ptrtoint_private(i32 addrspace(1)* %out, i32 %a, i32 %b) {
   %tmp4 = getelementptr i32* %tmp3, i32 %b
   %tmp5 = load i32* %tmp4
   store i32 %tmp5, i32 addrspace(1)* %out
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &reg_and_imm_offset()(
+; HSAIL: align(4) private_u8 %__privateStack[64];
+
+; HSAIL-DAG: st_private_align(4)_u32 3, [%__privateStack];
+; HSAIL-DAG: st_private_align(4)_u32 1, [%__privateStack][12];
+; HSAIL-DAG: st_private_align(4)_u32 2, [%__privateStack][32];
+; HSAIL-DAG: shl_u32 [[PTR:\$s[0-9]+]]
+; HSAIL-DAG: st_private_align(4)_u32 7, [%__privateStack]{{\[}}[[PTR]]{{\]}};
+; HSAIL-DAG: st_private_align(4)_u32 9, [%__privateStack]{{\[}}[[PTR]]+8];
+
+; HSAIL: ld_private_align(4)_u32 {{\$s[0-9]+}}, [%__privateStack]{{\[}}[[PTR]]+12];
+; HSAIL: ret;
+define void @reg_and_imm_offset(i32 addrspace(1)* %out, i32 %index) {
+entry:
+  %alloca = alloca [16 x i32]
+  %gep0 = getelementptr [16 x i32]* %alloca, i32 0, i32 0
+  %gep1 = getelementptr [16 x i32]* %alloca, i32 0, i32 3
+  %gep2 = getelementptr [16 x i32]* %alloca, i32 0, i32 8
+  %gep3 = getelementptr [16 x i32]* %alloca, i32 0, i32 %index
+  %gep3.sum1 = add i32 %index, 2
+  %gep4 = getelementptr [16 x i32]* %alloca, i32 0, i32 %gep3.sum1
+  store i32 3, i32* %gep0
+  store i32 1, i32* %gep1
+  store i32 2, i32* %gep2
+  store i32 7, i32* %gep3
+  store i32 9, i32* %gep4
+  %gep3.sum = add i32 %index, 3
+  %gep5 = getelementptr [16 x i32]* %alloca, i32 0, i32 %gep3.sum
+  %load = load i32* %gep5
+  store i32 %load, i32 addrspace(1)* %out
   ret void
 }
