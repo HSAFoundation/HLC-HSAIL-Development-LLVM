@@ -76,6 +76,11 @@ void HSAILMCInstLower::lower(const MachineInstr *MI, MCInst &OutMI) const {
       MCOp = MCOperand::CreateExpr(MCSymbolRefExpr::Create(Sym, Ctx));
       break;
     }
+    case MachineOperand::MO_MCSymbol: {
+      MCSymbol *Sym = MO.getMCSymbol();
+      MCOp = MCOperand::CreateExpr(MCSymbolRefExpr::Create(Sym, Ctx));
+      break;
+    }
     case MachineOperand::MO_TargetIndex: {
       llvm_unreachable("Don't know how to lower target index");
       break;

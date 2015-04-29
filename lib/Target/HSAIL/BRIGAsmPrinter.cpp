@@ -1487,7 +1487,10 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI,
   else if (base.isSymbol()) {
     base_name = "%";
     base_name.append(base.getSymbolName());
+  } else if (base.isMCSymbol()) {
+    base_name = base.getMCSymbol()->getName();
   }
+
   // Get [$reg]
   HSAIL_ASM::SRef reg_name;
   if (reg.isReg() && reg.getReg() != 0) {
