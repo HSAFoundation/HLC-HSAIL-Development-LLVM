@@ -288,11 +288,9 @@ void HSAILRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
   assert(SPAdj == 0 && "Unexpected");
   MachineInstr &MI = *II;
   unsigned Opcode = MI.getOpcode();
-  MachineFunction &MF = *MI.getParent()->getParent();
-  // FrameIndex to Offset translation is usually performed by the
-  // target-specific implementation of TargetFrameLowering
-  const TargetFrameLowering *TFL =
-      MF.getTarget().getSubtarget<HSAILSubtarget>().getFrameLowering();
+  MachineFunction *MF = MI.getParent()->getParent();
+  const MachineFrameInfo *MFI = MF->getFrameInfo();
+  MCContext &Ctx = MF->getContext();
 
   assert(HSAIL::getNamedOperandIdx(Opcode, HSAIL::OpName::address) ==
          static_cast<int>(FIOperandNum) &&
@@ -306,26 +304,11 @@ void HSAILRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
   else if (Opcode == HSAIL::RESTORE_B1)
     lowerRestoreB1(II, FrameIndex);
 
+  StringRef SymName = MFI->isSpillSlotObjectIndex(FrameIndex) ?
+    "%__spillStack" : "%__privateStack";
+  MCSymbol *Sym = Ctx.GetOrCreateSymbol(SymName);
 
-  unsigned int y = MI.getNumOperands();
-  for (unsigned int x = 0; x < y; ++x) {
-    if (!MI.getOperand(x).isFI()) {
-      continue;
-    }
-    int FrameIndex = MI.getOperand(x).getIndex();
-    int64_t Offset = TFL->getFrameIndexOffset(MF, FrameIndex);
-    // int64_t Size = MF.getFrameInfo()->getObjectSize(FrameIndex);
-    // An optimization is to only use the offsets if the size
-    // is larger than 4, which means we are storing an array
-    // instead of just a pointer. If we are size 4 then we can
-    // just do register copies since we don't need to worry about
-    // indexing dynamically
-    if (!MI.getOperand(x).isImm()) {
-      MI.getOperand(x).ChangeToImmediate(Offset);
-    } else {
-      MI.getOperand(x).setImm(Offset);
-    }
-  }
+  Base.ChangeToMCSymbol(Sym);
 }
 
 //===--------------------------------------------------------------------===//

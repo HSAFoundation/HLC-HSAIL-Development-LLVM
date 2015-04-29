@@ -243,7 +243,7 @@ BRIGAsmPrinter::BRIGAsmPrinter(TargetMachine &TM, MCStreamer &Streamer)
       TII(Subtarget->getInstrInfo()), mMeta(new HSAILKernelManager(mTM)),
       mMFI(nullptr), m_bIsKernel(false), brigantine(bc), mDwarfStream(nullptr),
       mBrigStream(nullptr), mDwarfFileStream(nullptr),
-      privateStackBRIGOffset(0), spillStackBRIGOffset(0), mBuffer(0) {
+      mBuffer(0) {
 
   // Obtain DWARF stream.
   BRIGDwarfStreamer *DwarfStreamer = dyn_cast<BRIGDwarfStreamer>(&OutStreamer);
@@ -1060,67 +1060,50 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     SpillScavenge.modifier().isDefinition() = 1;
   }
 
-  const DataLayout &DL = getDataLayout();
   const MachineFrameInfo *MFI = MF->getFrameInfo();
-  size_t stack_size = MFI->getOffsetAdjustment() + MFI->getStackSize();
 
-  size_t spill_size = 0;
-  size_t local_stack_size = 0;
-  unsigned local_stack_align, spill_align;
-  local_stack_align = spill_align = DL.getABIIntegerTypeAlignment(32);
+  uint64_t SpillSize = 0;
+  uint64_t PrivateSize = 0;
+  unsigned PrivateAlign = 4;
+  unsigned SpillAlign = 4;
 
-  spillMapforStack.clear();
-  LocalVarMapforStack.clear();
+  // The stack objects have been preprocessed by
+  // processFunctionBeforeFrameFinalized so that we only expect the last two frame
+    for (int I = MFI->getObjectIndexBegin(), E = MFI->getObjectIndexEnd();
+         I != E; ++I) {
+    if (MFI->isDeadObjectIndex(I))
+      continue;
 
-  int stk_dim = MFI->getNumObjects();
-  int stk_object_indx_begin = MFI->getObjectIndexBegin();
-  for (int stk_indx = 0; stk_indx < stk_dim; stk_indx++) {
-    int obj_index = stk_object_indx_begin + stk_indx;
-    if (!MFI->isDeadObjectIndex(obj_index)) {
-      if (MFI->isSpillSlotObjectIndex(obj_index)) {
-        unsigned obj_align = MFI->getObjectAlignment(obj_index);
-        spill_size = (spill_size + obj_align - 1) / obj_align * obj_align;
-        spillMapforStack[MFI->getObjectOffset(obj_index)] = spill_size;
-        spill_size += MFI->getObjectSize(obj_index);
-        spill_align = std::max(spill_align, obj_align);
-      } else {
-        unsigned obj_offset = MFI->getObjectOffset(obj_index);
-        unsigned obj_align = MFI->getObjectAlignment(obj_index);
-        local_stack_size =
-            (local_stack_size + obj_align - 1) / obj_align * obj_align;
-        LocalVarMapforStack[obj_offset] = local_stack_size;
-        unsigned obj_size = MFI->getObjectSize(obj_index);
-        for (unsigned cnt = 1; cnt < obj_size; cnt++)
-          LocalVarMapforStack[obj_offset + cnt] = local_stack_size + cnt;
-        local_stack_size += obj_size;
-        local_stack_align = std::max(local_stack_align, obj_align);
-      }
+    if (MFI->isSpillSlotObjectIndex(I)) {
+      assert(SpillSize == 0 && "Only one spill object should be seen");
+
+      SpillSize = MFI->getObjectSize(I);
+      SpillAlign = MFI->getObjectAlignment(I);
+    } else {
+      assert(PrivateSize == 0 && "Only one private object should be seen");
+
+      PrivateSize = MFI->getObjectSize(I);
+      PrivateAlign = MFI->getObjectAlignment(I);
     }
   }
-  local_stack_size = local_stack_size + MFI->getOffsetAdjustment();
-  spill_size = spill_size + MFI->getOffsetAdjustment();
 
-  if (stack_size) {
-    // Dimension is in units of type length
-    if (local_stack_size) {
-      HSAIL_ASM::DirectiveVariable stack_for_locals =
-          brigantine.addArrayVariable("%__privateStack", local_stack_size,
-                                      BRIG_SEGMENT_PRIVATE, BRIG_TYPE_U8);
-      stack_for_locals.align() = getBrigAlignment(local_stack_align);
-      stack_for_locals.allocation() = BRIG_ALLOCATION_AUTOMATIC;
-      stack_for_locals.linkage() = BRIG_LINKAGE_FUNCTION;
-      stack_for_locals.modifier().isDefinition() = 1;
-      privateStackBRIGOffset = stack_for_locals.brigOffset();
-    }
-    if (spill_size) {
-      HSAIL_ASM::DirectiveVariable spill = brigantine.addArrayVariable(
-          "%__spillStack", spill_size, BRIG_SEGMENT_SPILL, BRIG_TYPE_U8);
-      spill.align() = getBrigAlignment(spill_align);
-      spill.allocation() = BRIG_ALLOCATION_AUTOMATIC;
-      spill.linkage() = BRIG_LINKAGE_FUNCTION;
-      spill.modifier().isDefinition() = 1;
-      spillStackBRIGOffset = spill.brigOffset();
-    }
+  if (PrivateSize != 0) {
+    HSAIL_ASM::DirectiveVariable PrivateStack =
+      brigantine.addArrayVariable("%__privateStack", PrivateSize,
+                                  BRIG_SEGMENT_PRIVATE, BRIG_TYPE_U8);
+    PrivateStack.align() = getBrigAlignment(PrivateAlign);
+    PrivateStack.allocation() = BRIG_ALLOCATION_AUTOMATIC;
+    PrivateStack.linkage() = BRIG_LINKAGE_FUNCTION;
+    PrivateStack.modifier().isDefinition() = 1;
+  }
+
+  if (SpillSize != 0) {
+    HSAIL_ASM::DirectiveVariable SpillStack = brigantine.addArrayVariable(
+      "%__spillStack", SpillSize, BRIG_SEGMENT_SPILL, BRIG_TYPE_U8);
+    SpillStack.align() = getBrigAlignment(SpillAlign);
+    SpillStack.allocation() = BRIG_ALLOCATION_AUTOMATIC;
+    SpillStack.linkage() = BRIG_LINKAGE_FUNCTION;
+    SpillStack.modifier().isDefinition() = 1;
   }
 
   std::string sLabel = "@" + std::string(F->getName()) + "_entry";
@@ -1308,61 +1291,6 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
 // Dwarf Emission Helper Routines
 //===------------------------------------------------------------------===//
 
-/// Returns true and the offset of %privateStack BRIG variable, or false
-/// if there is no local stack
-bool BRIGAsmPrinter::getPrivateStackOffset(uint64_t *privateStackOffset) const {
-  if (privateStackBRIGOffset != 0) {
-    *privateStackOffset = privateStackBRIGOffset;
-    return true;
-  }
-  return false;
-}
-
-/// Returns true and the offset of %spillStack BRIG variable, or false
-/// if there is no stack for spills
-bool BRIGAsmPrinter::getSpillStackOffset(uint64_t *spillStackOffset) const {
-  if (spillStackBRIGOffset != 0) {
-    *spillStackOffset = spillStackBRIGOffset;
-    return true;
-  }
-  return false;
-}
-
-/// This function is used to translate stack objects' offsets reported by
-/// MachineFrameInfo to actual offsets in the %privateStack array
-bool BRIGAsmPrinter::getLocalVariableStackOffset(int varOffset,
-                                                 int *stackOffset) const {
-  stack_map_iterator i = LocalVarMapforStack.find(varOffset);
-  if (i != LocalVarMapforStack.end()) {
-    *stackOffset = i->second;
-    return true;
-  }
-  return false;
-}
-
-/// This function is used to translate stack objects' offsets reported by
-/// MachineFrameInfo to actual offsets in the %spill array
-bool BRIGAsmPrinter::getSpillVariableStackOffset(int varOffset,
-                                                 int *stackOffset) const {
-  stack_map_iterator i = spillMapforStack.find(varOffset);
-  if (i != spillMapforStack.end()) {
-    *stackOffset = i->second;
-    return true;
-  }
-  return false;
-}
-
-bool BRIGAsmPrinter::getGlobalVariableOffset(const GlobalVariable *GV,
-                                             uint64_t *result) const {
-  gvo_iterator i = globalVariableOffsets.find(GV);
-  if (i == globalVariableOffsets.end()) {
-    assert(!"Unknown global variable");
-    return false;
-  }
-  *result = i->second;
-  return true;
-}
-
 bool BRIGAsmPrinter::getGroupVariableOffset(const GlobalVariable *GV,
                                             uint64_t *result) const {
   pvgvo_const_iterator i = groupVariablesOffsets.find(GV);
@@ -1480,19 +1408,10 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI,
   else if (base.isImm()) {
     int64_t addr = base.getImm();
     assert(isInt<32>(addr));
+    assert(MI->getOpcode() == HSAIL::LD_SAMP);
 
-    if (MI->getOpcode() == HSAIL::LD_SAMP) {
-      BrigEmitOperandImage(MI, opNum); // Constant sampler.
-      return;
-    } else if (spillMapforStack.find(addr) != spillMapforStack.end()) {
-      base_name = "%__spillStack";
-      offset += spillMapforStack[addr];
-    } else if (LocalVarMapforStack.find(addr) != LocalVarMapforStack.end()) {
-      base_name = "%__privateStack";
-      offset += LocalVarMapforStack[addr];
-    } else
-      llvm_unreachable("Immediate base address: neither spill, private stack "
-                       "nor sampler handle");
+    BrigEmitOperandImage(MI, opNum); // Constant sampler.
+    return;
   }
   // Kernel or function argument
   else if (base.isSymbol()) {

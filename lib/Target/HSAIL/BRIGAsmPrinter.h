@@ -105,24 +105,6 @@ public:
                                         VectorArgumentOffsets &result) const;
   bool getGroupVariableOffset(const GlobalVariable *GV, uint64_t *result) const;
 
-  // returns true and the offset of %privateStack BRIG variable, or false if
-  // there is no local stack
-  bool getPrivateStackOffset(uint64_t *privateStackOffset) const;
-
-  // returns true and the offset of %spillStack BRIG variable, or false if there
-  // is no stack for spills
-  bool getSpillStackOffset(uint64_t *spillStackOffset) const;
-
-  // this function is used to translate stack objects' offsets reported by
-  // MachineFrameInfo
-  // to actual offsets in the %privateStack array
-  bool getLocalVariableStackOffset(int varOffset, int *stackOffset) const;
-
-  // this function is used to translate stack objects' offsets reported by
-  // MachineFrameInfo
-  // to actual offsets in the %spillStack array
-  bool getSpillVariableStackOffset(int varOffset, int *stackOffset) const;
-
 protected:
   virtual void emitMacroFunc(const MachineInstr *MI, raw_ostream &O);
 
@@ -192,14 +174,6 @@ protected:
   std::map<const GlobalVariable *, uint64_t> globalVariableOffsets;
   typedef std::map<const GlobalVariable *, uint64_t>::const_iterator
       gvo_iterator;
-
-  std::map<int, int> spillMapforStack;
-  std::map<int, int> LocalVarMapforStack;
-  typedef std::map<int, int>::const_iterator stack_map_iterator;
-
-  // offset of BRIG variables %privateStack and %spillStack
-  uint64_t privateStackBRIGOffset;
-  uint64_t spillStackBRIGOffset;
 
   // table that stores offsets of scalar arguments of function being emitted -
   // used in DWARF

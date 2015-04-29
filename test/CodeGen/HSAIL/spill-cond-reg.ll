@@ -123,11 +123,12 @@ cc:
 
 ; HSAIL: @BB1_1:
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack];
+; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][36];
+; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][20];
+; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][28];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][24];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][32];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][16];
-; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][36];
-; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][28];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][12];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][8];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][4];
