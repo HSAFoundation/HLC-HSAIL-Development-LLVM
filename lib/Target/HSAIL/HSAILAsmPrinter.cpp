@@ -121,11 +121,21 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
   O << (IsKernel ? "kernarg" : "arg") << '_' << getArgTypeName(EltTy, IsSExt)
     << ' ' << '%';
 
-  StringRef Name = A.getName();
-  if (Name.empty())
-    O << "arg_p" << ParamIndex;
-  else
-    O << Name;
+  if (MF) {
+    const HSAILParamManager &PM =
+      MF->getInfo<HSAILMachineFunctionInfo>()->getParamManager();
+
+    O << PM.getParamName(ParamIndex);
+  } else {
+    // If we don't have a machine function, we are just printing the
+    // declaration. The name doesn't matter so much.
+
+    StringRef Name = A.getName();
+    if (Name.empty())
+      O << "arg_p" << ParamIndex;
+    else
+      O << Name;
+  }
 
   // For vector args, we'll use an HSAIL array.
   if (NElts != 0)
@@ -169,7 +179,12 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F, raw_ostream &O,
     // TODO_HSA: Need "good" names for the formal arguments and returned value.
     // TODO_HSA: Need to emit alignment information..
     if (!RetTy->isVoidTy()) {
-      StringRef RetName = IsDecl ? "ret" : F.getName();
+      StringRef RetName("ret");
+      SmallString<256> ReturnName;
+      if (!IsDecl) {
+        getNameWithPrefix(ReturnName, &F);
+        RetName = ReturnName;
+      }
 
       const auto &RetAttrs = F.getAttributes().getRetAttributes();
 

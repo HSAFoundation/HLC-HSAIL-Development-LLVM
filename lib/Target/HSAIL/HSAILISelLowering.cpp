@@ -523,10 +523,16 @@ HSAILTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv,
   Type *type = funcType->getReturnType();
   if (!type->isVoidTy()) {
     Mangler Mang(getDataLayout());
-    SDValue RetVariable = DAG.getTargetExternalSymbol(
-        PM.getParamName(
-            PM.addReturnParam(type, PM.mangleArg(&Mang, F->getName()))),
-        getPointerTy(HSAILAS::ARG_ADDRESS));
+
+    // FIXME: The ParamManager here is only used for making sure the built
+    // string's name survives until code emission. We can't rely on the name
+    // here being added because unreachable functions with return values may not
+    // have return instructions.
+    const char *SymName = PM.getParamName(
+        PM.addReturnParam(type, PM.mangleArg(&Mang, F->getName())));
+
+    MVT ArgPtrVT = getPointerTy(HSAILAS::ARG_ADDRESS);
+    SDValue RetVariable = DAG.getTargetExternalSymbol(SymName, ArgPtrVT);
 
     AAMDNodes MD; // FIXME: What is this for?
     // Value *mdops[] = { const_cast<Function*>(F) };

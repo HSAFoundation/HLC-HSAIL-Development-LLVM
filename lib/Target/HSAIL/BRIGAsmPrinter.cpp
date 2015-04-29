@@ -1246,24 +1246,14 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
     bool IsZExt =
         Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
 
-    // FIXME: Move this logic into ParamManager or remove ParamManager.
     SmallString<256> ReturnName;
-
-    // If a unreachable function has a return type, we will never set the
-    // param name.
-    StringRef ParamName;
-    auto I = PM.ret_begin();
-    if (I == PM.ret_end()) {
-      getNameWithPrefix(ReturnName, F);
-      ParamName = ReturnName;
-    } else
-      ParamName = PM.getParamName(*I);
+    getNameWithPrefix(ReturnName, F);
 
     if (IsSExt || IsZExt) {
       EmitFunctionReturn(Type::getInt32Ty(retType->getContext()), isKernel,
-                         ParamName, IsSExt);
+                         ReturnName, IsSExt);
     } else {
-      EmitFunctionReturn(retType, isKernel, ParamName, IsSExt);
+      EmitFunctionReturn(retType, isKernel, ReturnName, IsSExt);
     }
   }
 
