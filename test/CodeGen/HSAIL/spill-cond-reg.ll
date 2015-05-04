@@ -2,7 +2,7 @@
 
 ; FUNC-LABEL: {{^}}prog function &test_spill_cond_reg
 ; HSAIL: {
-; HSAIL: align(4) spill_u8 %__spillStack[40];
+; HSAIL: align(4) spill_u8 %__spillStack[36];
 ; HSAIL-DAG: cmp_eq_b1_s32 $c0
 ; HSAIL-DAG: cmp_eq_b1_s32 $c1
 ; HSAIL-DAG: cmp_eq_b1_s32 $c2
@@ -35,13 +35,14 @@
 ; HSAIL-DAG: cvt_b1_u32 {{\$c[0-9]+}}, [[RELOAD_C0]]
 
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack];
+; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][4];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][8];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][12];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][16];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][20];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][24];
+; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][28];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][32];
-; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][36];
 
 ; HSAIL-DAG: cvt_b1_u32 $c{{[0-9]+}}, $s{{[0-9]+}}
 ; HSAIL-DAG: cvt_b1_u32 $c{{[0-9]+}}, $s{{[0-9]+}}
@@ -104,12 +105,13 @@ cc:
 
 ; HSAIL-LABEL: {{^}}prog function &test_spill_cond_reg_priv(arg_u32 %test_spill_cond_reg_priv)(
 ; HSAIL: align(4) private_u8 %__privateStack[52];
-; HSAIL: align(4) spill_u8 %__spillStack[44];
+; HSAIL: align(4) spill_u8 %__spillStack[40];
 
 ; HSAIL: lda_private_u32 {{\$s[0-9]+}}, [%__privateStack];
 ; HSAIL: st_private_align(4)_u32 123, [%__privateStack][{{\$s[0-9]+}}];
 
 ; HSAIL-DAG: st_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack];
+; HSAIL-DAG: st_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][4];
 ; HSAIL-DAG: st_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][8];
 ; HSAIL-DAG: st_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][12];
 ; HSAIL-DAG: st_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][16];
@@ -118,11 +120,9 @@ cc:
 ; HSAIL-DAG: st_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][28];
 ; HSAIL-DAG: st_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][32];
 ; HSAIL-DAG: st_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][36];
-; HSAIL-DAG: st_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][40];
 
 ; HSAIL: @BB1_1:
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack];
-; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][40];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][24];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][32];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][16];
@@ -130,6 +130,7 @@ cc:
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][28];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][12];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][8];
+; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][4];
 ; HSAIL-DAG: ld_spill_align(4)_u32 {{\$s[0-9]+}}, [%__spillStack][20];
 ; HSAIL-DAG: ld_private_align(4)_u32 {{\$s[0-9]+}}, [{{\$s[0-9]+}}+12];
 ; HSAIL: st_arg_align(4)_u32

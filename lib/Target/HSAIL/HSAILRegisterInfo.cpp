@@ -14,6 +14,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "HSAIL.h"
+#include "HSAILBrig.h"
 #include "HSAILRegisterInfo.h"
 #include "HSAILMachineFunctionInfo.h"
 #include "HSAILSubtarget.h"
@@ -221,16 +222,81 @@ bool HSAILRegisterInfo::saveScavengerRegisterToFI(
   return true;
 }
 
+void HSAILRegisterInfo::lowerSpillB1(MachineBasicBlock::iterator II,
+                                     int FrameIndex) const {
+  MachineBasicBlock *MBB = II->getParent();
+  MachineFunction *MF = MBB->getParent();
+  MachineInstr &MI = *II;
+  const HSAILInstrInfo *TII = ST.getInstrInfo();
+  MachineRegisterInfo &MRI = MF->getRegInfo();
+  unsigned TempGPR32 = MRI.createVirtualRegister(&HSAIL::GPR32RegClass);
+
+  DebugLoc DL = MI.getDebugLoc();
+  BuildMI(*MBB, II, DL, TII->get(HSAIL::CVT_U32_B1), TempGPR32)
+    .addImm(0)             // ftz
+    .addImm(0)             // round
+    .addImm(BRIG_TYPE_U32) // destTypedestLength
+    .addImm(BRIG_TYPE_B1)  // srcTypesrcLength
+    .addOperand(MI.getOperand(0));
+
+  MI.setDesc(TII->get(HSAIL::ST_U32));
+  MI.getOperand(0).setReg(TempGPR32);
+  MI.getOperand(0).setIsKill();
+
+  MachineOperand *TypeOp = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength);
+  TypeOp->setImm(BRIG_TYPE_U32);
+}
+
+void HSAILRegisterInfo::lowerRestoreB1(MachineBasicBlock::iterator II,
+                                       int FrameIndex) const {
+  MachineBasicBlock *MBB = II->getParent();
+  MachineInstr &MI = *II;
+  DebugLoc DL = MI.getDebugLoc();
+  unsigned DestReg = MI.getOperand(0).getReg();
+  const HSAILInstrInfo *TII = ST.getInstrInfo();
+
+  MachineRegisterInfo &MRI = MBB->getParent()->getRegInfo();
+  unsigned TempGPR32 = MRI.createVirtualRegister(&HSAIL::GPR32RegClass);
+
+  BuildMI(*MBB, ++II, DL, TII->get(HSAIL::CVT_B1_U32), DestReg)
+    .addImm(0)             // ftz
+    .addImm(0)             // round
+    .addImm(BRIG_TYPE_B1)  // destTypedestLength
+    .addImm(BRIG_TYPE_U32) // srcTypesrcLength
+    .addReg(TempGPR32, RegState::Kill);
+
+  MI.setDesc(TII->get(HSAIL::LD_U32));
+  MI.getOperand(0).setReg(TempGPR32);
+  MI.getOperand(0).setIsDef();
+
+  MachineOperand *TypeOp = TII->getNamedOperand(MI, HSAIL::OpName::TypeLength);
+  TypeOp->setImm(BRIG_TYPE_U32);
+}
+
 void HSAILRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
                                             int SPAdj, unsigned FIOperandNum,
                                             RegScavenger *RS) const {
   assert(SPAdj == 0 && "Unexpected");
   MachineInstr &MI = *II;
+  unsigned Opcode = MI.getOpcode();
   MachineFunction &MF = *MI.getParent()->getParent();
   // FrameIndex to Offset translation is usually performed by the
   // target-specific implementation of TargetFrameLowering
   const TargetFrameLowering *TFL =
       MF.getTarget().getSubtarget<HSAILSubtarget>().getFrameLowering();
+
+  assert(HSAIL::getNamedOperandIdx(Opcode, HSAIL::OpName::address) ==
+         static_cast<int>(FIOperandNum) &&
+         "Frame index should only be used for address operands");
+
+  MachineOperand &Base = MI.getOperand(FIOperandNum);
+  int FrameIndex = Base.getIndex();
+
+  if (Opcode == HSAIL::SPILL_B1)
+    lowerSpillB1(II, FrameIndex);
+  else if (Opcode == HSAIL::RESTORE_B1)
+    lowerRestoreB1(II, FrameIndex);
+
 
   unsigned int y = MI.getNumOperands();
   for (unsigned int x = 0; x < y; ++x) {

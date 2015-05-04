@@ -624,20 +624,6 @@ unsigned int HSAILInstrInfo::RemoveBranch(MachineBasicBlock &MBB) const {
   return Count;
 }
 
-// Emergency spill frame indexes for functions
-static DenseMap<const MachineFunction *, int> emergencyStackSlot;
-
-// Creates or returns a 32 bit emergency frame index for a function
-static int getEmergencyStackSlot(MachineFunction *MF) {
-  if (emergencyStackSlot.find(MF) == emergencyStackSlot.end()) {
-    emergencyStackSlot.insert(
-        std::make_pair(MF, MF->getFrameInfo()->CreateSpillStackObject(
-                               HSAIL::GPR32RegClass.getSize(),
-                               HSAIL::GPR32RegClass.getAlignment())));
-  }
-  return emergencyStackSlot[MF];
-}
-
 void HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
                                          MachineBasicBlock::iterator MI,
                                          unsigned SrcReg, bool isKill,
@@ -676,13 +662,6 @@ void HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
     llvm_unreachable("unrecognized TargetRegisterClass");
     break;
   case HSAIL::CRRegClassID:
-    // We may need a stack slot for spilling a temp GPR32 after expansion
-    // of pseudo insns spill_st_b1/spill_ld_b1. After frame finalization
-    // it will be too late to create it, so create it now.
-    // Note, there is no need to do it in loadRegFromStackSlot() because
-    // there is no spill load w/o a spill store.
-    (void)getEmergencyStackSlot(&MF);
-  // Fall through
   case HSAIL::GPR32RegClassID:
   case HSAIL::GPR64RegClassID: {
     MachineMemOperand *MMO = MF.getMachineMemOperand(
@@ -941,91 +920,9 @@ void HSAILInstrInfo::copyPhysReg(MachineBasicBlock &MBB,
       .addReg(SrcReg, getKillRegState(KillSrc));
 }
 
-/// Get a free GPR32 or insert spill and reload around specified instruction
-/// and return fried register
-unsigned
-HSAILInstrInfo::getTempGPR32PostRA(MachineBasicBlock::iterator MBBI) const {
-  MachineBasicBlock *MBB = MBBI->getParent();
-  RS->enterBasicBlock(MBB);
-  RS->forward(MBBI);
-  unsigned tempU32 = RS->FindUnusedReg(&HSAIL::GPR32RegClass);
-  if (!tempU32) {
-    BitVector AS =
-        RI.getAllocatableSet(*(MBB->getParent()), &HSAIL::GPR32RegClass);
-    // Remove any candidates touched by instruction.
-    for (unsigned i = 0, e = MBBI->getNumOperands(); i != e; ++i) {
-      const MachineOperand &MO = MBBI->getOperand(i);
-      if (MO.isRegMask())
-        AS.clearBitsNotInMask(MO.getRegMask());
-      if (!MO.isReg() || MO.isUndef() || !MO.getReg())
-        continue;
-      if (!TargetRegisterInfo::isVirtualRegister(MO.getReg())) {
-        AS.reset(MO.getReg());
-      }
-    }
-    tempU32 = AS.find_first();
-    MachineBasicBlock::iterator UseMI(MBBI);
-    RI.saveScavengerRegisterToFI(*MBB, *MBBI, ++UseMI, &HSAIL::GPR32RegClass,
-                                 tempU32,
-                                 getEmergencyStackSlot(MBB->getParent()));
-
-    // FIXME: Need to pass correct FrameOperand Idx
-    unsigned FIOpIdx = 0;
-    RI.eliminateFrameIndex(--MBBI, 0, FIOpIdx, RS);
-    RI.eliminateFrameIndex(--UseMI, 0, FIOpIdx, RS);
-  }
-  return tempU32;
-}
-
 bool HSAILInstrInfo::expandPostRAPseudo(
     MachineBasicBlock::iterator MBBI) const {
-  MachineBasicBlock *MBB = MBBI->getParent();
   MachineInstr &MI = *MBBI;
-  unsigned opcode = MI.getOpcode();
-
-  switch (opcode) {
-  case HSAIL::SPILL_B1: {
-    unsigned tempU32 = getTempGPR32PostRA(MBBI);
-    DebugLoc DL = MI.getDebugLoc();
-    BuildMI(*MBB, MBBI, DL, get(HSAIL::CVT_U32_B1), tempU32)
-        .addImm(0)             // ftz
-        .addImm(0)             // round
-        .addImm(BRIG_TYPE_U32) // destTypedestLength
-        .addImm(BRIG_TYPE_B1)  // srcTypesrcLength
-        .addOperand(MI.getOperand(0));
-
-    MI.setDesc(get(HSAIL::ST_U32));
-    MI.getOperand(0).setReg(tempU32);
-    MI.getOperand(0).setIsKill();
-
-    MachineOperand *TypeOp = getNamedOperand(MI, HSAIL::OpName::TypeLength);
-    TypeOp->setImm(BRIG_TYPE_U32);
-    RS->setRegUsed(tempU32);
-  }
-    return true;
-  case HSAIL::RESTORE_B1: {
-    unsigned tempU32 = getTempGPR32PostRA(MBBI);
-    DebugLoc DL = MI.getDebugLoc();
-    unsigned DestReg = MI.getOperand(0).getReg();
-
-    BuildMI(*MBB, ++MBBI, DL, get(HSAIL::CVT_B1_U32), DestReg)
-        .addImm(0)             // ftz
-        .addImm(0)             // round
-        .addImm(BRIG_TYPE_B1)  // destTypedestLength
-        .addImm(BRIG_TYPE_U32) // srcTypesrcLength
-        .addReg(tempU32, RegState::Kill);
-
-    MI.setDesc(get(HSAIL::LD_U32));
-    MI.getOperand(0).setReg(tempU32);
-    MI.getOperand(0).setIsDef();
-
-    MachineOperand *TypeOp = getNamedOperand(MI, HSAIL::OpName::TypeLength);
-    TypeOp->setImm(BRIG_TYPE_U32);
-
-    RS->setRegUsed(tempU32);
-  }
-    return true;
-  }
   return HSAILGenInstrInfo::expandPostRAPseudo(MI);
 }
 

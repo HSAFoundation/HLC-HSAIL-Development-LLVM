@@ -762,10 +762,6 @@ public:
 
 private:
   RegScavenger *RS;
-
-  /// Get a free GPR32 or insert spill and reload around specified instruction
-  /// and return fried register
-  unsigned getTempGPR32PostRA(MachineBasicBlock::iterator MBBI) const;
 };
 
 namespace HSAIL {

@@ -34,6 +34,9 @@ class HSAILRegisterInfo : public HSAILGenRegisterInfo {
 private:
   HSAILSubtarget &ST;
 
+  void lowerSpillB1(MachineBasicBlock::iterator II, int FrameIndex) const;
+  void lowerRestoreB1(MachineBasicBlock::iterator II, int FrameIndex) const;
+
 public:
   HSAILRegisterInfo(HSAILSubtarget &st);
 
