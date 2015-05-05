@@ -145,6 +145,8 @@ class HSAILMachineFunctionInfo : public MachineFunctionInfo {
   /// Pointer to the subtarget for this function.
   const HSAILSubtarget *mSTM;
 
+  bool HasSpilledCRs;
+
 public:
   explicit HSAILMachineFunctionInfo(MachineFunction &MF);
 
@@ -261,6 +263,15 @@ public:
 
   HSAILParamManager &getParamManager() { return ParamManager; }
   const HSAILParamManager &getParamManager() const { return ParamManager; }
+
+
+  bool hasSpilledCRs() const {
+    return HasSpilledCRs;
+  }
+
+  void setHasSpilledCRs(bool Spill = true) {
+    HasSpilledCRs = Spill;
+  }
 
 private:
   HSAILParamManager ParamManager;

@@ -179,11 +179,12 @@ bool HSAILRegisterInfo::requiresRegisterScavenging(
   return true;
 }
 
-/// requiresFrameIndexScavenging - returns true if the target requires post
-/// PEI scavenging of registers for materializing frame index constants.
 bool HSAILRegisterInfo::requiresFrameIndexScavenging(
     const MachineFunction &MF) const {
-  return true;
+  // If we have spilled condition registers, we create virtual registers when
+  // replacing the pseudos.
+  const HSAILMachineFunctionInfo *Info = MF.getInfo<HSAILMachineFunctionInfo>();
+  return Info->hasSpilledCRs();
 }
 
 static int getScavengingFrameIndex(RegScavenger *RS) {

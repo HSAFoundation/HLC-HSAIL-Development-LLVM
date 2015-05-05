@@ -14,9 +14,8 @@
 #ifndef _HSAIL_FRAME_LOWERING_H_
 #define _HSAIL_FRAME_LOWERING_H_
 
-#include "llvm/CodeGen/MachineFrameInfo.h"
-#include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/Target/TargetFrameLowering.h"
+
 
 namespace llvm {
 
@@ -26,17 +25,19 @@ public:
                               unsigned TransAl = 1)
       : TargetFrameLowering(D, StackAl, LAO, TransAl) {}
 
-  void emitPrologue(MachineFunction &MF) const override{};
+  void emitPrologue(MachineFunction &MF) const override {};
 
   void emitEpilogue(MachineFunction &MF,
-                    MachineBasicBlock &MBB) const override{};
+                    MachineBasicBlock &MBB) const override{}
 
   bool hasFP(const MachineFunction &MF) const override { return false; }
 
-  int getFrameIndexOffset(const MachineFunction &MF, int FI) const override {
-    return MF.getFrameInfo()->getObjectOffset(FI);
-  }
-}; // HSAILFrameLowering
+  int getFrameIndexOffset(const MachineFunction &MF, int FI) const override;
+
+  void processFunctionBeforeFrameFinalized(
+    MachineFunction &F,
+    RegScavenger *RS = nullptr) const override;
+};
 
 } // End llvm namespace
 

@@ -648,10 +648,13 @@ void HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
     Opc = HSAIL::ST_U64;
     BT = BRIG_TYPE_U64;
     break;
-  case HSAIL::CRRegClassID:
+  case HSAIL::CRRegClassID: {
+    HSAILMachineFunctionInfo *MFI = MF.getInfo<HSAILMachineFunctionInfo>();
+    MFI->setHasSpilledCRs();
     Opc = HSAIL::SPILL_B1;
     BT = BRIG_TYPE_B1;
     break;
+  }
   }
   if (MI != MBB.end()) {
     DL = MI->getDebugLoc();

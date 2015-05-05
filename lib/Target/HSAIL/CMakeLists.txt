@@ -21,6 +21,7 @@ set(sources
   BRIGAsmPrinter.cpp
 #  BRIGDwarfCompileUnit.cpp
 #  BRIGDwarfDebug.cpp
+  HSAILFrameLowering.cpp
   HSAILInstrInfo.cpp
   HSAILIntrinsicInfo.cpp
   HSAILISelDAGToDAG.cpp
