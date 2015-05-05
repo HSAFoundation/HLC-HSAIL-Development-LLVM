@@ -17,8 +17,6 @@
 #include "HSAILTargetMachine.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/Intrinsics.h"
-#include "llvm/IR/Module.h"
-#include <cstring>
 using namespace llvm;
 
 #define GET_LLVM_INTRINSIC_FOR_GCC_BUILTIN
@@ -118,30 +116,12 @@ std::string HSAILIntrinsicInfo::getName(unsigned int IntrID, Type **Tys,
   return Result;
 }
 
-unsigned int HSAILIntrinsicInfo::lookupName(const char *Name,
-                                            unsigned int Len) const {
+unsigned HSAILIntrinsicInfo::lookupName(const char *Name,
+                                        unsigned Len) const {
 #define GET_FUNCTION_RECOGNIZER
 #include "HSAILGenIntrinsics.inc"
 #undef GET_FUNCTION_RECOGNIZER
-  HSAILIntrinsic::ID IntrinsicID;
-  // Translate "__atom_*" intrinsic name to "__atomic_*" so we don't need to
-  // support both flavors. The "__atom_*" variants come from OCL 1.0 32-bit
-  // atomics and OCL Extension 1.2 64-bit atomics.
-  if (strncmp(Name, "__atom_", 7) == 0) {
-    // Translate "__atom_" to "__atomic_"
-    std::string atomicName = Name;
-    atomicName.insert(6, "ic");
-    IntrinsicID = getIntrinsicForGCCBuiltin("HSAIL", atomicName.c_str());
-  } else {
-    IntrinsicID = getIntrinsicForGCCBuiltin("HSAIL", Name);
-  }
-
-  //  errs() << "InstrinsicID: " << Name << "\t" << IntrinsicID << "\n";
-
-  if (IntrinsicID != (HSAILIntrinsic::ID)Intrinsic::not_intrinsic) {
-    return IntrinsicID;
-  }
-  return 0;
+  return getIntrinsicForGCCBuiltin("HSAIL", Name);
 }
 
 bool HSAILIntrinsicInfo::isOverloaded(unsigned IntrID) const {
