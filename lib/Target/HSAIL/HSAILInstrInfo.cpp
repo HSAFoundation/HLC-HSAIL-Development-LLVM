@@ -11,21 +11,11 @@
 #include "HSAILBrig.h"
 #include "HSAILTargetMachine.h"
 #include "HSAILUtilityFunctions.h"
-#include "llvm/IR/Instructions.h"
-#include "llvm/ADT/DenseMap.h"
 #include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
 #include "llvm/CodeGen/MachineRegisterInfo.h"
-#include "llvm/CodeGen/MachineMemOperand.h"
-#include "llvm/CodeGen/PseudoSourceValue.h"
 #include "llvm/CodeGen/RegisterScavenging.h"
 #include "llvm/Support/CommandLine.h"
-#include "llvm/Support/Debug.h"
-#include "llvm/Support/raw_ostream.h"
-#include "llvm/IR/Verifier.h"
-#include "llvm/CodeGen/Passes.h"
-#include "llvm/Pass.h"
-#include "llvm/ADT/SmallPtrSet.h"
 
 #include <queue>
 
