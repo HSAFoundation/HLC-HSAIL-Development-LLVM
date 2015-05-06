@@ -29,14 +29,6 @@
 #include "libHSAIL/HSAILBrigantine.h"
 #include "libHSAIL/HSAILItems.h"
 
-#include <cstdio>
-#include <ostream>
-#include <sstream>
-#include <algorithm>
-#include <string>
-#include <queue>
-#include <list>
-#include <utility>
 using namespace llvm;
 #define NUM_EXTRA_SLOTS_PER_IMAGE 1
 
