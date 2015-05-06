@@ -187,42 +187,6 @@ bool HSAILRegisterInfo::requiresFrameIndexScavenging(
   return Info->hasSpilledCRs();
 }
 
-static int getScavengingFrameIndex(RegScavenger *RS) {
-
-  SmallVector<int, 8> FI;
-  RS->getScavengingFrameIndices(FI);
-  return FI[0];
-}
-
-// Save scavenger register and provide a frame index for it.
-bool HSAILRegisterInfo::saveScavengerRegisterToFI(
-    MachineBasicBlock &MBB, MachineBasicBlock::iterator I,
-    MachineBasicBlock::iterator &UseMI, const TargetRegisterClass *RC,
-    unsigned Reg, int FI) const {
-  const HSAILInstrInfo &HII =
-      *static_cast<const HSAILInstrInfo *>(ST.getInstrInfo());
-  RegScavenger *RS = HII.getRS();
-
-  assert(RS != 0 && "Register scavenger has not been created");
-
-  // Setup emergency spill location
-  RS->addScavengingFrameIndex(FI);
-
-  assert(getScavengingFrameIndex(RS) >= 0 &&
-         "Cannot scavenge register without an emergency spill slot!");
-
-  // Store the scavenged register to its stack spill location
-  HII.storeRegToStackSlot(MBB, I, Reg, true /* isKill */,
-                          getScavengingFrameIndex(RS), RC, this);
-
-  // Restore the scavenged register before its use (or first terminator).
-  HII.loadRegFromStackSlot(MBB, UseMI, Reg, getScavengingFrameIndex(RS), RC,
-                           this);
-
-  // HSAIL Target saves/restores the scavenged register
-  return true;
-}
-
 void HSAILRegisterInfo::lowerSpillB1(MachineBasicBlock::iterator II,
                                      int FrameIndex) const {
   MachineBasicBlock *MBB = II->getParent();
