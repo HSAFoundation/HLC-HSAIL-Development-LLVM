@@ -1124,114 +1124,110 @@ void BRIGAsmPrinter::EmitFunctionBodyEnd() {
   brigantine.endBody();
 }
 
-void BRIGAsmPrinter::EmitFunctionReturn(Type *type, bool isKernel,
-                                        StringRef RetName, bool isSExt) {
+void BRIGAsmPrinter::EmitFunctionReturn(Type *Ty, bool IsKernel,
+                                        StringRef RetName, bool IsSExt) {
   std::string SymName("%");
   SymName += RetName;
 
-  HSAIL_ASM::SRef ret(SymName);
-
-  assert((!type->isVectorTy() || !type->getScalarType()->isIntegerTy(1)) &&
+  assert((!Ty->isVectorTy() || !Ty->getScalarType()->isIntegerTy(1)) &&
          "i1 vectors do not work");
 
   const DataLayout &DL = getDataLayout();
 
   unsigned NElts = ~0u;
-  Type *EmitTy = HSAIL::analyzeType(type, NElts, DL);
+  Type *EmitTy = HSAIL::analyzeType(Ty, NElts, DL);
 
-  // construct return symbol
-  HSAIL_ASM::DirectiveVariable retParam;
+  // Construct return symbol.
+  HSAIL_ASM::DirectiveVariable RetParam;
   if (NElts != 0) {
-    retParam = brigantine.addArrayVariable(
-        ret, NElts, BRIG_SEGMENT_ARG,
-        HSAIL::getBrigType(EmitTy, getDataLayout(), isSExt));
+    RetParam = brigantine.addArrayVariable(
+      SymName, NElts, BRIG_SEGMENT_ARG,
+        HSAIL::getBrigType(EmitTy, DL, IsSExt));
   } else {
-    retParam = brigantine.addVariable(ret, BRIG_SEGMENT_ARG,
-                                      HSAIL::getBrigType(EmitTy, DL, isSExt));
+    RetParam = brigantine.addVariable(SymName, BRIG_SEGMENT_ARG,
+                                      HSAIL::getBrigType(EmitTy, DL, IsSExt));
   }
 
-  retParam.align() = getBrigAlignment(DL.getABITypeAlignment(type));
-  brigantine.addOutputParameter(retParam);
+  RetParam.align() = getBrigAlignment(DL.getABITypeAlignment(Ty));
+  brigantine.addOutputParameter(RetParam);
 }
 
-uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type *type, bool isKernel,
-                                              const StringRef argName,
-                                              bool isSExt) {
-  std::string name;
+uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type *Ty, bool IsKernel,
+                                              StringRef ArgName,
+                                              bool IsSExt) {
+  std::string Name;
   {
-    raw_string_ostream stream(name);
+    raw_string_ostream Stream(Name);
 
-    if (argName.empty()) {
-      stream << "%arg_p" << paramCounter;
-    } else {
-      std::string Str = HSAILParamManager::mangleArg(Mang, argName);
-      stream << '%' << Str;
-    }
+    if (ArgName.empty())
+      Stream << "%arg_p" << paramCounter;
+    else
+      Stream << '%' << HSAILParamManager::mangleArg(Mang, ArgName);
   }
 
   paramCounter++;
 
-  const BrigSegment8_t symSegment =
-      isKernel ? BRIG_SEGMENT_KERNARG : BRIG_SEGMENT_ARG;
+  const BrigSegment8_t SymSegment =
+      IsKernel ? BRIG_SEGMENT_KERNARG : BRIG_SEGMENT_ARG;
 
-  HSAIL_ASM::DirectiveVariable sym;
+  HSAIL_ASM::DirectiveVariable Sym;
 
-  OpaqueType OT = GetOpaqueType(type);
-  // Create the symbol
+  OpaqueType OT = GetOpaqueType(Ty);
+
+  // Create the symbol.
   if (IsImage(OT)) {
-    sym = brigantine.addImage(name, symSegment);
-    sym.align() = BRIG_ALIGNMENT_8;
+    Sym = brigantine.addImage(Name, SymSegment);
+    Sym.align() = BRIG_ALIGNMENT_8;
   } else if (OT == Sampler) {
-    sym = brigantine.addSampler(name, symSegment);
-    sym.align() = BRIG_ALIGNMENT_8;
+    Sym = brigantine.addSampler(Name, SymSegment);
+    Sym.align() = BRIG_ALIGNMENT_8;
   } else {
     const DataLayout &DL = getDataLayout();
 
-    assert((!type->isVectorTy() || !type->getScalarType()->isIntegerTy(1)) &&
+    assert((!Ty->isVectorTy() || !Ty->getScalarType()->isIntegerTy(1)) &&
            "i1 vectors are broken");
 
     unsigned NElts = ~0u;
-    Type *EmitTy = HSAIL::analyzeType(type, NElts, DL);
+    Type *EmitTy = HSAIL::analyzeType(Ty, NElts, DL);
 
     if (NElts != 0) {
-      BrigType EltTy = HSAIL::getBrigType(EmitTy, DL, isSExt);
-      sym = brigantine.addArrayVariable(name, NElts, symSegment, EltTy);
+      BrigType EltTy = HSAIL::getBrigType(EmitTy, DL, IsSExt);
+      Sym = brigantine.addArrayVariable(Name, NElts, SymSegment, EltTy);
     } else {
-      sym = brigantine.addVariable(name, symSegment,
-                                   HSAIL::getBrigType(EmitTy, DL, isSExt));
+      Sym = brigantine.addVariable(Name, SymSegment,
+                                   HSAIL::getBrigType(EmitTy, DL, IsSExt));
     }
 
-    sym.align() = getBrigAlignment(DL.getABITypeAlignment(type));
+    Sym.align() = getBrigAlignment(DL.getABITypeAlignment(Ty));
   }
 
-  uint64_t rv = sym.brigOffset();
-  brigantine.addInputParameter(sym);
-  return rv;
+  uint64_t Offset = Sym.brigOffset();
+  brigantine.addInputParameter(Sym);
+  return Offset;
 }
 
 /// Emit the function signature
 void BRIGAsmPrinter::EmitFunctionEntryLabel() {
-  // Emit function start
   const Function *F = MF->getFunction();
-  Type *retType = F->getReturnType();
-  FunctionType *funcType = F->getFunctionType();
-  bool isKernel = HSAIL::isKernelFunc(F);
+  bool IsKernel = HSAIL::isKernelFunc(F);
   const HSAILParamManager &PM =
       MF->getInfo<HSAILMachineFunctionInfo>()->getParamManager();
 
   SmallString<256> NameWithPrefix;
   getHSAILMangledName(NameWithPrefix, F);
 
-  HSAIL_ASM::DirectiveExecutable fx;
-  if (isKernel)
-    fx = brigantine.declKernel(makeSRef(NameWithPrefix));
+  HSAIL_ASM::DirectiveExecutable Directive;
+  if (IsKernel)
+    Directive = brigantine.declKernel(makeSRef(NameWithPrefix));
   else
-    fx = brigantine.declFunc(makeSRef(NameWithPrefix));
+    Directive = brigantine.declFunc(makeSRef(NameWithPrefix));
 
-  fx.linkage() = findGlobalBrigLinkage(*F);
+  Directive.linkage() = findGlobalBrigLinkage(*F);
 
   const auto &Attrs = F->getAttributes();
-  if (!retType->isVoidTy()) {
+
+  Type *RetType = F->getReturnType();
+  if (!RetType->isVoidTy()) {
     bool IsSExt =
         Attrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::SExt);
     bool IsZExt =
@@ -1241,10 +1237,10 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
     getNameWithPrefix(ReturnName, F);
 
     if (IsSExt || IsZExt) {
-      EmitFunctionReturn(Type::getInt32Ty(retType->getContext()), isKernel,
+      EmitFunctionReturn(Type::getInt32Ty(RetType->getContext()), IsKernel,
                          ReturnName, IsSExt);
     } else {
-      EmitFunctionReturn(retType, isKernel, ReturnName, IsSExt);
+      EmitFunctionReturn(RetType, IsKernel, ReturnName, IsSExt);
     }
   }
 
@@ -1252,35 +1248,35 @@ void BRIGAsmPrinter::EmitFunctionEntryLabel() {
   // corresponding names.
   paramCounter = 0;
 
-  // clear arguments mapping
+  // Clear arguments mapping.
   functionScalarArgumentOffsets.clear();
   functionVectorArgumentOffsets.clear();
 
-  HSAILParamManager::param_iterator Ip = PM.arg_begin();
-  HSAILParamManager::param_iterator Ep = PM.arg_end();
+  HSAILParamManager::param_iterator AI = PM.arg_begin();
+  HSAILParamManager::param_iterator AE = PM.arg_end();
 
-  FunctionType::param_iterator pb = funcType->param_begin(),
-                               pe = funcType->param_end();
+  FunctionType *FTy = F->getFunctionType();
+  FunctionType::param_iterator PI = FTy->param_begin(),
+                               PE = FTy->param_end();
 
-  if (isKernel && F->hasStructRetAttr()) {
-    assert(Ip != Ep && "Invalid struct return fucntion!");
+  if (IsKernel && F->hasStructRetAttr()) {
+    assert(PI != PE && "Invalid struct return function!");
     // If this is a struct-return function, don't process the hidden
     // struct-return argument.
-    ++Ip;
-    ++pb;
+    ++AI;
+    ++PI;
   }
 
-  for (unsigned n = 1; pb != pe; ++pb, ++Ip, ++n) {
-    Type *type = *pb;
-    assert(Ip != Ep);
-    // Obtain argument name
-    const char *argName = PM.getParamName(*Ip);
-    // Here we will store an offset of DirectiveVariable
-    uint64_t argDirectiveOffset = 0;
+  for (unsigned N = 1; PI != PE; ++PI, ++AI, ++N) {
+    assert(AI != AE);
 
-    bool IsSExt = Attrs.hasAttribute(n, Attribute::SExt);
-    argDirectiveOffset = EmitFunctionArgument(type, isKernel, argName, IsSExt);
-    functionScalarArgumentOffsets[argName] = argDirectiveOffset;
+    Type *Ty = *PI;
+    const char *ArgName = PM.getParamName(*AI);
+
+    // Here we will store an offset of DirectiveVariable
+    bool IsSExt = Attrs.hasAttribute(N, Attribute::SExt);
+    uint64_t ArgDirectiveOffset = EmitFunctionArgument(Ty, IsKernel, ArgName, IsSExt);
+    functionScalarArgumentOffsets[ArgName] = ArgDirectiveOffset;
   }
 }
 
