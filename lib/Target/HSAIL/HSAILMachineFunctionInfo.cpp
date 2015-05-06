@@ -44,6 +44,7 @@ uint32_t HSAILPrintfInfo::getOperandID(uint32_t idx) { return mOperands[idx]; }
 HSAILMachineFunctionInfo::HSAILMachineFunctionInfo(MachineFunction &MF)
     : RegisterPartitioning(0),
       HasSpilledCRs(false),
+      HasScavengerSpill(false),
       ParamManager(MF.getTarget().getSubtargetImpl()->getDataLayout()) {
   const Function *F = MF.getFunction();
   mMF = &MF;

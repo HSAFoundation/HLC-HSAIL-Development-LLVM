@@ -146,6 +146,7 @@ class HSAILMachineFunctionInfo : public MachineFunctionInfo {
   const HSAILSubtarget *mSTM;
 
   bool HasSpilledCRs;
+  bool HasScavengerSpill;
 
 public:
   explicit HSAILMachineFunctionInfo(MachineFunction &MF);
@@ -271,6 +272,14 @@ public:
 
   void setHasSpilledCRs(bool Spill = true) {
     HasSpilledCRs = Spill;
+  }
+
+  bool hasScavengerSpill() const {
+    return HasScavengerSpill;
+  }
+
+  void setHasScavengerSpill(bool Spill = true) {
+    HasScavengerSpill = Spill;
   }
 
 private:

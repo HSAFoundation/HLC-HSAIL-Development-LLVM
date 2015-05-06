@@ -8,7 +8,8 @@ declare void @llvm.HSAIL.barrier() #2
 ; expansion.
 
 ; HSAIL-LABEL: {{^}}prog function &test_spill_cond_reg_with_scavenging()(
-; HSAIL: align(4) spill_u8 %__spillStack[168];
+; HSAIL: {{^[ \t]}}spill_u32 %___spillScavenge;
+; HSAIL: align(4) spill_u8 %__spillStack[164];
 
 ; HSAIL: st_spill_align(4)_u32 $s0, [%__spillStack];
 ; HSAIL: st_spill_align(4)_u32 $s0, [%__spillStack][4];
@@ -76,16 +77,16 @@ declare void @llvm.HSAIL.barrier() #2
 ; HSAIL-NEXT: cmp_eq_b1_s32 $c7,
 
 ; $s0 is spilled and restored to scavenged slot for conversion
-; HSAIL-NEXT: st_spill_align(4)_u32 $s0, [%__spillStack][116];
+; HSAIL-NEXT: st_spill_align(4)_u32 $s0, [%___spillScavenge];
 ; HSAIL-NEXT: cvt_u32_b1 $s0, $c0;
-; HSAIL-NEXT: st_spill_align(4)_u32 $s0, [%__spillStack][112];
-; HSAIL-NEXT: ld_spill_align(4)_u32 $s0, [%__spillStack][116];
-
 ; HSAIL: barrier;
+; HSAIL: ld_spill_align(4)_u32 $s0, [%___spillScavenge];
+
 
 ; Make sure we use the last slots
+; HSAIL: st_spill_align(4)_u32 $s0, [%__spillStack][156];
 ; HSAIL: st_spill_align(4)_u32 $s0, [%__spillStack][160];
-; HSAIL: st_spill_align(4)_u32 $s0, [%__spillStack][164];
+
 define void @test_spill_cond_reg_with_scavenging(i1 addrspace(1)* %out, i32 addrspace(1)* %in, i32 addrspace(1)* %s) #0 {
   %b_ptr = getelementptr i32 addrspace(1)* %in, i32 1
   %c_ptr = getelementptr i32 addrspace(1)* %in, i32 2

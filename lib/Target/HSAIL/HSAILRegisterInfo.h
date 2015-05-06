@@ -57,6 +57,12 @@ public:
 
   bool requiresFrameIndexScavenging(const MachineFunction &MF) const override;
 
+  bool saveScavengerRegister(MachineBasicBlock &MBB,
+                             MachineBasicBlock::iterator I,
+                             MachineBasicBlock::iterator &UseMI,
+                             const TargetRegisterClass *RC,
+                             unsigned Reg) const override;
+
   void eliminateFrameIndex(MachineBasicBlock::iterator MI, int SPAdj,
                            unsigned FIOperandNum,
                            RegScavenger *RS = nullptr) const override;

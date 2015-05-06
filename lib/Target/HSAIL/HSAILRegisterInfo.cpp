@@ -238,6 +238,50 @@ void HSAILRegisterInfo::lowerRestoreB1(MachineBasicBlock::iterator II,
   TypeOp->setImm(BRIG_TYPE_U32);
 }
 
+bool HSAILRegisterInfo::saveScavengerRegister(MachineBasicBlock &MBB,
+                                              MachineBasicBlock::iterator I,
+                                              MachineBasicBlock::iterator &UseMI,
+                                              const TargetRegisterClass *RC,
+                                              unsigned Reg) const {
+  MachineFunction *MF = MBB.getParent();
+  HSAILMachineFunctionInfo *Info = MF->getInfo<HSAILMachineFunctionInfo>();
+  MCContext &Ctx = MF->getContext();
+  const HSAILInstrInfo *TII = ST.getInstrInfo();
+
+  // We only rely on the RegScavenger in rare cases for the temp registers
+  // needed when expanding spill_b1 / restore_b1.
+  assert(RC == &HSAIL::GPR32RegClass &&
+         "Only expecting s register spills during emergencies");
+
+  DebugLoc DL = I->getDebugLoc();
+
+  // We don't really have a stack, and there's no real reason we can't create
+  // more stack objects. We will define a special spill variable for this case.
+  Info->setHasScavengerSpill();
+
+  MCSymbol *Sym = Ctx.GetOrCreateSymbol(StringRef("%___spillScavenge"));
+  BuildMI(MBB, I, DL, TII->get(HSAIL::ST_U32))
+    .addReg(Reg, RegState::Kill)    // src
+    .addSym(Sym)                    // address_base
+    .addReg(HSAIL::NoRegister)      // address_reg
+    .addImm(0)                      // address_offset
+    .addImm(BRIG_TYPE_U32)          // TypeLength
+    .addImm(HSAILAS::SPILL_ADDRESS) // segment
+    .addImm(RC->getAlignment());    // align
+
+  BuildMI(MBB, UseMI, DL, TII->get(HSAIL::LD_U32), Reg)
+    .addSym(Sym)                    // address_base
+    .addReg(HSAIL::NoRegister)      // address_reg
+    .addImm(0)                      // address_offset
+    .addImm(BRIG_TYPE_U32)          // TypeLength
+    .addImm(HSAILAS::SPILL_ADDRESS) // segment
+    .addImm(RC->getAlignment())     // align
+    .addImm(BRIG_WIDTH_1)           // width
+    .addImm(0);                     // mask
+
+  return true;
+}
+
 void HSAILRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
                                             int SPAdj, unsigned FIOperandNum,
                                             RegScavenger *RS) const {

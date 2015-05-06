@@ -1048,8 +1048,19 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     }
   }
 
-  DataLayout DL = getDataLayout();
+  const HSAILMachineFunctionInfo *Info = MF->getInfo<HSAILMachineFunctionInfo>();
 
+  if (Info->hasScavengerSpill()) {
+    HSAIL_ASM::DirectiveVariable SpillScavenge =
+      brigantine.addVariable("%___spillScavenge",
+                             BRIG_SEGMENT_SPILL, BRIG_TYPE_U32);
+    SpillScavenge.align() = getBrigAlignment(4);
+    SpillScavenge.allocation() = BRIG_ALLOCATION_AUTOMATIC;
+    SpillScavenge.linkage() = BRIG_LINKAGE_FUNCTION;
+    SpillScavenge.modifier().isDefinition() = 1;
+  }
+
+  const DataLayout &DL = getDataLayout();
   const MachineFrameInfo *MFI = MF->getFrameInfo();
   size_t stack_size = MFI->getOffsetAdjustment() + MFI->getStackSize();
 
