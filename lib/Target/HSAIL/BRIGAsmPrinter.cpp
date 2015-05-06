@@ -635,21 +635,6 @@ public:
 };
 }
 
-bool IsKernel(const MachineInstr *II) {
-  std::string sFuncName;
-  const MachineBasicBlock *bb = II->getParent();
-  if (bb) {
-    const MachineFunction *mf = bb->getParent();
-
-    if (mf) {
-      const Function *F = mf->getFunction();
-      sFuncName = "&" + F->getName().str();
-      return HSAIL::isKernelFunc(F);
-    }
-  }
-  return false;
-}
-
 void BRIGAsmPrinter::EmitInstruction(const MachineInstr *II) {
   m_opndList.clear();
   HSAIL_ASM::Inst inst = EmitInstructionImpl(II);

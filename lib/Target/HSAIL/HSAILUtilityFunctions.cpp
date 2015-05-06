@@ -36,30 +36,6 @@ namespace llvm {
 
 namespace HSAIL {
 
-uint64_t getNumElementsInHSAILType(Type *type, const DataLayout &dataLayout) {
-  switch (type->getTypeID()) {
-  case Type::IntegerTyID:
-  case Type::PointerTyID:
-  case Type::FloatTyID:
-  case Type::DoubleTyID:
-    return 1;
-  case Type::VectorTyID:
-    return dataLayout.getTypeAllocSize(type) /
-           dataLayout.getTypeAllocSize(type->getVectorElementType());
-  case Type::ArrayTyID:
-    return type->getArrayNumElements() *
-           getNumElementsInHSAILType(type->getArrayElementType(), dataLayout);
-  case Type::StructTyID: {
-    StructType *st = cast<StructType>(type);
-    const StructLayout *layout = dataLayout.getStructLayout(st);
-    return layout->getSizeInBytes();
-  }
-  default:
-    llvm_unreachable("Unhandled type");
-  }
-  return 0;
-}
-
 BrigType getBrigType(Type *type, const DataLayout &DL, bool Signed) {
   switch (type->getTypeID()) {
   case Type::VoidTyID:

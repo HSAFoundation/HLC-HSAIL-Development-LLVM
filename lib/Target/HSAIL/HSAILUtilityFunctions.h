@@ -18,32 +18,16 @@
 #include "HSAIL.h"
 #include "HSAILBrig.h"
 #include "HSAILTargetMachine.h"
-#include "llvm/ADT/SmallVector.h"
 
-// Utility functions from ID
-//
 namespace llvm {
-class TargetRegisterClass;
-class SDValue;
-class SDNode;
-class Value;
-class Type;
-class TypeSymbolTable;
-class StructType;
-class IntegerType;
-class FunctionType;
-class VectorType;
-class ArrayType;
-class PointerType;
-class MachineInstr;
-class HSAILMachineFunctionInfo;
 class GlobalVariable;
-class SelectionDAG;
-class DebugLoc;
+class HSAILMachineFunctionInfo;
+class MachineInstr;
+class TargetRegisterClass;
+class Type;
 
 namespace HSAIL {
 
-uint64_t getNumElementsInHSAILType(Type *type, const DataLayout &dataLayout);
 BrigType getBrigType(Type *Ty, const DataLayout &DL, bool Signed = false);
 
 /// Returns the type to use when expressing the type in HSAIL. If this will be
