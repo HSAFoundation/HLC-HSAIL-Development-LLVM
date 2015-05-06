@@ -27,7 +27,7 @@ let Predicates = [SmallModel] in {
 let isNotDuplicable = 1, hasCtrlDep = 1, hasSideEffects = 1 in {
   def ARG_DECL : HSAILInst<(outs), (ins PtrRC:$symbol, BrigTypeX:$TypeLength, ArraySize:$size,
                                     ArgDeclAlignment:$alignment),
-                                    "\t${alignment}arg$TypeLength $symbol$size", []>;
+                                    "${alignment}arg$TypeLength $symbol$size", []>;
 }
 
 // FIXME: If the MEMOP isn't explicitly typed in output, counts as

@@ -26,10 +26,30 @@ using namespace llvm;
 
 HSAILInstPrinter::HSAILInstPrinter(const MCAsmInfo &MAI, const MCInstrInfo &MII,
                                    const MCRegisterInfo &MRI)
-    : MCInstPrinter(MAI, MII, MRI) {}
+  : MCInstPrinter(MAI, MII, MRI),
+    InArgScope(false) {}
 
 void HSAILInstPrinter::printInst(const MCInst *MI, raw_ostream &OS,
                                  StringRef Annot) {
+
+  if (MI->getOpcode() == HSAIL::ARG_SCOPE_START) {
+    InArgScope = true;
+    printInstruction(MI, OS);
+    printAnnotation(OS, Annot);
+    return;
+  }
+
+  if (MI->getOpcode() == HSAIL::ARG_SCOPE_END) {
+    InArgScope = false;
+    printInstruction(MI, OS);
+    printAnnotation(OS, Annot);
+    return;
+  }
+
+  // Indent any instructions in a call scope.
+  if (InArgScope)
+    OS << '\t';
+
   printInstruction(MI, OS);
 
   // Special case call because there appears to be no way to handle variable_ops

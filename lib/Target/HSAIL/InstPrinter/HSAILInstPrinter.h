@@ -19,6 +19,9 @@
 namespace llvm {
 
 class HSAILInstPrinter : public MCInstPrinter {
+private:
+  bool InArgScope;
+
 public:
   HSAILInstPrinter(const MCAsmInfo &MAI, const MCInstrInfo &MII,
                    const MCRegisterInfo &MRI);
