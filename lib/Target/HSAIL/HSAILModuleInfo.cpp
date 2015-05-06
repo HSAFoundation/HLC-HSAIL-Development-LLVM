@@ -17,7 +17,7 @@ HSAILModuleInfo::HSAILModuleInfo(const MachineModuleInfo &MMI) {
   mMMI = &MMI;
   mOffset = 0;
   mReservedBuffs = 0;
-  symTab = NULL;
+  symTab = nullptr;
   mCurrentCPOffset = 0;
   mPrintfOffset = 0;
   mProcessed = false;
@@ -35,7 +35,7 @@ HSAILModuleInfo::~HSAILModuleInfo() {
 static const HSAILConstPtr *getConstPtr(const HSAILKernel *krnl,
                                         const std::string &arg) {
   if (!krnl) {
-    return NULL;
+    return nullptr;
   }
   SmallVector<HSAILConstPtr, DEFAULT_VEC_SLOTS>::const_iterator begin, end;
   for (begin = krnl->constPtr.begin(), end = krnl->constPtr.end(); begin != end;
@@ -44,7 +44,7 @@ static const HSAILConstPtr *getConstPtr(const HSAILKernel *krnl,
       return &(*begin);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 void HSAILModuleInfo::processModule(const Module *M,
@@ -62,7 +62,7 @@ void HSAILModuleInfo::processModule(const Module *M,
 HSAILKernel *HSAILModuleInfo::getKernel(StringRef name) {
   StringMap<HSAILKernel *>::iterator iter = mKernels.find(name);
   if (iter == mKernels.end()) {
-    return NULL;
+    return nullptr;
   } else {
     return iter->second;
   }

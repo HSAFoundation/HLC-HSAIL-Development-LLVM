@@ -15,7 +15,7 @@ using namespace llvm;
 static const HSAILConstPtr *getConstPtr(const HSAILKernel *krnl,
                                         const std::string &arg) {
   if (!krnl) {
-    return NULL;
+    return nullptr;
   }
 
   SmallVector<HSAILConstPtr, DEFAULT_VEC_SLOTS>::const_iterator begin, end;
@@ -25,7 +25,7 @@ static const HSAILConstPtr *getConstPtr(const HSAILKernel *krnl,
       return &(*begin);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 void HSAILPrintfInfo::addOperand(size_t idx, uint32_t size) {
@@ -79,7 +79,7 @@ bool HSAILMachineFunctionInfo::usesHWConstant(std::string name) const {
 }
 
 bool HSAILMachineFunctionInfo::isKernel() const {
-  return mKernel != NULL && mKernel->mKernel;
+  return mKernel != nullptr && mKernel->mKernel;
 }
 
 HSAILKernel *HSAILMachineFunctionInfo::getKernel() { return mKernel; }

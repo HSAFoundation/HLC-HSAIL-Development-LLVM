@@ -805,7 +805,7 @@ bool BRIGAsmPrinter::doFinalization(Module &M) {
     DwarfDebug *mDD = getDwarfDebug();
     mDD->endModule();
     delete mDD;
-    setDwarfDebug(NULL);
+    setDwarfDebug(nullptr);
   }
 #endif
 
@@ -903,7 +903,7 @@ void BRIGAsmPrinter::EmitEndOfAsmFile(Module &M) {
   }
 
   if (!isValid) {
-    errs() << vld.getErrorMsg(NULL) << '\n';
+    errs() << vld.getErrorMsg(nullptr) << '\n';
     //    HSAIL_ASM::dump(bc);
     if (DumpOnFailFilename.size() > 0) {
       std::string info;

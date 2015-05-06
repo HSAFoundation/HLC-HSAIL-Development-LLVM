@@ -139,5 +139,5 @@ Function *HSAILIntrinsicInfo::getDeclaration(Module *M, unsigned IntrID,
                                              unsigned int numTys) const {
   llvm_unreachable("Not implemented");
 
-  return NULL;
+  return nullptr;
 }

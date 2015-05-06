@@ -119,7 +119,7 @@ struct HSAILKernel {
     constSize = 0;
 
     mKernel = false;
-    sgv = NULL;
+    sgv = nullptr;
 
     memset(constSizes, 0, sizeof(constSizes));
     EnqueuesKernel = false;

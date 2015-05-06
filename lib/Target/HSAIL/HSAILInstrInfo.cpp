@@ -469,7 +469,7 @@ static unsigned GenerateBranchCondReversion(MachineBasicBlock &MBB,
 
   MachineRegisterInfo &MRI = MBB.getParent()->getRegInfo();
 
-  MachineInstr *cond_expr = NULL;
+  MachineInstr *cond_expr = nullptr;
 
   // Manualy search for latest usage of condition register in MBB
   MachineBasicBlock::iterator I = MBB.end();

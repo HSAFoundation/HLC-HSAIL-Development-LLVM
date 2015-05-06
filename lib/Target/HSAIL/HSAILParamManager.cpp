@@ -37,7 +37,7 @@ unsigned HSAILParamManager::addParam(HSAILParamType ParamType, Type *Ty,
                                      const StringRef ParamName) {
   HSAILParam Param;
   Param.Type = ParamType;
-  Param.Arg = NULL;
+  Param.Arg = nullptr;
   SmallVector<unsigned, 4> *ParamList = 0;
   const char *DefName = 0;
 

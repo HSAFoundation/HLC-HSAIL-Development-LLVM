@@ -17,7 +17,7 @@ HSAILAsmBackend::HSAILAsmBackend(const Target &T) {}
 /// assembler backend to emit the final object file.
 MCObjectWriter *HSAILAsmBackend::createObjectWriter(raw_ostream &OS) const {
   assert(!"When do we hit this?");
-  return NULL;
+  return nullptr;
 }
 
 // pulled from x86asmbackend.cpp, used in ApplyFixup

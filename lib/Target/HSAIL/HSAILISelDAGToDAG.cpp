@@ -695,7 +695,7 @@ SDNode *HSAILDAGToDAGISel::Select(SDNode *Node) {
 
   if (Node->isMachineOpcode()) {
     DEBUG(dbgs() << "== "; Node->dump(CurDAG); dbgs() << '\n');
-    return NULL; // Already selected.
+    return nullptr; // Already selected.
   }
 
   switch (Opcode) {
@@ -808,10 +808,6 @@ SDNode *HSAILDAGToDAGISel::Select(SDNode *Node) {
   case HSAILISD::ACTIVELANEMASK:
     return SelectActiveLaneMask(Node);
   }
-
-  DEBUG(dbgs() << "=> ";
-        if (ResNode == NULL || ResNode == Node) Node->dump(CurDAG);
-        else ResNode->dump(CurDAG); dbgs() << '\n');
 
   return ResNode;
 }

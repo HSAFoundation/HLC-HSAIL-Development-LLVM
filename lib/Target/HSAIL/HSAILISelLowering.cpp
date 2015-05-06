@@ -292,7 +292,7 @@ HSAILTargetLowering::getRepRegClassFor(MVT VT) const {
     llvm_unreachable("Cannot find register class for value type");
     break;
   }
-  return NULL;
+  return nullptr;
 }
 
 /// getRepRegClassCostFor - Return the cost of the 'representative' register
@@ -539,8 +539,8 @@ HSAILTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv,
     // MDNode *MD = MDNode::get(F->getContext(), mdops);
 
     unsigned ArgNo = 0;
-    LowerArgument(Chain, SDValue(), false, NULL, &Outs, dl, DAG, &RetOps, ArgNo,
-                  type, HSAILAS::ARG_ADDRESS, NULL, RetVariable, &OutVals,
+    LowerArgument(Chain, SDValue(), false, nullptr, &Outs, dl, DAG, &RetOps, ArgNo,
+                  type, HSAILAS::ARG_ADDRESS, nullptr, RetVariable, &OutVals,
                   false, MD);
     Chain = DAG.getNode(ISD::TokenFactor, dl, MVT::Other, RetOps);
   }
@@ -699,7 +699,7 @@ SDValue HSAILTargetLowering::LowerArgument(
     const char *ParamName, SDValue ParamPtr,
     const SmallVectorImpl<SDValue> *OutVals, bool isRetArgLoad,
     const AAMDNodes &AAInfo, uint64_t offset) const {
-  assert((Ins == NULL && Outs != NULL) || (Ins != NULL && Outs == NULL));
+  assert((Ins == nullptr && Outs != nullptr) || (Ins != nullptr && Outs == nullptr));
 
   Type *sType = type->getScalarType();
 
@@ -710,8 +710,8 @@ SDValue HSAILTargetLowering::LowerArgument(
   else if (sType->isIntegerTy(16))
     argVT = MVT::i16;
 
-  bool isLoad = Ins != NULL;
-  bool hasFlag = InFlag.getNode() != NULL;
+  bool isLoad = Ins != nullptr;
+  bool hasFlag = InFlag.getNode() != nullptr;
   SDValue ArgValue;
 
   const VectorType *VecTy = dyn_cast<VectorType>(type);
@@ -813,8 +813,8 @@ SDValue HSAILTargetLowering::LowerFormalArguments(
     // Value *mdops[] = { const_cast<Argument*>(&(*AI)) };
     // MDNode *ArgMD = MDNode::get(MF.getFunction()->getContext(), mdops);
 
-    LowerArgument(Chain, SDValue(), false, &Ins, NULL, dl, DAG, &InVals, ArgNo,
-                  AI->getType(), AS, ParamName, ParamPtr, NULL);
+    LowerArgument(Chain, SDValue(), false, &Ins, nullptr, dl, DAG, &InVals, ArgNo,
+                  AI->getType(), AS, ParamName, ParamPtr, nullptr);
   }
 
   return Chain;
@@ -856,9 +856,9 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   Chain = DAG.getCALLSEQ_START(Chain, DAG.getIntPtrConstant(0, true), dl);
   SDValue InFlag = Chain.getValue(1);
 
-  const FunctionType *funcType = NULL;
-  const Function *calleeFunc = NULL;
-  const char *FuncName = NULL;
+  const FunctionType *funcType = nullptr;
+  const Function *calleeFunc = nullptr;
+  const char *FuncName = nullptr;
 
   // If the callee is a GlobalAddress/ExternalSymbol node (quite common,
   // every direct call is) turn it into a TargetGlobalAddress/
@@ -880,7 +880,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
     llvm_unreachable(
         "Cannot lower call to a function which is not a global address");
 
-  assert(funcType != NULL);
+  assert(funcType != nullptr);
 
   SmallVector<SDValue, 8> Ops;
   SmallVector<SDValue, 8> VarOps;
@@ -982,8 +982,8 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
                                     pe = funcType->param_end();
        pb != pe; ++pb, ++k) {
     Type *type = *pb;
-    Chain = LowerArgument(Chain, InFlag, true, NULL, &Outs, dl, DAG, NULL, j,
-                          type, HSAILAS::ARG_ADDRESS, NULL,
+    Chain = LowerArgument(Chain, InFlag, true, nullptr, &Outs, dl, DAG, nullptr, j,
+                          type, HSAILAS::ARG_ADDRESS, nullptr,
                           VarOps[FirstArg + k], &OutVals);
     InFlag = Chain.getValue(1);
   }
@@ -1009,8 +1009,8 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   // Read return value.
   if (!Ins.empty()) {
     j = 0;
-    Chain = LowerArgument(Chain, InFlag, true, &Ins, NULL, dl, DAG, &InVals, j,
-                          retType, HSAILAS::ARG_ADDRESS, NULL, RetValue, NULL,
+    Chain = LowerArgument(Chain, InFlag, true, &Ins, nullptr, dl, DAG, &InVals, j,
+                          retType, HSAILAS::ARG_ADDRESS, nullptr, RetValue, nullptr,
                           true);
     InFlag = Chain.getValue(2);
     Chain = Chain.getValue(1);
@@ -1075,7 +1075,7 @@ const char *HSAILTargetLowering::getTargetNodeName(unsigned Opcode) const {
   switch (Opcode) {
   default:
     llvm_unreachable("Unknown target-node");
-    return NULL;
+    return nullptr;
   case HSAILISD::CALL:
     return "HSAILISD::CALL";
   case HSAILISD::RET:

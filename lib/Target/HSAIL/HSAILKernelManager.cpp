@@ -102,7 +102,7 @@ static bool printfPrint(std::pair<const std::string, HSAILPrintfInfo *> &data,
 void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
                                       int counter, bool isKernel,
                                       const Function *F, int pointerCount) {
-  assert(F && "Cannot pass a NULL Pointer to F!");
+  assert(F && "Cannot pass a nullptr Pointer to F!");
   assert(Ip->getType()->isPointerTy() &&
          "Argument must be a pointer to be passed into this function!\n");
   std::string ptrArg("pointer:");
@@ -197,9 +197,9 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
 HSAILKernelManager::HSAILKernelManager(HSAILTargetMachine *TM) {
   mTM = TM;
   mSTM = mTM->getSubtargetImpl();
-  mMFI = NULL;
-  mAMI = NULL;
-  mMF = NULL;
+  mMFI = nullptr;
+  mAMI = nullptr;
+  mMF = nullptr;
   clear();
 }
 
