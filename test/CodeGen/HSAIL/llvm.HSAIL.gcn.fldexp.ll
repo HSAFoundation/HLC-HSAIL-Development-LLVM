@@ -1,4 +1,4 @@
-; RUN: llc -march=hsail < %s | FileCheck -check-prefix=HSAIL %s
+; RUN: llc -march=hsail -mattr=+gcn < %s | FileCheck -check-prefix=HSAIL %s
 
 declare float @llvm.HSAIL.gcn.fldexp.f32(float, i32) #0
 declare double @llvm.HSAIL.gcn.fldexp.f64(double, i32) #0

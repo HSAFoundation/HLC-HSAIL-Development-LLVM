@@ -1,4 +1,4 @@
-; RUN: llc -march=hsail < %s | FileCheck -check-prefix=HSAIL %s
+; RUN: llc -march=hsail -mattr=+gcn < %s | FileCheck -check-prefix=HSAIL %s
 
 declare i32 @llvm.HSAIL.get.global.id(i32) #0
 declare void @llvm.HSAIL.barrier() #1

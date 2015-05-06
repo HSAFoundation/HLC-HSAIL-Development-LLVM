@@ -1,5 +1,5 @@
-; RUN: llc -march=hsail -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
-; RUN: llc -march=hsail64 -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
+; RUN: llc -march=hsail -mattr=+gcn -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
+; RUN: llc -march=hsail64 -mattr=+gcn -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
 
 declare i32 @llvm.HSAIL.gcn.atomic.append.u32(i32 addrspace(5)*) #1
 

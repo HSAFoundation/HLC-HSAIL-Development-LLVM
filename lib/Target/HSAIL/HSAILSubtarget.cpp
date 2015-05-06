@@ -11,23 +11,17 @@
 //
 //===----------------------------------------------------------------------===//
 
-#define DEBUG_TYPE "subtarget"
 #include "HSAILSubtarget.h"
-#include "HSAILFrameLowering.h"
-#include "HSAILInstrInfo.h"
 
-#define GET_SUBTARGETINFO_ENUM
-#define GET_SUBTARGETINFO_TARGET_DESC
+#include "llvm/IR/DataLayout.h"
+#include "llvm/Support/Debug.h"
+
+#define DEBUG_TYPE "subtarget"
+
 #define GET_SUBTARGETINFO_CTOR
+#define GET_SUBTARGETINFO_TARGET_DESC
 #include "HSAILGenSubtargetInfo.inc"
 
-#include "llvm/IR/GlobalValue.h"
-#include "llvm/Support/Debug.h"
-#include "llvm/Support/raw_ostream.h"
-#include "llvm/Support/Host.h"
-#include "llvm/Target/TargetMachine.h"
-#include "llvm/Target/TargetOptions.h"
-#include "llvm/ADT/SmallVector.h"
 using namespace llvm;
 
 static std::string computeDataLayout(const HSAILSubtarget &ST) {
@@ -54,6 +48,8 @@ HSAILSubtarget::HSAILSubtarget(StringRef TT, StringRef CPU, StringRef FS,
     : HSAILGenSubtargetInfo(TT, CPU, FS), TargetTriple(TT),
       DevName(CPU.empty() ? "generic" : CPU.str()),
       Is64Bit(TargetTriple.getArch() == Triple::hsail64),
+      HasImages(false),
+      IsGCN(false),
       DL(computeDataLayout(initializeSubtargetDependencies(DevName, FS))),
       FrameLowering(TargetFrameLowering::StackGrowsUp, 16, 0), TLInfo(),
       InstrInfo(), imageHandles(new HSAILImageHandles()) {

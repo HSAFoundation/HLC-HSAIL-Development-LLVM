@@ -1,4 +1,4 @@
-; RUN: llc -march=hsail -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
+; RUN: llc -march=hsail -mattr=+gcn -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
 
 declare i64 @llvm.HSAIL.mqsad(i64, i32, i64) #0
 

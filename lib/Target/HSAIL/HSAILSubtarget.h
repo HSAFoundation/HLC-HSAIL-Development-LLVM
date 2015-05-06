@@ -104,6 +104,9 @@ protected:
   Triple TargetTriple;
   std::string DevName;
   bool Is64Bit;
+  bool HasImages;
+  bool IsGCN;
+
   const DataLayout DL;
   HSAILFrameLowering FrameLowering;
   std::unique_ptr<HSAILTargetLowering> TLInfo;
@@ -143,9 +146,13 @@ public:
 
   bool is64Bit() const { return Is64Bit; }
 
-  bool hasImages() const { return false; }
+  bool hasImages() const {
+    return HasImages;
+  }
 
-  bool isGCN() const { return true; }
+  bool isGCN() const {
+    return IsGCN;
+  }
 
   // FIXME: Remove this
   bool supportMetadata30() const { return true; }

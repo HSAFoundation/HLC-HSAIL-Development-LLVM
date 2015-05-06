@@ -20,6 +20,16 @@ include "llvm/Target/Target.td"
 // HSAIL Subtarget features.
 //===----------------------------------------------------------------------===//
 
+def FeatureImages : SubtargetFeature<"images",
+        "HasImages",
+        "true",
+        "Enable image precision operations">;
+
+def FeatureGCN : SubtargetFeature<"gcn",
+        "IsGCN",
+        "true",
+        "Enable AMD GCN extensions">;
+
 //===----------------------------------------------------------------------===//
 // HSAIL processors supported.
 //===----------------------------------------------------------------------===//
@@ -28,6 +38,7 @@ class Proc<string Name, list<SubtargetFeature> Features>
  : Processor<Name, NoItineraries, Features>;
 
 def : Proc<"generic", []>;
+def : Proc<"kaveri", [FeatureImages, FeatureGCN]>;
 
 //===----------------------------------------------------------------------===//
 // Register File Description

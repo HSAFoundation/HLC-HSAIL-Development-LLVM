@@ -830,11 +830,12 @@ void BRIGAsmPrinter::EmitStartOfAsmFile(Module &M) {
                                          : BRIG_MACHINE_SMALL,
                     BRIG_PROFILE_FULL, BRIG_ROUND_FLOAT_NEAR_EVEN);
 
-  // if (usesGCNAtomicCounter()) {
-  brigantine.addExtension("amd:gcn");
-  //}
 
-  brigantine.addExtension("IMAGE");
+  if (Subtarget->isGCN())
+    brigantine.addExtension("amd:gcn");
+
+  if (Subtarget->hasImages())
+    brigantine.addExtension("IMAGE");
 
   // If we are emitting first instruction that occupied some place in BRIG
   // we should also emit 4 reserved bytes to the MCSection, so that offsets

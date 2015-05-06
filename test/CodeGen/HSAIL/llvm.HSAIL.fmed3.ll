@@ -1,4 +1,4 @@
-; RUN: llc -march=hsail -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
+; RUN: llc -march=hsail -mattr=+gcn -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
 
 declare float @llvm.HSAIL.fmed3(float, float, float) #0
 

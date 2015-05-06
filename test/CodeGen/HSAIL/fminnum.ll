@@ -1,4 +1,4 @@
-; RUN: llc -march=hsail -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
+; RUN: llc -march=hsail -mattr=+gcn -verify-machineinstrs < %s | FileCheck -check-prefix=HSAIL %s
 
 declare float @llvm.minnum.f32(float, float) #0
 declare <2 x float> @llvm.minnum.v2f32(<2 x float>, <2 x float>) #0
