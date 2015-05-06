@@ -64,6 +64,109 @@ typedef enum clk_arg_qualifier_t {
 
 } // end of namespace clk
 
+
+static const char *getTypeName(Type *ptr, const char *symTab,
+                               HSAILMachineFunctionInfo *mfi, bool signedType) {
+  switch (ptr->getTypeID()) {
+  case Type::StructTyID: {
+    OpaqueType OT = GetOpaqueType(ptr);
+
+    switch (OT) {
+    case NotOpaque:
+      return "struct";
+    case Event:
+      return "event";
+    case Sampler:
+      return "sampler";
+    case I1D:
+      return "image1d";
+    case I1DB:
+      return "image1d_buffer";
+    case I1DA:
+      return "image1d_array";
+    case I2D:
+      return "image2d";
+    case I2DA:
+      return "image2d_array";
+    case I3D:
+      return "image3d";
+    case I2DDepth:
+      return "image2ddepth";
+    case I2DADepth:
+      return "image2dadepth";
+    case Sema:
+      return "semaphore";
+    case C32:
+      return "counter32";
+    case C64:
+      return "counter64";
+    case ReserveId:
+      return "reserveId";
+    case CLKEventT:
+      return "clk_event_t";
+    case QueueT:
+      return "queue_t";
+    case UnknownOpaque:
+      return "opaque";
+    }
+  }
+  case Type::HalfTyID:
+    return "half";
+  case Type::FloatTyID:
+    return "float";
+  case Type::DoubleTyID: {
+    return "double";
+  }
+  case Type::IntegerTyID: {
+    LLVMContext &ctx = ptr->getContext();
+    if (ptr == Type::getInt8Ty(ctx)) {
+      return (signedType) ? "i8" : "u8";
+    } else if (ptr == Type::getInt16Ty(ctx)) {
+      return (signedType) ? "i16" : "u16";
+    } else if (ptr == Type::getInt32Ty(ctx)) {
+      return (signedType) ? "i32" : "u32";
+    } else if (ptr == Type::getInt64Ty(ctx)) {
+      return (signedType) ? "i64" : "u64";
+    }
+    break;
+  }
+  default:
+    break;
+  case Type::ArrayTyID: {
+    const ArrayType *AT = cast<ArrayType>(ptr);
+    ptr = AT->getElementType();
+    return getTypeName(ptr, symTab, mfi, signedType);
+    break;
+  }
+  case Type::VectorTyID: {
+    const VectorType *VT = cast<VectorType>(ptr);
+    ptr = VT->getElementType();
+    return getTypeName(ptr, symTab, mfi, signedType);
+    break;
+  }
+  case Type::PointerTyID: {
+    const PointerType *PT = cast<PointerType>(ptr);
+    ptr = PT->getElementType();
+    return getTypeName(ptr, symTab, mfi, signedType);
+    break;
+  }
+  case Type::FunctionTyID: {
+    const FunctionType *FT = cast<FunctionType>(ptr);
+    ptr = FT->getReturnType();
+    return getTypeName(ptr, symTab, mfi, signedType);
+    break;
+  }
+  }
+  ptr->dump();
+  if (mfi) {
+#if 0
+    mfi->addErrorMsg(amd::CompilerErrorMessage[UNKNOWN_TYPE_NAME]);
+#endif
+  }
+  return "unknown";
+}
+
+
 static bool errorPrint(const char *ptr, raw_ostream &O) {
   if (ptr[0] == 'E') {
     O << ";error:" << ptr << "\n";
@@ -119,7 +222,7 @@ void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
       Align = NextPowerOf2(Align);
   }
   ptrArg += Ip->getName().str() + ":" +
-            HSAIL::getTypeName(PT, symTab, mMFI, mMFI->isSignedIntType(Ip)) +
+            getTypeName(PT, symTab, mMFI, mMFI->isSignedIntType(Ip)) +
             ":1:1:" + itostr(counter * 16) + ":";
   switch (PT->getAddressSpace()) {
   case HSAILAS::ADDRESS_NONE:
@@ -246,7 +349,7 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored, uint32_t buf,
       std::string argMeta("value:");
       argMeta +=
           Ip->getName().str() + ":" +
-          HSAIL::getTypeName(cType, symTab, mMFI, mMFI->isSignedIntType(Ip)) +
+          getTypeName(cType, symTab, mMFI, mMFI->isSignedIntType(Ip)) +
           ":";
       int bitsize = cType->getPrimitiveSizeInBits();
       int numEle = 1;
@@ -352,7 +455,7 @@ void HSAILKernelManager::processArgMetadata(raw_ostream &ignored, uint32_t buf,
           }
           queueArg +=
               Ip->getName().str() + ":" +
-              HSAIL::getTypeName(PT, symTab, mMFI, mMFI->isSignedIntType(Ip)) +
+              getTypeName(PT, symTab, mMFI, mMFI->isSignedIntType(Ip)) +
               ":1:1:" + itostr(mCBSize * 16) + ":" + MemType;
           mMFI->addMetadata(queueArg, true);
           ++mCBSize;
