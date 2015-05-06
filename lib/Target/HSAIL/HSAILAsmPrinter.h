@@ -21,6 +21,7 @@
 namespace llvm {
 
 class ConstantFP;
+class MachineFrameInfo;
 
 template <unsigned> class SmallString;
 
@@ -65,6 +66,13 @@ public:
   void EmitGlobalVariable(const GlobalVariable *GV) override;
   void EmitStartOfAsmFile(Module &) override;
   void EmitFunctionEntryLabel() override;
+
+  void computeStackUsage(const MachineFrameInfo *MFI,
+                         uint64_t &PrivateSize,
+                         unsigned &PrivateAlign,
+                         uint64_t &SpillSize,
+                         unsigned &SpillAlign) const;
+
   void EmitFunctionBodyStart() override;
   void EmitFunctionBodyEnd() override;
   void EmitInstruction(const MachineInstr *MI) override;

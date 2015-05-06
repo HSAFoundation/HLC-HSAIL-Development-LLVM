@@ -654,6 +654,38 @@ void HSAILAsmPrinter::EmitFunctionEntryLabel() {
   OutStreamer.EmitRawText(O.str());
 }
 
+void HSAILAsmPrinter::computeStackUsage(const MachineFrameInfo *MFI,
+                                        uint64_t &PrivateSize,
+                                        unsigned &PrivateAlign,
+                                        uint64_t &SpillSize,
+                                        unsigned &SpillAlign) const {
+  SpillSize = 0;
+  PrivateSize = 0;
+  PrivateAlign = 4;
+  SpillAlign = 4;
+
+  // The stack objects have been preprocessed by
+  // processFunctionBeforeFrameFinalized so that we only expect the last two
+  // frame objects.
+  for (int I = MFI->getObjectIndexBegin(), E = MFI->getObjectIndexEnd();
+       I != E; ++I) {
+    if (MFI->isDeadObjectIndex(I))
+      continue;
+
+    if (MFI->isSpillSlotObjectIndex(I)) {
+      assert(SpillSize == 0 && "Only one spill object should be seen");
+
+      SpillSize = MFI->getObjectSize(I);
+      SpillAlign = MFI->getObjectAlignment(I);
+    } else {
+      assert(PrivateSize == 0 && "Only one private object should be seen");
+
+      PrivateSize = MFI->getObjectSize(I);
+      PrivateAlign = MFI->getObjectAlignment(I);
+    }
+  }
+}
+
 void HSAILAsmPrinter::EmitFunctionBodyStart() {
   std::string FunStr;
   raw_string_ostream O(FunStr);
@@ -786,11 +818,25 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
   }
 
   const MachineFrameInfo *MFI = MF->getFrameInfo();
-  size_t StackSize = MFI->getOffsetAdjustment() + MFI->getStackSize();
-  if (StackSize) {
-    // Dimension is in units of type length.
-    O << "\tspill_u32 %stack[" << (StackSize >> 2) << "];\n";
+
+  uint64_t SpillSize, PrivateSize;
+  unsigned PrivateAlign, SpillAlign;
+  computeStackUsage(MFI, PrivateSize, PrivateAlign, SpillSize, SpillAlign);
+
+  if (PrivateSize != 0) {
+    O << "\talign(" << PrivateAlign
+      << ") private_u8 %__privateStack[" << PrivateSize << "];\n";
   }
+
+  if (SpillSize != 0) {
+    O << "\talign(" << SpillAlign
+      << ") spill_u8 %__spillStack[" << SpillSize << "];\n";
+  }
+
+  const HSAILMachineFunctionInfo *Info = MF->getInfo<HSAILMachineFunctionInfo>();
+  if (Info->hasScavengerSpill())
+    O << "\tspill_u32 %___spillScavenge;";
+
 
 #if 0
   // Allocate gcn region for gcn atomic counter, if required.

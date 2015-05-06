@@ -1050,31 +1050,9 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
 
   const MachineFrameInfo *MFI = MF->getFrameInfo();
 
-  uint64_t SpillSize = 0;
-  uint64_t PrivateSize = 0;
-  unsigned PrivateAlign = 4;
-  unsigned SpillAlign = 4;
-
-  // The stack objects have been preprocessed by
-  // processFunctionBeforeFrameFinalized so that we only expect the last two
-  // frame objects.
-  for (int I = MFI->getObjectIndexBegin(), E = MFI->getObjectIndexEnd();
-       I != E; ++I) {
-    if (MFI->isDeadObjectIndex(I))
-      continue;
-
-    if (MFI->isSpillSlotObjectIndex(I)) {
-      assert(SpillSize == 0 && "Only one spill object should be seen");
-
-      SpillSize = MFI->getObjectSize(I);
-      SpillAlign = MFI->getObjectAlignment(I);
-    } else {
-      assert(PrivateSize == 0 && "Only one private object should be seen");
-
-      PrivateSize = MFI->getObjectSize(I);
-      PrivateAlign = MFI->getObjectAlignment(I);
-    }
-  }
+  uint64_t SpillSize, PrivateSize;
+  unsigned PrivateAlign, SpillAlign;
+  computeStackUsage(MFI, PrivateSize, PrivateAlign, SpillSize, SpillAlign);
 
   if (PrivateSize != 0) {
     HSAIL_ASM::DirectiveVariable PrivateStack =
