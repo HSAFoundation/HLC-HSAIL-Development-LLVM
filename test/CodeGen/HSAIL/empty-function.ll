@@ -12,7 +12,6 @@
 
 ; HSAIL-LABEL: {{^}}prog function &empty_func_void()()
 ; HSAIL-NEXT: {
-; HSAIL: @empty_func_void_entry:
 ; HSAIL-NOT: ret;
 ; HSAIL: };
 define void @empty_func_void() {
@@ -21,7 +20,6 @@ define void @empty_func_void() {
 
 ; HSAIL-LABEL: {{^}}prog function &__unnamed_1()()
 ; HSAIL-NEXT: {
-; HSAIL: @_entry:{{$}}
 ; HSAIL-NOT: ret;
 ; HSAIL: };
 define void @0() {
@@ -30,7 +28,6 @@ define void @0() {
 
 ; HSAIL-LABEL: {{^}}prog kernel &empty_kernel_void()
 ; HSAIL-NEXT: {
-; HSAIL: @empty_kernel_void_entry:
 ; HSAIL-NOT: ret;
 ; HSAIL: };
 define spir_kernel void @empty_kernel_void() {
@@ -81,7 +78,6 @@ define zeroext i8 @empty_func_with_zext_return_type() {
 
 ; HSAIL-LABEL: {{^}}prog function &unreachable_func_with_return_type(arg_f32 %unreachable_func_with_return_type)(arg_u32 %out)
 ; HSAIL-NEXT: {
-; HSAIL: @unreachable_func_with_return_type_entry:
 ; HSAIL: ld_arg_align(4)_u32
 ; HSAIL-NEXT: st_global_align(4)_u32
 ; HSAIL-NEXT: };

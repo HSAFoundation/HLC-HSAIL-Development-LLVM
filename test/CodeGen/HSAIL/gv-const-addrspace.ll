@@ -129,7 +129,7 @@
                                                                 <1 x i32> <i32 3>,
                                                                 <1 x i32> <i32 4> ]
 
-; FUNC-LABEL: @float
+; FUNC-LABEL: {{^}}prog function &float(
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
 ; HSAIL: ld_readonly_align(4)_f32 [[LD:\$s[0-9]+]], [&float_gv]{{\[}}[[ADDR]]{{\]}};
 ; HSAIL: st_global_align(4)_f32 [[LD]]
@@ -142,7 +142,7 @@ define void @float(float addrspace(1)* %out, i32 %index) {
 }
 
 
-; FUNC-LABEL: @double
+; FUNC-LABEL: {{^}}prog function &double(
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 3;
 ; HSAIL: ld_readonly_align(8)_f64 [[LD:\$d[0-9]+]], [&double_gv]{{\[}}[[ADDR]]{{\]}};
 ; HSAIL: st_global_align(8)_f64 [[LD]]
@@ -156,7 +156,7 @@ define void @double(double addrspace(1)* %out, i32 %index) {
 
 @i32_gv = internal unnamed_addr addrspace(2) constant [5 x i32] [i32 0, i32 1, i32 2, i32 3, i32 4], align 4
 
-; FUNC-LABEL: @i32
+; FUNC-LABEL: {{^}}prog function &i32(
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
 ; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&i32_gv]{{\[}}[[ADDR]]{{\]}};
 ; HSAIL: st_global_align(4)_u32 [[LD]]
@@ -168,7 +168,7 @@ define void @i32(i32 addrspace(1)* %out, i32 %index) {
   ret void
 }
 
-; FUNC-LABEL: @struct_foo_gv_load
+; FUNC-LABEL: {{^}}prog function &struct_foo_gv_load(
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
 ; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&struct_foo_gv]{{\[}}[[ADDR]]+4{{\]}};
 ; HSAIL: st_global_align(4)_u32 [[LD]]
@@ -180,7 +180,7 @@ define void @struct_foo_gv_load(i32 addrspace(1)* %out, i32 %index) {
   ret void
 }
 
-; FUNC-LABEL: @struct_foo_gv_zeroinit_load
+; FUNC-LABEL: {{^}}prog function &struct_foo_gv_zeroinit_load(
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
 ; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&struct_foo_zeroinit]{{\[}}[[ADDR]]+4{{\]}};
 ; HSAIL: st_global_align(4)_u32 [[LD]]
@@ -192,7 +192,7 @@ define void @struct_foo_gv_zeroinit_load(i32 addrspace(1)* %out, i32 %index) {
   ret void
 }
 
-; FUNC-LABEL: @bare_struct_foo_gv_zeroinit_load
+; FUNC-LABEL: {{^}}prog function &bare_struct_foo_gv_zeroinit_load(
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
 ; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&bare_struct_foo_zeroinit]{{\[}}[[ADDR]]+4{{\]}};
 ; HSAIL: st_global_align(4)_u32 [[LD]]
@@ -204,7 +204,7 @@ define void @bare_struct_foo_gv_zeroinit_load(i32 addrspace(1)* %out, i32 %index
   ret void
 }
 
-; FUNC-LABEL: @struct_foo_gv_partial_zeroinit_load
+; FUNC-LABEL: {{^}}prog function &struct_foo_gv_partial_zeroinit_load(
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
 ; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&struct_foo_partial_zeroinit]{{\[}}[[ADDR]]+4{{\]}};
 ; HSAIL: st_global_align(4)_u32 [[LD]]
@@ -216,7 +216,7 @@ define void @struct_foo_gv_partial_zeroinit_load(i32 addrspace(1)* %out, i32 %in
   ret void
 }
 
-; FUNC-LABEL: @array_v1_gv_load
+; FUNC-LABEL: {{^}}prog function &array_v1_gv_load(
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
 ; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&array_v1_gv]{{\[}}[[ADDR]]{{\]}};
 ; HSAIL: st_global_align(4)_u32 [[LD]]
@@ -229,7 +229,7 @@ define void @array_v1_gv_load(<1 x i32> addrspace(1)* %out, i32 %index) {
 }
 
 
-; FUNC-LABEL: @zeroinit_scalar_array_load
+; FUNC-LABEL: {{^}}prog function &zeroinit_scalar_array_load(
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
 ; HSAIL: ld_readonly_align(4)_u32 [[LD:\$s[0-9]+]], [&zeroinit_scalar_array]{{\[}}[[ADDR]]{{\]}};
 ; HSAIL: st_global_align(4)_u32 [[LD]]
@@ -241,7 +241,7 @@ define void @zeroinit_scalar_array_load(i32 addrspace(1)* %out, i32 %index) {
   ret void
 }
 
-; FUNC-LABEL: @zeroinit_vector_array_load
+; FUNC-LABEL: {{^}}prog function &zeroinit_vector_array_load(
 define void @zeroinit_vector_array_load(<4 x i32> addrspace(1)* %out, i32 %index) {
   %gep = getelementptr inbounds [4 x <4 x i32>] addrspace(2)* @zeroinit_vector_array, i32 0, i32 %index
   %load = load <4 x i32> addrspace(2)* %gep, align 16
@@ -249,7 +249,7 @@ define void @zeroinit_vector_array_load(<4 x i32> addrspace(1)* %out, i32 %index
   ret void
 }
 
-; FUNC-LABEL: @gv_addressing_in_branch
+; FUNC-LABEL: {{^}}prog function &gv_addressing_in_branch(
 ; HSAIL: shl_u32 [[ADDR:\$s[0-9]+]], {{\$s[0-9]+}}, 2;
 ; HSAIL: ld_readonly_align(4)_f32 [[LD:\$s[0-9]+]], [&float_gv]{{\[}}[[ADDR]]{{\]}};
 ; HSAIL: st_global_align(4)_f32 [[LD]]

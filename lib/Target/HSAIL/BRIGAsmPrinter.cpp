@@ -1106,9 +1106,6 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     SpillScavenge.modifier().isDefinition() = 1;
   }
 
-  std::string sLabel = "@" + std::string(F->getName()) + "_entry";
-  brigantine.addLabel(sLabel);
-
   retValCounter = 0;
   paramCounter = 0;
 

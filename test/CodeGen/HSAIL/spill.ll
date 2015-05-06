@@ -3,7 +3,6 @@
 ; FUNC-LABEL: {{^}}prog function &test_spill_branch_add
 ; HSAIL: {
 ; HSAIL: align(4) spill_u8 %__spillStack[12];
-; HSAIL: @test_spill_branch_add_entry:
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[IN:\$s[0-9]+]], [%in];
 ; HSAIL-DAG: ld_arg_align(4)_u32 [[OUT:\$s[0-9]+]], [%out];
 ; HSAIL-DAG: ld_global_align(4)_u32 [[A:\$s[0-9]+]], {{\[}}[[IN]]{{\]}};

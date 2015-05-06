@@ -59,7 +59,7 @@ define void @sint_to_fp_i1_f64(double addrspace(1)* %out, i32 %in) {
   ret void
 }
 
-; HSAIL-LABEL: @s_sint_to_fp_i64_to_f64
+; HSAIL-LABEL: {{^}}prog function &s_sint_to_fp_i64_to_f64(
 ; HSAIL: cvt_f64_s64 {{\$d[0-9]+}}, {{\$d[0-9]+}};
 define void @s_sint_to_fp_i64_to_f64(double addrspace(1)* %out, i64 %in) {
   %result = sitofp i64 %in to double

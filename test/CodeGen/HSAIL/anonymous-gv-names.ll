@@ -9,6 +9,7 @@
 ; HSAIL: decl prog function &__unnamed_5()();
 ; HSAIL: decl prog function &__unnamed_6()();
 ; HSAIL: decl prog function &call_alias()();
+; HSAIL: decl prog function &__unnamed_7()();
 
 
 @0 = addrspace(2) global [4 x i32] [ i32 5, i32 4, i32 432, i32 3 ]
@@ -32,13 +33,12 @@ define void @4() {
 }
 
 ; HSAIL-LABEL: {{^}}prog function &__unnamed_6()()
-; HSAIL: @_entry:
 ; HSAIL: ret;
 define void @5() {
   ret void
 }
 
-; HSAIL-LABEL: {{^}}prog kernel &__unnamed_7()
+; HSAIL-LABEL: {{^}}prog kernel &__unnamed_8()
 ; HSAIL: ret;
 define spir_kernel void @6() {
   ret void
@@ -50,5 +50,13 @@ define spir_kernel void @6() {
 ; HSAIL: call &falias () ();
 define void @call_alias() nounwind {
   call void @falias()
+  ret void
+}
+
+; HSAIL-LABEL: {{^}}prog function &__unnamed_7()()
+; HSAIL: // BB#0: // %named_entry_block
+; HSAIL: ret;
+define void @7() {
+named_entry_block:
   ret void
 }

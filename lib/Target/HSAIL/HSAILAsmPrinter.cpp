@@ -792,8 +792,6 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
     O << "\tspill_u32 %stack[" << (StackSize >> 2) << "];\n";
   }
 
-  O << '@' << F->getName() << "_entry:\n";
-
 #if 0
   // Allocate gcn region for gcn atomic counter, if required.
   if (usesGCNAtomicCounter())
