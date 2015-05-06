@@ -1048,18 +1048,6 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     }
   }
 
-  const HSAILMachineFunctionInfo *Info = MF->getInfo<HSAILMachineFunctionInfo>();
-
-  if (Info->hasScavengerSpill()) {
-    HSAIL_ASM::DirectiveVariable SpillScavenge =
-      brigantine.addVariable("%___spillScavenge",
-                             BRIG_SEGMENT_SPILL, BRIG_TYPE_U32);
-    SpillScavenge.align() = getBrigAlignment(4);
-    SpillScavenge.allocation() = BRIG_ALLOCATION_AUTOMATIC;
-    SpillScavenge.linkage() = BRIG_LINKAGE_FUNCTION;
-    SpillScavenge.modifier().isDefinition() = 1;
-  }
-
   const MachineFrameInfo *MFI = MF->getFrameInfo();
 
   uint64_t SpillSize = 0;
@@ -1068,9 +1056,10 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
   unsigned SpillAlign = 4;
 
   // The stack objects have been preprocessed by
-  // processFunctionBeforeFrameFinalized so that we only expect the last two frame
-    for (int I = MFI->getObjectIndexBegin(), E = MFI->getObjectIndexEnd();
-         I != E; ++I) {
+  // processFunctionBeforeFrameFinalized so that we only expect the last two
+  // frame objects.
+  for (int I = MFI->getObjectIndexBegin(), E = MFI->getObjectIndexEnd();
+       I != E; ++I) {
     if (MFI->isDeadObjectIndex(I))
       continue;
 
@@ -1104,6 +1093,17 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
     SpillStack.allocation() = BRIG_ALLOCATION_AUTOMATIC;
     SpillStack.linkage() = BRIG_LINKAGE_FUNCTION;
     SpillStack.modifier().isDefinition() = 1;
+  }
+
+  const HSAILMachineFunctionInfo *Info = MF->getInfo<HSAILMachineFunctionInfo>();
+  if (Info->hasScavengerSpill()) {
+    HSAIL_ASM::DirectiveVariable SpillScavenge =
+      brigantine.addVariable("%___spillScavenge",
+                             BRIG_SEGMENT_SPILL, BRIG_TYPE_U32);
+    SpillScavenge.align() = getBrigAlignment(4);
+    SpillScavenge.allocation() = BRIG_ALLOCATION_AUTOMATIC;
+    SpillScavenge.linkage() = BRIG_LINKAGE_FUNCTION;
+    SpillScavenge.modifier().isDefinition() = 1;
   }
 
   std::string sLabel = "@" + std::string(F->getName()) + "_entry";

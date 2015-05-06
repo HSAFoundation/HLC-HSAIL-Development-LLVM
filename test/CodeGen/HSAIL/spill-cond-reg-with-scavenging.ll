@@ -8,8 +8,8 @@ declare void @llvm.HSAIL.barrier() #2
 ; expansion.
 
 ; HSAIL-LABEL: {{^}}prog function &test_spill_cond_reg_with_scavenging()(
-; HSAIL: {{^[ \t]}}spill_u32 %___spillScavenge;
 ; HSAIL: align(4) spill_u8 %__spillStack[164];
+; HSAIL: {{^[ \t]}}spill_u32 %___spillScavenge;
 
 ; HSAIL: st_spill_align(4)_u32 $s0, [%__spillStack];
 ; HSAIL: st_spill_align(4)_u32 $s0, [%__spillStack][4];
