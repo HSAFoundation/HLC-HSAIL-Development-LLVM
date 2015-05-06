@@ -8,7 +8,6 @@
 //===----------------------------------------------------------------------===//
 
 #include "HSAILUtilityFunctions.h"
-#include "HSAILBrig.h"
 #include "HSAILInstrInfo.h"
 #include "HSAILISelLowering.h"
 #include "HSAILMachineFunctionInfo.h"

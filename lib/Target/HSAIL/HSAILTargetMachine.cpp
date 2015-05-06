@@ -22,10 +22,14 @@
 
 using namespace llvm;
 
+#if HSAIL_USE_LIBHSAIL
 static cl::opt<bool> UseStandardAsmPrinter(
     "hsail-asmprinter",
     cl::desc("Use standard LLVM AsmPrinter instead of BRIGAsmPrinter"),
     cl::init(false));
+#else
+static const bool UseStandardAsmPrinter = true;
+#endif
 
 extern "C" void LLVMInitializeHSAILTarget() {
   // Register the target.
@@ -68,11 +72,13 @@ HSAILTargetMachine::HSAILTargetMachine(const Target &T, StringRef TT,
   initAsmInfo();
   setAsmVerbosityDefault(true);
 
+#if HSAIL_USE_LIBHSAIL
   // FIXME: Hack to enable command line switch to switch between
   // BRIGAsmPrinter and HSAILAsmPrinter. Override the default registered
   // AsmPrinter to use the BRIGAsmPrinter.
   if (!UseStandardAsmPrinter)
     LLVMInitializeBRIGAsmPrinter();
+#endif
 }
 
 bool HSAILTargetMachine::addPassesToEmitFile(

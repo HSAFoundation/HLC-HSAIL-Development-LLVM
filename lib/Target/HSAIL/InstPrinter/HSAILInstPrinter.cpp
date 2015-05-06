@@ -10,7 +10,7 @@
 
 #include "HSAILInstPrinter.h"
 #include "HSAIL.h"
-#include "HSAILBrig.h"
+#include "HSAILBrigDefs.h"
 #include "HSAILInstrInfo.h"
 
 #include "MCTargetDesc/HSAILMCTargetDesc.h"

@@ -14,7 +14,7 @@
 
 #define DEBUG_TYPE "hsail-isel"
 #include "HSAIL.h"
-#include "HSAILBrig.h"
+#include "HSAILBrigDefs.h"
 #include "HSAILInstrInfo.h"
 #include "HSAILISelLowering.h"
 #include "HSAILMachineFunctionInfo.h"

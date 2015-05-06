@@ -40,10 +40,8 @@ static AsmPrinter *createHSAILAsmPrinterPass(TargetMachine &tm,
 }
 
 extern "C" void LLVMInitializeHSAILAsmPrinter() {
-  TargetRegistry::RegisterAsmPrinter(TheHSAIL_32Target,
-                                     createHSAILAsmPrinterPass);
-  TargetRegistry::RegisterAsmPrinter(TheHSAIL_64Target,
-                                     createHSAILAsmPrinterPass);
+  RegisterAsmPrinter<HSAILAsmPrinter> Target32(TheHSAIL_32Target);
+  RegisterAsmPrinter<HSAILAsmPrinter> Target64(TheHSAIL_64Target);
 }
 
 HSAILAsmPrinter::HSAILAsmPrinter(TargetMachine &TM, MCStreamer &Streamer)

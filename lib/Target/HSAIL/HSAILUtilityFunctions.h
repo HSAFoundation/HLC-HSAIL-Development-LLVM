@@ -16,7 +16,7 @@
 #define HSAILUTILITYFUNCTIONS_H_
 
 #include "HSAIL.h"
-#include "HSAILBrig.h"
+#include "HSAILBrigDefs.h"
 #include "HSAILTargetMachine.h"
 
 namespace llvm {

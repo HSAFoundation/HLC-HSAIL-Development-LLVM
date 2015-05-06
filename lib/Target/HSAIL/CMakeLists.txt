@@ -1,3 +1,6 @@
+
+include(CMakeDependentOption)
+
 set(LLVM_TARGET_DEFINITIONS HSAIL.td)
 
 tablegen(LLVM HSAILGenRegisterInfo.inc -gen-register-info)
@@ -18,14 +21,16 @@ find_path(LIBHSAIL_INCLUDE_DIR
 
 find_library(LIBHSAIL_LIBRARIES hsail)
 
-include_directories(${LIBHSAIL_INCLUDE_DIR})
 
 add_subdirectory(HSAILUtil)
+
+cmake_dependent_option(HSAIL_USE_LIBHSAIL
+  "Use libHSAIL for code emission of HSAIL" ON
+  "LIBHSAIL_LIBRARIES" OFF)
 
 set(sources
   HSAILAsmPrinter.cpp
   HSAILAlwaysInlinePass.cpp
-  BRIGAsmPrinter.cpp
 #  BRIGDwarfCompileUnit.cpp
 #  BRIGDwarfDebug.cpp
   HSAILELFTargetObjectFile.cpp
@@ -34,7 +39,6 @@ set(sources
   HSAILIntrinsicInfo.cpp
   HSAILISelDAGToDAG.cpp
   HSAILISelLowering.cpp
-  HSAILKernelManager.cpp
   HSAILMachineFunctionInfo.cpp
   HSAILMCInstLower.cpp
   HSAILModuleInfo.cpp
@@ -47,6 +51,23 @@ set(sources
   HSAILUtilityFunctions.cpp
   HSAILOpaqueTypes.cpp
   )
+
+if(HSAIL_USE_LIBHSAIL)
+  include_directories(${LIBHSAIL_INCLUDE_DIR})
+  add_definitions("-DHSAIL_USE_LIBHSAIL")
+
+  # We keep parts with a dependency on libHSAIL in a subdirectory
+  # because the LLVM build checks for and errors on "unknown" source
+  # files if we don't want to build them.
+  list(APPEND sources
+    BRIGAsmPrinter/BRIGAsmPrinter.h
+    BRIGAsmPrinter/BRIGAsmPrinter.cpp
+    BRIGAsmPrinter/BRIGDwarfCompileUnit.h
+    BRIGAsmPrinter/BRIGDwarfDebug.h
+    BRIGAsmPrinter/HSAILKernelManager.cpp
+    BRIGAsmPrinter/HSAILKernelManager.h)
+endif()
+
 
 if( CMAKE_CL_64 )
   # A workaround for a bug in cmake 2.8.3. See PR 8885.
@@ -65,7 +86,12 @@ endif()
 
 add_llvm_target(HSAILCodeGen ${sources})
 
-target_link_libraries(LLVMHSAILCodeGen PRIVATE ${LIBHSAIL_LIBRARIES} LLVMHSAILUtil)
+target_link_libraries(LLVMHSAILCodeGen PRIVATE LLVMHSAILUtil)
+
+if(HSAIL_USE_LIBHSAIL)
+  target_link_libraries(LLVMHSAILCodeGen PRIVATE ${LIBHSAIL_LIBRARIES})
+endif()
+
 
 # add_dependencies(LLVMHSAILCodeGen
 #   LLVMAnalysis

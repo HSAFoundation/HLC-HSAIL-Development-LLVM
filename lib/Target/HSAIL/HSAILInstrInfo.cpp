@@ -8,7 +8,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "HSAILInstrInfo.h"
-#include "HSAILBrig.h"
+#include "HSAILBrigDefs.h"
 #include "HSAILTargetMachine.h"
 #include "HSAILUtilityFunctions.h"
 #include "llvm/CodeGen/MachineFrameInfo.h"

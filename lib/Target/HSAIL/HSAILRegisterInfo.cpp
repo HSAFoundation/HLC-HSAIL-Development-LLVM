@@ -14,7 +14,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "HSAIL.h"
-#include "HSAILBrig.h"
+#include "HSAILBrigDefs.h"
 #include "HSAILRegisterInfo.h"
 #include "HSAILMachineFunctionInfo.h"
 #include "HSAILSubtarget.h"
