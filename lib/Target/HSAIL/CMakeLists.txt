@@ -21,6 +21,7 @@ set(sources
   BRIGAsmPrinter.cpp
 #  BRIGDwarfCompileUnit.cpp
 #  BRIGDwarfDebug.cpp
+  HSAILELFTargetObjectFile.cpp
   HSAILFrameLowering.cpp
   HSAILInstrInfo.cpp
   HSAILIntrinsicInfo.cpp
@@ -32,6 +33,7 @@ set(sources
   HSAILModuleInfo.cpp
   HSAILParamManager.cpp
   HSAILRegisterInfo.cpp
+  HSAILSection.cpp
   HSAILStoreInitializer.cpp
   HSAILSubtarget.cpp
   HSAILTargetMachine.cpp

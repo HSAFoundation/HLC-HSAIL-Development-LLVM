@@ -10,17 +10,29 @@
 #ifndef _HSAIL_ELF_OBJECT_FILE_H_
 #define _HSAIL_ELF_OBJECT_FILE_H_
 
+#include "HSAILSection.h"
+
 #include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 
 namespace llvm {
-class HSAIL32_DwarfTargetObjectFile : public TargetLoweringObjectFileELF {
+
+class HSAILTargetObjectFile : public TargetLoweringObjectFileELF {
 public:
-  HSAIL32_DwarfTargetObjectFile(){};
+  HSAILTargetObjectFile();
+  void Initialize(MCContext &ctx, const TargetMachine &TM) override;
 };
 
-class HSAIL64_DwarfTargetObjectFile : public TargetLoweringObjectFileELF {
+// FIXME: Do we really need both of these?
+class BRIG32_DwarfTargetObjectFile : public TargetLoweringObjectFileELF {
 public:
-  HSAIL64_DwarfTargetObjectFile(){};
+  BRIG32_DwarfTargetObjectFile(){};
+  virtual ~BRIG32_DwarfTargetObjectFile();
+};
+
+class BRIG64_DwarfTargetObjectFile : public TargetLoweringObjectFileELF {
+public:
+  BRIG64_DwarfTargetObjectFile(){};
+  virtual ~BRIG64_DwarfTargetObjectFile();
 };
 
 } // end namespace llvm

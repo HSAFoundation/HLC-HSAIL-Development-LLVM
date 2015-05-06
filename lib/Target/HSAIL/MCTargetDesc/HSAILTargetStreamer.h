@@ -1,5 +1,4 @@
-//===- HSAILTargetStreamer.cpp ---------------------------*- C++
-//-*---------===//
+//===- HSAILTargetStreamer.h -------------------------------------*- C++-*-===//
 //
 //                     The LLVM Compiler Infrastructure
 //

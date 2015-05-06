@@ -36,9 +36,12 @@ extern "C" void LLVMInitializeHSAILTarget() {
 extern "C" void LLVMInitializeBRIGAsmPrinter();
 
 static TargetLoweringObjectFile *createTLOF(const Triple &TT) {
+  if (UseStandardAsmPrinter)
+    return new HSAILTargetObjectFile();
+
   if (TT.getArch() == Triple::hsail64)
-    return new HSAIL64_DwarfTargetObjectFile();
-  return new HSAIL32_DwarfTargetObjectFile();
+    return new BRIG64_DwarfTargetObjectFile();
+  return new BRIG32_DwarfTargetObjectFile();
 }
 
 /// HSAILTargetMachine ctor -
