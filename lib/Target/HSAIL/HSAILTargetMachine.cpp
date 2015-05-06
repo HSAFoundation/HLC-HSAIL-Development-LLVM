@@ -44,14 +44,25 @@ static TargetLoweringObjectFile *createTLOF(const Triple &TT) {
   return new BRIG32_DwarfTargetObjectFile();
 }
 
-/// HSAILTargetMachine ctor -
-///
+// Hack to prevent weird standard OS directives from being printed when the
+// triple is not fully specified. e.g. on a OS X host, there is no other way to
+// disable printing .macosx_version_min at the start of the module.
+static std::string getTripleNoOS(StringRef Str) {
+  Triple TT(Str);
+
+  if (TT.getOS() == Triple::UnknownOS)
+    return Str;
+
+  TT.setOS(Triple::UnknownOS);
+  return TT.str();
+}
+
 HSAILTargetMachine::HSAILTargetMachine(const Target &T, StringRef TT,
                                        StringRef CPU, StringRef FS,
                                        const TargetOptions &Options,
                                        Reloc::Model RM, CodeModel::Model CM,
                                        CodeGenOpt::Level OL)
-    : LLVMTargetMachine(T, TT, CPU, FS, Options, RM, CM, OL),
+    : LLVMTargetMachine(T, getTripleNoOS(TT), CPU, FS, Options, RM, CM, OL),
       Subtarget(TT, CPU, FS, *this), IntrinsicInfo(this),
       TLOF(createTLOF(Triple(getTargetTriple()))) {
   initAsmInfo();
