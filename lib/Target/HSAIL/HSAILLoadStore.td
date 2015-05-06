@@ -12,7 +12,7 @@ class SegmentPPat<BRIGType srcTy> : Pat<
   (HSAILsegmentp (i32 timm:$segment),
                  (i1 timm:$nonull),
                  (srcTy.VT (GPROrImm srcTy.VT:$src0))),
-  (!cast<HSAILInst>("SEGMENTP_B1"#srcTy.InstName) $segment, $nonull, $src0, BrigTypeX.B1, srcTy.BT)
+  (!cast<HSAILInst>("SEGMENTP_B1"#srcTy.InstName) $segment, $nonull, $src0, BrigType.B1, srcTy.BT)
 >;
 
 
@@ -25,7 +25,7 @@ let Predicates = [SmallModel] in {
 }
 
 let isNotDuplicable = 1, hasCtrlDep = 1, hasSideEffects = 1 in {
-  def ARG_DECL : HSAILInst<(outs), (ins PtrRC:$symbol, BrigTypeX:$TypeLength, ArraySize:$size,
+  def ARG_DECL : HSAILInst<(outs), (ins PtrRC:$symbol, BrigType:$TypeLength, ArraySize:$size,
                                     ArgDeclAlignment:$alignment),
                                     "${alignment}arg$TypeLength $symbol$size", []>;
 }
@@ -36,7 +36,7 @@ class LDPat<Instruction inst, SDPatternOperator ldnode, ValueType vt> : Pat <
   (vt (ldnode (LoadAddr MEMOP:$address,
                         BrigSegment:$segment,
                         BrigAlignment:$align,
-                        BrigTypeX:$TypeLength,
+                        BrigType:$TypeLength,
                         BrigWidth:$width,
                         BrigMemoryModifierMask:$mask))),
   (inst MEMOP:$address, $TypeLength, $segment, $align, $width, $mask)
@@ -67,7 +67,7 @@ class STPat<Instruction inst, SDPatternOperator node, ValueType vt> : Pat <
       (StoreAddr MEMOP:$address,
                  BrigSegment:$segment,
                  BrigAlignment:$alignment,
-                 BrigTypeX:$TypeLength)),
+                 BrigType:$TypeLength)),
   (inst $src, MEMOP:$address, $TypeLength, $segment, $alignment)
 >;
 
@@ -88,7 +88,7 @@ def : STPat<ST_U16, truncstorei16, i32>;
 let isPseudo = 1 in {
   def SPILL_B1 : ST<"spill_b1", BrigOpcode.NOP,
     (ins CR:$src, MEMOP:$address,
-         BrigTypeX:$TypeLength, BrigSegment:$segment,
+         BrigType:$TypeLength, BrigSegment:$segment,
          BrigAlignment:$align)
   >;
 

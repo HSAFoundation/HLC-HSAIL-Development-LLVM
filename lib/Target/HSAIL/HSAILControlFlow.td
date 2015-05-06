@@ -61,10 +61,10 @@ let isBranch = 1, isTerminator = 1, hasCtrlDep = 1 in {
 
 def : Pat<
   (br bb:$src0),
-  (BR BrigWidth._ALL, bb:$src0, BrigTypeX.NONE)
+  (BR BrigWidth._ALL, bb:$src0, BrigType.NONE)
 >;
 
 def : Pat<
   (brcond i1:$src0, bb:$src1),
-  (CBR BrigWidth._1, $src0, bb:$src1, BrigTypeX.B1)
+  (CBR BrigWidth._1, $src0, bb:$src1, BrigType.B1)
 >;

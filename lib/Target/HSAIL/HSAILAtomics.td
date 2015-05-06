@@ -9,14 +9,14 @@ let mayLoad = 1, mayStore = 1, hasSideEffects = 1, HasDefaultSegment = 1 in {
 def : InstAddr_1Op_Pat<
   GCN_ATOMIC_APPEND_U32,
   int_HSAIL_gcn_atomic_append_u32,
-  BrigTypeX.U32,
+  BrigType.U32,
   AddressSpace.REGION
 >;
 
 def : InstAddr_1Op_Pat<
   GCN_ATOMIC_CONSUME_U32,
   int_HSAIL_gcn_atomic_consume_u32,
-  BrigTypeX.U32,
+  BrigType.U32,
   AddressSpace.REGION
 >;
 

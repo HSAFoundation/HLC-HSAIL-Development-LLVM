@@ -111,7 +111,7 @@ class HSAILInstBasic<bits<16> BrigVal,
 class HSAILInstBasic_0Op_NoRet<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstBasic<BrigVal,
                  (outs),
-                 (ins BrigTypeX:$TypeLength),
+                 (ins BrigType:$TypeLength),
   opName#"$TypeLength"
 > {
   let hasSideEffects = 1;
@@ -120,7 +120,7 @@ class HSAILInstBasic_0Op_NoRet<string opName, bits<16> BrigVal, HSAILProfile P> 
 class HSAILInstBasic_0Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstBasic<BrigVal,
                  (outs P.DestRC:$dest),
-                 (ins BrigTypeX:$TypeLength),
+                 (ins BrigType:$TypeLength),
   opName#"$TypeLength\t$dest"
 >;
 
@@ -132,7 +132,7 @@ multiclass InstBasic_0Op_UnsignedIntTypes<string opName, bits<16> BrigVal> {
 class HSAILInstBasic_1Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstBasic<BrigVal,
                  (outs P.DestRC:$dest),
-                 (ins P.Src0RC:$src0, BrigTypeX:$TypeLength),
+                 (ins P.Src0RC:$src0, BrigType:$TypeLength),
   opName#"$TypeLength\t$dest, $src0"
 >;
 
@@ -178,7 +178,7 @@ class HSAILInstBasic_2Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstBasic<BrigVal,
                  (outs P.DestRC:$dest),
                  (ins P.Src0RC:$src0, P.Src1RC:$src1,
-                      BrigTypeX:$TypeLength),
+                      BrigType:$TypeLength),
   opName#"$TypeLength\t$dest, $src0, $src1"
 >;
 
@@ -227,7 +227,7 @@ class HSAILInstBasic_3Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstBasic<BrigVal,
                  (outs P.DestRC:$dest),
                  (ins P.Src0RC:$src0, P.Src1RC:$src1, P.Src2RC:$src2,
-                      BrigTypeX:$TypeLength),
+                      BrigType:$TypeLength),
   opName#"$TypeLength\t$dest, $src0, $src1, $src2"
 >;
 
@@ -289,7 +289,7 @@ class HSAILInstMod_1Op<string opName, bits<16> BrigVal, HSAILProfile P> :
                (outs P.DestRC:$dest),
                (ins ftz:$ftz, BrigRound:$round,
                     P.Src0RC:$src0,
-                    BrigTypeX:$TypeLength),
+                    BrigType:$TypeLength),
   opName#"$ftz$round$TypeLength\t$dest, $src0"
 >;
 
@@ -325,7 +325,7 @@ class HSAILInstMod_2Op<string opName, bits<16> BrigVal, HSAILProfile P> :
                (outs P.DestRC:$dest),
                (ins ftz:$ftz, BrigRound:$round,
                     P.Src0RC:$src0, P.Src1RC:$src1,
-                    BrigTypeX:$TypeLength),
+                    BrigType:$TypeLength),
   opName#"$ftz$round$TypeLength\t$dest, $src0, $src1"
 >;
 
@@ -373,7 +373,7 @@ class HSAILInstMod_3Op<string opName, bits<16> BrigVal, HSAILProfile P> :
                (outs P.DestRC:$dest),
                (ins ftz:$ftz, BrigRound:$round,
                     P.Src0RC:$src0, P.Src1RC:$src1, P.Src2RC:$src2,
-                    BrigTypeX:$TypeLength),
+                    BrigType:$TypeLength),
   opName#"$ftz$round$TypeLength\t$dest, $src0, $src1, $src2"
 >;
 
@@ -390,8 +390,8 @@ class InstCvt<string opName, bits<16> BrigVal,
     (outs DestRC:$dest),
     (ins ftz:$ftz,
          BrigRound:$round,
-         BrigTypeX:$destTypedestLength,
-         BrigTypeX:$sourceType,
+         BrigType:$destTypedestLength,
+         BrigType:$sourceType,
          getRegClassForVT<SrcVT>.ret:$src),
     opName#"$ftz$round$destTypedestLength$sourceType\t$dest, $src",
    [], BrigVal
@@ -442,7 +442,7 @@ class HSAILInstSourceType<bits<16> BrigVal,
 class HSAILInstSourceType_1Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstSourceType<BrigVal,
                  (outs P.DestRC:$dest),
-                 (ins P.Src0RC:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+                 (ins P.Src0RC:$src0, BrigType:$TypeLength, BrigType:$sourceType),
   opName#"$TypeLength$sourceType\t$dest, $src0"
 >;
 
@@ -463,7 +463,7 @@ class HSAILInstSourceType_2Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstSourceType<BrigVal,
                  (outs P.DestRC:$dest),
                  (ins P.Src0RC:$src0, P.Src1RC:$src1,
-                      BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+                      BrigType:$TypeLength, BrigType:$sourceType),
   opName#"$TypeLength$sourceType\t$dest, $src0, $src1"
 >;
 
@@ -476,7 +476,7 @@ class HSAILInstSourceType_3Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstSourceType<BrigVal,
                  (outs P.DestRC:$dest),
                  (ins P.Src0RC:$src0, P.Src1RC:$src1, P.Src2RC:$src2,
-                      BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+                      BrigType:$TypeLength, BrigType:$sourceType),
   opName#"$TypeLength$sourceType\t$dest, $src0, $src1, $src2"
 >;
 
@@ -508,7 +508,7 @@ class HSAILInstSourceType_4Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstSourceType<BrigVal,
                  (outs P.DestRC:$dest),
                  (ins P.Src0RC:$src0, P.Src1RC:$src1, P.Src2RC:$src2, P.Src3RC:$src3,
-                      BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+                      BrigType:$TypeLength, BrigType:$sourceType),
   opName#"$TypeLength$sourceType\t$dest, $src0, $src1, $src2, $src3"
 >;
 
@@ -526,7 +526,7 @@ class HSAILInstLane_0Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstLane<
     BrigVal,
     (outs P.DestRC:$dest),
-    (ins BrigWidth:$width, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+    (ins BrigWidth:$width, BrigType:$TypeLength, BrigType:$sourceType),
   opName#"$width$TypeLength$sourceType\t$dest"
 >;
 
@@ -534,7 +534,7 @@ class HSAILInstLane_1Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstLane<
     BrigVal,
     (outs P.DestRC:$dest),
-    (ins BrigWidth:$width, P.Src0RC:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+    (ins BrigWidth:$width, P.Src0RC:$src0, BrigType:$TypeLength, BrigType:$sourceType),
   opName#"$width$TypeLength$sourceType\t$dest, $src0"
 >;
 
@@ -544,7 +544,7 @@ class HSAILInstLane_ActiveLanePermute<string opName, bits<16> BrigVal, HSAILProf
     (outs P.DestRC:$dest),
     (ins BrigWidth:$width,
          P.Src0RC:$src0, P.Src1RC:$src1, P.Src2RC:$src2, P.Src3RC:$src3,
-         BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+         BrigType:$TypeLength, BrigType:$sourceType),
   opName#"$width$TypeLength$sourceType\t$dest, $src0, $src1, $src2, $src3"
 >;
 
@@ -561,7 +561,7 @@ class HSAILInstLane_ActiveLaneMask<string opName, bits<16> BrigVal> :
   //(outs Vec4Op:$dest),
     (outs GPR64:$dest0, GPR64:$dest1,  GPR64:$dest2,  GPR64:$dest3),
     (ins BrigWidth:$width,
-         B1Op:$src0, BrigTypeX:$TypeLength, BrigTypeX:$sourceType),
+         B1Op:$src0, BrigType:$TypeLength, BrigType:$sourceType),
 //  opName#"$width$TypeLength$sourceType\t$dest, $src0"
   opName#"_v4$width$TypeLength$sourceType\t($dest0, $dest1, $dest2, $dest3), $src0"
 >;
@@ -577,21 +577,21 @@ class HSAILInstBr<bits<16> BrigVal,
 class HSAILInstBr_0Op_NoRet<string opName, bits<16> BrigVal> :
   HSAILInstBr<BrigVal,
               (outs),
-              (ins BrigWidth:$width, BrigTypeX:$TypeLength),
+              (ins BrigWidth:$width, BrigType:$TypeLength),
   opName#"$width$TypeLength"
 >;
 
 class HSAILInstBr_1Op_NoRet<string opName, bits<16> BrigVal> :
   HSAILInstBr<BrigVal,
               (outs),
-              (ins BrigWidth:$width, unknown:$src0, BrigTypeX:$TypeLength),
+              (ins BrigWidth:$width, unknown:$src0, BrigType:$TypeLength),
   opName#"$width$TypeLength\t$src0"
 >;
 
 class HSAILInstBr_2Op_NoRet<string opName, bits<16> BrigVal> :
   HSAILInstBr<BrigVal,
               (outs),
-              (ins BrigWidth:$width, HSAILSrc1Operand:$src0, unknown:$src1, BrigTypeX:$TypeLength),
+              (ins BrigWidth:$width, HSAILSrc1Operand:$src0, unknown:$src1, BrigType:$TypeLength),
   opName#"$width$TypeLength\t$src0, $src1"
 >;
 
@@ -606,7 +606,7 @@ class HSAILInstSeg<bits<16> BrigVal,
 class HSAILInstSeg_0Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstSeg<BrigVal,
                (outs P.DestRC:$dest),
-               (ins BrigSegment:$segment, BrigTypeX:$TypeLength),
+               (ins BrigSegment:$segment, BrigType:$TypeLength),
   opName#"$segment$TypeLength\t$dest"
 >;
 
@@ -629,8 +629,8 @@ class HSAILInstSegCvt_1Op<string opName, bits<16> BrigVal, HSAILProfile P> :
                  (ins BrigSegment:$segment,
                       nonull:$nonull,
                       P.Src0RC:$src0,
-                      BrigTypeX:$destTypedestLength,
-                      BrigTypeX:$sourceType),
+                      BrigType:$destTypedestLength,
+                      BrigType:$sourceType),
   opName#"$segment$nonull$destTypedestLength$sourceType\t$dest, $src0"
 >;
 
@@ -679,7 +679,7 @@ class HSAILInstMem<bits<16> BrigVal,
 class LD<string opName, bits<16> BrigVal, dag outs> :
   HSAILInstMem<BrigVal, outs,
     (ins MEMOP:$address,
-       BrigTypeX:$TypeLength,
+       BrigType:$TypeLength,
        BrigSegment:$segment,
        BrigAlignment:$align,
        BrigWidth:$width,
@@ -690,7 +690,7 @@ class LD<string opName, bits<16> BrigVal, dag outs> :
 }
 
 class StoreOperands<DAGOperand srcOp> {
-  field dag op_ins = (ins srcOp:$src, MEMOP:$address, BrigTypeX:$TypeLength,
+  field dag op_ins = (ins srcOp:$src, MEMOP:$address, BrigType:$TypeLength,
                     BrigSegment:$segment, BrigAlignment:$align);
 }
 
@@ -841,7 +841,7 @@ class InstAtomic_0Op<string opName, bits<16> BrigVal,
          BrigMemoryScope:$scope,
          equiv:$equiv,
          MEMOP:$address,
-         BrigTypeX:$TypeLength),
+         BrigType:$TypeLength),
     opName#"$segment$order$scope$equiv$TypeLength\t$dest, $address"
 >, AtomicNoRet<noRetOp, 1> {
   let atomicOperation = opVal;
@@ -859,7 +859,7 @@ class InstAtomic_1Op<string opName, bits<16> BrigVal,
          equiv:$equiv,
          MEMOP:$address,
          P.Src0RC:$src0,
-         BrigTypeX:$TypeLength),
+         BrigType:$TypeLength),
     opName#"$segment$order$scope$equiv$TypeLength\t$dest, $address, $src0"
 >, AtomicNoRet<noRetOp, 1> {
   let atomicOperation = opVal;
@@ -878,7 +878,7 @@ class InstAtomic_2Op<string opName, bits<16> BrigVal,
          MEMOP:$address,
          P.Src0RC:$src0,
          P.Src1RC:$src1,
-         BrigTypeX:$TypeLength),
+         BrigType:$TypeLength),
     opName#"$segment$order$scope$equiv$TypeLength\t$dest, $address, $src0, $src1"
 >, AtomicNoRet<noRetOp, 1> {
   let atomicOperation = opVal;
@@ -920,7 +920,7 @@ class InstAtomic_0Op_NoRet<string opName, bits<16> BrigVal, int opVal,
          BrigMemoryScope:$scope,
          equiv:$equiv,
          MEMOP:$address,
-         BrigTypeX:$TypeLength),
+         BrigType:$TypeLength),
     opName#"$segment$order$scope$equiv$TypeLength\t$address"
 >, AtomicNoRet<opName#typeSuffix, 0> {
   let atomicOperation = opVal;
@@ -939,7 +939,7 @@ class InstAtomic_1Op_NoRet<string opName, bits<16> BrigVal,
          equiv:$equiv,
          MEMOP:$address,
          P.Src0RC:$src0,
-         BrigTypeX:$TypeLength),
+         BrigType:$TypeLength),
     opName#"$segment$order$scope$equiv$TypeLength\t$address, $src0"
 >, AtomicNoRet<opName#typeSuffix, 0> {
   let atomicOperation = opVal;
@@ -958,7 +958,7 @@ class InstAtomic_2Op_NoRet<string opName, bits<16> BrigVal, int opVal,
          MEMOP:$address,
          P.Src0RC:$src0,
          P.Src1RC:$src1,
-         BrigTypeX:$TypeLength),
+         BrigType:$TypeLength),
     opName#"$segment$order$scope$equiv$TypeLength\t$address, $src0, $src1"
 >, AtomicNoRet<opName#typeSuffix, 0> {
   let atomicOperation = opVal;
@@ -993,8 +993,8 @@ class InstCmp<string opName, bits<16> BrigVal, HSAILProfile P> :
          ftz:$ftz,
          P.Src0RC:$src0,
          P.Src1RC:$src1,
-         BrigTypeX:$destTypedestLength,
-         BrigTypeX:$sourceType),
+         BrigType:$destTypedestLength,
+         BrigType:$sourceType),
     opName#"$op$ftz$destTypedestLength$sourceType\t$dest, $src0, $src1"
 >;
 
@@ -1031,7 +1031,7 @@ class HSAILInstAddr<bits<16> BrigVal,
 class HSAILInstAddr_1Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstAddr<BrigVal,
                 (outs P.DestRC:$dest),
-                (ins BrigSegment:$segment, MEMOP:$address, BrigTypeX:$TypeLength),
+                (ins BrigSegment:$segment, MEMOP:$address, BrigType:$TypeLength),
   opName#"$segment$TypeLength\t$dest, $address"
 >;
 
@@ -1053,14 +1053,14 @@ class HSAILInstImage_Ld_1D<string opName, bits<16> BrigVal> :
   HSAILInstImage<BrigVal,
                 (outs GPR32:$destR, GPR32:$destG, GPR32:$destB, GPR32:$destA),
                 (ins v4mod:$v4,
-                     BrigTypeX:$imageType,
-                     BrigTypeX:$coordType,
+                     BrigType:$imageType,
+                     BrigType:$coordType,
                      BrigImageGeometry:$geometry,
                      equiv:$equiv,
                      GPR64:$image,
                      GPR64:$sampler,
                      GPR32:$coordWidth,
-                     BrigTypeX:$destType),
+                     BrigType:$destType),
   opName#"$v4$geometry$equiv$destType$imageType$coordType\t($destR, $destG, $destB, $destA), $image, $sampler, $coordWidth"> {
   let mayStore = 0;
 }
@@ -1080,7 +1080,7 @@ class InstBasic_0Op_Pat<HSAILInst inst,
 class InstBasic_0Op_NoRet_Pat<HSAILInst inst,
                              SDPatternOperator node> : Pat <
   (node),
-  (inst BrigTypeX.NONE)
+  (inst BrigType.NONE)
 >;
 
 class InstBasic_1Op_Pat<HSAILInst inst,
@@ -1095,11 +1095,11 @@ multiclass InstBasic_1Op_IntTypes_Pat<string inst,
                                       SDPatternOperator node,
                                       bit signed = 0> {
   def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#!if(signed, "_S32", "_U32")), node, i32,
-    !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+    !if(signed, BrigType.S32, BrigType.U32)
   >;
 
   def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#!if(signed, "_S64", "_U64")), node, i64,
-    !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+    !if(signed, BrigType.S64, BrigType.U64)
   >;
 }
 
@@ -1107,22 +1107,22 @@ multiclass InstBasic_1Op_BitTypes_Pat<string inst,
                                       SDPatternOperator node,
                                       bit signed = 0> {
   def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#"_B32"), node, i32,
-    BrigTypeX.B32
+    BrigType.B32
   >;
 
   def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#"_B64"), node, i64,
-    BrigTypeX.B64
+    BrigType.B64
   >;
 
   def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#"_B1"), node, i1,
-    BrigTypeX.B1
+    BrigType.B1
   >;
 }
 
 multiclass InstBasic_1Op_FPTypes_Pat<string inst,
                                      SDPatternOperator node> {
-  def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigTypeX.F32>;
-  def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigTypeX.F64>;
+  def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigType.F32>;
+  def : InstBasic_1Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigType.F64>;
 }
 
 class InstBasic_2Op_Pat<HSAILInst inst,
@@ -1138,33 +1138,33 @@ multiclass InstBasic_2Op_IntTypes_Pat<string inst,
                                       SDPatternOperator node,
                                       bit signed = 0> {
   def : InstBasic_2Op_Pat<!cast<HSAILInst>(inst#!if(signed, "_S32", "_U32")), node, i32, i32,
-    !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+    !if(signed, BrigType.S32, BrigType.U32)
   >;
 
   def : InstBasic_2Op_Pat<!cast<HSAILInst>(inst#!if(signed, "_S64", "_U64")), node, i64, i64,
-    !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+    !if(signed, BrigType.S64, BrigType.U64)
   >;
 }
 
 multiclass InstBasic_2Op_BitIntTypes_Pat<string inst,
                                          SDPatternOperator node> {
   def : InstBasic_2Op_Pat<!cast<HSAILInst>(inst#"_B32"), node, i32, i32,
-    BrigTypeX.B32
+    BrigType.B32
   >;
 
   def : InstBasic_2Op_Pat<!cast<HSAILInst>(inst#"_B64"), node, i64, i64,
-    BrigTypeX.B64
+    BrigType.B64
   >;
 
   def : InstBasic_2Op_Pat<!cast<HSAILInst>(inst#"_B1"), node, i1, i1,
-    BrigTypeX.B1
+    BrigType.B1
   >;
 }
 
 multiclass InstBasic_2Op_FPTypes_Pat<HSAILInst inst,
                                      SDPatternOperator node> {
-  def : InstBasic_2Op_Pat<inst, node, f32, f32, BrigTypeX.F32>;
-  def : InstBasic_2Op_Pat<inst, node, f64, f64, BrigTypeX.F64>;
+  def : InstBasic_2Op_Pat<inst, node, f32, f32, BrigType.F32>;
+  def : InstBasic_2Op_Pat<inst, node, f64, f64, BrigType.F64>;
 }
 
 class InstBasic_3Op_Pat<HSAILInst inst,
@@ -1178,25 +1178,25 @@ multiclass InstBasic_3Op_IntTypes_Pat<string inst,
                                       SDPatternOperator node,
                                       bit signed = 0> {
   def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst# !if(signed, "_S32", "_U32")), node, i32,
-    !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+    !if(signed, BrigType.S32, BrigType.U32)
   >;
 
   def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst# !if(signed, "_S64", "_U64")), node, i64,
-    !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+    !if(signed, BrigType.S64, BrigType.U64)
   >;
 }
 
 // XXX - b1 missing intentionally with current set of instructions.
 multiclass InstBasic_3Op_BitTypes_Pat<string inst,
                                       SDPatternOperator node> {
-  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst#"_B32"), node, i32, BrigTypeX.B32>;
-  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst#"_B64"), node, i64, BrigTypeX.B64>;
+  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst#"_B32"), node, i32, BrigType.B32>;
+  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst#"_B64"), node, i64, BrigType.B64>;
 }
 
 multiclass InstBasic_3Op_FPTypes_Pat<string inst,
                                      SDPatternOperator node> {
-  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigTypeX.F32>;
-  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigTypeX.F64>;
+  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigType.F32>;
+  def : InstBasic_3Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigType.F64>;
 }
 
 class InstBasic_CMov_Pat<HSAILInst inst,
@@ -1216,11 +1216,11 @@ class InstBasic_3Op_BitExtract_Pat<HSAILInst inst,
 
 multiclass InstBasic_3Op_BitExtract_IntTypes_Pat<string inst, SDPatternOperator node, bit signed> {
   def : InstBasic_3Op_BitExtract_Pat<!cast<HSAILInst>(inst# !if(signed, "_S32", "_U32")), node, i32,
-    !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+    !if(signed, BrigType.S32, BrigType.U32)
   >;
 
   def : InstBasic_3Op_BitExtract_Pat<!cast<HSAILInst>(inst# !if(signed, "_S64", "_U64")), node, i64,
-    !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+    !if(signed, BrigType.S64, BrigType.U64)
   >;
 
 }
@@ -1262,33 +1262,33 @@ class InstMod_3Op_Pat<HSAILInst inst,
 multiclass InstMod_1Op_FPTypes_Pat<string inst,
                                    SDPatternOperator node,
                                    int round = BrigRound.FLOAT_DEFAULT> {
-  def : InstMod_1Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigTypeX.F32, round, 1>;
-  def : InstMod_1Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigTypeX.F64, round, 0>;
+  def : InstMod_1Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigType.F32, round, 1>;
+  def : InstMod_1Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigType.F64, round, 0>;
 }
 
 multiclass InstMod_2Op_IntTypes_Pat<string inst,
                                    SDPatternOperator node,
                                    bit signed = 0> {
   def : InstMod_2Op_Pat<!cast<HSAILInst>(inst# !if(signed, "_S32", "_U32")), node, i32,
-    !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+    !if(signed, BrigType.S32, BrigType.U32)
   >;
 
   def : InstMod_2Op_Pat<!cast<HSAILInst>(inst# !if(signed, "_S64", "_U64")), node, i64,
-    !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+    !if(signed, BrigType.S64, BrigType.U64)
   >;
 }
 
 multiclass InstMod_2Op_FPTypes_Pat<string inst,
                                    SDPatternOperator node,
                                    int round = BrigRound.FLOAT_DEFAULT> {
-  def : InstMod_2Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigTypeX.F32, round, 1>;
-  def : InstMod_2Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigTypeX.F64, round, 0>;
+  def : InstMod_2Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigType.F32, round, 1>;
+  def : InstMod_2Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigType.F64, round, 0>;
 }
 
 multiclass InstMod_3Op_FPTypes_Pat<string inst,
                                    SDPatternOperator node> {
-  def : InstMod_3Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigTypeX.F32, BrigRound.FLOAT_DEFAULT, 1>;
-  def : InstMod_3Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigTypeX.F64, BrigRound.FLOAT_DEFAULT, 0>;
+  def : InstMod_3Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigType.F32, BrigRound.FLOAT_DEFAULT, 1>;
+  def : InstMod_3Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigType.F64, BrigRound.FLOAT_DEFAULT, 0>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1318,7 +1318,7 @@ class InstSourceType_Class_Pat<HSAILInst inst,
                               ValueType vt,
                               int srcbt> : Pat <
   (i1 (node (vt (GPROrImm vt:$src0)), (i32 (GPROrImm i32:$src1)))),
-  (inst $src0, $src1, BrigTypeX.B1, srcbt)
+  (inst $src0, $src1, BrigType.B1, srcbt)
 >;
 
 class InstSourceType_3Op_Pat<HSAILInst inst,
@@ -1355,7 +1355,7 @@ class ActiveLanePermutePat<Instruction inst,
             (i32 (GPROrImm i32:$src1)),
             (vt (GPROrImm vt:$src2)),
             (i1 (GPROrImm i1:$src3)))),
-  (inst (i32 $width), $src0, $src1, $src2, $src3, bt, BrigTypeX.NONE)
+  (inst (i32 $width), $src0, $src1, $src2, $src3, bt, BrigType.NONE)
 >;
 
 class ActiveLaneIdPat<Instruction inst,
@@ -1363,7 +1363,7 @@ class ActiveLaneIdPat<Instruction inst,
                       ValueType vt,
                       int bt> : Pat<
   (vt (node (i32 timm:$width))),
-  (inst $width, bt, BrigTypeX.NONE)
+  (inst $width, bt, BrigType.NONE)
 >;
 
 class ActiveLaneCountPat<Instruction inst,
@@ -1371,7 +1371,7 @@ class ActiveLaneCountPat<Instruction inst,
                       ValueType vt,
                       int bt> : Pat<
   (vt (node (i32 timm:$width), (i1 (GPROrImm i1:$src0)))),
-  (inst $width, $src0, bt, BrigTypeX.B1)
+  (inst $width, $src0, bt, BrigType.B1)
 >;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1382,7 +1382,7 @@ class InstBr_0Op_NoRet_Pat<HSAILInst inst,
                            SDPatternOperator node,
                            int width = BrigWidth._1> : Pat <
   (node),
-  (inst width, BrigTypeX.NONE)
+  (inst width, BrigType.NONE)
 >;
 
 class InstBr_0Op_Pat<HSAILInst inst,
@@ -1498,11 +1498,11 @@ class AtomicPat_1Op_NoRet_Pat<HSAILInstAtomic inst, SDPatternOperator node,
 multiclass AtomicPat_0Op_BitTypes<string inst,
                                   SDPatternOperator node> {
   def : AtomicPat_0Op_Pat<
-    !cast<HSAILInstAtomic>(inst#"_B32"), node, i32, BrigTypeX.B32
+    !cast<HSAILInstAtomic>(inst#"_B32"), node, i32, BrigType.B32
   >;
 
   def : AtomicPat_0Op_Pat<
-    !cast<HSAILInstAtomic>(inst#"_B64"), node, i64, BrigTypeX.B64
+    !cast<HSAILInstAtomic>(inst#"_B64"), node, i64, BrigType.B64
   >;
 }
 
@@ -1511,45 +1511,45 @@ multiclass AtomicPat_1Op_IntTypes<string inst,
                                   bit signed = 0> {
   def : AtomicPat_1Op_Pat<
     !cast<HSAILInstAtomic>(inst#!if(signed, "_S32", "_U32")), node, i32,
-    !if(signed, BrigTypeX.S32, BrigTypeX.U32)
+    !if(signed, BrigType.S32, BrigType.U32)
   >;
 
   def : AtomicPat_1Op_Pat<
     !cast<HSAILInstAtomic>(inst#!if(signed, "_S64", "_U64")), node, i64,
-    !if(signed, BrigTypeX.S64, BrigTypeX.U64)
+    !if(signed, BrigType.S64, BrigType.U64)
   >;
 }
 
 multiclass AtomicPat_1Op_BitTypes<string inst,
                                   SDPatternOperator node> {
   def : AtomicPat_1Op_Pat<
-    !cast<HSAILInstAtomic>(inst#"_B32"), node, i32, BrigTypeX.B32
+    !cast<HSAILInstAtomic>(inst#"_B32"), node, i32, BrigType.B32
   >;
 
   def : AtomicPat_1Op_Pat<
-    !cast<HSAILInstAtomic>(inst#"_B64"), node, i64, BrigTypeX.B64
+    !cast<HSAILInstAtomic>(inst#"_B64"), node, i64, BrigType.B64
   >;
 }
 
 multiclass AtomicPat_1Op_NoRet_BitTypes<string inst,
                                         SDPatternOperator node> {
   def : AtomicPat_1Op_NoRet_Pat<
-    !cast<HSAILInstAtomic>(inst#"_B32"), node, i32, BrigTypeX.B32
+    !cast<HSAILInstAtomic>(inst#"_B32"), node, i32, BrigType.B32
   >;
 
   def : AtomicPat_1Op_NoRet_Pat<
-    !cast<HSAILInstAtomic>(inst#"_B64"), node, i64, BrigTypeX.B64
+    !cast<HSAILInstAtomic>(inst#"_B64"), node, i64, BrigType.B64
   >;
 }
 
 multiclass AtomicPat_2Op_BitTypes<string inst,
                                   SDPatternOperator node> {
   def : AtomicPat_2Op_Pat<
-    !cast<HSAILInstAtomic>(inst#"_B32"), node, i32, BrigTypeX.B32
+    !cast<HSAILInstAtomic>(inst#"_B32"), node, i32, BrigType.B32
   >;
 
   def : AtomicPat_2Op_Pat<
-    !cast<HSAILInstAtomic>(inst#"_B64"), node, i64, BrigTypeX.B64
+    !cast<HSAILInstAtomic>(inst#"_B64"), node, i64, BrigType.B64
   >;
 }
 

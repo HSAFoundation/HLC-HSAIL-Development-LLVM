@@ -98,8 +98,8 @@ def orShlAsMad : PatFrag<
 // }
 
 let Predicates = [EnableFPMAD] in {
-  defm : TernaryFusedPairOp<NFMA_F32, f32, fpimm, GPR32, fadd, fmul, BrigTypeX.F32>;
-  defm : TernaryFusedPairOp<NFMA_F64, f64, fpimm, GPR64, fadd, fmul, BrigTypeX.F64>;
+  defm : TernaryFusedPairOp<NFMA_F32, f32, fpimm, GPR32, fadd, fmul, BrigType.F32>;
+  defm : TernaryFusedPairOp<NFMA_F64, f64, fpimm, GPR64, fadd, fmul, BrigType.F64>;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -155,8 +155,8 @@ class BitExtractOp<HSAILInst bitextractInst, ValueType Ty, int bt> : Pat<
 // No signed extract operations are defined since HSAIL specifies extract as
 // left + right shifts rather than right shift + and
 let Predicates = [EnableOpt], AddedComplexity = 10 in {
-  def : BitExtractOp<BITEXTRACT_U32, i32, BrigTypeX.U32>;
-  def : BitExtractOp<BITEXTRACT_U64, i64, BrigTypeX.U64>;
+  def : BitExtractOp<BITEXTRACT_U32, i32, BrigType.U32>;
+  def : BitExtractOp<BITEXTRACT_U64, i64, BrigType.U64>;
 }
 
 // BFI
@@ -297,8 +297,8 @@ multiclass BitSelect<HSAILInst bitselectInst, ValueType Ty, int bt> {
 }
 
 let Predicates = [EnableOpt] in {
-defm : BitSelect<BITSELECT_B32, i32, BrigTypeX.B32>;
-defm : BitSelect<BITSELECT_B64, i64, BrigTypeX.B64>;
+defm : BitSelect<BITSELECT_B32, i32, BrigType.B32>;
+defm : BitSelect<BITSELECT_B64, i64, BrigType.B64>;
 }
 
 // pack
@@ -306,7 +306,7 @@ defm : BitSelect<BITSELECT_B64, i64, BrigTypeX.B64>;
 let Predicates = [EnableOpt], AddedComplexity = 5 in {
   def : Pat<
     (shl (i64 (anyext i32:$src)), (i32 32)),
-    (PACK_U32X2_U32 (i64 0), $src, (i32 1), BrigTypeX.U32X2, BrigTypeX.U32)
+    (PACK_U32X2_U32 (i64 0), $src, (i32 1), BrigType.U32X2, BrigType.U32)
   >;
 }
 
@@ -334,12 +334,12 @@ let Predicates = [UnsafeFPMath] in {
   let AddedComplexity = 5 in {
     def : Pat<
       (fdiv fp32imm1, f32:$src),
-      (NRCP_F32 $src, BrigTypeX.F32)
+      (NRCP_F32 $src, BrigType.F32)
     >;
 
     def : Pat<
       (fdiv fp64imm1, f64:$src),
-      (NRCP_F64 $src, BrigTypeX.F64)
+      (NRCP_F64 $src, BrigType.F64)
     >;
   }
 
@@ -347,24 +347,24 @@ let Predicates = [UnsafeFPMath] in {
   let AddedComplexity = 4 in {
      def : Pat<
        (fdiv fp32imm_minus1, f32:$src),
-       (NEG_F32 (f32 (NRCP_F32 $src, BrigTypeX.F32)), BrigTypeX.F32)
+       (NEG_F32 (f32 (NRCP_F32 $src, BrigType.F32)), BrigType.F32)
      >;
 
      def : Pat<
        (fdiv fp64imm_minus1, f64:$src),
-       (NEG_F64 (f64 (NRCP_F64 $src, BrigTypeX.F64)), BrigTypeX.F64)
+       (NEG_F64 (f64 (NRCP_F64 $src, BrigType.F64)), BrigType.F64)
      >;
   }
 
   let AddedComplexity = 5 in {
     def : Pat<
       (fdiv fp32imm_minus1, (fneg f32:$src)),
-      (NRCP_F32 $src, BrigTypeX.F32)
+      (NRCP_F32 $src, BrigType.F32)
     >;
 
     def : Pat<
       (fdiv fp64imm_minus1, (fneg f64:$src)),
-      (NRCP_F64 $src, BrigTypeX.F64)
+      (NRCP_F64 $src, BrigType.F64)
     >;
   }
 }
@@ -377,34 +377,34 @@ let Predicates = [UnsafeFPMath] in {
   let AddedComplexity = 15 in {
     def : Pat<
       (fdiv fp32imm1, (int_HSAIL_nsqrt_f32 f32:$src)),
-      (NRSQRT_F32 $src, BrigTypeX.F32)
+      (NRSQRT_F32 $src, BrigType.F32)
     >;
 
     def : Pat<
       (fdiv fp64imm1, (int_HSAIL_nsqrt_f64 f64:$src)),
-      (NRSQRT_F64 $src, BrigTypeX.F64)
+      (NRSQRT_F64 $src, BrigType.F64)
     >;
   }
 
   let AddedComplexity = 10 in {
     def : Pat<
       (fdiv f32:$src0, (int_HSAIL_nsqrt_f32 f32:$src1)),
-      (f32 (MUL_F32 1, 0, $src0, (f32 (NRSQRT_F32 $src1, BrigTypeX.F32)), BrigTypeX.F32))
+      (f32 (MUL_F32 1, 0, $src0, (f32 (NRSQRT_F32 $src1, BrigType.F32)), BrigType.F32))
     >;
 
     def : Pat<
       (f32 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f32 f32:$src1))),
-      (f32 (MUL_F32 1, 0, fpimm:$src0, (f32 (NRSQRT_F32 $src1, BrigTypeX.F32)), BrigTypeX.F32))
+      (f32 (MUL_F32 1, 0, fpimm:$src0, (f32 (NRSQRT_F32 $src1, BrigType.F32)), BrigType.F32))
     >;
 
     def : Pat<
       (f64 (fdiv GPR64:$src0, (int_HSAIL_nsqrt_f64 f64:$src1))),
-      (f64 (MUL_F64 0, 0, $src0, (f64 (NRSQRT_F64 $src1, BrigTypeX.F64)), BrigTypeX.F64))
+      (f64 (MUL_F64 0, 0, $src0, (f64 (NRSQRT_F64 $src1, BrigType.F64)), BrigType.F64))
     >;
 
     def : Pat<
       (f64 (fdiv fpimm:$src0, (int_HSAIL_nsqrt_f64 f64:$src1))),
-      (f64 (MUL_F64 0, 0, fpimm:$src0, (f64 (NRSQRT_F64 (f64 GPR64:$src1), BrigTypeX.F64)), BrigTypeX.F64))
+      (f64 (MUL_F64 0, 0, fpimm:$src0, (f64 (NRSQRT_F64 (f64 GPR64:$src1), BrigType.F64)), BrigType.F64))
     >;
   }
 }
@@ -459,22 +459,22 @@ multiclass minmax<Instruction inst, ValueType Ty, SDNode ImmTy,
 // comparisons with a constant are canonicalized to lt/gt with the
 // constant incremented, which breaks the simple pattern.
 let Predicates = [EnableOpt] in {
-  defm : minmax<MIN_S32, i32, imm, SETLT,  SETGT, BrigTypeX.S32>;
-  defm : minmax<MIN_S32, i32, imm, SETLE,  SETGE, BrigTypeX.S32>;
-  defm : minmax<MIN_U32, i32, imm, SETULT, SETUGT, BrigTypeX.U32>;
-  defm : minmax<MIN_U32, i32, imm, SETULE, SETUGE, BrigTypeX.U32>;
-  defm : minmax<MAX_S32, i32, imm, SETGT,  SETLT, BrigTypeX.S32>;
-  defm : minmax<MAX_S32, i32, imm, SETGE,  SETLE, BrigTypeX.S32>;
-  defm : minmax<MAX_U32, i32, imm, SETUGT, SETULT, BrigTypeX.U32>;
-  defm : minmax<MAX_U32, i32, imm, SETUGE, SETULE, BrigTypeX.U32>;
-  defm : minmax<MIN_S64, i64, imm, SETLT,  SETGT, BrigTypeX.S64>;
-  defm : minmax<MIN_S64, i64, imm, SETLE,  SETGE, BrigTypeX.S64>;
-  defm : minmax<MIN_U64, i64, imm, SETULT, SETUGT, BrigTypeX.U64>;
-  defm : minmax<MIN_U64, i64, imm, SETULE, SETUGE, BrigTypeX.U64>;
-  defm : minmax<MAX_S64, i64, imm, SETGT,  SETLT, BrigTypeX.S64>;
-  defm : minmax<MAX_S64, i64, imm, SETGE,  SETLE, BrigTypeX.S64>;
-  defm : minmax<MAX_U64, i64, imm, SETUGT, SETULT, BrigTypeX.U64>;
-  defm : minmax<MAX_U64, i64, imm, SETUGE, SETULE, BrigTypeX.U64>;
+  defm : minmax<MIN_S32, i32, imm, SETLT,  SETGT, BrigType.S32>;
+  defm : minmax<MIN_S32, i32, imm, SETLE,  SETGE, BrigType.S32>;
+  defm : minmax<MIN_U32, i32, imm, SETULT, SETUGT, BrigType.U32>;
+  defm : minmax<MIN_U32, i32, imm, SETULE, SETUGE, BrigType.U32>;
+  defm : minmax<MAX_S32, i32, imm, SETGT,  SETLT, BrigType.S32>;
+  defm : minmax<MAX_S32, i32, imm, SETGE,  SETLE, BrigType.S32>;
+  defm : minmax<MAX_U32, i32, imm, SETUGT, SETULT, BrigType.U32>;
+  defm : minmax<MAX_U32, i32, imm, SETUGE, SETULE, BrigType.U32>;
+  defm : minmax<MIN_S64, i64, imm, SETLT,  SETGT, BrigType.S64>;
+  defm : minmax<MIN_S64, i64, imm, SETLE,  SETGE, BrigType.S64>;
+  defm : minmax<MIN_U64, i64, imm, SETULT, SETUGT, BrigType.U64>;
+  defm : minmax<MIN_U64, i64, imm, SETULE, SETUGE, BrigType.U64>;
+  defm : minmax<MAX_S64, i64, imm, SETGT,  SETLT, BrigType.S64>;
+  defm : minmax<MAX_S64, i64, imm, SETGE,  SETLE, BrigType.S64>;
+  defm : minmax<MAX_U64, i64, imm, SETUGT, SETULT, BrigType.U64>;
+  defm : minmax<MAX_U64, i64, imm, SETUGE, SETULE, BrigType.U64>;
 }
 
 // Abs
@@ -482,13 +482,13 @@ let Predicates = [EnableOpt] in {
   def : Pat<
     (xor (add (sra i32:$src, (i32 31)), i32:$src),
          (sra i32:$src, (i32 31))),
-    (ABS_S32 0, 0, $src, BrigTypeX.S32)
+    (ABS_S32 0, 0, $src, BrigType.S32)
   >;
 
   def : Pat<
     (xor (add (sra i64:$src, (i32 63)), i64:$src),
          (sra i64:$src, (i32 63))),
-    (ABS_S64 0, 0, $src, BrigTypeX.S64)
+    (ABS_S64 0, 0, $src, BrigType.S64)
   >;
 }
 
@@ -509,9 +509,9 @@ multiclass FusedAddMul1<HSAILInst op, ValueType Ty, int bt, RegisterClass RC,
 
 // FIXME: Change to default rounding mode
 let Predicates = [EnableOpt] in {
-  defm addmul1_f32 : FusedAddMul1<ADD_F32, f32, BrigTypeX.F32, GPR32, fp32imm1,
+  defm addmul1_f32 : FusedAddMul1<ADD_F32, f32, BrigType.F32, GPR32, fp32imm1,
                                   BrigRound.FLOAT_NEAR_EVEN, 1>;
-  defm addmul1_f64 : FusedAddMul1<ADD_F64, f64, BrigTypeX.F64, GPR64, fp64imm1,
+  defm addmul1_f64 : FusedAddMul1<ADD_F64, f64, BrigType.F64, GPR64, fp64imm1,
                                   BrigRound.FLOAT_NEAR_EVEN, 0>;
 }
 
@@ -519,6 +519,6 @@ let Predicates = [EnableOpt] in {
   def : Pat<
     (or (shl i32:$src0, i32:$src1),
         (srl i32:$src0, (sub imm32, (and i32:$src1, imm31)))),
-    (BITALIGN_B32 $src0, $src0, (i32 (NEG_S32 $src1, BrigTypeX.S32)), BrigTypeX.B32)
+    (BITALIGN_B32 $src0, $src0, (i32 (NEG_S32 $src1, BrigType.S32)), BrigType.B32)
   >;
 }

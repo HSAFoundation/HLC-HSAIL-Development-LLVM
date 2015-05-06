@@ -16,7 +16,7 @@ class CvtSInt32RoundPat<BRIGType srcTy,
                         int roundmode,
                         int ftz = 0> : Pat<
   (i32 (fp_to_sint (roundop srcTy.VT:$src))),
-  (!cast<HSAILInst>("CVT_S32"#srcTy.InstName) ftz, roundmode, BrigTypeX.S32, srcTy.BT, $src)
+  (!cast<HSAILInst>("CVT_S32"#srcTy.InstName) ftz, roundmode, BrigType.S32, srcTy.BT, $src)
 >;
 
 let isConv = 1 in {
@@ -313,14 +313,14 @@ def : CvtPat<F32Ty, F64Ty,
   int_HSAIL_cvt_f32_zero_f64, BrigRound.FLOAT_ZERO, 1
 >;
 
-def : InstMod_1Op_Pat<RINT_F32, frint, f32, BrigTypeX.F32, BrigRound.NONE, 1>;
-def : InstMod_1Op_Pat<RINT_F64, frint, f64, BrigTypeX.F64>;
+def : InstMod_1Op_Pat<RINT_F32, frint, f32, BrigType.F32, BrigRound.NONE, 1>;
+def : InstMod_1Op_Pat<RINT_F64, frint, f64, BrigType.F64>;
 
-def : InstMod_1Op_Pat<FLOOR_F32, ffloor, f32, BrigTypeX.F32, BrigRound.NONE, 1>;
-def : InstMod_1Op_Pat<FLOOR_F64, ffloor, f64, BrigTypeX.F64>;
+def : InstMod_1Op_Pat<FLOOR_F32, ffloor, f32, BrigType.F32, BrigRound.NONE, 1>;
+def : InstMod_1Op_Pat<FLOOR_F64, ffloor, f64, BrigType.F64>;
 
-def : InstMod_1Op_Pat<CEIL_F32, fceil, f32, BrigTypeX.F32, BrigRound.NONE, 1>;
-def : InstMod_1Op_Pat<CEIL_F64, fceil, f64, BrigTypeX.F64>;
+def : InstMod_1Op_Pat<CEIL_F32, fceil, f32, BrigType.F32, BrigRound.NONE, 1>;
+def : InstMod_1Op_Pat<CEIL_F64, fceil, f64, BrigType.F64>;
 
-def : InstMod_1Op_Pat<TRUNC_F32, ftrunc, f32, BrigTypeX.F32, BrigRound.NONE, 1>;
-def : InstMod_1Op_Pat<TRUNC_F64, ftrunc, f64, BrigTypeX.F64>;
+def : InstMod_1Op_Pat<TRUNC_F32, ftrunc, f32, BrigType.F32, BrigRound.NONE, 1>;
+def : InstMod_1Op_Pat<TRUNC_F64, ftrunc, f64, BrigType.F64>;

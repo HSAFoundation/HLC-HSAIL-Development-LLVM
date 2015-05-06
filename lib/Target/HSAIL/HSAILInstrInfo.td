@@ -143,42 +143,42 @@ class HSAILProfile <list<HSAILOperand> ArgBT> {
 include "HSAILOperands.td"
 include "HSAILEnums.td"
 
-def UntypedTy : BRIGType<BrigTypeX.NONE, untyped, "", "">;
+def UntypedTy : BRIGType<BrigType.NONE, untyped, "", "">;
 
-def B1Ty : BRIGType<BrigTypeX.B1, i1, "b1", "_B1">;
-def B32Ty : BRIGType<BrigTypeX.B32, i32, "b32", "_B32">;
-def B64Ty : BRIGType<BrigTypeX.B64, i64, "b64", "_B64">;
+def B1Ty : BRIGType<BrigType.B1, i1, "b1", "_B1">;
+def B32Ty : BRIGType<BrigType.B32, i32, "b32", "_B32">;
+def B64Ty : BRIGType<BrigType.B64, i64, "b64", "_B64">;
 
-def S32Ty : BRIGType<BrigTypeX.S32, i32, "s32", "_S32">;
-def S64Ty : BRIGType<BrigTypeX.S64, i64, "s64", "_S64">;
+def S32Ty : BRIGType<BrigType.S32, i32, "s32", "_S32">;
+def S64Ty : BRIGType<BrigType.S64, i64, "s64", "_S64">;
 
-def U32Ty : BRIGType<BrigTypeX.U32, i32, "u32", "_U32">;
-def U64Ty : BRIGType<BrigTypeX.U64, i64, "u64", "_U64">;
+def U32Ty : BRIGType<BrigType.U32, i32, "u32", "_U32">;
+def U64Ty : BRIGType<BrigType.U64, i64, "u64", "_U64">;
 
 // Deal with cases that still assume f16 is an i32.
-def F16Ty_i32 : BRIGType<BrigTypeX.F16, i32, "f16", "_F16">;
-def F16Ty_f32 : BRIGType<BrigTypeX.F16, f32, "f16", "_F16">;
+def F16Ty_i32 : BRIGType<BrigType.F16, i32, "f16", "_F16">;
+def F16Ty_f32 : BRIGType<BrigType.F16, f32, "f16", "_F16">;
 
-def F16Ty : BRIGType<BrigTypeX.F16, f16, "f16", "_F16">;
-def F32Ty : BRIGType<BrigTypeX.F32, f32, "f32", "_F32">;
-def F64Ty : BRIGType<BrigTypeX.F64, f64, "f64", "_F64">;
+def F16Ty : BRIGType<BrigType.F16, f16, "f16", "_F16">;
+def F32Ty : BRIGType<BrigType.F32, f32, "f32", "_F32">;
+def F64Ty : BRIGType<BrigType.F64, f64, "f64", "_F64">;
 
-def U8X4Ty : BRIGType<BrigTypeX.U8X4, i32, "u8x4", "_U8X4">;
-def U8X8Ty : BRIGType<BrigTypeX.U8X8, i64, "u8x8", "_U8X8">;
+def U8X4Ty : BRIGType<BrigType.U8X4, i32, "u8x4", "_U8X4">;
+def U8X8Ty : BRIGType<BrigType.U8X8, i64, "u8x8", "_U8X8">;
 
-def S8X4Ty : BRIGType<BrigTypeX.S8X4, i32, "s8x4", "_S8X4">;
-def S8X8Ty : BRIGType<BrigTypeX.S8X8, i64, "s8x8", "_S8X8">;
+def S8X4Ty : BRIGType<BrigType.S8X4, i32, "s8x4", "_S8X4">;
+def S8X8Ty : BRIGType<BrigType.S8X8, i64, "s8x8", "_S8X8">;
 
-def U16X2Ty : BRIGType<BrigTypeX.U16X2, i32, "u16x2", "_U16X2">;
+def U16X2Ty : BRIGType<BrigType.U16X2, i32, "u16x2", "_U16X2">;
 
-def U16X4Ty : BRIGType<BrigTypeX.U16X4, i64, "u16x4", "_U16X4">;
-def S16X4Ty : BRIGType<BrigTypeX.S16X4, i64, "s16x4", "_S16X4">;
+def U16X4Ty : BRIGType<BrigType.U16X4, i64, "u16x4", "_U16X4">;
+def S16X4Ty : BRIGType<BrigType.S16X4, i64, "s16x4", "_S16X4">;
 
-def U32X2Ty : BRIGType<BrigTypeX.U32X2, i64, "u32x2", "_U32X2">;
-def S32X2Ty : BRIGType<BrigTypeX.S32X2, i64, "s32x2", "_S32X2">;
+def U32X2Ty : BRIGType<BrigType.U32X2, i64, "u32x2", "_U32X2">;
+def S32X2Ty : BRIGType<BrigType.S32X2, i64, "s32x2", "_S32X2">;
 
-def F16X2Ty : BRIGType<BrigTypeX.F16X2, i32, "f16x2", "_F16X2">;
-def F16X4Ty : BRIGType<BrigTypeX.F16X4, i64, "f16x4", "_F16X4">;
+def F16X2Ty : BRIGType<BrigType.F16X2, i32, "f16x2", "_F16X2">;
+def F16X4Ty : BRIGType<BrigType.F16X4, i64, "f16x4", "_F16X4">;
 
 def UntypedOp : HSAILOperand<UntypedTy, "">;
 
