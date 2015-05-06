@@ -532,7 +532,7 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
   O << "module &__llvm_hsail_module:" << BRIG_VERSION_HSAIL_MAJOR << ':'
     << BRIG_VERSION_HSAIL_MINOR << ':'
     << (Subtarget->isFull() ? "$full" : "$base") << ':'
-    << (Subtarget->is64Bit() ? "$large" : "$small") << ':'
+    << (Subtarget->isLargeModel() ? "$large" : "$small") << ':'
     << "$near" // TODO: Get from somewhere
     << ";\n\n";
 
@@ -614,7 +614,7 @@ StringRef HSAILAsmPrinter::getArgTypeName(Type *Ty, bool Signed) const {
       } else if (Name.startswith("struct._sampler_t")) {
         return "_Samp";
       } else if (Name == "struct._counter32_t" || Name == "struct._event_t") {
-        return Subtarget->is64Bit() ? "u64" : "u32";
+        return Subtarget->isLargeModel() ? "u64" : "u32";
       } else {
         llvm_unreachable("unhandled struct type argument");
       }

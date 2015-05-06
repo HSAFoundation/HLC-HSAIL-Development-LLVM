@@ -20,7 +20,6 @@
 #include "HSAILISelLowering.h"
 
 #include "llvm/ADT/SmallVector.h"
-#include "llvm/IR/DataLayout.h"
 #include "llvm/Target/TargetSubtargetInfo.h"
 
 #define GET_SUBTARGETINFO_HEADER
@@ -103,7 +102,7 @@ class HSAILSubtarget : public HSAILGenSubtargetInfo {
 protected:
   Triple TargetTriple;
   std::string DevName;
-  bool Is64Bit;
+  bool IsLargeModel;
   bool HasImages;
   bool IsGCN;
 
@@ -144,7 +143,13 @@ public:
 
   bool isFull() const { return true; }
 
-  bool is64Bit() const { return Is64Bit; }
+  bool isLargeModel() const {
+    return IsLargeModel;
+  }
+
+  bool isSmallModel() const {
+    return !IsLargeModel;
+  }
 
   bool hasImages() const {
     return HasImages;

@@ -877,7 +877,7 @@ bool HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr, SDValue &Base,
   case ISD::Constant: {
     int64_t new_offset = cast<ConstantSDNode>(Addr)->getSExtValue();
     // No 64 bit offsets in 32 bit target
-    if (!Subtarget->is64Bit() && !isInt<32>(new_offset))
+    if (Subtarget->isSmallModel() && !isInt<32>(new_offset))
       return false;
     Offset += new_offset;
     return true;
@@ -899,7 +899,7 @@ bool HSAILDAGToDAGISel::SelectAddrCommon(SDValue Addr, SDValue &Base,
           cast<GlobalAddressSDNode>(Addr)->getGlobal(), SDLoc(Addr), ValueType);
       int64_t new_offset =
           Offset + cast<GlobalAddressSDNode>(Addr)->getOffset();
-      if (!Subtarget->is64Bit() && !isInt<32>(new_offset))
+      if (Subtarget->isSmallModel() && !isInt<32>(new_offset))
         return false;
       Offset += new_offset;
       return true;

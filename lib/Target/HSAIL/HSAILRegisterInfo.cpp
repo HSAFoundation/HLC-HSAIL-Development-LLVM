@@ -169,7 +169,7 @@ HSAILRegisterInfo::getPointerRegClass(const MachineFunction &MF,
 
   assert(Kind == 0);
 
-  if (ST.is64Bit())
+  if (ST.isLargeModel())
     return &HSAIL::GPR64RegClass;
   return &HSAIL::GPR32RegClass;
 }

@@ -25,7 +25,7 @@
 using namespace llvm;
 
 static std::string computeDataLayout(const HSAILSubtarget &ST) {
-  if (ST.is64Bit()) {
+  if (ST.isLargeModel()) {
     return "e-p:32:32-p1:64:64-p2:64:64-p3:32:32-p4:64:64-p5:32:32"
            "-p6:32:32-p7:64:64-p8:32:32-p9:64:64-i1:8:8-i8:8:8"
            "-i16:16:16-i32:32:32-i64:64:64-f32:32:32-f64:64:64-f80:32:32"
@@ -47,7 +47,7 @@ HSAILSubtarget::HSAILSubtarget(StringRef TT, StringRef CPU, StringRef FS,
                                HSAILTargetMachine &TM)
     : HSAILGenSubtargetInfo(TT, CPU, FS), TargetTriple(TT),
       DevName(CPU.empty() ? "generic" : CPU.str()),
-      Is64Bit(TargetTriple.getArch() == Triple::hsail64),
+      IsLargeModel(TargetTriple.getArch() == Triple::hsail64),
       HasImages(false),
       IsGCN(false),
       DL(computeDataLayout(initializeSubtargetDependencies(DevName, FS))),

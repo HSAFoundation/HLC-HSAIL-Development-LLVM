@@ -47,11 +47,6 @@ public:
   };
 
 public:
-  //  HSAILTargetMachine(const Target &T,
-  //                   const std::string &TT,
-  //                   const std::string &FS,
-  //                   bool is64Bit);
-
   HSAILTargetMachine(const Target &T, StringRef TT, StringRef CPU, StringRef FS,
                      const TargetOptions &Options, Reloc::Model RM,
                      CodeModel::Model CM, CodeGenOpt::Level OL);

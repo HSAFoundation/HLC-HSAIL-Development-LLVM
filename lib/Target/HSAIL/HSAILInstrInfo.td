@@ -13,8 +13,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-def In32BitMode  : Predicate<"!Subtarget->is64Bit()">;
-def In64BitMode  : Predicate<"Subtarget->is64Bit()">;
+def SmallModel : Predicate<"Subtarget->isSmallModel()">;
+def LargeModel : Predicate<"Subtarget->isLargeModel()">;
 def EnableOpt    : Predicate<"CodeGenOpt::None != TM.getOptLevel()">;
 
 // Mark the default value for a width modifier. This only effects how

@@ -594,7 +594,7 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine &brig,
                                                         : 0);
       }
     }
-    if (mSTM->is64Bit()) {
+    if (mSTM->isLargeModel()) {
       RTI(brig) << "memory:64bitABI";
     }
 

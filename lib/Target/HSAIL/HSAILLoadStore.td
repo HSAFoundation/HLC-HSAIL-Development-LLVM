@@ -16,11 +16,11 @@ class SegmentPPat<BRIGType srcTy> : Pat<
 >;
 
 
-let Predicates = [In64BitMode] in {
+let Predicates = [LargeModel] in {
   def : SegmentPPat<U64Ty>;
 }
 
-let Predicates = [In32BitMode] in {
+let Predicates = [SmallModel] in {
   def : SegmentPPat<U32Ty>;
 }
 

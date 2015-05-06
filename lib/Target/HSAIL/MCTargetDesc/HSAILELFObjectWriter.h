@@ -14,7 +14,7 @@
 namespace llvm {
 class HSAILELFObjectWriter : public MCELFObjectTargetWriter {
 public:
-  HSAILELFObjectWriter(bool is64Bit, uint16_t EMachine,
+  HSAILELFObjectWriter(bool IsLargeModel, uint16_t EMachine,
                        bool HasRelocationAddend);
 
 protected:

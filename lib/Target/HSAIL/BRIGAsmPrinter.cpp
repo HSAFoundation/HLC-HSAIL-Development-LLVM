@@ -826,8 +826,8 @@ void BRIGAsmPrinter::EmitStartOfAsmFile(Module &M) {
   brigantine.startProgram();
   brigantine.module("&__llvm_hsail_module", BRIG_VERSION_HSAIL_MAJOR,
                     BRIG_VERSION_HSAIL_MINOR,
-                    Subtarget->is64Bit() ? BRIG_MACHINE_LARGE
-                                         : BRIG_MACHINE_SMALL,
+                    Subtarget->isLargeModel() ? BRIG_MACHINE_LARGE :
+                                                BRIG_MACHINE_SMALL,
                     BRIG_PROFILE_FULL, BRIG_ROUND_FLOAT_NEAR_EVEN);
 
 
