@@ -16,7 +16,6 @@
 #define LLVM_LIB_TARGET_HSAIL_HSAILASMPRINTER_H
 
 #include "llvm/CodeGen/AsmPrinter.h"
-#include <vector>
 
 namespace llvm {
 
@@ -78,6 +77,6 @@ public:
   void EmitInstruction(const MachineInstr *MI) override;
 };
 
-} // End anonymous llvm
+}
 
 #endif

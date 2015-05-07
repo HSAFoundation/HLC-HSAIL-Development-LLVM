@@ -11,16 +11,10 @@
 
 #include "HSAIL.h"
 #include "HSAILAsmPrinter.h"
-#include "HSAILInstrInfo.h"
 #include "HSAILBrig.h"
 #include "HSAILSubtarget.h"
-#include "llvm/IR/GlobalVariable.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/CodeGen/AsmPrinter.h"
-#include "llvm/CodeGen/MachineOperand.h"
-#include "llvm/Support/FormattedStream.h"
-#include "llvm/Support/Compiler.h"
-#include "llvm/Support/TargetRegistry.h"
 
 #include "MCTargetDesc/RawVectorOstream.h"
 

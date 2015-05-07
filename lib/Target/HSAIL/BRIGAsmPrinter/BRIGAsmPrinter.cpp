@@ -18,49 +18,20 @@
 #include "BRIGDwarfDebug.h"
 #include "MCTargetDesc/BRIGDwarfStreamer.h"
 #include "HSAILKernelManager.h"
-#include "HSAILMachineFunctionInfo.h"
 #include "HSAILOpaqueTypes.h"
 #include "HSAILStoreInitializer.h"
 #include "HSAILTargetMachine.h"
 #include "HSAILUtilityFunctions.h"
 
-#include "llvm/IR/Argument.h"
-#include "llvm/IR/Constants.h"
-#include "llvm/IR/Function.h"
-#include "llvm/IR/GlobalVariable.h"
-#include "llvm/IR/Metadata.h"
-#include "llvm/IR/Module.h"
-#include "llvm/IR/Type.h"
-#include "llvm/ADT/APFloat.h"
-#include "llvm/ADT/APInt.h"
-#include "llvm/ADT/StringExtras.h"
-#include "llvm/ADT/VariadicFunction.h"
-#include "llvm/IR/DerivedTypes.h"
 #include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
-#include "llvm/CodeGen/MachineConstantPool.h"
-#include "llvm/CodeGen/MachineFunction.h"
-#include "llvm/CodeGen/MachineFrameInfo.h"
-#include "llvm/CodeGen/MachineInstr.h"
 #include "llvm/CodeGen/MachineModuleInfo.h"
-#include "llvm/CodeGen/MachineRegisterInfo.h"
-#include "llvm/MC/MCAsmInfo.h"
-#include "llvm/MC/MCAssembler.h"
-#include "llvm/MC/MCInst.h"
-#include "llvm/MC/MCStreamer.h"
-#include "llvm/MC/MCSymbol.h"
-#include "llvm/MC/MCObjectStreamer.h"
 #include "llvm/MC/MCValue.h"
-#include "llvm/MC/MCObjectWriter.h"
-#include "llvm/IR/Operator.h"
-#include "llvm/Support/FormattedStream.h"
-#include "llvm/Support/FileSystem.h"
+
 #include "llvm/Support/CommandLine.h"
-#include "llvm/Support/Debug.h"
-#include "llvm/IR/Mangler.h"
+#include "llvm/Support/FileSystem.h"
+#include "llvm/Support/TargetRegistry.h"
+
 #include "../lib/CodeGen/AsmPrinter/DwarfDebug.h"
-#include <sstream>
-#include <iostream>
-#include <fstream>
 
 #include "LibHSAILAdapters.h"
 
@@ -69,6 +40,8 @@
 #include "libHSAIL/HSAILParser.h"
 #include "libHSAIL/HSAILValidator.h"
 
+#include <fstream>
+#include <iostream>
 #include <memory>
 
 using namespace llvm;
