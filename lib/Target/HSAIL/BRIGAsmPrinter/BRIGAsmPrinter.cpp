@@ -1046,7 +1046,7 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
   paramCounter = 0;
 
 #if 0
-  if (usesGCNAtomicCounter()) { // TBD095
+  if (usesGCNAtomicCounter()) {
     HSAIL_ASM::InstBase gcn_region = brigantine.addInst<HSAIL_ASM::InstBase>(
       BRIG_OPCODE_GCNREGIONALLOC);
     brigantine.appendOperand(gcn_region, brigantine.createImmed(4,

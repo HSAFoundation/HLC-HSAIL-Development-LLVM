@@ -156,8 +156,7 @@ BitVector HSAILRegisterInfo::getReservedRegs(const MachineFunction &MF) const {
 
 bool HSAILRegisterInfo::trackLivenessAfterRegAlloc(
     const MachineFunction &MF) const {
-  // Only enable when post-RA scheduling is enabled and this is needed.
-  // TODO: HSA
+  // TODO: Only enable when post-RA scheduling is enabled and this is needed.
   return true;
 }
 

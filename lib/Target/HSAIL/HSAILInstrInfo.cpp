@@ -647,7 +647,6 @@ void HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
         MachineMemOperand::MOStore, MFI.getObjectSize(FrameIndex),
         MFI.getObjectAlignment(FrameIndex));
 
-    // FIXME: Why is this setting kill?
     BuildMI(MBB, MI, DL, get(Opc))
         .addReg(SrcReg, getKillRegState(isKill)) // src
         .addFrameIndex(FrameIndex)               // address_base

@@ -32,18 +32,8 @@ namespace llvm {
 
 class HSAILSubtarget;
 
-//===----------------------------------------------------------------------===//
-/// HSAILLowering - This class defines information used to lower LLVM code to
-/// legal SelectionDAG operators that the target instruction selector can accept
-/// natively.
-///
-/// This class also defines callbacks that targets must implement to lower
-/// target-specific constructs to SelectionDAG operators.
-///
 class HSAILTargetLowering : public TargetLowering {
 private:
-  /// Subtarget - Keep a pointer to the X86Subtarget around so that we can
-  /// make the right decision when generating code for different targets.
   const HSAILSubtarget *Subtarget;
   const HSAILRegisterInfo *RegInfo;
   const DataLayout *DL;
@@ -104,7 +94,7 @@ protected:
   /// AS is an address space of argument, either arg or kernarg
   /// ParamPtr is a pointer value for argument to load from or store to.
   /// Offset is a value which has to be added to the pointer.
-  /// If InFlag gis present lue all operations.
+  /// If InFlag is present glue all operations.
   /// If ChainLink is true chain link all operations.
   /// Returns last operation value.
   SDValue LowerArgument(SDValue Chain, SDValue InFlag, bool ChainLink,
@@ -186,32 +176,12 @@ public:
   //===--------------------------------------------------------------------===//
   // Instruction Emitting Hooks
   //
-
-  //===--------------------------------------------------------------------===//
-  // Addressing mode description hooks (used by LSR etc).
-  //
-  /// isLegalAddressingMode - Return true if the addressing mode represented by
-  /// AM is legal for this target, for a load/store of the specified type.
-  /// The type may be VoidTy, in which case only return true if the addressing
-  /// mode is legal for a load/store of any legal type.
-  /// TODO: Handle pre/postinc as well.
   bool isLegalAddressingMode(const AddrMode &AM, Type *Ty) const override;
 
-  /// isTruncateFree - Return true if it's free to truncate a value of
-  /// type Ty1 to type Ty2. e.g. On x86 it's free to truncate a i32 value in
-  /// register EAX to i16 by referencing its sub-register AX.
   bool isTruncateFree(Type *Ty1, Type *Ty2) const override;
 
   bool isTruncateFree(EVT VT1, EVT VT2) const override;
 
-  /// isZExtFree - Return true if any actual instruction that defines a
-  /// value of type Ty1 implicitly zero-extends the value to Ty2 in the result
-  /// register. This does not necessarily include registers defined in
-  /// unknown ways, such as incoming arguments, or copies from unknown
-  /// virtual registers. Also, if isTruncateFree(Ty2, Ty1) is true, this
-  /// does not necessarily apply to truncate instructions. e.g. on x86-64,
-  /// all instructions that define 32-bit values implicit zero-extend the
-  /// result out to 64 bits.
   bool isZExtFree(Type *Ty1, Type *Ty2) const override;
 
   bool isZExtFree(EVT VT1, EVT VT2) const override;
@@ -219,15 +189,8 @@ public:
   bool isFAbsFree(EVT VT) const override;
   bool isFNegFree(EVT VT) const override;
 
-  /// isNarrowingProfitable - Return true if it's profitable to narrow
-  /// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
-  /// from i32 to i8 but not from i32 to i16.
   bool isNarrowingProfitable(EVT VT1, EVT VT2) const override;
 
-  /// isLegalICmpImmediate - Return true if the specified immediate is legal
-  /// icmp immediate, that is the target has icmp instructions which can compare
-  /// a register against the immediate without having to materialize the
-  /// immediate into a register.
   bool isLegalICmpImmediate(int64_t Imm) const override;
 
   MVT getScalarShiftAmountTy(EVT LHSTy) const override;

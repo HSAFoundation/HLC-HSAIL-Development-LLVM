@@ -253,28 +253,16 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM)
 
 HSAILTargetLowering::~HSAILTargetLowering() {}
 
-/// getSetCCResultType - Return the ValueType of the result of SETCC
-/// operations.  Also used to obtain the target's preferred type for
-/// the condition operand of SELECT and BRCOND nodes.  In the case of
-/// BRCOND the argument passed is MVT::Other since there are no other
-/// operands to get a type hint from.
 EVT HSAILTargetLowering::getSetCCResultType(LLVMContext &Context,
                                             EVT VT) const {
   return MVT::i1;
 }
 
-/// getSchedulingPreference - Some scheduler, e.g. hybrid, can switch to
-/// different scheduling heuristics for different nodes. This function returns
-/// the preference (or none) for the given node.
 Sched::Preference
 HSAILTargetLowering::getSchedulingPreference(SDNode *N) const {
   return TargetLowering::getSchedulingPreference(N);
 }
-/// getRepRegClassFor - Return the 'representative' register class for the
-/// specified value type. The 'representative' register class is the largest
-/// legal super-reg register class for the register class of the value type.
-/// For example, on i386 the rep register class for i8, i16, and i32 are GR32;
-/// while the rep register class is GR64 on x86_64.
+
 const TargetRegisterClass *
 HSAILTargetLowering::getRepRegClassFor(MVT VT) const {
   switch (VT.SimpleTy) {
@@ -295,34 +283,21 @@ HSAILTargetLowering::getRepRegClassFor(MVT VT) const {
   return nullptr;
 }
 
-/// getRepRegClassCostFor - Return the cost of the 'representative' register
-/// class for the specified value type.
 uint8_t HSAILTargetLowering::getRepRegClassCostFor(MVT VT) const {
-  // Micah: Is this true that the reg class cost for everything is 1 in HSAIL?
   return 1;
 }
 
-/// getTgtMemIntrinsic: Given an intrinsic, checks if on the target the
-/// intrinsic will need to map to a MemIntrinsicNode (touches memory). If
-/// this is the case, it returns true and store the intrinsic
-/// information into the IntrinsicInfo that was passed to the function.
 bool HSAILTargetLowering::getTgtMemIntrinsic(IntrinsicInfo &Info,
                                              const CallInst &I,
                                              unsigned Intrinsic) const {
   return false;
 }
 
-/// isFPImmLegal - Returns true if the target can instruction select the
-/// specified FP immediate natively. If false, the legalizer will materialize
-/// the FP immediate as a load from a constant pool.
 bool HSAILTargetLowering::isFPImmLegal(const APFloat &Imm, EVT VT) const {
   // All floating point types are legal for 32bit and 64bit types.
   return (VT == EVT(MVT::f32) || VT == EVT(MVT::f64));
 }
 
-/// getByValTypeAlignment - Return the desired alignment for ByVal aggregate
-/// function arguments in the caller parameter area.  This is the actual
-/// alignment, not its logarithm.
 unsigned HSAILTargetLowering::getByValTypeAlignment(Type *Ty) const {
   return TargetLowering::getByValTypeAlignment(Ty);
 }
@@ -334,33 +309,20 @@ bool HSAILTargetLowering::allowsMisalignedMemoryAccesses(EVT,
   return true;
 }
 
-/// getJumpTableEncoding - Return the entry encoding for a jump table in the
-/// current function.  The returned value is a member of the
-/// MachineJumpTableInfo::JTEntryKind enum.
 unsigned HSAILTargetLowering::getJumpTableEncoding() const {
   return MachineJumpTableInfo::EK_BlockAddress;
 }
 
-/// isOffsetFoldingLegal - Return true if folding a constant offset
-/// with the given GlobalAddress is legal.  It is frequently not legal in
-/// PIC relocation models.
 bool HSAILTargetLowering::isOffsetFoldingLegal(
-    const GlobalAddressSDNode *GA) const {
-  // Micah: Since HSAIL does not support PIC now, we can always set this to
-  // true.
+  const GlobalAddressSDNode *GA) const {
   return true;
 }
 
-/// ComputeNumSignBitsForTargetNode - This method can be implemented by
-/// targets that want to expose additional information about sign bits to the
-/// DAG Combiner.
 unsigned HSAILTargetLowering::ComputeNumSignBitsForTargetNode(
     SDValue Op, const SelectionDAG &DAG, unsigned Depth) const {
   return 1;
 }
 
-/// isGAPlusOffset - Returns true (and the GlobalValue and the offset) if the
-/// node is a GlobalAddress + offset.
 bool HSAILTargetLowering::isGAPlusOffset(SDNode *N, const GlobalValue *&GA,
                                          int64_t &Offset) const {
   bool res = TargetLowering::isGAPlusOffset(N, GA, Offset);
@@ -423,18 +385,6 @@ PerformIntrinsic_Wo_ChainCombine(SDNode *N,
   return SDValue();
 }
 
-/// PerformDAGCombine - This method will be invoked for all target nodes and
-/// for any target-independent nodes that the target has registered with
-/// invoke it for.
-///
-/// The semantics are as follows:
-/// Return Value:
-///   SDValue.Val == 0   - No change was made
-///   SDValue.Val == N   - N was replaced, is dead, and is already handled.
-///   otherwise          - N should be replaced by the returned Operand.
-///
-/// In addition, methods provided by DAGCombinerInfo may be used to perform
-/// more complex transformations.
 SDValue HSAILTargetLowering::PerformDAGCombine(SDNode *N,
                                                DAGCombinerInfo &DCI) const {
   switch (N->getOpcode()) {
@@ -447,34 +397,21 @@ SDValue HSAILTargetLowering::PerformDAGCombine(SDNode *N,
   return SDValue();
 }
 
-/// isTypeDesirableForOp - Return true if the target has native support for
-/// the specified value type and it is 'desirable' to use the type for the
-/// given node type. e.g. On x86 i16 is legal, but undesirable since i16
-/// instruction encodings are longer and some i16 instructions are slow.
 bool HSAILTargetLowering::isTypeDesirableForOp(unsigned Opc, EVT VT) const {
   return TargetLowering::isTypeDesirableForOp(Opc, VT);
 }
 
-/// isDesirableToPromoteOp - Return true if it is profitable for dag combiner
-/// to transform a floating point op of specified opcode to a equivalent op of
-/// an integer type. e.g. f32 load -> i32 load can be profitable on ARM.
 bool HSAILTargetLowering::isDesirableToTransformToIntegerOp(unsigned Opc,
                                                             EVT VT) const {
   return (Opc == ISD::LOAD || Opc == ISD::STORE) &&
          (VT.getSimpleVT() == MVT::f32 || VT.getSimpleVT() == MVT::f64);
 }
 
-/// IsDesirableToPromoteOp - This method query the target whether it is
-/// beneficial for dag combiner to promote the specified node. If true, it
-/// should return the desired promotion type by reference.
 bool HSAILTargetLowering::IsDesirableToPromoteOp(SDValue Op, EVT &PVT) const {
   return TargetLowering::IsDesirableToPromoteOp(Op, PVT);
 }
 
 //===--------------------------------------------------------------------===//
-// Lowering methods - These methods must be implemented by targets so that
-// the SelectionDAGLowering code knows how to lower these.
-//
 
 /// n-th element of a vector has different alignment than a base.
 /// This function returns alignment for n-th alement.
@@ -501,10 +438,6 @@ static unsigned getElementAlignment(const DataLayout *DL, Type *Ty,
   return Alignment;
 }
 
-/// LowerReturn - This hook must be implemented to lower outgoing
-/// return values, described by the Outs array, into the specified
-/// DAG. The implementation should return the resulting token chain
-/// value.
 SDValue
 HSAILTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv,
                                  bool isVarArg,
@@ -777,12 +710,6 @@ SDValue HSAILTargetLowering::LowerArgument(
   return ArgValue;
 }
 
-/// LowerFormalArguments - This hook must be implemented to lower the
-/// incoming (formal) arguments, described by the Ins array, into the
-/// specified DAG. The implementation should fill in the InVals array
-/// with legal-type argument values, and return the resulting token
-/// chain value.
-///
 SDValue HSAILTargetLowering::LowerFormalArguments(
     SDValue Chain, CallingConv::ID CallConv, bool isVarArg,
     const SmallVectorImpl<ISD::InputArg> &Ins, SDLoc dl, SelectionDAG &DAG,
@@ -827,13 +754,6 @@ static BrigType getParamBrigType(Type *Ty, const DataLayout &DL, bool IsSExt) {
 
   return BT;
 }
-
-/// LowerCall - This hook must be implemented to lower calls into the
-/// the specified DAG. The outgoing arguments to the call are described
-/// by the Outs array, and the values to be returned by the call are
-/// described by the Ins array. The implementation should fill in the
-/// InVals array with legal-type return values from the call, and return
-/// the resulting token chain value.
 
 SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
                                        SmallVectorImpl<SDValue> &InVals) const {
@@ -1023,11 +943,6 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   case ISD::A:                                                                 \
     return Lower##A(Op, DAG)
 
-/// LowerOperation - This callback is invoked for operations that are
-/// unsupported by the target, which are registered to use 'custom' lowering,
-/// and whose defined values are all legal.
-/// If the target has no operations that require custom lowering, it need not
-/// implement this.  The default implementation of this aborts.
 SDValue HSAILTargetLowering::LowerOperation(SDValue Op,
                                             SelectionDAG &DAG) const {
   switch (Op.getOpcode()) {
@@ -1902,13 +1817,6 @@ SDValue HSAILTargetLowering::LowerATOMIC_STORE(SDValue Op,
 }
 
 //===--------------------------------------------------------------------===//
-// Addressing mode description hooks (used by LSR etc).
-//
-/// isLegalAddressingMode - Return true if the addressing mode represented by
-/// AM is legal for this target, for a load/store of the specified type.
-/// The type may be VoidTy, in which case only return true if the addressing
-/// mode is legal for a load/store of any legal type.
-/// TODO: Handle pre/postinc as well.
 bool HSAILTargetLowering::isLegalAddressingMode(const AddrMode &AM,
                                                 Type *Ty) const {
   if (Subtarget->isGCN()) {
@@ -1920,9 +1828,7 @@ bool HSAILTargetLowering::isLegalAddressingMode(const AddrMode &AM,
 
   return TargetLowering::isLegalAddressingMode(AM, Ty);
 }
-/// isTruncateFree - Return true if it's free to truncate a value of
-/// type Ty1 to type Ty2. e.g. On x86 it's free to truncate a i32 value in
-/// register EAX to i16 by referencing its sub-register AX.
+
 bool HSAILTargetLowering::isTruncateFree(Type *Ty1, Type *Ty2) const {
   return TargetLowering::isTruncateFree(Ty1, Ty2);
 }
@@ -1930,14 +1836,7 @@ bool HSAILTargetLowering::isTruncateFree(Type *Ty1, Type *Ty2) const {
 bool HSAILTargetLowering::isTruncateFree(EVT VT1, EVT VT2) const {
   return TargetLowering::isTruncateFree(VT1, VT2);
 }
-/// isZExtFree - Return true if any actual instruction that defines a
-/// value of type Ty1 implicitly zero-extends the value to Ty2 in the result
-/// register. This does not necessarily include registers defined in
-/// unknown ways, such as incoming arguments, or copies from unknown
-/// registers. Also, if isTruncateFree(Ty2, Ty1) is true, this
-/// does not necessarily apply to truncate instructions. e.g. on x86-64,
-/// all instructions that define 32-bit values implicit zero-extend the
-/// result out to 64 bits.
+
 bool HSAILTargetLowering::isZExtFree(Type *Ty1, Type *Ty2) const {
   return false;
 }
@@ -1948,9 +1847,6 @@ bool HSAILTargetLowering::isFAbsFree(EVT VT) const { return true; }
 
 bool HSAILTargetLowering::isFNegFree(EVT VT) const { return true; }
 
-/// isNarrowingProfitable - Return true if it's profitable to narrow
-/// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
-/// from i32 to i8 but not from i32 to i16.
 bool HSAILTargetLowering::isNarrowingProfitable(EVT VT1, EVT VT2) const {
   // This is only profitable in HSAIL to go from a 64bit type to
   // a 32bit type, but not to a 8 or 16bit type.
@@ -1958,10 +1854,6 @@ bool HSAILTargetLowering::isNarrowingProfitable(EVT VT1, EVT VT2) const {
          (VT1 == EVT(MVT::f64) && VT2 == EVT(MVT::f32));
 }
 
-/// isLegalICmpImmediate - Return true if the specified immediate is legal
-/// icmp immediate, that is the target has icmp instructions which can compare
-/// a register against the immediate without having to materialize the
-/// immediate into a register.
 bool HSAILTargetLowering::isLegalICmpImmediate(int64_t Imm) const {
   // HSAIL doesn't have any restrictions on this.
   return true;

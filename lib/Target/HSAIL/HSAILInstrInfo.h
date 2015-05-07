@@ -604,7 +604,6 @@ inline static bool isMem(const MachineInstr *MI, unsigned Op) {
          isLeaMem(MI, Op);
 }
 
-// class HSAILInstrInfo : public TargetInstrInfoImpl {
 class HSAILInstrInfo : public HSAILGenInstrInfo {
   const HSAILRegisterInfo RI;
 

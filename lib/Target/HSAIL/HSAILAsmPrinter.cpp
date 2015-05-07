@@ -169,8 +169,6 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F, raw_ostream &O,
 
   // Functions with kernel linkage cannot have output args.
   if (!IsKernel) {
-    // TODO_HSA: Need "good" names for the formal arguments and returned value.
-    // TODO_HSA: Need to emit alignment information..
     if (!RetTy->isVoidTy()) {
       StringRef RetName("ret");
       SmallString<256> ReturnName;

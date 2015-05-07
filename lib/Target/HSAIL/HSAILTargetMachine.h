@@ -32,8 +32,6 @@ private:
 
 public:
   class HSAILSelectionDAGInfo : public TargetSelectionDAGInfo {
-    /// Subtarget - Keep a pointer to the HSAILSubtarget around so that we can
-    /// make the right decision when generating code for different targets.
     const HSAILSubtarget *Subtarget;
 
     const HSAILTargetLowering &TLI;
@@ -70,7 +68,6 @@ public:
                            AnalysisID StopAfter = 0) override;
 };
 
-/// HSAIL_32TargetMachine - HSAIL 32-bit target machine.
 class HSAIL_32TargetMachine : public HSAILTargetMachine {
   HSAILSelectionDAGInfo TSInfo;
 
@@ -83,8 +80,6 @@ public:
   void dump(raw_ostream &O);
 };
 
-/// HSAIL_64TargetMachine - HSAIL 64-bit target machine.
-///
 class HSAIL_64TargetMachine : public HSAILTargetMachine {
   HSAILSelectionDAGInfo TSInfo;
 
@@ -95,9 +90,6 @@ public:
                         CodeGenOpt::Level OL);
 };
 
-} // End llvm namespace
-
-namespace llvm {
 class HSAILPassConfig : public TargetPassConfig {
 public:
   HSAILPassConfig(HSAILTargetMachine *TM, PassManagerBase &PM)

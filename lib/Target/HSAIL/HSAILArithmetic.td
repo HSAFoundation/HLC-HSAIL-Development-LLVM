@@ -193,24 +193,17 @@ defm : InstSourceType_1Op_Pats<"POPCOUNT_U32", ctpop, 1>;
 
 ////////////////////////////////////////////////////////////////////////////////
 // firstbit (integer, 1-bit, 32-bit, and 64-bit)
-// HSAIL_SPEC_CURRENT <
 
 defm FIRSTBIT : InstSourceType_1Op_U32_IntTypes<"firstbit", BrigOpcode.FIRSTBIT>;
 defm : InstSourceType_1Op_Pats<"FIRSTBIT_U32", ctlz>;
 def : InstSourceType_1Op_Pat<FIRSTBIT_U32_U32, int_HSAIL_firstbit_u32, i32, BrigType.U32, BrigType.U32>;
 
-// > HSAIL_SPEC_CURRENT
-
 ////////////////////////////////////////////////////////////////////////////////
 // lastbit (integer, 1-bit, 32-bit, and 64-bit)
-// HSAIL_SPEC_CURRENT <
-
 defm LASTBIT : InstSourceType_1Op_U32_IntTypes<"lastbit", BrigOpcode.LASTBIT>;
 
 defm : InstSourceType_1Op_Pats<"LASTBIT_U32", cttz>;
 def : InstSourceType_1Op_Pat<LASTBIT_U32_U32, int_HSAIL_lastbit_u32, i32, BrigType.U32, BrigType.U32>;
-
-// > HSAIL_SPEC_CURRENT
 
 ////////////////////////////////////////////////////////////////////////////////
 // signbit (integer, 1-bit, 32-bit, and 64-bit)

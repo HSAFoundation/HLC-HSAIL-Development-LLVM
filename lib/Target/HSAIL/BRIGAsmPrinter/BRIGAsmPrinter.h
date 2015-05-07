@@ -104,13 +104,13 @@ protected:
 
   HSAILTargetMachine *mTM;
   const HSAILInstrInfo *TII;
-  HSAILKernelManager *mMeta;      /* metadata required by the runtime */
-  HSAILMachineFunctionInfo *mMFI; /* current function being processed */
+  HSAILKernelManager *mMeta;      // Metadata required by the runtime.
+  HSAILMachineFunctionInfo *mMFI; // Current function being processed.
 
-  /// name of the kernel wrapper of the current function
+  /// Name of the kernel wrapper of the current function.
   std::string mKernelName;
-  bool m_bIsKernel; // is 'true' if the current function being processed is
-                    // OpenCL kernel
+  bool m_bIsKernel; // True if the current function being processed is an OpenCL
+                    // kernel.
 
   HSAIL_ASM::BrigContainer bc;
   HSAIL_ASM::Brigantine brigantine;
@@ -157,32 +157,34 @@ protected:
   void BrigEmitVecOperand(const MachineInstr *MI, unsigned opStart,
                           unsigned numRegs, HSAIL_ASM::Inst inst);
 
-  // Stream that captures DWARF data to the internal buffer
+  // Stream that captures DWARF data to the internal buffer.
   RawVectorOstream *mDwarfStream;
-  // Stream that will receive all BRIG data
+
+  // Stream that will receive all BRIG data.
   raw_ostream *mBrigStream;
-  // Stream that will receive all captured DWARF data in the case of -odebug
+
+  // Stream that will receive all captured DWARF data in the case of -odebug.
   raw_fd_ostream *mDwarfFileStream;
 
-  // table that stores offsets of all emitted global variables - used in DWARF
+  // Table that stores offsets of all emitted global variables - used in DWARF.
   std::map<const GlobalVariable *, uint64_t> globalVariableOffsets;
   typedef std::map<const GlobalVariable *, uint64_t>::const_iterator
       gvo_iterator;
 
-  // table that stores offsets of scalar arguments of function being emitted -
-  // used in DWARF
+  // Table that stores offsets of scalar arguments of function being emitted -
+  // used in DWARF.
   typedef std::map<std::string, uint64_t> ScalarArgumentOffsetsMap;
   typedef ScalarArgumentOffsetsMap::const_iterator fao_iterator;
   ScalarArgumentOffsetsMap functionScalarArgumentOffsets;
 
-  // table that stores offsets of BRIG variables generated for vector arguments
-  // - used in DWARF
+  // Table that stores offsets of BRIG variables generated for vector arguments
+  // - used in DWARF.
   typedef std::map<std::string, VectorArgumentOffsets> VectorArgumentOffsetsMap;
   typedef VectorArgumentOffsetsMap::const_iterator fvo_iterator;
   VectorArgumentOffsetsMap functionVectorArgumentOffsets;
 
-  // tables that store offsets of private and group variables - used in both
-  // DWARF and EmitFunctionBodyStart
+  // Tables that store offsets of private and group variables - used in both
+  // DWARF and EmitFunctionBodyStart.
   typedef DenseMap<const GlobalVariable *, uint64_t> PVGVOffsetMap;
   PVGVOffsetMap groupVariablesOffsets;
   typedef PVGVOffsetMap::iterator pvgvo_iterator;
@@ -233,5 +235,6 @@ private:
   HSAIL_ASM::Inst EmitInstructionImpl(const MachineInstr *);
 };
 
-} // end namespace llvm
+}
+
 #endif // _BRIG_ASM_PRINTER_H_
