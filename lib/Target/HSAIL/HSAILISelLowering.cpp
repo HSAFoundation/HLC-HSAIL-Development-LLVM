@@ -258,11 +258,6 @@ EVT HSAILTargetLowering::getSetCCResultType(LLVMContext &Context,
   return MVT::i1;
 }
 
-Sched::Preference
-HSAILTargetLowering::getSchedulingPreference(SDNode *N) const {
-  return TargetLowering::getSchedulingPreference(N);
-}
-
 const TargetRegisterClass *
 HSAILTargetLowering::getRepRegClassFor(MVT VT) const {
   switch (VT.SimpleTy) {
@@ -287,19 +282,9 @@ uint8_t HSAILTargetLowering::getRepRegClassCostFor(MVT VT) const {
   return 1;
 }
 
-bool HSAILTargetLowering::getTgtMemIntrinsic(IntrinsicInfo &Info,
-                                             const CallInst &I,
-                                             unsigned Intrinsic) const {
-  return false;
-}
-
 bool HSAILTargetLowering::isFPImmLegal(const APFloat &Imm, EVT VT) const {
   // All floating point types are legal for 32bit and 64bit types.
   return (VT == EVT(MVT::f32) || VT == EVT(MVT::f64));
-}
-
-unsigned HSAILTargetLowering::getByValTypeAlignment(Type *Ty) const {
-  return TargetLowering::getByValTypeAlignment(Ty);
 }
 
 bool HSAILTargetLowering::allowsMisalignedMemoryAccesses(EVT,
@@ -321,12 +306,6 @@ bool HSAILTargetLowering::isOffsetFoldingLegal(
 unsigned HSAILTargetLowering::ComputeNumSignBitsForTargetNode(
     SDValue Op, const SelectionDAG &DAG, unsigned Depth) const {
   return 1;
-}
-
-bool HSAILTargetLowering::isGAPlusOffset(SDNode *N, const GlobalValue *&GA,
-                                         int64_t &Offset) const {
-  bool res = TargetLowering::isGAPlusOffset(N, GA, Offset);
-  return res;
 }
 
 static SDValue PerformBitalignCombine(SDNode *N,
@@ -397,18 +376,10 @@ SDValue HSAILTargetLowering::PerformDAGCombine(SDNode *N,
   return SDValue();
 }
 
-bool HSAILTargetLowering::isTypeDesirableForOp(unsigned Opc, EVT VT) const {
-  return TargetLowering::isTypeDesirableForOp(Opc, VT);
-}
-
 bool HSAILTargetLowering::isDesirableToTransformToIntegerOp(unsigned Opc,
                                                             EVT VT) const {
   return (Opc == ISD::LOAD || Opc == ISD::STORE) &&
          (VT.getSimpleVT() == MVT::f32 || VT.getSimpleVT() == MVT::f64);
-}
-
-bool HSAILTargetLowering::IsDesirableToPromoteOp(SDValue Op, EVT &PVT) const {
-  return TargetLowering::IsDesirableToPromoteOp(Op, PVT);
 }
 
 //===--------------------------------------------------------------------===//
@@ -1827,14 +1798,6 @@ bool HSAILTargetLowering::isLegalAddressingMode(const AddrMode &AM,
   }
 
   return TargetLowering::isLegalAddressingMode(AM, Ty);
-}
-
-bool HSAILTargetLowering::isTruncateFree(Type *Ty1, Type *Ty2) const {
-  return TargetLowering::isTruncateFree(Ty1, Ty2);
-}
-
-bool HSAILTargetLowering::isTruncateFree(EVT VT1, EVT VT2) const {
-  return TargetLowering::isTruncateFree(VT1, VT2);
 }
 
 bool HSAILTargetLowering::isZExtFree(Type *Ty1, Type *Ty2) const {

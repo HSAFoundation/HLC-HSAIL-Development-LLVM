@@ -45,18 +45,11 @@ public:
 
   EVT getSetCCResultType(LLVMContext &Context, EVT VT) const override;
 
-  Sched::Preference getSchedulingPreference(SDNode *N) const override;
-
   const TargetRegisterClass *getRepRegClassFor(MVT VT) const override;
 
   uint8_t getRepRegClassCostFor(MVT VT) const override;
 
-  bool getTgtMemIntrinsic(IntrinsicInfo &Info, const CallInst &I,
-                          unsigned Intrinsic) const override;
-
   bool isFPImmLegal(const APFloat &Imm, EVT VT) const override;
-
-  unsigned getByValTypeAlignment(Type *Ty) const override;
 
   bool allowsMisalignedMemoryAccesses(EVT, unsigned AddrSpace = 0,
                                       unsigned Align = 1,
@@ -69,16 +62,9 @@ public:
   unsigned ComputeNumSignBitsForTargetNode(SDValue Op, const SelectionDAG &DAG,
                                            unsigned Depth = 0) const override;
 
-  bool isGAPlusOffset(SDNode *N, const GlobalValue *&GA,
-                      int64_t &Offset) const override;
-
   SDValue PerformDAGCombine(SDNode *N, DAGCombinerInfo &DCI) const override;
 
-  bool isTypeDesirableForOp(unsigned Opc, EVT VT) const override;
-
   bool isDesirableToTransformToIntegerOp(unsigned Opc, EVT VT) const override;
-
-  bool IsDesirableToPromoteOp(SDValue Op, EVT &PVT) const override;
 
   bool isLoadBitCastBeneficial(EVT load, EVT bitcast) const override;
 
@@ -177,10 +163,6 @@ public:
   // Instruction Emitting Hooks
   //
   bool isLegalAddressingMode(const AddrMode &AM, Type *Ty) const override;
-
-  bool isTruncateFree(Type *Ty1, Type *Ty2) const override;
-
-  bool isTruncateFree(EVT VT1, EVT VT2) const override;
 
   bool isZExtFree(Type *Ty1, Type *Ty2) const override;
 
