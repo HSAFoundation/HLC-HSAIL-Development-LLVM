@@ -1,4 +1,11 @@
-
+//===------------------------------------------------------*- tablegen -*--===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
 
 defm ADD : InstMod_2Op_IntTypes<"add", BrigOpcode.ADD>;
 defm ADD : InstMod_2Op_FPTypes<"add", BrigOpcode.ADD>;

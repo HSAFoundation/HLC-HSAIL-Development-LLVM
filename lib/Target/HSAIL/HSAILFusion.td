@@ -1,4 +1,11 @@
-//===--- HSAILFusion.td - Fused instructions -------------*- tablegen -*---===//
+//===------------------------------------------------------*- tablegen -*--===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
 //
 // Fused instruction patterns
 //
@@ -6,6 +13,7 @@
 // codegeneration.
 //
 //===----------------------------------------------------------------------===//
+
 ////////////////////////////////////////////////////////////////////////////////
 // llc command line options predicates
 def EnableFPMAD        : Predicate<"CurDAG->getTarget().Options.LessPreciseFPMAD()">;

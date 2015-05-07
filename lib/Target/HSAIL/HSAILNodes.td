@@ -1,4 +1,11 @@
-//===--------------------- HSAILILNodes.td - HSAIL nodes ------------------===//
+//===------------------------------------------------------*- tablegen -*--===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
 
 def HSAILDTIntTernaryOp : SDTypeProfile<1, 3, [
   SDTCisSameAs<0, 1>, SDTCisSameAs<0, 2>, SDTCisInt<0>, SDTCisInt<3>
