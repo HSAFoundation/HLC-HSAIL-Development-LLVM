@@ -553,9 +553,6 @@ unsigned HSAILInstrInfo::InsertBranch(
   case COND_IRREVERSIBLE:
     // Do nothing
     break;
-  default:
-    llvm_unreachable("Unknown CondReverse code");
-    return 0;
   }
 
   unsigned Count = 0;

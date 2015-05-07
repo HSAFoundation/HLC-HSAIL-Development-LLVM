@@ -61,9 +61,6 @@ unsigned HSAILParamManager::addParam(HSAILParamType ParamType, Type *Ty,
     ParamList = &CallRetParams;
     DefName = "__ret_";
     break;
-
-  default:
-    llvm_unreachable("Unknown HSAIL parameter type");
   }
 
   if (ParamName.empty()) {

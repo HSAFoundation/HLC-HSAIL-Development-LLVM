@@ -329,10 +329,9 @@ static BrigLinkage findGlobalBrigLinkage(const GlobalValue &GV) {
   case GlobalValue::ExternalWeakLinkage:
   case GlobalValue::AppendingLinkage:
     return BRIG_LINKAGE_PROGRAM;
-
-  default:
-    return BRIG_LINKAGE_NONE;
   }
+
+  llvm_unreachable("Invalid linkage type");
 }
 
 static unsigned getGVAlignment(const GlobalVariable &GV, const DataLayout &DL,
