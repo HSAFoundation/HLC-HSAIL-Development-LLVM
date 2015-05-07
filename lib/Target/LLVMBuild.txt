@@ -25,6 +25,7 @@ subdirectories =
  BPF
  CppBackend
  Hexagon
+ HSAIL
  MSP430
  NVPTX
  Mips
