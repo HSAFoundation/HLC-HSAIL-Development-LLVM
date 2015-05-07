@@ -160,19 +160,6 @@ bool HSAILRegisterInfo::trackLivenessAfterRegAlloc(
   return true;
 }
 
-const TargetRegisterClass *
-HSAILRegisterInfo::getPointerRegClass(const MachineFunction &MF,
-                                      unsigned Kind) const {
-  if (Kind == 32)
-    return &HSAIL::GPR32RegClass;
-
-  assert(Kind == 0);
-
-  if (ST.isLargeModel())
-    return &HSAIL::GPR64RegClass;
-  return &HSAIL::GPR32RegClass;
-}
-
 bool HSAILRegisterInfo::requiresRegisterScavenging(
     const MachineFunction &MF) const {
   return true;
