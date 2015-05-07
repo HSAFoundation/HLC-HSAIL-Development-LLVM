@@ -6,8 +6,8 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef _LIB_HSAIL_ADAPTERS_H_
-#define _LIB_HSAIL_ADAPTERS_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_BRIGASMPRINTER_LIBHSAILADAPTERS_H
+#define LLVM_LIB_TARGET_HSAIL_BRIGASMPRINTER_LIBHSAILADAPTERS_H
 
 #include "libHSAIL/HSAILBrigObjectFile.h"
 

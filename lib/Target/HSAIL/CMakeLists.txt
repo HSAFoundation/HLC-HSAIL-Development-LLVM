@@ -65,7 +65,8 @@ if(HSAIL_USE_LIBHSAIL)
     BRIGAsmPrinter/BRIGDwarfCompileUnit.h
     BRIGAsmPrinter/BRIGDwarfDebug.h
     BRIGAsmPrinter/HSAILKernelManager.cpp
-    BRIGAsmPrinter/HSAILKernelManager.h)
+    BRIGAsmPrinter/HSAILKernelManager.h
+    BRIGAsmPrinter/LibHSAILAdapters.h)
 endif()
 
 
