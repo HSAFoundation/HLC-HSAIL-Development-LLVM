@@ -8,7 +8,6 @@
 //===----------------------------------------------------------------------===//
 
 ////////////////////////////////////////////////////////////////////////////////
-// call
 
 let isNotDuplicable = 1, isCall = 1 in {
   // No semicolon because we need to specially handle the printing of
@@ -22,7 +21,6 @@ let isNotDuplicable = 1, isCall = 1 in {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// lower and raise the stack
 
 let isNotDuplicable = 1, hasSideEffects = 1 in {
   def ARG_SCOPE_START : HSAILInst<

@@ -6,14 +6,7 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-//
-// This is a target description file for the Intel i386 architecture, refered to
-// here as the "HSAIL" architecture.
-//
-//===----------------------------------------------------------------------===//
 
-// Get the target-independent interfaces which we are implementing...
-//
 include "llvm/Target/Target.td"
 
 //===----------------------------------------------------------------------===//
@@ -59,7 +52,6 @@ def BRIGAsmWriter : AsmWriter {
 }
 
 def HSAIL : Target {
-  // Information about the instructions...
   let InstructionSet = HSAILInstrInfo;
 
   let AssemblyWriters = [BRIGAsmWriter];

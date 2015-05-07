@@ -9,8 +9,8 @@
 //
 // Fused instruction patterns
 //
-// This files contains optimizations, rather than definitions essential for the
-// codegeneration.
+// This files contains optimizations, rather than definitions
+// essential for the code generation.
 //
 //===----------------------------------------------------------------------===//
 
