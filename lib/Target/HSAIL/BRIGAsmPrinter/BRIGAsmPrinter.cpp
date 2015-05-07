@@ -22,6 +22,7 @@
 #include "HSAILStoreInitializer.h"
 #include "HSAILTargetMachine.h"
 #include "HSAILUtilityFunctions.h"
+#include "InstPrinter/HSAILInstPrinter.h"
 
 #include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 #include "llvm/CodeGen/MachineModuleInfo.h"
@@ -46,7 +47,6 @@
 
 using namespace llvm;
 
-#include "HSAILGenMnemonicMapper.inc"
 #define GET_LLVM_INTRINSIC_FOR_GCC_BUILTIN
 #include "HSAILGenIntrinsics.inc"
 #undef GET_LLVM_INTRINSIC_FOR_GCC_BUILTIN
@@ -668,23 +668,7 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   if (TII->isInstSegCvt(Opc))
     return BrigEmitInstSegCvt(*II, BrigOpc);
 
-  if (HSAIL::isImageInst(II)) {
-    const char *AsmStr = getInstMnemonic(II);
-    HSAIL_ASM::InstImage inst = HSAIL_ASM::parseMnemo(AsmStr, brigantine);
-    BrigEmitImageInst(II, inst);
-    return inst;
-  }
-
   switch (II->getOpcode()) {
-  default: {
-    const char *AsmStr = getInstMnemonic(II);
-    HSAIL_ASM::Inst inst = HSAIL_ASM::parseMnemo(AsmStr, brigantine);
-    unsigned NumOperands = II->getNumOperands();
-    for (unsigned OpNum = 0; OpNum != NumOperands; ++OpNum) {
-      BrigEmitOperand(II, OpNum, inst);
-    }
-    return inst;
-  }
   case HSAIL::RET:
     return brigantine.addInst<HSAIL_ASM::InstBasic>(BRIG_OPCODE_RET,
                                                     BRIG_TYPE_NONE);
@@ -701,7 +685,6 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
     MachineInstr::const_mop_iterator oi = II->operands_begin();
     MachineInstr::const_mop_iterator oe = II->operands_end();
     const GlobalValue *gv = (oi++)->getGlobal();
-    ;
 
     // Place a call
     HSAIL_ASM::InstBr call =
@@ -744,6 +727,8 @@ HSAIL_ASM::Inst BRIGAsmPrinter::EmitInstructionImpl(const MachineInstr *II) {
   case HSAIL::ARG_DECL:
     BrigEmitVecArgDeclaration(II);
     return HSAIL_ASM::Inst();
+  default:
+    llvm_unreachable("unhandled instruction");
   }
 }
 
@@ -1353,7 +1338,7 @@ void BRIGAsmPrinter::BrigEmitOperandLdStAddress(const MachineInstr *MI,
   // Get [$reg]
   HSAIL_ASM::SRef reg_name;
   if (reg.isReg() && reg.getReg() != 0) {
-    reg_name = HSAIL_ASM::SRef(getRegisterName(reg.getReg()));
+    reg_name = HSAIL_ASM::SRef(HSAILInstPrinter::getRegisterName(reg.getReg()));
   }
 
   const DataLayout &DL = getDataLayout();
@@ -1422,7 +1407,7 @@ void BRIGAsmPrinter::BrigEmitOperandImage(const MachineInstr *MI,
 HSAIL_ASM::OperandRegister BRIGAsmPrinter::getBrigReg(MachineOperand s) {
   assert(s.getType() == MachineOperand::MO_Register);
   return brigantine.createOperandReg(
-      HSAIL_ASM::SRef(getRegisterName(s.getReg())));
+    HSAIL_ASM::SRef(HSAILInstPrinter::getRegisterName(s.getReg())));
 }
 
 void BRIGAsmPrinter::BrigEmitVecOperand(const MachineInstr *MI,
