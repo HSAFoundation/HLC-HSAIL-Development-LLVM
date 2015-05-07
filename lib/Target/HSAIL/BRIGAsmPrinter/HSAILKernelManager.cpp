@@ -159,41 +159,6 @@ static const char *getTypeName(Type *ptr, const char *symTab,
 }
 
 
-static bool errorPrint(const char *ptr, raw_ostream &O) {
-  if (ptr[0] == 'E') {
-    O << ";error:" << ptr << "\n";
-  } else {
-    O << ";warning:" << ptr << "\n";
-  }
-  return false;
-}
-
-static bool printfPrint(std::pair<const std::string, HSAILPrintfInfo *> &data,
-                        raw_ostream &O) {
-  O << ";printf_fmt:" << data.second->getPrintfID();
-  // Number of operands
-  O << ":" << data.second->getNumOperands();
-  // Size of each operand
-  for (size_t i = 0, e = data.second->getNumOperands(); i < e; ++i) {
-    O << ":" << (data.second->getOperandID(i) >> 3);
-  }
-  const char *ptr = data.first.c_str();
-  uint32_t size = data.first.size() - 1;
-  // The format string size
-  O << ":" << size << ":";
-  for (size_t i = 0; i < size; ++i) {
-    if (ptr[i] == '\r') {
-      O << "\\r";
-    } else if (ptr[i] == '\n') {
-      O << "\\n";
-    } else {
-      O << ptr[i];
-    }
-  }
-  O << ";\n"; // c_str() is cheap way to trim
-  return false;
-}
-
 void HSAILKernelManager::updatePtrArg(Function::const_arg_iterator Ip,
                                       int counter, bool isKernel,
                                       const Function *F, int pointerCount) {
@@ -623,9 +588,7 @@ void HSAILKernelManager::brigEmitMetaData(HSAIL_ASM::Brigantine &brig,
     }
     RTI(brig) << "uniqueid:" << kernelId;
     if (kernel) {
-      size_t local = kernel->curSize;
       size_t hwlocal = ((kernel->curHWSize + 3) & (~0x3));
-      size_t region = kernel->curRSize;
       size_t hwregion = ((kernel->curHWRSize + 3) & (~0x3));
       // private memory
       RTI(brig) << "memory:"

@@ -43,18 +43,6 @@ enum CondReverseFlag {
                          // one depency which should be reverted with it
 };
 
-static unsigned getBrigTypeFromRCID(unsigned ID) {
-  switch (ID) {
-  case HSAIL::CRRegClassID:
-    return BRIG_TYPE_B1;
-  case HSAIL::GPR32RegClassID:
-    return BRIG_TYPE_B32;
-  case HSAIL::GPR64RegClassID:
-    return BRIG_TYPE_B64;
-  default:
-    llvm_unreachable("unhandled register class ID");
-  }
-}
 HSAILInstrInfo::HSAILInstrInfo(HSAILSubtarget &st)
     : HSAILGenInstrInfo(),
       //  : TargetInstrInfoImpl(HSAILInsts, array_lengthof(HSAILInsts)),

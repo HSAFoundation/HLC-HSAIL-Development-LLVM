@@ -34,11 +34,6 @@
 
 using namespace llvm;
 
-static AsmPrinter *createHSAILAsmPrinterPass(TargetMachine &tm,
-                                             MCStreamer &Streamer) {
-  return new HSAILAsmPrinter(tm, Streamer);
-}
-
 extern "C" void LLVMInitializeHSAILAsmPrinter() {
   RegisterAsmPrinter<HSAILAsmPrinter> Target32(TheHSAIL_32Target);
   RegisterAsmPrinter<HSAILAsmPrinter> Target64(TheHSAIL_64Target);
@@ -689,7 +684,6 @@ void HSAILAsmPrinter::EmitFunctionBodyStart() {
   raw_string_ostream O(FunStr);
 
   const DataLayout &DL = getDataLayout();
-  const Function *F = MF->getFunction();
 
 #if 0
   if (isKernelFunc(*F)) { // Emitting block data inside of kernel.

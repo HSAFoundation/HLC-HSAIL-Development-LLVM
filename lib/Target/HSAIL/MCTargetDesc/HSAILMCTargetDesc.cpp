@@ -70,14 +70,6 @@ static MCInstPrinter *createHSAILMCInstPrinter(const Target &T,
   return new HSAILInstPrinter(MAI, MII, MRI);
 }
 
-static MCStreamer *createMCStreamer(const Target &T, StringRef TT,
-                                    MCContext &Ctx, MCAsmBackend &TAB,
-                                    raw_ostream &_OS, MCCodeEmitter *_Emitter,
-                                    const MCSubtargetInfo &MSI, bool RelaxAll) {
-  // FIXME: Create a stream for assembly printing.
-  llvm_unreachable("Non-BRIG streamer not implemented");
-}
-
 extern "C" void LLVMInitializeHSAILTargetMC() {
 
   // Register the target asm info.

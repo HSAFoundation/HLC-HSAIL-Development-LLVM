@@ -636,7 +636,6 @@ SDValue HSAILTargetLowering::getArgStore(
     SDValue Chain, SDValue Ptr, SDValue Value, unsigned Index, SDValue InFlag,
     const AAMDNodes &AAInfo, uint64_t Offset) const {
 
-  MachineFunction &MF = DAG.getMachineFunction();
   Type *EltTy = Ty;
   if (Ty->isArrayTy())
     EltTy = Ty->getArrayElementType();
@@ -791,7 +790,6 @@ SDValue HSAILTargetLowering::LowerFormalArguments(
   MachineFunction &MF = DAG.getMachineFunction();
   HSAILMachineFunctionInfo *FuncInfo = MF.getInfo<HSAILMachineFunctionInfo>();
   HSAILParamManager &PM = FuncInfo->getParamManager();
-  const FunctionType *funcType = MF.getFunction()->getFunctionType();
   unsigned AS = HSAIL::isKernelFunc(MF.getFunction()) ? HSAILAS::KERNARG_ADDRESS
                                                       : HSAILAS::ARG_ADDRESS;
   MVT PtrTy = getPointerTy(AS);
@@ -937,7 +935,6 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
                                     pe = funcType->param_end();
        pb != pe; ++pb, ++ai, ++k) {
     Type *type = *pb;
-    EVT VT = Outs[j].VT;
 
     std::string ParamName;
     if (calleeFunc && ai != ae) {

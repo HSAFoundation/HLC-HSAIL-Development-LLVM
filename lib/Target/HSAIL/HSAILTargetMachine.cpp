@@ -101,8 +101,6 @@ TargetPassConfig *HSAILTargetMachine::createPassConfig(PassManagerBase &PM) {
 }
 
 void HSAILPassConfig::addIRPasses() {
-  HSAILTargetMachine &HSATM = getTM<HSAILTargetMachine>();
-
   addPass(createHSAILAlwaysInlinePass());
   addPass(createAlwaysInlinerPass());
 
