@@ -80,6 +80,11 @@ AMDGPU
 * `AMD GPU Programming Guide <http://developer.amd.com/download/AMD_Accelerated_Parallel_Processing_OpenCL_Programming_Guide.pdf>`_
 * `AMD Compute Resources <http://developer.amd.com/tools/heterogeneous-computing/amd-accelerated-parallel-processing-app-sdk/documentation/>`_
 
+HSAIL
+----
+* `HSA Programmer Reference Manual Specification 1.0  <http://www.hsafoundation.com/?ddownload=4945>`_
+* `HSA Standards  <http://www.hsafoundation.com/standards/>`_
+
 SPARC
 -----
 
