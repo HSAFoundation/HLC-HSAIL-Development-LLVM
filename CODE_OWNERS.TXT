@@ -16,6 +16,11 @@ N: Owen Anderson
 E: resistor@mac.com
 D: SelectionDAG (lib/CodeGen/SelectionDAG/*)
 
+N: Matt Arsenault
+E: Matthew.Arsenault@amd.com
+I: arsenm
+D: HSAIL Target (lib/Target/HSAIL)
+
 N: Rafael Avila de Espindola
 E: rafael.espindola@gmail.com
 D: Gold plugin (tools/gold/*)
