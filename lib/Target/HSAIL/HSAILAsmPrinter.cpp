@@ -689,6 +689,18 @@ StringRef HSAILAsmPrinter::getArgTypeName(Type *Ty, bool Signed) const {
   return "";
 }
 
+void HSAILAsmPrinter::EmitFunctionHeader() {
+  // Print the 'header' of function.
+  const Function *F = MF->getFunction();
+
+  OutStreamer->SwitchSection(
+      getObjFileLowering().SectionForGlobal(F, *Mang, TM));
+
+  // Emit the CurrentFnSym.  This is a virtual function to allow targets to do
+  // their wild and crazy things as required.
+  EmitFunctionEntryLabel();
+}
+
 void HSAILAsmPrinter::EmitFunctionEntryLabel() {
   std::string FunStr;
   raw_string_ostream O(FunStr);
