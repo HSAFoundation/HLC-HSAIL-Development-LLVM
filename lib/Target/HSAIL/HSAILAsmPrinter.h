@@ -65,6 +65,7 @@ public:
   void getHSAILMangledName(SmallString<256> &Out, const GlobalValue *GV) const;
   void EmitGlobalVariable(const GlobalVariable *GV) override;
   void EmitStartOfAsmFile(Module &) override;
+  void EmitFunctionHeader() override;
   void EmitFunctionEntryLabel() override;
 
   void checkModuleSubtargetExtensions(const Module &M,
