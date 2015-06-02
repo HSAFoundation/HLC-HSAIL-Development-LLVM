@@ -218,6 +218,7 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM,
   setTruncStoreAction(MVT::i64, MVT::v4i16, Expand);
   setTruncStoreAction(MVT::i64, MVT::v8i16, Expand);
   setTruncStoreAction(MVT::i64, MVT::v16i16, Expand);
+  setTruncStoreAction(MVT::i64, MVT::i1, Expand);
   setTruncStoreAction(MVT::i64, MVT::i8, Expand);
   setTruncStoreAction(MVT::i64, MVT::v2i8, Expand);
   setTruncStoreAction(MVT::i64, MVT::v4i8, Expand);
