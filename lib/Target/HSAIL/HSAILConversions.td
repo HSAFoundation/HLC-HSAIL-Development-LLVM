@@ -20,6 +20,14 @@ class CvtPat<BRIGType destTy,
   (!cast<HSAILInst>("CVT"#destTy.InstName#srcTy.InstName) ftz, roundmode, destTy.BT, srcTy.BT, $src)
 >;
 
+// cvt changes behavior for some reason when the dest type is b1, and
+// does != 0 instead of truncate, so convert to i1 range values before
+// doing conversion.
+class Trunc_B1_Pat<BRIGType srcTy, HSAILInst andInst, BRIGType andTy> : Pat<
+  (i1 (trunc srcTy.VT:$src)),
+  (!cast<HSAILInst>("CVT_B1"#srcTy.InstName) 0, BrigRound.NONE, BrigType.B1, srcTy.BT, (andInst $src, 1, andTy.BT))
+>;
+
 class CvtSInt32RoundPat<BRIGType srcTy,
                         SDPatternOperator roundop,
                         int roundmode,
@@ -72,8 +80,8 @@ def : CvtPat<S32Ty, B1Ty, sext>;
 def : CvtPat<U32Ty, B1Ty, zext>;
 def : CvtPat<U32Ty, B1Ty, anyext>;
 
-def : CvtPat<B1Ty, U64Ty, trunc>;
-def : CvtPat<B1Ty, U32Ty, trunc>;
+def : Trunc_B1_Pat<U32Ty, AND_B32, B32Ty>;
+def : Trunc_B1_Pat<U64Ty, AND_B64, B64Ty>;
 def : CvtPat<U32Ty, U64Ty, trunc>;
 
 // ftz conversion complies our OpenCL contract wrt f64 denorms,
