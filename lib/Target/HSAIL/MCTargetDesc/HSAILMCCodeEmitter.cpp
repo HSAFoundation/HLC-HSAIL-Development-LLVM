@@ -60,7 +60,7 @@ public:
 
   ~DummyMCCodeEmitter() override {}
 
-  void EncodeInstruction(const MCInst &Inst, raw_ostream &OS,
+  void encodeInstruction(const MCInst &Inst, raw_ostream &OS,
                          SmallVectorImpl<MCFixup> &Fixups,
                          const MCSubtargetInfo &STI) const override {
     llvm_unreachable("DummyMCCodeEmitter::EncodeInstruction called...");
@@ -97,7 +97,7 @@ void HSAILMCCodeEmitter::EmitSegmentOverridePrefix(uint64_t TSFlags,
   llvm_unreachable("When do we hit this?");
 }
 
-void HSAILMCCodeEmitter::EncodeInstruction(const MCInst &MI, raw_ostream &OS,
+void HSAILMCCodeEmitter::encodeInstruction(const MCInst &MI, raw_ostream &OS,
                                            SmallVectorImpl<MCFixup> &Fixups,
                                            const MCSubtargetInfo &STI) const {
   llvm_unreachable("When do we hit this?");

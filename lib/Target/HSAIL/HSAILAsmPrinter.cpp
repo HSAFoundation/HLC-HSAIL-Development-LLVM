@@ -63,7 +63,7 @@ bool HSAILAsmPrinter::runOnMachineFunction(MachineFunction &MF) {
   // different prefix.
   SmallString<256> Name;
   getHSAILMangledName(Name, MF.getFunction());
-  CurrentFnSym = OutContext.GetOrCreateSymbol(Name);
+  CurrentFnSym = OutContext.getOrCreateSymbol(Name);
 
 
 //  EmitFunctionEntryLabel();
@@ -262,7 +262,7 @@ void HSAILAsmPrinter::printInitVarWithAddressPragma(StringRef VarName,
                                                     unsigned EltSize,
                                                     raw_ostream &O) {
   MCValue Val;
-  bool Res = Expr->EvaluateAsRelocatable(Val, nullptr, nullptr);
+  bool Res = Expr->evaluateAsRelocatable(Val, nullptr, nullptr);
   (void)Res;
   assert(Res && "Could not evaluate MCExpr");
   assert(!Val.getSymB() && "Multi-symbol expressions not handled");
@@ -333,7 +333,7 @@ void HSAILAsmPrinter::printScalarConstant(const Constant *CPV,
   if (const GlobalValue *GV = dyn_cast<GlobalValue>(CPV)) {
     O << '0';
 
-    auto ME = MCSymbolRefExpr::Create(getSymbol(GV), OutContext);
+    auto ME = MCSymbolRefExpr::create(getSymbol(GV), OutContext);
     Addrs.push_back(std::make_pair(TotalSizeEmitted, ME));
     TotalSizeEmitted += DL.getTypeAllocSize(GV->getType());
     return;

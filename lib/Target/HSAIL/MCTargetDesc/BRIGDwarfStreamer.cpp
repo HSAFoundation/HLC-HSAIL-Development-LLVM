@@ -33,10 +33,10 @@ RawVectorOstream *BRIGDwarfStreamer::getDwarfStream() {
 }
 
 void BRIGDwarfStreamer::InitSections(bool NoExecStack) {
-  const MCSectionELF *codeSection = getContext().getELFSection(
-      ".brigcode", ELF::SHT_NOBITS, 0);
-  const MCSectionELF *directivesSection = getContext().getELFSection(
-      ".brigdirectives", ELF::SHT_NOBITS, 0);
+  MCSectionELF *codeSection = getContext().getELFSection(
+    ".brigcode", ELF::SHT_NOBITS, 0);
+  MCSectionELF *directivesSection = getContext().getELFSection(
+    ".brigdirectives", ELF::SHT_NOBITS, 0);
   SwitchSection(codeSection);
   SwitchSection(directivesSection);
   SwitchSection(codeSection);
