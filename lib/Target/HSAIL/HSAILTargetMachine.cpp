@@ -101,7 +101,8 @@ HSAILTargetMachine::HSAILTargetMachine(const Target &T, StringRef TT,
 
 bool HSAILTargetMachine::addPassesToEmitFile(
     PassManagerBase &PM, raw_pwrite_stream &Out, CodeGenFileType FT,
-    bool DisableVerify, AnalysisID StartAfter, AnalysisID StopAfter) {
+    bool DisableVerify, AnalysisID StartAfter, AnalysisID StopAfter,
+    MachineFunctionInitializer *MFInitializer) {
   HSAILFileType = FT; // FIXME: Remove this.
 
   if (!UseStandardAsmPrinter) {
@@ -111,7 +112,8 @@ bool HSAILTargetMachine::addPassesToEmitFile(
   }
 
   return LLVMTargetMachine::addPassesToEmitFile(PM, Out, FT, DisableVerify,
-                                                StartAfter, StopAfter);
+                                                StartAfter, StopAfter,
+                                                MFInitializer);
 }
 
 TargetPassConfig *HSAILTargetMachine::createPassConfig(PassManagerBase &PM) {

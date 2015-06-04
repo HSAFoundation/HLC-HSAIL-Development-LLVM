@@ -131,7 +131,7 @@ void BRIGAsmPrinter::BrigEmitInitVarWithAddressPragma(StringRef VarName,
   raw_svector_ostream O(InitStr);
 
   MCValue Val;
-  bool Res = Expr->EvaluateAsRelocatable(Val, nullptr, nullptr);
+  bool Res = Expr->evaluateAsRelocatable(Val, nullptr, nullptr);
   (void)Res;
   assert(Res && "Could not evaluate MCExpr");
   assert(!Val.getSymB() && "Multi-symbol expressions not handled");

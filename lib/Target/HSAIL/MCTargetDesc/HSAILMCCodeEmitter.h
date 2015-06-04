@@ -58,7 +58,7 @@ public:
                         uint64_t TSFlags, unsigned &CurByte, raw_ostream &OS,
                         SmallVectorImpl<MCFixup> &Fixups) const;
 
-  void EncodeInstruction(const MCInst &MI, raw_ostream &OS,
+  void encodeInstruction(const MCInst &MI, raw_ostream &OS,
                          SmallVectorImpl<MCFixup> &Fixups,
                          const MCSubtargetInfo &STI) const override;
   void EmitSegmentOverridePrefix(uint64_t TSFlags, unsigned &CurByte,

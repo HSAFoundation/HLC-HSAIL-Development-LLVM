@@ -20,7 +20,7 @@
 #include "llvm/Support/ELF.h"
 using namespace llvm;
 
-HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(StringRef &T) {
+HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(const Triple &TT) {
   PrivateGlobalPrefix = "&";
   PrivateLabelPrefix = "@";
   GlobalDirective = "global";
@@ -45,7 +45,7 @@ HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(StringRef &T) {
   // failed.
   SupportsDebugInformation = false;
 
-  PointerSize = Triple(T).getArch() == Triple::hsail64 ? 8 : 4;
+  PointerSize = TT.getArch() == Triple::hsail64 ? 8 : 4;
 
   ExceptionsType = ExceptionHandling::None;
   //  DwarfRequiresFrameSection = false;
@@ -56,7 +56,7 @@ HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(StringRef &T) {
   Data64bitsDirective = "sectiondata_b64\t";
 }
 
-const MCSection *
+MCSection *
 HSAILELFMCAsmInfo::getNonexecutableStackSection(MCContext &Ctx) const {
   return nullptr;
 }

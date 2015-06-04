@@ -162,7 +162,8 @@ public:
   //===--------------------------------------------------------------------===//
   // Instruction Emitting Hooks
   //
-  bool isLegalAddressingMode(const AddrMode &AM, Type *Ty) const override;
+  bool isLegalAddressingMode(const AddrMode &AM, Type *Ty,
+                             unsigned AddrSpace) const override;
 
   bool isZExtFree(Type *Ty1, Type *Ty2) const override;
 

@@ -1830,7 +1830,8 @@ SDValue HSAILTargetLowering::LowerATOMIC_STORE(SDValue Op,
 
 //===--------------------------------------------------------------------===//
 bool HSAILTargetLowering::isLegalAddressingMode(const AddrMode &AM,
-                                                Type *Ty) const {
+                                                Type *Ty,
+                                                unsigned AddrSpace) const {
   if (Subtarget->isGCN()) {
     // Do not generate negative offsets as they can not be folded into
     // instructions.
@@ -1838,7 +1839,7 @@ bool HSAILTargetLowering::isLegalAddressingMode(const AddrMode &AM,
       return false;
   }
 
-  return TargetLowering::isLegalAddressingMode(AM, Ty);
+  return TargetLowering::isLegalAddressingMode(AM, Ty, AddrSpace);
 }
 
 bool HSAILTargetLowering::isZExtFree(Type *Ty1, Type *Ty2) const {
