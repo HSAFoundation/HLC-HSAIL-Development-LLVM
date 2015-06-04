@@ -61,10 +61,13 @@ public:
   CodeGenFileType HSAILFileType;
 
 public:
-  bool addPassesToEmitFile(PassManagerBase &PM, raw_pwrite_stream &Out,
-                           CodeGenFileType FT, bool DisableVerify = true,
-                           AnalysisID StartAfter = 0,
-                           AnalysisID StopAfter = 0) override;
+  bool addPassesToEmitFile(
+    PassManagerBase &PM, raw_pwrite_stream &Out,
+    CodeGenFileType FT, bool DisableVerify = true,
+    AnalysisID StartBefore = nullptr,
+    AnalysisID StartAfter = nullptr,
+    AnalysisID StopAfter = nullptr,
+    MachineFunctionInitializer *MFInitializer = nullptr) override;
 };
 
 class HSAIL_32TargetMachine : public HSAILTargetMachine {

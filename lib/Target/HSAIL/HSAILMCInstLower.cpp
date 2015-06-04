@@ -43,22 +43,22 @@ void HSAILMCInstLower::lower(const MachineInstr *MI, MCInst &OutMI) const {
       const APFloat &FloatValue = MO.getFPImm()->getValueAPF();
 
       if (&FloatValue.getSemantics() == &APFloat::IEEEsingle)
-        MCOp = MCOperand::CreateFPImm(FloatValue.convertToFloat());
+        MCOp = MCOperand::createFPImm(FloatValue.convertToFloat());
       else if (&FloatValue.getSemantics() == &APFloat::IEEEdouble)
-        MCOp = MCOperand::CreateFPImm(FloatValue.convertToDouble());
+        MCOp = MCOperand::createFPImm(FloatValue.convertToDouble());
       else
         llvm_unreachable("Unhandled floating point type");
       break;
     }
     case MachineOperand::MO_Immediate:
-      MCOp = MCOperand::CreateImm(MO.getImm());
+      MCOp = MCOperand::createImm(MO.getImm());
       break;
     case MachineOperand::MO_Register:
-      MCOp = MCOperand::CreateReg(MO.getReg());
+      MCOp = MCOperand::createReg(MO.getReg());
       break;
     case MachineOperand::MO_MachineBasicBlock:
-      MCOp = MCOperand::CreateExpr(
-          MCSymbolRefExpr::Create(MO.getMBB()->getSymbol(), Ctx));
+      MCOp = MCOperand::createExpr(
+          MCSymbolRefExpr::create(MO.getMBB()->getSymbol(), Ctx));
       break;
     case MachineOperand::MO_GlobalAddress: {
       const GlobalValue *GV = MO.getGlobal();
@@ -66,19 +66,19 @@ void HSAILMCInstLower::lower(const MachineInstr *MI, MCInst &OutMI) const {
       SmallString<256> Name;
       AP.getHSAILMangledName(Name, GV);
 
-      MCSymbol *Sym = Ctx.GetOrCreateSymbol(Name);
+      MCSymbol *Sym = Ctx.getOrCreateSymbol(Name);
 
-      MCOp = MCOperand::CreateExpr(MCSymbolRefExpr::Create(Sym, Ctx));
+      MCOp = MCOperand::createExpr(MCSymbolRefExpr::create(Sym, Ctx));
       break;
     }
     case MachineOperand::MO_ExternalSymbol: {
-      MCSymbol *Sym = Ctx.GetOrCreateSymbol(Twine('%') + MO.getSymbolName());
-      MCOp = MCOperand::CreateExpr(MCSymbolRefExpr::Create(Sym, Ctx));
+      MCSymbol *Sym = Ctx.getOrCreateSymbol(Twine('%') + MO.getSymbolName());
+      MCOp = MCOperand::createExpr(MCSymbolRefExpr::create(Sym, Ctx));
       break;
     }
     case MachineOperand::MO_MCSymbol: {
       MCSymbol *Sym = MO.getMCSymbol();
-      MCOp = MCOperand::CreateExpr(MCSymbolRefExpr::Create(Sym, Ctx));
+      MCOp = MCOperand::createExpr(MCSymbolRefExpr::create(Sym, Ctx));
       break;
     }
     case MachineOperand::MO_TargetIndex: {

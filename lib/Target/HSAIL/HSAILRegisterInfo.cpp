@@ -245,7 +245,7 @@ bool HSAILRegisterInfo::saveScavengerRegister(MachineBasicBlock &MBB,
   // more stack objects. We will define a special spill variable for this case.
   Info->setHasScavengerSpill();
 
-  MCSymbol *Sym = Ctx.GetOrCreateSymbol(StringRef("%___spillScavenge"));
+  MCSymbol *Sym = Ctx.getOrCreateSymbol(StringRef("%___spillScavenge"));
   BuildMI(MBB, I, DL, TII->get(HSAIL::ST_U32))
     .addReg(Reg, RegState::Kill)    // src
     .addSym(Sym)                    // address_base
@@ -292,7 +292,7 @@ void HSAILRegisterInfo::eliminateFrameIndex(MachineBasicBlock::iterator II,
 
   StringRef SymName = MFI->isSpillSlotObjectIndex(FrameIndex) ?
     "%__spillStack" : "%__privateStack";
-  MCSymbol *Sym = Ctx.GetOrCreateSymbol(SymName);
+  MCSymbol *Sym = Ctx.getOrCreateSymbol(SymName);
 
   Base.ChangeToMCSymbol(Sym);
 }
