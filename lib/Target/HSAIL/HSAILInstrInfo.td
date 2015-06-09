@@ -403,6 +403,16 @@ def Inst_B32 : HSAILProfile<[B32Op, UntypedOp, UntypedOp, UntypedOp, UntypedOp]>
 def Inst_B64 : HSAILProfile<[B64Op, UntypedOp, UntypedOp, UntypedOp, UntypedOp]>;
 
 
+def Inst_U32_U32_U32_U32_U32 : HSAILProfile<[U32Op, U32Op, U32Op, U32Op, U32Op]>;
+def Inst_U64_U64_U64_U32_U32 : HSAILProfile<[U64Op, U64Op, U64Op, U32Op, U32Op]>;
+
+def Inst_S32_S32_S32_U32_U32 : HSAILProfile<[S32Op, S32Op, S32Op, U32Op, U32Op]>;
+def Inst_S64_S64_S64_U32_U32 : HSAILProfile<[S64Op, S64Op, S64Op, U32Op, U32Op]>;
+
+def Inst_B32_U32_U32 : HSAILProfile<[B32Op, U32Op, U32Op, UntypedOp, UntypedOp]>;
+def Inst_B64_U32_U32 : HSAILProfile<[B64Op, U32Op, U32Op, UntypedOp, UntypedOp]>;
+
+
 //===----------------------------------------------------------------------===//
 // Custom Selection DAG Type Profiles
 //===----------------------------------------------------------------------===//
