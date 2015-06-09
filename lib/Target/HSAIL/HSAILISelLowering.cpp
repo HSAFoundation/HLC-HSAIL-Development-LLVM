@@ -1239,46 +1239,40 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
   case HSAILIntrinsic::HSAIL_popcount_u32_b32:
     return DAG.getNode(ISD::CTPOP, SL, MVT::i32, Op.getOperand(1));
 
+  case Intrinsic::hsail_nfma:
   case HSAILIntrinsic::HSAIL_nfma_f32:
-    return DAG.getNode(HSAILISD::NFMA, SL, MVT::f32, Op.getOperand(1),
-                       Op.getOperand(2), Op.getOperand(3));
-
   case HSAILIntrinsic::HSAIL_nfma_f64:
-    return DAG.getNode(HSAILISD::NFMA, SL, MVT::f64, Op.getOperand(1),
-                       Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::NFMA, SL, Op.getValueType(),
+                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
 
+  case Intrinsic::hsail_bitselect:
   case HSAILIntrinsic::HSAIL_bitselect_u32:
-    return DAG.getNode(HSAILISD::BITSELECT, SL, MVT::i32, Op.getOperand(1),
-                       Op.getOperand(2), Op.getOperand(3));
-
   case HSAILIntrinsic::HSAIL_bitselect_u64:
-    return DAG.getNode(HSAILISD::BITSELECT, SL, MVT::i64, Op.getOperand(1),
-                       Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::BITSELECT, SL, Op.getValueType(),
+                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
 
+  case Intrinsic::hsail_ubitextract:
   case HSAILIntrinsic::HSAIL_bfe:
-    return DAG.getNode(HSAILISD::UBITEXTRACT, SL, MVT::i32, Op.getOperand(1),
-                       Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::UBITEXTRACT, SL, Op.getValueType(),
+                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
 
+  case Intrinsic::hsail_sbitextract:
   case HSAILIntrinsic::HSAIL_ibfe:
-    return DAG.getNode(HSAILISD::SBITEXTRACT, SL, MVT::i32, Op.getOperand(1),
-                       Op.getOperand(2), Op.getOperand(3));
+    return DAG.getNode(HSAILISD::SBITEXTRACT, SL, Op.getValueType(),
+                       Op.getOperand(1), Op.getOperand(2), Op.getOperand(3));
 
   // FIXME: There should be LLVM intrinsics for mulhs / mulhu.
+  case Intrinsic::hsail_smulhi:
   case HSAILIntrinsic::HSAIL_mulhi_s32:
-    return DAG.getNode(ISD::MULHS, SL, MVT::i32, Op.getOperand(1),
-                       Op.getOperand(2));
-
   case HSAILIntrinsic::HSAIL_mulhi_s64:
-    return DAG.getNode(ISD::MULHS, SL, MVT::i64, Op.getOperand(1),
-                       Op.getOperand(2));
+    return DAG.getNode(ISD::MULHS, SL, Op.getValueType(),
+                       Op.getOperand(1), Op.getOperand(2));
 
+  case Intrinsic::hsail_umulhi:
   case HSAILIntrinsic::HSAIL_mulhi_u32:
-    return DAG.getNode(ISD::MULHU, SL, MVT::i32, Op.getOperand(1),
-                       Op.getOperand(2));
-
   case HSAILIntrinsic::HSAIL_mulhi_u64:
-    return DAG.getNode(ISD::MULHU, SL, MVT::i64, Op.getOperand(1),
-                       Op.getOperand(2));
+    return DAG.getNode(ISD::MULHU, SL, Op.getValueType(),
+                       Op.getOperand(1), Op.getOperand(2));
 
   case HSAILIntrinsic::HSAIL_mad_u64:
     return DAG.getNode(HSAILISD::UMAD, SL, MVT::i64, Op.getOperand(1),
@@ -1320,18 +1314,22 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
     return DAG.getNode(HSAILISD::UMIN, SL, MVT::i64, Op.getOperand(1),
                        Op.getOperand(2));
 
+  case Intrinsic::hsail_smul24:
   case HSAILIntrinsic::HSAIL_mul24_s32:
     return DAG.getNode(HSAILISD::SMUL24, SL, MVT::i32, Op.getOperand(1),
                        Op.getOperand(2));
 
+  case Intrinsic::hsail_umul24:
   case HSAILIntrinsic::HSAIL_mul24_u32:
     return DAG.getNode(HSAILISD::UMUL24, SL, MVT::i32, Op.getOperand(1),
                        Op.getOperand(2));
 
+  case Intrinsic::hsail_smad24:
   case HSAILIntrinsic::HSAIL_mad24_s32:
     return DAG.getNode(HSAILISD::SMAD24, SL, MVT::i32, Op.getOperand(1),
                        Op.getOperand(2), Op.getOperand(3));
 
+  case Intrinsic::hsail_umad24:
   case HSAILIntrinsic::HSAIL_mad24_u32:
     return DAG.getNode(HSAILISD::UMAD24, SL, MVT::i32, Op.getOperand(1),
                        Op.getOperand(2), Op.getOperand(3));
@@ -1352,6 +1350,15 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
     return DAG.getNode(ISD::SIGN_EXTEND, SL, MVT::i32, Class);
   }
 
+  case Intrinsic::hsail_segmentp: {
+    unsigned AS = cast<ConstantSDNode>(Op.getOperand(1))->getZExtValue();
+    unsigned NoNull = cast<ConstantSDNode>(Op.getOperand(2))->getZExtValue();
+    return DAG.getNode(
+      HSAILISD::SEGMENTP, SL, MVT::i1,
+      DAG.getTargetConstant(AS, SL, MVT::i32),
+      DAG.getTargetConstant(NoNull, SL, MVT::i1),
+      Op.getOperand(3));
+  }
   case HSAILIntrinsic::HSAIL_segmentp_global: {
     return DAG.getNode(
       HSAILISD::SEGMENTP, SL, MVT::i1,
@@ -1369,6 +1376,9 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_WO_CHAIN(SDValue Op,
         HSAILISD::SEGMENTP, SL, MVT::i1,
         DAG.getTargetConstant(HSAILAS::PRIVATE_ADDRESS, SL, MVT::i32),
         DAG.getTargetConstant(0, SL, MVT::i1), Op.getOperand(1));
+  }
+  case Intrinsic::hsail_kernargbaseptr: {
+    return DAG.getNode(HSAILISD::KERNARGBASEPTR, SL, Op.getValueType());
   }
   case HSAILIntrinsic::HSAIL_ld_kernarg_u32:
   case HSAILIntrinsic::HSAIL_ld_kernarg_u64: {
@@ -1388,6 +1398,20 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     return lowerSamplerInitializerOperand(Op, DAG);
 
   switch (IntNo) {
+  case Intrinsic::hsail_activelanepermute: {
+    const ConstantSDNode *Width = cast<ConstantSDNode>(Op.getOperand(2));
+    const SDValue Ops[] = {
+        Op.getOperand(0),                                  // Chain
+        DAG.getTargetConstant(Width->getZExtValue(), SL, MVT::i32), // width
+        Op.getOperand(3),                                  // src0
+        Op.getOperand(4),                                  // src1
+        Op.getOperand(5),                                  // src2
+        Op.getOperand(6)                                   // src3
+    };
+
+    return DAG.getNode(HSAILISD::ACTIVELANEPERMUTE, SL, Op->getVTList(), Ops);
+  }
+
   case HSAILIntrinsic::HSAIL_activelanepermute_b32: {
     SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
 
@@ -1459,6 +1483,17 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     return DAG.getNode(HSAILISD::ACTIVELANEID, SL, VTs, Ops);
   }
 
+  case Intrinsic::hsail_activelaneid: {
+    SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
+    const ConstantSDNode *Width = cast<ConstantSDNode>(Op.getOperand(2));
+    const SDValue Ops[] = {
+        Op.getOperand(0),                                          // Chain
+        DAG.getTargetConstant(Width->getZExtValue(), SL, MVT::i32) // width
+    };
+
+    return DAG.getNode(HSAILISD::ACTIVELANEID, SL, VTs, Ops);
+  }
+
   case HSAILIntrinsic::HSAIL_activelaneid_width_u32: {
     SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
 
@@ -1468,6 +1503,18 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     };
 
     return DAG.getNode(HSAILISD::ACTIVELANEID, SL, VTs, Ops);
+  }
+
+  case Intrinsic::hsail_activelanecount: {
+    SDVTList VTs = DAG.getVTList(MVT::i32, MVT::Other);
+    const ConstantSDNode *Width = cast<ConstantSDNode>(Op.getOperand(2));
+    const SDValue Ops[] = {
+      Op.getOperand(0),                                           // Chain
+      DAG.getTargetConstant(Width->getZExtValue(), SL, MVT::i32), // width
+      Op.getOperand(3)
+    };
+
+    return DAG.getNode(HSAILISD::ACTIVELANECOUNT, SL, VTs, Ops);
   }
 
   case HSAILIntrinsic::HSAIL_activelanecount_u32_b1: {
@@ -1492,6 +1539,17 @@ SDValue HSAILTargetLowering::LowerINTRINSIC_W_CHAIN(SDValue Op,
     };
 
     return DAG.getNode(HSAILISD::ACTIVELANECOUNT, SL, VTs, Ops);
+  }
+
+  case Intrinsic::hsail_activelanemask: {
+    const ConstantSDNode *Width = cast<ConstantSDNode>(Op.getOperand(2));
+    const SDValue Ops[] = {
+      Op.getOperand(0),                                  // Chain
+      DAG.getTargetConstant(Width->getZExtValue(), SL, MVT::i32), // width
+      Op.getOperand(3)
+    };
+
+    return DAG.getNode(HSAILISD::ACTIVELANEMASK, SL, Op->getVTList(), Ops);
   }
 
   case HSAILIntrinsic::HSAIL_activelanemask_v4_b64_b1: {

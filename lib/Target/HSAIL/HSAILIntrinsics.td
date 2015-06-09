@@ -339,10 +339,6 @@ def int_HSAIL_memfence : GCCBuiltin<"__hsail_memfence">,
   Intrinsic<[], [llvm_i32_ty, llvm_i32_ty], []
 >;
 
-def int_HSAIL_imagefence : GCCBuiltin<"__hsail_imagefence">,
-  Intrinsic<[], [], []
->;
-
 // Instrinsics for explicit conversions
 // float to int
 def int_HSAIL_cvt_s32_neari_f32 : GCCBuiltin<"__cvt_s32_rte_f32">,

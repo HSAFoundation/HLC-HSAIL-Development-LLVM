@@ -174,6 +174,12 @@ multiclass InstBasic_1Op_BF<string opName, bits<16> BrigVal> {
   def _B64 : HSAILInstBasic_1Op<opName, BrigVal, Inst_B64_B64>;
 }
 
+// Instructions like gridsize which always use an i32 immediate source
+multiclass InstBasic_1Op_U32ImmSrc<string opName, bits<16> BrigVal> {
+  def _U32 : HSAILInstBasic_1Op<opName, BrigVal, Inst_U32_U32>;
+  def _U64 : HSAILInstBasic_1Op<opName, BrigVal, Inst_U64_U32>;
+}
+
 class HSAILInstBasic_2Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstBasic<BrigVal,
                  (outs P.DestRC:$dest),
@@ -222,6 +228,10 @@ multiclass InstBasic_2Op_LdExp<string opName, bits<16> BrigVal> {
   def _F64 : HSAILInstBasic_2Op<opName, BrigVal, Inst_F64_F64_U32>;
 }
 
+multiclass InstBasic_2Op_BitRetType_U32_U32<string opName, bits<16> BrigVal> {
+  def _B32 : HSAILInstBasic_2Op<opName, BrigVal, Inst_B32_U32_U32>;
+  def _B64 : HSAILInstBasic_2Op<opName, BrigVal, Inst_B64_U32_U32>;
+}
 
 class HSAILInstBasic_3Op<string opName, bits<16> BrigVal, HSAILProfile P> :
   HSAILInstBasic<BrigVal,
@@ -229,6 +239,14 @@ class HSAILInstBasic_3Op<string opName, bits<16> BrigVal, HSAILProfile P> :
                  (ins P.Src0RC:$src0, P.Src1RC:$src1, P.Src2RC:$src2,
                       BrigType:$TypeLength),
   opName#"$TypeLength\t$dest, $src0, $src1, $src2"
+>;
+
+class HSAILInstBasic_4Op<string opName, bits<16> BrigVal, HSAILProfile P> :
+  HSAILInstBasic<BrigVal,
+                 (outs P.DestRC:$dest),
+                 (ins P.Src0RC:$src0, P.Src1RC:$src1, P.Src2RC:$src2,
+                      P.Src3RC:$src3, BrigType:$TypeLength),
+  opName#"$TypeLength\t$dest, $src0, $src1, $src2, $src3"
 >;
 
 multiclass InstBasic_3Op_FPTypes<string opName, bits<16> BrigVal> {
@@ -261,6 +279,14 @@ multiclass InstBasic_3Op_BitExtract<string opName, bits<16> BrigVal> {
 
   def _U32 : HSAILInstBasic_3Op<opName, BrigVal, Inst_U32_U32_U32_U32>;
   def _U64 : HSAILInstBasic_3Op<opName, BrigVal, Inst_U64_U64_U32_U32>;
+}
+
+multiclass InstBasic_4Op_BitInsert<string opName, bits<16> BrigVal> {
+  def _S32 : HSAILInstBasic_4Op<opName, BrigVal, Inst_S32_S32_S32_U32_U32>;
+  def _S64 : HSAILInstBasic_4Op<opName, BrigVal, Inst_S64_S64_S64_U32_U32>;
+
+  def _U32 : HSAILInstBasic_4Op<opName, BrigVal, Inst_U32_U32_U32_U32_U32>;
+  def _U64 : HSAILInstBasic_4Op<opName, BrigVal, Inst_U64_U64_U64_U32_U32>;
 }
 
 multiclass InstBasic_3Op_SUF<string opName, bits<16> BrigVal> {
@@ -1087,8 +1113,17 @@ class InstBasic_1Op_Pat<HSAILInst inst,
                         SDPatternOperator node,
                         ValueType vt,
                         int bt> : Pat <
-  (vt (node (GPROrImm vt:$src0))),
+  (vt (node (vt (GPROrImm vt:$src0)))),
   (inst $src0, bt)
+>;
+
+// 1 operand is always i32 immediate
+class GridSize_Pat<HSAILInst inst,
+                   SDPatternOperator node,
+                   ValueType vt,
+                   int bt> : Pat <
+  (vt (node i32:$src0)),
+  (inst imm:$src0, bt)
 >;
 
 multiclass InstBasic_1Op_IntTypes_Pat<string inst,
@@ -1133,6 +1168,27 @@ class InstBasic_2Op_Pat<HSAILInst inst,
   (vt0 (node (GPROrImm vt0:$src0), (vt1 (GPROrImm vt1:$src1)))),
   (inst $src0, $src1, bt)
 >;
+
+class InstBasic_2Op_RetType_Pat<HSAILInst inst,
+                                SDPatternOperator node,
+                                ValueType destvt,
+                                ValueType vt0,
+                                ValueType vt1,
+                                int bt> : Pat <
+  (destvt (node (GPROrImm vt0:$src0), (vt1 (GPROrImm vt1:$src1)))),
+  (inst $src0, $src1, bt)
+>;
+
+multiclass InstBasic_2Op_BitRetType_U32_U32_Pat<string inst,
+                                                SDPatternOperator node> {
+  def : InstBasic_2Op_RetType_Pat<!cast<HSAILInst>(inst#"_B32"),
+    node, i32, i32, i32, BrigType.B32
+  >;
+
+  def : InstBasic_2Op_RetType_Pat<!cast<HSAILInst>(inst#"_B64"),
+    node, i64, i32, i32, BrigType.B64
+  >;
+}
 
 multiclass InstBasic_2Op_IntTypes_Pat<string inst,
                                       SDPatternOperator node,
@@ -1222,7 +1278,27 @@ multiclass InstBasic_3Op_BitExtract_IntTypes_Pat<string inst, SDPatternOperator 
   def : InstBasic_3Op_BitExtract_Pat<!cast<HSAILInst>(inst# !if(signed, "_S64", "_U64")), node, i64,
     !if(signed, BrigType.S64, BrigType.U64)
   >;
+}
 
+class InstBasic_4Op_BitInsert_Pat<HSAILInst inst,
+                                  SDPatternOperator node,
+                                  ValueType vt,
+                                  int bt> : Pat <
+  (node (vt (GPROrImm vt:$src0)),
+        (vt (GPROrImm vt:$src1)),
+        (i32 (GPROrImm i32:$src2)),
+        (i32 (GPROrImm i32:$src3))),
+  (inst $src0, $src1, $src2, $src3, bt)
+>;
+
+multiclass InstBasic_4Op_BitInsert_IntTypes_Pat<string inst, SDPatternOperator node, bit signed> {
+  def : InstBasic_4Op_BitInsert_Pat<!cast<HSAILInst>(inst# !if(signed, "_S32", "_U32")), node, i32,
+    !if(signed, BrigType.S32, BrigType.U32)
+  >;
+
+  def : InstBasic_4Op_BitInsert_Pat<!cast<HSAILInst>(inst# !if(signed, "_S64", "_U64")), node, i64,
+    !if(signed, BrigType.S64, BrigType.U64)
+  >;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1239,6 +1315,14 @@ class InstMod_1Op_Pat<HSAILInst inst,
   (inst ftz, round, $src0, bt)
 >;
 
+class InstMod_1Op_Intrin_Pat<HSAILInst inst,
+                             SDPatternOperator node,
+                             ValueType vt,
+                             int bt> : Pat <
+  (vt (node i1:$ftz, i32:$round, (vt (GPROrImm vt:$src0)))),
+  (inst imm:$ftz, imm:$round, $src0, bt)
+>;
+
 class InstMod_2Op_Pat<HSAILInst inst,
                       SDPatternOperator node,
                       ValueType vt,
@@ -1247,6 +1331,27 @@ class InstMod_2Op_Pat<HSAILInst inst,
                       int ftz = 0> : Pat <
   (vt (node (vt (GPROrImm vt:$src0)), (vt (GPROrImm vt:$src1)))),
   (inst ftz, round, $src0, $src1, bt)
+>;
+
+class InstMod_2Op_Intrin_Pat<HSAILInst inst,
+                             SDPatternOperator node,
+                             ValueType vt,
+                             int bt> : Pat <
+  (vt (node i1:$ftz,
+            i32:$round,
+            (vt (GPROrImm vt:$src0)),
+            (vt (GPROrImm vt:$src1)))),
+  (inst imm:$ftz, imm:$round, $src0, $src1, bt)
+>;
+
+class InstMod_2Op_NoRound_Intrin_Pat<HSAILInst inst,
+                                     SDPatternOperator node,
+                                     ValueType vt,
+                                     int bt> : Pat <
+  (vt (node i1:$ftz,
+            (vt (GPROrImm vt:$src0)),
+            (vt (GPROrImm vt:$src1)))),
+  (inst imm:$ftz, BrigRound.NONE, $src0, $src1, bt)
 >;
 
 class InstMod_3Op_Pat<HSAILInst inst,
@@ -1264,6 +1369,12 @@ multiclass InstMod_1Op_FPTypes_Pat<string inst,
                                    int round = BrigRound.FLOAT_DEFAULT> {
   def : InstMod_1Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigType.F32, round, 1>;
   def : InstMod_1Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigType.F64, round, 0>;
+}
+
+multiclass InstMod_1Op_FPTypes_Intrin_Pat<string inst,
+                                          SDPatternOperator node> {
+  def : InstMod_1Op_Intrin_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigType.F32>;
+  def : InstMod_1Op_Intrin_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigType.F64>;
 }
 
 multiclass InstMod_2Op_IntTypes_Pat<string inst,
@@ -1285,6 +1396,12 @@ multiclass InstMod_2Op_FPTypes_Pat<string inst,
   def : InstMod_2Op_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigType.F64, round, 0>;
 }
 
+multiclass InstMod_2Op_Intrin_FPTypes_Pat<string inst,
+                                          SDPatternOperator node> {
+  def : InstMod_2Op_Intrin_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigType.F32>;
+  def : InstMod_2Op_Intrin_Pat<!cast<HSAILInst>(inst#"_F64"), node, f64, BrigType.F64>;
+}
+
 multiclass InstMod_3Op_FPTypes_Pat<string inst,
                                    SDPatternOperator node> {
   def : InstMod_3Op_Pat<!cast<HSAILInst>(inst#"_F32"), node, f32, BrigType.F32, BrigRound.FLOAT_DEFAULT, 1>;
@@ -1297,10 +1414,11 @@ multiclass InstMod_3Op_FPTypes_Pat<string inst,
 
 class InstSourceType_1Op_Pat<HSAILInst inst,
                              SDPatternOperator node,
-                             ValueType vt,
+                             ValueType destvt,
+                             ValueType srcvt,
                              int destbt,
                              int srcbt> : Pat <
-  (vt (node (GPROrImm vt:$src0))),
+  (destvt (node (srcvt (GPROrImm srcvt:$src0)))),
   (inst $src0, destbt, srcbt)
 >;
 
@@ -1383,6 +1501,12 @@ class InstBr_0Op_NoRet_Pat<HSAILInst inst,
                            int width = BrigWidth._1> : Pat <
   (node),
   (inst width, BrigType.NONE)
+>;
+
+class InstBr_0Op_NoRet_Intrin_Pat<HSAILInst inst,
+                                  SDPatternOperator node> : Pat <
+  (node i32:$width),
+  (inst imm:$width, BrigType.NONE)
 >;
 
 class InstBr_0Op_Pat<HSAILInst inst,
