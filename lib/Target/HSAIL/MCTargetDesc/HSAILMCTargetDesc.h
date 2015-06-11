@@ -26,6 +26,7 @@ class MCObjectWriter;
 class MCRegisterInfo;
 class MCSubtargetInfo;
 class Target;
+class Triple;
 class raw_ostream;
 
 extern Target TheHSAIL_32Target, TheHSAIL_64Target;
@@ -35,11 +36,13 @@ MCCodeEmitter *createHSAILMCCodeEmitter(const MCInstrInfo &MCII,
                                         MCContext &Ctx);
 
 MCAsmBackend *createHSAIL32AsmBackend(const Target &T,
-                                      const MCRegisterInfo &MRI, StringRef TT,
+                                      const MCRegisterInfo &MRI,
+                                      const Triple &TT,
                                       StringRef CPU);
 
 MCAsmBackend *createHSAIL64AsmBackend(const Target &T,
-                                      const MCRegisterInfo &MRI, StringRef TT,
+                                      const MCRegisterInfo &MRI,
+                                      const Triple &TT,
                                       StringRef CPU);
 
 } // End llvm namespace

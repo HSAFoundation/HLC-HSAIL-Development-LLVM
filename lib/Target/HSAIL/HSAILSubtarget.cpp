@@ -24,7 +24,7 @@
 
 using namespace llvm;
 
-HSAILSubtarget::HSAILSubtarget(StringRef TT, StringRef CPU, StringRef FS,
+HSAILSubtarget::HSAILSubtarget(const Triple &TT, StringRef CPU, StringRef FS,
                                HSAILTargetMachine &TM)
     : HSAILGenSubtargetInfo(TT, CPU, FS), TargetTriple(TT),
       DevName(CPU.empty() ? "generic" : CPU.str()),

@@ -40,7 +40,7 @@ using namespace llvm;
 #include "HSAILGenRegisterInfo.inc"
 
 // MC related code probably should be in MCTargetDesc subdir
-static MCCodeGenInfo *createHSAILMCCodeGenInfo(StringRef TT, Reloc::Model RM,
+static MCCodeGenInfo *createHSAILMCCodeGenInfo(const Triple &TT, Reloc::Model RM,
                                                CodeModel::Model CM,
                                                CodeGenOpt::Level OL) {
   MCCodeGenInfo *X = new MCCodeGenInfo();
@@ -54,13 +54,13 @@ static MCInstrInfo *createHSAILMCInstrInfo() {
   return X;
 }
 
-static MCRegisterInfo *createHSAILMCRegisterInfo(StringRef TT) {
+static MCRegisterInfo *createHSAILMCRegisterInfo(const Triple &TT) {
   MCRegisterInfo *X = new MCRegisterInfo();
   InitHSAILMCRegisterInfo(X, 0);
   return X;
 }
 
-static MCSubtargetInfo *createHSAILMCSubtargetInfo(StringRef TT, StringRef CPU,
+static MCSubtargetInfo *createHSAILMCSubtargetInfo(const Triple &TT, StringRef CPU,
                                                    StringRef FS) {
   MCSubtargetInfo * X = new MCSubtargetInfo();
   InitHSAILMCSubtargetInfo(X, TT, CPU, FS);
@@ -99,7 +99,7 @@ createHSAILObjectTargetStreamer(MCStreamer &S, const MCSubtargetInfo &STI) {
   return new HSAILTargetStreamer(S);
 }
 
-static MCInstPrinter *createHSAILMCInstPrinter(const Triple &T,
+static MCInstPrinter *createHSAILMCInstPrinter(const Triple &TT,
                                                unsigned SyntaxVariant,
                                                const MCAsmInfo &MAI,
                                                const MCInstrInfo &MII,
