@@ -38,9 +38,10 @@ public:
   };
 
 public:
-  HSAILTargetMachine(const Target &T, StringRef TT, StringRef CPU, StringRef FS,
-                     const TargetOptions &Options, Reloc::Model RM,
-                     CodeModel::Model CM, CodeGenOpt::Level OL);
+  HSAILTargetMachine(const Target &T, const Triple &TT, StringRef CPU,
+                     StringRef FS, const TargetOptions &
+                     Options, Reloc::Model RM, CodeModel::Model CM,
+                     CodeGenOpt::Level OL);
 
   const HSAILIntrinsicInfo *getIntrinsicInfo() const override {
     return &IntrinsicInfo;
@@ -73,7 +74,7 @@ class HSAIL_32TargetMachine : public HSAILTargetMachine {
   HSAILSelectionDAGInfo TSInfo;
 
 public:
-  HSAIL_32TargetMachine(const Target &T, StringRef TT, StringRef CPU,
+  HSAIL_32TargetMachine(const Target &T, const Triple &TT, StringRef CPU,
                         StringRef FS, const TargetOptions &Options,
                         Reloc::Model RM, CodeModel::Model CM,
                         CodeGenOpt::Level OL);
@@ -85,7 +86,7 @@ class HSAIL_64TargetMachine : public HSAILTargetMachine {
   HSAILSelectionDAGInfo TSInfo;
 
 public:
-  HSAIL_64TargetMachine(const Target &T, StringRef TT, StringRef CPU,
+  HSAIL_64TargetMachine(const Target &T, const Triple &TT, StringRef CPU,
                         StringRef FS, const TargetOptions &Options,
                         Reloc::Model RM, CodeModel::Model CM,
                         CodeGenOpt::Level OL);

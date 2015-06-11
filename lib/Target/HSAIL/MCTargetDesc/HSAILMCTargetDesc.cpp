@@ -60,7 +60,7 @@ static MCRegisterInfo *createHSAILMCRegisterInfo(StringRef TT) {
   return X;
 }
 
-static MCSubtargetInfo *createHSAILMCSubtargetInfo(StringRef TT, StringRef CPU,
+static MCSubtargetInfo *createHSAILMCSubtargetInfo(const Triple &TT, StringRef CPU,
                                                    StringRef FS) {
   MCSubtargetInfo * X = new MCSubtargetInfo();
   InitHSAILMCSubtargetInfo(X, TT, CPU, FS);
@@ -99,7 +99,7 @@ createHSAILObjectTargetStreamer(MCStreamer &S, const MCSubtargetInfo &STI) {
   return new HSAILTargetStreamer(S);
 }
 
-static MCInstPrinter *createHSAILMCInstPrinter(const Triple &T,
+static MCInstPrinter *createHSAILMCInstPrinter(const Triple &TT,
                                                unsigned SyntaxVariant,
                                                const MCAsmInfo &MAI,
                                                const MCInstrInfo &MII,
