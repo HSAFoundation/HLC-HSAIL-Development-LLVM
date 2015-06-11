@@ -118,7 +118,7 @@ public:
   /// of the specified triple.
   ///
 
-  HSAILSubtarget(StringRef TT, StringRef CPU, StringRef FS,
+  HSAILSubtarget(const Triple &TT, StringRef CPU, StringRef FS,
                  HSAILTargetMachine &TM);
   HSAILSubtarget &initializeSubtargetDependencies(StringRef GPU, StringRef FS);
 

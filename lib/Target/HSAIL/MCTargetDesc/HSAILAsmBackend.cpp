@@ -100,12 +100,14 @@ bool HSAILAsmBackend::writeNopData(uint64_t Count, MCObjectWriter *OW) const {
 
 MCAsmBackend *llvm::createHSAIL32AsmBackend(const Target &T,
                                             const MCRegisterInfo &MRI,
-                                            StringRef TT, StringRef CPU) {
+                                            const Triple &TT,
+                                            StringRef CPU) {
   return new ELFHSAIL_32AsmBackend(T);
 }
 
 MCAsmBackend *llvm::createHSAIL64AsmBackend(const Target &T,
                                             const MCRegisterInfo &MRI,
-                                            StringRef TT, StringRef CPU) {
+                                            const Triple &TT,
+                                            StringRef CPU) {
   return new ELFHSAIL_64AsmBackend(T);
 }
