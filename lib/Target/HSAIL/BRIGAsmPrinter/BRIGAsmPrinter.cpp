@@ -1493,6 +1493,10 @@ HSAIL_ASM::InstBasic BRIGAsmPrinter::BrigEmitInstBasic(const MachineInstr &MI,
   if (Src2Idx != -1)
     BrigEmitOperand(&MI, Src2Idx, inst);
 
+  int Src3Idx = HSAIL::getNamedOperandIdx(Opc, HSAIL::OpName::src3);
+  if (Src3Idx != -1)
+    BrigEmitOperand(&MI, Src3Idx, inst);
+
   return inst;
 }
 
