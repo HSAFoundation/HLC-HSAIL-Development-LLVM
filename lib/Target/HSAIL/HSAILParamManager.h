@@ -141,7 +141,9 @@ public:
   }
 
   /// returns a unique argument name.
-  static std::string mangleArg(Mangler *Mang, const StringRef argName);
+  static std::string mangleArg(Mangler *Mang,
+                               StringRef ArgName,
+                               const DataLayout &DL);
 };
 }
 
