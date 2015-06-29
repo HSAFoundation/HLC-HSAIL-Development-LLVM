@@ -438,16 +438,18 @@ HSAILTargetLowering::LowerReturn(SDValue Chain, CallingConv::ID CallConv,
   SmallVector<SDValue, 6> RetOps;
   RetOps.push_back(Chain);
 
+  const DataLayout &DL = *getDataLayout();
+
   Type *type = funcType->getReturnType();
   if (!type->isVoidTy()) {
-    Mangler Mang(getDataLayout());
+    Mangler Mang;
 
     // FIXME: The ParamManager here is only used for making sure the built
     // string's name survives until code emission. We can't rely on the name
     // here being added because unreachable functions with return values may not
     // have return instructions.
     const char *SymName = PM.getParamName(
-        PM.addReturnParam(type, PM.mangleArg(&Mang, F->getName())));
+      PM.addReturnParam(type, PM.mangleArg(&Mang, F->getName(), DL)));
 
     MVT ArgPtrVT = getPointerTy(HSAILAS::ARG_ADDRESS);
     SDValue RetVariable = DAG.getTargetExternalSymbol(SymName, ArgPtrVT);
@@ -711,14 +713,15 @@ SDValue HSAILTargetLowering::LowerFormalArguments(
                                                       : HSAILAS::ARG_ADDRESS;
   MVT PtrTy = getPointerTy(AS);
 
-  Mangler Mang(DL);
+  const DataLayout &DL = *getDataLayout();
+  Mangler Mang;
 
   // Map function param types to Ins.
   Function::const_arg_iterator AI = MF.getFunction()->arg_begin();
   Function::const_arg_iterator AE = MF.getFunction()->arg_end();
   for (unsigned ArgNo = 0; AI != AE; ++AI) {
     unsigned Param = PM.addArgumentParam(
-        AS, *AI, HSAILParamManager::mangleArg(&Mang, AI->getName()));
+      AS, *AI, HSAILParamManager::mangleArg(&Mang, AI->getName(), DL));
     const char *ParamName = PM.getParamName(Param);
     std::string md = (AI->getName() + ":" + ParamName + " ").str();
     FuncInfo->addMetadata("argmap:" + md, true);
@@ -759,7 +762,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   MachineFunction &MF = DAG.getMachineFunction();
   HSAILParamManager &PM =
       MF.getInfo<HSAILMachineFunctionInfo>()->getParamManager();
-  Mangler Mang(DL);
+  Mangler Mang;
 
   Chain = DAG.getCALLSEQ_START(Chain, DAG.getIntPtrConstant(0, dl, true), dl);
   SDValue InFlag = Chain.getValue(1);
@@ -794,21 +797,22 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
   SmallVector<SDValue, 8> VarOps;
   SDVTList VTs = DAG.getVTList(MVT::Other, MVT::Glue);
 
+  const DataLayout &DL = *getDataLayout();
   Type *retType = funcType->getReturnType();
   SDValue RetValue;
   if (!retType->isVoidTy()) {
     MVT PtrVT = getPointerTy(HSAILAS::ARG_ADDRESS);
     RetValue = DAG.getTargetExternalSymbol(
         PM.getParamName(
-            PM.addCallRetParam(retType, PM.mangleArg(&Mang, FuncName))),
+          PM.addCallRetParam(retType, PM.mangleArg(&Mang, FuncName, DL))),
         PtrVT);
 
     unsigned NElts;
-    Type *EmitTy = HSAIL::analyzeType(retType, NElts, *DL);
+    Type *EmitTy = HSAIL::analyzeType(retType, NElts, DL);
 
-    BrigType BT = getParamBrigType(EmitTy, *DL, CLI.RetSExt);
+    BrigType BT = getParamBrigType(EmitTy, DL, CLI.RetSExt);
 
-    unsigned Align = HSAIL::getAlignTypeQualifier(retType, *DL, false);
+    unsigned Align = HSAIL::getAlignTypeQualifier(retType, DL, false);
 
     const SDValue ArgDeclOps[] = {
       RetValue,
@@ -852,7 +856,7 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
 
     std::string ParamName;
     if (calleeFunc && ai != ae) {
-      ParamName = PM.mangleArg(&Mang, ai->getName());
+      ParamName = PM.mangleArg(&Mang, ai->getName(), DL);
     }
     if (ParamName.empty()) {
       ParamName = "__param_p";
@@ -862,12 +866,12 @@ SDValue HSAILTargetLowering::LowerCall(CallLoweringInfo &CLI,
         PM.getParamName(PM.addCallArgParam(type, ParamName)), ArgPtrVT);
 
     unsigned NElts;
-    Type *EmitTy = HSAIL::analyzeType(type, NElts, *DL);
+    Type *EmitTy = HSAIL::analyzeType(type, NElts, DL);
 
     // START array parameter declaration
-    BrigType BT = getParamBrigType(EmitTy, *DL, Outs[j].Flags.isSExt());
+    BrigType BT = getParamBrigType(EmitTy, DL, Outs[j].Flags.isSExt());
 
-    unsigned Align = HSAIL::getAlignTypeQualifier(type, *DL, false);
+    unsigned Align = HSAIL::getAlignTypeQualifier(type, DL, false);
     const SDValue ArgDeclOps[] = {
         StParamValue,
         DAG.getTargetConstant(BT, dl, MVT::i32),

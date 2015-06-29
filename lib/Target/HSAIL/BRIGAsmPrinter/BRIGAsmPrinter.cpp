@@ -1072,6 +1072,8 @@ void BRIGAsmPrinter::EmitFunctionReturn(Type *Ty, bool IsKernel,
 uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type *Ty, bool IsKernel,
                                               StringRef ArgName,
                                               bool IsSExt) {
+  const DataLayout &DL = getDataLayout();
+
   std::string Name;
   {
     raw_string_ostream Stream(Name);
@@ -1079,7 +1081,7 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type *Ty, bool IsKernel,
     if (ArgName.empty())
       Stream << "%arg_p" << paramCounter;
     else
-      Stream << '%' << HSAILParamManager::mangleArg(Mang, ArgName);
+      Stream << '%' << HSAILParamManager::mangleArg(Mang, ArgName, DL);
   }
 
   paramCounter++;
@@ -1099,8 +1101,6 @@ uint64_t BRIGAsmPrinter::EmitFunctionArgument(Type *Ty, bool IsKernel,
     Sym = brigantine.addSampler(Name, SymSegment);
     Sym.align() = BRIG_ALIGNMENT_8;
   } else {
-    const DataLayout &DL = getDataLayout();
-
     assert((!Ty->isVectorTy() || !Ty->getScalarType()->isIntegerTy(1)) &&
            "i1 vectors are broken");
 
