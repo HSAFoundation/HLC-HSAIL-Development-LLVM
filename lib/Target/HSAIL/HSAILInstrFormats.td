@@ -744,11 +744,15 @@ def store_v4_f64 : StoreOperands<Vec4SrcOpF64>;
 
 
 multiclass LD_Types<string opName, bits<16> BrigVal> {
-  def _S8 : LD<opName, BrigVal, (outs GPR32:$dest)>;
-  def _U8 : LD<opName, BrigVal, (outs GPR32:$dest)>;
+  def _S8 : LD<opName, BrigVal, (outs GPR32:$dest)>,
+            LdStVectorMap<NAME#"_S8", 1>;
+  def _U8 : LD<opName, BrigVal, (outs GPR32:$dest)>,
+            LdStVectorMap<NAME#"_U8", 1>;
 
-  def _S16 : LD<opName, BrigVal, (outs GPR32:$dest)>;
-  def _U16 : LD<opName, BrigVal, (outs GPR32:$dest)>;
+  def _S16 : LD<opName, BrigVal, (outs GPR32:$dest)>,
+             LdStVectorMap<NAME#"_S16", 1>;
+  def _U16 : LD<opName, BrigVal, (outs GPR32:$dest)>,
+             LdStVectorMap<NAME#"_U16", 1>;
 
   def _S32 : LD<opName, BrigVal, (outs GPR32:$dest)>,
              LdStVectorMap<NAME#"_S32", 1>;
@@ -767,6 +771,17 @@ multiclass LD_Types<string opName, bits<16> BrigVal> {
   def _F64 : LD<opName, BrigVal, (outs GPR64:$dest)>,
              LdStVectorMap<NAME#"_F64", 1>;
 
+
+  def _V2_S8 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp32:$dest)>,
+               LdStVectorMap<NAME#"_S8", 2>;
+  def _V2_U8 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp32:$dest)>,
+               LdStVectorMap<NAME#"_U8", 2>;
+
+  def _V2_S16 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_S16", 2>;
+  def _V2_U16 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_U16", 2>;
+
   def _V2_S32 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp32:$dest)>,
                 LdStVectorMap<NAME#"_S32", 2>;
   def _V2_U32 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp32:$dest)>,
@@ -781,6 +796,17 @@ multiclass LD_Types<string opName, bits<16> BrigVal> {
   def _V2_F64 : LD<opName#"_v2", BrigVal, (outs Vec2DestOp64:$dest)>,
                 LdStVectorMap<NAME#"_F64", 2>;
 
+
+  def _V3_S8 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp32:$dest)>,
+               LdStVectorMap<NAME#"_S8", 3>;
+  def _V3_U8 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp32:$dest)>,
+               LdStVectorMap<NAME#"_U8", 3>;
+
+  def _V3_S16 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_S16", 3>;
+  def _V3_U16 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_U16", 3>;
+
   def _V3_S32 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp32:$dest)>,
                 LdStVectorMap<NAME#"_S32", 3>;
   def _V3_U32 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp32:$dest)>,
@@ -794,6 +820,17 @@ multiclass LD_Types<string opName, bits<16> BrigVal> {
                 LdStVectorMap<NAME#"_U64", 3>;
   def _V3_F64 : LD<opName#"_v3", BrigVal, (outs Vec3DestOp64:$dest)>,
                 LdStVectorMap<NAME#"_F64", 3>;
+
+
+  def _V4_S8 : LD<opName#"_v4", BrigVal, (outs Vec4DestOp32:$dest)>,
+               LdStVectorMap<NAME#"_S8", 4>;
+  def _V4_U8 : LD<opName#"_v4", BrigVal, (outs Vec4DestOp32:$dest)>,
+               LdStVectorMap<NAME#"_U8", 4>;
+
+  def _V4_S16 : LD<opName#"_v4", BrigVal, (outs Vec4DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_S16", 4>;
+  def _V4_U16 : LD<opName#"_v4", BrigVal, (outs Vec4DestOp32:$dest)>,
+                LdStVectorMap<NAME#"_U16", 4>;
 
   def _V4_S32 : LD<opName#"_v4", BrigVal, (outs Vec4DestOp32:$dest)>,
                 LdStVectorMap<NAME#"_S32", 4>;
