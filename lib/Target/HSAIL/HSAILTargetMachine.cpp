@@ -138,7 +138,7 @@ bool HSAILPassConfig::addInstSelector() {
   // Install an instruction selector.
 
   addPass(createHSAILISelDag(HSATM));
-
+  addPass(createHSAILOptimizeMemoryOps(HSATM));
 #if 0
   addPass(&DeadMachineInstructionElimID);
   if (EnableUniformOps) {
