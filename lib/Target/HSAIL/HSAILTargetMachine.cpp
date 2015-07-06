@@ -22,15 +22,6 @@
 
 using namespace llvm;
 
-#if HSAIL_USE_LIBHSAIL
-static cl::opt<bool> UseStandardAsmPrinter(
-    "hsail-asmprinter",
-    cl::desc("Use standard LLVM AsmPrinter instead of BRIGAsmPrinter"),
-    cl::init(false));
-#else
-static const bool UseStandardAsmPrinter = true;
-#endif
-
 extern "C" void LLVMInitializeHSAILTarget() {
   // Register the target.
   RegisterTargetMachine<HSAIL_32TargetMachine> X(TheHSAIL_32Target);
@@ -40,12 +31,7 @@ extern "C" void LLVMInitializeHSAILTarget() {
 extern "C" void LLVMInitializeBRIGAsmPrinter();
 
 static TargetLoweringObjectFile *createTLOF(const Triple &TT) {
-  if (UseStandardAsmPrinter)
-    return new HSAILTargetObjectFile();
-
-  if (TT.getArch() == Triple::hsail64)
-    return new BRIG64_DwarfTargetObjectFile();
-  return new BRIG32_DwarfTargetObjectFile();
+  return new HSAILTargetObjectFile();
 }
 
 static StringRef computeDataLayout(const Triple &T) {
@@ -84,28 +70,12 @@ HSAILTargetMachine::HSAILTargetMachine(const Target &T, const Triple &TT,
     Subtarget(getTripleNoOS(TT), CPU, FS, *this), IntrinsicInfo(this),
     TLOF(createTLOF(getTripleNoOS(TT))) {
   initAsmInfo();
-
-#if HSAIL_USE_LIBHSAIL
-  // FIXME: Hack to enable command line switch to switch between
-  // BRIGAsmPrinter and HSAILAsmPrinter. Override the default registered
-  // AsmPrinter to use the BRIGAsmPrinter.
-  if (!UseStandardAsmPrinter)
-    LLVMInitializeBRIGAsmPrinter();
-#endif
 }
 
 bool HSAILTargetMachine::addPassesToEmitFile(
     PassManagerBase &PM, raw_pwrite_stream &Out, CodeGenFileType FT,
     bool DisableVerify, AnalysisID StartBefore, AnalysisID StartAfter,
     AnalysisID StopAfter, MachineFunctionInitializer *MFInitializer) {
-  HSAILFileType = FT; // FIXME: Remove this.
-
-  if (!UseStandardAsmPrinter) {
-    // Use CGFT_ObjectFile regardless on the output format.
-    // To process CGFT_AssemblyFile we will later disassemble generated BRIG.
-    FT = CGFT_ObjectFile;
-  }
-
   return LLVMTargetMachine::addPassesToEmitFile(PM, Out, FT, DisableVerify,
                                                 StartAfter, StopAfter,
                                                 MFInitializer);
