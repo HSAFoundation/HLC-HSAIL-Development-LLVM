@@ -873,52 +873,52 @@ multiclass ST_Types<string opName, bits<16> BrigVal> {
              LdStVectorMap<NAME#"_F64", 1>;
 
 
-  def _V2_U8 : ST<opName, BrigVal, store_v2_u32.op_ins>,
+  def _V2_U8 : ST<opName#"_v2", BrigVal, store_v2_u32.op_ins>,
                 LdStVectorMap<NAME#"_U8", 2>;
-  def _V2_U16 : ST<opName, BrigVal, store_v2_u32.op_ins>,
+  def _V2_U16 : ST<opName#"_v2", BrigVal, store_v2_u32.op_ins>,
                 LdStVectorMap<NAME#"_U16", 2>;
 
-  def _V2_U32 : ST<opName, BrigVal, store_v2_u32.op_ins>,
+  def _V2_U32 : ST<opName#"_v2", BrigVal, store_v2_u32.op_ins>,
                 LdStVectorMap<NAME#"_U32", 2>;
-  def _V2_F32 : ST<opName, BrigVal, store_v2_f32.op_ins>,
+  def _V2_F32 : ST<opName#"_v2", BrigVal, store_v2_f32.op_ins>,
                 LdStVectorMap<NAME#"_F32", 2>;
 
-  def _V2_U64 : ST<opName, BrigVal, store_v2_u64.op_ins>,
+  def _V2_U64 : ST<opName#"_v2", BrigVal, store_v2_u64.op_ins>,
                 LdStVectorMap<NAME#"_U64", 2>;
-  def _V2_F64 : ST<opName, BrigVal, store_v2_f64.op_ins>,
+  def _V2_F64 : ST<opName#"_v2", BrigVal, store_v2_f64.op_ins>,
                 LdStVectorMap<NAME#"_F64", 2>;
 
 
-  def _V3_U8 : ST<opName, BrigVal, store_v3_u32.op_ins>,
+  def _V3_U8 : ST<opName#"_v3", BrigVal, store_v3_u32.op_ins>,
                LdStVectorMap<NAME#"_U8", 3>;
-  def _V3_U16 : ST<opName, BrigVal, store_v3_u32.op_ins>,
+  def _V3_U16 : ST<opName#"_v3", BrigVal, store_v3_u32.op_ins>,
                 LdStVectorMap<NAME#"_U16", 3>;
 
-  def _V3_U32 : ST<opName, BrigVal, store_v3_u32.op_ins>,
+  def _V3_U32 : ST<opName#"_v3", BrigVal, store_v3_u32.op_ins>,
                 LdStVectorMap<NAME#"_U32", 3>;
-  def _V3_F32 : ST<opName, BrigVal, store_v3_f32.op_ins>,
+  def _V3_F32 : ST<opName#"_v3", BrigVal, store_v3_f32.op_ins>,
                 LdStVectorMap<NAME#"_F32", 3>;
 
-  def _V3_U64 : ST<opName, BrigVal, store_v3_u64.op_ins>,
+  def _V3_U64 : ST<opName#"_v3", BrigVal, store_v3_u64.op_ins>,
                 LdStVectorMap<NAME#"_U64", 3>;
-  def _V3_F64 : ST<opName, BrigVal, store_v3_f64.op_ins>,
+  def _V3_F64 : ST<opName#"_v3", BrigVal, store_v3_f64.op_ins>,
                 LdStVectorMap<NAME#"_F64", 3>;
 
 
-  def _V4_U8 : ST<opName, BrigVal, store_v4_u32.op_ins>,
+  def _V4_U8 : ST<opName#"_v4", BrigVal, store_v4_u32.op_ins>,
                 LdStVectorMap<NAME#"_U8", 4>;
 
-  def _V4_U16 : ST<opName, BrigVal, store_v4_u32.op_ins>,
+  def _V4_U16 : ST<opName#"_v4", BrigVal, store_v4_u32.op_ins>,
                 LdStVectorMap<NAME#"_U16", 4>;
 
-  def _V4_U32 : ST<opName, BrigVal, store_v4_u32.op_ins>,
+  def _V4_U32 : ST<opName#"_v4", BrigVal, store_v4_u32.op_ins>,
                 LdStVectorMap<NAME#"_U32", 4>;
-  def _V4_F32 : ST<opName, BrigVal, store_v4_f32.op_ins>,
+  def _V4_F32 : ST<opName#"_v4", BrigVal, store_v4_f32.op_ins>,
                 LdStVectorMap<NAME#"_F32", 4>;
 
-  def _V4_U64 : ST<opName, BrigVal, store_v4_u64.op_ins>,
+  def _V4_U64 : ST<opName#"_v4", BrigVal, store_v4_u64.op_ins>,
                 LdStVectorMap<NAME#"_U64", 4>;
-  def _V4_F64 : ST<opName, BrigVal, store_v4_f64.op_ins>,
+  def _V4_F64 : ST<opName#"_v4", BrigVal, store_v4_f64.op_ins>,
                 LdStVectorMap<NAME#"_F64", 4>;
 }
 
