@@ -30,8 +30,6 @@ cmake_dependent_option(HSAIL_USE_LIBHSAIL
 set(sources
   HSAILAsmPrinter.cpp
   HSAILAlwaysInlinePass.cpp
-#  BRIGDwarfCompileUnit.cpp
-#  BRIGDwarfDebug.cpp
   HSAILELFTargetObjectFile.cpp
   HSAILFrameLowering.cpp
   HSAILInstrInfo.cpp
@@ -73,14 +71,6 @@ if( CMAKE_CL_64 )
   if( CMAKE_VERSION STREQUAL "2.8.3" )
     include(CMakeDetermineCompilerId)
   endif()
-  # end of workaround.
-#  enable_language(ASM_MASM)
-#  ADD_CUSTOM_COMMAND(
-#    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/HSAILCompilationCallback_Win64.obj
-#    MAIN_DEPENDENCY HSAILCompilationCallback_Win64.asm
-#    COMMAND ${CMAKE_ASM_MASM_COMPILER} /Fo ${CMAKE_CURRENT_BINARY_DIR}/HSAILCompilationCallback_Win64.obj /c ${CMAKE_CURRENT_SOURCE_DIR}/HSAILCompilationCallback_Win64.asm
-#   )
-#   set(sources ${sources} ${CMAKE_CURRENT_BINARY_DIR}/HSAILCompilationCallback_Win64.obj)
 endif()
 
 add_llvm_target(HSAILCodeGen ${sources})
@@ -91,20 +81,6 @@ if(HSAIL_USE_LIBHSAIL)
   target_link_libraries(LLVMHSAILCodeGen PRIVATE ${LIBHSAIL_LIBRARIES})
 endif()
 
-
-# add_dependencies(LLVMHSAILCodeGen
-#   LLVMAnalysis
-#   LLVMAsmPrinter
-#   LLVMCodeGen
-#   LLVMCore
-#   LLVMMC
-#   LLVMSelectionDAG
-#   LLVMSupport
-#   LLVMTarget
-#   LLVMHSAILAsmPrinter
-#   )
-#add_subdirectory(AsmParser)
-#add_subdirectory(Disassembler)
 add_subdirectory(InstPrinter)
 add_subdirectory(TargetInfo)
 add_subdirectory(MCTargetDesc)
