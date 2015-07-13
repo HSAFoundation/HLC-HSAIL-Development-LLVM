@@ -62,9 +62,7 @@ static MCRegisterInfo *createHSAILMCRegisterInfo(const Triple &TT) {
 
 static MCSubtargetInfo *createHSAILMCSubtargetInfo(const Triple &TT, StringRef CPU,
                                                    StringRef FS) {
-  MCSubtargetInfo * X = new MCSubtargetInfo();
-  InitHSAILMCSubtargetInfo(X, TT, CPU, FS);
-  return X;
+  return createHSAILMCSubtargetInfoImpl(TT, CPU, FS);
 }
 
 #if 1
