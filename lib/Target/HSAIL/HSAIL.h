@@ -47,22 +47,11 @@ const unsigned int RESERVED_FUNCS = 1024;
 namespace llvm {
 
 class FunctionPass;
-class LoopPass;
-class MCCodeEmitter;
-class MCContext;
-class MCObjectWriter;
-class MCSubtargetInfo;
-class MCContext;
-class MCInstrInfo;
-class MCRegisterInfo;
-class MCStreamer;
-class MachineCodeEmitter;
-class Target;
-class TargetAsmBackend;
 class HSAILTargetMachine;
-class formatted_raw_ostream;
-class raw_ostream;
+class LoopPass;
 class ModulePass;
+class Target;
+
 
 ModulePass *createHSAILLowerSPIRSamplersPass();
 
