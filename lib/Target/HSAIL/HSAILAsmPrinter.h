@@ -30,11 +30,11 @@ private:
 
   StringRef getArgTypeName(Type *Ty, bool Signed = false) const;
 
-  void EmitFunctionArgument(unsigned ParamIndex, const Argument &Arg,
+  void emitFunctionArgument(unsigned ParamIndex, const Argument &Arg,
                             bool IsKernel, bool IsSExt, raw_ostream &O) const;
-  void EmitFunctionReturn(Type *Ty, StringRef Name, bool IsKernel, bool IsSExt,
+  void emitFunctionReturn(Type *Ty, StringRef Name, bool IsKernel, bool IsSExt,
                           raw_ostream &O) const;
-  void EmitFunctionLabel(const Function &F, raw_ostream &O, bool IsDecl) const;
+  void emitFunctionLabel(const Function &F, raw_ostream &O, bool IsDecl) const;
 
   static char getSymbolPrefixForAddressSpace(unsigned AS);
   char getSymbolPrefix(const MCSymbol &S) const;
