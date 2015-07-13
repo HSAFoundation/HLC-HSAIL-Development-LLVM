@@ -7,18 +7,18 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// \file
-// \brief Declare OpenCL dispatch-specific constants that are passed
-//        as additional arguments (the "kernenv") to the HSAIL kernel.
+/// \file
+/// \brief Declare OpenCL dispatch-specific constants that are passed
+///        as additional arguments (the "kernenv") to the HSAIL kernel.
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef __AMD_OPENCL_KERNENV_H__
-#define __AMD_OPENCL_KERNENV_H__
+#ifndef LIB_TARGET_HSAIL_AMDOPENCLKERNENV_H_
+#define LIB_TARGET_HSAIL_AMDOPENCLKERNENV_H_
 
-#include <llvm/ADT/StringRef.h>
-#include <llvm/IR/DerivedTypes.h>
-#include <llvm/Support/ErrorHandling.h>
+#include "llvm/ADT/StringRef.h"
+#include "llvm/IR/DerivedTypes.h"
+#include "llvm/Support/ErrorHandling.h"
 
 namespace llvm {
 class LLVMContext;
@@ -66,4 +66,4 @@ static inline Type *getKernenvArgType(unsigned ID, LLVMContext &C,
 static inline StringRef getKernenvArgTypeName(unsigned ID) { return "size_t"; }
 }
 
-#endif // __AMD_OPENCL_KERNENV_H__
+#endif
