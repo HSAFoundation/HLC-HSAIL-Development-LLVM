@@ -31,12 +31,6 @@ private:
   TargetLoweringObjectFile *TLOF;
 
 public:
-  class HSAILSelectionDAGInfo : public TargetSelectionDAGInfo {
-  public:
-    explicit HSAILSelectionDAGInfo(const HSAILTargetMachine &TM)
-      : TargetSelectionDAGInfo(TM.getDataLayout()) {}
-  };
-
 public:
   HSAILTargetMachine(const Target &T, const Triple &TT, StringRef CPU,
                      StringRef FS, const TargetOptions &
@@ -72,8 +66,6 @@ public:
 };
 
 class HSAIL_32TargetMachine : public HSAILTargetMachine {
-  HSAILSelectionDAGInfo TSInfo;
-
 public:
   HSAIL_32TargetMachine(const Target &T, const Triple &TT, StringRef CPU,
                         StringRef FS, const TargetOptions &Options,
@@ -84,8 +76,6 @@ public:
 };
 
 class HSAIL_64TargetMachine : public HSAILTargetMachine {
-  HSAILSelectionDAGInfo TSInfo;
-
 public:
   HSAIL_64TargetMachine(const Target &T, const Triple &TT, StringRef CPU,
                         StringRef FS, const TargetOptions &Options,

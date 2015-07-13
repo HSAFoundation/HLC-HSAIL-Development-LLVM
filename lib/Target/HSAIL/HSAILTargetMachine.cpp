@@ -161,7 +161,7 @@ HSAIL_32TargetMachine::HSAIL_32TargetMachine(const Target &T, const Triple &TT,
                                              Reloc::Model RM,
                                              CodeModel::Model CM,
                                              CodeGenOpt::Level OL)
-    : HSAILTargetMachine(T, TT, CPU, FS, Options, RM, CM, OL), TSInfo(*this) {
+    : HSAILTargetMachine(T, TT, CPU, FS, Options, RM, CM, OL) {
   // Check for mismatch in target triple settings and data layout. Note the
   // target
   // triple comes from the module (unless overridden on command line). It's just
@@ -183,7 +183,7 @@ HSAIL_64TargetMachine::HSAIL_64TargetMachine(const Target &T, const Triple &TT,
                                              Reloc::Model RM,
                                              CodeModel::Model CM,
                                              CodeGenOpt::Level OL)
-  : HSAILTargetMachine(T, TT, CPU, FS, Options, RM, CM, OL), TSInfo(*this) {
+  : HSAILTargetMachine(T, TT, CPU, FS, Options, RM, CM, OL) {
   // Check for mismatch in target triple settings and data layout. Note the
   // target
   // triple comes from the module (unless overridden on command line). It's just
