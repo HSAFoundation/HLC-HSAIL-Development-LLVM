@@ -41,6 +41,7 @@ set(sources
   HSAILMachineFunctionInfo.cpp
   HSAILMCInstLower.cpp
   HSAILModuleInfo.cpp
+  HSAILOptimizeMemoryOps.cpp
   HSAILParamManager.cpp
   HSAILRegisterInfo.cpp
   HSAILSection.cpp
