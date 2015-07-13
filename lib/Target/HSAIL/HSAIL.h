@@ -52,74 +52,12 @@ class LoopPass;
 class ModulePass;
 class Target;
 
-
-ModulePass *createHSAILLowerSPIRSamplersPass();
-
-///
-///
-FunctionPass *createHSAILControlDependencyAnalysis();
-
-///
-///
-FunctionPass *createHSAILUniformOperations(const HSAILTargetMachine &TM);
-
-///
-///
-FunctionPass *createHSAILOptimizeMemoryOps(const HSAILTargetMachine &TM);
-
-///
-///
-FunctionPass *createHSAILPropagateImageOperandsPass();
-
-///
-///
-ModulePass *createHSAILSyntaxCleanupPass();
-
 /// Insert kernel index metadata for device enqueue.
 ModulePass *createHSAILInsertKernelIndexMetadataPass();
 
-/// Optimize and lower AddrSpaceCast
-FunctionPass *createHSAILAddrSpaceCastPass();
-
-ModulePass *createHSAILProducePrintfMetadataPass();
-FunctionPass *createHSAILConsumePrintfMetadataPass(HSAILTargetMachine &TM);
-
-ModulePass *createHSAILNullPtrInsertionPass();
-
-/// createHSAILEarlyCFGOpts - HSAIL specific control flow optimizations
-LoopPass *createHSAILEarlyCFGOpts();
-
-/// createHSAILISelDag - This pass converts a legalized DAG into a
-/// HSAIL-specific DAG, ready for instruction scheduling.
+/// This pass converts a legalized DAG into a HSAIL-specific DAG, ready for
+/// instruction scheduling.
 FunctionPass *createHSAILISelDag(TargetMachine &TM);
-
-/// createGlobalBaseRegPass - This pass initializes a global base
-/// register for PIC on x86-32.
-FunctionPass *createGlobalBaseRegPass();
-
-/// createHSAILFloatingPointStackifierPass - This function returns a pass which
-/// converts floating point register references and pseudo instructions into
-/// floating point stack references and physical instructions.
-///
-FunctionPass *createHSAILFloatingPointStackifierPass();
-
-/// createSSEDomainFixPass - This pass twiddles SSE opcodes to prevent domain
-/// crossings.
-FunctionPass *createSSEDomainFixPass();
-
-/// createHSAILEmitCodeToMemory - Returns a pass that converts a register
-/// allocated function into raw machine code in a dynamically
-/// allocated chunk of memory.
-FunctionPass *createEmitHSAILCodeToMemory();
-
-/// createHSAILMaxStackAlignmentHeuristicPass - This function returns a pass
-/// which determines whether the frame pointer register should be
-/// reserved in case dynamic stack alignment is later required.
-///
-FunctionPass *createHSAILMaxStackAlignmentHeuristicPass();
-
-FunctionPass *createHSAILFuncArgScopeEmitter(TargetMachine &tm,
-                                             CodeGenOpt::Level OL);
 
 ModulePass *createHSAILAlwaysInlinePass();
 
