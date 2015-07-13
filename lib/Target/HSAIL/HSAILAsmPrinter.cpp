@@ -111,7 +111,7 @@ static bool isModuleLinkage(const GlobalValue &GV) {
   return !isProgramLinkage(GV);
 }
 
-void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
+void HSAILAsmPrinter::emitFunctionArgument(unsigned ParamIndex,
                                            const Argument &A, bool IsKernel,
                                            bool IsSExt, raw_ostream &O) const {
   const DataLayout &DL = getDataLayout();
@@ -151,7 +151,7 @@ void HSAILAsmPrinter::EmitFunctionArgument(unsigned ParamIndex,
     O << '[' << NElts << ']';
 }
 
-void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty, StringRef Name,
+void HSAILAsmPrinter::emitFunctionReturn(Type *Ty, StringRef Name,
                                          bool IsKernel, bool IsSExt,
                                          raw_ostream &O) const {
   const DataLayout &DL = getDataLayout();
@@ -171,7 +171,7 @@ void HSAILAsmPrinter::EmitFunctionReturn(Type *Ty, StringRef Name,
     O << '[' << NElts << ']';
 }
 
-void HSAILAsmPrinter::EmitFunctionLabel(const Function &F, raw_ostream &O,
+void HSAILAsmPrinter::emitFunctionLabel(const Function &F, raw_ostream &O,
                                         bool IsDecl) const {
   Type *RetTy = F.getReturnType();
 
@@ -204,10 +204,10 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F, raw_ostream &O,
           RetAttrs.hasAttribute(AttributeSet::ReturnIndex, Attribute::ZExt);
 
       if (IsSExt || IsZExt) {
-        EmitFunctionReturn(Type::getInt32Ty(RetTy->getContext()), RetName,
+        emitFunctionReturn(Type::getInt32Ty(RetTy->getContext()), RetName,
                            IsKernel, IsSExt, O);
       } else
-        EmitFunctionReturn(RetTy, RetName, IsKernel, IsSExt, O);
+        emitFunctionReturn(RetTy, RetName, IsKernel, IsSExt, O);
     }
 
     O << ")(";
@@ -221,7 +221,7 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F, raw_ostream &O,
     O << ')';
   } else if (NArgs == 1) {
     bool IsSExt = Attrs.hasAttribute(1, Attribute::SExt);
-    EmitFunctionArgument(0, *F.arg_begin(), IsKernel, IsSExt, O);
+    emitFunctionArgument(0, *F.arg_begin(), IsKernel, IsSExt, O);
     O << ')';
   } else {
     O << "\n\t";
@@ -232,7 +232,7 @@ void HSAILAsmPrinter::EmitFunctionLabel(const Function &F, raw_ostream &O,
     for (Function::const_arg_iterator I = F.arg_begin(), E = F.arg_end();
          I != E; ++Index) {
       bool IsSExt = Attrs.hasAttribute(Index + 1, Attribute::SExt);
-      EmitFunctionArgument(Index, *I++, IsKernel, IsSExt, O);
+      emitFunctionArgument(Index, *I++, IsKernel, IsSExt, O);
       if (I != E)
         O << ",\n\t";
     }
@@ -616,7 +616,7 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
       if (isProgramLinkage(F))
         O << "prog ";
 
-      EmitFunctionLabel(F, O, true);
+      emitFunctionLabel(F, O, true);
       O << ";\n\n";
       OutStreamer->EmitRawText(O.str());
     }
@@ -709,7 +709,7 @@ void HSAILAsmPrinter::EmitFunctionEntryLabel() {
 
   if (isProgramLinkage(*F))
     O << "prog ";
-  EmitFunctionLabel(*F, O, false);
+  emitFunctionLabel(*F, O, false);
   O << "\n{";
 
   OutStreamer->EmitRawText(O.str());
