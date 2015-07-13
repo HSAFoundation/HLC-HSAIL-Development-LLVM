@@ -6,8 +6,9 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef _HSAIL_ASM_BACKEND_H_
-#define _HSAIL_ASM_BACKEND_H_
+
+#ifndef LLVM_LIB_TARGET_HSAIL_MCTARGETDESC_HSAILASMBACKEND_H
+#define LLVM_LIB_TARGET_HSAIL_MCTARGETDESC_HSAILASMBACKEND_H
 
 #include "HSAILELFObjectWriter.h"
 #include "llvm/MC/MCAsmBackend.h"
@@ -69,4 +70,4 @@ public:
 };
 } // end anonymous namespace
 
-#endif // _HSAIL_ASM_BACKEND_H_
+#endif

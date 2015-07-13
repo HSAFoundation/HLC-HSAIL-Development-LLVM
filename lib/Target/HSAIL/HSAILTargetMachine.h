@@ -11,8 +11,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _HSAIL_TARGET_MACHINE_H_
-#define _HSAIL_TARGET_MACHINE_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILTARGETMACHINE_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILTARGETMACHINE_H
 
 #include "HSAILIntrinsicInfo.h"
 #include "HSAILSubtarget.h"
@@ -97,4 +97,5 @@ public:
   void addPostRegAlloc() override;
 };
 } // End llvm namespace
+
 #endif

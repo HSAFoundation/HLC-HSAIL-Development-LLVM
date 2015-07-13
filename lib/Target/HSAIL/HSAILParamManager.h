@@ -13,8 +13,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef HSAIL_PARAM_MANAGER_H
-#define HSAIL_PARAM_MANAGER_H
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILPARAMMANAGER_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILPARAMMANAGER_H
 
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/ADT/DenseMap.h"

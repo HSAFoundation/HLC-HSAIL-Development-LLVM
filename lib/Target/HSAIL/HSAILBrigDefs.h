@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef LLVM_LIB_TARGET_HSAIL_BRIGENUMS_H
-#define LLVM_LIB_TARGET_HSAIL_BRIGENUMS_H
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILBRIGDEFS_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILBRIGDEFS_H
 
 #if HSAIL_USE_LIBHSAIL
 #include "HSAILBrig.h"

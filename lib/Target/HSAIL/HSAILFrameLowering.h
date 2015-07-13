@@ -1,4 +1,4 @@
-//=-- HSAILTargetFrameLowering.h - Define HSAIL frame lowering ---*- C++ -*-==//
+//=-- HSAILFrameLowering.h - Define HSAIL frame lowering ---------*- C++ -*-==//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -11,8 +11,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _HSAIL_FRAME_LOWERING_H_
-#define _HSAIL_FRAME_LOWERING_H_
+#ifndef LIB_TARGET_HSAIL_HSAILFRAMELOWERING_H
+#define LIB_TARGET_HSAIL_HSAILFRAMELOWERING_H
 
 #include "llvm/Target/TargetFrameLowering.h"
 
@@ -42,4 +42,4 @@ public:
 
 } // End llvm namespace
 
-#endif // _HSAIL_FRAME_LOWERING_H_
+#endif

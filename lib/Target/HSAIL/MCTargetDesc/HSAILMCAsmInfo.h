@@ -11,8 +11,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _HSAIL_MC_ASM_INFO_H_
-#define _HSAIL_MC_ASM_INFO_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_MCTARGETDESC_HSAILMCASMINFO_H
+#define LLVM_LIB_TARGET_HSAIL_MCTARGETDESC_HSAILMCASMINFO_H
 
 #include "llvm/MC/MCAsmInfo.h"
 
@@ -27,4 +27,4 @@ struct HSAILELFMCAsmInfo : public MCAsmInfo {
 };
 } // namespace llvm
 
-#endif // _HSAIL_MC_ASM_INFO_H_
+#endif

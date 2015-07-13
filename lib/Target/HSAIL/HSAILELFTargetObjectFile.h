@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _HSAIL_ELF_OBJECT_FILE_H_
-#define _HSAIL_ELF_OBJECT_FILE_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILELFTARGETOBJECTFILE_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILELFTARGETOBJECTFILE_H
 
 #include "HSAILSection.h"
 
@@ -54,4 +54,4 @@ public:
 
 } // end namespace llvm
 
-#endif // _HSAIL_ELF_OBJECT_FILE_H_
+#endif

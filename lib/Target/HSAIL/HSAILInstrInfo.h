@@ -11,8 +11,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _HSAIL_INSTRUCTION_INFO_H_
-#define _HSAIL_INSTRUCTION_INFO_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILINSTRINFO_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILINSTRINFO_H
 
 #include "HSAIL.h"
 #include "HSAILRegisterInfo.h"
@@ -197,4 +197,4 @@ int getVectorLdStOpcode(uint16_t Opcode, unsigned vsize);
 
 } // End llvm namespace
 
-#endif // _HSAIL_INSTR_INFO_H_
+#endif

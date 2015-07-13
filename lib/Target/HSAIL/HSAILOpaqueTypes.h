@@ -14,8 +14,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef __HSAIL_OPAQUE_TYPES_H__
-#define __HSAIL_OPAQUE_TYPES_H__
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILOPAQUETYPES_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILOPAQUETYPES_H
 
 namespace llvm {
 

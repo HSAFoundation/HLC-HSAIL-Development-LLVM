@@ -14,8 +14,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef RAW_VECTOR_OSTREAM_H
-#define RAW_VECTOR_OSTREAM_H
+#ifndef LLVM_LIB_TARGET_HSAIL_MCTARGETDESC_RAWVECTOROSTREAM_H
+#define LLVM_LIB_TARGET_HSAIL_MCTARGETDESC_RAWVECTOROSTREAM_H
 
 #include "llvm/Support/raw_ostream.h"
 #include <vector>
@@ -55,4 +55,4 @@ public:
 };
 }
 
-#endif // RAW_VECTOR_OSTREAM_H
+#endif

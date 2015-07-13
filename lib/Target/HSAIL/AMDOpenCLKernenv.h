@@ -13,8 +13,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef LIB_TARGET_HSAIL_AMDOPENCLKERNENV_H_
-#define LIB_TARGET_HSAIL_AMDOPENCLKERNENV_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_AMDOPENCLKERNENV_H
+#define LLVM_LIB_TARGET_HSAIL_AMDOPENCLKERNENV_H
 
 #include "llvm/ADT/StringRef.h"
 #include "llvm/IR/DerivedTypes.h"

@@ -6,8 +6,9 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-#ifndef _HSAIL_ELF_OBJECT_WRITER_H_
-#define _HSAIL_ELF_OBJECT_WRITER_H_
+
+#ifndef LLVM_LIB_TARGET_HSAIL_MCTARGETDESC_HSAILELFOBJECTWRITER_H
+#define LLVM_LIB_TARGET_HSAIL_MCTARGETDESC_HSAILELFOBJECTWRITER_H
 
 #include "llvm/MC/MCELFObjectWriter.h"
 
@@ -25,4 +26,4 @@ protected:
 };
 }
 
-#endif // _HSAIL_ELF_OBJECT_WRITER_H_
+#endif
