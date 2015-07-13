@@ -6,11 +6,6 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-//
-// This file contains the entry points for global functions defined in the x86
-// target library, as used by the LLVM JIT.
-//
-//===----------------------------------------------------------------------===//
 
 #ifndef TARGET_HSAIL_H
 #define TARGET_HSAIL_H
@@ -136,15 +131,15 @@ enum {
 };
 }
 
-// Enum for memory operand decoding
+/// Enum for memory operand decoding
 namespace HSAILADDRESS {
 enum { BASE = 0, REG = 1, OFFSET = 2, ADDRESS_NUM_OPS };
 }
 
-// Target architectures to optimize for
+/// Target architectures to optimize for
 enum OptimizeForTargetArch {
-  GENERIC, // No target specific flavor
-  SI       // Optimize fot Southern Islands family
+  GENERIC, ///< No target specific flavor
+  SI       ///< Optimize fot Southern Islands family
 };
 
 namespace HSAIL {
