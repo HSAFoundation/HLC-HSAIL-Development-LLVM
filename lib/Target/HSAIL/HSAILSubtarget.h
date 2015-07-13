@@ -11,8 +11,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _HSAIL_SUBTARGET_H_
-#define _HSAIL_SUBTARGET_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILSUBTARGET_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILSUBTARGET_H
 
 #include "HSAIL.h"
 #include "HSAILFrameLowering.h"

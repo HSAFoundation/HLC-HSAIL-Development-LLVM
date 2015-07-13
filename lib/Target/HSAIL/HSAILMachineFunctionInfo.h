@@ -12,8 +12,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _HSAILMACHINEFUNCTIONINFO_H_
-#define _HSAILMACHINEFUNCTIONINFO_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILMACHINEFUNCTIONINFO_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILMACHINEFUNCTIONINFO_H
 
 #include "HSAIL.h"
 #include "HSAILKernel.h"
@@ -287,4 +287,4 @@ private:
 };
 } // llvm namespace
 
-#endif // _HSAILMACHINEFUNCTIONINFO_H_
+#endif

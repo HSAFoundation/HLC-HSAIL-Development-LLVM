@@ -13,8 +13,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _HSAIL_KERNEL_H_
-#define _HSAIL_KERNEL_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILKERNEL_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILKERNEL_H
 
 #include "HSAIL.h"
 #include "llvm/IR/Value.h"
@@ -128,4 +128,4 @@ struct HSAILKernel {
 };
 } // end llvm namespace
 
-#endif // _HSAIL_KERNEL_H_
+#endif

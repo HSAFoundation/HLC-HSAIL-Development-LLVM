@@ -11,8 +11,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef HSAILMCCODEEMITTER_H
-#define HSAILMCCODEEMITTER_H
+#ifndef LLVM_LIB_TARGET_HSAIL_MCTARGETDESC_HSAILMCCODEEMITTER_H
+#define LLVM_LIB_TARGET_HSAIL_MCTARGETDESC_HSAILMCCODEEMITTER_H
 
 #define DEBUG_TYPE "mccodeemitter"
 #include "HSAIL.h"

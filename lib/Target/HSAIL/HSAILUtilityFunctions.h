@@ -12,8 +12,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef HSAILUTILITYFUNCTIONS_H_
-#define HSAILUTILITYFUNCTIONS_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILUTILITYFUNCTIONS_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILUTILITYFUNCTIONS_H
 
 #include "HSAIL.h"
 #include "HSAILBrigDefs.h"
@@ -59,4 +59,4 @@ bool sanitizeGlobalValueName(llvm::GlobalValue *GV);
 
 } // End namespace llvm
 
-#endif // HSAILUTILITYFUNCTIONS_H_
+#endif

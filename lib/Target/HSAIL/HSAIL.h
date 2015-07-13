@@ -7,8 +7,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef TARGET_HSAIL_H
-#define TARGET_HSAIL_H
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAIL_H
+#define LLVM_LIB_TARGET_HSAIL_HSAIL_H
 
 #include "llvm/Support/DataTypes.h"
 #include "llvm/Target/TargetMachine.h"

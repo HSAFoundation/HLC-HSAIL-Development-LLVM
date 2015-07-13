@@ -19,8 +19,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _HSAIL_LOWERING_H_
-#define _HSAIL_LOWERING_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILISELLOWERING_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILISELLOWERING_H
 
 #include "HSAILRegisterInfo.h"
 #include "HSAILMachineFunctionInfo.h"
@@ -227,4 +227,4 @@ enum {
 }
 } // end llvm namespace
 
-#endif // _HSAIL_LOWERING_H_
+#endif

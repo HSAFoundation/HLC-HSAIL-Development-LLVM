@@ -11,8 +11,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _HSAIL_REGISTER_INFO_H_
-#define _HSAIL_REGISTER_INFO_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILREGISTERINFO_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILREGISTERINFO_H
 
 #include "llvm/Target/TargetRegisterInfo.h"
 
@@ -73,4 +73,4 @@ public:
 
 } // End llvm namespace
 
-#endif // _HSAIL_REGISTER_INFO_H_
+#endif

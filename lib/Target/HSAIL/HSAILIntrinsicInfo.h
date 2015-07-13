@@ -11,8 +11,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef _HSAIL_INTRINSIC_INFO_H_
-#define _HSAIL_INTRINSIC_INFO_H_
+#ifndef LLVM_LIB_TARGET_HSAIL_HSAILINTRINSICINFO_H
+#define LLVM_LIB_TARGET_HSAIL_HSAILINTRINSICINFO_H
 
 #include "llvm/IR/Intrinsics.h"
 #include "llvm/Target/TargetIntrinsicInfo.h"
