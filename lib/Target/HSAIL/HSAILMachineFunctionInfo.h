@@ -33,7 +33,7 @@ namespace llvm {
 class HSAILSubtarget;
 class HSAILPrintfInfo {
   uint32_t mPrintfID;
-  SmallVector<uint32_t, DEFAULT_VEC_SLOTS> mOperands;
+  SmallVector<uint32_t, 8> mOperands;
 
 public:
   void addOperand(size_t idx, uint32_t size);

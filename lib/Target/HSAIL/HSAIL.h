@@ -17,28 +17,6 @@
 
 #include "MCTargetDesc/HSAILMCTargetDesc.h"
 
-#define HSAIL_MAJOR_VERSION 3
-#define HSAIL_MINOR_VERSION 1
-#define HSAIL_REVISION_NUMBER 104
-#define HSAIL_20_REVISION_NUMBER 88
-#define ARENA_SEGMENT_RESERVED_UAVS 12
-#define DEFAULT_ARENA_UAV_ID 8
-#define DEFAULT_RAW_UAV_ID 7
-#define GLOBAL_RETURN_RAW_UAV_ID 11
-#define HW_MAX_NUM_CB 8
-#define MAX_NUM_UNIQUE_UAVS 8
-
-// The next two values can never be zero, as zero is the ID that is
-// used to assert against.
-#define DEFAULT_LDS_ID 1
-#define DEFAULT_GDS_ID 1
-#define DEFAULT_SCRATCH_ID 1
-#define DEFAULT_VEC_SLOTS 8
-
-#define OCL_DEVICE_ALL 0xFFFFF
-
-const unsigned int RESERVED_FUNCS = 1024;
-
 namespace llvm {
 
 class FunctionPass;

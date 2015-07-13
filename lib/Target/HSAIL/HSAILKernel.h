@@ -52,7 +52,7 @@ typedef struct _HSAILConstPtrRec {
 /// Structure that holds information for all local/region address
 /// arrays in the kernel
 typedef struct _HSAILLocalPrivateArgRec {
-  // SmallVector<HSAILArrayMem *, DEFAULT_VEC_SLOTS> local;
+  // SmallVector<HSAILArrayMem *, 8> local;
   std::string name; // Kernel Name
 } HSAILLocalPrivateArg;
 
@@ -60,8 +60,7 @@ typedef struct _HSAILLocalPrivateArgRec {
 typedef struct _HSAILkernelArgRec {
   uint32_t reqGroupSize[3];  // x,y,z sizes for group.
   uint32_t reqRegionSize[3]; // x,y,z sizes for region.
-  SmallVector<uint32_t, DEFAULT_VEC_SLOTS>
-      argInfo;  // information about argumetns.
+  SmallVector<uint32_t, 8> argInfo;  // Information about arguments.
   bool mHasRWG; // true if reqd_work_group_size is specified.
   bool mHasRWR; // true if reqd_work_region_size is specified.
 
@@ -77,16 +76,13 @@ struct HSAILKernel {
   uint32_t curRSize;   // region memory, hardware + software emulated
   uint32_t curHWSize;  // hardware local memory
   uint32_t curHWRSize; // hardware region memory
-  uint32_t constSize;  // software constant memory
 
   bool mKernel; // true if this is a kernel
   std::string mName;
   HSAILKernelAttr *sgv; // kernel attributes
 
   // vector containing constant pointer information
-  SmallVector<struct _HSAILConstPtrRec, DEFAULT_VEC_SLOTS> constPtr;
-
-  uint32_t constSizes[HW_MAX_NUM_CB]; // Size of each constant buffer
+  SmallVector<struct _HSAILConstPtrRec, 8> constPtr;
 
   // set that specifies the read-only images for the kernel
   SmallSet<uint32_t, 32> readOnly;
@@ -101,8 +97,7 @@ struct HSAILKernel {
   std::vector<uint32_t> accessTypeQualifer;
 
   // Vector of constant pool offsets
-  SmallVector<std::pair<uint32_t, const Constant *>, DEFAULT_VEC_SLOTS>
-      CPOffsets;
+  SmallVector<std::pair<uint32_t, const Constant *>, 8> CPOffsets;
 
   // Vector of kernel argument type names
   std::vector<std::string> ArgTypeNames;
@@ -116,12 +111,10 @@ struct HSAILKernel {
     curRSize = 0;
     curHWSize = 0;
     curHWRSize = 0;
-    constSize = 0;
 
     mKernel = false;
     sgv = nullptr;
 
-    memset(constSizes, 0, sizeof(constSizes));
     EnqueuesKernel = false;
     KernelIndex = -1;
   }

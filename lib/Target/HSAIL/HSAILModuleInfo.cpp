@@ -37,7 +37,7 @@ static const HSAILConstPtr *getConstPtr(const HSAILKernel *krnl,
   if (!krnl) {
     return nullptr;
   }
-  SmallVector<HSAILConstPtr, DEFAULT_VEC_SLOTS>::const_iterator begin, end;
+  SmallVector<HSAILConstPtr, 8>::const_iterator begin, end;
   for (begin = krnl->constPtr.begin(), end = krnl->constPtr.end(); begin != end;
        ++begin) {
     if (!strcmp(begin->name.data(), arg.c_str())) {
@@ -110,6 +110,8 @@ uint32_t HSAILModuleInfo::getConstPtrCB(const HSAILKernel *krnl,
 }
 
 uint32_t HSAILModuleInfo::getOrCreateFunctionID(const std::string &func) {
+  const unsigned int RESERVED_FUNCS = 1024;
+
   uint32_t id;
   if (mFuncNames.find(func) == mFuncNames.end()) {
     id = mFuncNames.size() + RESERVED_FUNCS + mFuncPtrNames.size();
