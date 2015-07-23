@@ -16,13 +16,7 @@ using namespace llvm;
 
 HSAILTargetStreamer::HSAILTargetStreamer(MCStreamer &S) : MCTargetStreamer(S) {}
 
-HSAILTargetStreamer::~HSAILTargetStreamer() {}
+HSAILTargetAsmStreamer::HSAILTargetAsmStreamer(MCStreamer &S)
+  : HSAILTargetStreamer(S) {}
 
-class HSAILTargetAsmStreamer : public HSAILTargetStreamer {
-public:
-  HSAILTargetAsmStreamer(MCStreamer &S, formatted_raw_ostream &OS);
-};
 
-HSAILTargetAsmStreamer::HSAILTargetAsmStreamer(MCStreamer &S,
-                                               formatted_raw_ostream &OS)
-    : HSAILTargetStreamer(S) {}

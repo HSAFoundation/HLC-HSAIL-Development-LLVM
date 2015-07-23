@@ -21,8 +21,14 @@ namespace llvm {
 class HSAILTargetStreamer : public MCTargetStreamer {
 public:
   HSAILTargetStreamer(MCStreamer &S);
-  ~HSAILTargetStreamer();
 };
+
+
+class HSAILTargetAsmStreamer : public HSAILTargetStreamer {
+public:
+  HSAILTargetAsmStreamer(MCStreamer &S);
+};
+
 }
 
 #endif

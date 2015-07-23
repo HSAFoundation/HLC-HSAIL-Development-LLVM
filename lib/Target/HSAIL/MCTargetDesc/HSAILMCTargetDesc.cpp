@@ -97,6 +97,13 @@ createHSAILObjectTargetStreamer(MCStreamer &S, const MCSubtargetInfo &STI) {
   return new HSAILTargetStreamer(S);
 }
 
+static MCTargetStreamer *createHSAILAsmTargetStreamer(MCStreamer &S,
+                                                      formatted_raw_ostream &OS,
+                                                      MCInstPrinter *InstPrint,
+                                                      bool isVerboseAsm) {
+  return new HSAILTargetAsmStreamer(S);
+}
+
 static MCInstPrinter *createHSAILMCInstPrinter(const Triple &TT,
                                                unsigned SyntaxVariant,
                                                const MCAsmInfo &MAI,
@@ -116,6 +123,7 @@ extern "C" void LLVMInitializeHSAILTargetMC() {
     TargetRegistry::RegisterMCInstPrinter(*T, createHSAILMCInstPrinter);
     TargetRegistry::RegisterMCCodeEmitter(*T, createHSAILMCCodeEmitter);
     TargetRegistry::RegisterELFStreamer(*T, createBRIGStreamer);
+    TargetRegistry::RegisterAsmTargetStreamer(*T, createHSAILAsmTargetStreamer);
 //    TargetRegistry::RegisterObjectTargetStreamer(*T, createHSAILObjectTargetStreamer);
   }
 }
