@@ -19,7 +19,6 @@ add_subdirectory(HSAILUtil)
 set(sources
   HSAILAsmPrinter.cpp
   HSAILAlwaysInlinePass.cpp
-  HSAILELFTargetObjectFile.cpp
   HSAILFrameLowering.cpp
   HSAILInstrInfo.cpp
   HSAILIntrinsicInfo.cpp
@@ -34,6 +33,7 @@ set(sources
   HSAILStoreInitializer.cpp
   HSAILSubtarget.cpp
   HSAILTargetMachine.cpp
+  HSAILTargetObjectFile.cpp
   HSAILUtilityFunctions.cpp
   HSAILOpaqueTypes.cpp
   )

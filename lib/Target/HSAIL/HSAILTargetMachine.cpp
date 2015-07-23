@@ -12,7 +12,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "HSAILTargetMachine.h"
-#include "HSAILELFTargetObjectFile.h"
+#include "HSAILTargetObjectFile.h"
 
 #include "llvm/CodeGen/Passes.h"
 #include "llvm/Support/CommandLine.h"

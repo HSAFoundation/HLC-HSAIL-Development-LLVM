@@ -7,7 +7,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "HSAILELFTargetObjectFile.h"
+#include "HSAILTargetObjectFile.h"
 
 using namespace llvm;
 

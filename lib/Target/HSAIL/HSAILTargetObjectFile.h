@@ -16,7 +16,7 @@
 
 namespace llvm {
 
-class HSAILTargetObjectFile : public TargetLoweringObjectFileELF {
+class HSAILTargetObjectFile : public TargetLoweringObjectFile {
 public:
   HSAILTargetObjectFile();
   void Initialize(MCContext &ctx, const TargetMachine &TM) override;
@@ -41,13 +41,13 @@ public:
 };
 
 // FIXME: Do we really need both of these?
-class BRIG32_DwarfTargetObjectFile : public TargetLoweringObjectFileELF {
+class BRIG32_DwarfTargetObjectFile : public TargetLoweringObjectFile {
 public:
   BRIG32_DwarfTargetObjectFile(){};
   virtual ~BRIG32_DwarfTargetObjectFile();
 };
 
-class BRIG64_DwarfTargetObjectFile : public TargetLoweringObjectFileELF {
+class BRIG64_DwarfTargetObjectFile : public TargetLoweringObjectFile {
 public:
   BRIG64_DwarfTargetObjectFile(){};
   virtual ~BRIG64_DwarfTargetObjectFile();
