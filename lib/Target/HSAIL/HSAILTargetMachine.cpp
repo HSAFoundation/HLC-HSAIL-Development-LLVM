@@ -133,10 +133,6 @@ bool HSAILPassConfig::addInstSelector() {
 
   return false;
 }
-bool HSAILPassConfig::addPreEmitPass() { return false; }
-bool HSAILPassConfig::addPreRegAlloc() { return false; }
-bool HSAILPassConfig::addPostRegAlloc() { return false; }
-
 //===----------------------------------------------------------------------===//
 // HSAIL_32Machine functions
 //===----------------------------------------------------------------------===//

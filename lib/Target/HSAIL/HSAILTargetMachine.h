@@ -105,11 +105,8 @@ public:
 
   // Pass Pipeline Configuration
   void addIRPasses() override;
-  bool addPreEmitPass() override;
   bool addPreISel() override;
   bool addInstSelector() override;
-  bool addPreRegAlloc() override;
-  bool addPostRegAlloc() override;
 };
 } // End llvm namespace
 #endif
