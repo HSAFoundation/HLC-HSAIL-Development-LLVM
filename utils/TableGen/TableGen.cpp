@@ -41,8 +41,7 @@ enum ActionType {
   PrintEnums,
   PrintSets,
   GenOptParserDefs,
-  GenCTags,
-  GenMnemonicMapper
+  GenCTags
 };
 
 namespace {
@@ -82,8 +81,10 @@ namespace {
                                "Print enum values for a class"),
                     clEnumValN(PrintSets, "print-sets",
                                "Print expanded sets for testing DAG exprs"),
-                    clEnumValN(GenMnemonicMapper, "gen-mnemonic-mapper",
-                               "Generate mnemonic mapper"),
+                    clEnumValN(GenOptParserDefs, "gen-opt-parser-defs",
+                               "Generate option definitions"),
+                    clEnumValN(GenCTags, "gen-ctags",
+                               "Generate ctags-compatible index"),
                     clEnumValEnd));
 
   cl::opt<std::string>
@@ -165,9 +166,6 @@ bool LLVMTableGenMain(raw_ostream &OS, RecordKeeper &Records) {
   }
   case GenCTags:
     EmitCTags(Records, OS);
-    break;
-  case GenMnemonicMapper:
-    EmitMnemonicMapper(Records, OS);
     break;
   }
 
