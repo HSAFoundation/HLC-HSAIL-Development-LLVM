@@ -242,8 +242,6 @@ public:
   /// alignment (if present) and a comment describing it if appropriate.
   virtual void EmitBasicBlockStart(const MachineBasicBlock &MBB);
 
-  const MCExpr *lowerConstant(const Constant *CV);
-
   /// Lower the specified LLVM Constant to an MCExpr.
   const MCExpr *lowerConstant(const Constant *CV);
 
