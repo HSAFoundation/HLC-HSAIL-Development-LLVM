@@ -19,8 +19,8 @@
 namespace llvm {
 class Triple;
 
-struct HSAILELFMCAsmInfo : public MCAsmInfo {
-  explicit HSAILELFMCAsmInfo(const Triple &TT);
+struct HSAILMCAsmInfo : public MCAsmInfo {
+  explicit HSAILMCAsmInfo(const Triple &TT);
   MCSection *getNonexecutableStackSection(MCContext &Ctx) const override;
 
   bool isValidUnquotedName(StringRef Name) const override;

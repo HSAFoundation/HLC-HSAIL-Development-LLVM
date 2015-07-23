@@ -15,12 +15,10 @@
 #include "HSAILTargetMachine.h"
 #include "llvm/ADT/Triple.h"
 #include "llvm/MC/MCContext.h"
-#include "llvm/MC/MCSectionELF.h"
 #include "llvm/Support/CommandLine.h"
-#include "llvm/Support/ELF.h"
 using namespace llvm;
 
-HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(const Triple &TT) {
+HSAILMCAsmInfo::HSAILMCAsmInfo(const Triple &TT) {
   PrivateGlobalPrefix = "&";
   PrivateLabelPrefix = "@";
   GlobalDirective = "global";
@@ -57,7 +55,7 @@ HSAILELFMCAsmInfo::HSAILELFMCAsmInfo(const Triple &TT) {
 }
 
 MCSection *
-HSAILELFMCAsmInfo::getNonexecutableStackSection(MCContext &Ctx) const {
+HSAILMCAsmInfo::getNonexecutableStackSection(MCContext &Ctx) const {
   return nullptr;
 }
 
@@ -70,7 +68,7 @@ static bool isValidFirstChar(char C) {
   return isValidChar(C) && C != '.' && !(C >= '0' && C <= '9');
 }
 
-bool HSAILELFMCAsmInfo::isValidUnquotedName(StringRef Name) const {
+bool HSAILMCAsmInfo::isValidUnquotedName(StringRef Name) const {
   char First = Name.front();
   assert((First == '%' || First == '&' || First == '@') &&
          "Missing valid prefix character");

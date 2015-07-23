@@ -107,7 +107,7 @@ static MCInstPrinter *createHSAILMCInstPrinter(const Triple &TT,
 
 extern "C" void LLVMInitializeHSAILTargetMC() {
   for (Target *T : { &TheHSAIL_32Target, &TheHSAIL_64Target }) {
-    RegisterMCAsmInfo<HSAILELFMCAsmInfo> X(*T);
+    RegisterMCAsmInfo<HSAILMCAsmInfo> X(*T);
 
     TargetRegistry::RegisterMCCodeGenInfo(*T, createHSAILMCCodeGenInfo);
     TargetRegistry::RegisterMCInstrInfo(*T, createHSAILMCInstrInfo);
