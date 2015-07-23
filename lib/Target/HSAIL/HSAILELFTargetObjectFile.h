@@ -21,7 +21,8 @@ public:
   HSAILTargetObjectFile();
   void Initialize(MCContext &ctx, const TargetMachine &TM) override;
 
-  MCSection *getSectionForConstant(SectionKind Kind,
+  MCSection *getSectionForConstant(const DataLayout &DL,
+                                   SectionKind Kind,
                                    const Constant *C) const override {
     return ReadOnlySection;
   }
