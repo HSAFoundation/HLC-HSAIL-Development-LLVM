@@ -38,6 +38,7 @@ void HSAILTargetObjectFile::Initialize(MCContext &ctx,
                                        const TargetMachine &TM) {
   TargetLoweringObjectFile::Initialize(ctx, TM);
 
+#if 0
   TextSection = new HSAILSection(MCSection::SV_ELF, SectionKind::getText());
   DataSection =
     new HSAILSection(MCSection::SV_ELF, SectionKind::getDataRel());
@@ -73,6 +74,7 @@ void HSAILTargetObjectFile::Initialize(MCContext &ctx,
     new HSAILSection(MCSection::SV_ELF, SectionKind::getMetadata());
   DwarfRangesSection =
     new HSAILSection(MCSection::SV_ELF, SectionKind::getMetadata());
+#endif
 }
 
 BRIG32_DwarfTargetObjectFile::~BRIG32_DwarfTargetObjectFile() {

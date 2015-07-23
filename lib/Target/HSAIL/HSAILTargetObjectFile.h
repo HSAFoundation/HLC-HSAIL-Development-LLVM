@@ -10,8 +10,6 @@
 #ifndef LLVM_LIB_TARGET_HSAIL_HSAILELFTARGETOBJECTFILE_H
 #define LLVM_LIB_TARGET_HSAIL_HSAILELFTARGETOBJECTFILE_H
 
-#include "HSAILSection.h"
-
 #include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
 
 namespace llvm {

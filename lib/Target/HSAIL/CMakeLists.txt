@@ -29,7 +29,6 @@ set(sources
   HSAILModuleInfo.cpp
   HSAILParamManager.cpp
   HSAILRegisterInfo.cpp
-  HSAILSection.cpp
   HSAILStoreInitializer.cpp
   HSAILSubtarget.cpp
   HSAILTargetMachine.cpp
