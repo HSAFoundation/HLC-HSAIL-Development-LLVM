@@ -969,7 +969,7 @@ void BRIGAsmPrinter::EmitFunctionBodyStart() {
                   dyn_cast<GlobalVariable>(MO.getGlobal())) {
             switch (GV->getType()->getAddressSpace()) {
             case HSAILAS::GROUP_ADDRESS:
-              groupVariablesOffsets.insert(pvgvo_record(GV, 0));
+              groupVariablesOffsets.insert(std::make_pair(GV, 0));
               break;
             }
           }
