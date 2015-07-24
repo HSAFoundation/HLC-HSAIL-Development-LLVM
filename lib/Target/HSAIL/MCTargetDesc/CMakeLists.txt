@@ -2,7 +2,6 @@
 add_llvm_library(LLVMHSAILDesc
   BRIGDwarfStreamer.cpp
 
-  HSAILELFObjectWriter.cpp
   HSAILMCCodeEmitter.cpp
   HSAILMCTargetDesc.cpp
   HSAILTargetStreamer.cpp
