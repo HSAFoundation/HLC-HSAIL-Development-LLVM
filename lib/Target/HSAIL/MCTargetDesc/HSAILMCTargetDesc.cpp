@@ -118,9 +118,4 @@ extern "C" void LLVMInitializeHSAILTargetMC() {
     TargetRegistry::RegisterELFStreamer(*T, createBRIGStreamer);
 //    TargetRegistry::RegisterObjectTargetStreamer(*T, createHSAILObjectTargetStreamer);
   }
-
-  TargetRegistry::RegisterMCAsmBackend(TheHSAIL_32Target,
-                                       createHSAIL32AsmBackend);
-  TargetRegistry::RegisterMCAsmBackend(TheHSAIL_64Target,
-                                       createHSAIL64AsmBackend);
 }
