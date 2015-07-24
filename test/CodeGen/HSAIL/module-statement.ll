@@ -8,6 +8,7 @@
 ; DEFAULT32: {{^}}module &__llvm_hsail_module:1:0:$full:$small:$near;
 ; DEFAULT64: {{^}}module &__llvm_hsail_module:1:0:$full:$large:$near;
 
+; ALL-NOT: .data
 define void @empty_func() {
   ret void
 }
