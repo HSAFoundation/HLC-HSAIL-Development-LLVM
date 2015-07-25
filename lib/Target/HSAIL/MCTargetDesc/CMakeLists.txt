@@ -4,6 +4,7 @@ add_llvm_library(LLVMHSAILDesc
 
   HSAILMCCodeEmitter.cpp
   HSAILMCTargetDesc.cpp
+  HSAILObjectStreamer.cpp
   HSAILTargetStreamer.cpp
   HSAILMCAsmInfo.cpp
   HSAILMCAsmStreamer.cpp
