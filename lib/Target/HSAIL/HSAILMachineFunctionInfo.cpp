@@ -45,7 +45,7 @@ HSAILMachineFunctionInfo::HSAILMachineFunctionInfo(MachineFunction &MF)
     : RegisterPartitioning(0),
       HasSpilledCRs(false),
       HasScavengerSpill(false),
-      ParamManager(MF.getTarget().getDataLayout()) {
+      ParamManager(&MF.getDataLayout()) {
   const Function *F = MF.getFunction();
   mMF = &MF;
   MachineModuleInfo &mmi = MF.getMMI();
@@ -85,7 +85,7 @@ bool HSAILMachineFunctionInfo::isKernel() const {
 HSAILKernel *HSAILMachineFunctionInfo::getKernel() { return mKernel; }
 
 uint32_t HSAILMachineFunctionInfo::getScratchSize() {
-  const DataLayout *DL = mMF->getTarget().getDataLayout();
+  const DataLayout &DL = mMF->getDataLayout();
 
   if (mScratchSize == -1) {
     mScratchSize = 0;
@@ -94,7 +94,7 @@ uint32_t HSAILMachineFunctionInfo::getScratchSize() {
     while (I != Ie) {
       // FIXME: Mishandling byval structs
       Type *curType = I->getType();
-      mScratchSize += RoundUpToAlignment(DL->getTypeStoreSize(curType), 16);
+      mScratchSize += RoundUpToAlignment(DL.getTypeStoreSize(curType), 16);
       ++I;
     }
     // mScratchSize += ((mScratchSize + 15) & ~15); // possible typo: doubling
@@ -105,7 +105,7 @@ uint32_t HSAILMachineFunctionInfo::getScratchSize() {
 
 size_t HSAILMachineFunctionInfo::getPrivateSize() {
   if (mPrivateMemSize == -1) {
-    const DataLayout *DL = mMF->getTarget().getDataLayout();
+    const DataLayout &DL = mMF->getDataLayout();
 
     mPrivateMemSize = 0;
     SmallPtrSet<const GlobalVariable *, 16> thisFuncPvtVarsSet;
@@ -124,7 +124,7 @@ size_t HSAILMachineFunctionInfo::getPrivateSize() {
                   HSAILAS::PRIVATE_ADDRESS) {
                 if (thisFuncPvtVarsSet.insert(GV).second) {
                   mPrivateMemSize +=
-                      DL->getTypeAllocSize(GV->getType()->getElementType());
+                      DL.getTypeAllocSize(GV->getType()->getElementType());
                 }
               }
             }
@@ -139,7 +139,7 @@ size_t HSAILMachineFunctionInfo::getPrivateSize() {
 
 size_t HSAILMachineFunctionInfo::getGroupSize() {
   if (mGroupMemSize == -1) {
-    const DataLayout *DL = mMF->getTarget().getDataLayout();
+    const DataLayout &DL = mMF->getDataLayout();
 
     mGroupMemSize = 0;
     SmallPtrSet<const GlobalVariable *, 16> thisFuncGrpVarsSet;
@@ -157,7 +157,7 @@ size_t HSAILMachineFunctionInfo::getGroupSize() {
               if (GV->getType()->getAddressSpace() == HSAILAS::GROUP_ADDRESS) {
                 if (thisFuncGrpVarsSet.insert(GV).second) {
                   mGroupMemSize +=
-                      DL->getTypeAllocSize(GV->getType()->getElementType());
+                      DL.getTypeAllocSize(GV->getType()->getElementType());
                 }
               }
             }
