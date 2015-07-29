@@ -1,0 +1,4 @@
+1. Add lit tests
+2. Fix warnings
+4. HSAILInstrInfo::getTempGPR32PostRA() - Figure out frame index operand index.
+5. Fix memory leak in HSAILSubtarget::getDataLayout()

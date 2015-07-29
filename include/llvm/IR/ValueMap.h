@@ -221,7 +221,7 @@ class ValueMapCallbackVH : public CallbackVH {
   ValueMapT *Map;
 
   ValueMapCallbackVH(KeyT Key, ValueMapT *Map)
-      : CallbackVH(const_cast<Value*>(static_cast<const Value*>(Key))),
+      : CallbackVH(const_cast<Value*>(reinterpret_cast<const Value*>(Key))),
         Map(Map) {}
 
   // Private constructor used to create empty/tombstone DenseMap keys.

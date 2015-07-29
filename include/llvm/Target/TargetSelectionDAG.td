@@ -371,6 +371,7 @@ def zext       : SDNode<"ISD::ZERO_EXTEND", SDTIntExtendOp>;
 def anyext     : SDNode<"ISD::ANY_EXTEND" , SDTIntExtendOp>;
 def trunc      : SDNode<"ISD::TRUNCATE"   , SDTIntTruncOp>;
 def bitconvert : SDNode<"ISD::BITCAST"    , SDTUnaryOp>;
+def addrspacecast : SDNode<"ISD::ADDRSPACECAST", SDTUnaryOp>;
 def extractelt : SDNode<"ISD::EXTRACT_VECTOR_ELT", SDTVecExtract>;
 def insertelt  : SDNode<"ISD::INSERT_VECTOR_ELT", SDTVecInsert>;
 
@@ -509,7 +510,7 @@ def intrinsic_wo_chain : SDNode<"ISD::INTRINSIC_WO_CHAIN",
                                 SDTypeProfile<1, -1, [SDTCisPtrTy<1>]>, []>;
 
 // Do not use cvt directly. Use cvt forms below
-def cvt : SDNode<"ISD::CONVERT_RNDSAT", SDTConvertOp>;
+def convert_rndsat : SDNode<"ISD::CONVERT_RNDSAT", SDTConvertOp>;
 
 def SDT_assertext : SDTypeProfile<1, 1,
   [SDTCisInt<0>, SDTCisInt<1>, SDTCisSameAs<1, 0>]>;
@@ -976,47 +977,47 @@ def atomic_load_64 :
 // Selection DAG CONVERT_RNDSAT patterns
 
 def cvtff : PatFrag<(ops node:$val, node:$dty, node:$sty, node:$rd, node:$sat),
-    (cvt node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
+    (convert_rndsat node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
        return cast<CvtRndSatSDNode>(N)->getCvtCode() == ISD::CVT_FF;
     }]>;
 
 def cvtss : PatFrag<(ops node:$val, node:$dty, node:$sty, node:$rd, node:$sat),
-    (cvt node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
+    (convert_rndsat node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
        return cast<CvtRndSatSDNode>(N)->getCvtCode() == ISD::CVT_SS;
     }]>;
 
 def cvtsu : PatFrag<(ops node:$val, node:$dty, node:$sty, node:$rd, node:$sat),
-    (cvt node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
+    (convert_rndsat node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
        return cast<CvtRndSatSDNode>(N)->getCvtCode() == ISD::CVT_SU;
     }]>;
 
 def cvtus : PatFrag<(ops node:$val, node:$dty, node:$sty, node:$rd, node:$sat),
-    (cvt node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
+    (convert_rndsat node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
        return cast<CvtRndSatSDNode>(N)->getCvtCode() == ISD::CVT_US;
     }]>;
 
 def cvtuu : PatFrag<(ops node:$val, node:$dty, node:$sty, node:$rd, node:$sat),
-    (cvt node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
+    (convert_rndsat node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
        return cast<CvtRndSatSDNode>(N)->getCvtCode() == ISD::CVT_UU;
     }]>;
 
 def cvtsf : PatFrag<(ops node:$val, node:$dty, node:$sty, node:$rd, node:$sat),
-    (cvt node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
+    (convert_rndsat node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
        return cast<CvtRndSatSDNode>(N)->getCvtCode() == ISD::CVT_SF;
     }]>;
 
 def cvtuf : PatFrag<(ops node:$val, node:$dty, node:$sty, node:$rd, node:$sat),
-    (cvt node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
+    (convert_rndsat node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
        return cast<CvtRndSatSDNode>(N)->getCvtCode() == ISD::CVT_UF;
     }]>;
 
 def cvtfs : PatFrag<(ops node:$val, node:$dty, node:$sty, node:$rd, node:$sat),
-    (cvt node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
+    (convert_rndsat node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
        return cast<CvtRndSatSDNode>(N)->getCvtCode() == ISD::CVT_FS;
     }]>;
 
 def cvtfu : PatFrag<(ops node:$val, node:$dty, node:$sty, node:$rd, node:$sat),
-    (cvt node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
+    (convert_rndsat node:$val, node:$dty, node:$sty, node:$rd, node:$sat), [{
        return cast<CvtRndSatSDNode>(N)->getCvtCode() == ISD::CVT_FU;
     }]>;
 

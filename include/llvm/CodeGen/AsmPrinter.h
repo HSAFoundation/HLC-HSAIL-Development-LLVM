@@ -240,7 +240,9 @@ public:
 
   /// This method prints the label for the specified MachineBasicBlock, an
   /// alignment (if present) and a comment describing it if appropriate.
-  void EmitBasicBlockStart(const MachineBasicBlock &MBB) const;
+  virtual void EmitBasicBlockStart(const MachineBasicBlock &MBB);
+
+  const MCExpr *lowerConstant(const Constant *CV);
 
   /// Lower the specified LLVM Constant to an MCExpr.
   const MCExpr *lowerConstant(const Constant *CV);

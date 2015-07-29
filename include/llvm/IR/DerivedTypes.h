@@ -127,6 +127,10 @@ public:
     return makeArrayRef(param_begin(), param_end());
   }
 
+  inline iterator_range<param_iterator> params() {
+    return iterator_range<param_iterator>(param_begin(), param_end());
+  }
+
   /// Parameter type accessors.
   Type *getParamType(unsigned i) const { return ContainedTys[i+1]; }
 
@@ -279,6 +283,10 @@ public:
   element_iterator element_end() const { return &ContainedTys[NumContainedTys];}
   ArrayRef<Type *> const elements() const {
     return makeArrayRef(element_begin(), element_end());
+  }
+
+  inline iterator_range<element_iterator> elements() {
+    return iterator_range<element_iterator>(element_begin(), element_end());
   }
 
   /// isLayoutIdentical - Return true if this is layout identical to the

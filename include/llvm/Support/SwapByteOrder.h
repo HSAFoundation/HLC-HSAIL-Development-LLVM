@@ -19,6 +19,7 @@
 #include "llvm/Support/DataTypes.h"
 #include <cstddef>
 #include <limits>
+#include <string>
 
 namespace llvm {
 namespace sys {
@@ -76,6 +77,28 @@ inline   signed short getSwappedBytes(  signed short C) { return SwapByteOrder_1
 
 inline unsigned int   getSwappedBytes(unsigned int   C) { return SwapByteOrder_32(C); }
 inline   signed int   getSwappedBytes(  signed int   C) { return SwapByteOrder_32(C); }
+
+#if 0
+inline uint32_t getSwappedBytes(float C) {
+  union {
+    uint32_t I;
+    float F;
+  } Tmp;
+
+  std::memcpy(&Tmp, &C, sizeof(float));
+  return SwapByteOrder_32(Tmp.I);
+}
+
+inline uint64_t getSwappedBytes(double C) {
+  union {
+    uint64_t I;
+    double F;
+  } Tmp;
+
+  std::memcpy(&Tmp, &C, sizeof(double));
+  return SwapByteOrder_64(Tmp.I);
+}
+#endif
 
 #if __LONG_MAX__ == __INT_MAX__
 inline unsigned long  getSwappedBytes(unsigned long  C) { return SwapByteOrder_32(C); }
