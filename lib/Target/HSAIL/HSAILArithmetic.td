@@ -42,6 +42,11 @@ def : InstMod_2Op_Pat<DIV_F32, int_HSAIL_div_f32, f32,
   BrigType.F32, BrigRound.FLOAT_DEFAULT, 0
 >;
 
+// Legacy intrinsic
+def : InstMod_2Op_Pat<DIV_F32, int_HSAIL_div_ftz_f32, f32,
+  BrigType.F32, BrigRound.FLOAT_DEFAULT, 1
+>;
+
 defm : InstBasic_2Op_IntTypes_Pat<"REM", urem, 0>;
 defm : InstBasic_2Op_IntTypes_Pat<"REM", srem, 1>;
 

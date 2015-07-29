@@ -317,6 +317,10 @@ def int_HSAIL_div_f32 : GCCBuiltin<"__hsail_div_f32">,
   Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty], [IntrNoMem]
 >;
 
+def int_HSAIL_div_ftz_f32 : GCCBuiltin<"__hsail_div_ftz_f32">,
+  Intrinsic<[llvm_float_ty], [llvm_float_ty, llvm_float_ty], [IntrNoMem]
+>;
+
 // Intrinsics for OpenCL relational built-ins (OCL 1.2 6.12.6)
 def int_HSAIL_class_f32 : GCCBuiltin<"__hsail_class_f32">,
   Intrinsic<[llvm_i32_ty], [llvm_float_ty, llvm_i32_ty], [IntrNoMem]
