@@ -14,6 +14,7 @@
 
 #include "HSAILMCTargetDesc.h"
 #include "HSAILMCAsmInfo.h"
+#include "HSAILMCAsmStreamer.h"
 #include "HSAILMCCodeEmitter.h"
 #include "InstPrinter/HSAILInstPrinter.h"
 #include "llvm/MC/MCCodeGenInfo.h"
@@ -124,6 +125,6 @@ extern "C" void LLVMInitializeHSAILTargetMC() {
     TargetRegistry::RegisterMCCodeEmitter(*T, createHSAILMCCodeEmitter);
     TargetRegistry::RegisterELFStreamer(*T, createBRIGStreamer);
     TargetRegistry::RegisterAsmTargetStreamer(*T, createHSAILAsmTargetStreamer);
-//    TargetRegistry::RegisterObjectTargetStreamer(*T, createHSAILObjectTargetStreamer);
+    TargetRegistry::RegisterAsmStreamer(*T, createHSAILMCAsmStreamer);
   }
 }
