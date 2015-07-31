@@ -142,6 +142,15 @@ public:
                                             raw_pwrite_stream &OS,
                                             MCCodeEmitter *Emitter,
                                             bool RelaxAll);
+  typedef MCStreamer *(*AsmStreamerCtorTy)(MCContext &Ctx,
+                                           std::unique_ptr<formatted_raw_ostream> OS,
+                                           bool IsVerboseAsm,
+                                           bool UseDwarfDirectory,
+                                           MCInstPrinter *InstPrint,
+                                           MCCodeEmitter *CE,
+                                           MCAsmBackend *TAB,
+                                           bool ShowInst);
+
   typedef MCTargetStreamer *(*NullTargetStreamerCtorTy)(MCStreamer &S);
   typedef MCTargetStreamer *(*AsmTargetStreamerCtorTy)(
       MCStreamer &S, formatted_raw_ostream &OS, MCInstPrinter *InstPrint,
@@ -229,6 +238,10 @@ private:
   MachOStreamerCtorTy MachOStreamerCtorFn;
   ELFStreamerCtorTy ELFStreamerCtorFn;
 
+  /// AsmStreamerCtorFn - Construction function for this target's
+  /// AsmStreamer, if registered (default = llvm::createAsmStreamer).
+  AsmStreamerCtorTy AsmStreamerCtorFn;
+
   /// Construction function for this target's null TargetStreamer, if
   /// registered (default = nullptr).
   NullTargetStreamerCtorTy NullTargetStreamerCtorFn;
@@ -252,7 +265,8 @@ private:
 public:
   Target()
       : COFFStreamerCtorFn(nullptr), MachOStreamerCtorFn(nullptr),
-        ELFStreamerCtorFn(nullptr), NullTargetStreamerCtorFn(nullptr),
+        ELFStreamerCtorFn(nullptr), AsmStreamerCtorFn(nullptr),
+        NullTargetStreamerCtorFn(nullptr),
         AsmTargetStreamerCtorFn(nullptr), ObjectTargetStreamerCtorFn(nullptr),
         MCRelocationInfoCtorFn(nullptr), MCSymbolizerCtorFn(nullptr) {}
 
@@ -472,9 +486,18 @@ public:
                                 MCInstPrinter *InstPrint, MCCodeEmitter *CE,
                                 MCAsmBackend *TAB, bool ShowInst) const {
     formatted_raw_ostream &OSRef = *OS;
-    MCStreamer *S = llvm::createAsmStreamer(Ctx, std::move(OS), IsVerboseAsm,
-                                            UseDwarfDirectory, InstPrint, CE,
-                                            TAB, ShowInst);
+
+    MCStreamer *S;
+    if (AsmStreamerCtorFn) {
+      S = AsmStreamerCtorFn(Ctx, std::move(OS), IsVerboseAsm,
+                            UseDwarfDirectory, InstPrint, CE,
+                            TAB, ShowInst);
+    } else {
+      S = llvm::createAsmStreamer(Ctx, std::move(OS), IsVerboseAsm,
+                                  UseDwarfDirectory, InstPrint, CE,
+                                  TAB, ShowInst);
+    }
+
     createAsmTargetStreamer(*S, OSRef, InstPrint, IsVerboseAsm);
     return S;
   }
@@ -806,6 +829,19 @@ struct TargetRegistry {
 
   static void RegisterELFStreamer(Target &T, Target::ELFStreamerCtorTy Fn) {
     T.ELFStreamerCtorFn = Fn;
+  }
+
+  /// RegisterAsmStreamer - Register an assembly MCStreamer implementation
+  /// for the given target.
+  ///
+  /// Clients are responsible for ensuring that registration doesn't occur
+  /// while another thread is attempting to access the registry. Typically
+  /// this is done by initializing all targets at program startup.
+  ///
+  /// @param T - The target being registered.
+  /// @param Fn - A function to construct an MCStreamer for the target.
+  static void RegisterAsmStreamer(Target &T, Target::AsmStreamerCtorTy Fn) {
+    T.AsmStreamerCtorFn = Fn;
   }
 
   static void RegisterNullTargetStreamer(Target &T,
