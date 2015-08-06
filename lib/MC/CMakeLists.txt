@@ -8,6 +8,7 @@ add_llvm_library(LLVMMC
   MCAsmInfoELF.cpp
   MCAsmStreamer.cpp
   MCAssembler.cpp
+  MCBasicAsmStreamer.cpp
   MCCodeEmitter.cpp
   MCCodeGenInfo.cpp
   MCContext.cpp

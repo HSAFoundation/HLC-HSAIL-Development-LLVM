@@ -7,14 +7,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "llvm/MC/MCStreamer.h"
+#include "llvm/MC/MCBasicAsmStreamer.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/ADT/Twine.h"
-#include "llvm/MC/MCAsmBackend.h"
 #include "llvm/MC/MCAsmInfo.h"
-#include "llvm/MC/MCCodeEmitter.h"
 #include "llvm/MC/MCContext.h"
 #include "llvm/MC/MCExpr.h"
 #include "llvm/MC/MCFixupKindInfo.h"
@@ -37,21 +35,7 @@ using namespace llvm;
 
 namespace {
 
-class MCAsmStreamer final : public MCStreamer {
-  std::unique_ptr<formatted_raw_ostream> OSOwner;
-  formatted_raw_ostream &OS;
-  const MCAsmInfo *MAI;
-  std::unique_ptr<MCInstPrinter> InstPrinter;
-  std::unique_ptr<MCCodeEmitter> Emitter;
-  std::unique_ptr<MCAsmBackend> AsmBackend;
-
-  SmallString<128> CommentToEmit;
-  raw_svector_ostream CommentStream;
-
-  unsigned IsVerboseAsm : 1;
-  unsigned ShowInst : 1;
-  unsigned UseDwarfDirectory : 1;
-
+class MCAsmStreamer final : public MCBasicAsmStreamer {
   void EmitRegisterName(int64_t Register);
   void EmitCFIStartProcImpl(MCDwarfFrameInfo &Frame) override;
   void EmitCFIEndProcImpl(MCDwarfFrameInfo &Frame) override;
@@ -61,44 +45,12 @@ public:
                 bool isVerboseAsm, bool useDwarfDirectory,
                 MCInstPrinter *printer, MCCodeEmitter *emitter,
                 MCAsmBackend *asmbackend, bool showInst)
-      : MCStreamer(Context), OSOwner(std::move(os)), OS(*OSOwner),
-        MAI(Context.getAsmInfo()), InstPrinter(printer), Emitter(emitter),
-        AsmBackend(asmbackend), CommentStream(CommentToEmit),
-        IsVerboseAsm(isVerboseAsm), ShowInst(showInst),
-        UseDwarfDirectory(useDwarfDirectory) {
-    assert(InstPrinter);
-    if (IsVerboseAsm)
-        InstPrinter->setCommentStream(CommentStream);
-  }
-
-  inline void EmitEOL() {
-    // If we don't have any comments, just emit a \n.
-    if (!IsVerboseAsm) {
-      OS << '\n';
-      return;
-    }
-    EmitCommentsAndEOL();
-  }
+    : MCBasicAsmStreamer(Context, std::move(os),
+                         isVerboseAsm, useDwarfDirectory,
+                         printer, emitter,
+                         asmbackend, showInst) {}
 
   void EmitSyntaxDirective() override;
-
-  void EmitCommentsAndEOL();
-
-  /// isVerboseAsm - Return true if this streamer supports verbose assembly at
-  /// all.
-  bool isVerboseAsm() const override { return IsVerboseAsm; }
-
-  /// hasRawTextSupport - We support EmitRawText.
-  bool hasRawTextSupport() const override { return true; }
-
-  /// AddComment - Add a comment that can be emitted to the generated .s
-  /// file if applicable as a QoI issue to make the output of the compiler
-  /// more readable.  This only affects the MCAsmStreamer, and only when
-  /// verbose assembly output is enabled.
-  void AddComment(const Twine &T) override;
-
-  /// AddEncodingComment - Add a comment showing the encoding of an instruction.
-  void AddEncodingComment(const MCInst &Inst, const MCSubtargetInfo &);
 
   /// GetCommentOS - Return a raw_ostream that comments can be written to.
   /// Unlike AddComment, you are required to terminate comments with \n if you
@@ -108,8 +60,6 @@ public:
       return nulls();  // Discard comments unless in verbose asm mode.
     return CommentStream;
   }
-
-  void emitRawComment(const Twine &T, bool TabPrefix = true) override;
 
   /// AddBlankLine - Emit a blank line to a .s file to pretty it up.
   void AddBlankLine() override {
@@ -233,66 +183,18 @@ public:
   void EmitWinEHHandler(const MCSymbol *Sym, bool Unwind, bool Except) override;
   void EmitWinEHHandlerData() override;
 
-  void EmitInstruction(const MCInst &Inst, const MCSubtargetInfo &STI) override;
-
   void EmitBundleAlignMode(unsigned AlignPow2) override;
   void EmitBundleLock(bool AlignToEnd) override;
   void EmitBundleUnlock() override;
-
-  /// EmitRawText - If this file is backed by an assembly streamer, this dumps
-  /// the specified string in the output .s file.  This capability is
-  /// indicated by the hasRawTextSupport() predicate.
-  void EmitRawTextImpl(StringRef String) override;
 
   void FinishImpl() override;
 };
 
 } // end anonymous namespace.
 
-/// AddComment - Add a comment that can be emitted to the generated .s
-/// file if applicable as a QoI issue to make the output of the compiler
-/// more readable.  This only affects the MCAsmStreamer, and only when
-/// verbose assembly output is enabled.
-void MCAsmStreamer::AddComment(const Twine &T) {
-  if (!IsVerboseAsm) return;
-
-  T.toVector(CommentToEmit);
-  // Each comment goes on its own line.
-  CommentToEmit.push_back('\n');
-}
-
-void MCAsmStreamer::EmitCommentsAndEOL() {
-  if (CommentToEmit.empty() && CommentStream.GetNumBytesInBuffer() == 0) {
-    OS << '\n';
-    return;
-  }
-
-  StringRef Comments = CommentToEmit;
-
-  assert(Comments.back() == '\n' &&
-         "Comment array not newline terminated");
-  do {
-    // Emit a line of comments.
-    OS.PadToColumn(MAI->getCommentColumn());
-    size_t Position = Comments.find('\n');
-    OS << MAI->getCommentString() << ' ' << Comments.substr(0, Position) <<'\n';
-
-    Comments = Comments.substr(Position+1);
-  } while (!Comments.empty());
-
-  CommentToEmit.clear();
-}
-
 static inline int64_t truncateToSize(int64_t Value, unsigned Bytes) {
   assert(Bytes && "Invalid size!");
   return Value & ((uint64_t) (int64_t) -1 >> (64 - Bytes * 8));
-}
-
-void MCAsmStreamer::emitRawComment(const Twine &T, bool TabPrefix) {
-  if (TabPrefix)
-    OS << '\t';
-  OS << MAI->getCommentString() << T;
-  EmitEOL();
 }
 
 void MCAsmStreamer::ChangeSection(MCSection *Section,
@@ -481,7 +383,7 @@ void MCAsmStreamer::EmitSyntaxDirective() {
   if (MAI->getAssemblerDialect() == 1)
     OS << "\t.intel_syntax noprefix\n";
   // FIXME: Currently emit unprefix'ed registers.
-  // The intel_syntax directive has one optional argument 
+  // The intel_syntax directive has one optional argument
   // with may have a value of prefix or noprefix.
 }
 
@@ -1235,112 +1137,6 @@ void MCAsmStreamer::EmitWinCFIEndProlog(void) {
   EmitEOL();
 }
 
-void MCAsmStreamer::AddEncodingComment(const MCInst &Inst,
-                                       const MCSubtargetInfo &STI) {
-  raw_ostream &OS = GetCommentOS();
-  SmallString<256> Code;
-  SmallVector<MCFixup, 4> Fixups;
-  raw_svector_ostream VecOS(Code);
-  Emitter->encodeInstruction(Inst, VecOS, Fixups, STI);
-
-  // If we are showing fixups, create symbolic markers in the encoded
-  // representation. We do this by making a per-bit map to the fixup item index,
-  // then trying to display it as nicely as possible.
-  SmallVector<uint8_t, 64> FixupMap;
-  FixupMap.resize(Code.size() * 8);
-  for (unsigned i = 0, e = Code.size() * 8; i != e; ++i)
-    FixupMap[i] = 0;
-
-  for (unsigned i = 0, e = Fixups.size(); i != e; ++i) {
-    MCFixup &F = Fixups[i];
-    const MCFixupKindInfo &Info = AsmBackend->getFixupKindInfo(F.getKind());
-    for (unsigned j = 0; j != Info.TargetSize; ++j) {
-      unsigned Index = F.getOffset() * 8 + Info.TargetOffset + j;
-      assert(Index < Code.size() * 8 && "Invalid offset in fixup!");
-      FixupMap[Index] = 1 + i;
-    }
-  }
-
-  // FIXME: Note the fixup comments for Thumb2 are completely bogus since the
-  // high order halfword of a 32-bit Thumb2 instruction is emitted first.
-  OS << "encoding: [";
-  for (unsigned i = 0, e = Code.size(); i != e; ++i) {
-    if (i)
-      OS << ',';
-
-    // See if all bits are the same map entry.
-    uint8_t MapEntry = FixupMap[i * 8 + 0];
-    for (unsigned j = 1; j != 8; ++j) {
-      if (FixupMap[i * 8 + j] == MapEntry)
-        continue;
-
-      MapEntry = uint8_t(~0U);
-      break;
-    }
-
-    if (MapEntry != uint8_t(~0U)) {
-      if (MapEntry == 0) {
-        OS << format("0x%02x", uint8_t(Code[i]));
-      } else {
-        if (Code[i]) {
-          // FIXME: Some of the 8 bits require fix up.
-          OS << format("0x%02x", uint8_t(Code[i])) << '\''
-             << char('A' + MapEntry - 1) << '\'';
-        } else
-          OS << char('A' + MapEntry - 1);
-      }
-    } else {
-      // Otherwise, write out in binary.
-      OS << "0b";
-      for (unsigned j = 8; j--;) {
-        unsigned Bit = (Code[i] >> j) & 1;
-
-        unsigned FixupBit;
-        if (MAI->isLittleEndian())
-          FixupBit = i * 8 + j;
-        else
-          FixupBit = i * 8 + (7-j);
-
-        if (uint8_t MapEntry = FixupMap[FixupBit]) {
-          assert(Bit == 0 && "Encoder wrote into fixed up bit!");
-          OS << char('A' + MapEntry - 1);
-        } else
-          OS << Bit;
-      }
-    }
-  }
-  OS << "]\n";
-
-  for (unsigned i = 0, e = Fixups.size(); i != e; ++i) {
-    MCFixup &F = Fixups[i];
-    const MCFixupKindInfo &Info = AsmBackend->getFixupKindInfo(F.getKind());
-    OS << "  fixup " << char('A' + i) << " - " << "offset: " << F.getOffset()
-       << ", value: " << *F.getValue() << ", kind: " << Info.Name << "\n";
-  }
-}
-
-void MCAsmStreamer::EmitInstruction(const MCInst &Inst, const MCSubtargetInfo &STI) {
-  assert(getCurrentSection().first &&
-         "Cannot emit contents before setting section!");
-
-  // Show the encoding in a comment if we have a code emitter.
-  if (Emitter)
-    AddEncodingComment(Inst, STI);
-
-  // Show the MCInst if enabled.
-  if (ShowInst) {
-    Inst.dump_pretty(GetCommentOS(), InstPrinter.get(), "\n ");
-    GetCommentOS() << "\n";
-  }
-
-  if(getTargetStreamer())
-    getTargetStreamer()->prettyPrintAsm(*InstPrinter, OS, Inst, STI);
-  else
-    InstPrinter->printInst(&Inst, OS, "", STI);
-
-  EmitEOL();
-}
-
 void MCAsmStreamer::EmitBundleAlignMode(unsigned AlignPow2) {
   OS << "\t.bundle_align_mode " << AlignPow2;
   EmitEOL();
@@ -1355,16 +1151,6 @@ void MCAsmStreamer::EmitBundleLock(bool AlignToEnd) {
 
 void MCAsmStreamer::EmitBundleUnlock() {
   OS << "\t.bundle_unlock";
-  EmitEOL();
-}
-
-/// EmitRawText - If this file is backed by an assembly streamer, this dumps
-/// the specified string in the output .s file.  This capability is
-/// indicated by the hasRawTextSupport() predicate.
-void MCAsmStreamer::EmitRawTextImpl(StringRef String) {
-  if (!String.empty() && String.back() == '\n')
-    String = String.substr(0, String.size()-1);
-  OS << String;
   EmitEOL();
 }
 
