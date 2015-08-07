@@ -6,7 +6,6 @@ add_llvm_library(LLVMHSAILDesc
   HSAILMCTargetDesc.cpp
   HSAILTargetStreamer.cpp
   HSAILMCAsmInfo.cpp
-  HSAILMCAsmStreamer.cpp
   RawVectorOstream.cpp
   )
 
