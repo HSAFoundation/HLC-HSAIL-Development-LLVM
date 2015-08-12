@@ -553,6 +553,10 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::ppc64le:
     return Triple::ELF;
 
+  case Triple::hsail:
+  case Triple::hsail64:
+    return Triple::UnknownObjectFormat;
+
   case Triple::ppc:
   case Triple::ppc64:
     if (T.isOSDarwin())
