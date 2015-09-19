@@ -238,7 +238,6 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM,
   setHasMultipleConditionRegisters(true);
   setJumpIsExpensive(true);
   setSelectIsExpensive(true);
-  setPow2SDivIsCheap(false);
   setPrefLoopAlignment(0);
   setSchedulingPreference((CodeGenOpt::None == TM.getOptLevel()) ? Sched::Source
                                                                  : Sched::ILP);
