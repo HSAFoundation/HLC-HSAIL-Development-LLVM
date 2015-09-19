@@ -643,7 +643,7 @@ void HSAILInstrInfo::storeRegToStackSlot(MachineBasicBlock &MBB,
   case HSAIL::GPR32RegClassID:
   case HSAIL::GPR64RegClassID: {
     MachineMemOperand *MMO = MF.getMachineMemOperand(
-        MachinePointerInfo::getFixedStack(FrameIndex),
+        MachinePointerInfo::getFixedStack(MF, FrameIndex),
         MachineMemOperand::MOStore, MFI.getObjectSize(FrameIndex),
         MFI.getObjectAlignment(FrameIndex));
 
@@ -701,7 +701,7 @@ void HSAILInstrInfo::loadRegFromStackSlot(MachineBasicBlock &MBB,
   case HSAIL::GPR64RegClassID:
   case HSAIL::CRRegClassID: {
     MachineMemOperand *MMO = MF.getMachineMemOperand(
-        MachinePointerInfo::getFixedStack(FrameIndex),
+        MachinePointerInfo::getFixedStack(MF, FrameIndex),
         MachineMemOperand::MOLoad, MFI.getObjectSize(FrameIndex),
         MFI.getObjectAlignment(FrameIndex));
     BuildMI(MBB, MI, DL, get(Opc))
