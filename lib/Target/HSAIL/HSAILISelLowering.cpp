@@ -305,6 +305,8 @@ bool HSAILTargetLowering::allowsMisalignedMemoryAccesses(EVT,
                                                          unsigned AddrSpace,
                                                          unsigned Align,
                                                          bool *Fast) const {
+  if (Fast)
+    *Fast = true;
   return true;
 }
 
