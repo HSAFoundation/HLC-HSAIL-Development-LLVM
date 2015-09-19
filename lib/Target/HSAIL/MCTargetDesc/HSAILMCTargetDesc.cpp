@@ -16,7 +16,6 @@
 #include "HSAILMCAsmInfo.h"
 #include "HSAILMCAsmStreamer.h"
 #include "HSAILMCCodeEmitter.h"
-#include "HSAILObjectStreamer.h"
 #include "InstPrinter/HSAILInstPrinter.h"
 #include "llvm/MC/MCCodeGenInfo.h"
 #include "llvm/MC/MCInstrInfo.h"
@@ -99,14 +98,6 @@ createHSAILObjectTargetStreamer(MCStreamer &S, const MCSubtargetInfo &STI) {
   return new HSAILTargetStreamer(S);
 }
 
-#if 0
-static MCStreamer *createMCStreamer(const Triple &T, MCContext &Context,
-                                    MCAsmBackend &MAB, raw_pwrite_stream &OS,
-                                    MCCodeEmitter *Emitter, bool RelaxAll) {
-  return createHSAILObjectStreamer(Context, MAB, OS, Emitter, RelaxAll);
-}
-#endif
-
 static MCTargetStreamer *createHSAILAsmTargetStreamer(MCStreamer &S,
                                                       formatted_raw_ostream &OS,
                                                       MCInstPrinter *InstPrint,
@@ -132,9 +123,7 @@ extern "C" void LLVMInitializeHSAILTargetMC() {
     TargetRegistry::RegisterMCSubtargetInfo(*T, createHSAILMCSubtargetInfo);
     TargetRegistry::RegisterMCInstPrinter(*T, createHSAILMCInstPrinter);
     TargetRegistry::RegisterMCCodeEmitter(*T, createHSAILMCCodeEmitter);
-    //TargetRegistry::RegisterELFStreamer(*T, createBRIGStreamer);
-    //TargetRegistry::RegisterObjectTargetStreamer(*T, createHSAILObjectStreamer);
-    //TargetRegistry::RegisterUnknownObjectFormatStreamer(*T, createHSAILObjectStreamer);
+    TargetRegistry::RegisterELFStreamer(*T, createBRIGStreamer);
     TargetRegistry::RegisterAsmTargetStreamer(*T, createHSAILAsmTargetStreamer);
     TargetRegistry::RegisterAsmStreamer(*T, createHSAILMCAsmStreamer);
   }

@@ -560,10 +560,8 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
     return Triple::ELF;
 
   case Triple::wasm32:
-  case Triple::wasm64: // Unknown for now, until an object format is specified.
-
-  case Triple::hsail:
-  case Triple::hsail64:
+  case Triple::wasm64:
+    // Unknown for now, until an object format is specified.
     return Triple::UnknownObjectFormat;
   }
 

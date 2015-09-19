@@ -142,13 +142,6 @@ public:
                                             raw_pwrite_stream &OS,
                                             MCCodeEmitter *Emitter,
                                             bool RelaxAll);
-
-  typedef MCStreamer *(*UnknownStreamerCtorTy)(const Triple &T,
-                                               MCContext &Ctx,
-                                               MCAsmBackend &TAB,
-                                               raw_pwrite_stream &OS,
-                                               MCCodeEmitter *Emitter);
-
   typedef MCStreamer *(*AsmStreamerCtorTy)(MCContext &Ctx,
                                            std::unique_ptr<formatted_raw_ostream> OS,
                                            bool IsVerboseAsm,
@@ -244,7 +237,6 @@ private:
   COFFStreamerCtorTy COFFStreamerCtorFn;
   MachOStreamerCtorTy MachOStreamerCtorFn;
   ELFStreamerCtorTy ELFStreamerCtorFn;
-  UnknownStreamerCtorTy UnknownStreamerCtorFn;
 
   /// AsmStreamerCtorFn - Construction function for this target's
   /// AsmStreamer, if registered (default = llvm::createAsmStreamer).
@@ -462,6 +454,8 @@ public:
                                      bool DWARFMustBeAtTheEnd) const {
     MCStreamer *S;
     switch (T.getObjectFormat()) {
+    default:
+      llvm_unreachable("Unknown object format");
     case Triple::COFF:
       assert(T.isOSWindows() && "only Windows COFF is supported");
       S = COFFStreamerCtorFn(Ctx, TAB, OS, Emitter, RelaxAll);
@@ -480,13 +474,6 @@ public:
       else
         S = createELFStreamer(Ctx, TAB, OS, Emitter, RelaxAll);
       break;
-    case Triple::UnknownObjectFormat: {
-      if (UnknownStreamerCtorFn)
-        S = UnknownStreamerCtorFn(T, Ctx, TAB, OS, Emitter);
-      else
-        llvm_unreachable("unknown object format must have a custom streamer");
-      break;
-    }
     }
     if (ObjectTargetStreamerCtorFn)
       ObjectTargetStreamerCtorFn(*S, STI);
@@ -842,11 +829,6 @@ struct TargetRegistry {
 
   static void RegisterELFStreamer(Target &T, Target::ELFStreamerCtorTy Fn) {
     T.ELFStreamerCtorFn = Fn;
-  }
-
-  static void RegisterUnknownObjectFormatStreamer(
-    Target &T, Target::UnknownStreamerCtorTy Fn) {
-    T.UnknownStreamerCtorFn = Fn;
   }
 
   /// RegisterAsmStreamer - Register an assembly MCStreamer implementation
