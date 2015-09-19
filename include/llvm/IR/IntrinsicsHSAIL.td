@@ -358,7 +358,7 @@ def int_hsail_dim : GCCBuiltin<"__builtin_hsail_dim">,
 def int_hsail_gridgroups : GCCBuiltin<"__builtin_hsail_gridgroups">,
   Intrinsic<[llvm_i32_ty], [llvm_i32_ty], [IntrNoMem]>;
 
-def int_hsail_gridsize : GCCBuiltin<"__builtin_hsail_gridsize">,
+def int_hsail_gridsize :
   Intrinsic<[llvm_anyint_ty], [llvm_i32_ty], [IntrNoMem]>;
 
 // int_hsail_packetcompletionsig
