@@ -95,6 +95,9 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM,
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::i32, Expand);
   setOperationAction(ISD::SIGN_EXTEND_INREG, MVT::i64, Expand);
 
+  setOperationAction(ISD::BRIND, MVT::Other, Expand);
+  setOperationAction(ISD::BR_JT, MVT::Other, Expand);
+
   setOperationAction(ISD::BR_CC, MVT::i32, Expand);
   setOperationAction(ISD::BR_CC, MVT::i64, Expand);
   setOperationAction(ISD::BR_CC, MVT::f32, Expand);
