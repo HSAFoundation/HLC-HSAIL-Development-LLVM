@@ -607,7 +607,6 @@ void HSAILAsmPrinter::EmitStartOfAsmFile(Module &M) {
 
     if (!HSAIL::isKernelFunc(&F) && !isHSAILInstrinsic(F.getName())) {
       Str.clear();
-      O.resync();
 
       O << "decl ";
 
