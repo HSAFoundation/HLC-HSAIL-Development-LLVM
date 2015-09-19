@@ -44,7 +44,7 @@ define spir_kernel void @6() {
   ret void
 }
 
-@falias = alias void ()* @5
+@falias = alias void(), void ()* @5
 
 ; HSAIL-LABEL: {{^}}prog function &call_alias()()
 ; HSAIL: call &falias () ();
