@@ -18,8 +18,9 @@
 using namespace llvm;
 
 
-int HSAILFrameLowering::getFrameIndexOffset(const MachineFunction &MF,
-                                            int FI) const {
+int HSAILFrameLowering::getFrameIndexReference(const MachineFunction &MF,
+                                               int FI,
+                                               unsigned &FrameReg) const {
   return MF.getFrameInfo()->getObjectOffset(FI);
 }
 

@@ -33,7 +33,8 @@ public:
 
   bool hasFP(const MachineFunction &MF) const override { return false; }
 
-  int getFrameIndexOffset(const MachineFunction &MF, int FI) const override;
+  int getFrameIndexReference(const MachineFunction &MF, int FI,
+                             unsigned &FrameReg) const override;
 
   void processFunctionBeforeFrameFinalized(
     MachineFunction &F,
