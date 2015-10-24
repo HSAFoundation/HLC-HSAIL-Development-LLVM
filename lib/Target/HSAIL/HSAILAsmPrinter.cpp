@@ -265,12 +265,21 @@ void HSAILAsmPrinter::printInitVarWithAddressPragma(StringRef VarName,
   assert(Res && "Could not evaluate MCExpr");
   assert(!Val.getSymB() && "Multi-symbol expressions not handled");
 
-  const MCSymbol &Sym = Val.getSymA()->getSymbol();
-
   O << "pragma \"initvarwithaddress:" << VarName << ':'
     << BaseOffset // Offset into the destination.
-    << ':' << EltSize << ':' << getSymbolPrefix(Sym) << Sym.getName() << ':'
-    << Val.getConstant() // Offset of the symbol being written.
+    << ':' << EltSize << ':';
+
+  if (const MCSymbolRefExpr *SymA = Val.getSymA()) {
+    const MCSymbol &Sym = SymA->getSymbol();
+    O << getSymbolPrefix(Sym) << Sym.getName();
+  } else {
+    // FIXME: I'm not sure what the expected behavior of this is with a null
+    // symbol. This pragma seems to be undocumented. Just print the constant
+    // value in place of the address.
+    O << '0';
+  }
+
+  O << ':' << Val.getConstant() // Offset of the symbol being written.
     << '\"' << ';' << '\n';
 }
 
