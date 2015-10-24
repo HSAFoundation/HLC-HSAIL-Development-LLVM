@@ -135,13 +135,17 @@ void BRIGAsmPrinter::BrigEmitInitVarWithAddressPragma(StringRef VarName,
   (void)Res;
   assert(Res && "Could not evaluate MCExpr");
   assert(!Val.getSymB() && "Multi-symbol expressions not handled");
-
-  const MCSymbol &Sym = Val.getSymA()->getSymbol();
-
   O << "initvarwithaddress:" << VarName << ':'
     << BaseOffset // Offset into the destination.
-    << ':' << EltSize << ':' << getSymbolPrefix(Sym) << Sym.getName() << ':'
-    << Val.getConstant(); // Offset of the symbol being written.
+    << ':' << EltSize << ':';
+
+  if (const MCSymbolRefExpr *SymA = Val.getSymA()) {
+    const MCSymbol &Sym = SymA->getSymbol();
+    O << getSymbolPrefix(Sym) << Sym.getName();
+  } else
+    O << '0';
+
+  O << ':' << Val.getConstant(); // Offset of the symbol being written.
 
   HSAIL_ASM::DirectivePragma pgm =
       brigantine.append<HSAIL_ASM::DirectivePragma>();
