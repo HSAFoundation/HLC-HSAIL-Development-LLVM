@@ -545,15 +545,13 @@ void HSAILAsmPrinter::checkModuleSubtargetExtensions(const Module &M,
                                                      bool &IsFullProfile,
                                                      bool &IsGCN,
                                                      bool &HasImages) const {
-  IsFullProfile = false;
+  // Only full profile is supported now.
+  IsFullProfile = true;
   IsGCN = false;
   HasImages = false;
 
   for (const Function &F : M) {
     const HSAILSubtarget &ST = TM.getSubtarget<HSAILSubtarget>(F);
-
-    if (ST.isFullProfile())
-      IsFullProfile = true;
 
     if (ST.isGCN())
       IsGCN = true;
@@ -563,7 +561,7 @@ void HSAILAsmPrinter::checkModuleSubtargetExtensions(const Module &M,
 
     // Stop looking if there are no more subtarget extensions to check for,
     // which is the most common case.
-    if (IsFullProfile && IsGCN && HasImages)
+    if (IsGCN && HasImages)
       break;
   }
 }

@@ -140,10 +140,6 @@ public:
 
   void ParseSubtargetFeatures(StringRef CPU, StringRef FS);
 
-  bool isFullProfile() const {
-    return true;
-  }
-
   bool isLargeModel() const {
     return IsLargeModel;
   }
