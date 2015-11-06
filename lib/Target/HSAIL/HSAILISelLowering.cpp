@@ -1782,7 +1782,7 @@ SDValue HSAILTargetLowering::LowerLOAD(SDValue Op, SelectionDAG &DAG) const {
   // Do extload into 32-bit register, then extend that.
   SDValue NewLD =
       DAG.getExtLoad(extType, dl, MVT::i32, LD->getChain(), LD->getBasePtr(),
-                     MVT::i8, LD->getMemOperand());
+                     LD->getMemoryVT(), LD->getMemOperand());
 
   SDValue Ops[] = {
     DAG.getNode(ISD::getExtForLoadExtType(false, extType), dl, MVT::i64, NewLD),
