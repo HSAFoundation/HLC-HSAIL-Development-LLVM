@@ -288,7 +288,7 @@ void HSAILAsmPrinter::printFloat(uint32_t Val, raw_ostream &O) {
 }
 
 void HSAILAsmPrinter::printDouble(uint64_t Val, raw_ostream &O) {
-  O << format("0F%" PRIx64, Val);
+  O << format("0D%" PRIx64, Val);
 }
 
 void HSAILAsmPrinter::printConstantFP(const ConstantFP *CFP, raw_ostream &O) {
@@ -471,6 +471,15 @@ static void printAlignTypeQualifier(const GlobalValue &GV, const DataLayout &DL,
     O << "align(" << Alignment << ") ";
 }
 
+static void printSimpleZeroInit(raw_ostream &O, bool IsFloat, bool IsDouble) {
+  O << '0';
+
+  if (IsFloat)
+    O << "F00000000";
+  else if (IsDouble)
+    O << "D0000000000000000";
+}
+
 void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
   if (HSAIL::isIgnoredGV(GV))
     return;
@@ -515,6 +524,10 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
       // Emit trivial zero initializers as a single 0.
       if (Init->isNullValue()) {
         Type *Ty = Init->getType();
+        Type *ScalarTy = Ty->getScalarType();
+        bool IsFloat = ScalarTy->isFloatTy();
+        bool IsDouble = ScalarTy->isDoubleTy();
+
         if (Ty->isAggregateType() || Ty->isVectorTy()) {
           O << getArgTypeName(EmitTy) << "[](";
 
@@ -522,12 +535,14 @@ void HSAILAsmPrinter::EmitGlobalVariable(const GlobalVariable *GV) {
           for (unsigned I = 0; I < NElts; ++I) {
             if (I > 0)
               O << ", ";
-            O << '0';
+
+            printSimpleZeroInit(O, IsFloat, IsDouble);
           }
 
           O << ')';
         } else
-          O << '0';
+          printSimpleZeroInit(O, IsFloat, IsDouble);
+
         O << ';';
       } else {
         printGVInitialValue(*GV, Init, DL, O);
