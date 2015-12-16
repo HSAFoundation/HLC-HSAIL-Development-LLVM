@@ -2,11 +2,19 @@
 
 %struct.foo = type { float, [5 x i32] }
 
-
+; HSAIL-DAG: prog readonly_u32 &scalar_i32 = 99;
 ; HSAIL-DAG: prog align(16) readonly_u32 &vector_v4i32[4] = u32[](47, 256, 99, 1299);
 ; HSAIL-DAG: prog align(16) readonly_u32 &vector_v3i32[4] = u32[](47, 256, 12, 0);
 ; HSAIL-DAG: prog align(16) readonly_u32 &zero_vector_v4i32[4] = u32[](0, 0, 0, 0);
 ; HSAIL-DAG: prog align(16) readonly_u32 &zero_vector_v3i32[4] = u32[](0, 0, 0, 0);
+
+; HSAIL-DAG: prog readonly_f32 &scalar_f32 = 0F40000000;
+; HSAIL-DAG: prog align(16) readonly_f32 &zero_vector_v4f32[4] = f32[](0F00000000, 0F00000000, 0F00000000, 0F00000000);
+; HSAIL-DAG: prog align(16) readonly_f32 &zero_vector_v3f32[4] = f32[](0F00000000, 0F00000000, 0F00000000, 0F00000000);
+
+; HSAIL-DAG: prog readonly_f64 &scalar_f64 = 0D4000000000000000;
+; HSAIL-DAG: prog align(32) readonly_f64 &zero_vector_v4f64[4] = f64[](0D0000000000000000, 0D0000000000000000, 0D0000000000000000, 0D0000000000000000);
+; HSAIL-DAG: prog align(32) readonly_f64 &zero_vector_v3f64[4] = f64[](0D0000000000000000, 0D0000000000000000, 0D0000000000000000, 0D0000000000000000);
 
 ; HSAIL-DAG: prog readonly_u32 &array_array[16] = u32[](1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4);
 ; HSAIL-DAG: prog readonly_u32 &array_array_array[32] = u32[](1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4);
@@ -40,6 +48,14 @@
 
 @zero_vector_v4i32 = addrspace(2) constant <4 x i32> zeroinitializer
 @zero_vector_v3i32 = addrspace(2) constant <3 x i32> zeroinitializer
+
+@scalar_f32 = addrspace(2) constant float 2.0
+@zero_vector_v4f32 = addrspace(2) constant <4 x float> zeroinitializer
+@zero_vector_v3f32 = addrspace(2) constant <3 x float> zeroinitializer
+
+@scalar_f64 = addrspace(2) constant double 2.0
+@zero_vector_v4f64 = addrspace(2) constant <4 x double> zeroinitializer
+@zero_vector_v3f64 = addrspace(2) constant <3 x double> zeroinitializer
 
 @array_array = addrspace(2) constant [4 x [4 x i32]] [
   [4 x i32] [i32 1, i32 2, i32 3, i32 4 ],
