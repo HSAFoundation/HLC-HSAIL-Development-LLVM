@@ -181,6 +181,7 @@ set(LLVM_ALL_TARGETS
   BPF
   CppBackend
   Hexagon
+  HSAIL
   Mips
   MSP430
   NVPTX
