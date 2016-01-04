@@ -127,6 +127,8 @@ HSAILTargetLowering::HSAILTargetLowering(HSAILTargetMachine &TM,
   setOperationAction(ISD::INTRINSIC_WO_CHAIN, MVT::Other, Custom);
   setOperationAction(ISD::INTRINSIC_W_CHAIN, MVT::Other, Custom);
 
+  setOperationAction(ISD::READCYCLECOUNTER, MVT::i64, Legal);
+
   for (MVT VT : MVT::fp_valuetypes())
     setLoadExtAction(ISD::EXTLOAD, VT, MVT::f32, Expand);
 

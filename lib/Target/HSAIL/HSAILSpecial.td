@@ -80,6 +80,7 @@ def : InstBasic_0Op_Pat<WORKITEMFLATID_U32, int_HSAIL_workitemid_flat, i32, Brig
 def : InstBasic_1Op_Pat<WORKITEMID_U32, int_HSAIL_get_local_id, i32, BrigType.U32>;
 
 
+def : InstBasic_0Op_Pat<CLOCK_U64, readcyclecounter, i64, BrigType.U64>;
 def : InstBasic_0Op_Pat<CLOCK_U64, int_hsail_clock, i64, BrigType.U64>;
 def : InstBasic_0Op_Pat<CUID_U32, int_hsail_cuid, i32, BrigType.U32>;
 def : InstBasic_0Op_Pat<LANEID_U32, int_hsail_laneid, i32, BrigType.U32>;
