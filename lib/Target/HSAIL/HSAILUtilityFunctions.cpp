@@ -166,12 +166,26 @@ unsigned getAlignTypeQualifier(Type *ty, const DataLayout &DL,
 static bool isKernelFunc(StringRef str) {
   if (str.startswith("__OpenCL_") && str.endswith("_kernel"))
     return true;
+
   return false;
 }
 
 bool isKernelFunc(const Function *F) {
   if (CallingConv::SPIR_KERNEL == F->getCallingConv())
     return true;
+
+  NamedMDNode *kernels = F->getParent()->getNamedMetadata("opencl.kernels");
+  if (kernels != NULL) {
+    for (unsigned i = 0, e = kernels->getNumOperands(); i != e; ++i) {
+      if (kernels->getOperand(i)->getOperand(0) == NULL)
+        continue; // globaldce might have removed uncalled kernels
+      Function *k =
+        cast<Function>(dyn_cast<ValueAsMetadata>(
+          kernels->getOperand(i)->getOperand(0))->getValue());
+      if (k == F)
+        return true;
+    }
+  }
 
   return isKernelFunc(F->getName());
 }
