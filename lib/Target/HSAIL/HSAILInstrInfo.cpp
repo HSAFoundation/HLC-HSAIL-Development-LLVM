@@ -123,9 +123,6 @@ static bool IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg,
 
   CanReverse = true;
 
-  if (MRI.hasOneUse(Reg))
-    return true;
-
   std::queue<MachineBasicBlock *> Q;
   SmallPtrSet<MachineBasicBlock *, 32> Visited;
 
@@ -150,6 +147,8 @@ static bool IsDefBeforeUse(MachineBasicBlock &MBB, unsigned Reg,
           if (instr->readsRegister(Reg)) {
             // Always abort on circular dependencies
             // Which will require to insert or remove not
+            // FIXME: This detects only single BB loop uses where the
+            // definition is also inside the loop.
             if (instr->getParent() == &MBB &&
                 (instr->isBranch() || (instr->getOpcode() == HSAIL::NOT_B1))) {
               CanReverse = false;
