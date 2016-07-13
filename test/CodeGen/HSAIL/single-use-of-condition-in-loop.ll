@@ -1,4 +1,4 @@
-; RUN: llc -march=hsail64 -filetype=asm < %s | FileCheck -check-prefix=HSAIL %s
+; RUN: llc -march=hsail64 < %s | FileCheck -check-prefix=HSAIL %s
 ;
 ; Regression tests a case where a condition was reversed using
 ; a 'not_b1 c1, c1' even though the negation was inside a loop.
